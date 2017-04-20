@@ -1,0 +1,68 @@
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.62.27440M, Apr 11 2013, 09:42:32
+* File creation date: 11:38:11, 17-04-2013                                      
+ MAXIMUM NUMBER OF LINKS         :            2
+ MAXIMUM NUMBER OF NODES         :            0
+ RESOLUTION GRAPHICS SCREEN      :         1200         900
+ RESOLUTION TEXT     SCREEN      :          150          60
+ NUMBER OF COLOURS AVAILABLE     :          256
+             0        100002 NOD(KMAX)
+             6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+             6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+             6         50000 xlan(maxlan)
+             7         50000 ylan(maxlan)
+             7         50000 zlan(maxlan)
+             7         25000 nclan(maxlan)
+Load land boundary               (*.ldb)
+Opened file : wgs84_europe.ldb
+             8         60000 xlan(maxlan)
+             8         60000 ylan(maxlan)
+             9         60000 zlan(maxlan)
+             9         30000 nclan(maxlan)
+            10         72000 xlan(maxlan)
+            10         72000 ylan(maxlan)
+            11         72000 zlan(maxlan)
+            11         36000 nclan(maxlan)
+            12         86400 xlan(maxlan)
+            12         86400 ylan(maxlan)
+            13         86400 zlan(maxlan)
+            14         43200 nclan(maxlan)
+            14        103680 xlan(maxlan)
+            15        103680 ylan(maxlan)
+            16        103680 zlan(maxlan)
+            16         51840 nclan(maxlan)
+            17        124416 xlan(maxlan)
+            18        124416 ylan(maxlan)
+            19        124416 zlan(maxlan)
+            20         62208 nclan(maxlan)
+            21        149299 xlan(maxlan)
+            22        149299 ylan(maxlan)
+            23        149299 zlan(maxlan)
+            24         74649 nclan(maxlan)
+            26        179158 xlan(maxlan)
+            27        179158 ylan(maxlan)
+            28        179158 zlan(maxlan)
+            29         89579 nclan(maxlan)
+            31        214989 xlan(maxlan)
+            33        214989 ylan(maxlan)
+            34        214989 zlan(maxlan)
+            35        107494 nclan(maxlan)
+            37        257986 xlan(maxlan)
+            39        257986 ylan(maxlan)
+            41        257986 zlan(maxlan)
+            42        128993 nclan(maxlan)
+            45        309583 xlan(maxlan)
+            47        309583 ylan(maxlan)
+            50        309583 zlan(maxlan)
+            51        154791 nclan(maxlan)
+            54        371499 xlan(maxlan)
+            57        371499 ylan(maxlan)
+            60        371499 zlan(maxlan)
+            61        185749 nclan(maxlan)
+Closed file : wgs84_europe.ldb
+YOU LOADED wgs84_europe.ldb

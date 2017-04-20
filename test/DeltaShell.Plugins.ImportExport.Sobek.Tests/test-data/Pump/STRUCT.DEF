@@ -1,0 +1,30 @@
+STDS id '9' nm 'UrbanPump01' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+10 0.8 0.6 0 0 <
+30 4.5 3.5 0 0 <
+tble  stds
+STDS id '4' nm 'UrbanPump02' ty 9 dn 2 rt cr 1
+TBLE
+2 0.5 <
+5 0.7 <
+8 0.9 <
+tble ct lt 1
+TBLE 10 0.05 -0.20 0.05 1.50 <
+10 0.10 -0.10 0.10 1.25 <
+5 0.20 -0.05 0.20 1.00 <
+tble stds
+STDS id '##1' nm 'RiverPump01' ty 3 dn -1 rt cr 0 1 0 ct lt 1 PDIN 0 0 '' pdin
+TBLE
+25 4.5 3.5 0 0 <
+tble  stds
+STDS id '17127' nm 'RiverPump02' ty 3 dn -1 rt cr 1 PDIN 0 0 pdin
+TBLE
+0 1
+1 .8
+2 .6
+3 .2
+tble ct lt 1 PDIN 0 0 “ pdin
+TBLE
+12 1.7 1.5 0 0
+tble stds
+

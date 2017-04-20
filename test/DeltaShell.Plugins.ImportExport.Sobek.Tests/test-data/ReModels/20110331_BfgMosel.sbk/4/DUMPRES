@@ -1,0 +1,68 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =     7 Nr iter. = 100
+    RUHR                           X=   3679.00 DH=   0.02999
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  99
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+ Time step =     7 Nr iter. =  98
+    RUHR                           X=   3679.00 DH=  -0.09535
+    RUHR                           X=   4214.00 DQ=    -0.948
+ Time step =     7 Nr iter. =  97
+    RUHR                           X=   3679.00 DH=   0.03000
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  96
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+ Time step =     7 Nr iter. =  95
+    RUHR                           X=   3679.00 DH=  -0.09534
+    RUHR                           X=   4214.00 DQ=    -0.948
+ Time step =     7 Nr iter. =  94
+    RUHR                           X=   3679.00 DH=   0.02999
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  93
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+ Time step =     7 Nr iter. =  92
+    RUHR                           X=   3679.00 DH=  -0.09535
+    RUHR                           X=   4214.00 DQ=    -0.948
+ Time step =     7 Nr iter. =  91
+    RUHR                           X=   3679.00 DH=   0.03000
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  90
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+ Time step =     7 Nr iter. =  89
+    RUHR                           X=   3679.00 DH=  -0.09534
+    RUHR                           X=   4214.00 DQ=    -0.948
+ Time step =     7 Nr iter. =  88
+    RUHR                           X=   3679.00 DH=   0.02999
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  87
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+ Time step =     7 Nr iter. =  86
+    RUHR                           X=   3679.00 DH=  -0.09535
+    RUHR                           X=   4214.00 DQ=    -0.948
+ Time step =     7 Nr iter. =  85
+    RUHR                           X=   3679.00 DH=   0.03000
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  84
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+ Time step =     7 Nr iter. =  83
+    RUHR                           X=   3679.00 DH=  -0.09534
+    RUHR                           X=   4214.00 DQ=    -0.948
+ Time step =     7 Nr iter. =  82
+    RUHR                           X=   3679.00 DH=   0.02999
+    RUHR                           X=   4749.00 DQ=     0.138
+ Time step =     7 Nr iter. =  81
+    RUHR                           X=   3679.00 DH=   0.06535
+    RUHR                           X=   4214.00 DQ=     0.822
+  

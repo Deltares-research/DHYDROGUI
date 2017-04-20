@@ -1,0 +1,249 @@
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.61.26790M, Mar 20 2013, 14:26:32
+* File creation date: 15:54:13, 20-03-2013                                      
+ MAXIMUM NUMBER OF LINKS         :            2
+ MAXIMUM NUMBER OF NODES         :            0
+ RESOLUTION GRAPHICS SCREEN      :         1200         900
+ RESOLUTION TEXT     SCREEN      :          150          60
+ NUMBER OF COLOURS AVAILABLE     :          256
+             0        100002 NOD(KMAX)
+             6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+             6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX)
+             6         50000 xlan(maxlan)
+             7         50000 ylan(maxlan)
+             7         50000 zlan(maxlan)
+             7         25000 nclan(maxlan)
+Opened Model definition file : frictiontypes.mdu
+Opened 'rec30x30-dx10m_net.nc' as #  3.
+Closed NetCDF file 'rec30x30-dx10m_net.nc.
+Opened file : test.xyn
+Closed file : test.xyn
+             7          1441 netcell(numpx1)
+             7          1860 lnn(numl)
+             7          3720 lne(2,numl)
+ Renumber flow nodes...
+ Sumdiff:       81030  Sumdiff renum:        89150
+ Bandwidth:          61  Bandwidth renum:           61
+Opened file : frictiontypes.ext
+             8          1860 xe (nx)
+             8          1860 ye (nx)
+             8          1860 xyen(2, nx)
+             8         16740 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpeu(nx)
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Found optional keyword VALUE
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Found optional keyword VALUE
+Found optional keyword FACTOR
+Found optional keyword IFRCTYP
+looking for keyword: QUANTITY
+keyword QUANTITY NOT found!
+             8          7200 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+             8          3480 ln   (2,lnx)
+             8          3480 lncn (2,lnx)
+             8          3480 bob  (2,lnx)
+             8          1740 dx   (  lnx)
+             8          1740 dxi  (  lnx)
+             8          1740 wu   (  lnx)
+             8          1740 wui  (  lnx)
+             8          1740 kcu  (  lnx)
+             8          1740 csu  (  lnx)
+             8          1740 snu  (  lnx)
+             8          1740 acl  (  lnx)
+             8          1740 acn  (2,lnx)
+             8          1740 iadv   (lnx)
+             8          1740 ibot   (lnx)
+             8          5220 xu(lnx), yu(lnx) , blu(lnx)
+             8          1860 ln2lne (nex)
+             8          1860 lne2ln (nex)
+cutcell_list; nr of *.cut files found =              0             4
+             8          6960 wcxyl(4,lnx)
+             8          1800 wcxy (2,ndx)
+             8          3480 wcL  (2,Lnx)
+             8          6960 wcnxyl(4,lnx)
+             8          2883 wcnxy (3,numk)
+cutcell_list; nr of *.cut files found =              0             5
+             8          1920 walls(17,nw)
+             8          3600 banf(mxban)
+             8          3600 nban(2,mxban)
+             9          3600 rr(mxban), nr(mxban)
+             9          3600 banh (mxban)
+             9          3600 nbanh(2,mxban)
+             9          1800 s0  (ndx) , s1  (ndx)
+             9          1800 a0  (ndx) , a1  (ndx)
+             9          1800 hs  (ndx) , s00 (ndx)
+             9          1800 ucx (ndkx) , ucy (ndkx)
+             9          1800 uqcx(ndkx) , uqcy(ndkx)
+             9          1800 ucxq(ndkx) , ucyq(ndkx)
+             9          1800 qin (ndkx) , vih (ndkx)
+             9          1800 dvxc(ndkx) , dvyc(ndkx)
+             9          1740 cfu  (lnx)
+             9          1740 wsu  (lnx)
+             9          1740 u0   (lnkx)
+             9          1740 u1   (lnkx)
+             9          1740 q1   (lnkx)
+             9          1740 qa   (lnkx)
+             9          1740 v    (lnkx)
+             9          1740 ucxu (lnkx)
+             9          1740 ucyu (lnkx)
+             9          1740 hu   (lnkx)
+             9          1740 huvli(lnkx)
+             9          1740 au   (lnkx)
+             9          1740 viu  (lnkx)
+             9          1740 cflj (lnkx)
+             9          1740 tetaj(lnkx)
+             9          1740 suu  (lnkx)
+             9          1740 advi (lnkx)
+             9          1740 adve (lnkx)
+             9          1740 rhou (lnkx)
+             9          1740 plotlin(max(lnkx,ndkx))
+             9          1740 teta (lnx)
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Found optional keyword VALUE
+External Forcing or Initialising 'frictioncoefficient' from file 'northmanning.pol'.
+             9          1740 viuh(lnx)
+             9          1740 zh(nx)
+Opened file : northmanning.pol
+Closed file : northmanning.pol
+Opened file : DFM_interpreted_initial_values_northmanning.pol.xyz
+Closed file : DFM_interpreted_initial_values_northmanning.pol.xyz
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Found optional keyword VALUE
+Found optional keyword FACTOR
+Found optional keyword IFRCTYP
+External Forcing or Initialising 'frictioncoefficient' from file 'midwhitecolebrook.pol'.
+             9          1740 viuh(lnx)
+             9          1740 zh(nx)
+Opened file : midwhitecolebrook.pol
+Closed file : midwhitecolebrook.pol
+Opened file : DFM_interpreted_initial_values_midwhitecolebrook.pol.xyz
+Closed file : DFM_interpreted_initial_values_midwhitecolebrook.pol.xyz
+looking for keyword: QUANTITY
+keyword QUANTITY NOT found!
+External Forcing or Initialising 'frictioncoefficient' from file 'midwhitecolebrook.pol'.
+Closed file : frictiontypes.ext
+             9          1740 lv2(lintot)
+             9          3566 ccr(0:ijstck)
+             9          3566 bbl(0:ijstck)
+             9          1800 bbr(nodtot), ddr(nodtot)
+             9          4500 d0(nodtot), zkr(nodtot),pk(0:nodtot), apk(nodtot), rk(nodtot)
+nogauss , nocg :            455           445
+             9          1740 klnup(6,lnx)
+             9          1740 slnup(6,lnx)
+Modelinit finished   at: 15:54:14, 20-03-2013
+* Active Model definition:
+# Generated on 15:54:14, 20-03-2013
+# Deltares, D-Flow FM Version 1.1.61.26790M, Mar 20 2013, 14:26:32
+
+[model]
+Program              = D-Flow FM
+Version              = 1.1.61.26790M
+AutoStart            = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile              = rec30x30-dx10m_net.nc# *_net.nc
+BathymetryFile       =                     # *.xyb
+WaterLevIniFile      =                     # Initial water levels sample file *.xyz
+LandBoundaryFile     =                     # Only for plotting
+ThinDamFile          =                     # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile        =                     # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProflocFile          =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile          =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile          =                     # *...
+WaterLevIni          = 0.                  # Initial water level
+Bedlevuni            = -5.                 # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+BedlevType           = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                           # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                           # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                           # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                           # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile        =                     # *_part.pol, polyline(s) x,y
+AngLat               = 0.                  # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D         = 3                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Makeorthocenters     = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+
+[numerics]
+CFLMax               = 1.                  # Max. Courant nr.
+CFLWaveFrac          = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType            = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtypmom            = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa             = 0                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver            = 1                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree            = 6                   # Maximum degree in Gauss elimination
+
+[physics]
+UnifFrictCoef        = 2.3d-2              # Uniform friction coefficient, 0=no friction
+UnifFrictType        = -1                  # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+Vicouv               = 0.                  # Uniform horizontal eddy viscosity
+Smagorinsky          = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder                = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov                 = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks              = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+Vicoww               = 0.                  # Uniform vertical eddy viscosity
+TidalForcing         = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity             = 0                   # Include salinity, (0=no, 1=yes)
+
+[wind]
+ICdtyp               = 2                   # ( ), Cd = const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints
+Cdbreakpoints        = 6.3d-4 7.23d-3      # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints = 0. 100.             # (m/s), e.g. 0.0      100.0
+
+[time]
+RefDate              = 19920831            # Reference date (yyyymmdd)
+Tunit                =                     # Time units in MDU (H, M or S)
+DtUser               = 300.                # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax                = 60.                 # Max timestep in seconds
+DtInit               = 1.                  # Initial timestep in seconds
+AutoTimestep         = 1                   # Use CFL timestep limit or not (1/0)
+TStart               = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop                = 8640000.            # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile          =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime      =                     # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile         = frictiontypes.ext   # *.ext
+
+[output]
+ObsFile              = test.xyn            # *.xyn Coords+name of observation stations.
+CrsFile              =                     # *_crs.pli Polyline(s) definining cross section(s).
+HisFile              =                     # *_his.nc History file in NetCDF format.
+HisInterval          = 300.                # Interval (s) between history outputs
+XLSInterval          = 0.                  # Interval (s) between XLS history
+FlowGeomFile         =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapFile              =                     # *_map.nc Map file in NetCDF format.
+MapInterval          = 300.                # Interval (s) between map file outputs
+RstInterval          = 300.                # Interval (s) between map file outputs
+WaqFileBase          = frictiontypes       # Basename (without extension) for all Delwaq files to be written.
+WaqInterval          = 120.                # Interval (in s) between Delwaq file outputs
+StatsInterval        = 0.                  # Interval (in s) between simulation statistics output.
+SnapshotDir          = plotjes             # Directory where snapshots/screendumps are saved.
+TimingsInterval      = 0.                  # Timings output interval
+**
+Opened display settings file : frictiontypes.cfg
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+Values at flow links
+IFRCUTP friction type            (     )

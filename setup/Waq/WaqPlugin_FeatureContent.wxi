@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+
+  <ComponentRef Id="WaterQualityModelPlugin"/>
+  <ComponentRef Id="WaterQualityModelGuiPlugin"/>
+
+  <?ifndef var.NOKERNELS?>
+  <ComponentRef Id="WaterQualityDefaultLibrary"/>
+  <ComponentRef Id="WaterQualitySobekLibrary"/>
+  <?endif?>
+  
+  <ComponentRef Id="WaterQuality_scripts_examples_files"/>
+  <ComponentRef Id="WaterQuality_scripts_libraries_files"/>
+
+  <?ifndef var.NOKERNELS?>
+  <ComponentRef Id="delwaq_x86"/>
+  <?endif?>
+  
+  <ComponentRef Id="plct_component"/>
+  <ComponentRef Id="plctIni"/>
+
+  <!-- ugrid api dlls -->
+  <ComponentRef Id="NGHS.IO"/>
+  <ComponentRef Id="nghsx86_ugriddll"/>
+
+  <!-- TODO: agrhyd is not yet finished, so dido is not required in the installations
+  <ComponentRef Id="dido_cmd"/>
+  <ComponentRef Id="dido_bin"/>
+  <ComponentRef Id="dido_colormaps"/>
+  <ComponentRef Id="dido_platforms"/>
+  <ComponentRef Id="dido_icons"/>
+  <ComponentRef Id="dido_manuals"/>-->
+
+  <Feature Id="delwaq_x64_feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+  <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    <?ifndef var.NOKERNELS?>
+    <ComponentRef Id="delwaq_x64"/>
+    <?endif?>
+    
+    <!-- ugrid api dlls -->
+    <ComponentRef Id="nghsx64_ugriddll"/>
+  </Feature>
+
+  <?ifndef var.NOKERNELS?>
+  <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
+    <ComponentRef Id="WaterQualityDuflowLibrary"/>
+    <ComponentRef Id="DuflowProcessLibraryPlugin_x86"/>
+
+    <Feature Id="DuflowProcesses_x64" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+      <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+      <ComponentRef Id="DuflowProcessLibraryPlugin_x64"/>
+    </Feature>
+  </Feature>
+  <?endif?>
+</Include>

@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using SharpMap.Api.Layers;
+using SharpMap.Data.Providers;
+using SharpMap.UI.Tools;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui
+{
+    public class WaveMapViewDecorator
+    {
+        private static readonly Bitmap ObstacleIcon = Properties.Resources.wall_brick;
+        private static readonly Bitmap BoundaryIcon = Common.Gui.Properties.Resources.boundary;
+        private static readonly Bitmap ObservationPointIcon = Common.Gui.Properties.Resources.Observation;
+        private static readonly Bitmap ObservationCrossSectionIcon = Common.Gui.Properties.Resources.ObservationCS;
+
+        internal const string ObstacleToolName = "Obstacle Tool (Waves)";
+        internal const string BoundaryToolName = "Boundary Tool (Waves)";
+        internal const string ObservationPointToolName = "Observation Point Tool (Waves)";
+        internal const string ObservationCrossSectionToolName = "Observation Cross-Section Tool (Waves)";
+
+        private static readonly string ModelName = typeof (WaveModel).Name;
+        
+        public static void AddMapToolsIfMissing(MapView mapView)
+        {
+            if (mapView.MapControl.Tools.OfType<Feature2DLineTool>().Any(t => t.Name == ObstacleToolName))
+                return; // already has them
+
+            var tools = new List<MapTool>();
+
+            // tools:
+            tools.Add(new Feature2DLineTool(WaveModelMapLayerProvider.ObstacleLayerName, ObstacleToolName, ObstacleIcon));
+            tools.Add(new Feature2DLineTool(WaveModelMapLayerProvider.BoundaryLayerName, BoundaryToolName, BoundaryIcon));
+            tools.Add(new Feature2DPointTool(WaveModelMapLayerProvider.ObservationPointLayerName, ObservationPointToolName, ObservationPointIcon));
+            tools.Add(new Feature2DLineTool(WaveModelMapLayerProvider.ObservationCrossSectionLayerName, ObservationCrossSectionToolName, ObservationCrossSectionIcon));
+            
+            tools.Cast<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
+            mapView.MapControl.Tools.AddRange(tools);
+        }
+
+        private static Func<ILayer, bool> GetLayerFilter(ITargetLayerTool tool)
+        {
+            return l => l.Name == tool.LayerName && //expected layer name must match
+                        l.DataSource is Feature2DCollection && //and layer must be a 2D layer
+                        ((Feature2DCollection)l.DataSource).ModelName == ModelName;
+        }
+    }
+}

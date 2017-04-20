@@ -1,0 +1,50 @@
+CMUPDATE: update of the application \SOBEK216\FlowJaap.Lit
+1 tasks need update:PLUVIUS1,
+
+Updating case: 4 - TestWLBasic
+
+Updating case: 8 - TestWLRectangularPressurized
+
+Updating case: 16 - TestQHBoundary
+
+Updating case: 17 - TestExtraResistanceKsi
+
+Updating case: 1 - TestLateralDiffusePos
+
+Updating case: 23 - TestLateralDiffuseNeg
+
+Updating case: 21 - TestLateral2
+
+Updating case: 27 - TestLateralDiffuseFlat
+
+Updating case: 3 - TestLateral
+
+Updating case: 25 - TestLateralMiddle
+
+Updating case: 26 - TestLateralDiffuseSlope
+
+Updating case: 29 - TestLateralLowest
+
+Updating case: 28 - TestLateralNearest
+
+Updating case: 30 - TestDiffuseForkFlat
+
+Updating case: 31 - TestLateral2TimeSeries
+
+ERROR: 98, The number of files in casedesc.cmt and descprot.cmt is not equal 
+\SOBEK216\FLOWJAAP.LIT\31\c
+asedesc.cmt PLUVIUS1
+Updating case: 5 - TestWLRectangularFreeSurface
+
+Updating case: 2 - TestWLTrapeziumProfile
+
+Updating case: 6 - TestWLEggProfile
+
+Updating case: 7 - TestWLCircleProfile
+
+Updating case: 19 - TestTabulatedExtraResistanceKsi
+
+Erased files: 
+    none
+New files in the application :
+    none

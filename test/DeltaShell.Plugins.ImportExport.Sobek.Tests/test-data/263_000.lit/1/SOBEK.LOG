@@ -1,0 +1,84 @@
+@(#)Deltares, SOBEKSIM Version 4.03.74.17967, Aug  5 2011, 10:04:13
+opened file : F:\SBO212_3\Programs\flow\sobeksim.lng
+closed file : F:\SBO212_3\Programs\flow\sobeksim.lng
+ConvtabYzprof
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : qlat.tbl
+closed file : qlat.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : qlat.tbl
+closed file : qlat.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : casedesc.cmt
+closed file : casedesc.cmt
+ Warning in subroutine initial
+ Bottom level higher than bottom connected reach in well T1_x=0m . Bottom level 
+ moved to bottom connected reach
+ Warning in subroutine initial
+ Bottom level higher than bottom connected reach in well T2_x=0m . Bottom level 
+ moved to bottom connected reach
+Lateral inflow on closed pipe, storage on inflow node < 0.5*pipediam*pipediam T4_x=0m       0.000000
+Please make sure you have sufficient storage surface on lateral inflow nodes on closed pipes < 0.5*pipediam*pipediam
+On lateral inflow nodes there is always some surface storage in reality
+Number of inflow nodes atached to pipes :              1
+Opened file : F:\SBO212_3\programs\flow\onlineplot/delftfl.ini
+Using Program File 
+F:\SBO212_3\programs\flow\onlineplot/delftfl.ini
+FOUND : @INITSCREEN
+FOUND : @GRAFCOL
+FOUND : @GRAFCOL2
+FOUND : @TEXTCOL
+FOUND : @CURSORSPEED
+FOUND : @NPOS
+FOUND : @CIRCLE
+FOUND : @AUTOSCALE
+FOUND : @TEXTSIZE
+FOUND : @DEFAULT
+FOUND : @HARDCOPYDEVICE
+FOUND : @HARDCOPYOPTIONS
+FOUND : @OLDORNEWNAMES
+FOUND : @KEEPSTARTDIR
+FOUND : @TIMESTEP
+FOUND : @AVERAGING
+FOUND : @SUNSET
+FOUND : @SMOOTH
+FOUND : @INTERNAL DIFFUSION
+FOUND : @TEKAL BLOCK INDICATORS
+FOUND : @ARCINFO GRIDCELLSIZE
+FOUND : @OLDORNEWNAMES
+FOUND : @FLOWSWANPHAROSHISWA
+Opened file : F:\SBO212_3\programs\flow\onlineplot/isocolour.hls
+Using Program File 
+F:\SBO212_3\programs\flow\onlineplot/isocolour.hls
+closed file : F:\SBO212_3\programs\flow\onlineplot/isocolour.hls
+opened file : ..\work\flow_bal.out
+closed file : ..\work\flow_bal.out
+cpu computation =      35.296875
+---------------------------------
+Normal end of Sobeksim
+closed file : ..\work\sobek.log

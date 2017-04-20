@@ -1,0 +1,97 @@
+$node
+1 Mo05PTrier
+2 Mo06Neumagen-Dhron
+3 Mo07Starkenburg
+4 Mo08PCochem
+$branch
+1 Mo03MdSu-MdSa
+2 Mo04MdSa-PTri
+3 Mo05PTri-ND
+$structure
+1 Detzem
+2 Fankel
+3 St.
+4 Zeltingen
+5 Wintrich
+6 Enkirch
+7 Fankel
+8 St.
+9 Enkirch
+10 Zeltingen
+11 Wintrich
+$lat_discharge
+1 ZWE
+2 ZWE
+3 ZWE
+4 Kyll
+5 Salm
+6 Lieser
+7 Dhron
+8 Alf
+$segment
+$controller
+1 Detzem
+2 Detzem
+3 Detzem
+4 Detzem
+5 Fankel
+6 Fankel
+7 Fankel
+8 Fankel
+9 St.
+10 St.
+11 St.
+12 St.
+13 Zeltingen
+14 Zeltingen
+15 Zeltingen
+16 Zeltingen
+17 Wintrich
+18 Wintrich
+19 Wintrich
+20 Wintrich
+21 Enkirch
+22 Enkirch
+23 Enkirch
+24 Enkirch
+$trigger
+1 RWE-Fankel
+2 Fankel
+3 WSA-Fankel
+4 Fankel
+5 Fankel
+6 Fankel
+7 RWE-St.
+8 St.
+9 WSA-St.
+10 St.
+11 St.
+12 St.
+13 RWE-Enkirch
+14 Enkirch
+15 WSA-Enkirch
+16 Enkirch
+17 Enkirch
+18 Enkirch
+19 RWE-Zeltingen
+20 Zeltingen
+21 WSA-Zeltingen
+22 Zeltingen
+23 Zeltingen
+24 Zeltingen
+25 RWE-Wintrich
+26 Wintrich
+27 WSA-Wintrich
+28 Wintrich
+29 Wintrich
+30 Wintrich
+31 RWE-Detzem
+32 Detzem
+33 WSA-Detzem
+34 Detzem
+35 Detzem
+36 Detzem
+$h_bound
+1 Mo08PCochem
+$Q_bound
+1 Mo05PTrier

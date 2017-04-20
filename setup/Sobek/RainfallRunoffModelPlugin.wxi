@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?include ..\Scripts\RainfallRunoffScripts.wxi?>
+  <Directory Id="DeltaShell.Plugins.DelftModels.RainfallRunoff" Name="DeltaShell.Plugins.RainfallRunoffModel">
+    <?define rrplugindir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RainfallRunoff\"?>
+    <Component Id="RainfallRunoffModelPlugin" Guid="8BDD43E2-FF10-499C-9C4A-8F9C239DEFEC">
+      <File Id="DeltaShell.Plugins.DelftModels.RainfallRunoff.dll" Source="$(var.rrplugindir)DeltaShell.Plugins.DelftModels.RainfallRunoff.dll" />
+      <File Id="DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.dll" />
+    </Component>
+    <Directory Id="rr_kernel_folder" Name="rr_kernel">
+      <?define rrkerneldir="$(var.rrplugindir)rr_kernel\"?>
+
+      <Directory Id="x86_RainfallRunoffKernel" Name="x86">
+        <Component Id="x86_RainfallRunoffKernel_dll" Guid="636B6F9A-5401-4F37-8886-0C4BA932558A">
+          <?define x86_rrkerneldir="$(var.rrkerneldir)x86\"?>
+          <File Id="x86_rr_libifcoremd.dll" Source="$(var.x86_rrkerneldir)libifcoremd.dll" />
+          <File Id="x86_rr_libifcoremdd.dll" Source="$(var.x86_rrkerneldir)libifcoremdd.dll" />
+          <File Id="x86_rr_libifportmd.dll" Source="$(var.x86_rrkerneldir)libifportmd.dll" />
+          <File Id="x86_rr_libmmd.dll" Source="$(var.x86_rrkerneldir)libmmd.dll" />
+          <File Id="x86_rr_libmmdd.dll" Source="$(var.x86_rrkerneldir)libmmdd.dll" />
+          <File Id="x86_rr_msvcr100.dll" Source="$(var.x86_rrkerneldir)msvcr100.dll" />
+          <File Id="x86_rr_msvcr110.dll" Source="$(var.x86_rrkerneldir)msvcr110.dll" />
+          <File Id="x86_rr_msvcr120.dll" Source="$(var.x86_rrkerneldir)msvcr120.dll" />
+          <File Id="x86_rr_netcdf.dll" Source="$(var.x86_rrkerneldir)netcdf.dll" />
+          <File Id="x86_rr_pthreadVCE2.dll" Source="$(var.x86_rrkerneldir)pthreadVCE2.dll" />
+          <File Id="x86_rr_dll.dll" Source="$(var.x86_rrkerneldir)rr_dll.dll" />
+          <File Id="x86_rr_svml_dispmd.dll" Source="$(var.x86_rrkerneldir)svml_dispmd.dll" />         
+          <File Id="x86_rr_vcruntime140.dll" Source="$(var.x86_rrkerneldir)vcruntime140.dll" />         
+          <?undef x86_rrkerneldir?>
+        </Component>
+      </Directory>
+
+      <Directory Id="x64_RainfallRunoffKernel" Name="x64">
+        <Component Id="x64_RainfallRunoffKernel_dll" Guid="9D9653D4-98EB-4822-BEF2-C246E8B8CB50">
+          <?define x64_rrkerneldir="$(var.rrkerneldir)x64\"?>
+          <File Id="x64_rr_libifcoremd.dll" Source="$(var.x64_rrkerneldir)libifcoremd.dll" />
+          <File Id="x64_rr_libifcoremdd.dll" Source="$(var.x64_rrkerneldir)libifcoremdd.dll" />
+          <File Id="x64_rr_libifportmd.dll" Source="$(var.x64_rrkerneldir)libifportmd.dll" />
+          <File Id="x64_rr_libmmd.dll" Source="$(var.x64_rrkerneldir)libmmd.dll" />
+          <File Id="x64_rr_libmmdd.dll" Source="$(var.x64_rrkerneldir)libmmdd.dll" />
+          <File Id="x64_rr_msvcr100.dll" Source="$(var.x64_rrkerneldir)msvcr100.dll" />
+          <File Id="x64_rr_msvcr110.dll" Source="$(var.x64_rrkerneldir)msvcr110.dll" />
+          <File Id="x64_rr_msvcr120.dll" Source="$(var.x64_rrkerneldir)msvcr120.dll" />
+          <File Id="x64_rr_netcdf.dll" Source="$(var.x64_rrkerneldir)netcdf.dll" />
+          <File Id="x64_rr_pthreadVC2.dll" Source="$(var.x64_rrkerneldir)pthreadVC2.dll" />
+          <File Id="x64_rr_dll.dll" Source="$(var.x64_rrkerneldir)rr_dll.dll" />
+          <File Id="x64_rr_svml_dispmd.dll" Source="$(var.x64_rrkerneldir)svml_dispmd.dll" />
+          <File Id="x64_rr_vcruntime140.dll" Source="$(var.x64_rrkerneldir)vcruntime140.dll" />
+          <?undef x64_rrkerneldir?>
+        </Component>
+      </Directory>
+      
+      <?undef rrkerneldir?>
+      </Directory>
+    <?undef rrplugindir?>
+  </Directory>
+</Include>
+ 

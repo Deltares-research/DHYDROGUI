@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfModelApiParameter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- Salinity computation-->
+  <!-- <ModelApiParameter Id="SaltComputation"              Description="Turn On/Off Salinity Computation"                                        Value="true"    Type="typeof(bool)"     Visible="true"  Category="Salinity" />-->
+  <!-- <ModelApiParameter Id="Diffusion"                    Description="Global Diffusion"                                                        Value="10"      Type="typeof(double)"   Visible="true"  Category="Salinity" />-->
+  <!-- Results General-->
+  <ModelApiParameter Id="InterpolationType"                 Description="Interpolation type for ObservationPoints (Nearest/Linear)"               Value="Nearest" Type="typeof(string)"   Visible="true"  Category="ObservationPoints"/>
+  <!-- Numerical Parameters-->
+  <ModelApiParameter Id="AccelerationTermFactor"            Description="Factor on 1D Acceleration Term (dU/dt, Can Vary Between 0-1)"            Value="1"       Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="AccurateVersusSpeed"               Description="Accuracy Factor"                                                         Value="3"       Type="typeof(int)"      Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="CourantNumber"                     Description="Maximum Flow (1D) and Velocity (2D) Courant Number"                      Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="DtMinimum"                         Description="Minimum Timestep"                                                        Value="0.001"   Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="EpsilonValueVolume"                Description="Epsilon for Volume"                                                      Value="0.0001"  Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="EpsilonValueWaterDepth"            Description="Epsilon for Water Depth"                                                 Value="0.0001"  Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MaxDegree"                         Description="Max.Degree of Nodal Points to Be Eliminated by Gaussian Elimination"     Value="6"       Type="typeof(int)"      Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MaxIterations"                     Description="Maximum Number of Iterations"                                            Value="8"       Type="typeof(int)"      Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MinimumLength"                     Description="Minimum Length"                                                          Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MinimumSurfaceatStreet"            Description="Minimum Surface at Street"                                               Value="0.1"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MinimumSurfaceinNode"              Description="Minimum Surface in Node"                                                 Value="0.1"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="RelaxationFactor"                  Description="Relaxation Factor"                                                       Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="Rho"                               Description="Density of Water"                                                        Value="1000"    Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="StructureInertiaDampingFactor"     Description="Structure Inertia Damping Factor"                                        Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="Theta"                             Description="Theta"                                                                   Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="ThresholdValueFlooding"            Description="Threshold Water Depth for Flooding Channels"                             Value="0.01"    Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="ThresholdValueFloodingFLS"         Description="Threshold Water Depth for Flooding of Land "                             Value="0.001"   Type="typeof(double)"   Visible="false" Category="NumericalParameters" />
+  <ModelApiParameter Id="UseTimeStepReducerStructures"      Description="Use Timestep Reduction on Structures"                                    Value="false"   Type="typeof(bool)"     Visible="true"  Category="NumericalParameters" />
+  <!--<ModelApiParameter Id="StructureDynamicsFactor"       Description="Factor for Structure Dynamics (1DFLOW (Rural) & 1DFLOW (Urban) Only)"    Value="1.0"     Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />-->
+  <!-- Advanced Options-->
+  <ModelApiParameter Id="ExtraResistanceGeneralStructure"   Description="Extra Resistance for General Structure"                                  Value="0.0"     Type="typeof(double)"   Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="FillCulvertsWithGL"                Description="Fill too Low Culverts with Ground Layer"                                 Value="false"   Type="typeof(bool)"     Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="LateralLocation"                   Description="Location of Laterals: Nearest (0) or Lowest Water Level Point (1)"       Value="0"       Type="typeof(int)"      Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="MaxLoweringCrossAtCulvert"         Description="Maximum Lowering of Cross_Section Bed Level at Culvert"                  Value="0.0"     Type="typeof(double)"   Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="MaxVolFact"                        Description="Maximum Fraction of Volume to Be Extracted by Lateral Outflow"           Value="0.9"     Type="typeof(double)"   Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="NoNegativeQlatWhenThereIsNoWater"  Description="Reduce Lateral Outflow When Insufficient Water Available"                Value="true"    Type="typeof(bool)"     Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="TransitionHeightSD"                Description="Transition Height in Summer Dikes"                                       Value="0.5"     Type="typeof(double)"   Visible="true"  Category="AdvancedOptions" />
+  <!-- Simulation Options -->
+  <ModelApiParameter Id="Debug"                             Description="Print Debug Information"                                                 Value="false"   Type="typeof(bool)"     Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="UseTimers"                         Description="Use Timers"                                                              Value="false"   Type="typeof(bool)"     Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="TimersOutputFrequency"             Description="Output Frequency for Timers"                                             Value="1"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="DebugTime"                         Description="Print Debug Information of Time"                                         Value="0"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="DumpInput"                         Description="Print Debug Input Information"                                           Value="false"   Type="typeof(bool)"     Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="DiffusionAtBoundaries"             Description="Calculate Diffusion at Boundaries"                                       Value="true"    Type="typeof(bool)"     Visible="true"  Category="Salinity" />
+  <ModelApiParameter Id="Iadvec1D"                          Description="Advection Type in 1D Flow"                                               Value="1"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="Limtyphu1D"                        Description="Limiter Type for Estimating Flow Area at Velocity Point in 1D Flow"      Value="1"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
+  <ModelApiParameter Id="Momdilution1D"                     Description="Advection Control Volume Based on Flow- or Total Area in 1D Links"       Value="1"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
+  <!--DispMaxFactor=0.45-->
+  <ModelApiParameter Id="DispMaxFactor"                     Description="Factor For Maximum Dispersion"                                           Value="0.45"    Type="typeof(double)"   Visible="true"  Category="SimulationOptions" />
+  <!--Initial Conditions-->
+  <ModelApiParameter Id="InitialEmptyWells"                 Description="Initialize wells with no water inside"                                   Value="false"   Type="typeof(bool)"     Visible="true"  Category="InitialConditions" />
+</ArrayOfModelApiParameter>

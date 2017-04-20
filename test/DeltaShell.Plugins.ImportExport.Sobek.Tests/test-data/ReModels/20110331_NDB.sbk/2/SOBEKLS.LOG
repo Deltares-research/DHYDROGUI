@@ -1,0 +1,6 @@
+010322        927          timesteps without convergence (See residu file)
+010430  Chezy value in floodplain 1 limited because of low water depth
+010430  Chezy value in floodplain 2 limited because of low water depth
+010331  Minumum number of iterations         8
+010341  Maximum number of iterations       100
+010351  Mean number of iterations        70

@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{01748E93-3E38-468B-B2BB-FEC4C1E9B7FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeltaShell.Plugins.Fews.Tests</RootNamespace>
+    <AssemblyName>DeltaShell.Plugins.Fews.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <DontImportPostSharp>True</DontImportPostSharp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Assemblers\BranchesComplexTypeAssemblerTest.cs" />
+    <Compile Include="Assemblers\NodeFeatureCollectionAssemblerTest.cs" />
+    <Compile Include="Assemblers\LineFeatueCollectionAssemblerTest.cs" />
+    <Compile Include="Assemblers\ProfilesComplexTypeAssemblerTest.cs" />
+    <Compile Include="Assemblers\RouteTestHelper.cs" />
+    <Compile Include="FewsAdapterHKTGTest.cs" />
+    <Compile Include="FewsAdapterMaasTest.cs" />
+    <Compile Include="FewsAdapterTestBase.cs" />
+    <Compile Include="ModelStateTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\DataItemTimeSeriesAggregatorTest.cs" />
+    <Compile Include="Queries\FeatureDataTimeSeriesAggregatorTest.cs" />
+    <Compile Include="Queries\NetworkCoverageTimeSeriesAggregatorTest.cs" />
+    <Compile Include="Queries\ExtendedQueryContextTest.cs" />
+    <Compile Include="Queries\FeatureCoverageTimeSeriesAggregatorTest.cs" />
+    <Compile Include="FewsAdapterTest.cs" />
+    <Compile Include="Forms\SelectTimeSeriesWizardPageTest.cs" />
+    <Compile Include="PiTimeSeriesLateralSourceImporterTest.cs" />
+    <Compile Include="PiTimeSeriesTargetItemImporterTest.cs" />
+    <Compile Include="PiProfilesExporterTest.cs" />
+    <Compile Include="PiTimeSeriesImporterTest.cs" />
+    <Compile Include="ShapeFileExporterTest.cs" />
+    <Compile Include="ShapeFileReaderAndWriterTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DelftTools.Controls.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37046, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.TestProject.1.2.0.37110\lib\net40\DelftTools.TestUtils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Core">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DeltaShell.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DeltaShell.Gui.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Data.NHibernate">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.NetCDF">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.ProjectExplorer">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Scripting">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FEWSPiForDotNet">
+      <HintPath>..\..\src\DeltaShell.Plugins.Fews\lib\DeltaShell.Plugins.Fews\FEWSPiForDotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Core">
+      <HintPath>..\..\lib\IKVM.OpenJDK.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Text">
+      <HintPath>..\..\lib\IKVM.OpenJDK.Text.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Util">
+      <HintPath>..\..\lib\IKVM.OpenJDK.Util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.API">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.API.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Bind">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.Bind.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Crypto">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.Crypto.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Parse">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.Parse.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Transform">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.Transform.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.WebServices">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.WebServices.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.XPath">
+      <HintPath>..\..\lib\IKVM.OpenJDK.XML.XPath.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IKVM.Runtime">
+      <HintPath>..\..\lib\IKVM.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="xmlunit">
+      <HintPath>lib\xmlunit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
+      <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DelftTools.ModelExchange\DelftTools.ModelExchange.csproj">
+      <Project>{D73F4744-2C86-44CE-82F3-45025A661E01}</Project>
+      <Name>DelftTools.ModelExchange</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
+      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
+      <Project>{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
+      <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
+      <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
+      <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Deltares.IO.FewsPI\Deltares.IO.FewsPI.csproj">
+      <Project>{2989E646-B5A0-4599-8AF5-113FD60C3749}</Project>
+      <Name>Deltares.IO.FewsPI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.Fews\DeltaShell.Plugins.Fews.csproj">
+      <Project>{DF36566F-25E2-4514-9715-163B50B87AAC}</Project>
+      <Name>DeltaShell.Plugins.Fews</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils\DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils.csproj">
+      <Project>{ca5f0591-734f-4b4b-9b64-38f811e5b068}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.2.0.37110\tools\mklink-test-data.cmd" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.1.2.0.37110\test-data\DelftTools.TestUtils
+
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.2.0.37110\tools\mklink-test-data.cmd" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
+</PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.2.0.37110\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.2.0.37110\build\net40\DeltaShell.TestProject.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
+    <Error Condition="!Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+  </Target>
+  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.TestProject.1.2.0.37110\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.2.0.37110\build\net40\DeltaShell.TestProject.targets')" />
+</Project>

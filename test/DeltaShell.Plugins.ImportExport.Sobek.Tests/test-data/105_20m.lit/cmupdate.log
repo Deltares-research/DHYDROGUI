@@ -1,0 +1,9 @@
+CMUPDATE: update of the application \SBK212_2\105_010.lit
+6 tasks need update:SUFHYD,CASEDEF1,PLUVIUS1,MAPPER1,VIEW1,VIEW2,
+
+Updating case: 3 - REF 105_010  SOBEK2.12.000.05 +SobekSIM3.8.60 +Parsen2.4.62
+
+Erased files: 
+    none
+New files in the application :
+..\3\NETWORK.OBI   created as empty file

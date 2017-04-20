@@ -1,0 +1,13 @@
+[test]
+dummy			 = value		#I'm just a dumy value
+
+[structure]
+type             = weir
+id               = w
+x                = 1
+y                = 2
+crest_level      = 3
+crest_width      = 4
+discharge_coeff  = 1
+lat_dis_coeff    = 1
+allowed_flow_dir = 0

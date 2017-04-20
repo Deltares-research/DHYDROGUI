@@ -1,0 +1,255 @@
+[General]
+    majorVersion          = 1                   
+    minorVersion          = 0                   
+    fileType              = structure           
+
+[Structure]
+    id                    = 1                   
+    name                  = Pump1               
+    branchId              = branch              
+    chainage              = 0.500               
+    compound              = 0                   
+    type                  = pump                
+    direction             = 2                   
+    nrstages              = 1                   
+    capacity              = 3.000               
+    startlevelsuctionside = 4.000               
+    stoplevelsuctionside  = 5.000               
+    startleveldeliveryside= 2.000               
+    stopleveldeliveryside = 3.000               
+    reductionfactorlevels = 3                   
+    head                  = 0.000 0.100 0.200   
+    reductionfactor       = 0.000 0.100 0.200   
+
+[Structure]
+    id                    = 2                   
+    name                  = Weir1               
+    branchId              = branch              
+    chainage              = 1.000               
+    compound              = 1                   
+    type                  = weir                
+    crestlevel            = 3.000               
+    crestwidth            = 5.000               
+    dischargecoeff        = 2.000               
+    latdiscoeff           = 2.000               
+    allowedflowdir        = 0                   
+
+[Structure]
+    id                    = 3                   
+    name                  = Weir2               
+    branchId              = branch              
+    chainage              = 1.500               
+    compound              = 2                   
+    type                  = universalWeir       
+    allowedflowdir        = 0                   
+    levelsCount           = 4                   
+    yValues               = 5.000 -2.000 -2.000 5.000
+    zValues               = 10.000 2.500 2.500 10.000
+    crestlevel            = 2.500               
+    dischargecoeff        = 0.500               
+    freesubmergedfactor   = 0.667               
+
+[Structure]
+    id                    = 4                   
+    name                  = Weir3               
+    branchId              = branch              
+    chainage              = 2.000               
+    compound              = 3                   
+    type                  = riverWeir           
+    crestlevel            = 2.000               
+    crestwidth            = 5.000               
+    poscwcoef             = 1.400               
+    posslimlimit          = 0.050               
+    negcwcoef             = 1.400               
+    negslimlimit          = 0.050               
+    possfcount            = 5                   
+    possf                 = 0.000 0.250 0.500 0.750 1.000
+    posred                = 0.000 0.250 0.500 0.750 1.000
+    negsfcount            = 5                   
+    negsf                 = 0.000 0.250 0.500 0.750 1.000
+    negred                = 0.000 0.250 0.500 0.750 1.000
+
+[Structure]
+    id                    = 5                   
+    name                  = Weir4               
+    branchId              = branch              
+    chainage              = 2.500               
+    compound              = 4                   
+    type                  = advancedWeir        
+    crestlevel            = 3.000               
+    crestwidth            = 6.000               
+    npiers                = 1                   
+    posheight             = 9.000               
+    posdesignhead         = 2.500               
+    pospiercontractcoef   = 0.050               
+    posabutcontractcoef   = 0.200               
+    negheight             = 9.000               
+    negdesignhead         = 2.500               
+    negpiercontractcoef   = 0.050               
+    negabutcontractcoef   = 0.200               
+
+[Structure]
+    id                    = 6                   
+    name                  = Weir5               
+    branchId              = branch              
+    chainage              = 3.000               
+    compound              = 5                   
+    type                  = orifice             
+    allowedflowdir        = 0                   
+    crestlevel            = 3.000               
+    crestwidth            = 5.000               
+    openlevel             = 5.500               
+    contractioncoeff      = 0.500               
+    latcontrcoeff         = 1.000               
+    uselimitflowpos       = 0                   
+    limitflowpos          = 0.000               
+    uselimitflowneg       = 1                   
+    limitflowneg          = 0.150               
+
+[Structure]
+    id                    = 7                   
+    name                  = Weir6               
+    branchId              = branch              
+    chainage              = 3.500               
+    compound              = 6                   
+    type                  = generalStructure    
+    widthleftW1           = 1.000               
+    widthleftWsdl         = 0.500               
+    widthcenter           = 1.000               
+    widthrightWsdr        = 0.500               
+    widthrightW2          = 1.000               
+    levelleftZb1          = 1.100               
+    levelleftZbsl         = 0.600               
+    levelcenter           = 1.100               
+    levelrightZbsr        = 0.600               
+    levelrightZb2         = 1.100               
+    gateheight            = 2.600               
+    posfreegateflowcoeff  = 1.200               
+    posdrowngateflowcoeff = 0.700               
+    posfreeweirflowcoeff  = 1.200               
+    posdrownweirflowcoeff = 0.700               
+    poscontrcoeffreegate  = 1.200               
+    negfreegateflowcoeff  = 1.300               
+    negdrowngateflowcoeff = 0.800               
+    negfreeweirflowcoeff  = 1.300               
+    negdrownweirflowcoeff = 0.800               
+    negcontrcoeffreegate  = 1.300               
+    extraresistance       = 0.000               
+
+[Structure]
+    id                    = 8                   
+    name                  = Culvert1            
+    branchId              = branch              
+    chainage              = 0.400               
+    compound              = 7                   
+    type                  = culvert             
+    allowedflowdir        = 0                   
+    leftLevel             = 0.500               
+    rightLevel            = 1.500               
+    csDefId               = 8                   
+    length                = 10.000              
+    inletlosscoeff        = 0.200               
+    outletlosscoeff       = 0.300               
+    valveOnOff            = 0                   
+    iniValveOpen          = 0.000               
+    lossCoeffCount        = 11                  
+    relativeOpening       = 0.000 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900 1.000
+    lossCoefficient       = 1.000 1.100 1.200 1.300 1.400 1.500 1.600 1.700 1.800 1.900 2.000
+    bedFrictionType       = 1                   
+    bedFriction           = 0.250               
+    groundFrictionType    = 1                   
+    groundFriction        = 0.000               
+
+[Structure]
+    id                    = 9                   
+    name                  = Culvert2            
+    branchId              = branch              
+    chainage              = 4.500               
+    compound              = 8                   
+    type                  = invertedSiphon      
+    allowedflowdir        = 0                   
+    leftLevel             = 0.400               
+    rightLevel            = 1.300               
+    csDefId               = 9                   
+    length                = 8.000               
+    inletlosscoeff        = 0.150               
+    outletlosscoeff       = 0.250               
+    valveOnOff            = 0                   
+    iniValveOpen          = 0.000               
+    lossCoeffCount        = 11                  
+    relativeOpening       = 0.000 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900 1.000
+    lossCoefficient       = 1.000 1.100 1.200 1.300 1.400 1.500 1.600 1.700 1.800 1.900 2.000
+    bendLossCoeff         = 0.600               
+    bedFrictionType       = 1                   
+    bedFriction           = 0.350               
+    groundFrictionType    = 1                   
+    groundFriction        = 0.350               
+
+[Structure]
+    id                    = 10                  
+    name                  = Culvert3            
+    branchId              = branch              
+    chainage              = 5.000               
+    compound              = 9                   
+    type                  = siphon              
+    allowedflowdir        = 1                   
+    leftLevel             = 0.500               
+    rightLevel            = 1.100               
+    csDefId               = 10                  
+    length                = 14.000              
+    inletlosscoeff        = 0.350               
+    outletlosscoeff       = 0.650               
+    valveOnOff            = 0                   
+    iniValveOpen          = 0.000               
+    lossCoeffCount        = 11                  
+    relativeOpening       = 0.000 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900 1.000
+    lossCoefficient       = 1.000 1.100 1.200 1.300 1.400 1.500 1.600 1.700 1.800 1.900 2.000
+    bendLossCoeff         = 0.500               
+    turnOnLevel           = 0.200               
+    turnOffLevel          = 0.800               
+    bedFrictionType       = 1                   
+    bedFriction           = 0.650               
+    groundFrictionType    = 1                   
+    groundFriction        = 0.650               
+
+[Structure]
+    id                    = 11                  
+    name                  = Bridge1             
+    branchId              = branch              
+    chainage              = 5.500               
+    compound              = 10                  
+    type                  = bridge              
+    allowedflowdir        = 0                   
+    bedlevel              = 0.300               
+    csDefId               = 11                  
+    length                = 1.500               
+    inletlosscoeff        = 0.400               
+    outletlosscoeff       = 0.800               
+    bedFrictionType       = 1                   
+    bedFriction           = 0.650               
+    groundFrictionType    = 1                   
+    groundFriction        = 0.350               
+
+[Structure]
+    id                    = 12                  
+    name                  = BridgePillar1       
+    branchId              = branch              
+    chainage              = 6.000               
+    compound              = 11                  
+    type                  = bridgePillar        
+    allowedflowdir        = 0                   
+    bedlevel              = 0.300               
+    pillarwidth           = 0.750               
+    formfactor            = 0.500               
+
+[Structure]
+    id                    = 13                  
+    name                  = ExtraResistance1    
+    branchId              = branch              
+    chainage              = 6.000               
+    compound              = 12                  
+    type                  = extraResistance     
+    numValues             = 9                   
+    levels                = 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900
+    ksi                   = 0.13 0.23 0.33 0.43 0.53 0.63 0.73 0.83 0.93
+

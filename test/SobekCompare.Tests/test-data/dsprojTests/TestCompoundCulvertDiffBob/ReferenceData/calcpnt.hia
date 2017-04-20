@@ -1,0 +1,16 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.6914, Jan 10 2017, 20:05:48
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=2
+NumberOfLocations=11
+T0=1996.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Location Descriptions]
+10=1
+11=2
+ 

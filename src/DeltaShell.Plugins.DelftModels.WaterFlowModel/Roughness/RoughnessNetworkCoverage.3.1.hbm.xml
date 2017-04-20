@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness" assembly="DeltaShell.Plugins.DelftModels.WaterFlowModel">
+  <subclass name="RoughnessNetworkCoverage" discriminator-value="RoughnessNetworkCoverage" extends="NetTopologySuite.Extensions.Coverages.NetworkCoverage" lazy="false" 
+            persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage31LegacyLoader, DeltaShell.Plugins.DelftModels.WaterFlowModel]], DeltaShell.Plugins.Data.NHibernate">
+
+  </subclass>
+
+</hibernate-mapping>

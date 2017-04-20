@@ -1,0 +1,402 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using DelftTools.Hydro;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.FunctionStores;
+using DeltaShell.Plugins.NetworkEditor.Import;
+using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
+using GeoAPI.Extensions.Feature;
+using Mono.Addins;
+using NetTopologySuite.IO;
+
+namespace DeltaShell.Plugins.NetworkEditor
+{
+    [Extension(typeof(IPlugin))]
+    public class NetworkEditorApplicationPlugin : ApplicationPlugin
+    {
+        static readonly WKTReader WktReader = new WKTReader();
+
+        public readonly IList<IFileExporter> exporters = new List<IFileExporter>
+            {
+                new CrossSectionYZToCsvFileExporter(),
+                new CrossSectionXYZToCsvFileExporter(),
+                new CrossSectionZWToCsvFileExporter()
+            };
+
+        public override string Name
+        {
+            get { return Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network; }
+        }
+
+        public override string DisplayName
+        {
+            get { return Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin; }
+        }
+
+        public override string Description
+        {
+            get { return Properties.Resources.NetworkEditorApplicationPlugin_Description; }
+        }
+
+        public override string Version
+        {
+            get { return GetType().Assembly.GetName().Version.ToString(); }
+        }
+
+        public override string FileFormatVersion
+        {
+            get { return "3.5.1.0"; }
+        }
+
+        public override Image Image
+        {
+            get { return new Bitmap(32, 32); }
+        }
+
+        public override IEnumerable<Assembly> GetPersistentAssemblies()
+        {
+            yield return typeof (HydroRegion).Assembly;
+            yield return typeof(ReadOnlyMapHisFileFunctionStore).Assembly;
+            yield return GetType().Assembly;
+        }
+
+        public override void Activate()
+        {
+            base.Activate();
+
+            Application.ProjectClosing += ApplicationOnProjectClosing;
+            Application.ProjectOpened += ApplicationOnProjectOpened;
+        }
+
+        public override IEnumerable<DataItemInfo> GetDataItemInfos()
+        {
+            yield return new DataItemInfo<HydroRegion>
+                {
+                    Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region,
+                    Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
+                    Image = Properties.Resources.HydroRegion,
+                    CreateData = owner => new HydroRegion
+                        {
+                            Name = string.Format("{0}1", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region),
+                            SubRegions =
+                                {
+                                    new HydroNetwork { Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network },
+                                    new DrainageBasin { Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin }
+                                },
+                        },
+                    AddExampleData = data => AddExampleHydroRegionData(data)
+                };
+
+            yield return new DataItemInfo<HydroNetwork>
+                {
+                    Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network,
+                    Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
+                    Image = Properties.Resources.Network,
+                    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
+                                                    || !((HydroRegion) owner).SubRegions.OfType<HydroNetwork>().Any(), // Support only a single network per region for now
+                    CreateData = owner =>
+                        {
+                            var network = new HydroNetwork();
+
+                            var hydroRegion = owner as HydroRegion;
+                            if (hydroRegion != null)
+                            {
+                                network.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network), hydroRegion.SubRegions);
+
+                                hydroRegion.SubRegions.Add(network);
+                            }
+
+                            var folder = owner as Folder;
+                            if (folder != null)
+                            {
+                                network.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network), folder.Items);
+                            }
+
+                            return network;
+                        },
+                    AddExampleData = data => AddExampleHydroNetworkData(data)
+                };
+
+            yield return new DataItemInfo<DrainageBasin>
+                {
+                    Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin,
+                    Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
+                    Image = Properties.Resources.DrainageBasin,
+                    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
+                                                    || !((HydroRegion) owner).SubRegions.OfType<DrainageBasin>().Any(), // Support only a single basin per region for now
+                    CreateData = owner =>
+                        {
+                            var drainageBasin = new DrainageBasin();
+
+                            var hydroRegion = owner as HydroRegion;
+                            if (hydroRegion != null)
+                            {
+                                drainageBasin.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin), hydroRegion.SubRegions);
+
+                                hydroRegion.SubRegions.Add(drainageBasin);
+                            }
+
+                            var folder = owner as Folder;
+                            if (folder != null)
+                            {
+                                drainageBasin.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin), folder.Items);
+                            }
+
+                            return drainageBasin;
+                        },
+                    AddExampleData = data => AddExampleDrainageBasinData(data)
+                };
+
+            //yield return new DataItemInfo<Area>
+            //{
+            //    Name = "Area",
+            //    Category = "Hydro",
+            //    Image = Properties.Resources.CrossSectionSmallWithExclamation,
+            //    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
+            //                                    || !((HydroRegion)owner).SubRegions.OfType<Area>().Any(), // Support only a single area per region for now
+            //    CreateData = owner =>
+            //    {
+            //        var area = new Area();
+
+            //        var hydroRegion = owner as HydroRegion;
+            //        if (hydroRegion != null)
+            //        {
+            //            area.Name = NamingHelper.GetUniqueName("area{0}", hydroRegion.SubRegions);
+
+            //            hydroRegion.SubRegions.Add(area);
+            //        }
+
+            //        var folder = owner as Folder;
+            //        if (folder != null)
+            //        {
+            //            area.Name = NamingHelper.GetUniqueName("area{0}", folder.Items);
+            //        }
+
+            //        return area;
+            //    }
+            //};
+        }
+
+        public override IEnumerable<IFileImporter> GetFileImporters()
+        {
+            yield return new BridgeFromGisImporter();
+            yield return new CatchmentFromGisImporter();
+            yield return new ChannelFromGisImporter();
+            yield return new CrossSectionXYZFromGisImporter();
+            yield return new CrossSectionYZFromGisImporter();
+            yield return new CrossSectionZWFromGisImporter();
+            yield return new CulvertFromGisImporter();
+            yield return new HydroRegionFromGisImporter();
+            yield return new LateralSourceFromGisImporter();
+            yield return new ObservationPointFromGisImporter();
+            yield return new PumpFromGisImporter();
+            yield return new SimpleWeirFromGisImporter();
+            yield return new CrossSectionYZFromCsvFileImporter();
+            yield return new CrossSectionXYZFromCsvFileImporter();
+            yield return new CrossSectionZWFromCsvFileImporter();
+            yield return new NetworkCoverageFromGisImporter();
+            yield return new HydroAreaEmbankmentImporter();
+            yield return new HydroAreaEmbankmentHeightImporter();
+        }
+
+        public override IEnumerable<IFileExporter> GetFileExporters()
+        {
+            return exporters;
+        }
+
+        private void ApplicationOnProjectClosing(Project project)
+        {
+            ((INotifyCollectionChanged) Application.Project).CollectionChanged -= OnProjectCollectionChanged;
+        }
+
+        private void ApplicationOnProjectOpened(Project project)
+        {
+            ((INotifyCollectionChanged) Application.Project).CollectionChanged += OnProjectCollectionChanged;
+            FixOwnersOnChildDataItems(project.RootFolder);
+        }
+
+        private void FixOwnersOnChildDataItems(Folder folder)
+        {
+            foreach (var item in folder.Items)
+            {
+                var subfolder = item as Folder;
+                if (subfolder != null)
+                    FixOwnersOnChildDataItems(subfolder);
+
+                var dataItem = item as IDataItem;
+                if (dataItem != null)
+                    SetOwnerForDataItem(dataItem, folder);
+            }
+        }
+
+        private void SetOwnerForDataItem(IDataItem dataItem, IDataItemOwner dataItemOwner)
+        {
+            dataItem.Owner = dataItemOwner;
+            foreach(var child in dataItem.Children)
+                SetOwnerForDataItem(child, dataItemOwner);
+        }
+
+        private void OnProjectCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            HandleSubRegionCollectionChanged(sender, e);
+
+            HandleRegionDataItemCollectionChanged(sender, e);
+        }
+
+        /// <summary>
+        /// Add / remove data item in the project - handle sub-regions and/or data items
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EditAction]
+        private void HandleRegionDataItemCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            var regionDataItem = e.Item as IDataItem;
+
+            if (regionDataItem == null || !(regionDataItem.Value is IHydroRegion))
+            {
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangeAction.Add)
+            {
+                if(!(sender is IEventedList<IProjectItem>))
+                {
+                    return;
+                }
+
+                AddChildRegionDataItems(regionDataItem);
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangeAction.Remove)
+            {
+                // handle child data item removed
+                var region = (IHydroRegion)regionDataItem.Value;
+                if (region.Parent != null && regionDataItem.Parent != null && Equals(regionDataItem.Parent.Children, sender))
+                {
+                    region.Parent.SubRegions.Remove(region);
+                }
+
+                return;
+            }
+
+            throw new NotSupportedException(string.Format(Properties.Resources.NetworkEditorApplicationPlugin_HandleRegionDataItemCollectionChanged__0__is_not_supported_for_hydro_regions_in_the_project, e.Action));
+        }
+        
+        /// <summary>
+        /// Add / remove child data item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EditAction]
+        private void HandleSubRegionCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            var subRegions = sender as IEventedList<IRegion>;
+            var subRegion = e.Item as IRegion;
+
+            if (subRegions == null || subRegion == null || subRegion.Parent == null)
+            {
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangeAction.Add)
+            {
+                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                AddChildRegionDataItems(parentRegionDataItem);
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangeAction.Remove)
+            {
+                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
+                if (regionDataItem != null)
+                {
+                    parentRegionDataItem.Children.Remove(regionDataItem);
+                }
+                return;
+            }
+
+            throw new NotSupportedException(string.Format(Properties.Resources.NetworkEditorApplicationPlugin_HandleSubRegionCollectionChanged__0__is_not_supported_on_the_hydro_region_collection, e.Action));
+        }
+
+        private static void AddChildRegionDataItems(IDataItem regionDataItem)
+        {
+            var region = regionDataItem.Value as IRegion;
+
+            if(region == null)
+            {
+                return;
+            }
+
+            foreach (var subRegion in region.SubRegions)
+            {
+                var existingDataItem = regionDataItem.Children.FirstOrDefault(childDataItem => childDataItem.Value == subRegion);
+                if (existingDataItem == null)
+                {
+                    existingDataItem = CreateDataItemForSubRegion(subRegion, regionDataItem);
+                    regionDataItem.Children.Add(existingDataItem);
+                }
+                AddChildRegionDataItems(existingDataItem);
+            }
+        }
+
+        private static IDataItem CreateDataItemForSubRegion(IRegion subRegion, IDataItem parent)
+        {
+            return new DataItem
+            {
+                Name = subRegion.Name,
+                Role = parent.Role,
+                Parent = parent,
+                ValueType = typeof(IRegion),
+                ValueConverter = new AggregationValueConverter(subRegion),
+                Owner = parent.Owner
+            };
+        }
+
+        private static void AddExampleHydroRegionData(HydroRegion hydroRegion)
+        {
+            var hydroNetwork = hydroRegion.SubRegions.OfType<HydroNetwork>().First();
+            var drainageBasin = hydroRegion.SubRegions.OfType<DrainageBasin>().First();
+
+            AddExampleHydroNetworkData(hydroNetwork);
+            AddExampleDrainageBasinData(drainageBasin);
+
+            var link = drainageBasin.WasteWaterTreatmentPlants[0].LinkTo(hydroNetwork.LateralSources.First());
+            link.Geometry = WktReader.Read("LINESTRING(5 5, 5 0)");
+        }
+
+        private static void AddExampleHydroNetworkData(HydroNetwork network)
+        {
+            var node1 = new HydroNode { Name = "Node1", Geometry = WktReader.Read("POINT(0 0)") };
+            var node2 = new HydroNode { Name = "Node2", Geometry = WktReader.Read("POINT(10 0)") };
+            var lateral = new LateralSource { Chainage = 5, Geometry = WktReader.Read("POINT(5 0)") };
+            var channel1 = new Channel { Name = "Channel1", BranchFeatures = { lateral }, Source = node1, Target = node2, Geometry = WktReader.Read("LINESTRING(0 0, 10 0)") };
+
+            network.Branches.Add(channel1);
+            network.Nodes.AddRange(new[] { node1, node2 });
+        }
+
+        private static void AddExampleDrainageBasinData(DrainageBasin drainageBasin)
+        {
+            var catchment = new Catchment { Name = "Catchment1", CatchmentType = CatchmentType.Unpaved, Geometry = WktReader.Read("POLYGON((0 6, 0 12, 10 12, 10 6, 0 6))") };
+            var plant = new WasteWaterTreatmentPlant { Name = "Plant1", Geometry = WktReader.Read("POINT(5 5)") };
+
+            drainageBasin.Catchments.Add(catchment);
+            drainageBasin.WasteWaterTreatmentPlants.Add(plant);
+
+            var link = catchment.LinkTo(plant);
+            link.Geometry = WktReader.Read("LINESTRING(5 9, 5 5)");
+        }
+    }
+}

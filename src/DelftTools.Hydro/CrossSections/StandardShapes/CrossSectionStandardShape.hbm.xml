@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DelftTools.Hydro.CrossSections.StandardShapes"
+                   assembly="DelftTools.Hydro">
+  <class name="ICrossSectionStandardShape" batch-size="500" >
+    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
+      <generator class="increment" />
+    </id>
+    <discriminator column="type" type="string"/>
+    <subclass name="CrossSectionStandardShapeArch" discriminator-value="arch">
+      <property name="Width" />
+      <property name="Height" />
+      <property name="ArcHeight" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeCunette" discriminator-value="cunette">
+      <property name="Width" />
+      <property name="Height" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeEgg" discriminator-value="egg">
+      <property name="Width" />
+      <property name="Height" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeElliptical" discriminator-value="elliptical">
+      <property name="Width" />
+      <property name="Height" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeRectangle" discriminator-value="rectangle">
+      <property name="Width" />
+      <property name="Height" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeRound" discriminator-value="round">
+      <property name="Diameter" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeSteelCunette" discriminator-value="steelcunette">
+      <property name="Height" />
+      <property name="RadiusR" />
+      <property name="RadiusR1" />
+      <property name="RadiusR2" />
+      <property name="RadiusR3" />
+      <property name="AngleA" />
+      <property name="AngleA1" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeTrapezium" discriminator-value="trapezium">
+      <property name="Slope" />
+      <property name="BottomWidthB" />
+      <property name="MaximumFlowWidth" />
+    </subclass>
+  </class>
+</hibernate-mapping>

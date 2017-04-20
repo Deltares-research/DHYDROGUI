@@ -1,0 +1,38 @@
+﻿using System.ComponentModel;
+using DelftTools.Utils;
+using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGrid
+{
+    [DisplayName("Observation point")]
+    public class WaterQualityObservationPointProperties : NameblePointFeatureProperties
+    {
+        private WaterQualityObservationPoint ObservationPoint
+        {
+            get { return (WaterQualityObservationPoint) data; }
+        }
+
+        [Category("General")]
+        [DisplayName("Observation point type")]
+        [PropertyOrder(2)]
+        public ObservationPointType ObservationPointType
+        {
+            get { return ObservationPoint.ObservationPointType ; }
+            set { ObservationPoint.ObservationPointType = value; }
+        }
+
+        [DynamicVisibleValidationMethod]
+        public override bool IsPropertyVisible(string propertyName)
+        {
+            if (propertyName == TypeUtils.GetMemberName(()=> Z))
+            {
+                return ObservationPointType == ObservationPointType.SinglePoint;
+            }
+
+            return true;
+        }
+    }
+}

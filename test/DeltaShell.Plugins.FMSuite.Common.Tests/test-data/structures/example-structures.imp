@@ -1,0 +1,49 @@
+[structure]
+type             = weir
+id               = Weir_down
+x                = 680
+y                = 360
+crest_level      = 2
+lat_contr_coeff  = 1
+
+[structure]
+type             = pump
+id               = pump01
+x                = 500
+y                = 360
+capacity         = 3
+
+[structure]
+type             = weir
+id               = Weir_up
+x                = 290
+y                = 360
+crest_level      = 2.8
+crest_width      = 26.8
+lat_contr_coeff  = 1
+
+[structure]
+type             = pump
+id               = pump01
+x                = 200
+y                = 360
+capacity         = 5
+
+[structure]
+type             = pump
+id               = pump03
+x                = 600
+y                = 360
+capacity         = 6
+
+[structure]
+type             = gate  
+id               = Orifice01
+x                = 500
+y                = 360
+sill_level       = 2
+sill_width       = 33
+opening_width    = 1
+lower_edge_level = 2.8
+door_height      = 5
+horizontal_opening_direction= symmetric

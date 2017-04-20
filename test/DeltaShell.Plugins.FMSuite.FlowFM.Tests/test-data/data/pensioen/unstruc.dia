@@ -1,0 +1,199 @@
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+Opened file : ISOCOLOUR.hls
+Using Local FileISOCOLOUR.hls
+Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.56.25020M, Dec 19 2012, 13:49:22
+* File creation date: 13:32:01, 21-12-2012                                      
+ MAXIMUM NUMBER OF LINKS         :            2
+ MAXIMUM NUMBER OF NODES         :            0
+ RESOLUTION GRAPHICS SCREEN      :         1200         900
+ RESOLUTION TEXT     SCREEN      :          150          60
+ NUMBER OF COLOURS AVAILABLE     :          256
+             0        100002 NOD(KMAX)
+             6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+             6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX)
+             6         50000 xlan(maxlan)
+             7         50000 ylan(maxlan)
+             7         50000 zlan(maxlan)
+             7         25000 nclan(maxlan)
+Opened Model definition file : N:\Deltabox\Postbox\Donchyts, Gennadii\pensioen\pensioen.mdu
+Opened 'chall10kort_net.nc' as #  3.
+Closed NetCDF file 'chall10kort_net.nc.
+Opened file : chainage5.xyn
+Closed file : chainage5.xyn
+Opened file : 17_crs.pli
+Closed file : 17_crs.pli
+             8         12153 netcell(numpx1)
+             8         16000 lnn(numl)
+             8         32000 lne(2,numl)
+             8          7897 xz(numc)
+             8          7897 yz(numc)
+             8          7897 xzw(numc)
+             8          7897 yzw(numc)
+             8          7897 ba(numc)
+Opened file : pensioen.ext
+             8         16000 xe (nx)
+             8         16000 ye (nx)
+             9         16000 xyen(2, nx)
+            10        144000 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpeu(nx)
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : channelwestlev.pli
+Closed file : channelwestlev.pli
+waterlevelbnd channelwestlev.pli      25 nr of open bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : channeleastdis.pli
+Closed file : channeleastdis.pli
+dischargebndchanneleastdis.pli      22nr of open bndcells
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+Opened file : tribsouth.pli
+Closed file : tribsouth.pli
+dischargebndtribsouth.pli      25nr of open bndcells
+looking for keyword: QUANTITY
+keyword QUANTITY NOT found!
+            10         63752 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+            11         30794 ln   (2,lnx)
+            11         30794 lncn (2,lnx)
+            12         30794 bob  (2,lnx)
+            12         15397 dx   (  lnx)
+            12         15397 dxi  (  lnx)
+            12         15397 wu   (  lnx)
+            12         15397 wui  (  lnx)
+            12         15397 kcu  (  lnx)
+            12         15397 csu  (  lnx)
+            13         15397 snu  (  lnx)
+            13         15397 acl  (  lnx)
+            13         15397 acn  (2,lnx)
+            13         15397 iadv   (lnx)
+            13         15397 ibot   (lnx)
+            13         46191 xu(lnx), yu(lnx) , blu(lnx)
+            14         16000 ln2lne (nex)
+            14         16000 lne2ln (nex)
+            14          8102  cn (numk)
+            14          8102 ucnx(numk)
+            14          8102 ucny(numk)
+            14          8102 ban (numk)
+cutcell_list; nr of *.cut files found =              0             4
+            15         61588 wcxyl(4,lnx)
+            15         15938 wcxy (2,ndx)
+            15         61588 wcnxyl(4,lnx)
+            16         24306 wcnxy (3,numk)
+            16          9648 walls(16,nw)
+cutcell_list; nr of *.cut files found =              0             5
+            16         31325 banf(mxban)
+            16         31325 nban(2,mxban)
+            17         31325 rr(mxban), nr(mxban)
+            17         31325 banh (mxban)
+            17         31325 nbanh(2,mxban)
+            17         15938 s0  (ndx) , s1  (ndx)
+            17         15938 a0  (ndx) , a1  (ndx)
+            18         15938 hs  (ndx) , s00 (ndx)
+            18          7969 cfs (ndx)
+            18         15938 ucx (ndkx) , ucy (ndkx)
+            18         15938 uqcx(ndkx) , uqcy(ndkx)
+            18         15938 ucxq(ndkx) , ucyq(ndkx)
+            18         15938 qin (ndkx) , vih (ndkx)
+            18         15938 dvxc(ndkx) , dvyc(ndkx)
+            18          7969 cfli(ndkx)
+            18          7969 squ (ndkx)
+            18          7969 sqi (ndkx)
+            18          7969 sq  (ndkx)
+            19          7969 vol0(ndkx)
+            19          7969 vol1(ndkx)
+            19          7969 volerror(ndkx)
+            19          7969 tidep (ndx)
+            19         15397 cfu  (lnx)
+            19          7969 frcu (lnx)
+            19          7969 ifrcutp(lnx)
+            19         15397 wsu  (lnx)
+            19         15397 u0   (lnkx)
+            19         15397 u1   (lnkx)
+            19         15397 q1   (lnkx)
+            20         15397 qa   (lnkx)
+            20         15397 v    (lnkx)
+            20         15397 ucxu (lnkx)
+            20         15397 ucyu (lnkx)
+            20         15397 hu   (lnkx)
+            20         15397 huvli(lnkx)
+            20         15397 au   (lnkx)
+            20         15397 viu  (lnkx)
+            21         15397 cflj (lnkx)
+            21         15397 tetaj(lnkx)
+            21         15397 suu  (lnkx)
+            21         15397 advi (lnkx)
+            21         15397 adve (lnkx)
+            21         15397 rhou (lnkx)
+            21         15397 plotlin(max(lnkx,ndkx))
+            21          7969 bb   (ndx )
+            21          7969 dd   (ndx )
+            22          7969 fu   (lnkx)
+            22          7969 ru   (lnkx)
+            22         15397 teta (lnx)
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'waterlevelbnd' from file 'channelwestlev.pli'.
+Opened file : channelwestlev.pli
+Closed file : channelwestlev.pli
+Opened file : channelwestlev_0001.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'dischargebnd' from file 'channeleastdis.pli'.
+Opened file : channeleastdis.pli
+Closed file : channeleastdis.pli
+Opened file : channeleastdis_0001.tim
+looking for keyword: QUANTITY
+looking for keyword: FILENAME
+looking for keyword: FILETYPE
+looking for keyword: METHOD
+looking for keyword: OPERAND
+External Forcing or Initialising 'dischargebnd' from file 'tribsouth.pli'.
+Opened file : tribsouth.pli
+Closed file : tribsouth.pli
+Opened file : tribsouth_0001.tim
+looking for keyword: QUANTITY
+keyword QUANTITY NOT found!
+External Forcing or Initialising 'velocitybnd' from file 'tribsouth.pli'.
+Closed file : pensioen.ext
+            22          7969 ij(nodtot)
+            22          7969 nodbr2(nodtot)
+            22          7969 nbrstk(nodtot)
+            22          7969 nodstk(nodtot)
+            22          7969 noel(nodtot)
+            22          7969 noel0(nodtot)
+            22          7969 ia(nodtot)
+            22          7969 row(nodtot)
+            22         15397 lv2(lintot)
+            22          7969 jagauss(nodtot)
+            24         31620 ccr(0:ijstck)
+            24         31620 bbl(0:ijstck)
+            24         15938 bbr(nodtot), ddr(nodtot)
+            24         39845 d0(nodtot), zkr(nodtot),pk(0:nodtot), apk(nodtot), rk(nodtot)
+nogauss , nocg :           4102          3867
+            24         15397 klnup(6,lnx)
+            25         15397 slnup(6,lnx)
+Modelinit finished   at: 13:32:02, 21-12-2012
+Opened display settings file : pensioen.cfg
+Opened file : redwhiteblue.hls
+Using Local Fileredwhiteblue.hls
+Closed file : redwhiteblue.hls
+Opened NetCDF file 'pensioen_his.nc' as #  3.
+Opened NetCDF file 'pensioen_map.nc' as #  4.

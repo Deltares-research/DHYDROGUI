@@ -1,0 +1,468 @@
+[Map]
+Version=Mapper 3.02 Beta
+Window=-60,-345,15480,10635
+ZoomExtent=-105941,295385.4,397340.9,630414.8
+ViewExtent=-105941,295385.4,397340.9,630414.8
+BorderStyle= 0
+Transparent= 0
+Text=The Netherlands
+ForeColor=0
+BackColor=FFFF80
+FontName=MS Serif
+FontSize=6
+FontBold= 0
+FontItalic= 0
+FontUnderLine= 0
+FontStrikethru= 0
+UnitMeter=0
+
+[Legend]
+Visible= 0
+BorderStyle=-1
+Transparent=-1
+Position=-105941,630414.8
+Text=
+ForeColor=0
+BackColor=FFFFFF
+FontName=MS Serif
+FontSize=6.75
+FontBold= 0
+FontItalic= 0
+FontUnderLine= 0
+FontStrikethru= 0
+
+[Title]
+Visible= 0
+BorderStyle= 0
+Transparent= 0
+Position=-105941,630414.8
+Text=Titel
+ForeColor=0
+BackColor=FFFFFF
+FontName=Arial
+FontSize=12
+FontBold= 0
+FontItalic= 0
+FontUnderLine= 0
+FontStrikethru= 0
+
+[Info]
+Visible= 0
+BorderStyle= 0
+Transparent= 0
+Position=-102992.1,590623.9
+Text=
+ForeColor=0
+BackColor=FFFFFF
+FontName=Arial
+FontSize=6
+FontBold= 0
+FontItalic= 0
+FontUnderLine= 0
+FontStrikethru= 0
+
+[Layer1]
+Path=\Sobek\Map\Netherlands\RD_PROV.MPL
+Name=Provincies
+LineStyle= 0
+LineColor=408000
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=F0FBFF
+MinZoom=0
+MaxZoom=0
+Visible=-1
+Selectable= 0
+
+[Layer2]
+Path=\Sobek\Map\Netherlands\GRID23.MPL
+Name=SC-DLO type 23
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=0
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer3]
+Path=\Sobek\Map\Netherlands\GRID22.MPL
+Name=SC-DLO type 22
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FFFFFF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer4]
+Path=\Sobek\Map\Netherlands\GRID21.MPL
+Name=SC-DLO type 21
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=808040
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer5]
+Path=\Sobek\Map\Netherlands\GRID20.MPL
+Name=SC-DLO type 20
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=7F7F7F
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer6]
+Path=\Sobek\Map\Netherlands\GRID19.MPL
+Name=SC-DLO type 19
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FF80
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer7]
+Path=\Sobek\Map\Netherlands\GRID18.MPL
+Name=SC-DLO type 18
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FFFF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer8]
+Path=\Sobek\Map\Netherlands\GRID17.MPL
+Name=SC-DLO type 17
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 7
+FillColor=FF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer9]
+Path=\Sobek\Map\Netherlands\GRID16.MPL
+Name=SC-DLO type 16
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=4EBE41
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer10]
+Path=\Sobek\Map\Netherlands\GRID15.MPL
+Name=SC-DLO type 15
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=8000
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer11]
+Path=\Sobek\Map\Netherlands\GRID14.MPL
+Name=SC-DLO type 14
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=80FFFF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer12]
+Path=\Sobek\Map\Netherlands\GRID13.MPL
+Name=SC-DLO type 13
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=598DA4
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer13]
+Path=\Sobek\Map\Netherlands\GRID12.MPL
+Name=SC-DLO type 12
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=8DB6D1
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer14]
+Path=\Sobek\Map\Netherlands\GRID11.MPL
+Name=SC-DLO type 11
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=CCFFFE
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer15]
+Path=\Sobek\Map\Netherlands\GRID10.MPL
+Name=SC-DLO type 10
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=56BCFA
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer16]
+Path=\Sobek\Map\Netherlands\GRID9.MPL
+Name=SC-DLO type 9
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=80FF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer17]
+Path=\Sobek\Map\Netherlands\GRID8.MPL
+Name=SC-DLO type 8
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=8000FF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer18]
+Path=\Sobek\Map\Netherlands\GRID7.MPL
+Name=SC-DLO type 7
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 6
+FillColor=FF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer19]
+Path=\Sobek\Map\Netherlands\GRID6.MPL
+Name=SC-DLO type 6
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=655D7
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer20]
+Path=\Sobek\Map\Netherlands\GRID5.MPL
+Name=SC-DLO type 5
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=2C00C4
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer21]
+Path=\Sobek\Map\Netherlands\GRID4.MPL
+Name=SC-DLO type 4
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FF8000
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer22]
+Path=\Sobek\Map\Netherlands\GRID3.MPL
+Name=SC-DLO type 3
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FFFF00
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer23]
+Path=\Sobek\Map\Netherlands\GRID2.MPL
+Name=SC-DLO type 2
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FF80FF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer24]
+Path=\Sobek\Map\Netherlands\GRID1.MPL
+Name=SC-DLO type 1
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=4D4DFF
+MinZoom=0
+MaxZoom=0
+Visible= 0
+Selectable=-1
+
+[Layer25]
+Path=\Sobek\Map\Netherlands\RD_STAD.MPL
+Name=Bebouwd gebied
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=8080FF
+MinZoom=0
+MaxZoom=0
+Visible=-1
+Selectable=-1
+
+[Layer26]
+Path=\Sobek\Map\Netherlands\RD_WEGEN.MPL
+Name=Wegen
+LineStyle= 0
+LineColor=FF
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FF
+MinZoom=0
+MaxZoom=0
+Visible=-1
+Selectable=-1
+
+[Layer27]
+Path=\Sobek\Map\Netherlands\RD_WATER.MPL
+Name=Waterlopen
+LineStyle= 0
+LineColor=0
+LineWidth=0
+PointStyle= 0
+PointSize=0
+FillStyle= 0
+FillColor=FFFF00
+MinZoom=0
+MaxZoom=0
+Visible=-1
+Selectable=-1
+

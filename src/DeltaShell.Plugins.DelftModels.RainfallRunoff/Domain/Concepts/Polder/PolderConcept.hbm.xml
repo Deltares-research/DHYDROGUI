@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder"
+                   assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
+  <joined-subclass
+    extends="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.CatchmentModelData"
+    name="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder.PolderConcept, DeltaShell.Plugins.DelftModels.RainfallRunoff"
+    lazy="false" table="rr_polderconcept">
+    <key column="Id"/>
+  </joined-subclass>
+</hibernate-mapping>

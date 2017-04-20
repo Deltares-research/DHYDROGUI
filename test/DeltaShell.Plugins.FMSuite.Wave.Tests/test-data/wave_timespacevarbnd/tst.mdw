@@ -1,0 +1,123 @@
+[WaveFileInformation]
+   FileVersion          = 02.00                        
+[General]
+   OnlyInputVerify      = false                        
+   SimMode              = stationary                   
+   DirConvention        = nautical                     
+   ReferenceDate        = 2006-01-05                   
+   ObstacleFile         = tst.obt                      
+   WindSpeed            =  1.0000000e+001              
+   WindDir              =  1.8000000e+002              
+   TSeriesFile          = timeseries.bcw               
+[TimePoint]
+   Time                 =  0.0000000e+000              
+   WaterLevel           =  0.0000000e+000              
+   XVeloc               =  0.0000000e+000              
+   YVeloc               =  0.0000000e+000              
+[TimePoint]
+   Time                 =  6.0000000e+001              
+   WaterLevel           =  0.0000000e+000              
+   XVeloc               =  0.0000000e+000              
+   YVeloc               =  0.0000000e+000              
+[TimePoint]
+   Time                 =  1.2000000e+002              
+   WaterLevel           =  0.0000000e+000              
+   XVeloc               =  0.0000000e+000              
+   YVeloc               =  0.0000000e+000              
+[Constants]
+   WaterLevelCorrection =  0.0000000e+000              
+   Gravity              =  9.8100004e+000              
+   WaterDensity         =  1.0000000e+003              
+   NorthDir             =  9.0000000e+001              
+   MinimumDepth         =  5.0000001e-002              
+[Processes]
+   GenModePhys          = 3                            
+   Breaking             = true                         
+   BreakAlpha           =  1.0000000e+000              
+   BreakGamma           =  8.0000001e-001              
+   Triads               = false                        
+   TriadsAlpha          =  1.0000000e-001              
+   TriadsBeta           =  2.2000000e+000              
+   WaveSetup            = false                        
+   BedFriction          = jonswap                      
+   BedFricCoef          =  6.7000002e-002              
+   Diffraction          = false                        
+   DiffracCoef          =  2.0000000e-001              
+   DiffracSteps         = 5                            
+   DiffracProp          = true                         
+   WindGrowth           = false                        
+   WhiteCapping         = Komen                        
+   Quadruplets          = false                        
+   Refraction           = true                         
+   FreqShift            = true                         
+   WaveForces           = dissipation                  
+[Numerics]
+   DirSpaceCDD          =  5.0000000e-001              
+   FreqSpaceCSS         =  5.0000000e-001              
+   RChHsTm01            =  2.0000000e-002              
+   RChMeanHs            =  2.0000000e-002              
+   RChMeanTm01          =  2.0000000e-002              
+   PercWet              =  9.8000000e+001              
+   MaxIter              = 15                           
+[Output]
+   TestOutputLevel      = 0                            
+   TraceCalls           = false                        
+   UseHotFile           = false                         
+   WriteCOM             = false                        
+   LocationFile         = tst.loc                      
+   WriteTable           = false                         
+   WriteSpec1D          = true                         
+   WriteSpec2D          = false                        
+   Int2KeepHotfile      = 7.2000000e+02                
+   AppendCOM            = false                        
+[Domain]
+   Grid                 = outer.grd                    
+   BedLevelGrid         = outer.grd                    
+   BedLevel             = outer.dep                    
+   DirSpace             = circle                       
+   NDir                 = 36                           
+   StartDir             =  0.0000000e+000              
+   EndDir               =  3.6000000e+002              
+   FreqMin              =  5.0000001e-002              
+   FreqMax              =  1.0000000e+000              
+   NFreq                = 24                           
+   Output               = false                         
+[Domain]
+   Grid                 = inner.grd                    
+   BedLevelGrid         = inner.grd                    
+   BedLevel             = inner.dep                    
+   DirSpace             = circle                       
+   NDir                 = 36                           
+   StartDir             =  0.0000000e+000              
+   EndDir               =  3.6000000e+002              
+   FreqMin              =  5.0000001e-002              
+   FreqMax              =  1.0000000e+000              
+   NFreq                = 24                           
+   NestedInDomain       = 1                            
+   Output               = false                         
+[Boundary]
+   Name                 = Boundary 1                   
+   Definition           = orientation                  
+   Orientation          = south                        
+   SpectrumSpec         = parametric                   
+   SpShapeType          = jonswap                      
+   PeriodType           = peak                         
+   DirSpreadType        = power                        
+   PeakEnhanceFac       =  3.3000000e+000              
+   GaussSpread          =  9.9999998e-003              
+   DistanceDir          = counter-clockwise            
+   CondSpecAtDist       =  1.0000000e+005            
+   CondSpecAtDist       =  2.0000000e+005             
+   CondSpecAtDist       =  2.3000000e+005
+[Boundary]
+   Name                 = Boundary 2                   
+   Definition           = orientation                  
+   Orientation          = west                         
+   SpectrumSpec         = parametric                   
+   SpShapeType          = jonswap                      
+   PeriodType           = peak                         
+   DirSpreadType        = power                        
+   PeakEnhanceFac       =  3.3000000e+000              
+   GaussSpread          =  9.9999998e-003              
+   DistanceDir          = counter-clockwise            
+   CondSpecAtDist       =  5.0000000e+004              

@@ -1,0 +1,13 @@
+PARAMETER
+"Cl"
+ 
+ACTIVATED
+-1
+ 
+SURFACE WATER TYPES
+"Brakke natuur",12500
+"Pluimpot",6000
+ 
+INDIVIDUAL OBJECTS
+
+ 

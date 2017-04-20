@@ -1,0 +1,18 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=1
+NumberOfLocations=27
+T0=2003.08.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=15
+ 
+[Long Parameters]
+ 
+[Long Locations]
+1=Hvl_OpenVerval_Trigger
+2=Hvl_SluitVerval_Trigger
+ 

@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SubstanceProcessLibraryWizardPageExtentsions_Empty_" xml:space="preserve">
+    <value>#&lt;empty&gt;</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_RevertInputFileToTemplate" xml:space="preserve">
+    <value>#Al uw werk in de input file zal worden hersteld. Wilt u doorgaan?</value>
+  </data>
+  <data name="WaterQualityModelWizardPage_Description" xml:space="preserve">
+    <value>#Algemene opties instellen</value>
+  </data>
+  <data name="SetLabelOperation_Label_DisplayName" xml:space="preserve">
+    <value>#Argument label</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_Arguments" xml:space="preserve">
+    <value>#Argumenten</value>
+  </data>
+  <data name="SubstanceProcessLibraryView_InitializeTableView_Initial_value" xml:space="preserve">
+    <value>#Beginwaarde</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizardPage_Dll_file_path_tooltip" xml:space="preserve">
+    <value>#Bestandspad van het dll-bestand voor een proces dat wordt gebruikt (met de extensie)</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizardPage_Process_definition_files_path_tooltip" xml:space="preserve">
+    <value>#Bestandspad van het proces-definitiebestanden die worden gebruikt (zonder extensie: de overeenkomstige [pad] .def en [pad] .dat bestanden zal automatisch worden opgehaald bij de berekening)</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_Edit" xml:space="preserve">
+    <value>#Bewerken</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_GetContextMenu_Generate_Fractions_Data" xml:space="preserve">
+    <value>#Breuken gegevens genereren</value>
+  </data>
+  <data name="WaterQualityModel1DExtentions_CheckOutput_The_selected_time_step_is_not_in_the_output" xml:space="preserve">
+    <value>#De geselecteerde tijd stap is niet in de uitvoer van model '{0}'</value>
+  </data>
+  <data name="WaterQualityModel1DWizard_Welcome_message" xml:space="preserve">
+    <value>#Deze wizard wordt gebruikt om een water kwaliteit model te maken</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizard_Welcome_message" xml:space="preserve">
+    <value>#Deze wizard zal een stoffen en werkwijzen configuratiebestand (sub) dat een selectie uit de stoffen en processen die beschikbaar zijn in de processen-bibliotheek bevat importeren.</value>
+  </data>
+  <data name="WaterQualityModel1DWizard_Finished_message" xml:space="preserve">
+    <value>#Druk op Voltooien om de water kwaliteit model te maken</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizard_Finished_message" xml:space="preserve">
+    <value>#Druk op Voltooien om uw stoffen en werkwijzen configuratiebestand te importeren.</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizard_Title" xml:space="preserve">
+    <value>#Een configuratiebestand stoffen en werkwijzen (sub-bestand) importeren</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_Unit" xml:space="preserve">
+    <value>#Eenheid</value>
+  </data>
+  <data name="SubstanceProcessLibraryView_InitializeTableView_Unit" xml:space="preserve">
+    <value>#Eenheid</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_SegmentFunctionFilePath" xml:space="preserve">
+    <value>#Segment Function File Path</value>
+  </data>
+  <data name="WaterQualityBoundaryDataListView_InitializeTableView_Fraction" xml:space="preserve">
+    <value>#Fractie</value>
+  </data>
+  <data name="WaterQualityBoundaryData_InvalidFractionName" xml:space="preserve">
+    <value>#Fractie namen mag geen ongeldige bestandsnaam tekens bevatten, noch moeten zij bestaan uit alleen spaties, gebruik niet: {0}</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_Function_type" xml:space="preserve">
+    <value>#Functietype</value>
+  </data>
+  <data name="WaterQualityBoundaryDataListView_InitializeTableView_Function_type" xml:space="preserve">
+    <value>#Functietype</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___" xml:space="preserve">
+    <value>#Gebruik het bestand .hyd van...</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_GetContextMenu_Generate_Fractions" xml:space="preserve">
+    <value>#Genereren van breuken</value>
+  </data>
+  <data name="WaterQualityModel1DWizard_Could_not_import_selected_sub_file" xml:space="preserve">
+    <value>#Geselecteerde sub bestand importeren niet</value>
+  </data>
+  <data name="WaterQualityBoundaryDataListView_InitializeTableView_Boundary_node" xml:space="preserve">
+    <value>#Grens knooppunt</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_RevertInputFileToTemplate_Caption" xml:space="preserve">
+    <value>#Herstellen van invoerbestand</value>
+  </data>
+  <data name="SetLabelOperation_Label_Description" xml:space="preserve">
+    <value>#Het label in te stellen op het gebied</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizardPageExtensions_The_process_definition_files_path_is_set_to_0_" xml:space="preserve">
+    <value>#Het proces definitie bestanden pad is ingesteld op: '{0}'</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0_" xml:space="preserve">
+    <value>#Het proces dll bestandspad is ingesteld op: '{0}'</value>
+  </data>
+  <data name="WaterQualityModel1DWizard_Could_not_link_selected_flow_model_data" xml:space="preserve">
+    <value>#Kon niet geselecteerde stroom modelgegevens koppelen</value>
+  </data>
+  <data name="OverwriteLabelOperation_Label_DisplayName" xml:space="preserve">
+    <value>#Label</value>
+  </data>
+  <data name="SetLabelOperationProperties_DisplayName" xml:space="preserve">
+    <value>#Label instellen</value>
+  </data>
+  <data name="WaterQualityBoundaryDataListView_InitializeTableView_Lateral_source" xml:space="preserve">
+    <value>#Laterale bron</value>
+  </data>
+  <data name="WaterQualityModel1DWizard_Title" xml:space="preserve">
+    <value>#Maken van een water kwaliteit model</value>
+  </data>
+  <data name="WaterQualityModel1DExtentions_CheckOutput_Model_has_no_substances" xml:space="preserve">
+    <value>#Model '{0}' heeft geen stoffen in haar stof proces bibliotheek</value>
+  </data>
+  <data name="WaterQualityModel1DExtentions_CheckOutput_Model_missing_substances" xml:space="preserve">
+    <value>#Model '{0}' ontbreekt uitvoer voor de volgende stof {2} in de stof proces bibliotheek: {1}</value>
+  </data>
+  <data name="OverwriteLabelOperation_Label_Description" xml:space="preserve">
+    <value>#Nieuwe label moet worden ingevoegd.</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_Components" xml:space="preserve">
+    <value>#Onderdelen</value>
+  </data>
+  <data name="OverwriteLabelOperationProperties_DisplayName" xml:space="preserve">
+    <value>#Ruimtelijke gegevenslabel overschrijven</value>
+  </data>
+  <data name="SubstanceProcessLibraryWizardPage_Description" xml:space="preserve">
+    <value>#Selecteer een vooraf gedefinieerde configurarion of een costum sub bestand</value>
+  </data>
+  <data name="FunctionListView_InitializeTableView_Default_value" xml:space="preserve">
+    <value>#Standaardwaarde</value>
+  </data>
+  <data name="SubstanceProcessLibraryView_InitializeTableView_Default_value" xml:space="preserve">
+    <value>#Standaardwaarde</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_GetContextMenu_Revert_to_Original_Template" xml:space="preserve">
+    <value>#Terugkeren naar de oorspronkelijke sjabloon</value>
+  </data>
+  <data name="SubstanceProcessLibraryView_InitializeTableView_Show_in_Map" xml:space="preserve">
+    <value>#Toon voor cellen</value>
+  </data>
+  <data name="SubstanceProcessLibraryView_InitializeTableView_Show_in_His" xml:space="preserve">
+    <value>#Toon voor het toezicht op locaties</value>
+  </data>
+  <data name="WaterQualityModelNodePresenter_GetContextMenu_Validate" xml:space="preserve">
+    <value>#Valideren</value>
+  </data>
+  <data name="WaterQualityBoundaryDataListView_InitializeTableView_Evaporation" xml:space="preserve">
+    <value>#Verdamping</value>
+  </data>
+  <data name="WaterQualityModelNodePresenter_GetContextMenu_Water_quality_model_is_not_valid__Please_check_the_validation_report_" xml:space="preserve">
+    <value>#Water kwaliteit model is niet geldig. Gelieve te controleren het validatierapport.</value>
+  </data>
+</root>

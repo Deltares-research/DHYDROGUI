@@ -1,0 +1,30 @@
+  Following dimensions have been set:
+  Number of nodes       =          18
+  Boundary nodes        =           9
+  Number of 3B-branches =           9
+  Meteostations         =           1
+  I,ext.knoopnr, upstream/downstream nodes, SimSeq
+       1       1       0       2       1                      2                   
+       2       2       0       0      10                      1                   
+       3       3       0       4       2                      3                   
+       4       4       0       0      11                      9                   
+       5       5       0       6       3                      4                   
+       6       6       0       0      12                      10                  
+       7       7       0       8       4                      5                   
+       8       8       0       0      13                      11                  
+       9       9       0      10       5                      6                   
+      10      10       0       0      14                      12                  
+      11      11       0      12       6                      7                   
+      12      12       0       0      15                      13                  
+      13      13       0      14       7                      8                   
+      14      14       0       0      16                      14                  
+      15      15       0      16       8                      17                  
+      16      16       0       0      17                      15                  
+      17      17       0      18       9                      18                  
+      18      18       0       0      18                      16                  
+  RRRunoffNode Nodes    =           9
+  RRConnection nodes    =           1
+Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+Warning: Only one weatherstation in rainfall/runoff/temperature file. No check of meteostation names performed; all nodes use this one and only meteostation.
+  Start event            1
+ Succesfull logout of Sobek_RR                                                  

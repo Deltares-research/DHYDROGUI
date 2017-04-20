@@ -1,0 +1,56 @@
+[forcing]
+Name 				= pli1_0001
+Function			= timeseries
+Time-interpolation 		= linear
+Vertical position type		= percentage from bed
+Vertical position specification	= 20 50 70
+Vertical interpolation		= linear
+Quantity			= time
+Unit				= -
+Quantity			= x-velocity 
+	Unit			= m/s
+Vertical position 	= 1
+Quantity			= x-velocity
+Unit				= m/s
+Vertical position 	= 2
+Quantity			= x-velocity 
+Unit				= m/s
+Vertical position 	= 3
+Quantity			= y-velocity 
+	Unit			= m/s
+Vertical position 	= 1		
+Quantity			= y-velocity 
+Unit				= m/s
+Vertical position 	= 2
+Quantity			= y-velocity 
+Unit				= m/s
+Vertical position 	= 3
+20130101000000	0.1	0.5	0.8	-0.1	-0.3	-0.5
+20130923120000	0.2	-0.1	-0.5	0.1	0.5	0.9
+
+[forcing]
+Name 				= pli1_0001
+Function			= timeseries
+Time-interpolation 		= linear
+Vertical position type		= z above datum
+Vertical position specification	= -8 -6 -4 -2 0
+Vertical interpolation		= linear
+Quantity			= time 
+Unit				= seconds since 2013-01-01
+Quantity			= salinitybnd
+	Unit			= ppt
+Vertical position	= 1
+Quantity			= salinitybnd
+	Unit			= ppt
+Vertical position 	= 2
+Quantity			= salinitybnd
+	Unit			= ppt 
+Vertical position	= 3
+Quantity			= salinitybnd
+	Unit			= ppt 
+Vertical position 	= 4
+Quantity			= salinitybnd
+	Unit			= ppt 
+Vertical position  	= 5
+0	0.5	22	18 	12	7	0 
+1440	0.65	30	22	17	14	8

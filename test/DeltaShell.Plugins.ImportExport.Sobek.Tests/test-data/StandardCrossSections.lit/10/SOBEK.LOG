@@ -1,0 +1,169 @@
+@(#)Deltares, SOBEKSIM Version 4.03.92.19321, Nov 10 2011, 15:18:44
+opened file : D:\Sobek213\Programs\flow\sobeksim.lng
+closed file : D:\Sobek213\Programs\flow\sobeksim.lng
+ConvtabYzprof
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : casedesc.cmt
+closed file : casedesc.cmt
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 12 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5_1 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5_2 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5_3 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5_4 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5_5 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 13 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 14 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6_1 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6_2 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6_3 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6_4 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6_5 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 15 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 15 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 16 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 16 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_1 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_1 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_2 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_2 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_3 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_3 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_4 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_4 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_5 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 7_5 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 17 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 17 . This part of cr
+ oss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5 . This part of cro
+ ss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 5 . This part of cro
+ ss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_1 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_1 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_2 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_2 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_3 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_3 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_4 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_4 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_5 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 2_5 . This part of c
+ ross-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6 . This part of cro
+ ss-section table is set to 0.0001 m. width
+ Warning in subroutine plinfl
+ Part of cross-section table smaller than 0.0001 m at reach 6 . This part of cro
+ ss-section table is set to 0.0001 m. width
+opened file : ..\work\flow_bal.out
+closed file : ..\work\flow_bal.out
+cpu computation =       0.140625
+---------------------------------
+Normal end of Sobeksim
+closed file : ..\work\sobek.log

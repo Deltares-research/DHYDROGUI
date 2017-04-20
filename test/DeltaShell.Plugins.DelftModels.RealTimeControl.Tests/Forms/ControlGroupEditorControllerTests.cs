@@ -1,0 +1,702 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
+using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using Netron.GraphLib.UI;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
+{
+
+    [TestFixture]
+    public class ControlGroupEditorControllerTests
+    {
+        private ControlGroupEditorController controller;
+        private ControlGroup controlGroup;
+        private GraphControl graphControl;
+
+        [SetUp]
+        public void SetUp()
+        {
+            controller = new ControlGroupEditorController();
+            controlGroup = new ControlGroup();
+            graphControl = new GraphControl();
+
+            controller.ControlGroup = controlGroup;
+            controller.GraphControl = graphControl;
+        }
+
+        [Test]
+        public void AddingDomainObjectToControlGroupAddsShapeToGraphControl()
+        {
+            controlGroup.Rules.Add(new PIDRule());
+            controlGroup.Conditions.Add(new StandardCondition());
+            controlGroup.Inputs.Add(new Input());
+            controlGroup.Outputs.Add(new Output());
+            controlGroup.Signals.Add(new LookupSignal());
+
+            Assert.AreEqual(1, controlGroup.Rules.Count());
+            Assert.AreEqual(1, controlGroup.Conditions.Count());
+            Assert.AreEqual(1, controlGroup.Inputs.Count());
+            Assert.AreEqual(1, controlGroup.Outputs.Count());
+            Assert.AreEqual(1, controlGroup.Signals.Count());
+
+            Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
+            Assert.AreEqual(1, graphControl.Shapes.OfType<ConditionShape>().Count());
+            Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
+            Assert.AreEqual(1, graphControl.Shapes.OfType<OutputItemShape>().Count());
+            Assert.AreEqual(1, graphControl.Shapes.OfType<SignalShape>().Count());
+        }
+
+        [Test]
+        public void ConnectingItemsDoesNotCreateNewShapes()
+        {
+            var rule = new PIDRule();
+            var input = new Input();
+            controlGroup.Rules.Add(rule);
+            controlGroup.Inputs.Add(input);
+
+            rule.Inputs.Add(input);
+            
+            Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
+            Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
+        }
+
+        [Test]
+        public void RemovingRtcDomainObjectFromControlGroupRemovesShapeFromGraphControl()
+        {
+            Assert.AreEqual(0, graphControl.Shapes.OfType<RuleShape>().Count());
+            
+            var rule1 = new PIDRule("test1");
+            controlGroup.Rules.Add(rule1);
+            Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
+            
+            var rule2 = new PIDRule("test2"){LongName = "Long text test2"};
+            controlGroup.Rules.Add(rule2);
+            Assert.AreEqual(2, graphControl.Shapes.OfType<RuleShape>().Count());
+            
+            controlGroup.Rules.Remove(rule1);
+            Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
+            
+            var ruleShape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
+            Assert.NotNull(ruleShape);
+            Assert.AreEqual(rule2.Name, ruleShape.Title);
+            Assert.AreEqual(rule2.LongName, ruleShape.Text);
+        }
+
+        [Test]
+        public void RemovingShapeObjectFromGraphRemovesRtcObjectFromControlGroup()
+        {
+            var rule1 = new PIDRule("test1");
+            controlGroup.Rules.Add(rule1);
+            var rule2 = new PIDRule("test2");
+            controlGroup.Rules.Add(rule2);
+            graphControl.Shapes.Remove(graphControl.Shapes.OfType<RuleShape>().FirstOrDefault());
+
+            Assert.AreEqual(1, controlGroup.Rules.Count());
+            Assert.AreEqual(rule2.Name, controlGroup.Rules.FirstOrDefault().Name);
+        }
+
+        [Test]
+        public void RenamingRtcDomainObjectRenamesShape()
+        {
+            var rule = new PIDRule("test1");
+            controlGroup.Rules.Add(rule);
+
+            rule.Name = "test2";
+            rule.LongName = "Long name test2";
+
+            var ruleShape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
+
+            Assert.NotNull(ruleShape);
+            Assert.AreEqual(rule.Name, ruleShape.Title);
+            Assert.AreEqual(rule.LongName, ruleShape.Text);
+        }
+
+        [Test]
+        public void ChangingRuleOverwritesTagInShapeWithNewRule()
+        {
+            var rule1 = new PIDRule();
+            controlGroup.Rules.Add(rule1);
+            var rule2 = new IntervalRule();
+            controlGroup.Rules[0] = rule2;
+
+            Assert.AreEqual(rule2, graphControl.Shapes.OfType<RuleShape>().FirstOrDefault().Tag);
+        }
+
+        [Test]
+        public void ConvertDomainObjectToShapeObject()
+        {
+            var controlGroupEditorController = new ControlGroupEditorController();
+            Assert.IsTrue(controlGroupEditorController.ObjectToShape(new PIDRule()) is RuleShape);
+            Assert.IsTrue(controlGroupEditorController.ObjectToShape(new StandardCondition()) is ConditionShape);
+            Assert.IsTrue(controlGroupEditorController.ObjectToShape(new Input()) is InputItemShape);
+            Assert.IsTrue(controlGroupEditorController.ObjectToShape(new Output()) is OutputItemShape);
+            Assert.IsTrue(controlGroupEditorController.ObjectToShape(new LookupSignal()) is SignalShape);
+        }
+
+        [Test]
+        public void RemovingShapeFromGraphControlRemovesCorrespondingDomainObject()
+        {
+            var rule = new PIDRule();
+            controlGroup.Rules.Add(rule);
+
+            Assert.AreEqual(1, controlGroup.Rules.Count);
+
+            var shapes = controller.GraphControl.Shapes;
+            controller.GraphControlShapesOnShapeRemoved(null, shapes[0]);
+
+            Assert.AreEqual(0, controlGroup.Rules.Count);
+        }
+
+        [Test]
+        public void ConvertPIDRuleToIntervalRule()
+        {
+            var rule = new PIDRule{Name = "test"};
+            controlGroup.Rules.Add(rule);
+            Assert.AreEqual(1, controlGroup.Rules.Count);
+
+            // implicit action made by ControlGroup.OnCollectionChanged
+            var changeCounter = 0;
+            graphControl.OnShapeAdded += (sender, shape) => changeCounter++;
+            graphControl.OnShapeRemoved += (sender, shape) => changeCounter++;
+
+            controller.ConvertRuleTypeTo(controlGroup.Rules[0], typeof(IntervalRule));
+            Assert.AreEqual(0, changeCounter); 
+            
+            Assert.AreEqual(1, controlGroup.Rules.Count);
+            Assert.AreEqual(typeof(IntervalRule), controlGroup.Rules[0].GetType());
+            Assert.AreEqual(rule.Name, controlGroup.Rules[0].Name);
+            Assert.AreEqual(rule.LongName, controlGroup.Rules[0].LongName);
+        }
+
+        [Test]
+        public void ConvertStandardConditionToTimeCondition()
+        {
+
+            var condition = new StandardCondition { Name = "test" };
+            controlGroup.Conditions.Add(condition);
+            Assert.AreEqual(1, controlGroup.Conditions.Count);
+
+            // implicit action made by ControlGroup.OnCollectionChanged
+            var changeCounter = 0;
+            graphControl.OnShapeAdded += (sender, shape) => changeCounter++;
+            graphControl.OnShapeRemoved += (sender, shape) => changeCounter++;
+
+            controller.ConvertConditionTypeTo(condition, typeof(TimeCondition));
+            Assert.AreEqual(0, changeCounter);
+
+            Assert.AreEqual(1, controlGroup.Conditions.Count);
+            Assert.AreEqual(typeof(TimeCondition), controlGroup.Conditions[0].GetType());
+            Assert.AreEqual(condition.Name, controlGroup.Conditions[0].Name);
+            Assert.AreEqual(condition.LongName, controlGroup.Conditions[0].LongName);
+        }
+
+        [Test]
+        public void ConvertStandardConditionToTimeConditionShouldDisconnectInputFromTimeCondition()
+        {
+
+            var condition = new StandardCondition { Name = "test" };
+            var input = new Input
+            {
+                ParameterName = "InParam",
+                Feature = new RtcTestFeature { Name = "In" },
+            };
+            condition.Input = input;
+            controlGroup.Conditions.Add(condition);
+            controlGroup.Inputs.Add(input);
+            controller.AddConnections(controller.ControlGroup.Rules, controller.ControlGroup.Conditions, controller.ControlGroup.Signals);
+            Assert.AreEqual(1,graphControl.Connections.Count);
+            controller.ConvertConditionTypeTo(condition, typeof(TimeCondition));
+            Assert.AreEqual(0, graphControl.Connections.Count);
+           
+        }
+
+        [Test]
+        public void ConversionDoesNotRequireGraphControl()
+        {
+            controller.GraphControl= null;
+            ConvertPIDRuleToIntervalRule();
+        }
+
+        [Test]
+        public void ConversionOfRuleTypeDoesNotAffectShape()
+        {
+            var rule = new PIDRule { Name = "test" };
+            controlGroup.Rules.Add(rule);
+
+            var shape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
+
+            Assert.AreEqual(rule.Name, ((RuleBase)shape.Tag).Name);
+            Assert.IsTrue(shape.Tag is PIDRule);
+
+            controller.ConvertRuleTypeTo(controlGroup.Rules[0], typeof(IntervalRule));
+
+            Assert.AreEqual(rule.Name, ((RuleBase)shape.Tag).Name);
+            Assert.AreEqual(rule.LongName, ((RuleBase)shape.Tag).LongName);
+            Assert.IsTrue(shape.Tag is IntervalRule);
+        }
+
+        [Test]
+        public void AddObjectAndShapeAtSpecificLocation()
+        {
+            List<object> objecten = new List<object>();
+            objecten.Add(new Input());
+            var rule = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
+            var condition = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
+            var input = objecten.Where(c => c is Input).Cast<Input>().ToList();
+            var output = objecten.Where(c => c is Output).Cast<Output>().ToList();
+            var signal = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
+            controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal, new Point(10, 11));
+                    
+            Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
+            Assert.AreEqual(10, graphControl.Shapes[0].X);
+            Assert.AreEqual(11, graphControl.Shapes[0].Y);
+
+            objecten.Add(new HydraulicRule());
+            var rule2 = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
+            var condition2 = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
+            var input2 = new List<Input>();
+            var output2 = objecten.Where(c => c is Output).Cast<Output>().ToList();
+            var signal2 = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
+            controller.AddShapesToControlGroupAndPlace(rule2, condition2, input2, output2, signal2, new Point(100, 110));
+            
+            Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
+            Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
+            Assert.AreEqual(100, graphControl.Shapes[1].X);
+            Assert.AreEqual(110, graphControl.Shapes[1].Y);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RemovingFeatureResetsInputToDefault()
+        {
+            var input = new Input { ParameterName = "p", Feature = new RtcTestFeature { Name = "f"}};
+
+            controlGroup.Inputs.Add(input);
+
+            var itemShape = graphControl.Shapes.OfType<InputItemShape>().FirstOrDefault();
+
+            Assert.NotNull(itemShape);
+            Assert.AreEqual("f_p", itemShape.Title);
+
+            input.Feature = null;
+
+            Assert.AreEqual("[Not Set]", itemShape.Title);
+        }
+
+        [Test]
+        public void RemovingControlGroupFromControllerCleansGraphControl()
+        {
+            controlGroup.Rules.Add(new PIDRule());
+            Assert.AreEqual(1, controller.GraphControl.Shapes.Count);
+            controller.ControlGroup = null;
+            Assert.AreEqual(0, controller.GraphControl.Shapes.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RenamingFeatureOnOutputChangesTextOnShape()
+        {
+            var feature = new RtcTestFeature { Name = "feature" };
+            var output = new Output { Feature = feature, ParameterName = "parameter"};
+
+            controlGroup.Outputs.Add(output);
+
+            feature.Name = "feature2"; // change
+
+            Assert.AreEqual("feature2_parameter", ((ShapeBase)graphControl.Shapes[0]).Title, "changing feature name should update shape text");
+        }
+
+        [Test]
+        public void AllowConditionToConditionRelation()
+        {
+            var condition1 = new StandardCondition();
+            var condition2 = new StandardCondition();
+            condition1.TrueOutputs.Add(condition2);
+
+            var controlGroupOfConditions = new ControlGroup();
+
+            controlGroupOfConditions.Conditions.Add(condition1);
+            controlGroupOfConditions.Conditions.Add(condition2);
+
+            controller.ControlGroup = controlGroupOfConditions;
+
+            Assert.AreEqual(1, graphControl.Connections.Count);
+
+            var connection = graphControl.Connections[0];
+            
+            Assert.IsTrue(ControlGroupEditorController.ConnectionIs(connection));
+        }
+
+        private static Dictionary<ConnectorType, ConnectorType> GetAllowedConnections(object from, object to)
+        {
+            var connectors = Enum.GetValues(typeof(ConnectorType));
+            var allowed = new Dictionary<ConnectorType, ConnectorType>();
+            foreach (ConnectorType source in connectors)
+            {
+                foreach (ConnectorType target in connectors)
+                {
+                    if (ControlGroupEditorController.IsConnectionAllowed(from, source, to, target))
+                    {
+                        allowed[source] = target;
+                    }
+                }
+            }
+            return allowed;
+        }
+
+        [Test]
+        public void InputCanConnectToInput()
+        {
+            var source = new Input();
+            var target = new Input();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void InputCanConnectToCondition()
+        {
+            var source = new Input();
+            var target = new StandardCondition();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(1, allowedConnections.Count);
+            Assert.AreEqual(ConnectorType.Top, allowedConnections[ConnectorType.Bottom]);
+        }
+
+        [Test]
+        public void InputCanConnectToRule()
+        {
+            var input = new Input();
+            var hydraulicRule = new HydraulicRule();
+
+            var allowedConnections = GetAllowedConnections(input, hydraulicRule);
+            Assert.AreEqual(1, allowedConnections.Count);
+            Assert.AreEqual(ConnectorType.Top, allowedConnections[ConnectorType.Bottom]);
+        }
+
+        [Test]
+        public void InputCanConnectToSignal()
+        {
+            var input = new Input();
+            var lookupSignal = new LookupSignal();
+
+            var allowedConnections = GetAllowedConnections(input, lookupSignal);
+            Assert.AreEqual(1, allowedConnections.Count);
+            Assert.AreEqual(ConnectorType.Top, allowedConnections[ConnectorType.Bottom]);
+        }
+
+        [Test]
+        public void InputCanConnectToOutput()
+        {
+            var input = new Input();
+            var output = new Output();
+            var allowedConnections = GetAllowedConnections(input, output);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+
+        [Test]
+        public void ConditionCanConnectToInput()
+        {
+            var source = new StandardCondition();
+            var target = new Input();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void ConditionCanConnectToCondition()
+        {
+            var source = new StandardCondition();
+            var target = new StandardCondition();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(2, allowedConnections.Count);
+            Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Right]);
+            Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Bottom]);
+        }
+
+        [Test]
+        public void ConditionCanConnectToRule()
+        {
+            var source = new StandardCondition();
+            var target = new HydraulicRule();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(2, allowedConnections.Count);
+            Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Right]);
+            Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Bottom]);
+        }
+
+        [Test]
+        public void ConditionCanConnectToOutput()
+        {
+            var source = new StandardCondition();
+            var output = new Output();
+
+            var allowedConnections = GetAllowedConnections(source, output);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void ConditionCanConnectToSignal()
+        {
+            var source = new StandardCondition();
+            var output = new LookupSignal();
+
+            var allowedConnections = GetAllowedConnections(source, output);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void RuleCanConnectToInput()
+        {
+            var source = new HydraulicRule();
+            var target = new Input();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void RuleCanConnectToCondition()
+        {
+            var source = new HydraulicRule();
+            var target = new StandardCondition();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void RuleCanConnectToRule()
+        {
+            var source = new HydraulicRule();
+            var target = new HydraulicRule();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void RuleCanConnectToSignal()
+        {
+            var source = new HydraulicRule();
+            var target = new LookupSignal();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void RuleCanConnectToOutput()
+        {
+            var source = new HydraulicRule();
+            var output = new Output();
+
+            var allowedConnections = GetAllowedConnections(source, output);
+            Assert.AreEqual(1, allowedConnections.Count);
+            Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Right]);
+        }
+
+        [Test]
+        public void OutputCanConnectToInput()
+        {
+            var source = new Output();
+            var target = new Input();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void OutputCanConnectToCondition()
+        {
+            var source = new Output();
+            var target = new StandardCondition();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void OutputCanConnectToRule()
+        {
+            var source = new Output();
+            var target = new HydraulicRule();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void OutputCanConnectToSignal()
+        {
+            var source = new Output();
+            var target = new LookupSignal();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void OutputCanConnectToOutput()
+        {
+            var source = new Output();
+            var output = new Output();
+
+            var allowedConnections = GetAllowedConnections(source, output);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void SignalCanConnectToInput()
+        {
+            var source = new LookupSignal();
+            var target = new Input();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void SignalCanConnectToCondition()
+        {
+            var source = new LookupSignal();
+            var target = new StandardCondition();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void SignalCanConnectToCertainRules()
+        {
+            var source = new LookupSignal();
+            var target = new HydraulicRule();
+
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+            Assert.IsFalse(target.CanBeLinkedFromSignal());
+
+            var target2 = new PIDRule();
+            var allowedConnections2 = GetAllowedConnections(source, target2);
+            Assert.AreEqual(1, allowedConnections2.Count);
+            Assert.IsTrue(target2.CanBeLinkedFromSignal());
+            Assert.AreEqual(ConnectorType.Bottom, allowedConnections2[ConnectorType.Right]);
+        }
+
+        [Test]
+        public void SignalCanConnectToOutput()
+        {
+            var source = new LookupSignal();
+            var target = new Output();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void SignalCanConnectToSignal()
+        {
+            var source = new LookupSignal();
+            var target = new LookupSignal();
+            var allowedConnections = GetAllowedConnections(source, target);
+            Assert.AreEqual(0, allowedConnections.Count);
+        }
+
+        [Test]
+        public void ConditionCanConnectToOnly1Condition()
+        {
+            var source = new StandardCondition();
+            var target = new StandardCondition();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            var secondRuie = new HydraulicRule();
+            Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, secondRuie, ConnectorType.Left));
+            var secondCondition = new StandardCondition();
+            Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, secondCondition, ConnectorType.Left));
+        }
+
+        [Test]
+        public void ConditionCanConnectToOnly1Rule()
+        {
+            var source = new StandardCondition();
+            var target = new HydraulicRule();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            var secondRuie = new HydraulicRule();
+            Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, secondRuie, ConnectorType.Left));
+            var secondCondition = new StandardCondition();
+            Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, secondCondition, ConnectorType.Left));
+        }
+
+        [Test]
+        public void InputCanConnectToMultipleRuleOrConditions()
+        {
+            var source = new Input();
+            var target = new HydraulicRule();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, target, ConnectorType.Top));
+            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, target, ConnectorType.Left);
+            var secondRuie = new HydraulicRule();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, secondRuie, ConnectorType.Top));
+            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, secondRuie, ConnectorType.Left);
+            var secondCondition = new StandardCondition();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, secondCondition, ConnectorType.Top));
+            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, secondCondition, ConnectorType.Left);
+        }
+
+        [Test]
+        public void OutputCanConnectFromMultipleRules()
+        {
+            var source = new HydraulicRule();
+            var target = new Output();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            var secondRuie = new HydraulicRule();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(secondRuie, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(secondRuie, ConnectorType.Right, target, ConnectorType.Left);
+            var thirdRule = new HydraulicRule();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(thirdRule, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(thirdRule, ConnectorType.Right, target, ConnectorType.Left);
+        }
+
+        [Test]
+        public void RuleCanConnectFromMultipleConditions()
+        {
+            var source = new StandardCondition();
+            var target = new HydraulicRule();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+
+            // can not connect the same condition again
+            Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
+            Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, target, ConnectorType.Left));
+
+            var secondCondition = new StandardCondition();
+            Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(secondCondition, ConnectorType.Right, target, ConnectorType.Left));
+            ControlGroupEditorController.Connect(secondCondition, ConnectorType.Right, target, ConnectorType.Left);
+        }
+
+        [Test]
+        public void ControlGroupModelEventsAreIgnoredInControllerCollectionChanged()
+        {
+            graphControl = new GraphControl();
+
+            controller.ControlGroup = controlGroup;
+
+            var collectionChangedCount = 0;
+            ((INotifyCollectionChanged)controller.ControlGroup).CollectionChanged += (s, e) =>
+            {
+                collectionChangedCount++;
+            };
+
+            controlGroup.Inputs.Add(new Input());
+            Assert.AreEqual(1, collectionChangedCount);
+        }
+    }
+}

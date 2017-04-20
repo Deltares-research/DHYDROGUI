@@ -1,0 +1,30 @@
+[User Project Identification]
+Version=3.10
+
+[User Node Types]
+Number of Types=1
+1 ParentID=SBK_CHANNEL_STORCONN&LAT
+1 Type=NoLaNode
+1 ID=SBK_CHANNEL_STORCONN&LAT_NOLANODE
+1 BNAname=sbk_channel_storconn&lat_nolanode
+1 In Use=-1
+1 Visible=-1
+1 LabelInactive=0
+1 SymbolType=1
+1 BorderColor=0
+1 FillColor=65535
+1 Syst=SYS_DEFAULT
+1 IncludeInScaleData=-1
+1 IncludeInTableView=0
+1 MonitorStation=0
+1 SurfaceWaterType=NoLaSWT
+1 Allow boundaries=-1
+1 Number of boundaries=1
+1 Boundary 1=NoLaFract
+1 Metafile=
+1 PictureActive=0
+1 WLM function=
+
+[User Branch Types]
+Number of Types=0
+

@@ -1,0 +1,208 @@
+﻿using System;
+using System.Linq;
+using System.Windows.Forms;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui.Swf;
+using DelftTools.TestUtils;
+using DelftTools.TestUtils.TestReferenceHelper;
+using DeltaShell.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.ProjectExplorer;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.SharpMapGis.Gui;
+using NUnit.Framework;
+using Control = System.Windows.Controls.Control;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
+{
+    [TestFixture]
+    [Category(TestCategory.WindowsForms)]
+    public class WaterFlowFMModelNodePresenterTest
+    {
+        [Test]
+        public void ShowTreeViewForFMModel()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var project = app.Project;
+                    project.RootFolder.Add(model);
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
+
+        [Test]
+        public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var model = new WaterFlowFMModel();
+
+                    var project = app.Project;
+                    project.RootFolder.Add(model);
+
+                    var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
+                    var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
+
+                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "Numerical Parameters");
+                    gui.CommandHandler.OpenViewForSelection();
+
+                    Assert.IsNotNull(gui.DocumentViews.ActiveView);
+                    Assert.AreEqual("Numerical Parameters", GetSelectedTab(GetActiveFMModelView()).Text);
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
+
+        [Test]
+        public void JumpToSubTabThroughProjectExplorerWithModelViewAlreadyOpenOpen()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var model = new WaterFlowFMModel();
+
+                    var project = app.Project;
+                    project.RootFolder.Add(model);
+
+                    var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
+                    var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
+
+                    // open on 'Domain' tab (first tab)
+                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "General");
+                    gui.CommandHandler.OpenViewForSelection();
+
+                    // switch to 'Numerical Parameters' tab
+                    gui.Selection = childItems.OfType<FlowFMTreeShortcut>().First(s => s.Text == "Numerical Parameters");
+                    gui.CommandHandler.OpenViewForSelection();
+
+                    // assert the 'Numerical Parameters' tab is in front
+                    Assert.IsNotNull(gui.DocumentViews.ActiveView);
+                    Assert.AreEqual("Numerical Parameters", GetSelectedTab(GetActiveFMModelView()).Text);
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
+
+        [Test]
+        public void CheckEventLeaksThroughDataItemWrappers()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
+            
+            var outputFunction = model.OutputHisFileStore.Functions.First();
+
+            Console.WriteLine("Before:");
+            int before = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
+
+            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
+            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().Last();
+
+            // ask first time
+            outputFolder.ChildItems.OfType<object>().ToList();
+
+            int afterFirstTime = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
+
+            for (int i = 0; i < 5; i++)
+            {
+                // ask for output items
+                outputFolder.ChildItems.OfType<object>().ToList();
+            }
+
+            int afterManyTimes = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
+
+            // todo: check for multiple models?
+
+            Assert.AreEqual(before + 4, afterFirstTime); // first time increase by one for each event (PropChing, PropChed, CollChing, CollChed)
+            Assert.AreEqual(afterFirstTime, afterManyTimes); // subseqeuent times should not increase
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        [Category(TestCategory.Integration)]
+        public void CheckEventLeaksThroughDataItemAfterModelRun()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
+
+            var outputFunction = model.OutputHisFileStore.Functions.First();
+            
+            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
+            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().Last();
+
+            // ask first time before run
+            outputFolder.ChildItems.OfType<object>().ToList();
+
+            Console.WriteLine("Before run:");
+            int before = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
+
+            ActivityRunner.RunActivity(model);
+
+            outputFolder.ChildItems.OfType<object>().ToList();
+
+            Console.WriteLine("After run:");
+            var after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
+
+            Assert.AreEqual(before, after);
+        }
+
+
+        private static WaterFlowFMModelView GetActiveFMModelView()
+        {
+            return (WaterFlowFMModelView)FlowFMGuiPlugin.ActiveMapView.TabControl.ActiveView;
+        }
+
+        private static TabPage GetSelectedTab(WaterFlowFMModelView modelView)
+        {
+            return modelView.Controls[0].Controls.OfType<TabControl>().First().SelectedTab;
+        }
+    }
+}

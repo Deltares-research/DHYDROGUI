@@ -1,0 +1,8 @@
+* TYPE=1 : PIPE
+* TYPE=2 : RECTAN   ,  HYDRAD = AREA / (WIDTH + 2*HEIGHT)
+* TYPE=3 : RECTAN2D ,  HYDRAD = HEIGHT
+
+PROF=1      TYPE=3             WIDTH=22
+PROF=2      TYPE=3             WIDTH=30
+PROF=3      TYPE=3             WIDTH=10
+PROF=4      TYPE=3             WIDTH=30

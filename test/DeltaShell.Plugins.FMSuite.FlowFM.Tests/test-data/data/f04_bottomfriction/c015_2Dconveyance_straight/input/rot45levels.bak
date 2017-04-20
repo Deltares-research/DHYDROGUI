@@ -1,0 +1,15 @@
+ De bak heeft een slope van 0.0075 en een lengte van 240 m
+ Het verval is dus 240*0.0075 = 1.80 m
+ Om in de eerste diagonale cel het juste doorstroomoppervlak te krijgen bij waterhoogte 4 m
+ moet de waterstand van de onderrand gezet worden op:
+
+ zbot = 4 + 1.80 - 0.25*dxdiagonaal*0.0075 m
+
+ en
+
+ ztop = zbot - 1.8 m
+
+ netw rot45        _3       _6       _12        _24         _48
+ dxdiagonaal m      8        4         2          1         0.5
+ zbot m         5.875   5.7925   5.79625   5.798125   5.7990625
+ ztop m         3.985   3.9925   3.99625   3.998125   3.9990625

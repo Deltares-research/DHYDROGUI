@@ -1,0 +1,129 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =    39 Nr iter. = 100
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  99
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  98
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  97
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  96
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  95
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  94
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  93
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  92
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  91
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  90
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  89
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  88
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  87
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  86
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  85
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  84
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  83
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+ Time step =    39 Nr iter. =  82
+    NE1_NEC05                      X=   2624.00 DH=   0.01656
+    NE1_NEC05                      X=   3687.00 DQ=     1.383
+ Time step =    39 Nr iter. =  81
+    NE1_NEC05                      X=   2624.00 DH=  -0.01656
+    NE1_NEC05                      X=   3687.00 DQ=    -1.383
+  
+ Time step =   218 Nr iter. = 100
+    RT2_Yssel__1                   X=  41615.00 DH=   0.02734
+    RT2_Yssel__1                   X=  42116.00 DQ=    -3.654
+ Time step =   218 Nr iter. =  99
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.01504
+    RT2_Yssel__1                   X=  42116.00 DQ=     2.376
+ Time step =   218 Nr iter. =  98
+    RT2_Yssel__1                   X=  41615.00 DH=   0.01571
+    RT2_Yssel__1                   X=  42116.00 DQ=    -2.181
+ Time step =   218 Nr iter. =  97
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.00953
+    RT2_Yssel__1                   X=  42116.00 DQ=     1.636
+ Time step =   218 Nr iter. =  96
+    RT2_Yssel__1                   X=  41615.00 DH=   0.01041
+    RT2_Yssel__1                   X=  42116.00 DQ=    -1.487
+ Time step =   218 Nr iter. =  95
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.00253
+    RT2_Yssel__1                   X=  42116.00 DQ=    -0.699
+ Time step =   218 Nr iter. =  94
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.02634
+    RT2_Yssel__1                   X=  42116.00 DQ=     4.006
+ Time step =   218 Nr iter. =  93
+    RT2_Yssel__1                   X=  41615.00 DH=   0.02732
+    RT2_Yssel__1                   X=  42116.00 DQ=    -3.651
+ Time step =   218 Nr iter. =  92
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.01503
+    RT2_Yssel__1                   X=  42116.00 DQ=     2.374
+ Time step =   218 Nr iter. =  91
+    RT2_Yssel__1                   X=  41615.00 DH=   0.01570
+    RT2_Yssel__1                   X=  42116.00 DQ=    -2.180
+ Time step =   218 Nr iter. =  90
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.00953
+    RT2_Yssel__1                   X=  42116.00 DQ=     1.636
+ Time step =   218 Nr iter. =  89
+    RT2_Yssel__1                   X=  41615.00 DH=   0.01041
+    RT2_Yssel__1                   X=  42116.00 DQ=    -1.487
+ Time step =   218 Nr iter. =  88
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.00254
+    RT2_Yssel__1                   X=  42116.00 DQ=    -0.699
+ Time step =   218 Nr iter. =  87
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.02636
+    RT2_Yssel__1                   X=  42116.00 DQ=     4.009
+ Time step =   218 Nr iter. =  86
+    RT2_Yssel__1                   X=  41615.00 DH=   0.02734
+    RT2_Yssel__1                   X=  42116.00 DQ=    -3.654
+ Time step =   218 Nr iter. =  85
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.01504
+    RT2_Yssel__1                   X=  42116.00 DQ=     2.376
+ Time step =   218 Nr iter. =  84
+    RT2_Yssel__1                   X=  41615.00 DH=   0.01571
+    RT2_Yssel__1                   X=  42116.00 DQ=    -2.181
+ Time step =   218 Nr iter. =  83
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.00953
+    RT2_Yssel__1                   X=  42116.00 DQ=     1.636
+ Time step =   218 Nr iter. =  82
+    RT2_Yssel__1                   X=  41615.00 DH=   0.01041
+    RT2_Yssel__1                   X=  42116.00 DQ=    -1.487
+ Time step =   218 Nr iter. =  81
+    RT2_Yssel__1                   X=  41615.00 DH=  -0.00253
+    RT2_Yssel__1                   X=  42116.00 DQ=    -0.699
+  

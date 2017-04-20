@@ -1,0 +1,778 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using DeltaShell.Sobek.Readers.Readers;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
+using log4net;
+using NetTopologySuite.Extensions.Coverages;
+
+namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
+{
+    public class SobekRoughnessImporter: PartialSobekImporterBase
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRoughnessImporter));
+        private const RoughnessType DefaultRoughnessType = RoughnessType.Chezy;
+        private const double DefaultRoughnessValue = 45.0;
+        IDictionary<string, IDictionary<NetworkLocation, DelftTools.Utils.Tuple<double, int>>> sectionTypeLocations = new Dictionary<string, IDictionary<NetworkLocation, DelftTools.Utils.Tuple<double, int>>>();
+
+        private string displayName = "Friction (roughness)";
+        public override string DisplayName
+        {
+            get { return displayName; }
+        }
+
+        protected override void PartialImport()
+        {
+
+            log.DebugFormat("Importing roughness data ...");
+            
+            var main = GetCrossSectionSectionType(DelftModels.WaterFlowModel.WaterFlowModel1DDataSet.MainChannelName);
+            var floodPlain1 = GetCrossSectionSectionType(DelftModels.WaterFlowModel.WaterFlowModel1DDataSet.Floodplain1Name);
+            var floodPlain2 = GetCrossSectionSectionType(DelftModels.WaterFlowModel.WaterFlowModel1DDataSet.Floodplain2Name);
+ 
+            var frictionFile = GetFilePath(SobekFileNames.SobekFrictionFileName);
+            if (!File.Exists(frictionFile))
+            {
+                log.WarnFormat("Friction file [{0}] not found; skipping...", frictionFile);
+                return;
+            }
+
+            if (SobekFileNames.SobekGlobalFrictionFileName != "")
+            {
+                // In sobekRE the global friction record GLFR is stored in DEFFRC.4; other friction (BDFR, CRFR, STFR) in DEFFRC.1
+                var globalfrictionFile = GetFilePath(SobekFileNames.SobekGlobalFrictionFileName);
+                if (!File.Exists(globalfrictionFile))
+                {
+                    log.WarnFormat("Friction file [{0}] not found; skipping...", globalfrictionFile);
+                    return;
+                }
+            }
+
+            var sobekFriction = new SobekFrictionDatFileReader().ReadSobekFriction(frictionFile);
+
+            if (main != null && floodPlain1 != null && floodPlain2 != null)
+            {
+                SetMainAndFloodPlainRoughness(main, floodPlain1, floodPlain2, sobekFriction);
+            }
+
+            if (ShouldCancel)
+            {
+                return;
+            }
+
+            SetCrossSectionFrictionsToRougnessCoverages(sobekFriction);
+        }
+
+        private void SetCrossSectionFrictionsToRougnessCoverages(SobekFriction sobekFriction)
+        {
+
+            Dictionary<IBranch, IList<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>> crossSectionRoughnessPerBranch = GetCrossSectionRoughnessPerBranch(sobekFriction);
+
+
+            // now we have per branch a list with cross secion and imported CRFR record
+            foreach (var crossSections in crossSectionRoughnessPerBranch)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                var roughnessTypePerBranchSection = new Dictionary<string, RoughnessType>();
+                foreach (var tuple in crossSections.Value.OrderBy(t => t.First.Chainage))
+                {
+                    SetFrictionToCrossSectionLocation(roughnessTypePerBranchSection, tuple.First, tuple.Second);
+                }
+            }
+
+            // set values to coverages
+            for (int i = 0; i < sectionTypeLocations.Count; i++)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                var d =
+                    new SortedDictionary<NetworkLocation, DelftTools.Utils.Tuple<double, int>>(sectionTypeLocations.Values.ElementAt(i));
+
+                var roughnessSection = GetRoughnessSection(sectionTypeLocations.Keys.ElementAt(i));
+
+                if (roughnessSection == null)
+                {
+                    continue;
+                }
+
+                var coverage = roughnessSection.RoughnessNetworkCoverage;
+
+                if (coverage == null)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    coverage.SkipInterpolationForNewLocation = true;
+                    foreach (var key in d.Keys)
+                    {
+                        var v = d[key];
+                        coverage[key] = new[] {v.First, v.Second};
+
+                        if (ShouldCancel)
+                        {
+                            return;
+                        }
+                    }
+                }
+                finally
+                {
+                    coverage.SkipInterpolationForNewLocation = false;
+                }
+            }
+        }
+
+        private Dictionary<IBranch, IList<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>> GetCrossSectionRoughnessPerBranch(SobekFriction sobekFriction)
+        {
+            var profilePath = GetFilePath(SobekFileNames.SobekProfileDataFileName);
+            var locationPath = GetFilePath(SobekFileNames.SobekNetworkLocationsFileName);
+            var sobekCrossSectionMapping = new SobekProfileDatFileReader().Read(profilePath).ToDictionaryWithErrorDetails(profilePath, def => def.LocationId, def => def.DefinitionId);
+            var sobekCrossSectionLocations = new SobekCrossSectionsReader().Read(GetFilePath(SobekFileNames.SobekNetworkLocationsFileName)).ToDictionaryWithErrorDetails(locationPath, l => l.ID, l => l);
+
+            return GetCrossSectionRoughnessPerBranch(sobekCrossSectionLocations,
+                                                    sobekCrossSectionMapping,
+                                                    sobekFriction,
+                                                    HydroNetwork.Branches.ToDictionary(b => b.Name, b => b),
+                                                    GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName));
+
+        }
+
+        private void SetMainAndFloodPlainRoughness(CrossSectionSectionType main, CrossSectionSectionType floodPlain1, CrossSectionSectionType floodPlain2, SobekFriction sobekFriction)
+        {
+            var defaultRoughnessType = DefaultRoughnessType;
+            var defaultRoughnessValue = DefaultRoughnessValue;
+
+            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+
+            var sectionMain = GetRoughnessSection(main.Name);
+            var sectionFloodplain1 = GetRoughnessSection(floodPlain1.Name);
+            var sectionFloodplain2 = GetRoughnessSection(floodPlain2.Name);
+
+            var channels = HydroNetwork.Channels.ToDictionary(b => b.Name, b => b);
+
+            if (SobekBedFrictionContainsReverseRoughness(sobekFriction))
+            {
+                waterFlowModel1D.UseReverseRoughness = true;
+            }
+
+            var globalSobekFriction = sobekFriction;
+
+            if (SobekFileNames.SobekGlobalFrictionFileName != "")
+            {
+                var globalfrictionFile = GetFilePath(SobekFileNames.SobekGlobalFrictionFileName);
+                globalSobekFriction = new SobekFrictionDatFileReader().ReadSobekFriction(globalfrictionFile);
+
+            }
+            SetGlobalFrictionToRoughnessCoverages(globalSobekFriction, sectionMain, sectionFloodplain1,
+                                                      sectionFloodplain2, out defaultRoughnessValue,
+                                                      out defaultRoughnessType, true);
+            
+            if (waterFlowModel1D.UseReverseRoughness)
+            {
+                var reverseMain = waterFlowModel1D.RoughnessSections.GetApplicableReverseRoughnessSection(sectionMain);
+                var reverseFp1 = waterFlowModel1D.RoughnessSections.GetApplicableReverseRoughnessSection(sectionFloodplain1);
+                var reverseFp2 = waterFlowModel1D.RoughnessSections.GetApplicableReverseRoughnessSection(sectionFloodplain2);
+                SetGlobalFrictionToRoughnessCoverages(globalSobekFriction, reverseMain, reverseFp1,
+                                                      reverseFp2, out defaultRoughnessValue,
+                                                      out defaultRoughnessType, false);
+            }
+
+            // process all BDFR records
+            foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                if (!channels.ContainsKey(sobekBedFriction.BranchId))
+                {
+                    log.WarnFormat("Friction BDFR {0} is linked to branch that does not exist (id {1}); ignored.",
+                                   sobekBedFriction.Id, sobekBedFriction.BranchId);
+                    continue;
+                }
+                var channel = channels[sobekBedFriction.BranchId];
+                if (! channel.CrossSections.Any(c => c.CrossSectionType == CrossSectionType.ZW || c.CrossSectionType == CrossSectionType.Standard))
+                {
+                    log.WarnFormat(
+                        "Friction BDFR {0} is linked to branch definition {1} without any tabulated,standard or river profiles; ignored.",
+                        sobekBedFriction.Id, sobekBedFriction.BranchId);
+                    continue;
+                }
+
+                var sobekMainBedFrictionData = sobekBedFriction.MainFriction;
+                
+                if (sectionMain != null)
+                {
+                    SetPositiveAndNegativeRoughnessToSection(sectionMain, channel, sobekBedFriction.MainFriction, sobekMainBedFrictionData);
+                }
+
+                if (sectionFloodplain1 != null)
+                {
+                    SetPositiveAndNegativeRoughnessToSection(sectionFloodplain1, channel, sobekBedFriction.FloodPlain1Friction, sobekMainBedFrictionData);
+                }
+
+                if (sectionFloodplain2 != null)
+                {
+                    SetPositiveAndNegativeRoughnessToSection(sectionFloodplain2, channel, sobekBedFriction.FloodPlain2Friction, sobekMainBedFrictionData);
+                }
+            }
+            coveragesWithInterpolationSet.Clear(); //clear our administration, we no longer care
+        }
+
+        private bool SobekBedFrictionContainsReverseRoughness(SobekFriction sobekFriction)
+        {
+            foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
+            {
+                var plains = new[]
+                                 {
+                                     sobekBedFriction.MainFriction, sobekBedFriction.FloodPlain1Friction,
+                                     sobekBedFriction.FloodPlain2Friction
+                                 };
+
+                foreach (var sobekBedFrictionPlainData in plains)
+                {
+                    if (!sobekBedFrictionPlainData.Positive.Equals(sobekBedFrictionPlainData.Negative))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void SetPositiveAndNegativeRoughnessToSection(RoughnessSection section, IChannel channel, SobekBedFrictionData sobekBedFrictionData, SobekBedFrictionData sobekMainBedFrictionData)
+        {
+            section.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
+            try
+            {
+                var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+
+                SetSobekBedFrictionToRoughnessCoverage(sobekBedFrictionData, sobekMainBedFrictionData, 
+                                                       true, section, channel);
+
+                SetAndCheckInterpolationRoughnessCoverage(sobekBedFrictionData.Positive, section, channel);
+
+                //is there a reverse roughness defined (not same as normal roughness)?
+                if (waterFlowModel1D.UseReverseRoughness)
+                {
+                    var reverseRoughnessSection = waterFlowModel1D.RoughnessSections.GetApplicableReverseRoughnessSection(section);
+
+                    bool shouldSetReverseRoughness = !sobekBedFrictionData.Positive.Equals(sobekBedFrictionData.Negative) ||
+                                                     sobekBedFrictionData.FrictionType == SobekBedFrictionType.CopyOfMain;
+
+                    if (reverseRoughnessSection.Reversed && shouldSetReverseRoughness)
+                    {
+                        ((ReverseRoughnessSection) reverseRoughnessSection).UseNormalRoughness = false;
+
+                        SetSobekBedFrictionToRoughnessCoverage(sobekBedFrictionData, sobekMainBedFrictionData,
+                                                               false, reverseRoughnessSection, channel);
+
+                        SetAndCheckInterpolationRoughnessCoverage(sobekBedFrictionData.Negative, reverseRoughnessSection,
+                                                                  channel);
+                    }
+                }
+            }
+            finally
+            {
+                section.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = false;
+            }
+        }
+        
+        private static void SetGlobalFrictionToRoughnessCoverages(SobekFriction sobekFriction, RoughnessSection sectionMain,
+            RoughnessSection sectionFloodplain1, RoughnessSection sectionFloodplain2, out double defaultRoughness,
+            out RoughnessType defaultRoughnessType, bool usePositive)
+        {
+            defaultRoughness = DefaultRoughnessValue;
+            defaultRoughnessType = DefaultRoughnessType;
+
+            if ((sectionMain == null) || (sectionFloodplain1 == null) || (sectionFloodplain2 == null))
+            {
+                return;
+            }
+            if (!sobekFriction.GlobalBedFrictionList.Any())
+            {
+                log.ErrorFormat("No global friction available; set to to default {0}, {1}", DefaultRoughnessType, DefaultRoughnessValue);
+
+                sectionMain.SetDefaults(DefaultRoughnessType, DefaultRoughnessValue);
+                sectionFloodplain1.SetDefaults(DefaultRoughnessType, DefaultRoughnessValue);
+                sectionFloodplain2.SetDefaults(DefaultRoughnessType, DefaultRoughnessValue);
+                return;
+            }
+
+            // if the BDFR record is contained in the GLFR record the friction for the main channel is
+            // also used for yz cross sections
+            if (!Enum.IsDefined(typeof(RoughnessType), (int)sobekFriction.GlobalBedFrictionList.First().MainFriction.FrictionType))
+            {
+
+                log.WarnFormat("Default friction type {0} of frictionpart {1} is not supported. The default roughness has been set to {2} constant value {3}",
+                    sobekFriction.GlobalBedFrictionList.First().MainFriction.FrictionType,
+                    sectionMain.RoughnessNetworkCoverage.Name,
+                    DefaultRoughnessType,
+                    DefaultRoughnessValue
+                    );
+
+            }
+            else
+            {
+                var directionData = usePositive
+                                        ? sobekFriction.GlobalBedFrictionList.First().MainFriction.Positive
+                                        : sobekFriction.GlobalBedFrictionList.First().MainFriction.Negative;
+
+                defaultRoughness = directionData.FrictionConst;
+                defaultRoughnessType = (RoughnessType)sobekFriction.GlobalBedFrictionList.First().MainFriction.FrictionType;
+            }
+
+            sectionMain.SetDefaults(defaultRoughnessType,defaultRoughness);
+            SetSobekDefaultBedFrictionToCoverage(sectionFloodplain1,
+                                       sobekFriction.GlobalBedFrictionList.First().FloodPlain1Friction.FrictionType ==
+                                       SobekBedFrictionType.CopyOfMain
+                                           ? sobekFriction.GlobalBedFrictionList.First().MainFriction
+                                           : sobekFriction.GlobalBedFrictionList.First().FloodPlain1Friction, usePositive);
+
+            SetSobekDefaultBedFrictionToCoverage(sectionFloodplain2,
+                                       sobekFriction.GlobalBedFrictionList.First().FloodPlain2Friction.FrictionType ==
+                                       SobekBedFrictionType.CopyOfMain
+                                           ? sobekFriction.GlobalBedFrictionList.First().MainFriction
+                                           : sobekFriction.GlobalBedFrictionList.First().FloodPlain2Friction, usePositive);
+        }
+
+        private static void SetSobekDefaultBedFrictionToCoverage(RoughnessSection roughnessSection, SobekBedFrictionData sobekBedFrictionData, bool usePositive)
+        {
+            //friction type not supported set default chezy and constant value 45
+            if (!Enum.IsDefined(typeof(RoughnessType), (int)sobekBedFrictionData.FrictionType))
+            {
+                roughnessSection.SetDefaults(DefaultRoughnessType,DefaultRoughnessValue);
+
+                log.WarnFormat("Default friction type {0} of frictionpart {1} is not supported. The default roughness has been set to {2} constant value {3}",
+                    sobekBedFrictionData.FrictionType,
+                    roughnessSection.Name,
+                    DefaultRoughnessType,
+                    DefaultRoughnessValue
+                    );
+
+                return;
+            }
+            
+            var directionData = usePositive ? sobekBedFrictionData.Positive : sobekBedFrictionData.Negative;
+            roughnessSection.SetDefaults((RoughnessType) sobekBedFrictionData.FrictionType, directionData.FrictionConst);
+        }
+
+
+        private static void SetSobekBedFrictionToRoughnessCoverage(SobekBedFrictionData sobekBedFrictionData, SobekBedFrictionData sobekMainBedFrictionData, bool usePositive,
+            RoughnessSection roughnessSection, IChannel channel)
+        {
+            var bedFrictionData = sobekBedFrictionData;
+            if (sobekBedFrictionData.FrictionType == SobekBedFrictionType.CopyOfMain)
+            {
+                bedFrictionData = sobekMainBedFrictionData;
+            }
+
+            var sobekBedFrictionDirectionData = usePositive ? bedFrictionData.Positive : bedFrictionData.Negative;
+
+            //friction type not supported set default chezy and constant value 45
+            if (!Enum.IsDefined(typeof(RoughnessType), (int)bedFrictionData.FrictionType))
+            {
+
+                roughnessSection.RoughnessNetworkCoverage[new NetworkLocation(channel, 0)] = new object[]
+                                                                                        {
+                                                                                            DefaultRoughnessValue,
+                                                                                            DefaultRoughnessType
+                                                                                        };
+
+                log.WarnFormat("Friction type {0} of frictionpart {1} is not supported. The default roughness of channel {2} has been set to {3} constant value {4}",
+                    sobekBedFrictionData.FrictionType,
+                    roughnessSection.RoughnessNetworkCoverage.Name,
+                    channel.Name,
+                    DefaultRoughnessType,
+                    DefaultRoughnessValue
+                    );
+
+                return;
+            }
+            
+            switch (sobekBedFrictionDirectionData.FunctionType)
+            {
+                case SobekFrictionFunctionType.Constant:
+                    roughnessSection.RoughnessNetworkCoverage[new NetworkLocation(channel, 0)] = new object[]
+                                                                                        {
+                                                                                            sobekBedFrictionDirectionData.FrictionConst,
+                                                                                            (int)bedFrictionData.FrictionType
+                                                                                        };
+                    break;
+                case SobekFrictionFunctionType.FunctionOfLocation:
+                    foreach (DataRow row in sobekBedFrictionDirectionData.LocationTable.Rows)
+                    {
+                        roughnessSection.RoughnessNetworkCoverage[new NetworkLocation(channel, (double)row[0])] = new object[]
+                                                                              {
+                                                                                  (double) row[1],
+                                                                                  (int)bedFrictionData.FrictionType
+                                                                              };
+                    }
+                    break;
+                case SobekFrictionFunctionType.FunctionOfH:
+                    var functionOfH = roughnessSection.AddHRoughnessFunctionToBranch(channel);
+                    // first column is H, next columns are chainage
+                    ConvertSobekBedFrictionToFunction(sobekBedFrictionDirectionData.HTable, functionOfH);
+                    AddFunctionNetworkLocationsToCoverage(channel, bedFrictionData, roughnessSection, functionOfH);
+                    break;
+                case SobekFrictionFunctionType.FunctionOfQ:
+                    var functionOfQ = roughnessSection.AddQRoughnessFunctionToBranch(channel);
+                    // first column is H, next columns are chainage
+                    ConvertSobekBedFrictionToFunction(sobekBedFrictionDirectionData.QTable, functionOfQ);
+                    AddFunctionNetworkLocationsToCoverage(channel, bedFrictionData, roughnessSection, functionOfQ);
+                    break;
+            }
+        }
+
+        private readonly IList<RoughnessNetworkCoverage> coveragesWithInterpolationSet = new List<RoughnessNetworkCoverage>();
+
+        private void SetAndCheckInterpolationRoughnessCoverage(SobekBedFrictionDirectionData sobekBedFrictionDirectionData, RoughnessSection roughnessSection, IChannel channel)
+        {
+            var coverageName = roughnessSection.Name;
+
+            var coverage = roughnessSection.RoughnessNetworkCoverage;
+
+            if (!coveragesWithInterpolationSet.Contains(coverage) && sobekBedFrictionDirectionData.Interpolation != SobekBedFrictionDirectionData.InterpolationNotSetValue)
+            {
+                coverage.Arguments[0].InterpolationType = sobekBedFrictionDirectionData.Interpolation;
+                coveragesWithInterpolationSet.Add(coverage);
+                log.WarnFormat("Interpolation {0} (of channel {1} ({2})) has been set as network-wide interpolation for roughness section '{3}'. Only a single interpolation type for entire network is supported.", 
+                    sobekBedFrictionDirectionData.Interpolation, channel.Name, channel.LongName, coverageName);
+            }
+
+            if (sobekBedFrictionDirectionData.Interpolation != coverage.Arguments[0].InterpolationType &&
+                sobekBedFrictionDirectionData.Interpolation != SobekBedFrictionDirectionData.InterpolationNotSetValue)
+            {
+                log.WarnFormat("Interpolation {0} of channel {1} ({2}) cannot be set for roughness section '{3}'. Only one interpolation type supported for entire network. Interpolation is {4}.",
+                    sobekBedFrictionDirectionData.Interpolation, channel.Name, channel.LongName, coverageName,
+                    coverage.Arguments[0].InterpolationType);
+            }
+        }
+
+        /// <summary>
+        /// Adds for all given chainages in the function of Q or H a network location to the roughness coverage
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="bedFrictionData"></param>
+        /// <param name="roughnessSection"></param>
+        /// <param name="functionOfH"></param>
+        private static void AddFunctionNetworkLocationsToCoverage(IChannel channel, SobekBedFrictionData bedFrictionData, RoughnessSection roughnessSection, IFunction functionOfH)
+        {
+            foreach (double chainage in functionOfH.Arguments[0].Values)
+            {
+                var location = new NetworkLocation(channel, chainage);
+                roughnessSection.RoughnessNetworkCoverage[location] = new[]
+                                                                    {
+                                                                        ((MultiDimensionalArray)(functionOfH[chainage])).MinValue,
+                                                                        (int)bedFrictionData.FrictionType
+                                                                    };
+            }
+        }
+
+
+        private CrossSectionSectionType GetCrossSectionSectionType(string name)
+        {
+            var rougnessSection = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == name);
+
+            if (rougnessSection != null)
+            {
+                return rougnessSection;
+            }
+
+            rougnessSection = new CrossSectionSectionType { Name = name };
+            //HydroNetwork.CrossSectionSectionTypes.Add(rougnessSection);
+            return rougnessSection;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sectionTypeName"></param>
+        /// <returns></returns>
+        private RoughnessSection GetRoughnessSection(string sectionTypeName)
+        {
+            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+
+            RoughnessSection roughnessSection =
+                waterFlowModel1D.RoughnessSections.FirstOrDefault(rs => rs.Name == sectionTypeName);
+
+            if(roughnessSection != null)
+            {
+                return roughnessSection;
+            }
+
+            var crossSectionSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == sectionTypeName);
+            if (crossSectionSectionType == null)
+            {
+                log.ErrorFormat("Roughness section type {0} is not available in network. The import of the roughness spatial data has been skipped.", sectionTypeName);
+                return null;
+            }
+
+            roughnessSection = new RoughnessSection(crossSectionSectionType, HydroNetwork);
+            waterFlowModel1D.RoughnessSections.Add(roughnessSection);
+            return roughnessSection;
+        }
+
+        private static void ConvertSobekBedFrictionToFunction(DataTable sobekBedFrictionData, IFunction function)
+        {
+            for (var c = 1; c < sobekBedFrictionData.Columns.Count; c++)
+            {
+                var chainage = double.Parse(sobekBedFrictionData.Columns[c].ColumnName, CultureInfo.InvariantCulture);
+                for (var r = 0; r < sobekBedFrictionData.Rows.Count; r++)
+                {
+                    // sobekBedFriction.MainFriction.HTable.Columns[4].ColumnName
+                    function[chainage, sobekBedFrictionData.Rows[r][0]] = sobekBedFrictionData.Rows[r][c];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set Sobek Cross section friction (CRFR) to imported cross section.
+        /// 1 - create segments (start, end, CrossSectionsectionType) in cross section
+        /// 2 - set the appropriate roughness value and type to the corresponding roughness coverage
+        /// </summary>
+        /// <param name="networkLocation"></param>
+        /// <param name="sobekCrossSectionFriction"></param>
+        private void SetFrictionToCrossSectionLocation(IDictionary<string, RoughnessType> roughnessTypePerBranchSection,
+            INetworkLocation networkLocation, SobekCrossSectionFriction sobekCrossSectionFriction)
+        {
+            IDictionary<DelftTools.Utils.Tuple<RoughnessType, double>, string> usedFriction = new Dictionary<DelftTools.Utils.Tuple<RoughnessType, double>, string>();
+
+            var frictionSegmentCount = sobekCrossSectionFriction.Segments.Count;
+            for (var i = 0; i < frictionSegmentCount; i++)
+            {
+                var sobekFrictionSegment = sobekCrossSectionFriction.Segments[i];
+
+                string sectionName = "Main";
+
+                if (!sobekCrossSectionFriction.IsSameAsMainFriction)
+                {
+                    sectionName = GetSectionTypeName(roughnessTypePerBranchSection, usedFriction,
+                                                 new DelftTools.Utils.Tuple<RoughnessType, double>(sobekFrictionSegment.FrictionType,
+                                                                                  sobekFrictionSegment.Friction));
+                }
+
+                SetRoughnessDataToRoughnessCoverage(networkLocation.Branch, networkLocation.Chainage, sobekFrictionSegment, sectionName);
+
+            }
+        }
+
+        private void SetRoughnessDataToRoughnessCoverage(IBranch branch, double offset, SobekFrictionSegment sobekFrictionSegment, string sectionTypeName)
+        {
+            if (!sectionTypeLocations.ContainsKey(sectionTypeName))
+            {
+                sectionTypeLocations[sectionTypeName] = new Dictionary<NetworkLocation, DelftTools.Utils.Tuple<double, int>>();
+            }
+
+            var d = sectionTypeLocations[sectionTypeName];
+
+            if (!Enum.IsDefined(typeof(RoughnessType), (int)sobekFrictionSegment.FrictionType))
+            {
+                d[new NetworkLocation(branch, offset)] = new DelftTools.Utils.Tuple<double, int>(DefaultRoughnessValue, (int)DefaultRoughnessType);
+
+                log.WarnFormat(
+                    "Friction type {0} of channel {1} is not supported. The roughness has been set to {2} constant value {3}",
+                    sobekFrictionSegment.FrictionType,
+                    branch.Name,
+                    DefaultRoughnessType,
+                    DefaultRoughnessValue
+                    );
+            }
+            else
+            {
+                d[new NetworkLocation(branch, offset)] = new DelftTools.Utils.Tuple<double, int>(sobekFrictionSegment.Friction, (int)sobekFrictionSegment.FrictionType);
+            }
+        }
+
+
+        private string GetSectionTypeName(IDictionary<string, RoughnessType> roughnessTypePerBranchSection,
+            IDictionary<DelftTools.Utils.Tuple<RoughnessType, double>, string> usedFriction,
+            DelftTools.Utils.Tuple<RoughnessType, double> roughness)
+        {
+            if (usedFriction.ContainsKey(roughness))
+            {
+                // combination has been used reuse section
+                return usedFriction[roughness];
+            }
+            // combination of type value not found get next free sectionname. 
+            // Extra requirement is the section may not be used for the current branch with another roughness type
+            var count = usedFriction.Count;// -1;
+            //while (roughnessTypePerBranchSection.Contains(
+            //    new KeyValuePair<string, RoughnessType>(GetSectionName(count++), roughness.First)))
+            while (true)
+            {
+                if (roughnessTypePerBranchSection.ContainsKey(GetSectionName(count)))
+                {
+                    if ((roughnessTypePerBranchSection[GetSectionName(count)] == roughness.First)
+                        && (!usedFriction.Values.Contains(GetSectionName(count))))
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+                count++;
+            }
+            //var newSection = GetSectionName(usedFriction.Count);
+            var newSection = GetSectionName(count);
+            usedFriction[roughness] = newSection;
+            roughnessTypePerBranchSection[newSection] = roughness.First;
+            return newSection;
+        }
+
+        private static string GetSectionName(int count)
+        {
+            return string.Format(DelftTools.Hydro.HydroNetwork.CrossSectionSectionFormat, count);
+        }
+
+        public static Dictionary<IBranch, IList<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>> GetCrossSectionRoughnessPerBranch(IDictionary<string, SobekBranchLocation> sobekCrossSectionLocations, IDictionary<string, string> sobekCrossSectionMapping, SobekFriction sobekFriction, IDictionary<string, IBranch> branches, string crossSectionDefinitionReaderPath)
+        {
+            Dictionary<string, SobekCrossSectionDefinition> sobekCrossSectionDefinitions = null;
+            var sobekCrossSectionFrictions = sobekFriction.CrossSectionFrictionList.ToDictionaryWithErrorDetails("friction file", csf => csf.CrossSectionID, csf => csf);
+            var sobekBranchMainFrictions = sobekFriction.SobekBedFrictionList.ToDictionaryWithErrorDetails("friction file", bf => bf.BranchId, bf => bf.MainFriction);
+
+            var crossSectionRoughnessPerBranch = new Dictionary<IBranch, IList<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>>();
+
+            foreach (var crossSectionID in sobekCrossSectionLocations.Keys)
+            {
+                var crossSectionLocation = sobekCrossSectionLocations[crossSectionID];
+
+                if (!branches.ContainsKey(crossSectionLocation.BranchID))
+                {
+                    log.WarnFormat("Branch {0} of location {1} - {2} doesn't exist. Feature has been skipped", crossSectionLocation.BranchID, crossSectionLocation.ID, crossSectionLocation.Name);
+                    continue;
+                }
+
+                var branch = branches[crossSectionLocation.BranchID];
+                if (crossSectionLocation.Offset > branch.Length)
+                {
+                    log.WarnFormat("Offset of location {0} - {1} ({2}) is out of branch {3} length ({4}). Feature has been skipped", crossSectionLocation.ID, crossSectionLocation.Name, crossSectionLocation.Offset.ToString("N1"), crossSectionLocation.BranchID, branch.Length.ToString("N1"));
+                    continue;
+                }
+
+                if (!crossSectionRoughnessPerBranch.ContainsKey(branch))
+                {
+                    crossSectionRoughnessPerBranch[branch] = new List<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>();
+                }
+                var crossSectionRoughnessPerBranchItem = crossSectionRoughnessPerBranch[branch];
+
+                var definitionID = "";
+
+                if (sobekCrossSectionMapping.ContainsKey(crossSectionID))
+                {
+                    definitionID = sobekCrossSectionMapping[crossSectionID];
+                }
+                else
+                {
+                    log.WarnFormat("Cross-section {0} has no definition. Look-up for roughness of this cross-section has been skipped", crossSectionID);
+                    continue;
+                }
+
+                if (sobekCrossSectionFrictions.ContainsKey(definitionID))
+                {
+                    var sobekCrossSectionFriction = sobekCrossSectionFrictions[definitionID];
+                    crossSectionRoughnessPerBranchItem.Add(new DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>(new NetworkLocation(branch, crossSectionLocation.Offset), sobekCrossSectionFriction));
+                }
+                else
+                {
+                    if (sobekCrossSectionDefinitions == null)
+                    {
+                        var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
+                        sobekCrossSectionDefinitions = crossSectionDefinitionReader.Read(crossSectionDefinitionReaderPath).ToDictionaryWithErrorDetails(crossSectionDefinitionReaderPath, csDef => csDef.ID, csDef => csDef);
+                    }
+                    SobekCrossSectionDefinition sobekCrossSectionDefinition = null;
+
+                    if (!sobekCrossSectionDefinitions.TryGetValue(definitionID, out sobekCrossSectionDefinition))
+                    {
+                        log.WarnFormat("Cross-section definition {0} not found. Look-up for roughness of this cross-section has been skipped", definitionID);
+                        continue;
+                    }
+                    
+                    if (sobekCrossSectionDefinition.YZ.Count == 0)
+                    {
+                        continue; //GetSobekCrossSectionFrictionBasedOnBranchFriction is for yz values
+                    }
+
+                    if (sobekBranchMainFrictions.ContainsKey(crossSectionLocation.BranchID))
+                    {
+                        log.WarnFormat("Friction data of definition {0} of cross-section {1} has not been found. The main bed of branch {2} is used as roughness data.", definitionID, crossSectionID, crossSectionLocation.BranchID);
+
+                        var sobekCrossSectionFriction = GetSobekCrossSectionFrictionBasedOnBranchFriction(crossSectionLocation, sobekCrossSectionDefinitions[definitionID], sobekBranchMainFrictions[crossSectionLocation.BranchID]);
+
+                        crossSectionRoughnessPerBranchItem.Add(new DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>(new NetworkLocation(branch, crossSectionLocation.Offset), sobekCrossSectionFriction));
+                    }
+                    else if (sobekFriction.GlobalBedFrictionList.Any())
+                    {
+                        log.WarnFormat("Friction data of definition {0} of cross-section {1} has not been found. The main bed of branch {2} has not been found. The global friction will be used.", definitionID, crossSectionID, crossSectionLocation.BranchID);
+
+                        var sobekCrossSectionFriction = GetSobekCrossSectionFrictionBasedOnBranchFriction(crossSectionLocation, sobekCrossSectionDefinitions[definitionID], sobekFriction.GlobalBedFrictionList.First().MainFriction);
+
+                        crossSectionRoughnessPerBranchItem.Add(new DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>(new NetworkLocation(branch, crossSectionLocation.Offset), sobekCrossSectionFriction));
+                    }
+                    else
+                    {
+                        log.WarnFormat("Friction data of definition {0} of cross-section {1} has not been found. The main bed of branch {2} has not been found. Additionally no global friction has been found.", definitionID, crossSectionID, crossSectionLocation.BranchID);
+                    }
+                }
+            }
+            return crossSectionRoughnessPerBranch;
+        }
+
+        /// <summary>
+        /// GetSobekCrossSectionFrictionBasedOnBranchFriction is only needed if the friction data is missing CrossSection Friction data for yz profiles
+        /// </summary>
+        /// <param name="crossSectionLocation"></param>
+        /// <param name="sobekCrossSectionDefinition"></param>
+        /// <param name="sobekBranchMainFriction"></param>
+        /// <returns></returns>
+        private static SobekCrossSectionFriction GetSobekCrossSectionFrictionBasedOnBranchFriction(SobekBranchLocation crossSectionLocation, SobekCrossSectionDefinition sobekCrossSectionDefinition, SobekBedFrictionData sobekBranchMainFriction)
+        {
+
+
+            var dataTableFormat = new DataTable("format");
+            dataTableFormat.Columns.Add(new DataColumn("een", typeof(double)));
+            dataTableFormat.Columns.Add(new DataColumn("twee", typeof(double)));
+
+            var sobekCrossSectionFriction = new SobekCrossSectionFriction
+                                                {
+                                                    ID = crossSectionLocation.ID,
+                                                    IsSameAsMainFriction = true
+                                                };
+
+            //section
+            var row = dataTableFormat.NewRow();
+            row[0] = sobekCrossSectionDefinition.YZ.First().X;
+            row[1] = sobekCrossSectionDefinition.YZ.Last().X;
+            sobekCrossSectionFriction.AddYSections(row);
+
+            //value
+            row = dataTableFormat.NewRow();
+            row[0] = Convert.ToDouble(sobekBranchMainFriction.FrictionType, CultureInfo.InvariantCulture);
+            row[1] = sobekBranchMainFriction.Positive.FrictionConst;
+            sobekCrossSectionFriction.AddFrictionValues(row);
+            return sobekCrossSectionFriction;
+        }
+
+    }
+}

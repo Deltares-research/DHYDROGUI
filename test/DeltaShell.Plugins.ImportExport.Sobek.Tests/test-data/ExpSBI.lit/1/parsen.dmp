@@ -1,0 +1,225 @@
+Sobek Parser V2.06.028.29797
+file_top_ntw = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.NTW                                           
+file_top_net = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.TP                                            
+file_top_obi = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.OBI                                           
+file_top_cpt = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CP                                            
+file_top_nfl =                                                                                 
+file_top_dat = \SOBEK213\EXPSBI.LIT\WORK\NODES.DAT                                             
+file_top_xyc = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.D12                                           
+file_crs_net = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CR                                            
+file_crs_def = \SOBEK213\EXPSBI.LIT\WORK\PROFILE.DEF                                           
+file_crs_dat = \SOBEK213\EXPSBI.LIT\WORK\PROFILE.DAT                                           
+file_str_net = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ST                                            
+file_str_def = \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DEF                                            
+file_str_dbs = \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DEF                                            
+file_str_dat = \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DAT                                            
+file_str_con = \SOBEK213\EXPSBI.LIT\WORK\CONTROL.DEF                                           
+file_str_trg = \SOBEK213\EXPSBI.LIT\WORK\TRIGGER.DEF                                           
+file_str_cmp = \SOBEK213\EXPSBI.LIT\WORK\STRUCT.CMP                                            
+file_str_vlv = \SOBEK213\EXPSBI.LIT\WORK\VALVE.TAB                                             
+file_str_mud =                                                                                 
+file_str_mum =                                                                                 
+file_frc_bed = \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT                                          
+file_frc_wnd = \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT                                          
+file_frc_exr = \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT                                          
+file_frc_glf = \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT                                          
+file_cnd_net = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CN                                            
+file_cnd_flb = \SOBEK213\EXPSBI.LIT\WORK\BOUNDARY.DAT                                          
+file_cnd_fll = \SOBEK213\EXPSBI.LIT\WORK\LATERAL.DAT                                           
+file_cnd_fbd = \SOBEK213\EXPSBI.LIT\WORK\BOUNDLAT.DAT                                          
+file_cnd_sab = \SOBEK213\EXPSBI.LIT\WORK\BOUNDARY.SAL                                          
+file_cnd_sal = \SOBEK213\EXPSBI.LIT\WORK\LATERAL.SAL                                           
+file_ini_igl = \SOBEK213\EXPSBI.LIT\WORK\INITIAL.DAT                                           
+file_ini_ifl = \SOBEK213\EXPSBI.LIT\WORK\INITIAL.DAT                                           
+file_ini_isa = \SOBEK213\EXPSBI.LIT\WORK\INITIAL.SAL                                           
+file_met_wnd = \SOBEK213\FIXED\DEFAULT.WDC                                                     
+file_met_bui = \SOBEK213\FIXED\DEFAULT.BUI                                                     
+file_met_wat =                                                                                 
+file_dsp_gld = \SOBEK213\EXPSBI.LIT\WORK\GLOBDISP.DAT                                          
+file_dsp_lod = \SOBEK213\EXPSBI.LIT\WORK\LOKDISP.DAT                                           
+file_dsp_fwt = \SOBEK213\EXPSBI.LIT\WORK\FRESHWAT.DAT                                          
+file_dsp_mou = \SOBEK213\EXPSBI.LIT\WORK\MOUTH.DAT                                             
+file_dsp_brm = \SOBEK213\EXPSBI.LIT\WORK\BRMOUTH.DAT                                           
+file_grd_net = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.GR                                            
+file_rtm_flt = ..\work\runtime.dat                                                             
+file_rtm_flm = ..\work\runtime.dat                                                             
+file_rtm_san = ..\work\runtime.dat                                                             
+file_rtm_gwn =                                                                                 
+file_gwm_gwm =                                                                                 
+file_mea_net = \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ME                                            
+ConveyanceAccuracyFactor= 0.015
+DefaultDistrictCode=00
+CalculationPointMinDistDwn1=  0.50
+CalculationPointMinDistUp 1=  0.50
+CalculationPointMinDistDwn2=  0.50
+CalculationPointMinDistUp 2=  0.50
+CalculationPointMinDistDwn3=  0.50
+CalculationPointMinDistUp 3=  0.50
+CalculationPointMinDistDwn4=  0.50
+CalculationPointMinDistUp 4=  0.50
+CompoundObjectDistance= 10.00
+No range check
+Existance check
+ max_increase_width_with_h_subs=    99999.00    
+ max_increase_width_with_h_nosubs=    99999.00    
+ max_change_deltax_with_x =    99999.00    
+ max_change_totwidth_with_x =    99999.00    
+ max_change_flowwidth_with_x =    99999.00    
+ dx_structure =    1.000000    
+ dx_min =    1.000000    
+Conveyance tables created
+Output for total of sections only
+ applications: <RIVR><FLOW> 
+ Start parsing FLOW data
+ Counting objects ......
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.TP
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CN
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.NTW
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ME
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\CONTROL.DEF
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ST
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\TRIGGER.DEF
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CR
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\PROFILE.DEF
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+ Topography layer ......
+ Start Reading Topo Data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.TP
+File Opened
+ Reading Obi Data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.OBI
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.OBI
+File Opened
+ Start hashing branches, nodes
+ Start converting topo_1
+ Start converting topo_2
+ Start parsing pluvius nodes
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NODES.DAT
+File Opened
+ Reading Measurement Layer ......
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ME
+File Opened
+ Grid layer ......
+ Start reading cs-locations
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CR
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\PROFILE.DAT
+File Opened
+ Start ordering cross-sections
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.NTW
+File Opened
+ Start reading struct locations
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ST
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.ST
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\STRUCT.CMP
+File Opened
+ Start reading grid data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.GR
+File Opened
+Opening File: ..\work\runtime.dat
+File Opened
+Opening File: \SOBEK213\FIXED\DEFAULT.BUI
+File Opened
+ Structure layer ......
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DAT
+File Opened
+ Start converting grid data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DEF
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.TP
+File Opened
+ Start converting structure data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\STRUCT.DEF
+File Opened
+ Conditions layer ......
+ Conditions layer ......
+ Read Condition Tables
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\BOUNDLAT.DAT
+File Opened
+ Read Condition Locations
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CN
+File Opened
+ Convert Boundary Conditions
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\BOUNDARY.DAT
+File Opened
+ Convert Lateral Discharges
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\LATERAL.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.NTW
+File Opened
+ Controllers and Triggers ......
+ Convert Controllers
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\CONTROL.DEF
+File Opened
+ Convert Triggers
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\TRIGGER.DEF
+File Opened
+ Convert Measurement Stations ......
+ Convert Lateral U-Discharges
+ Cross sections layer ......
+ Start reading cs-definition data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\PROFILE.DEF
+File Opened
+ Start reading cs-location data
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\PROFILE.DAT
+File Opened
+ Friction layer ......
+ Global Friction
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+ Bed Friction
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+ Cross-Section Friction
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\FRICTION.DAT
+File Opened
+ No section output
+ Convert Cross-Sections to Grid
+ Maximum number of conveyance levels computed:          184
+ Wind Friction
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\WND_LOC.DAT
+File Opened
+Opening File: \SOBEK213\FIXED\DEFAULT.WDC
+File Opened
+ Curving Points
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.CP
+File Opened
+ 2D-Connections
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.D12
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\NETWORK.GR
+File Opened
+ Initial conditions layer ......
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \SOBEK213\EXPSBI.LIT\WORK\INITIAL.DAT
+File Opened
+ Output options ......
+Opening File: ..\work\runtime.dat
+File Opened
+ Stop parsing FLOW data
+
+End of program

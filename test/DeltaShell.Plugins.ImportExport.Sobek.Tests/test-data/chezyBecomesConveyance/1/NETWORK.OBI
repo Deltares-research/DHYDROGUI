@@ -1,0 +1,14 @@
+OBI1.0
+OBID id 'Q(t)_boundary' ci 'SBK_BOUNDARY' obid
+OBID id '4' ci 'SBK_PROFILE' obid
+OBID id '1_1' ci 'SBK_GRIDPOINT' obid
+OBID id '1_2' ci 'SBK_GRIDPOINT' obid
+OBID id '1_3' ci 'SBK_GRIDPOINT' obid
+OBID id '1_4' ci 'SBK_GRIDPOINT' obid
+OBID id '1_5' ci 'SBK_GRIDPOINT' obid
+OBID id '1_6' ci 'SBK_GRIDPOINT' obid
+OBID id '1_7' ci 'SBK_GRIDPOINT' obid
+OBID id '1_8' ci 'SBK_GRIDPOINT' obid
+OBID id '1_9' ci 'SBK_GRIDPOINT' obid
+OBID id '5' ci 'SBK_PROFILE' obid
+OBID id 'Closed end' ci 'SBK_CHANNELCONNECTION' obid

@@ -1,0 +1,10 @@
+OBI1.0
+OBID id 'cn1' ci 'SBK_CHANNELCONNECTION' obid
+OBID id 'wr1' ci 'SBK_WEIR' obid
+OBID id '1' ci 'SBK_GRIDPOINT' obid
+OBID id 'rwr1' ci 'SBK_RIVERWEIR' obid
+OBID id '2' ci 'SBK_GRIDPOINT' obid
+OBID id '3' ci 'SBK_GRIDPOINT' obid
+OBID id 'cs1' ci 'SBK_CMPSTR' obid
+OBID id '4' ci 'SBK_GRIDPOINT' obid
+OBID id 'cn2' ci 'SBK_CHANNELCONNECTION' obid

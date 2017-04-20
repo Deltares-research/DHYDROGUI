@@ -1,0 +1,11 @@
+[structure]
+type             = weir
+id               = w
+x                = 1
+y                = 2
+crest_level      = 3
+crest_width      = 4
+Im_a_nonexistent_property = hax		# This property is not in the schema!
+discharge_coeff  = 1
+lat_dis_coeff    = 1
+allowed_flow_dir = 0

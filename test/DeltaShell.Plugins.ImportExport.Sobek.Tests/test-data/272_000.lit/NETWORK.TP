@@ -1,0 +1,30 @@
+TP_1.0
+NODE id 'T1_h1' nm 'T1_h1_Q=0' px 0 py 0 node
+NODE id 'T2_h3' nm 'T2_h3' px 500 py 50 node
+NODE id 'T2_h1' nm 'T2_h1_Q=0' px 0 py 50 node
+NODE id 'T3_h1' nm 'T3_h1_h=2m' px 0 py 100 node
+NODE id 'T1_h3' nm 'T1_h3' px 500 py 0 node
+NODE id 'T3_h3' nm 'T3_h3' px 500 py 100 node
+NODE id 'T4_h3' nm 'T4_h3' px 500 py 150 node
+NODE id 'T4_h1' nm 'T4_h1_h=2m' px 0 py 150 node
+NODE id 'T5_h1' nm 'T5_h1_Qh_rel' px 0 py 200 node
+NODE id 'T6_h3' nm 'T6_h3' px 500 py 250 node
+NODE id 'T5_h3' nm 'T5_h3' px 500 py 200 node
+NODE id 'T6_h1' nm 'T6_h1_Qh_rel' px 0 py 250 node
+NODE id 'T7_h1' nm 'T7_h1_h=2m' px 0 py 300 node
+NODE id 'T7_h2' nm '' px 100 py 300 node
+NODE id 'T7_h3' nm '' px 150 py 300 node
+NODE id 'T7_h4' nm '' px 200 py 300 node
+NODE id 'T7_h5' nm '' px 450 py 300 node
+NODE id 'T7_h6' nm 'T7_h6_Q=10' px 500 py 300 node
+BRCH id '1' nm '' bn 'T1_h1' en 'T1_h3' al 500 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id '2' nm '' bn 'T2_h3' en 'T2_h1' al 500 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id '3' nm '' bn 'T3_h1' en 'T3_h3' al 500 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id '4' nm '' bn 'T4_h3' en 'T4_h1' al 500 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '5' nm '' bn 'T5_h1' en 'T5_h3' al 500 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '6' nm '' bn 'T6_h3' en 'T6_h1' al 500 vc_opt 0 vc_equi -1 vc_len 1000 brch
+BRCH id '7' nm '' bn 'T7_h1' en 'T7_h2' al 100 vc_opt 0 vc_equi -1 vc_len 100000 brch
+BRCH id '8' nm '' bn 'T7_h2' en 'T7_h3' al 50 vc_opt 0 vc_equi -1 vc_len 100000 brch
+BRCH id '9' nm '' bn 'T7_h3' en 'T7_h4' al 50 vc_opt 0 vc_equi -1 vc_len 100000 brch
+BRCH id '10' nm '' bn 'T7_h4' en 'T7_h5' al 250 vc_opt 0 vc_equi -1 vc_len 100000 brch
+BRCH id '11' nm '' bn 'T7_h5' en 'T7_h6' al 50 vc_opt 0 vc_equi -1 vc_len 100000 brch

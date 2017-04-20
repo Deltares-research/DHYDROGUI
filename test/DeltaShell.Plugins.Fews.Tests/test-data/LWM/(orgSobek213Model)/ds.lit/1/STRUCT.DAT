@@ -1,0 +1,14 @@
+STRU id 'KBR724' nm 'pijler' dd 'KBR724' stru
+STRU id 'KBR318' nm 'landh' dd 'KBR318' stru
+STRU id 'ELC_KSL3' nm 'Groote Provincialesluis' dd 'ELC_KSL3' ca 0 cj '' stru
+STRU id 'KBR261' nm 'landh' dd 'KBR261' stru
+STRU id 'ELC_KSL20' nm 'Hunsingosluis' dd 'ELC_KSL20' ca 0 cj '' stru
+STRU id 'ELC_KSL11' nm 'Lauwerssluizen' dd 'ELC_KSL11' stru
+STRU id 'KGM16' nm 'Nieuwe Robbengat' dd 'KGM16' ca 1 cj 'KGM16_CNTR' stru
+STRU id 'iKGM16' nm 'Inlaat' dd 'iKGM16' ca 1 cj 'iKGM16_TIME' stru
+STRU id 'KGM127' nm 'Zoutkamperplaat' dd 'KGM127' ca 1 cj 'KGM127_CNTR' stru
+STRU id 'iKGM127' nm 'Inlaat' dd 'iKGM127' ca 1 cj 'iKGM127_TIME' stru
+STRU id 'KGM128' nm 'Kollumeroord' dd 'KGM128' ca 1 cj 'KGM128_CNTR' stru
+STRU id 'iKGM128' nm 'Inlaat' dd 'iKGM128' ca 1 cj 'iKGM128_TIME' stru
+STRU id 'KGM196' nm 'Eskespolder' dd 'KGM196' ca 1 cj 'KGM196_CNTR' stru
+STRU id 'iKGM196' nm 'Inlaat' dd 'iKGM196' ca 1 cj 'iKGM196_TIME' stru

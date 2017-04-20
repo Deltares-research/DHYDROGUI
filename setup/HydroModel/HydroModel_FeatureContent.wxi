@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <ComponentRef Id="HydroModelPlugin"/>
+  <?ifndef var.NOKERNELS?>
+  <ComponentRef Id="x86_hydromodel_kernels"/>
+  <?endif?>
+  
+  <ComponentRef Id="hydro_model_scripts_examples_files"/>
+  <ComponentRef Id="hydro_model_scripts_libraries_files"/>
+
+  <?ifndef var.NOKERNELS?>
+  <Feature Id="HM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    <ComponentRef Id="x64_hydromodel_kernels"/>
+  </Feature>
+  <?endif?>
+</Include>

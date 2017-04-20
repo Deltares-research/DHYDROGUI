@@ -1,0 +1,1227 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =     1 Nr iter. = 999
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 998
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  24118.00 DQ=    -0.052
+ Time step =     1 Nr iter. = 997
+    Mo04MdSa-PTri                  X=  11944.00 DH=   0.00502
+    Mo04MdSa-PTri                  X=  12486.00 DQ=    -0.390
+ Time step =     1 Nr iter. = 996
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 995
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  25756.00 DQ=    -0.052
+ Time step =     1 Nr iter. = 994
+    Mo04MdSa-PTri                  X=  11944.00 DH=   0.00502
+    Mo04MdSa-PTri                  X=  12486.00 DQ=    -0.390
+ Time step =     1 Nr iter. = 993
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 992
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  24118.00 DQ=    -0.052
+ Time step =     1 Nr iter. = 991
+    Mo04MdSa-PTri                  X=  11944.00 DH=   0.00502
+    Mo04MdSa-PTri                  X=  12486.00 DQ=    -0.390
+ Time step =     1 Nr iter. = 990
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 989
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  24118.00 DQ=    -0.052
+ Time step =     1 Nr iter. = 988
+    Mo04MdSa-PTri                  X=  11944.00 DH=   0.00502
+    Mo04MdSa-PTri                  X=  12486.00 DQ=    -0.390
+ Time step =     1 Nr iter. = 987
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 986
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  24118.00 DQ=    -0.052
+ Time step =     1 Nr iter. = 985
+    Mo04MdSa-PTri                  X=  11944.00 DH=   0.00502
+    Mo04MdSa-PTri                  X=  12486.00 DQ=    -0.390
+ Time step =     1 Nr iter. = 984
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 983
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  25756.00 DQ=    -0.052
+ Time step =     1 Nr iter. = 982
+    Mo04MdSa-PTri                  X=  11944.00 DH=   0.00502
+    Mo04MdSa-PTri                  X=  12486.00 DQ=    -0.390
+ Time step =     1 Nr iter. = 981
+    Mo04MdSa-PTri                  X=  12486.00 DH=  -0.02089
+    Mo04MdSa-PTri                  X=  12486.00 DQ=     0.412
+ Time step =     1 Nr iter. = 980
+    Mo04MdSa-PTri                  X=  12486.00 DH=   0.01587
+    Mo05PTri-ND                    X=  24118.00 DQ=    -0.052
+  
+ Time step =   687 Nr iter. = 100
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00014
+    Mo05PTri-ND                    X=  42235.00 DQ=    -0.072
+ Time step =   687 Nr iter. =  99
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00569
+    Mo05PTri-ND                    X=  44981.00 DQ=     3.126
+ Time step =   687 Nr iter. =  98
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00431
+    Mo05PTri-ND                    X=  44981.00 DQ=     2.605
+ Time step =   687 Nr iter. =  97
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01063
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.843
+ Time step =   687 Nr iter. =  96
+    Mo05PTri-ND                    X=  44432.00 DH=  -0.00008
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.043
+ Time step =   687 Nr iter. =  95
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00009
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.041
+ Time step =   687 Nr iter. =  94
+    Mo05PTri-ND                    X=  44432.00 DH=  -0.00009
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.038
+ Time step =   687 Nr iter. =  93
+    Mo05PTri-ND                    X=  44432.00 DH=  -0.00010
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.029
+ Time step =   687 Nr iter. =  92
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00011
+    Mo05PTri-ND                    X=  41685.00 DQ=    -0.024
+ Time step =   687 Nr iter. =  91
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00014
+    Mo05PTri-ND                    X=  42235.00 DQ=    -0.071
+ Time step =   687 Nr iter. =  90
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00569
+    Mo05PTri-ND                    X=  44981.00 DQ=     3.127
+ Time step =   687 Nr iter. =  89
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00431
+    Mo05PTri-ND                    X=  44981.00 DQ=     2.602
+ Time step =   687 Nr iter. =  88
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01064
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.850
+ Time step =   687 Nr iter. =  87
+    Mo05PTri-ND                    X=  43883.00 DH=  -0.00009
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.047
+ Time step =   687 Nr iter. =  86
+    Mo05PTri-ND                    X=  44432.00 DH=  -0.00010
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.044
+ Time step =   687 Nr iter. =  85
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00009
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.033
+ Time step =   687 Nr iter. =  84
+    Mo05PTri-ND                    X=  44432.00 DH=  -0.00011
+    Mo05PTri-ND                    X=  44981.00 DQ=     0.034
+ Time step =   687 Nr iter. =  83
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00011
+    Mo05PTri-ND                    X=  41685.00 DQ=    -0.025
+ Time step =   687 Nr iter. =  82
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00014
+    Mo05PTri-ND                    X=  42235.00 DQ=    -0.071
+ Time step =   687 Nr iter. =  81
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.00569
+    Mo05PTri-ND                    X=  44981.00 DQ=     3.127
+  
+ Time step =   688 Nr iter. = 100
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.185
+ Time step =   688 Nr iter. =  99
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+ Time step =   688 Nr iter. =  98
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01037
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.847
+ Time step =   688 Nr iter. =  97
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.186
+ Time step =   688 Nr iter. =  96
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+ Time step =   688 Nr iter. =  95
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01037
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.846
+ Time step =   688 Nr iter. =  94
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.185
+ Time step =   688 Nr iter. =  93
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+ Time step =   688 Nr iter. =  92
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01037
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.847
+ Time step =   688 Nr iter. =  91
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.186
+ Time step =   688 Nr iter. =  90
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+ Time step =   688 Nr iter. =  89
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01037
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.846
+ Time step =   688 Nr iter. =  88
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.185
+ Time step =   688 Nr iter. =  87
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+ Time step =   688 Nr iter. =  86
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01037
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.847
+ Time step =   688 Nr iter. =  85
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.186
+ Time step =   688 Nr iter. =  84
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+ Time step =   688 Nr iter. =  83
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01037
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.846
+ Time step =   688 Nr iter. =  82
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00586
+    Mo05PTri-ND                    X=  44981.00 DQ=    -3.185
+ Time step =   688 Nr iter. =  81
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00451
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.661
+  
+ Time step =  2067 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.500
+ Time step =  2067 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.984
+ Time step =  2067 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00894
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.484
+ Time step =  2067 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.499
+ Time step =  2067 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.983
+ Time step =  2067 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00894
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.484
+ Time step =  2067 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.500
+ Time step =  2067 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.984
+ Time step =  2067 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00894
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.484
+ Time step =  2067 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.500
+ Time step =  2067 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.983
+ Time step =  2067 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00894
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.484
+ Time step =  2067 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.500
+ Time step =  2067 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.984
+ Time step =  2067 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00894
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.484
+ Time step =  2067 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.499
+ Time step =  2067 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.983
+ Time step =  2067 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00894
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.484
+ Time step =  2067 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00621
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.500
+ Time step =  2067 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01515
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.984
+  
+ Time step =  2080 Nr iter. = 100
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.119
+ Time step =  2080 Nr iter. =  99
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.118
+ Time step =  2080 Nr iter. =  98
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.115
+ Time step =  2080 Nr iter. =  97
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.115
+ Time step =  2080 Nr iter. =  96
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.118
+ Time step =  2080 Nr iter. =  95
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.117
+ Time step =  2080 Nr iter. =  94
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.115
+ Time step =  2080 Nr iter. =  93
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.115
+ Time step =  2080 Nr iter. =  92
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.118
+ Time step =  2080 Nr iter. =  91
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.118
+ Time step =  2080 Nr iter. =  90
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.115
+ Time step =  2080 Nr iter. =  89
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.115
+ Time step =  2080 Nr iter. =  88
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.118
+ Time step =  2080 Nr iter. =  87
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.117
+ Time step =  2080 Nr iter. =  86
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.115
+ Time step =  2080 Nr iter. =  85
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.115
+ Time step =  2080 Nr iter. =  84
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.118
+ Time step =  2080 Nr iter. =  83
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.118
+ Time step =  2080 Nr iter. =  82
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=    -5.115
+ Time step =  2080 Nr iter. =  81
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01186
+    Mo05PTri-ND                    X=  26302.00 DQ=     5.115
+  
+ Time step =  2085 Nr iter. = 100
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.005
+ Time step =  2085 Nr iter. =  99
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  98
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.006
+ Time step =  2085 Nr iter. =  97
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  96
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.005
+ Time step =  2085 Nr iter. =  95
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  94
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.006
+ Time step =  2085 Nr iter. =  93
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  92
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.005
+ Time step =  2085 Nr iter. =  91
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  90
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.006
+ Time step =  2085 Nr iter. =  89
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  88
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.005
+ Time step =  2085 Nr iter. =  87
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  86
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.006
+ Time step =  2085 Nr iter. =  85
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  84
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.005
+ Time step =  2085 Nr iter. =  83
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+ Time step =  2085 Nr iter. =  82
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.006
+ Time step =  2085 Nr iter. =  81
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01155
+    Mo05PTri-ND                    X=  44981.00 DQ=    -5.005
+  
+ Time step =  2098 Nr iter. = 100
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00971
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.678
+ Time step =  2098 Nr iter. =  99
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00513
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.885
+ Time step =  2098 Nr iter. =  98
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02106
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.301
+ Time step =  2098 Nr iter. =  97
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.739
+ Time step =  2098 Nr iter. =  96
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00971
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.678
+ Time step =  2098 Nr iter. =  95
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00513
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.884
+ Time step =  2098 Nr iter. =  94
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02106
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.301
+ Time step =  2098 Nr iter. =  93
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.739
+ Time step =  2098 Nr iter. =  92
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00971
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.678
+ Time step =  2098 Nr iter. =  91
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00513
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.884
+ Time step =  2098 Nr iter. =  90
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02106
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.301
+ Time step =  2098 Nr iter. =  89
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.738
+ Time step =  2098 Nr iter. =  88
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00971
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.677
+ Time step =  2098 Nr iter. =  87
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00513
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.885
+ Time step =  2098 Nr iter. =  86
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02106
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.301
+ Time step =  2098 Nr iter. =  85
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.739
+ Time step =  2098 Nr iter. =  84
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00971
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.678
+ Time step =  2098 Nr iter. =  83
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00513
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.885
+ Time step =  2098 Nr iter. =  82
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02106
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.301
+ Time step =  2098 Nr iter. =  81
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.739
+  
+ Time step =  2099 Nr iter. = 100
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00970
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.672
+ Time step =  2099 Nr iter. =  99
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00508
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.853
+ Time step =  2099 Nr iter. =  98
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.257
+ Time step =  2099 Nr iter. =  97
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.733
+ Time step =  2099 Nr iter. =  96
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00970
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.672
+ Time step =  2099 Nr iter. =  95
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00508
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.852
+ Time step =  2099 Nr iter. =  94
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.257
+ Time step =  2099 Nr iter. =  93
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.732
+ Time step =  2099 Nr iter. =  92
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00970
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.672
+ Time step =  2099 Nr iter. =  91
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00508
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.853
+ Time step =  2099 Nr iter. =  90
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.257
+ Time step =  2099 Nr iter. =  89
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.733
+ Time step =  2099 Nr iter. =  88
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00970
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.672
+ Time step =  2099 Nr iter. =  87
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00508
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.852
+ Time step =  2099 Nr iter. =  86
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.257
+ Time step =  2099 Nr iter. =  85
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.733
+ Time step =  2099 Nr iter. =  84
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00970
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.672
+ Time step =  2099 Nr iter. =  83
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00508
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.853
+ Time step =  2099 Nr iter. =  82
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.257
+ Time step =  2099 Nr iter. =  81
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.733
+  
+ Time step =  2100 Nr iter. = 100
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.728
+ Time step =  2100 Nr iter. =  99
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00969
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.651
+ Time step =  2100 Nr iter. =  98
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00505
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.834
+ Time step =  2100 Nr iter. =  97
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02096
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.214
+ Time step =  2100 Nr iter. =  96
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.728
+ Time step =  2100 Nr iter. =  95
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00969
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.652
+ Time step =  2100 Nr iter. =  94
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00505
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.833
+ Time step =  2100 Nr iter. =  93
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02096
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.213
+ Time step =  2100 Nr iter. =  92
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.728
+ Time step =  2100 Nr iter. =  91
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00969
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.651
+ Time step =  2100 Nr iter. =  90
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00505
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.834
+ Time step =  2100 Nr iter. =  89
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02096
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.214
+ Time step =  2100 Nr iter. =  88
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00622
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.728
+ Time step =  2100 Nr iter. =  87
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00969
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.653
+ Time step =  2100 Nr iter. =  86
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00505
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.828
+ Time step =  2100 Nr iter. =  85
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02097
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.208
+ Time step =  2100 Nr iter. =  84
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00623
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.725
+ Time step =  2100 Nr iter. =  83
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00969
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.654
+ Time step =  2100 Nr iter. =  82
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00504
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.830
+ Time step =  2100 Nr iter. =  81
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02097
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.211
+  
+ Time step =  2101 Nr iter. = 100
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00621
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.709
+ Time step =  2101 Nr iter. =  99
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00968
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.635
+ Time step =  2101 Nr iter. =  98
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00510
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.847
+ Time step =  2101 Nr iter. =  97
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.191
+ Time step =  2101 Nr iter. =  96
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00621
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.709
+ Time step =  2101 Nr iter. =  95
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00968
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.635
+ Time step =  2101 Nr iter. =  94
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00510
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.847
+ Time step =  2101 Nr iter. =  93
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.191
+ Time step =  2101 Nr iter. =  92
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00621
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.709
+ Time step =  2101 Nr iter. =  91
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00968
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.636
+ Time step =  2101 Nr iter. =  90
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00510
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.847
+ Time step =  2101 Nr iter. =  89
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.191
+ Time step =  2101 Nr iter. =  88
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00621
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.709
+ Time step =  2101 Nr iter. =  87
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00968
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.635
+ Time step =  2101 Nr iter. =  86
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00510
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.847
+ Time step =  2101 Nr iter. =  85
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.191
+ Time step =  2101 Nr iter. =  84
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00621
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.709
+ Time step =  2101 Nr iter. =  83
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00968
+    Mo05PTri-ND                    X=   1733.00 DQ=    -4.636
+ Time step =  2101 Nr iter. =  82
+    Mo05PTri-ND                    X=   1733.00 DH=   0.00510
+    Mo05PTri-ND                    X=   1733.00 DQ=    -2.846
+ Time step =  2101 Nr iter. =  81
+    Mo05PTri-ND                    X=   1733.00 DH=  -0.02100
+    Mo05PTri-ND                    X=   1733.00 DQ=    10.191
+  
+ Time step =  2127 Nr iter. = 100
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01314
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.750
+ Time step =  2127 Nr iter. =  99
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01087
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.448
+ Time step =  2127 Nr iter. =  98
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01385
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.255
+ Time step =  2127 Nr iter. =  97
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00627
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.651
+ Time step =  2127 Nr iter. =  96
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01643
+    Mo05PTri-ND                    X=  44981.00 DQ=     6.593
+ Time step =  2127 Nr iter. =  95
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01314
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.750
+ Time step =  2127 Nr iter. =  94
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01087
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.446
+ Time step =  2127 Nr iter. =  93
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01385
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.254
+ Time step =  2127 Nr iter. =  92
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00628
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.651
+ Time step =  2127 Nr iter. =  91
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01643
+    Mo05PTri-ND                    X=  44981.00 DQ=     6.594
+ Time step =  2127 Nr iter. =  90
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01314
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.750
+ Time step =  2127 Nr iter. =  89
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01087
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.446
+ Time step =  2127 Nr iter. =  88
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01385
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.253
+ Time step =  2127 Nr iter. =  87
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00628
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.650
+ Time step =  2127 Nr iter. =  86
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01643
+    Mo05PTri-ND                    X=  44981.00 DQ=     6.593
+ Time step =  2127 Nr iter. =  85
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01314
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.750
+ Time step =  2127 Nr iter. =  84
+    Mo05PTri-ND                    X=  44981.00 DH=   0.01087
+    Mo05PTri-ND                    X=  44981.00 DQ=    -4.448
+ Time step =  2127 Nr iter. =  83
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01385
+    Mo05PTri-ND                    X=  44981.00 DQ=     5.256
+ Time step =  2127 Nr iter. =  82
+    Mo05PTri-ND                    X=  44981.00 DH=   0.00627
+    Mo05PTri-ND                    X=  44981.00 DQ=    -2.651
+ Time step =  2127 Nr iter. =  81
+    Mo05PTri-ND                    X=  44981.00 DH=  -0.01643
+    Mo05PTri-ND                    X=  44981.00 DQ=     6.594
+  
+ Time step =  2131 Nr iter. = 100
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.944
+ Time step =  2131 Nr iter. =  99
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.919
+ Time step =  2131 Nr iter. =  98
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01772
+    Mo05PTri-ND                    X=  26302.00 DQ=    -6.862
+ Time step =  2131 Nr iter. =  97
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.942
+ Time step =  2131 Nr iter. =  96
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.921
+ Time step =  2131 Nr iter. =  95
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01773
+    Mo05PTri-ND                    X=  26302.00 DQ=    -6.864
+ Time step =  2131 Nr iter. =  94
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.944
+ Time step =  2131 Nr iter. =  93
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.919
+ Time step =  2131 Nr iter. =  92
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01772
+    Mo05PTri-ND                    X=  26302.00 DQ=    -6.862
+ Time step =  2131 Nr iter. =  91
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.942
+ Time step =  2131 Nr iter. =  90
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.921
+ Time step =  2131 Nr iter. =  89
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01773
+    Mo05PTri-ND                    X=  26302.00 DQ=    -6.864
+ Time step =  2131 Nr iter. =  88
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.944
+ Time step =  2131 Nr iter. =  87
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.919
+ Time step =  2131 Nr iter. =  86
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01772
+    Mo05PTri-ND                    X=  26302.00 DQ=    -6.862
+ Time step =  2131 Nr iter. =  85
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.942
+ Time step =  2131 Nr iter. =  84
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.921
+ Time step =  2131 Nr iter. =  83
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01773
+    Mo05PTri-ND                    X=  26302.00 DQ=    -6.864
+ Time step =  2131 Nr iter. =  82
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01077
+    Mo05PTri-ND                    X=  26302.00 DQ=     3.944
+ Time step =  2131 Nr iter. =  81
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.00696
+    Mo05PTri-ND                    X=  26302.00 DQ=     2.919
+  
+ Time step =  2132 Nr iter. = 100
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  99
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+ Time step =  2132 Nr iter. =  98
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01745
+    Mo05PTri-ND                    X=  26302.00 DQ=     6.734
+ Time step =  2132 Nr iter. =  97
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  96
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+ Time step =  2132 Nr iter. =  95
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01745
+    Mo05PTri-ND                    X=  26302.00 DQ=     6.734
+ Time step =  2132 Nr iter. =  94
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  93
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+ Time step =  2132 Nr iter. =  92
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01745
+    Mo05PTri-ND                    X=  26302.00 DQ=     6.734
+ Time step =  2132 Nr iter. =  91
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  90
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+ Time step =  2132 Nr iter. =  89
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01745
+    Mo05PTri-ND                    X=  26302.00 DQ=     6.734
+ Time step =  2132 Nr iter. =  88
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  87
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+ Time step =  2132 Nr iter. =  86
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01745
+    Mo05PTri-ND                    X=  26302.00 DQ=     6.734
+ Time step =  2132 Nr iter. =  85
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  84
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+ Time step =  2132 Nr iter. =  83
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01745
+    Mo05PTri-ND                    X=  26302.00 DQ=     6.734
+ Time step =  2132 Nr iter. =  82
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01067
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.908
+ Time step =  2132 Nr iter. =  81
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00677
+    Mo05PTri-ND                    X=  26302.00 DQ=    -2.826
+  
+ Time step =  2147 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.933
+ Time step =  2147 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+ Time step =  2147 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00603
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.050
+ Time step =  2147 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.932
+ Time step =  2147 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+ Time step =  2147 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00603
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.050
+ Time step =  2147 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.933
+ Time step =  2147 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+ Time step =  2147 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00603
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.050
+ Time step =  2147 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.932
+ Time step =  2147 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+ Time step =  2147 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00603
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.050
+ Time step =  2147 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.933
+ Time step =  2147 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+ Time step =  2147 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00603
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.050
+ Time step =  2147 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.932
+ Time step =  2147 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+ Time step =  2147 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00603
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.050
+ Time step =  2147 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01473
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -6.933
+ Time step =  2147 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00870
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     3.883
+  
+ Time step =  2148 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00526
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.187
+ Time step =  2148 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00813
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.705
+ Time step =  2148 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00420
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.267
+ Time step =  2148 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01759
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.159
+ Time step =  2148 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00526
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.187
+ Time step =  2148 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00813
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.705
+ Time step =  2148 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00420
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.266
+ Time step =  2148 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01759
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.159
+ Time step =  2148 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00526
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.187
+ Time step =  2148 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00813
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.705
+ Time step =  2148 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00420
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.267
+ Time step =  2148 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01759
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.159
+ Time step =  2148 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00526
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.187
+ Time step =  2148 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00813
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.705
+ Time step =  2148 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00420
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.266
+ Time step =  2148 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01759
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.159
+ Time step =  2148 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00526
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.187
+ Time step =  2148 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00813
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.705
+ Time step =  2148 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00420
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.267
+ Time step =  2148 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01759
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.159
+  
+ Time step =  2343 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00536
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.376
+ Time step =  2343 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00830
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.045
+ Time step =  2343 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00436
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.498
+ Time step =  2343 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01801
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.919
+ Time step =  2343 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00536
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.375
+ Time step =  2343 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00830
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.045
+ Time step =  2343 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00436
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.498
+ Time step =  2343 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01801
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.919
+ Time step =  2343 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00536
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.376
+ Time step =  2343 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00830
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.045
+ Time step =  2343 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00436
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.498
+ Time step =  2343 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01801
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.919
+ Time step =  2343 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00536
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.376
+ Time step =  2343 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00830
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.045
+ Time step =  2343 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00436
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.499
+ Time step =  2343 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01801
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.919
+ Time step =  2343 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00536
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.375
+ Time step =  2343 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00830
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.046
+ Time step =  2343 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00436
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -2.498
+ Time step =  2343 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01801
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     8.919
+  
+ Time step =  2344 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00600
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.224
+ Time step =  2344 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01480
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.419
+ Time step =  2344 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00880
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.198
+ Time step =  2344 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00600
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.221
+ Time step =  2344 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01481
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.419
+ Time step =  2344 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00880
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.197
+ Time step =  2344 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00600
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.225
+ Time step =  2344 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01480
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.425
+ Time step =  2344 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00879
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.201
+ Time step =  2344 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00601
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.221
+ Time step =  2344 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01481
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.422
+ Time step =  2344 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00880
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.200
+ Time step =  2344 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00601
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.225
+ Time step =  2344 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01480
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.424
+ Time step =  2344 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00879
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.197
+ Time step =  2344 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00600
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.227
+ Time step =  2344 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01479
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.421
+ Time step =  2344 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00880
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -4.194
+ Time step =  2344 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00600
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -3.224
+ Time step =  2344 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.01480
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     7.419
+  
+ Time step =  2345 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.018
+ Time step =  2345 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.016
+ Time step =  2345 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.017
+ Time step =  2345 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.019
+ Time step =  2345 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.019
+ Time step =  2345 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.016
+ Time step =  2345 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.016
+ Time step =  2345 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.019
+ Time step =  2345 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.018
+ Time step =  2345 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.016
+ Time step =  2345 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.017
+ Time step =  2345 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.019
+ Time step =  2345 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.019
+ Time step =  2345 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.016
+ Time step =  2345 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.016
+ Time step =  2345 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.019
+ Time step =  2345 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.018
+ Time step =  2345 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.016
+ Time step =  2345 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -5.017
+ Time step =  2345 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00990
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     5.019
+  
+ Time step =  2346 Nr iter. = 100
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00847
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     4.137
+ Time step =  2346 Nr iter. =  99
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00471
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.729
+ Time step =  2346 Nr iter. =  98
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01869
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -9.330
+ Time step =  2346 Nr iter. =  97
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00552
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.464
+ Time step =  2346 Nr iter. =  96
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00847
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     4.137
+ Time step =  2346 Nr iter. =  95
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00471
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.730
+ Time step =  2346 Nr iter. =  94
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01869
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -9.331
+ Time step =  2346 Nr iter. =  93
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00552
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.463
+ Time step =  2346 Nr iter. =  92
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00847
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     4.137
+ Time step =  2346 Nr iter. =  91
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00471
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.729
+ Time step =  2346 Nr iter. =  90
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01869
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -9.330
+ Time step =  2346 Nr iter. =  89
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00552
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.467
+ Time step =  2346 Nr iter. =  88
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00848
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     4.135
+ Time step =  2346 Nr iter. =  87
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00470
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.730
+ Time step =  2346 Nr iter. =  86
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01869
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -9.331
+ Time step =  2346 Nr iter. =  85
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00552
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.466
+ Time step =  2346 Nr iter. =  84
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00848
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     4.135
+ Time step =  2346 Nr iter. =  83
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00470
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.729
+ Time step =  2346 Nr iter. =  82
+    Mo04MdSa-PTri                  X=  30041.00 DH=   0.01869
+    Mo04MdSa-PTri                  X=  30041.00 DQ=    -9.330
+ Time step =  2346 Nr iter. =  81
+    Mo04MdSa-PTri                  X=  30041.00 DH=  -0.00552
+    Mo04MdSa-PTri                  X=  30041.00 DQ=     2.464
+  
+ Time step =  2367 Nr iter. = 100
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.086
+ Time step =  2367 Nr iter. =  99
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.356
+ Time step =  2367 Nr iter. =  98
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01088
+    Mo05PTri-ND                    X=  26302.00 DQ=    -4.270
+ Time step =  2367 Nr iter. =  97
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.085
+ Time step =  2367 Nr iter. =  96
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.355
+ Time step =  2367 Nr iter. =  95
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01088
+    Mo05PTri-ND                    X=  26302.00 DQ=    -4.270
+ Time step =  2367 Nr iter. =  94
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.086
+ Time step =  2367 Nr iter. =  93
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.356
+ Time step =  2367 Nr iter. =  92
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01088
+    Mo05PTri-ND                    X=  26302.00 DQ=    -4.270
+ Time step =  2367 Nr iter. =  91
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.085
+ Time step =  2367 Nr iter. =  90
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.355
+ Time step =  2367 Nr iter. =  89
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01088
+    Mo05PTri-ND                    X=  26302.00 DQ=    -4.270
+ Time step =  2367 Nr iter. =  88
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.086
+ Time step =  2367 Nr iter. =  87
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.356
+ Time step =  2367 Nr iter. =  86
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01088
+    Mo05PTri-ND                    X=  26302.00 DQ=    -4.270
+ Time step =  2367 Nr iter. =  85
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.085
+ Time step =  2367 Nr iter. =  84
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.355
+ Time step =  2367 Nr iter. =  83
+    Mo05PTri-ND                    X=  26302.00 DH=   0.01088
+    Mo05PTri-ND                    X=  26302.00 DQ=    -4.270
+ Time step =  2367 Nr iter. =  82
+    Mo05PTri-ND                    X=  26302.00 DH=   0.00692
+    Mo05PTri-ND                    X=  26302.00 DQ=    -3.086
+ Time step =  2367 Nr iter. =  81
+    Mo05PTri-ND                    X=  26302.00 DH=  -0.01780
+    Mo05PTri-ND                    X=  26302.00 DQ=     7.356
+  

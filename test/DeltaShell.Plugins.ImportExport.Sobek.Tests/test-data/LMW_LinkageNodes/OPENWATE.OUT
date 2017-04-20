@@ -1,0 +1,18 @@
+ Run datum (DD-MM-YY) and time:20- 2-2009  11:35
+
+ Case name                                     
+
+
+
+ Maxima per event
+
+ Event   Start     Node identification   Node            Max_level    Max_accepted   Exceedance   
+  nr  year-mon-day                       name               [m]             [m]          [hour]
+===================================================================================================
+ N.B.  Output only as max. accepted waterlevel is exceeded
+===================================================================================================
+   1 2004 Jan   1   OW_3270              3270                   5.667        5.500        311
+   1 2004 Jan   1   OW_3267              3267                   6.036        5.400        324
+   1 2004 Jan   1   OW_4003              4003                   7.107        7.100         23
+   1 2004 Jan   1   OW_3156              3156                   8.104        8.100          7
+   1 2004 Jan   1   OW_4425mb            OW_4425mb              8.040        8.000         27

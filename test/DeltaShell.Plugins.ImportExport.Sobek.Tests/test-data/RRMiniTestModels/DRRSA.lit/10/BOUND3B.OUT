@@ -1,0 +1,31 @@
+ Run datum (DD-MM-YY) and time:20- 3-2012  13:24
+
+ Case name                                     
+
+
+
+ Maxima per event
+
+ Event   Start     Node identification   Node           Maximum_flow  
+  nr  year-mon-day                       name               [m3/s]
+===========================================================================
+   1 2000 Jan  10   cnGFE1022                                   0.419
+   1 2000 Jan  10   cnGFE1021                                   0.284
+   2 2000 Jul   1   cnGFE1022                                   5.558
+   2 2000 Jul   1   cnGFE1021                                   0.586
+   3 2000 Aug   5   cnGFE1022                                   3.368
+   3 2000 Aug   5   cnGFE1021                                   0.451
+   4 2000 Aug  29   cnGFE1022                                   2.992
+   4 2000 Aug  29   cnGFE1021                                   0.444
+   5 2000 Sep  15   cnGFE1022                                  15.728
+   5 2000 Sep  15   cnGFE1021                                   1.164
+   6 2000 Sep  22   cnGFE1022                                  10.429
+   6 2000 Sep  22   cnGFE1021                                   0.848
+   7 2000 Okt  17   cnGFE1022                                   6.826
+   7 2000 Okt  17   cnGFE1021                                   0.678
+   8 2000 Okt  28   cnGFE1022                                   0.419
+   8 2000 Okt  28   cnGFE1021                                   0.315
+   9 2000 Nov   5   cnGFE1022                                   2.464
+   9 2000 Nov   5   cnGFE1021                                   0.375
+  10 2000 Dec   9   cnGFE1022                                   5.036
+  10 2000 Dec   9   cnGFE1021                                   0.573

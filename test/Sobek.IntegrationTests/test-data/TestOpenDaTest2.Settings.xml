@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<DeltaShellOpenDAModelProviderSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectPath>D:\DeltaShell\delta-shell\test-data\Plugins\DelftModels\DeltaShell.Plugins.DelftModels.WaterFlowModel.IntegrationTests\testOpenDa2.dsproj</ProjectPath>
+  <ModelName>flow model 1d (demo network)</ModelName>
+  <UseMemoryClone>true</UseMemoryClone>
+</DeltaShellOpenDAModelProviderSettings>

@@ -1,0 +1,2788 @@
+GLFR dd 1.65 s1 0.474 s2 0.55 p1 -6 p2 2.75 p3 5.5 p4 4.125 p5 -0.2 p6 2.447 a1 0.0005 a2 6e-005 ra 1 glfr
+BDFR id '1' ci '1' mf 1 mt cp 0 2.99999993294477E-02 0  mr cp 0 2.99999993294477E-02 0  s1 6  s2 6  sf 1 st cp 0 2.99999993294477E-02 0  sr cp 0 2.99999993294477E-02 0  bdfr
+CRFR id '176' nm '94 (102.323)' cs '176'
+lt ys
+TBLE
+    201.20005    399.11005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '177' nm '95 (102.805)' cs '177'
+lt ys
+TBLE
+    131.00005    283.65005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '178' nm 'Ponte di Bailey' cs '178'
+lt ys
+TBLE
+    65.3426    185.5862    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '179' nm '96 (103.291)' cs '179'
+lt ys
+TBLE
+    117.32005    207.21005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '180' nm '97 (103.774)' cs '180'
+lt ys
+TBLE
+    201.22005    305.38005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '181' nm '98 (104.261)' cs '181'
+lt ys
+TBLE
+    178.98    279.03005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '182' nm '99 (104.779)' cs '182'
+lt ys
+TBLE
+    189.98    294.32005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '183' nm '100 (105.297)' cs '183'
+lt ys
+TBLE
+    153.57    257.13005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '184' nm 'Ponte A22 a Vadena' cs '184'
+lt ys
+TBLE
+    191.56    372.7701    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '185' nm '102 (105.759)' cs '185'
+lt ys
+TBLE
+    123.53    229.37005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '186' nm 'Ponte di Vadena' cs '186'
+lt ys
+TBLE
+    126.6385    199.73005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '187' nm 'Appostamento di Vadena' cs '187'
+lt ys
+TBLE
+    149.8526    234.05005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '188' nm '105 (106.261)' cs '188'
+lt ys
+TBLE
+    32.06    128.08285    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '189' nm '106 (106.720)' cs '189'
+lt ys
+TBLE
+    147.016    266.68005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '190' nm '107 (107.222)' cs '190'
+lt ys
+TBLE
+    196.6994    309.65105    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '191' nm '108 (107.740)' cs '191'
+lt ys
+TBLE
+    167.59    282.36005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '192' nm '109 (108.222)' cs '192'
+lt ys
+TBLE
+    234.26    338.04005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '193' nm '110 (108.760)' cs '193'
+lt ys
+TBLE
+    160.06    324.22005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '194' nm '111 (109.321)' cs '194'
+lt ys
+TBLE
+    174.433    323.04605    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '195' nm '112 (109.771)' cs '195'
+lt ys
+TBLE
+    158.653    283.14405    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '196' nm '113 (110.281)' cs '196'
+lt ys
+TBLE
+    189.057    310.37205    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '197' nm '114 (110.789)' cs '197'
+lt ys
+TBLE
+    184.708    312.49625    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '198' nm '115 (111.289)' cs '198'
+lt ys
+TBLE
+    144.701    260.83005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '199' nm '116 (111.796)' cs '199'
+lt ys
+TBLE
+    249.7195    395.98005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '200' nm 'Ponte di Piccolongo' cs '200'
+lt ys
+TBLE
+    156.69    288.3301    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '201' nm '118 (112.293)' cs '201'
+lt ys
+TBLE
+    147.387    249.4946    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '202' nm '119 (112.785)' cs '202'
+lt ys
+TBLE
+    147.752    262.4058    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '203' nm '120 (113.293)' cs '203'
+lt ys
+TBLE
+    155.942    259.5882    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '204' nm 'Ponte FS di Ora' cs '204'
+lt ys
+TBLE
+    115.5124    219.48005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '205' nm '122 (113.446)' cs '205'
+lt ys
+TBLE
+    144.1419    252.08765    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '206' nm 'Ponte di Ora' cs '206'
+lt ys
+TBLE
+    173.3552    287.7001    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '207' nm '124 (113.925)' cs '207'
+lt ys
+TBLE
+    178.0697    274.39005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '208' nm '125 (114.447)' cs '208'
+lt ys
+TBLE
+    122.13005    211.68005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '209' nm '126 (114.936)' cs '209'
+lt ys
+TBLE
+    147.1922    235.47005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '210' nm '127 (115.415)' cs '210'
+lt ys
+TBLE
+    184.2    267.02005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '211' nm '128 (115.929)' cs '211'
+lt ys
+TBLE
+    111.3549    242.5578    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '212' nm 'Ponte di Scac' cs '212'
+lt ys
+TBLE
+    166.6199    333.3601    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '213' nm '130 (116.453)' cs '213'
+lt ys
+TBLE
+    213.5123    334.77325    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '214' nm '131 (116.931)' cs '214'
+lt ys
+TBLE
+    193.29    331.41445    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '215' nm '132 (117.440)' cs '215'
+lt ys
+TBLE
+    29.08    125.16465    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '216' nm '133 (117.945)' cs '216'
+lt ys
+TBLE
+    10.87695    106.9355    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '217' nm 'Ponte di Egna' cs '217'
+lt ys
+TBLE
+    149.18    233.41005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '218' nm 'Idrometro di Egna' cs '218'
+lt ys
+TBLE
+    129.461    223.178    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '219' nm '136 (118.454)' cs '219'
+lt ys
+TBLE
+    128.28    217.62005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '220' nm '137 (118.953)' cs '220'
+lt ys
+TBLE
+    221.364    318.5425    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '221' nm '138 (119.448)' cs '221'
+lt ys
+TBLE
+    222.044    314.79155    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '222' nm '139 (119.935)' cs '222'
+lt ys
+TBLE
+    135.1605    227.3875    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '223' nm '140 (120.448)' cs '223'
+lt ys
+TBLE
+    158.6865    250.748    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '224' nm '141 (120.915)' cs '224'
+lt ys
+TBLE
+    130.44785    221.49835    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '225' nm '142 (121.450)' cs '225'
+lt ys
+TBLE
+    111.45    204.6005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '226' nm '143 (121.932)' cs '226'
+lt ys
+TBLE
+    97.782    190.47    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '227' nm 'Ponte S. Floriano' cs '227'
+lt ys
+TBLE
+    143.98    218.36005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '228' nm 'Idrometro di S. Floriano' cs '228'
+lt ys
+TBLE
+    85.583    182.233    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '229' nm '145 (122.419)' cs '229'
+lt ys
+TBLE
+    131.2125    224.46705    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '230' nm '146 (122.892)' cs '230'
+lt ys
+TBLE
+    50.21    169.53    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '231' nm '147 (123.479)' cs '231'
+lt ys
+TBLE
+    183.38    284.431    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '232' nm '148 (123.935)' cs '232'
+lt ys
+TBLE
+    115.69    219.45    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '233' nm 'Ponte Nuovo' cs '233'
+lt ys
+TBLE
+    54.594    172.444    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '234' nm '149 (124.443)' cs '234'
+lt ys
+TBLE
+    164.197    292.97    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '235' nm '150 (124.951)' cs '235'
+lt ys
+TBLE
+    161.03    262.65    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '236' nm '151 (125.458)' cs '236'
+lt ys
+TBLE
+    128.6    229.59005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '237' nm '152 (125.971)' cs '237'
+lt ys
+TBLE
+    125.2    217    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '238' nm '153 (126.471)' cs '238'
+lt ys
+TBLE
+    123.82    223.01    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '239' nm '154 (126.989)' cs '239'
+lt ys
+TBLE
+    182.17    277.52005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '240' nm '155 (127.484)' cs '240'
+lt ys
+TBLE
+    187.63    280.78    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '241' nm 'Idrometro di Salorno' cs '241'
+lt ys
+TBLE
+    26.806    126.966    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '242' nm 'Ponte di Salorno' cs '242'
+lt ys
+TBLE
+    248.88    329.32    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '243' nm '158 (127.983)' cs '243'
+lt ys
+TBLE
+    125.14    219.4005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '244' nm '159 (128.483)' cs '244'
+lt ys
+TBLE
+    235.22    328.374    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '245' nm '160 (128.967)' cs '245'
+lt ys
+TBLE
+    220.332    351.63005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '246' nm '161 (129.473)' cs '246'
+lt ys
+TBLE
+    84    199.39    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '247' nm '162 (129.988)' cs '247'
+lt ys
+TBLE
+    81.333    168.095    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '248' nm '165 (130.441)' cs '248'
+lt ys
+TBLE
+    67.45    214.18955    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '249' nm '166 (130.645)' cs '249'
+lt ys
+TBLE
+    52.32    214.35055    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '250' nm '167 (130.841)' cs '250'
+lt ys
+TBLE
+    116.7475    264.48405    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '251' nm '168 (131.059)' cs '251'
+lt ys
+TBLE
+    173.51    275.30505    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '252' nm '169 (131.290)' cs '252'
+lt ys
+TBLE
+    282.287    402.95105    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '253' nm '170 (131.489)' cs '253'
+lt ys
+TBLE
+    209.377    313.91175    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '254' nm '171 (131.685)' cs '254'
+lt ys
+TBLE
+    227.2025    341.7225    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '255' nm '172 (131.903)' cs '255'
+lt ys
+TBLE
+    74.8186    207.59175    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '256' nm '173 (132.102)' cs '256'
+lt ys
+TBLE
+    90.0457    213.8608    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '257' nm '174 (132.309)' cs '257'
+lt ys
+TBLE
+    248.48665    362.06005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '258' nm '175 (132.507)' cs '258'
+lt ys
+TBLE
+    237.1124    361.56605    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '259' nm '176 (132.708)' cs '259'
+lt ys
+TBLE
+    153.08435    282.25745    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '260' nm '177 (132.879)' cs '260'
+lt ys
+TBLE
+    328.07105    449.90595    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '261' nm '178 (133.056)' cs '261'
+lt ys
+TBLE
+    293.63525    415.98265    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '262' nm '179 (133.238)' cs '262'
+lt ys
+TBLE
+    331.56735    473.26975    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '263' nm '180 (133.440)' cs '263'
+lt ys
+TBLE
+    383.78975    540.7501    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '264' nm '181 (133.644)' cs '264'
+lt ys
+TBLE
+    152.8348    294.54415    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '265' nm '182 (133.841)' cs '265'
+lt ys
+TBLE
+    176.98275    303.8151    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '266' nm '183 (134.027)' cs '266'
+lt ys
+TBLE
+    121.80655    256.13885    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '267' nm '184 (134.240)' cs '267'
+lt ys
+TBLE
+    140.4788    265.6164    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '268' nm '185 (134.451)' cs '268'
+lt ys
+TBLE
+    379.6275    501.56685    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '269' nm '186 (134.651)' cs '269'
+lt ys
+TBLE
+    98.5544    201.0845    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '270' nm 'Ponte Masetto' cs '270'
+lt ys
+TBLE
+    225.77    311.2401    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '271' nm '188 (134.859)' cs '271'
+lt ys
+TBLE
+    264.0721    364.765    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '272' nm '189 (135.061)' cs '272'
+lt ys
+TBLE
+    98.41    199.05175    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '273' nm '190 (135.255)' cs '273'
+lt ys
+TBLE
+    124.7085    223.97005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '274' nm '191 (135.453)' cs '274'
+lt ys
+TBLE
+    87.42    186.70005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '275' nm '192 (135.654)' cs '275'
+lt ys
+TBLE
+    239.86055    339.21625    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '276' nm '193 (135.859)' cs '276'
+lt ys
+TBLE
+    19.62835    103.82155    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '277' nm '194 (136.058)' cs '277'
+lt ys
+TBLE
+    11.15    121.78005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '278' nm 'Ponte di S. Michele sulla s.s. n.43' cs '278'
+lt ys
+TBLE
+    12.1    100.58005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '279' nm 'Idrometro di S. Michele' cs '279'
+lt ys
+TBLE
+    12.27    100.07005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '280' nm '197 (159.969)' cs '280'
+lt ys
+TBLE
+    22.70745    114.09145    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '281' nm '198 (136.477)' cs '281'
+lt ys
+TBLE
+    206.39225    317.71005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '282' nm 'Ponte FS Trento-Malè' cs '282'
+lt ys
+TBLE
+    147.01005    247.1001    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '283' nm '200 (136.696)' cs '283'
+lt ys
+TBLE
+    171.62    281.90005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '284' nm '201 (136.896)' cs '284'
+lt ys
+TBLE
+    238.75    355.8863    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '285' nm 'Ponte FS Verona-Brennero a Grumo' cs '285'
+lt ys
+TBLE
+    244.28005    335.38005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '286' nm '203 (137.218)' cs '286'
+lt ys
+TBLE
+    242.5    366.35005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '287' nm '204 (137.424)' cs '287'
+lt ys
+TBLE
+    245.7522    346.43505    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '288' nm '205 (137.622)' cs '288'
+lt ys
+TBLE
+    271.688    417.78005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '289' nm '206 (137.825)' cs '289'
+lt ys
+TBLE
+    250.47335    395.70565    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '290' nm '207 (138.025)' cs '290'
+lt ys
+TBLE
+    329.98005    475.94515    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '291' nm '208 (138.228)' cs '291'
+lt ys
+TBLE
+    283.23005    426.36005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '292' nm '209 (138.434)' cs '292'
+lt ys
+TBLE
+    122.49    267.44005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '293' nm '210 (138.640)' cs '293'
+lt ys
+TBLE
+    263.04    408.20005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '294' nm '211 (138.826)' cs '294'
+lt ys
+TBLE
+    102.601    246.7    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '295' nm '212 (139.040)' cs '295'
+lt ys
+TBLE
+    188.43    332.15    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '296' nm '213 (139.236)' cs '296'
+lt ys
+TBLE
+    238.86    383.99    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '297' nm '214 (139.443)' cs '297'
+lt ys
+TBLE
+    230.91    375.58005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '298' nm '215 (139.656)' cs '298'
+lt ys
+TBLE
+    300.20005    444.08005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '299' nm '216 (139.851)' cs '299'
+lt ys
+TBLE
+    236.07005    372.77005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '300' nm 'Ponte di Nave S. Rocco' cs '300'
+lt ys
+TBLE
+    70.1    172.40005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '301' nm '218 (140.031)' cs '301'
+lt ys
+TBLE
+    90.89    210.59005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '302' nm 'ex Idrometro di Nava S. Felice' cs '302'
+lt ys
+TBLE
+    134.067    256.965    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '303' nm '220 (140.228)' cs '303'
+lt ys
+TBLE
+    147.76805    275.64005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '304' nm '221 (140.422)' cs '304'
+lt ys
+TBLE
+    182.65005    304.67005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '305' nm '222 (140.621)' cs '305'
+lt ys
+TBLE
+    105.6    233.74    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '306' nm '223 (140.818)' cs '306'
+lt ys
+TBLE
+    199.01    348.30005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '307' nm '224 (141.027)' cs '307'
+lt ys
+TBLE
+    227.376    367.868    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '308' nm '225 (141.225)' cs '308'
+lt ys
+TBLE
+    233.062    362.033    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '309' nm '226 (141.424)' cs '309'
+lt ys
+TBLE
+    243.576    367.59805    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '310' nm '227 (141.627)' cs '310'
+lt ys
+TBLE
+    212.234    332.14005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '311' nm '228 (141.825)' cs '311'
+lt ys
+TBLE
+    217.12    331.18005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '312' nm 'Ponte A22 a Zambana' cs '312'
+lt ys
+TBLE
+    268.99005    456.14005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '313' nm '230 (142.036)' cs '313'
+lt ys
+TBLE
+    409.52045    532.10845    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '314' nm 'Ponte di Zambana' cs '314'
+lt ys
+TBLE
+    459.34    556.02    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '315' nm '232 (142.238)' cs '315'
+lt ys
+TBLE
+    182.056    296.429    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '316' nm '233 (142.427)' cs '316'
+lt ys
+TBLE
+    235.249    348.19505    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '317' nm '234 (142.622)' cs '317'
+lt ys
+TBLE
+    233.96905    353.92205    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '318' nm '235 (142.827)' cs '318'
+lt ys
+TBLE
+    240.726    420.38305    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '319' nm '236 (143.018)' cs '319'
+lt ys
+TBLE
+    235.98705    448.99905    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '320' nm '237 (143.224)' cs '320'
+lt ys
+TBLE
+    275.675    477.96705    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '321' nm '238 (143.424)' cs '321'
+lt ys
+TBLE
+    280.20305    469.96005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '322' nm '239 (143.626)' cs '322'
+lt ys
+TBLE
+    142.393    383.30905    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '323' nm '240 (143.834)' cs '323'
+lt ys
+TBLE
+    310.853    453.91905    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '324' nm '241 (144.026)' cs '324'
+lt ys
+TBLE
+    143.157    253.097    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '325' nm '242 (144.220)' cs '325'
+lt ys
+TBLE
+    322.883    463.71305    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '326' nm '243 (144.415)' cs '326'
+lt ys
+TBLE
+    347.679    522.07005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '327' nm '244 (144.610)' cs '327'
+lt ys
+TBLE
+    181.984    308.66805    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '328' nm '245 (144.813)' cs '328'
+lt ys
+TBLE
+    154.078    332.92405    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '329' nm '246 (145.010)' cs '329'
+lt ys
+TBLE
+    365.7068    487.19855    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '330' nm '247 (145.218)' cs '330'
+lt ys
+TBLE
+    359.92805    475.38705    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '331' nm '248 (145.417)' cs '331'
+lt ys
+TBLE
+    214.34805    347.72605    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '332' nm 'Idrometro Foce Avisio' cs '332'
+lt ys
+TBLE
+    39.3655    154.479    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '333' nm '250 (145.654)' cs '333'
+lt ys
+TBLE
+    74.55    349.31155    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '334' nm '251 (145.736)' cs '334'
+lt ys
+TBLE
+    9.4    263.74    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '335' nm '252 (145.840)' cs '335'
+lt ys
+TBLE
+    8.9    247.2    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '336' nm '253 (145.894)' cs '336'
+lt ys
+TBLE
+    35.92    259.34825    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '337' nm '254 (146.005)' cs '337'
+lt ys
+TBLE
+    95.0032    317.94    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '338' nm '255 (146.100)' cs '338'
+lt ys
+TBLE
+    49.86    277.27    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '339' nm '256 (146.190)' cs '339'
+lt ys
+TBLE
+    18.55    249.93285    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '340' nm '257 (146.298)' cs '340'
+lt ys
+TBLE
+    67.4285    319.14    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '341' nm '258 (146.394)' cs '341'
+lt ys
+TBLE
+    9.13    264.97085    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '342' nm '259 (146.492)' cs '342'
+lt ys
+TBLE
+    8.95    308.75745    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '343' nm '260 (146.636)' cs '343'
+lt ys
+TBLE
+    112.5496    262.35055    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '344' nm 'Idrometro di Spini' cs '344'
+lt ys
+TBLE
+    121.123    255.856    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '345' nm '262 (146.812)' cs '345'
+lt ys
+TBLE
+    118.01005    235.53855    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '346' nm '263 (147.011)' cs '346'
+lt ys
+TBLE
+    96.56    227.4585    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '347' nm '264 (147.214)' cs '347'
+lt ys
+TBLE
+    134.75    245.10005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '348' nm '265 (147.416)' cs '348'
+lt ys
+TBLE
+    110.55    227.75005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '349' nm '266 (147.616)' cs '349'
+lt ys
+TBLE
+    105.15    222.84105    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '350' nm '267 (147.818)' cs '350'
+lt ys
+TBLE
+    92.51    209.28005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '351' nm '268 (148.038)' cs '351'
+lt ys
+TBLE
+    110.94    228.63955    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '352' nm '269 (148.170)' cs '352'
+lt ys
+TBLE
+    81.39    195.80805    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '353' nm '270 (148.220)' cs '353'
+lt ys
+TBLE
+    102.71005    224.29645    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '354' nm '271 (148.453)' cs '354'
+lt ys
+TBLE
+    125.84    230.04305    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '355' nm '272 (148.632)' cs '355'
+lt ys
+TBLE
+    101.83    225.00455    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '356' nm 'Idrometro di Roncafort' cs '356'
+lt ys
+TBLE
+    103.604    226.954    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '357' nm '274 (148.830)' cs '357'
+lt ys
+TBLE
+    100.099    206.68455    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '358' nm '275 (149.054)' cs '358'
+lt ys
+TBLE
+    104.75205    272.28955    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '359' nm '276 (149.251)' cs '359'
+lt ys
+TBLE
+    109.63    240.42005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '360' nm '277 (149.442)' cs '360'
+lt ys
+TBLE
+    113.05    254.90005    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '361' nm '278 (149.657)' cs '361'
+lt ys
+TBLE
+    98.95835    221.84    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '362' nm '279 (149.849)' cs '362'
+lt ys
+TBLE
+    98.4555    240.51    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '363' nm '280 (150.049)' cs '363'
+lt ys
+TBLE
+    108.68    224.137    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '364' nm '281 (150.260)' cs '364'
+lt ys
+TBLE
+    112.4945    233.8665    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '365' nm '282 (150.465)' cs '365'
+lt ys
+TBLE
+    115.667    241.1985    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '366' nm '283 (150.675)' cs '366'
+lt ys
+TBLE
+    98.57    220.45    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '367' nm '284 (150.843)' cs '367'
+lt ys
+TBLE
+    124.22    253.32225    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '368' nm '285 (151.045)' cs '368'
+lt ys
+TBLE
+    112.5455    231.9035    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '369' nm 'Ponte A 22' cs '369'
+lt ys
+TBLE
+    58.9754    244.8734    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '370' nm '286 (151.259)' cs '370'
+lt ys
+TBLE
+    105.17    217.09    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '371' nm '287 (151.476)' cs '371'
+lt ys
+TBLE
+    107.52    219.4257    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '372' nm '288 (151.629)' cs '372'
+lt ys
+TBLE
+    95.8545    216.99    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '373' nm '289 (151.653)' cs '373'
+lt ys
+TBLE
+    62.12    182.83    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr
+CRFR id '374' nm 'Ponte Trento Centro' cs '374'
+lt ys
+TBLE
+    91.048    314.246    <
+tble
+ft ys
+TBLE
+    1    0.03    <
+tble
+fr ys
+TBLE
+    1    0.03    <
+tble
+crfr

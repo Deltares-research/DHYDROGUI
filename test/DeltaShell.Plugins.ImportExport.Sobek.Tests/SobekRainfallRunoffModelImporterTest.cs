@@ -1,0 +1,127 @@
+﻿using System;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
+{
+    [TestFixture]
+    public class SobekRainfallRunoffModelImporterTest
+    {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.VerySlow)]
+        public void ImportTholenGeneralCheck()
+        {
+            string pathToSobekModel = TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP";
+
+            var hydroModel = CreateHydroModelWithRR();
+            var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
+            importer.Import();
+
+            //Settings
+            Assert.AreEqual(true, rainfallRunoffModel.CapSim, "CapSim");
+            Assert.AreEqual(RainfallRunoffEnums.CapsimInitOptions.AtEquilibriumMoisture, rainfallRunoffModel.CapSimInitOption, "CapSim init option");
+            
+            //no setting in file, but this is the default in sobek 2:
+            Assert.AreEqual(RainfallRunoffEnums.CapsimCropAreaOptions.PerCropArea, rainfallRunoffModel.CapSimCropAreaOption, "CapSim crop method"); 
+
+            //Catchments
+            Assert.AreEqual(0, rainfallRunoffModel.Basin.Catchments.Count(c => c.SubCatchments.Count > 0), "nested catchments");
+            Assert.AreEqual(0, rainfallRunoffModel.ModelData.Count(md => md.SubCatchmentModelData.Count > 0), "nested model data");
+
+            //Types
+            Assert.AreEqual(328, rainfallRunoffModel.Basin.Catchments.Count(c => c.CatchmentType == CatchmentType.Unpaved), "unpaved");
+            Assert.AreEqual(48, rainfallRunoffModel.Basin.Catchments.Count(c => c.CatchmentType == CatchmentType.Paved), "paved");
+
+            Assert.AreEqual(328, rainfallRunoffModel.ModelData.OfType<UnpavedData>().Count(), "unpaved model");
+            Assert.AreEqual(48, rainfallRunoffModel.ModelData.OfType<PavedData>().Count(), "paved model");
+            
+            //Meteo
+            Assert.AreEqual(MeteoDataDistributionType.Global, rainfallRunoffModel.Precipitation.DataDistributionType);
+            Assert.AreEqual(145,rainfallRunoffModel.Precipitation.Data.Arguments[0].Values.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportRRBoundariesAndConditions()
+        {
+            string pathToModel = TestHelper.GetDataDir() + @"\RR.Lit\1\Network.TP";
+
+            var rrModel = new RainfallRunoffModel();
+            var rrImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToModel, rrModel);
+
+            rrImporter.Import();
+
+            Assert.AreEqual(2, rrModel.BoundaryData.Count);
+
+            Assert.IsFalse(rrModel.BoundaryData[0].Series.IsConstant);
+            Assert.AreEqual(1.0, rrModel.BoundaryData[0].Series.Evaluate(new DateTime(2000, 1, 1))); //series
+
+            Assert.IsTrue(rrModel.BoundaryData[1].Series.IsConstant);
+            Assert.AreEqual(0.5, rrModel.BoundaryData[1].Series.Evaluate(new DateTime(2000, 1, 1))); //constant
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.VerySlow)]
+        public void ImportTholenUnpavedLinkCheck()
+        {
+            string pathToSobekModel = TestHelper.GetDataDir() + @"\Tholen.lit\29\NETWORK.TP";
+
+            var hydroModel = CreateHydroModelWithRR();
+            var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
+            importer.Import();
+            
+            var firstAreaWithPolderConceptWithUnpaved =
+                rainfallRunoffModel.GetAllModelData().OfType<UnpavedData>().FirstOrDefault();
+
+            Assert.IsNotNull(firstAreaWithPolderConceptWithUnpaved);
+
+            Assert.AreNotEqual(0, firstAreaWithPolderConceptWithUnpaved.Catchment.Links.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ImportRrStandaloneWithFlowConnectionNode()
+        {
+            // TOOLS-20516
+            string pathToModel = TestHelper.GetDataDir() + @"\019_011.lit\2\NETWORK.TP";
+            var hydroModel = CreateHydroModelWithRR();
+            var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
+            var rrImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToModel, hydroModel);
+            rrImporter.Import();
+
+            Assert.True(rainfallRunoffModel.Basin.Boundaries.Count == 1);
+            Assert.True(rainfallRunoffModel.BoundaryData.Count == 1);
+        }
+
+        private static HydroModel CreateHydroModelWithRR()
+        {
+            var hydroModel = new HydroModel();
+            var network = new HydroNetwork();
+            hydroModel.Region.SubRegions.Add(network);
+            var basin = new DrainageBasin();
+            hydroModel.Region.SubRegions.Add(basin);
+
+            var rainfallRunoffModel = new RainfallRunoffModel();
+            hydroModel.Activities.Add(rainfallRunoffModel);
+
+            rainfallRunoffModel.GetDataItemByValue(rainfallRunoffModel.Basin).LinkTo(hydroModel.GetDataItemByValue(basin));
+            return hydroModel;
+        }
+
+    }
+}

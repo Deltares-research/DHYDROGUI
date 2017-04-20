@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <subclass name="DelftTools.Hydro.Channel, DelftTools.Hydro" discriminator-value="channel" extends="NetTopologySuite.Extensions.Networks.Branch, NetTopologySuite.Extensions">
+    <property name="LongName" />
+  </subclass>
+</hibernate-mapping>

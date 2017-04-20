@@ -1,0 +1,34 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BuildPath>$(MSBuildProjectDirectory)</BuildPath>
+    <SolutionDir>$(MSBuildProjectDirectory)\</SolutionDir> 
+  </PropertyGroup>
+
+  <Target Name="BuildRelease">
+    <MSBuild Projects="NGHS.sln" Targets="Build" Properties="Configuration=Release;SolutionDir=$(SolutionDir);" />
+    
+    <ItemGroup>
+      <PdbFiles Include="$(BuildPath)\bin\**\*.pdb"/>
+      <PsSymFiles Include="$(BuildPath)\bin\**\*.pssym"/>
+    </ItemGroup>
+    <Delete Files="@(PdbFiles)" />
+    <Delete Files="@(PsSymFiles)" />
+  </Target>
+  
+  <Target Name="MsiWaq" DependsOnTargets="BuildRelease">
+    <MSBuild Projects="setup\Waq\Waq.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
+  
+  <Target Name="MsiSobek" DependsOnTargets="BuildRelease">
+    <MSBuild Projects="setup\Sobek\Sobek.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
+  
+  <Target Name="MsiFM" DependsOnTargets="BuildRelease">
+    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+	<MSBuild Projects="setup\FM\FM_Open.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM_Without_Waq.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
+
+</Project>

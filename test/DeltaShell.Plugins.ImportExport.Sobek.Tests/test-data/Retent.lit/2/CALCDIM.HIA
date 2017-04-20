@@ -1,0 +1,17 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.07.06
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=5
+NumberOfLocations=10
+T0=2007.01.15 01:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+ 
+[Long Locations]
+10=Discharge Coefficient (-)
+ 

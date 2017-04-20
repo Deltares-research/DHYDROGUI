@@ -1,0 +1,406 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="folder_with_data" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder_with_data.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QHBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QHBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HConst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HConst.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="QConst" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QConst.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Wind" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wind.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Observation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="None" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\none.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ReverseRoughnessSection" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ReverseRoughnessSection.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Boundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Boundary.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_none" xml:space="preserve">
+    <value>Turn selected nodes into None</value>
+  </data>
+  <data name="BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_H" xml:space="preserve">
+    <value>Turn selected nodes into H</value>
+  </data>
+  <data name="BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_H_t_" xml:space="preserve">
+    <value>Turn selected nodes into H(t)</value>
+  </data>
+  <data name="BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q" xml:space="preserve">
+    <value>Turn selected nodes into Q</value>
+  </data>
+  <data name="BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q_t_" xml:space="preserve">
+    <value>Turn selected nodes into Q(t)</value>
+  </data>
+  <data name="BoundaryNodeDataMapTool_AddToolStripMenuItems_Turn_selected_nodes_into_Q_h_" xml:space="preserve">
+    <value>Turn selected nodes into Q(h)</value>
+  </data>
+  <data name="LateralSourceDataMapTool_AddToolStripMenuItems_Turn_selected_laterals_into_Q" xml:space="preserve">
+    <value>Turn selected laterals into Q</value>
+  </data>
+  <data name="LateralSourceDataMapTool_AddToolStripMenuItems_Turn_selected_laterals_into_Q_t_" xml:space="preserve">
+    <value>Turn selected laterals into Q(t)</value>
+  </data>
+  <data name="LateralSourceDataMapTool_AddToolStripMenuItems_Turn_selected_laterals_into_Q_h_" xml:space="preserve">
+    <value>Turn selected laterals into Q(h)</value>
+  </data>
+  <data name="feedback" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\30.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="validation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\validation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="generateDataInSeriesToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALggAA
+        C4IBvvripQAAAlxJREFUOE99kd1LU3Ecxp/WC+wPSMjeCF9YU8OtTExMUFOUmrPpEnWFlk7DduZ2fJmp
+        OPDlQsrojRDKmyAvigIrmFE3dRHYZZigRVhSDCm6KKHEp+/Zps1aPg8P53d+v/N8fud3DqLVe6ubdn85
+        y302Ng03MTIdWx4cgxe1kbuwcrty2PrCJVFY2mn5P8CFzTiFUdRjLDIT1j5fKntet4WS4jTGBijYiBrc
+        QBF+ohIfI7NhpZ03sm+ui/1z3dxt3/EvQMEWOHAHebgAK/zyBvdhqjOzcCSX5feO8vTzavbMq/R/7mDl
+        XStbJs7SFWhkvrPwu5Q3yM6jOIKbIVidAByYQEptGsueFvHMbCX9C230zbvY/cnD9vfn6HunsGNaodmZ
+        vgg7RmTnBZRhTwjgQJ8kgL01qdx/zcich2YBlbB6ysKaqVJWPJLrkwpWPbAxu+XQksltoq5U91a+e0II
+        UC2AZgEUNFqCJuVAML3fHNw2sJU5L9NCMfgMPD5sD1r6bD+qemtZslhC3UndjBQTQ4AmAXgFEK3tg3Es
+        mMyQHOSuhgSiGFdtF20sFuMLiBOYkbOHAV4BqH8BdrbGL2eOpVJLotNA65CVh8VSpZyeUp6BOwJQYwAM
+        DuNyUn0ykxqSmaFk/ylr/ipxC0BdBxBSOi7ldeUxU7xa1vxN4lkP0Cz/uRiXs5SstTuveAWwojUALzbp
+        G/VXLNctzBevlqL9S+LBdLggUtEpeawN7LJwO64tLvrx2PZiKVLXeq8kb7SBWxbG9e36D/FD8bMYwCwG
+        Y6RfohVUPJMEJJNQEfgNuaNBC2gm2WIAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="WaterFlowModel1DApplicationPlugin_Description" xml:space="preserve">
+    <value>Allows to simulate 1D flow of water in open water systems, such as rivers and irrigation &amp; drainage channels.</value>
+  </data>
+  <data name="unstruc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\unstruc.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_GetRoughnessValidationIssuesForSection_Branch___0___has_Q_H_dependent_roughness_defined_on_section" xml:space="preserve">
+    <value>Branch '{0}' has Q/H dependent roughness defined on section '{1}'. Q/H dependent roughness is only supported on branches with ZW crosssections (tabulated).</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_GetRoughnessValidationIssuesForSection_Branch___0___has_Q_H_dependent_roughness_defined_on_section_2" xml:space="preserve">
+    <value>Branch '{0}' has Q/H dependent roughness defined on section '{1}'. The Q/H dependent roughness table should have at least two rows.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateInputRestartState_Input_restart_state" xml:space="preserve">
+    <value>Input restart state</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateExtraResistance_Empty_roughness_table" xml:space="preserve">
+    <value>Empty roughness table</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_a_salinity_type_of_None__All_open_boundaries_must_specify_salinity_values_" xml:space="preserve">
+    <value>The boundary condition {0} has a salinity type of None. All open boundaries must specify salinity values.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_multiple_connecting_branches__This_is_only_possible_for_waterlevel_boundary_conditions_" xml:space="preserve">
+    <value>The boundary condition {0} has multiple connecting branches. This is only possible for waterlevel boundary conditions.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidatePump____Capacity_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>': Capacity must be greater than or equal to 0.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidatePumpSuctionSide____Suction_start_level_must_be_greater_than_or_equal_to_suction_stop_level_" xml:space="preserve">
+    <value>': Suction start level must be greater than or equal to suction stop level.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidatePumpDeliverySide____Delivery_start_level_must_be_less_than_or_equal_to_delivery_stop_level_" xml:space="preserve">
+    <value>': Delivery start level must be less than or equal to delivery stop level.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateWeir____Crest_width_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>': Crest width must be greater than or equal to 0.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateGatedWeirFormula____Gate_opening_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>': Gate opening must be greater than or equal to 0.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateGatedWeirFormula____Maximum_positive_flow_restrictions_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>': Maximum positive flow restrictions must be greater than or equal to 0.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateGatedWeirFormula____Maximum_negative_flow_restrictions_must_be_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>': Maximum negative flow restrictions must be greater than or equal to 0.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Iadvec1D_must_be_1___5__Given_Value_is___0_" xml:space="preserve">
+    <value>Numerical Parameter Iadvec1D must be 1 - 5. Given Value is: {0}</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Limtyphu1D_must_be_1___3__Given_Value_is___0_" xml:space="preserve">
+    <value>Numerical Parameter Limtyphu1D must be 1 - 3. Given Value is: {0}</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Momdilution1D_must_be_1___3__Given_Value_is___0_" xml:space="preserve">
+    <value>Numerical Parameter Momdilution1D must be 1 - 3. Given Value is: {0}</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Grid_output_time_step_must_be_positive_value_" xml:space="preserve">
+    <value>Grid output time step must be positive value.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Structures_output_time_step_must_be_positive_value_" xml:space="preserve">
+    <value>Structures output time step must be positive value.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_The_structures_output_time_step_should_be_a_multiple_of_the_calculation_time_step_" xml:space="preserve">
+    <value>The structures output time step should be a multiple of the calculation time step.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_No_explicit_working_directory_found__Please_save_model_before_morphology_can_be_run_" xml:space="preserve">
+    <value>No explicit working directory found. Please save model before morphology can be run.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_file_does_not_exist__" xml:space="preserve">
+    <value>Morphology file does not exist.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_does_not_exist__" xml:space="preserve">
+    <value>Sediment file does not exist.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_Boundary_conditions" xml:space="preserve">
+    <value>Boundary conditions</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateExtraResistance_Extra_resistance" xml:space="preserve">
+    <value>Extra resistance</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_" xml:space="preserve">
+    <value>Could not read file {0} properly, it doesn't exist.</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
+    <value>Could not read file {0} properly, it seems empty</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_Could_not_read_content_section__0__properly" xml:space="preserve">
+    <value>Could not read content section {0} properly</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_adding_to_network_went_wrong_" xml:space="preserve">
+    <value>adding to network went wrong!</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model" xml:space="preserve">
+    <value>Could not set roughness data in model</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured___0___1_" xml:space="preserve">
+    <value>While reading roughness section an error occured :{0} {1}</value>
+  </data>
+  <data name="RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_" xml:space="preserve">
+    <value>Filling the table of the Q or H function failed!</value>
+  </data>
+  <data name="RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_" xml:space="preserve">
+    <value>Filling the table of the Q or H function failed, values count doesn't match the defined levels count!</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model" xml:space="preserve">
+    <value>branch ({0}) where the roughness should be put on is not available in the model</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__" xml:space="preserve">
+    <value>The length of the number of levels ({0}) and the defined number of levels of the branch property {1} are not the same of branch properties : {2}!</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_Could_not_read_roughness_branch_data" xml:space="preserve">
+    <value>Could not read roughness branch data</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_" xml:space="preserve">
+    <value>While reading branches for roughness section an error occured :{0} {1}</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_" xml:space="preserve">
+    <value>Couldn't read roughness section with a function type of : {0}</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_data" xml:space="preserve">
+    <value>Could not read roughness definition data</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model" xml:space="preserve">
+    <value>Could not import calibrated roughness section {0} because the calibrated roughness section you want to import doesn't exist in the model</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_" xml:space="preserve">
+    <value>When reading reverse roughness section ({0}) the referring (linked) 'normal' roughness section ({1}) is not found. The normal section ({1}) should be imported first!</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created" xml:space="preserve">
+    <value>While creating the roughnes section from the roughness file the roughness network coverage is not created</value>
+  </data>
+  <data name="RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type" xml:space="preserve">
+    <value>While creating the roughnes section from the roughness file the fisrt argument of the roughness network coverage is not created (used to set the interpolation type</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileReader_ReadMetaData_ErrorReadingNetCdfFile" xml:space="preserve">
+    <value>Error reading NetCdf file {0}</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileReader_ParseReferenceTime_UnableToParseDateTimeFromFile" xml:space="preserve">
+    <value>Unable to parse DateTime {0} from file {1}</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_OutputFileDoesNotExist" xml:space="preserve">
+    <value>Output file {0}, does not exist.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_TimeVariableDoesNotContainUnitAttribute" xml:space="preserve">
+    <value>Time variable does not contain unit attribute.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_TimeVariableDoesNotContainValidUnitInRequiredFormat" xml:space="preserve">
+    <value>Time variable does not contain a valid unit in the required Format: '{0} {1}'.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_OutputFileDoesNotContainRequiredTimeVariable" xml:space="preserve">
+    <value>Output file {0}, does not contain required time variable.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_OutputFileDoesNotContainRequiredLocationIdVariable" xml:space="preserve">
+    <value>Output file {0}, does not contain required location_id variable.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_OutputFileContainsMoreThan1LocationIdVariable" xml:space="preserve">
+    <value>Output file {0}, contains more than 1 potential location_id variable.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_OutputFileDoesNotContainAnyTimeDependentVariables" xml:space="preserve">
+    <value>Output file {0}, does not contain any time-dependent variables.</value>
+  </data>
+  <data name="WaterFlowModel1DOutputFileValidator_Validate_OutputFileDoesNotContainRequiredTimeDimension" xml:space="preserve">
+    <value>Output file {0}, does not contain required time dimension.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateSalinity_Salinity" xml:space="preserve">
+    <value>Salinity</value>
+  </data>
+  <data name="WaterFlowModel1D_AddDispersionF3CoverageDataItem_Dispersion_F3_coefficient" xml:space="preserve">
+    <value>Dispersion F3 coefficient</value>
+  </data>
+  <data name="WaterFlowModel1D_AddDispersionF4CoverageDataItem_Dispersion_F4_coefficient" xml:space="preserve">
+    <value>Dispersion F4 coefficient</value>
+  </data>
+  <data name="WaterFlowModel1D_EnableSalt_Dispersion_F1_coefficient" xml:space="preserve">
+    <value>Dispersion F1 coefficient</value>
+  </data>
+  <data name="WaterFlowModel1DModelOutputSettingsValidator_ValidateAggregationOptions_Only_allowed_values__Current__and__None__for__0_" xml:space="preserve">
+    <value>Only allowed values 'Current' and 'None' for: {0}</value>
+  </data>
+  <data name="WaterFlowModel1DModelTemperatureValidator_ValidateModelParameters_Temperature_parameters" xml:space="preserve">
+    <value>Temperature parameters</value>
+  </data>
+  <data name="WaterFlowModel1DTemperatureValidator_ValidateInitialTemperature_Initial_temperature_" xml:space="preserve">
+    <value>Initial temperature.</value>
+  </data>
+  <data name="WaterFlowModel1DTemperatureValidator_ValidateModelParameters_Values_should_be_in_double_format_" xml:space="preserve">
+    <value>Values should be in double format.</value>
+  </data>
+  <data name="SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButNoSalinityIniFileHasBeenSpecified" xml:space="preserve">
+    <value>Non-zero spatial data for Dispersion F4 Coefficient exists, but no Salinity.ini file has been specified.</value>
+  </data>
+  <data name="SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButSalinityIniFileWasNotFound" xml:space="preserve">
+    <value>Non-zero spatial data for Dispersion F4 Coefficient exists, but Salinity.ini file was not found at {0}. Either add a reference to the Salinity.ini file or remove the spatial data.</value>
+  </data>
+  <data name="SalinityValidator_SalinityIniFileFoundButNoSpatialDataForDispersionF4CoefficientExists" xml:space="preserve">
+    <value>Salinity.ini file found at {0}, but no non-zero spatial data for Dispersion F4 Coefficient exists. Either add spatial data or remove the Salinity.ini file reference.</value>
+  </data>
+  <data name="WaterFlowModel1DTemperatureValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_a_temperature_type_of_None__All_open_boundaries_must_specify_temperature_values_" xml:space="preserve">
+    <value>The boundary condition {0} has a temperature type of None. All open boundaries must specify temperature values.</value>
+  </data>
+</root>

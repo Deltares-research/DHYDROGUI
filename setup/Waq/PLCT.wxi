@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- The files in this directory are SVN links. The files themselves should NOT be deleted!
+       This is the selection for those files that is necessary to start PLCT. 
+  --> 
+  <Directory Name="plct" Id="plct_folder">
+    <Component Id="plctIni" Guid="*">
+      <File Source="$(var.waq_plugin_bin)plct\plct_eco.ini"/>
+    </Component>
+    <Directory Name="bin" Id="plct_bin_folder">
+      <?define plct_bin="$(var.waq_plugin_bin)plct\bin\"?>
+      <Component Guid="F99C5DCA-2835-407A-A190-2309B1A4B246" Id="plct_component">
+        <File Id="plct_ERRCODES.TXT" Source="$(var.plct_bin)ERRCODES.TXT" />
+        <File Id="plct_libifcoremdd.dll" Source="$(var.plct_bin)libifcoremdd.dll" />
+        <File Id="plct_libmmd.dll" Source="$(var.plct_bin)libmmd.dll" />
+        <File Id="plct_msvcr110.dll" Source="$(var.plct_bin)msvcr110.dll" />
+        <File Id="plct_msvcr110d.dll" Source="$(var.plct_bin)msvcr110d.dll" />
+        <File Id="plct_plct.exe" Source="$(var.plct_bin)plct.exe" />
+        <File Id="plct_xnmba131.dll" Source="$(var.plct_bin)xnmba131.dll" />
+        <File Id="plct_xnmhb131.dll" Source="$(var.plct_bin)xnmhb131.dll" />
+        <File Id="plct_xnmhn131.dll" Source="$(var.plct_bin)xnmhn131.dll" />
+      </Component>
+      <?undef plct_bin?>
+    </Directory>
+  </Directory>
+</Include>

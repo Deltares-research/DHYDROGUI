@@ -1,0 +1,4 @@
+[boundary]
+quantity=1d2dbnd
+locationfile=bank.pliz
+forcingfile=REALTIME

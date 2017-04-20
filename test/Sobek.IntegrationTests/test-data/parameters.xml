@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfModelApiParameter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- Salinity computation-->
+  <!-- <ModelApiParameter Id="SaltComputation"      Description="Turn on/off salinity computation"              Value="true"   Type="typeof(bool)"     Visible="true"  Category="Salinity" />-->
+  <!-- <ModelApiParameter Id="Diffusion"            Description="global diffusion"                              Value="10"     Type="typeof(double)"   Visible="true"  Category="Salinity" />-->
+  <!-- Steady State-->
+  <ModelApiParameter Id="ComputeSteadyState"   Description="Turn on/off steady state"                      Value="false"  Type="typeof(bool)"     Visible="true"  Category="SteadyState" />
+  <ModelApiParameter Id="Dtsteady"             Description="Time step for computing steady states"         Value="7200"   Type="typeof(double)"   Visible="true"  Category="SteadyState" />
+  <ModelApiParameter Id="EpsMaxU"              Description="convergence criterium for velocity difference between two time steps" 
+                                                                                                           Value="1e-6"   Type="typeof(double)"   Visible="true"  Category="SteadyState" />
+  <ModelApiParameter Id="Ntendcontrolsteady"   Description="only update bounds and structurecontrols first ntend steps"
+                                                                                                           Value="200"    Type="typeof(int)"      Visible="true"  Category="SteadyState" />
+  <ModelApiParameter Id="Ntmaxsteady"          Description="max nr of steps in steady state computation"   Value="1500"   Type="typeof(int)"      Visible="true"  Category="SteadyState" />
+  <!-- Advanced Options-->
+  <ModelApiParameter Id="TransitionHeight"     Description="Transition Height in summer dikes"             Value="1.0"    Type="typeof(double)"   Visible="true"  Category="AdvancedOptions" />
+  <ModelApiParameter Id="ExtraResistanceGeneralStructure" Description="Extra resistance for general structure" Value="0.0" Type="typeof(double)"  Visible="true"  Category="AdvancedOptions" />
+  <!-- Network Options-->
+  <ModelApiParameter Id="MinumumLength"             Description="Minumum length of reach segment"          Value="10"     Type="typeof(double)"   Visible="true"  Category="NetworkOptions" />
+  <ModelApiParameter Id="MinimumSurfaceinNode"      Description="minimum surface in node"                  Value="0.1"    Type="typeof(double)"   Visible="true"  Category="NetworkOptions" />
+  <ModelApiParameter Id="MinimumSurfaceatStreet"    Description="minimum surface at street"                Value="0.1"    Type="typeof(double)"   Visible="true"  Category="NetworkOptions" />
+  <!-- Numerical parameters-->
+  <ModelApiParameter Id="AccurateVersusSpeed"       Description="accuracy factor "                         Value="3"      Type="typeof(int)"      Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="DtMinimum"                 Description="Minimum timestep"                         Value="0.001"  Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="EpsilonValueVolume"        Description="Epsilon for Volume"                       Value="0.0001" Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="EpsilonValueWaterDepth"    Description="Epsilon for Water Depth"                  Value="0.0001" Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="ThresholdValueFlooding"    Description="Threshold water depth for flooding channels" Value="0.01"  Type="typeof(double)" Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="ThresholdValueFloodingFLS" Description="threshold water depth for flooding of land " Value="0.001" Type="typeof(double)" Visible="false" Category="NumericalParameters" />
+  <!--<ModelApiParameter Id="StructureDynamicsFactor"   Description="factor for structure dynamics (1DFLOW (Rural) & 1DFLOW (Urban) only) "   
+                                                                                                           Value="1.0"    Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />-->
+  <ModelApiParameter Id="StructureInertiaDampingFactor" Description="structure inertia damping factor"     Value="1.0"    Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="RelaxationFactor"          Description="Relaxation factor"                        Value="1.0"    Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="Theta"                     Description="Theta"                                    Value="1.0"    Type="typeof(double)"   Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="CourantNumber"             Description="maximum flow (1D) and velocity (2D) Courant number "   
+                                                                                                           Value="1.0"    Type="typeof(double)"    Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="Rho"                       Description="Density of water"                         Value="1000"   Type="typeof(double)"    Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="GravityAcceleration"       Description="Gravity acceleration"                     Value="9.81"   Type="typeof(double)"    Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MaxDegree"                 Description="Maximum degree of nodal points to be eliminated by Gaussian elimination"   
+                                                                                                           Value="6"      Type="typeof(int)"       Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="MaxIterations"             Description="Maximum number of iterations"             Value="8"      Type="typeof(int)"       Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="AccelerationTermFactor"    Description="factor on 1D acceleration term (dU/dt, can vary between 0-1)"
+                                                                                                           Value="1"      Type="typeof(double)"    Visible="true"  Category="NumericalParameters" />
+  <ModelApiParameter Id="UseTimeStepReducerStructures" Description="use timestep reduction on structures"  Value="false"   Type="typeof(bool)"      Visible="true"  Category="NumericalParameters" />
+  <!-- Runoff options-->
+  <ModelApiParameter Id="LowerTimeStepsLargeQlat"   Description="Reduction of timestep on large lateral inflow"
+                                                                                                           Value="false"  Type="typeof(bool)"     Visible="true"  Category="RunoffOptions" />
+  <ModelApiParameter Id="NoNegativeQlatWhenThereIsNoWater" Description="Reduce lateral outflow when insufficient water available"
+                                                                                                           Value="true"   Type="typeof(bool)"     Visible="true"  Category="RunoffOptions" />
+  <ModelApiParameter Id="MaxVolFact"                Description="Maximum fraction of volume to be extracted by lateral outflow"
+                                                                                                           Value="0.9"    Type="typeof(double)"   Visible="true"  Category="RunoffOptions" />
+  <ModelApiParameter Id="MinumumTimeStepNegativeQlat" Description="minimum timestep in timestep reduction on large lateral flow "
+                                                                                                           Value="1"      Type="typeof(double)"   Visible="true"  Category="RunoffOptions" />
+</ArrayOfModelApiParameter>

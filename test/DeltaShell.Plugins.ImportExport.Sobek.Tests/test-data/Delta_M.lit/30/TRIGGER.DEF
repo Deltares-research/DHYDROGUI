@@ -1,0 +1,365 @@
+TRGR id '0' nm 'Hvl_OpenVerval_Trigger' ty 1 tp 1 ts 'C_2##S_13' tt tr PDIN 1 0  pdin
+TBLE
+'1975/12/25;00:00:00' -1 -1 1 0 < 
+tble trgr
+TRGR id '1' nm 'Hvl_SluitVerval_Trigger' ty 1 tp 1 ml '-1' ts 'C_2##S_13' ch 0 ql '-1' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id '4' nm 'HY-SLUIT-TR' ty 1 tp 0 ml '28_200' ts '-1' ch 0 ql '0' tt tr PDIN 0 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 1 2 <
+tble
+trgr
+TRGR id '5' nm 'HY-OPEN-TR' ty 1 tp 0 ml '28_200' ts 'S_24' ch 0 ql '0' tt tr PDIN 0 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 0 2 <
+tble
+trgr
+TRGR id '18976' nm 'Svk_tijdreeks' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql '0' tt tr PDIN 0 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id '20770' nm 'HY_VERVAL_NEG' ty 1 tp 1 ml '-1' ts 'S_24' ch 0 ql '0' tt tr PDIN 0 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id '20771' nm 'HY_VERVAL_POS' ty 1 tp 1 ml '-1' ts 'S_24' ch 0 ql '0' tt tr PDIN 0 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0 <
+tble
+trgr
+TRGR id 'P_5542638' nm 'Stormvloed' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P_0' tt tr PDIN -1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P_5542639' nm 'GeenStormvloed' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P_5542640' nm 'MasterSVKW' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P_5543629' nm 'SVKW_Opgedreven' ty 1 tp 3 ml '-1' ts 'S_P_P_1' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 9.9 <
+tble
+trgr
+TRGR id 'P_5543630' nm 'SVKW_ZinkVerval' ty 1 tp 1 ml '-1' ts 'S_P_P_2' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id 'P_5543631' nm 'SVKW_Ingevaren' ty 1 tp 5 ml '-1' ts 'S_P_P_1' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Crest Width [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 359.9 <
+tble
+trgr
+TRGR id 'P_5543632' nm 'SVKW_DrijfVerval' ty 1 tp 1 ml '-1' ts 'S_P_P_2' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.1 <
+tble
+trgr
+TRGR id 'P_5543633' nm 'SVKW_b_Beweegt' ty 1 tp 3 ml '-1' ts 'S_P_P_1' ch 1 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P_5543634' nm 'SVKW_c_Beweegt' ty 1 tp 4 ml '-1' ts 'S_P_P_3' ch 1 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Crest Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P_5543645' nm 'MasterSVKH' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P_5543646' nm 'SVKH_SluitVerval' ty 1 tp 1 ml '-1' ts 'S_P_P_4' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id 'P_5543647' nm 'SVKH_OpenVerval' ty 1 tp 1 ml '-1' ts 'S_P_P_4' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.05 <
+tble
+trgr
+TRGR id 'P_5543648' nm 'SVKH_bG_Beweegt' ty 1 tp 3 ml '-1' ts 'S_P_P_4' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.5 <
+tble
+trgr
+TRGR id 'P_5543649' nm 'SVKH_bS_Beweegt' ty 1 tp 4 ml '-1' ts 'S_P_P_5' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Crest Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 3.5 <
+tble
+trgr
+TRGR id 'P_5543650' nm 'SVKH_sG_Beweegt' ty 1 tp 3 ml '-1' ts 'S_P_P_6' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.5 <
+tble
+trgr
+TRGR id 'P_5543651' nm 'SVKH_sS_Beweegt' ty 1 tp 4 ml '-1' ts 'S_P_P_7' ch 0 ql 'P_0' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Crest Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 3.5 <
+tble
+trgr
+TRGR id 'P_5585785' nm 'HK-OPEN-TR' ty 1 tp 0 ml '69_30326' ts '-1' ch 0 ql '-1' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1990/12/25;00:00:00' -1 -1 0 3.42 <
+tble
+trgr
+TRGR id 'P_5585786' nm 'HK-SLUIT-TR' ty 1 tp 0 ml '69_30326' ts '-1' ch 0 ql '-1' tt tr PDIN 1 0 '' pdin CLTT 'Time' 'On/Off' 'And/Or' 'Operation' 'Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1190/12/25;00:00:00' -1 -1 1 3.42 <
+tble
+trgr
+TRGR id '##5' nm 'BathUpExeedsTarget' ty 1 tp 0 ml 'M_BathSpui_Up' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 -.2 <
+tble trgr
+TRGR id '##6' nm 'BathUpExeedsDown' ty 1 tp 1 ts 'S_5670723' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 0 <
+tble trgr
+TRGR id '##7' nm 'BathDownExceedsUp' ty 1 tp 1 ts 'S_5670723' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 0 <
+tble trgr
+TRGR id '##8' nm 'BathUpUnderTarget' ty 1 tp 0 ml 'M_BathSpui_Up' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 -.2 <
+tble trgr
+TRGR id 'P01_0' nm 'P01_Hvl_OpenVerval_Trigger' ty 1 tp 1 ml '-1' ts 'P01_C_2##S_13' ch 0 ql '-1' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 1 0 <
+tble
+trgr
+TRGR id 'P01_1' nm 'P01_Hvl_SluitVerval_Trigger' ty 1 tp 1 ml '-1' ts 'P01_C_2##S_13' ch 0 ql '-1' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id 'P01_4' nm 'P01_HY-SLUIT-TR' ty 1 tp 0 ml 'P01_28_200' ts '-1' ch 0 ql 'P01_0' tt tr 'P01_Trigger' 0 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 1 2 <
+tble
+trgr
+TRGR id 'P01_5' nm 'P01_HY-OPEN-TR' ty 1 tp 0 ml 'P01_28_200' ts 'P01_S_24' ch 0 ql 'P01_0' tt tr 'P01_Trigger' 0 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1975/12/25;00:00:00' -1 -1 0 2 <
+tble
+trgr
+TRGR id 'P01_18976' nm 'P01_Svk_tijdreeks' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P01_0' tt tr 'P01_Trigger' 0 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_20770' nm 'P01_HY_VERVAL_NEG' ty 1 tp 1 ml '-1' ts 'P01_S_24' ch 0 ql 'P01_0' tt tr 'P01_Trigger' 0 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id 'P01_20771' nm 'P01_HY_VERVAL_POS' ty 1 tp 1 ml '-1' ts 'P01_S_24' ch 0 ql 'P01_0' tt tr 'P01_Trigger' 0 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0 <
+tble
+trgr
+TRGR id 'P01_P_5542638' nm 'P01_Stormvloed' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' -1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_P_5542639' nm 'P01_GeenStormvloed' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_P_5542640' nm 'P01_MasterSVKW' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_P_5543629' nm 'P01_SVKW_Opgedreven' ty 1 tp 3 ml '-1' ts 'P01_S_P_P_1' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 9.9 <
+tble
+trgr
+TRGR id 'P01_P_5543630' nm 'P01_SVKW_ZinkVerval' ty 1 tp 1 ml '-1' ts 'P01_S_P_P_2' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id 'P01_P_5543631' nm 'P01_SVKW_Ingevaren' ty 1 tp 5 ml '-1' ts 'P01_S_P_P_1' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Crest Width [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 359.9 <
+tble
+trgr
+TRGR id 'P01_P_5543632' nm 'P01_SVKW_DrijfVerval' ty 1 tp 1 ml '-1' ts 'P01_S_P_P_2' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.1 <
+tble
+trgr
+TRGR id 'P01_P_5543633' nm 'P01_SVKW_b_Beweegt' ty 1 tp 3 ml '-1' ts 'P01_S_P_P_1' ch 1 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_P_5543634' nm 'P01_SVKW_c_Beweegt' ty 1 tp 4 ml '-1' ts 'P01_S_P_P_3' ch 1 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Crest Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_P_5543645' nm 'P01_MasterSVKH' ty 0 tp 0 ml '-1' ts '-1' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' 0 -1 -1 9.9999e+009 <
+'1991/01/10;00:00:00' 0 -1 -1 9.9999e+009 <
+tble
+trgr
+TRGR id 'P01_P_5543646' nm 'P01_SVKH_SluitVerval' ty 1 tp 1 ml '-1' ts 'P01_S_P_P_4' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 0 0 <
+tble
+trgr
+TRGR id 'P01_P_5543647' nm 'P01_SVKH_OpenVerval' ty 1 tp 1 ml '-1' ts 'P01_S_P_P_4' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Head Difference [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.05 <
+tble
+trgr
+TRGR id 'P01_P_5543648' nm 'P01_SVKH_bG_Beweegt' ty 1 tp 3 ml '-1' ts 'P01_S_P_P_4' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.5 <
+tble
+trgr
+TRGR id 'P01_P_5543649' nm 'P01_SVKH_bS_Beweegt' ty 1 tp 4 ml '-1' ts 'P01_S_P_P_5' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Crest Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 3.5 <
+tble
+trgr
+TRGR id 'P01_P_5543650' nm 'P01_SVKH_sG_Beweegt' ty 1 tp 3 ml '-1' ts 'P01_S_P_P_6' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Gate Height [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 0.5 <
+tble
+trgr
+TRGR id 'P01_P_5543651' nm 'P01_SVKH_sS_Beweegt' ty 1 tp 4 ml '-1' ts 'P01_S_P_P_7' ch 0 ql 'P01_P_0' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Crest Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1991/01/01;00:00:00' -1 -1 1 3.5 <
+tble
+trgr
+TRGR id 'P01_P_5585785' nm 'P01_HK-OPEN-TR' ty 1 tp 0 ml 'P01_69_30326' ts '-1' ch 0 ql '-1' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1990/12/25;00:00:00' -1 -1 0 3.42 <
+tble
+trgr
+TRGR id 'P01_P_5585786' nm 'P01_HK-SLUIT-TR' ty 1 tp 0 ml 'P01_69_30326' ts '-1' ch 0 ql '-1' tt tr 'P01_Trigger' 1 0 '' pdin CLTT 'P01_Time' 'P01_On/Off' 'P01_And/Or' 'P01_Operation' 'P01_Water Level [m]' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE
+'1190/12/25;00:00:00' -1 -1 1 3.42 <
+tble
+trgr
+TRGR id 'P01_##1' nm 'P01_ZandkreekBinnenExceedsTarget' ty 1 tp 0 ml 'P01_M_ZandkreeksluisBinnen' tt tr PDIN 1 1 'P01_365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 -.7 <
+'2000/03/19;23:00:00' 0 0 1 -.7 <
+'2000/03/20;00:00:00' 0 0 1 -.1 <
+'2000/10/19;23:00:00' 0 0 1 -.1 <
+'2000/10/20;00:00:00' 0 0 1 -.7 <
+'2001/01/01;00:00:00' 0 0 1 -.7 <
+tble trgr
+TRGR id 'P01_##2' nm 'P01_ZandkreekBinnenUnderTarget' ty 1 tp 0 ml 'P01_M_ZandkreeksluisBinnen' tt tr PDIN 1 1 'P01_365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 -.7 <
+'2000/03/19;23:00:00' 0 0 0 -.7 <
+'2000/03/20;00:00:00' 0 0 0 -.1 <
+'2000/10/19;23:00:00' 0 0 0 -.1 <
+'2000/10/20;00:00:00' 0 0 0 -.7 <
+'2001/01/01;00:00:00' 0 0 0 -.7 <
+tble trgr
+TRGR id 'P01_##3' nm 'P01_ZandkreekBinnenExceedsBuiten' ty 1 tp 1 ts 'P01_S_5731288' tt tr PDIN 1 1 'P01_365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 0 <
+tble trgr
+TRGR id 'P01_##4' nm 'P01_ZandkreekBuitenExceedsBinnen' ty 1 tp 1 ts 'P01_S_5731288' tt tr PDIN 1 1 'P01_365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 0 <
+tble trgr
+TRGR id 'P01_##5' nm 'P01_BathUpExeedsTarget' ty 1 tp 0 ml 'P01_M_BathSpui_Up' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 0 <
+tble trgr
+TRGR id 'P01_##6' nm 'P01_BathUpExeedsDown' ty 1 tp 1 ts 'P01_S_5670723' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 0 <
+tble trgr
+TRGR id 'P01_##7' nm 'P01_BathDownExceedsUp' ty 1 tp 1 ts 'P01_S_5670723' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 0 <
+tble trgr
+TRGR id 'P01_##8' nm 'P01_BathUpUnderTarget' ty 1 tp 0 ml 'P01_M_BathSpui_Up' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 0 <
+tble trgr
+TRGR id '##9' nm 'GrevelingenUpExeedsTarget' ty 1 tp 0 ml 'Grevelingen' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 -.2 <
+tble trgr
+TRGR id '##10' nm 'GrevelingenUpUnderTarget' ty 1 tp 0 ml 'Grevelingen' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 -.2 <
+tble trgr
+TRGR id '##11' nm 'BrouwersluisUpExeedsDown' ty 1 tp 1 ts 'S_P_5707452##1' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 0 <
+tble trgr
+TRGR id '##12' nm 'BrouwersluisDownExeedsUp' ty 1 tp 1 ts 'S_P_5707452##1' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 0 <
+tble trgr
+TRGR id '##13' nm 'GrevelingenDownUnderTarget' ty 1 tp 0 ml 'VoorD_Grevelingen' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 -.2 <
+tble trgr
+TRGR id '##14' nm 'VeerseMeerExceedsTarget' ty 1 tp 0 ml 'M_ZandkreeksluisBinnen' tt tr PDIN 1 0  pdin
+TBLE
+'1995/01/01;00:00:00' -1 -1 1 -.7 <
+'1995/03/30;23:00:00' 0 0 1 -.7 <
+'1995/04/01;00:00:00' 0 0 1 0 <
+'1995/10/24;23:00:00' 0 0 1 0 <
+'1995/10/25;00:00:00' 0 0 1 -.7 <
+'1996/03/30;23:00:00' 0 0 1 -.7 <
+'1996/04/01;00:00:00' 0 0 1 0 <
+'1996/10/24;23:00:00' 0 0 1 0 <
+'1996/10/25;00:00:00' 0 0 1 -.7 <
+'1997/03/30;23:00:00' 0 0 1 -.7 <
+'1997/04/01;00:00:00' 0 0 1 0 <
+'1997/10/24;23:00:00' 0 0 1 0 <
+'1997/10/25;00:00:00' 0 0 1 -.7 <
+'1998/03/30;23:00:00' 0 0 1 -.7 <
+'1998/04/01;00:00:00' 0 0 1 0 <
+'1998/10/24;23:00:00' 0 0 1 0 <
+'1998/10/25;00:00:00' 0 0 1 -.7 <
+'1999/03/30;23:00:00' 0 0 1 -.7 <
+'1999/04/01;00:00:00' 0 0 1 0 <
+'1999/10/24;23:00:00' 0 0 1 0 <
+'1999/10/25;00:00:00' 0 0 1 -.7 <
+'2000/03/30;23:00:00' 0 0 1 -.7 <
+'2000/04/01;00:00:00' 0 0 1 0 <
+'2000/10/24;23:00:00' 0 0 1 0 <
+'2000/10/25;00:00:00' 0 0 1 -.7 <
+'2001/03/30;23:00:00' 0 0 1 -.7 <
+'2001/04/01;00:00:00' 0 0 1 0 <
+'2001/10/24;23:00:00' 0 0 1 0 <
+'2001/10/25;00:00:00' 0 0 1 -.7 <
+'2002/03/30;23:00:00' 0 0 1 -.7 <
+'2002/04/01;00:00:00' 0 0 1 0 <
+'2002/10/24;23:00:00' 0 0 1 0 <
+'2002/10/25;00:00:00' 0 0 1 -.7 <
+'2003/03/30;23:00:00' 0 0 1 -.7 <
+'2003/04/01;00:00:00' 0 0 1 0 <
+'2003/10/24;23:00:00' 0 0 1 0 <
+'2003/10/25;00:00:00' 0 0 1 -.7 <
+'2004/03/30;23:00:00' 0 0 1 -.7 <
+'2004/04/01;00:00:00' 0 0 1 0 <
+'2004/10/24;23:00:00' 0 0 1 0 <
+'2004/10/25;00:00:00' 0 0 1 -.7 <
+'2005/03/30;23:00:00' 0 0 1 -.7 <
+'2005/04/01;00:00:00' 0 0 1 0 <
+'2005/10/24;23:00:00' 0 0 1 0 <
+'2005/10/25;00:00:00' 0 0 1 -.7 <
+tble trgr
+TRGR id '##16' nm 'KatseHeuleOSExeedsVM' ty 1 tp 1 ts 'KatseHeule' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 0 <
+tble trgr
+TRGR id '##17' nm 'VeerseMeerUnderTarget' ty 1 tp 0 ml 'M_ZandkreeksluisBinnen' tt tr PDIN 1 1 '365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 0 -.7 <
+'2000/03/30;23:00:00' 0 0 0 -.7 <
+'2000/04/01;00:00:00' 0 0 0 -.1 <
+'2000/10/24;23:00:00' 0 0 0 -.1 <
+'2000/10/25;00:00:00' 0 0 0 -.7 <
+'2001/01/01;00:00:00' 0 0 0 -.7 <
+tble trgr
+TRGR id '##18' nm 'KatseHeuleVMExeedsOS' ty 1 tp 1 ts 'KatseHeule' tt tr PDIN 1 0  pdin
+TBLE
+'2000/01/01;00:00:00' -1 -1 1 0 <
+tble trgr
+TRGR id '##19' nm 'KatseHeuleZomer' ty 0 tp 1 tt tr PDIN 1 1 '365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' 0 -1 0 0 <
+'2000/04/01;00:00:00' 1 0 0 0 <
+'2000/10/25;00:00:00' 0 0 0 0 <
+'2000/12/31;00:00:00' 0 0 0 0 <
+tble trgr
+TRGR id '##20' nm 'KatseHeuleWinter' ty 0 tp 1 tt tr PDIN 1 1 '365;00:00:00' pdin
+TBLE
+'2000/01/01;00:00:00' 1 -1 0 0 <
+'2000/04/01;00:00:00' 0 0 0 0 <
+'2000/10/25;00:00:00' 1 0 0 0 <
+'2000/12/31;00:00:00' 1 0 0 0 <
+tble trgr

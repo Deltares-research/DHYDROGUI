@@ -1,0 +1,22 @@
+CRDS id '1' nm 'start' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+-25 15 <
+-5 5 <
+5 5 <
+25 15 <
+tble
+crds
+CRDS id '2' nm 'end' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+-25 10 <
+-5 0 <
+5 0 <
+25 10 <
+tble
+crds
+CRDS id '3' nm 'r_Default (3)' ty 0 wm 10 w1 0 w2 0 gl 0 gu 0  lt lw
+TBLE
+ 0  10  10 < 
+ 5  10  10 < 
+ 5.0001  .0001  .0001 < 
+tble  crds

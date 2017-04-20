@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by WL | Delft Hydraulics (WL | Delft Hydraulics) -->
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<element name="configUpdateScript" type="fews:ConfigUpdateCommandsComplexType">
+		<annotation>
+			<documentation>List of configuration updates.
+
+The order in which commands are executed is as follows:
+
+- All RemoveLocationSetItem commands
+- All AddLocation commands
+- All EditLocation commands.
+- All AddLocationSetItem commands
+- All EditLocationSetItem commands</documentation>
+		</annotation>
+	</element>
+	<complexType name="ConfigUpdateCommandsComplexType">
+		<annotation>
+			<documentation>Collections of Configuration update commands.</documentation>
+		</annotation>
+		<sequence>
+			<element name="updateCommand" type="fews:ConfigUpdateCommandComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="string" use="required" fixed="1.2">
+			<annotation>
+				<documentation>The version attribute is required.
+                    This is the version of this specific file.
+                    The version number of the entire interface is
+                    embedded  in the namespace.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ConfigUpdateCommandComplexType">
+		<choice>
+			<element name="addLocation" type="fews:AddEditLocationComplexType">
+				<annotation>
+					<documentation>Add location to the Locations file.</documentation>
+				</annotation>
+			</element>
+			<element name="addLocationSetItem" type="fews:AddEditLocationSetItemComplexType">
+				<annotation>
+					<documentation>Add an existing location to a location set. Also adds location information to linked IdMaps and ValidationRuleSets.</documentation>
+				</annotation>
+			</element>
+			<element name="removeLocationSetItem" type="fews:RemoveLocationSetItemComplexType">
+				<annotation>
+					<documentation>Remove a location from a location set. The location information is also removed from linked IdMaps and ValidationRuleSets.</documentation>
+				</annotation>
+			</element>
+			<element name="editLocation" type="fews:AddEditLocationComplexType">
+				<annotation>
+					<documentation>Edit an already existing location in the Locations file.</documentation>
+				</annotation>
+			</element>
+			<element name="editLocationSetItem" type="fews:AddEditLocationSetItemComplexType">
+				<annotation>
+					<documentation>Edit linked information for a location that is already present in the locationSet. </documentation>
+				</annotation>
+			</element>
+			<element name="importRatingCurves" type="fews:ImportRatingCurvesComplexType">
+				<annotation>
+					<documentation>Import rating curves from xml file(s) in the FEWS rating curves format. The imported rating curves are added to the ratingCurves xml file in the RegionConfigFiles directory. If a rating curve with the same ratingCurveId as an existing rating curve is imported, then the existing rating curve will be replaced.</documentation>
+				</annotation>
+			</element>
+			<element name="importMapLayerFiles" type="fews:ImportMapLayerFilesComplexType">
+				<annotation>
+					<documentation>Import dbf files that contain location attributes. The imported dbf files are put into the mapLayerFiles configuration directory. This only works for dbf files for which an older version is already present in the configuration. If the dbf files to import would make the configuration invalid, then an error is logged and none of the dbf files will be imported.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="AddEditLocationComplexType">
+		<annotation>
+			<documentation>Add / Edit location information.</documentation>
+		</annotation>
+		<sequence>
+			<element name="location" type="fews:LocationDataComplexType"/>
+		</sequence>
+		<attribute name="overwriteMissing" type="boolean" use="optional">
+			<annotation>
+				<documentation>If 'true' existing attributes will be set to null if they are not configured here.
+If 'false' existing attributes will remain unchanged when not configured here.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="AddEditLocationSetItemComplexType">
+		<annotation>
+			<documentation>Add / Edit LocationSet information.  Depending on the references of the LocationSet additional information must be provided for linked IdMaps and ValidationRuleSets.</documentation>
+		</annotation>
+		<sequence>
+			<element name="idMapData" type="fews:IdMapDataComplexType" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="validationRuleData" type="fews:ValidationRuleSetDataComplexType" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="locationId" type="string" use="required"/>
+		<attribute name="locationSetId" type="string" use="required"/>
+		<attribute name="overwriteMissing" type="boolean" use="optional">
+			<annotation>
+				<documentation>If 'true' existing attributes will be set to null if they are not configured here.
+If 'false' existing attributes will remain unchanged when not configured here.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--	<complexType name="RemoveLocationComplexType">
+		<annotation>
+			<documentation>Information required to remove a location.</documentation>
+		</annotation>
+		<attribute name="locationId" type="string" use="required"/>
+	</complexType>
+-->
+	<complexType name="RemoveLocationSetItemComplexType">
+		<annotation>
+			<documentation>Information required to remove a location from a location set.
+            </documentation>
+		</annotation>
+		<attribute name="locationId" type="string" use="required"/>
+		<attribute name="locationSetId" type="string" use="required"/>
+	</complexType>
+	<!--
+        Alter external idMap information.
+        - In the case of multiple IdMap references it
+        is necessary to provide the idMapId of the reference this change applies to.
+        - In the case of multiple entries in one idMap the internalParameterId must be
+        provided to identify the correct entry. If internalParameterId is omitted changes will
+        be applied to all entries.
+        - If id map contains Parameter-Location id map entries then the externalParameterId is no longer optional.
+    -->
+	<complexType name="IdMapDataComplexType">
+		<attribute name="idMapId" type="string" use="required"/>
+		<attribute name="internalParameterId" type="string" use="required"/>
+		<attribute name="externalLocationId" type="string" use="required"/>
+		<attribute name="externalParameterId" type="string" use="required"/>
+		<attribute name="externalQualifier" type="string" use="optional"/>
+	</complexType>
+	<!--
+        Alter validation rule information.
+        - In the case of multiple ValidationRule references it is necessary to provide the ValidationRuleId for which
+        this change applies.
+        - If the validationRuleSetId is not know it is also possible to provide the parameterId to distinguish the correct
+        ValidationRuleSet.
+        - In cases of trying to update read only data, a warning will be generated.
+    -->
+	<complexType name="ValidationRuleSetDataComplexType">
+		<attribute name="parameterId" type="string" use="required"/>
+		<attribute name="hardMax" type="float" use="optional"/>
+		<attribute name="hardMin" type="float" use="optional"/>
+		<attribute name="softMax" type="float" use="optional"/>
+		<attribute name="softMin" type="float" use="optional"/>
+		<attribute name="rateOfRise" type="float" use="optional"/>
+		<attribute name="rateOfFall" type="float" use="optional"/>
+		<attribute name="sameReadingDeviaton" type="float" use="optional"/>
+		<attribute name="sameReadingPeriod" type="float" use="optional"/>
+	</complexType>
+	<complexType name="LocationDataComplexType">
+		<annotation>
+			<documentation>points which a times series can exists.
+                     The point is represented by X, Y and Z coordinates. Each location element of a time
+            series location file corresponds to a time series data file and consist of four elements.</documentation>
+		</annotation>
+		<sequence>
+			<element name="description" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Long (descriptive) name of location (tool tip) or description</documentation>
+				</annotation>
+			</element>
+			<element name="shortName" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Short name of location for chart legend</documentation>
+				</annotation>
+			</element>
+			<element name="toolTip" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Tooltip to be displayed in the FewsExplorer.
+                        You can use use \n or CDATA or HTML when you need multiple lines.
+                        Besides the global properties you can use the following tags
+                        %ID%, %NAME%, %DESCRIPTION%, %LAST_VALUE%, %LAST_VALUE_TIME%,
+                        %FORECAST_START_TIME%, %MAXIMUM_VALUE%, %MAXIMUM_VALUE_TIME%
+                        The tooltip supports html including images and hyperlinks.
+                        The url in the hyper link can be an internet url, an executable file, a document file, or a folder.
+                        Use the CDATA xml tag to include html in a xml file.
+                        By default the following tool tip is used.
+
+                        ID: %ID%\n
+                        Name: %NAME%\n
+                        Desc: " + "%DESCRIPTION%\n
+                        Last value [%LAST_VALUE%] Time [%LAST_VALUE_TIME%]\n
+                        Forecast Start Time [%FORECAST_START_TIME%]\n
+                        Maximum [%MAXIMUM_VALUE%] Time [%MAXIMUM_VALUE_TIME%]
+
+                    </documentation>
+				</annotation>
+			</element>
+			<element name="parentLocationId" type="string" minOccurs="0">
+				<annotation>
+					<documentation>When a location has a parent id it is an invisible child location.
+                        All the children of a location are automatically selected in the fews explorer</documentation>
+				</annotation>
+			</element>
+			<element name="x" type="double">
+				<annotation>
+					<documentation>X coordinate of the point (Easting)</documentation>
+				</annotation>
+			</element>
+			<element name="y" type="double">
+				<annotation>
+					<documentation>Y coordinate of the point (Northing)</documentation>
+				</annotation>
+			</element>
+			<element name="z" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Z coordinate of the point (altitude)</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="id" type="string" use="required"/>
+		<attribute name="name" type="string" use="optional"/>
+	</complexType>
+	<complexType name="ImportRatingCurvesComplexType">
+		<sequence>
+			<element name="importPath" type="string">
+				<annotation>
+					<documentation>This can be the path and name of either a file or a directory. This path has to be either absolute or relative to the current working directory. If a file is specified, then the rating curves in the specified file will be imported. If a directory is specified, then the rating curves in all files in the specified directory will be imported.</documentation>
+				</annotation>
+			</element>
+			<element name="idMapId" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Optional id of IdMap to be used for locationId mapping during import. External locationIds will be mapped to internal locationIds.</documentation>
+				</annotation>
+			</element>
+			<element name="prefixLocationIdToRatingCurveId" type="boolean" default="false" minOccurs="0">
+				<annotation>
+					<documentation>Optional. If true, then for each rating curve the locationId is prefixed to the ratingCurveId. This can be used to ensure that all ratingCurveIds are unique. The locationIds are prefixed after locationId mapping takes place, but before the rating curve is imported. Default is false. E.g. for locationId "Delft" and ratingCurveId "224" the new ratingCurveId would become "Delft_224".</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ImportMapLayerFilesComplexType">
+		<sequence>
+			<element name="importPath" type="string">
+				<annotation>
+					<documentation>This can be the path and name of either a file or a directory. This path has to be either absolute or relative to the directory of this script file. If a file is specified, then that file will be imported. If a directory is specified, then all dbf files in the specified directory will be imported. If any .shp, .shx and .sll files, that correspond to the dbf files, are present, then those files will also be imported. If no .shp, .shx and .sll files are present, then the required .shp, .shx and .sll files will be generated from the dbf files and the generated files will also be imported. It is assumed that the Charset for each import dbf file is the same as the Charset for the corresponding dbf file in the existing configuration (as defined in the locationSets configuration file).</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+</schema>

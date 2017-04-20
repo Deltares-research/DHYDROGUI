@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?ifndef var.NOWAQ?>
+  <?include ..\Waq\WaqPlugin_UtilityShortcuts.wxi?>
+  <?endif?>
+</Include>

@@ -1,0 +1,136 @@
+MON1.0
+# Monitoring area's
+Reach = 0
+44
+Area 1  Name: Chloride_MPN5308
+  1,"l_759_s1"
+0
+Area 2  Name: Chloride_MPN5309
+  1,"l_130"
+0
+Area 3  Name: Chloride_MPN5307
+  1,"l_1695"
+0
+Area 4  Name: Chloride_MPN5314
+  1,"l_649"
+0
+Area 5  Name: Chloride_MPN5313
+  1,"l_1544"
+0
+Area 6  Name: Chloride_MPN5315
+  1,"l_939"
+0
+Area 7  Name: Chloride_MPN5316
+  1,"l_1735"
+0
+Area 8  Name: Chloride_MPN1233
+  1,"l_467_51"
+0
+Area 9  Name: Chloride_MPN5317
+  1,"l_cGFE830"
+0
+Area 10  Name: Chloride_MPN5319
+  1,"l_274"
+0
+Area 11  Name: Chloride_MPN5318
+  1,"l_cGFE828"
+0
+Area 12  Name: Chloride_MPN1236
+0
+0
+Area 13  Name: Chloride_MPN5311
+  1,"l_1754"
+0
+Area 14  Name: Chloride_MPN5310
+  1,"l_1287"
+0
+Area 15  Name: Chloride_MPN1282
+  1,"l_cGFE836"
+0
+Area 16  Name: Chloride_MPN5729
+  1,"l_163_1"
+0
+Area 17  Name: Chloride_MPN7969
+  1,"l_162_s3"
+0
+Area 18  Name: Chloride_MPN5312
+  1,"l_1576"
+0
+Area 19  Name: Chloride_MPN1231
+  1,"l_334_8"
+0
+Area 20  Name: Chloride_MPN7968
+  1,"l_1547"
+0
+Area 21  Name: Chloride_MPN1262
+  1,"l_443"
+0
+Area 22  Name: Chloride_MPN5711
+  1,"l_cGFE891"
+0
+Area 23  Name: Chloride_MPN1229
+  1,"l_1803"
+0
+Area 24  Name: Chloride_MPN1227
+  1,"l_1869"
+0
+Area 25  Name: Chloride_Oud_Kijkuit
+  1,"l_554"
+0
+Area 26  Name: Chloride_Deurloo
+  1,"l_177"
+0
+Area 27  Name: Chloride_mpRA11
+  1,"l_467_46"
+0
+Area 28  Name: Chloride_mpRA18
+  1,"l_1701"
+0
+Area 29  Name: Chloride_mpRA17
+  1,"l_1740"
+0
+Area 30  Name: Chloride_mpRA16
+  1,"l_1567"
+0
+Area 31  Name: Chloride_mpRA14
+  1,"l_571"
+0
+Area 32  Name: Chloride_mpRA13
+  1,"l_96_1"
+0
+Area 33  Name: Chloride_mpRA12
+  1,"l_1729"
+0
+Area 34  Name: Chloride_mpRA7
+  1,"l_16_1"
+0
+Area 35  Name: Chloride_mpRA8
+  1,"l_86_1"
+0
+Area 36  Name: Chloride_mpRA9
+  1,"l_341_11"
+0
+Area 37  Name: Chloride_mpRA10
+  1,"l_1476"
+0
+Area 38  Name: Chloride_mpRA5
+  1,"l_839"
+0
+Area 39  Name: Chloride_mpRA28
+  1,"l_467_41"
+0
+Area 40  Name: Chloride_mpRA1
+  1,"l_467_79"
+0
+Area 41  Name: Chloride_mpRA2
+  1,"l_17_4"
+0
+Area 42  Name: Chloride_mpRA3
+  1,"l_1753"
+0
+Area 43  Name: Chloride_mpRA4
+  1,"l_1276"
+0
+Area 44  Name: Chloride_mpRA6
+  1,"l_800"
+0

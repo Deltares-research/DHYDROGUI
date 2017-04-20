@@ -1,0 +1,2 @@
+PAVE id 'PVD01' ar 287870.7 lv 1.5 sd '2' ss 2 qc 0  2.398922E-02 0.7996408 qo 2 2 ms 'Station1' aaf 1 is  0 np  0 dw '3' ro 0 ru  0 qh '' pave
+PAVE id 'PVD02' ar 662649.4 lv 1.5 sd '1' ss 0 qc 0  0.1288485 0 qo 2 2 ms 'Station1' aaf 1 is  0 np  1000 dw '2' ro 0 ru  0 qh '' pave

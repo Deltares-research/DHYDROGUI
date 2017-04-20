@@ -1,0 +1,394 @@
+POI3.0
+# Segments links and nodes
+Reach=0
+24
+Segment 1  Name:   Color: 255
+2,"1_1","7"
+0
+Segment 2  Name:   Color: 255
+2,"1_5","1_2"
+0
+Segment 3  Name:   Color: 255
+1,"1_6"
+0
+Segment 4  Name:   Color: 255
+1,"2"
+0
+Segment 5  Name:   Color: 255
+2,"2_1","1"
+0
+Segment 6  Name:   Color: 255
+1,"2_2"
+0
+Segment 7  Name:   Color: 255
+1,"4"
+0
+Segment 8  Name:   Color: 255
+1,"2_3"
+0
+Segment 9  Name:   Color: 255
+1,"2_4"
+0
+Segment 10  Name:   Color: 255
+1,"2_5"
+0
+Segment 11  Name:   Color: 255
+1,"2_6"
+0
+Segment 12  Name:   Color: 255
+1,"2_7"
+0
+Segment 13  Name:   Color: 255
+2,"2_8","1_11"
+0
+Segment 14  Name:   Color: 255
+1,"2_9"
+0
+Segment 15  Name:   Color: 255
+2,"3","1_s2"
+0
+Segment 16  Name:   Color: 255
+2,"3_3","3_1"
+1,"L1"
+Segment 17  Name:   Color: 255
+2,"3_4","1_8"
+0
+Segment 18  Name:   Color: 255
+1,"3_5"
+0
+Segment 19  Name:   Color: 255
+2,"3_6","3_2"
+0
+Segment 20  Name:   Color: 255
+1,"3_7"
+0
+Segment 21  Name:   Color: 255
+2,"3_8","1_3"
+1,"7"
+Segment 22  Name:   Color: 255
+2,"5","8"
+0
+Segment 23  Name:   Color: 255
+1,"4_1"
+0
+Segment 24  Name:   Color: 255
+1,"9"
+0
+# Storage Nodes
+68,15
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+13
+19
+34
+66
+# Internal network flows
+"Node","1_2",16,1,2,0,"-1_6","1_2"
+3,2,"-1_6","1_2"
+"Node","8",12,3,3,0,"-3","1_6","9"
+15,3,"-3","1_6"
+15,24,"-3","9"
+3,24,"1_6","9"
+"Node","3_1",16,1,2,0,"-3_3","1_s2"
+16,15,"-3_3","1_s2"
+"Node","3_2",16,1,2,0,"-3_4","3_1"
+17,16,"-3_4","3_1"
+"Node","3_3",16,1,2,0,"-3_5","1_8"
+18,17,"-3_5","1_8"
+"Node","3",12,1,2,0,"-2","1_3"
+4,21,"-2","1_3"
+"Node","2_1",16,1,2,0,"-2_1","2"
+5,4,"-2_1","2"
+"Node","2_9",16,1,2,0,"-2_9","1_11"
+14,13,"-2_9","1_11"
+"Node","3_5",16,1,2,0,"-3_7","3_2"
+20,19,"-3_7","3_2"
+"Node","4_1",16,1,2,0,"-4_1","8"
+23,22,"-4_1","8"
+"Node","2_2",16,1,2,0,"-2_2","1"
+6,5,"-2_2","1"
+"Node","6",21,1,2,0,"-4","2_2"
+7,6,"-4","2_2"
+"Node","2_3",16,1,2,0,"-2_3","4"
+8,7,"-2_3","4"
+"Node","2_4",16,1,2,0,"-2_4","2_3"
+9,8,"-2_4","2_3"
+"Node","2_5",16,1,2,0,"-2_5","2_4"
+10,9,"-2_5","2_4"
+"Node","2_6",16,1,2,0,"-2_6","2_5"
+11,10,"-2_6","2_5"
+"Node","2_7",16,1,2,0,"-2_7","2_6"
+12,11,"-2_7","2_6"
+"Node","2_8",16,1,2,0,"-2_8","2_7"
+13,12,"-2_8","2_7"
+"Node","1_1",16,1,2,0,"-1_5","7"
+2,1,"-1_5","7"
+"Node","3_4",16,1,2,0,"-3_6","3_5"
+19,18,"-3_6","3_5"
+"Node","3_6",16,1,2,0,"-3_8","3_7"
+21,20,"-3_8","3_7"
+"Node","12",27,1,2,0,"-9","4_1"
+24,23,"-9","4_1"
+# Default branch boundary names
+23,6
+2,"Flow - Channel with lateral discharge",1
+1,"Lateral inflow"
+5,"Flow - Pipe with Runoff",1
+1,"Lateral inflow"
+6,"Flow - Dry Weather Pipe",1
+1,"Lateral inflow"
+7,"Flow - Rain Pipe",1
+1,"Lateral inflow"
+14,"2D - Line Boundary",1
+1,"2D Boundary Flow"
+15,"2D - Line 1D2D Internal Boundary",1
+1,"1D2D Boundary Flow"
+# Lateral Discharges to links
+# Default node boundary names
+68,20
+1,"Flow - Manhole",0
+2,"Flow - Manhole with Level Measurement",0
+3,"Flow - Manhole with Runoff",1
+1,"Lateral inflow"
+4,"Flow - Manhole with Lateral Flow",1
+1,"Lateral inflow"
+5,"Flow - Manhole with Lat.Disch. and Runoff",1
+1,"Lateral inflow"
+6,"Flow - Manhole with Lat.+Runoff (Comb.Node)",1
+1,"Lateral inflow"
+7,"Flow - External Weir",1
+1,"Boundary Flow"
+8,"Flow - External Orifice",1
+1,"Boundary Flow"
+9,"Flow - External Culvert",1
+1,"Boundary Flow"
+10,"Flow - External Friction",1
+1,"Boundary Flow"
+11,"Flow - External Pump Station",1
+1,"Boundary Flow"
+12,"Flow - Connection Node",0
+13,"Flow - Connection Node with Storage and Lateral Flow",1
+1,"Lateral inflow"
+14,"Flow - Boundary",1
+1,"Boundary Flow"
+15,"Flow - Linkage node",0
+16,"Flow - Calculation Point",0
+17,"Flow - Fixed Calculation Point",0
+18,"Flow - Measurement Station",0
+19,"Flow - Lateral Flow",1
+1,"Lateral inflow"
+20,"Flow - Cross Section",0
+21,"Flow - Weir",0
+22,"Flow - Universal Weir",0
+23,"Flow - Orifice",0
+24,"Flow - Culvert",0
+25,"Flow - Friction",0
+26,"Flow - Bridge",0
+27,"Flow - Pump Station",0
+28,"Flow - General Structure",0
+29,"Flow - Database Structure",0
+30,"Flow - River Weir",0
+31,"Flow - Advanced Weir",0
+32,"Flow - River Pump",0
+33,"Flow - Compound Structure",0
+34,"Flow-RR Connection on Channel",1
+1,"Lateral inflow"
+35,"Flow-RR Connection on Flow Connection Node",1
+1,"Lateral inflow"
+36,"Flow - 1D2D Internal Boundary Node",0
+37,"2D - Grid",1
+1,"2D Lateral Flow"
+38,"2D - Boundary",1
+1,"2D Boundary Flow"
+39,"2D - History",0
+40,"2D - Breaking Dam",0
+41,"2D - Corner",0
+42,"2D - Initial Water Level Point",0
+43,"RR - Paved",0
+44,"RR - UnPaved",0
+45,"RR - Greenhouse",0
+46,"RR - Open Water",0
+47,"RR - Boundary",0
+48,"RR - Pump Station",0
+49,"RR - Weir",0
+50,"RR - Orifice",0
+51,"RR - Friction",0
+52,"RR - QH relation",0
+53,"RR - Culvert",0
+54,"RR - Sacramento",0
+55,"RR - Industry",0
+56,"RR - Wastewater Treatment Plant",0
+57,"EM - Septic Tank",0
+58,"RR - Connection node",0
+59,"WQ - Dry Waste Load",0
+60,"RR - External Runoff",0
+61,"~Nd_61",0
+62,"~Nd_62",0
+63,"RR - HBV",0
+64,"RR - SCS",0
+65,"Upstream Node",1
+1,"Upstream"
+66,"CSO",1
+1,"CSO"
+67,"CSO-RR",1
+1,"CSO"
+68,"Flush",1
+1,"Flush"
+# Boundary flows of nodes
+"Node","1",65,1,1
+-1,1,"","-1_1",1
+"Node","L1",66,1,1
+-2,16,"L1","",1
+"Node","7",34,1,1
+-3,21,"7","",1
+"Node","9",68,1,1
+-4,22,"","-5",1
+"Node","21",14,1,1
+-5,14,"","2_9",1
+# Boundary types - monitoring stations
+8
+1,"Lateral inflow","0",""
+2,"Boundary Flow","0",""
+3,"2D Lateral Flow","0",""
+4,"2D Boundary Flow","0",""
+5,"Upstream","0",""
+6,"CSO","0",""
+7,"Flush","0",""
+8,"1D2D Boundary Flow","0",""
+# Surface water types
+2
+1,"Normal","0",""
+2,"SWTType2","0",""
+# Segment surface water types
+24
+Segment 1  Name:   Color: 255
+2,1,1,1,1
+0
+Segment 2  Name:   Color: 255
+2,1,1,1,1
+0
+Segment 3  Name:   Color: 255
+1,1,1
+0
+Segment 4  Name:   Color: 255
+1,1,2
+0
+Segment 5  Name:   Color: 255
+2,1,2,1,2
+0
+Segment 6  Name:   Color: 255
+1,1,2
+0
+Segment 7  Name:   Color: 255
+1,1,2
+0
+Segment 8  Name:   Color: 255
+1,1,2
+0
+Segment 9  Name:   Color: 255
+1,1,2
+0
+Segment 10  Name:   Color: 255
+1,1,2
+0
+Segment 11  Name:   Color: 255
+1,1,2
+0
+Segment 12  Name:   Color: 255
+1,1,2
+0
+Segment 13  Name:   Color: 255
+2,1,2,1,2
+0
+Segment 14  Name:   Color: 255
+1,1,2
+0
+Segment 15  Name:   Color: 255
+2,1,1,1,1
+0
+Segment 16  Name:   Color: 255
+2,1,1,1,1
+1,1,0
+Segment 17  Name:   Color: 255
+2,1,1,1,1
+0
+Segment 18  Name:   Color: 255
+1,1,1
+0
+Segment 19  Name:   Color: 255
+2,1,1,1,1
+0
+Segment 20  Name:   Color: 255
+1,1,1
+0
+Segment 21  Name:   Color: 255
+2,1,1,1,1
+1,1,0
+Segment 22  Name:   Color: 255
+2,1,1,1,1
+0
+Segment 23  Name:   Color: 255
+1,1,1
+0
+Segment 24  Name:   Color: 255
+1,1,1
+0
+# Boundary connection points
+# Connection Points for links
+0
+# Connection Points for nodes
+5
+-1,1,"","-1_1",1,1,0,0
+-2,16,"L1","",1,1,450.002696837647,-1.32249780612994
+-3,21,"7","",1,1,909.112491714343,-.153463202807352
+-4,22,"","-5",1,1,304.958466729773,174.54579989164
+-5,14,"","2_9",1,1,2000,0
+# Grid boundary aliases
+ 0 
+# Segments georeference: segnr, x, y, z
+24
+1,33.6835362800771,-.19671385018792,0
+2,124.052620094849,-.724474660909955,0
+3,245.273376596603,-1.43241107043286,0
+4,1020.91234647343,0,0
+5,1085.37252049352,0,0
+6,1198.14061494558,0,0
+7,1249.67154407856,0,0
+8,1330.0979212713,0,0
+9,1433.15977953725,0,0
+10,1536.22163780321,0,0
+11,1639.28349606916,0,0
+12,1742.34535433511,0,0
+13,1821.93814173405,0,0
+14,1948.46907086702,0,0
+15,322.165633996937,-1.64801024719658,0
+16,450.002696837647,-1.32249780612994,0
+17,518.601309817282,-1.14782465995003,0
+18,631.854734628191,-.85944664225972,0
+19,702.714694911547,-.679015411025467,0
+20,824.727124749487,-.368334275254164,0
+21,909.112491714343,-.153463202807352,0
+22,302.563698309758,134.837742569928,0
+23,298.686048601874,70.541781596298,0
+24,296.028444898412,26.4756083022582,0
+# Dry waste for nodes: drywaste nr, nodeID, x, y, z, nrofsegments, seg 1, .., seg nrofsegments
+0
+# Dry waste for links: drywaste nr, linkID, x, y, z, nrofsegments, seg 1, .., seg nrofsegments
+0
+# History point for nodes: History nr, nodeID, x, y, z, nrofsegments, seg 1, .., seg nrofsegments
+4
+1,"Start",149.995889551056,-.875984893646764,0,1,2
+2,"Upstream pipe",350.00321607795,-1.57712720987371,0,1,15
+3,"Near pipe",550.002177597343,-1.06786840238618,0,1,17
+4,"Far field",1850,0,0,1,13
+# History for links: History nr, linkID, x, y, z, nrofsegments, seg 1, .., seg nrofsegments
+0

@@ -1,0 +1,18 @@
+DLF1.0
+[Rainfall Runoff Module: Simulation Results]
+FILE "\SOBEK212\DRRSA.LIT\15\BALANSDT.HIS"     LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Balances per Timestep
+FILE "\SOBEK212\DRRSA.LIT\15\3BLINKS.HIS"      LAYER " " TYPE branch VAR 1 HISLOC 2 LINKSEP ""    = Flows on Links
+FILE "\SOBEK212\DRRSA.LIT\15\PVSTORDT.HIS"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Paved Nodes
+FILE "\SOBEK212\DRRSA.LIT\15\BNDFLODT.HIS"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Boundary Nodes
+FILE "\SOBEK212\DRRSA.LIT\15\BNDFLTOT.HIS"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Daily Totals towards Boundary
+FILE "\SOBEK212\DRRSA.LIT\15\WWTPDT.HIS"       LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = WWTP Flows
+[Rainfall Runoff Module: Dimensions]
+FILE "\SOBEK212\DRRSA.LIT\15\3BAREAS.HIS"      LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Node Areas
+[Flow Module: Levels and Flows]
+FILE "\SOBEK212\DRRSA.LIT\15\CALCPNT.HIS"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Results at Nodes
+FILE "\SOBEK212\DRRSA.LIT\15\REACHSEG.HIS"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Results at Reach Segments
+FILE "\SOBEK212\DRRSA.LIT\15\QLAT.HIS"        LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Lateral Flows
+FILE "\SOBEK212\DRRSA.LIT\15\FLOWANAL.HIS"    LAYER " " TYPE reachgridvirtual VAR 6 HISLOC 2     = Simulation Info at the Reach Segments
+[Flow Module: Dimensions]
+FILE "\SOBEK212\DRRSA.LIT\15\CALCDIM.HIS"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Nodes
+FILE "\SOBEK212\DRRSA.LIT\15\REACHDIM.HIS"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Reach Segments

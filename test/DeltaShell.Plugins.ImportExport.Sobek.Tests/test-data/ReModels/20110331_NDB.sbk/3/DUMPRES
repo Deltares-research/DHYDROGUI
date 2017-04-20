@@ -1,0 +1,1227 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =     5 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+ Time step =     5 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.28253
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.680
+ Time step =     5 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+ Time step =     5 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.28253
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.680
+ Time step =     5 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+ Time step =     5 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.28253
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.680
+ Time step =     5 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+ Time step =     5 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.28253
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.680
+ Time step =     5 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+ Time step =     5 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.28253
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.680
+ Time step =     5 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+ Time step =     5 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.28253
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.680
+ Time step =     5 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03205
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.962
+ Time step =     5 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25048
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.718
+  
+ Time step =     6 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+ Time step =     6 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=    25.446
+ Time step =     6 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41826
+    Z_MAAR_GAT                     X=   4096.90 DQ=   -25.446
+  
+ Time step =    13 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+ Time step =    13 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.29142
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.150
+ Time step =    13 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+ Time step =    13 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.29142
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.150
+ Time step =    13 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+ Time step =    13 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.29142
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.150
+ Time step =    13 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+ Time step =    13 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.29142
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.150
+ Time step =    13 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+ Time step =    13 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.29142
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.150
+ Time step =    13 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+ Time step =    13 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.29142
+    Z_MAAR_GAT                     X=   4609.20 DQ=    21.150
+ Time step =    13 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.03497
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -3.655
+ Time step =    13 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25644
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -17.495
+  
+ Time step =    15 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.51307
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -36.168
+ Time step =    15 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41285
+    Z_MAAR_GAT                     X=   4609.20 DQ=    19.165
+ Time step =    15 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=  -1.02136
+    Z_MAAR_GAT                     X=   4096.90 DQ=    30.030
+ Time step =    15 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.17520
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.287
+ Time step =    15 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.07976
+    Z_MAAR_GAT                     X=   4609.20 DQ=     6.721
+ Time step =    15 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.51307
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -36.168
+ Time step =    15 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41285
+    Z_MAAR_GAT                     X=   4609.20 DQ=    19.165
+ Time step =    15 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -1.02136
+    Z_MAAR_GAT                     X=   4096.90 DQ=    30.030
+ Time step =    15 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.17520
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.287
+ Time step =    15 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.07976
+    Z_MAAR_GAT                     X=   4609.20 DQ=     6.721
+ Time step =    15 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.51307
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -36.168
+ Time step =    15 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41285
+    Z_MAAR_GAT                     X=   4609.20 DQ=    19.165
+ Time step =    15 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=  -1.02136
+    Z_MAAR_GAT                     X=   4096.90 DQ=    30.030
+ Time step =    15 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.17520
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.287
+ Time step =    15 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.07976
+    Z_MAAR_GAT                     X=   4609.20 DQ=     6.721
+ Time step =    15 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.51307
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -36.168
+ Time step =    15 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.41285
+    Z_MAAR_GAT                     X=   4609.20 DQ=    19.165
+ Time step =    15 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -1.02136
+    Z_MAAR_GAT                     X=   4096.90 DQ=    30.030
+ Time step =    15 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.17520
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.287
+ Time step =    15 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.07976
+    Z_MAAR_GAT                     X=   4609.20 DQ=     6.721
+  
+ Time step =    16 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+ Time step =    16 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.024
+ Time step =    16 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.24109
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.024
+  
+ Time step =    17 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+ Time step =    17 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.380
+ Time step =    17 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.23191
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.380
+  
+ Time step =    18 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+ Time step =    18 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.550
+ Time step =    18 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25683
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.550
+  
+ Time step =    19 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+ Time step =    19 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.985
+ Time step =    19 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25816
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.985
+  
+ Time step =    20 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+ Time step =    20 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.334
+ Time step =    20 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25218
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.334
+  
+ Time step =    21 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+ Time step =    21 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.120
+ Time step =    21 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25038
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.120
+  
+ Time step =    22 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+ Time step =    22 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -8.977
+ Time step =    22 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25111
+    Z_MAAR_GAT                     X=   4609.20 DQ=     8.977
+  
+ Time step =    23 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+ Time step =    23 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.076
+ Time step =    23 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25621
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.076
+  
+ Time step =    24 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+ Time step =    24 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=    -9.356
+ Time step =    24 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26096
+    Z_MAAR_GAT                     X=   4609.20 DQ=     9.356
+  
+ Time step =    25 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+ Time step =    25 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.066
+ Time step =    25 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26862
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.066
+  
+ Time step =    26 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+ Time step =    26 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.645
+ Time step =    26 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26761
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.645
+  
+ Time step =    27 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+ Time step =    27 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.004
+ Time step =    27 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26699
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.004
+  
+ Time step =    28 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+ Time step =    28 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.162
+ Time step =    28 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26498
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.162
+  
+ Time step =    29 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+ Time step =    29 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -11.028
+ Time step =    29 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.26012
+    Z_MAAR_GAT                     X=   4609.20 DQ=    11.028
+  
+ Time step =    30 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+ Time step =    30 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.620
+ Time step =    30 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25687
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.620
+  
+ Time step =    31 Nr iter. = 100
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  99
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  98
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  97
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  96
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  95
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  94
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  93
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  92
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  91
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  90
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  89
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  88
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  87
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  86
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  85
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  84
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  83
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+ Time step =    31 Nr iter. =  82
+    Z_MAAR_GAT                     X=   5121.20 DH=   0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=   -10.221
+ Time step =    31 Nr iter. =  81
+    Z_MAAR_GAT                     X=   5121.20 DH=  -0.25672
+    Z_MAAR_GAT                     X=   4609.20 DQ=    10.221
+  

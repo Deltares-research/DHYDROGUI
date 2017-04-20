@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeltaShell.NGHS.IO</RootNamespace>
+    <AssemblyName>DeltaShell.NGHS.IO</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <DontImportPostSharp>True</DontImportPostSharp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(SolutionDir)bin\Debug\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(SolutionDir)bin\Release\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37046, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
+    <Compile Include="DelftBcReader.cs" />
+    <Compile Include="DelftBcWriter.cs" />
+    <Compile Include="DelftIniReader.cs" />
+    <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="FileReaders\Definition\DefinitionReader.cs" />
+    <Compile Include="FileReaders\FileReadingException.cs" />
+    <Compile Include="FileReaders\Location\LocationFileReader.cs" />
+    <Compile Include="FileReaders\Network\NetworkAndGridReader.cs" />
+    <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
+    <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
+    <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinition.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionArch.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCircle.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionCunette.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionEgg.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionElliptical.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionRectangle.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionStandard.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionSteelCunette.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionTrapezium.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionXyz.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionYz.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionZw.cs" />
+    <Compile Include="FileWriters\CrossSectionDefinition\DefinitionRegion.cs" />
+    <Compile Include="FileWriters\DefinitionGeneratorFactory.cs" />
+    <Compile Include="FileWriters\FileWritingException.cs" />
+    <Compile Include="FileWriters\General\GeneralRegion.cs" />
+    <Compile Include="FileWriters\General\GeneralRegionGenerator.cs" />
+    <Compile Include="FileWriters\IniFileWriter.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorCrossSectionLocation.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorLateralSourceLocation.cs" />
+    <Compile Include="FileWriters\Location\DefinitionGeneratorLocation.cs" />
+    <Compile Include="FileWriters\Location\LocationFileWriter.cs" />
+    <Compile Include="FileWriters\Location\LocationRegion.cs" />
+    <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
+    <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
+    <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
+    <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataFileNames.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataFileWriter.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
+    <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureAdvancedWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridge.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgePillar.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridgeStandard.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureCulvert.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureExtraResistance.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureGeneralStructure.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureInvertedSiphon.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureOrifice.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructurePump.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureRiverWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureSiphon.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureUniversalWeir.cs" />
+    <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureWeir.cs" />
+    <Compile Include="FileWriters\Structure\StructureRegion.cs" />
+    <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
+    <Compile Include="FunctionStores\MapHisFileReader.cs" />
+    <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
+    <Compile Include="Grid\GridApi.cs" />
+    <Compile Include="Grid\AGrid.cs" />
+    <Compile Include="Grid\GridApiDataSet.cs" />
+    <Compile Include="Grid\GridApiFactory.cs" />
+    <Compile Include="Grid\GridWrapper.cs" />
+    <Compile Include="Grid\IGrid.cs" />
+    <Compile Include="Grid\IGridApi.cs" />
+    <Compile Include="Grid\IUGrid.cs" />
+    <Compile Include="Grid\RemoteGridApi.cs" />
+    <Compile Include="Grid\UGrid.cs" />
+    <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
+    <Compile Include="Helpers\ConfigurationSetting.cs" />
+    <Compile Include="Helpers\DelftIniCategory.cs" />
+    <Compile Include="NGHSFileBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
+      <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Grid\Grid.cd" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.hbm.xml" />
+    <Content Include="Kernels\x64\io_netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x64\libifcoremd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x64\libmmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x64\msvcr110.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x64\netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x86\io_netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x86\libifcoremd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x86\libmmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x86\msvcr110.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernels\x86\netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
+    <Error Condition="!Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+  </Target>
+  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" />
+</Project>

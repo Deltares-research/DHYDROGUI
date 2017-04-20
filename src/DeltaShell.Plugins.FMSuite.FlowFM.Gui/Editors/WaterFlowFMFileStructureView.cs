@@ -1,0 +1,124 @@
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using DelftTools.Controls;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using NetTopologySuite.Extensions.Features;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
+{
+    public class FileBasedItemProperties
+    {
+        public FileBasedItemProperties(FileBasedModelItem item)
+        {
+            Property = item.PropertyName;
+            FullPath = item.FileExists ? item.FilePath : "<no file created yet>";
+        }
+
+        public string Property { get; private set; }
+
+        [DisplayName("Full path")]
+        public string FullPath { get; private set; }
+    }
+
+    public partial class WaterFlowFMFileStructureView : UserControl, IAdditionalView
+    {
+        private WaterFlowFMModel model;
+
+        public WaterFlowFMFileStructureView()
+        {
+            InitializeComponent();
+            treeView.NodePresenters.Add(new WaterFlowFMFileBasedItemNodePresenter {Model = Model});
+            treeView.SelectedNodeChanged += SelectedNodeChanged;
+        }
+
+        private void SelectedNodeChanged(object sender, EventArgs eventArgs)
+        {
+            var item = treeView.SelectedNode.Tag as FileBasedModelItem;
+            propertyGrid1.SelectedObject = item == null ? null : new FileBasedItemProperties(item);
+        }
+
+        public WaterFlowFMModel Model
+        {
+            get { return model; }
+            set
+            {
+                if (model != null)
+                {
+                    ((INotifyPropertyChanged)model).PropertyChanged -= ModelPropertyChanged;
+                    ((INotifyCollectionChanged)model).CollectionChanged -= ModelCollectionChanged;
+                }
+                model = value;
+                if (model != null)
+                {
+                    ((INotifyPropertyChanged)model).PropertyChanged += ModelPropertyChanged;
+                    ((INotifyCollectionChanged)model).CollectionChanged += ModelCollectionChanged;
+                }
+                if (model != null)
+                {
+                    var nodePresenter =
+                        treeView.NodePresenters.FirstOrDefault() as WaterFlowFMFileBasedItemNodePresenter;
+                    if (nodePresenter != null)
+                    {
+                        nodePresenter.Model = model;
+                    }
+                }
+                RefreshTree();
+            }
+        }
+
+        private void ModelCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            RefreshTree();
+        }
+
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //TODO: pick up imports, etc. for refreshes
+            if ((Equals(sender, Model) && e.PropertyName == TypeUtils.GetMemberName(() => Model.Name)) ||
+                (Model.Boundaries.Contains(sender) &&
+                 e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Name)) ||
+                //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
+                (Model.Pipes.Contains(sender) &&
+                 e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Name)))
+                //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
+
+            {
+                RefreshTree();
+            }
+        }
+
+        [InvokeRequired]
+        private void RefreshTree()
+        {
+            var parentNode = treeView.Data as FileBasedModelItem;
+            if (parentNode != null)
+            {
+                parentNode.Clear();
+            }
+            treeView.Data = model == null ? null : WaterFlowFMFileBasedItemFactory.CreateParentNode(model);
+        }
+
+        #region IView
+
+        public object Data { get { return Model; } set { Model = value as WaterFlowFMModel; } }
+        
+        public Image Image { get; set; }
+
+        public void EnsureVisible(object item)
+        {
+            treeView.EnsureVisible(item);
+        }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        #endregion
+    }
+}

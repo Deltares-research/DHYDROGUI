@@ -1,0 +1,1282 @@
+﻿using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.FileWriters.General;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.TestUtils;
+using NUnit.Framework;
+
+namespace DeltaShell.NGHS.IO.Tests.FileWriters
+{
+    [TestFixture]
+    public class StructureFileWriterTest
+    {
+        private IHydroNetwork network;
+
+        [SetUp]
+        public void SetUp()
+        {
+            network = FileWriterTestHelper.SetupSimpleHydroNetworkWith2NodesAnd1Branch();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+        
+        [Test]
+        public void TestStructuresFileWriterGivesExpectedResults_MultipleTypes()
+        {
+            var relativePathStructuresExpectedFile = TestHelper.GetTestFilePath(@"FileWriters/Structures_expected.txt");
+
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddPump(
+                StructureFileWriterTestHelper.PUMP_ID,
+                StructureFileWriterTestHelper.PUMP_NAME,
+                StructureFileWriterTestHelper.PUMP_CAPACITY,
+                StructureFileWriterTestHelper.PUMP_CHAINAGE,
+                StructureFileWriterTestHelper.PUMP_CONTROL_DIRECTION,
+                StructureFileWriterTestHelper.PUMP_SUCTION_START,
+                StructureFileWriterTestHelper.PUMP_SUCTION_STOP,
+                StructureFileWriterTestHelper.PUMP_DELIVERY_START,
+                StructureFileWriterTestHelper.PUMP_DELIVERY_STOP,
+                StructureFileWriterTestHelper.PUMP_HEAD_VALUES,
+                StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES);
+
+            branch.AddSimpleWeir(
+                StructureFileWriterTestHelper.WEIR_ID,
+                StructureFileWriterTestHelper.WEIR_NAME,
+                StructureFileWriterTestHelper.WEIR_CREST_LEVEL,
+                StructureFileWriterTestHelper.WEIR_CREST_WIDTH,
+                StructureFileWriterTestHelper.WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
+                StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
+
+            branch.AddUniversalWeir(
+                StructureFileWriterTestHelper.UNI_WEIR_ID,
+                StructureFileWriterTestHelper.UNI_WEIR_NAME,
+                StructureFileWriterTestHelper.UNI_WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.UNI_WEIR_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.UNI_WEIR_Y_VALUES.ToArray(),
+                StructureFileWriterTestHelper.UNI_WEIR_Z_VALUES.ToArray(),
+                StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
+
+            branch.AddRiverWeir(
+                StructureFileWriterTestHelper.RIVER_WEIR_ID,
+                StructureFileWriterTestHelper.RIVER_WEIR_NAME,
+                StructureFileWriterTestHelper.RIVER_WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.RIVER_WEIR_CREST_LEVEL,
+                StructureFileWriterTestHelper.RIVER_WEIR_CREST_WIDTH,
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_CW_COEFF,
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_SLIM_LIMIT,
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_CW_COEFF,
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_SLIM_LIMIT,
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_SF.ToArray(),
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_RED.ToArray(),
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
+
+            branch.AddAdvancedWeir(
+                StructureFileWriterTestHelper.ADV_WEIR_ID,
+                StructureFileWriterTestHelper.ADV_WEIR_NAME,
+                StructureFileWriterTestHelper.ADV_WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.ADV_WEIR_CREST_LEVEL,
+                StructureFileWriterTestHelper.ADV_WEIR_CREST_WIDTH,
+                StructureFileWriterTestHelper.ADV_WEIR_NUM_PIERS,
+                StructureFileWriterTestHelper.ADV_WEIR_UPSTREAM_FACE_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_DESIGN_HEAD_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_UPSTREAM_FACE_NEG,
+                StructureFileWriterTestHelper.ADV_WEIR_DESIGN_HEAD_NEG,
+                StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
+                StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
+
+            branch.AddOrifice(
+                StructureFileWriterTestHelper.ORIFICE_ID,
+                StructureFileWriterTestHelper.ORIFICE_NAME,
+                StructureFileWriterTestHelper.ORIFICE_CHAINAGE,
+                StructureFileWriterTestHelper.ORIFICE_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL,
+                StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH,
+                StructureFileWriterTestHelper.ORIFICE_GATE_OPENING,
+                StructureFileWriterTestHelper.ORIFICE_CONTRACTION_COEFF,
+                StructureFileWriterTestHelper.ORIFICE_LAT_CONTRACTION_COEFF,
+                StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_POS,
+                StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_POS,
+                StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG,
+                StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
+
+            branch.AddGeneralStructure(
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_NAME,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CHAINAGE,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_EXTRA_RESISTANCE,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_W1,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_WSDL,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_CENTER,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_WSDR,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_W2,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZB1,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZBSL,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
+
+            branch.AddCulvert(
+                StructureFileWriterTestHelper.CULVERT_ID,
+                StructureFileWriterTestHelper.CULVERT_NAME,
+                StructureFileWriterTestHelper.CULVERT_CHAINAGE,
+                StructureFileWriterTestHelper.CULVERT_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.CULVERT_INLET_LEVEL,
+                StructureFileWriterTestHelper.CULVERT_OUTLET_LEVEL,
+                StructureFileWriterTestHelper.CULVERT_LENGTH,
+                StructureFileWriterTestHelper.CULVERT_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.CULVERT_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.CULVERT_IS_GATED,
+                StructureFileWriterTestHelper.CULVERT_GATE_INITIAL_OPENING,
+                StructureFileWriterTestHelper.CULVERT_REL_OPENING.ToArray(),
+                StructureFileWriterTestHelper.CULVERT_LOSS_COEFF.ToArray(),
+                StructureFileWriterTestHelper.CULVERT_FRICTION,
+                StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ENABLED,
+                StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
+
+            branch.AddInvertedSiphon(
+                StructureFileWriterTestHelper.INV_SIPHON_ID,
+                StructureFileWriterTestHelper.INV_SIPHON_NAME,
+                StructureFileWriterTestHelper.INV_SIPHON_CHAINAGE,
+                StructureFileWriterTestHelper.INV_SIPHON_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.INV_SIPHON_INLET_LEVEL,
+                StructureFileWriterTestHelper.INV_SIPHON_OUTLET_LEVEL,
+                StructureFileWriterTestHelper.INV_SIPHON_LENGTH,
+                StructureFileWriterTestHelper.INV_SIPHON_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.INV_SIPHON_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.INV_SIPHON_IS_GATED,
+                StructureFileWriterTestHelper.INV_SIPHON_GATE_INITIAL_OPENING,
+                StructureFileWriterTestHelper.INV_SIPHON_REL_OPENING.ToArray(),
+                StructureFileWriterTestHelper.INV_SIPHON_LOSS_COEFF.ToArray(),
+                StructureFileWriterTestHelper.INV_SIPHON_FRICTION,
+                StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ENABLED,
+                StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
+                StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
+
+            branch.AddSiphon(
+                StructureFileWriterTestHelper.SIPHON_ID,
+                StructureFileWriterTestHelper.SIPHON_NAME,
+                StructureFileWriterTestHelper.SIPHON_CHAINAGE,
+                StructureFileWriterTestHelper.SIPHON_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.SIPHON_INLET_LEVEL,
+                StructureFileWriterTestHelper.SIPHON_OUTLET_LEVEL,
+                StructureFileWriterTestHelper.SIPHON_LENGTH,
+                StructureFileWriterTestHelper.SIPHON_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.SIPHON_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.SIPHON_IS_GATED,
+                StructureFileWriterTestHelper.SIPHON_GATE_INITIAL_OPENING,
+                StructureFileWriterTestHelper.SIPHON_REL_OPENING.ToArray(),
+                StructureFileWriterTestHelper.SIPHON_LOSS_COEFF.ToArray(),
+                StructureFileWriterTestHelper.SIPHON_FRICTION,
+                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ENABLED,
+                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ROUGHNESS,
+                StructureFileWriterTestHelper.SIPHON_BEND_LOSS_COEFF,
+                StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
+                StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
+
+            branch.AddBridgeStandard(
+                StructureFileWriterTestHelper.BRIDGE_ID,
+                StructureFileWriterTestHelper.BRIDGE_NAME,
+                StructureFileWriterTestHelper.BRIDGE_CHAINAGE,
+                StructureFileWriterTestHelper.BRIDGE_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.BRIDGE_BED_LEVEL,
+                StructureFileWriterTestHelper.BRIDGE_CSDEF_ID,
+                StructureFileWriterTestHelper.BRIDGE_LENGTH,
+                StructureFileWriterTestHelper.BRIDGE_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.BRIDGE_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.BRIDGE_FRICTION,
+                StructureFileWriterTestHelper.BRIDGE_GROUNDFRICTION,
+                StructureFileWriterTestHelper.BRIDGE_ENABLE_GROUNDLAYER);
+
+            branch.AddBridgePillar(
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_ID,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_NAME,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_CHAINAGE,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_BED_LEVEL,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_CSDEF_ID,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_WIDTH,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_FORM_FACTOR);
+
+            branch.AddExtraResistance(
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID,
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_NAME,
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE,
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.ToArray(),
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_KSI.ToArray());
+				
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            string errorMessage;
+            var relativePathActualFile = Path.Combine(FileWriterTestHelper.RelativeTargetDirectory, FileWriterTestHelper.ModelFileNames.Structures);
+            Assert.IsTrue(FileComparer.Compare(relativePathStructuresExpectedFile, relativePathActualFile, out errorMessage, true),
+                          string.Format("Generated Structures file does not match template!{0}{1}", Environment.NewLine, errorMessage));
+        }
+        
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_Pump()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddPump(
+                StructureFileWriterTestHelper.PUMP_ID, 
+                StructureFileWriterTestHelper.PUMP_NAME, 
+                StructureFileWriterTestHelper.PUMP_CAPACITY, 
+                StructureFileWriterTestHelper.PUMP_CHAINAGE, 
+                StructureFileWriterTestHelper.PUMP_CONTROL_DIRECTION,
+                StructureFileWriterTestHelper.PUMP_SUCTION_START,
+                StructureFileWriterTestHelper.PUMP_SUCTION_STOP, 
+                StructureFileWriterTestHelper.PUMP_DELIVERY_START, 
+                StructureFileWriterTestHelper.PUMP_DELIVERY_STOP, 
+                StructureFileWriterTestHelper.PUMP_HEAD_VALUES, 
+                StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(16, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Pump, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Direction.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.PUMP_CONTROL_DIRECTION).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NrStages.Key);
+            Assert.AreEqual("1", idProperty.Value); // default value in DefinitionGenerator
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Capacity.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_CAPACITY.ToString(StructureRegion.Capacity.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.StartLevelSuctionSide.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_SUCTION_START.ToString(StructureRegion.StartLevelSuctionSide.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.StopLevelSuctionSide.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_SUCTION_STOP.ToString(StructureRegion.StopLevelSuctionSide.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.StartLevelDeliverySide.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_DELIVERY_START.ToString(StructureRegion.StartLevelDeliverySide.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.StopLevelDeliverySide.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.PUMP_DELIVERY_STOP.ToString(StructureRegion.StopLevelDeliverySide.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Head.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.PUMP_HEAD_VALUES.Select(v => v.ToString(StructureRegion.Head.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.ReductionFactor.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.PUMP_REDUCTION_VALUES.Select(v => v.ToString(StructureRegion.ReductionFactor.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_Weir()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddSimpleWeir(
+                StructureFileWriterTestHelper.WEIR_ID,
+                StructureFileWriterTestHelper.WEIR_NAME,
+                StructureFileWriterTestHelper.WEIR_CREST_LEVEL,
+                StructureFileWriterTestHelper.WEIR_CREST_WIDTH,
+                StructureFileWriterTestHelper.WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
+                StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(11, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Weir, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_CREST_LEVEL.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DischargeCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF.ToString(StructureRegion.DischargeCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LatDisCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF.ToString(StructureRegion.LatDisCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION).ToString(), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_UniversalWeir()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddUniversalWeir(
+                StructureFileWriterTestHelper.UNI_WEIR_ID,
+                StructureFileWriterTestHelper.UNI_WEIR_NAME,
+                StructureFileWriterTestHelper.UNI_WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.UNI_WEIR_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.UNI_WEIR_Y_VALUES.ToArray(),
+                StructureFileWriterTestHelper.UNI_WEIR_Z_VALUES.ToArray(),
+                StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF);
+            
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(13, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.UniversalWeir, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.UNI_WEIR_FLOW_DIRECTION).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelsCount.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_Y_VALUES.Count.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.YValues.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.UNI_WEIR_Y_VALUES.Select(v => v.ToString(StructureRegion.YValues.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.ZValues.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.UNI_WEIR_Z_VALUES.Select(v => v.ToString(StructureRegion.ZValues.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_Z_VALUES.Min().ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DischargeCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF.ToString(StructureRegion.DischargeCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.FreeSubmergedFactor.Key);
+            Assert.AreEqual("0.667", idProperty.Value); // default value in DefinitionGenerator
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_RiverWeir()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddRiverWeir(
+                StructureFileWriterTestHelper.RIVER_WEIR_ID,
+                StructureFileWriterTestHelper.RIVER_WEIR_NAME,
+                StructureFileWriterTestHelper.RIVER_WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.RIVER_WEIR_CREST_LEVEL,
+                StructureFileWriterTestHelper.RIVER_WEIR_CREST_WIDTH,
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_CW_COEFF,
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_SLIM_LIMIT,
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_CW_COEFF,
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_SLIM_LIMIT,
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_SF.ToArray(),
+                StructureFileWriterTestHelper.RIVER_WEIR_POS_RED.ToArray(),
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.ToArray(),
+                StructureFileWriterTestHelper.RIVER_WEIR_NEG_RED.ToArray());
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(18, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.RiverWeir, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_CREST_LEVEL.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosCwCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_POS_CW_COEFF.ToString(StructureRegion.PosCwCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosSlimLimit.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_POS_SLIM_LIMIT.ToString(StructureRegion.PosSlimLimit.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegCwCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_NEG_CW_COEFF.ToString(StructureRegion.NegCwCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegSlimLimit.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_NEG_SLIM_LIMIT.ToString(StructureRegion.NegSlimLimit.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosSfCount.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_POS_SF.Count.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosSf.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.RIVER_WEIR_POS_SF.Select(v => v.ToString(StructureRegion.PosSf.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosRed.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.RIVER_WEIR_POS_RED.Select(v => v.ToString(StructureRegion.PosRed.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegSfCount.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_NEG_SF.Count.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegSf.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.RIVER_WEIR_POS_SF.Select(v => v.ToString(StructureRegion.NegSf.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegRed.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.RIVER_WEIR_POS_RED.Select(v => v.ToString(StructureRegion.NegRed.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_AdvancedWeir()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddAdvancedWeir(
+                StructureFileWriterTestHelper.ADV_WEIR_ID,
+                StructureFileWriterTestHelper.ADV_WEIR_NAME,
+                StructureFileWriterTestHelper.ADV_WEIR_CHAINAGE,
+                StructureFileWriterTestHelper.ADV_WEIR_CREST_LEVEL,
+                StructureFileWriterTestHelper.ADV_WEIR_CREST_WIDTH,
+                StructureFileWriterTestHelper.ADV_WEIR_NUM_PIERS,
+                StructureFileWriterTestHelper.ADV_WEIR_UPSTREAM_FACE_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_DESIGN_HEAD_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_POS,
+                StructureFileWriterTestHelper.ADV_WEIR_UPSTREAM_FACE_NEG,
+                StructureFileWriterTestHelper.ADV_WEIR_DESIGN_HEAD_NEG,
+                StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG,
+                StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(17, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.AdvancedWeir, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_CREST_LEVEL.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NPiers.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_NUM_PIERS.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosHeight.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_UPSTREAM_FACE_POS.ToString(StructureRegion.PosHeight.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosDesignHead.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_DESIGN_HEAD_POS.ToString(StructureRegion.PosDesignHead.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosPierContractCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_POS.ToString(StructureRegion.PosPierContractCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosAbutContractCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_POS.ToString(StructureRegion.PosAbutContractCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegHeight.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_UPSTREAM_FACE_NEG.ToString(StructureRegion.NegHeight.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegDesignHead.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_DESIGN_HEAD_NEG.ToString(StructureRegion.NegDesignHead.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegPierContractCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_PIER_CONTRACTION_NEG.ToString(StructureRegion.NegPierContractCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegAbutContractCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_ABUT_CONTRACTION_NEG.ToString(StructureRegion.NegAbutContractCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_Orifice()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddOrifice(
+                StructureFileWriterTestHelper.ORIFICE_ID,
+                StructureFileWriterTestHelper.ORIFICE_NAME,
+                StructureFileWriterTestHelper.ORIFICE_CHAINAGE,
+                StructureFileWriterTestHelper.ORIFICE_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL,
+                StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH,
+                StructureFileWriterTestHelper.ORIFICE_GATE_OPENING,
+                StructureFileWriterTestHelper.ORIFICE_CONTRACTION_COEFF,
+                StructureFileWriterTestHelper.ORIFICE_LAT_CONTRACTION_COEFF,
+                StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_POS,
+                StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_POS,
+                StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG,
+                StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(16, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Orifice, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.ORIFICE_FLOW_DIRECTION).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.OpenLevel.Key);
+            Assert.AreEqual((StructureFileWriterTestHelper.ORIFICE_GATE_OPENING + StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL)
+                .ToString(StructureRegion.OpenLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.ContractionCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CONTRACTION_COEFF.ToString(StructureRegion.ContractionCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LatContrCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LAT_CONTRACTION_COEFF.ToString(StructureRegion.LatContrCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.UseLimitFlowPos.Key);
+            Assert.AreEqual(Convert.ToInt32(StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_POS).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LimitFlowPos.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_POS.ToString(StructureRegion.LimitFlowPos.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.UseLimitFlowNeg.Key);
+            Assert.AreEqual(Convert.ToInt32(StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LimitFlowNeg.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG.ToString(StructureRegion.LimitFlowNeg.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_GeneralStructure()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddGeneralStructure(
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_NAME,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CHAINAGE,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_EXTRA_RESISTANCE,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_W1,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_WSDL,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_CENTER,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_WSDR,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_W2,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZB1,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZBSL,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(28, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.GeneralStructure, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthLeftW1.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_W1.ToString(StructureRegion.WidthLeftW1.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthLeftWsdl.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_WSDL.ToString(StructureRegion.WidthLeftWsdl.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthCenter.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_CENTER.ToString(StructureRegion.WidthCenter.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthRightWsdr.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_WSDR.ToString(StructureRegion.WidthRightWsdr.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthRightW2.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_W2.ToString(StructureRegion.WidthRightW2.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelLeftZb1.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZB1.ToString(StructureRegion.LevelLeftZb1.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelLeftZbsl.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZBSL.ToString(StructureRegion.LevelLeftZbsl.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelCenter.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER.ToString(StructureRegion.LevelCenter.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelRightZbsr.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR.ToString(StructureRegion.LevelRightZbsr.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelRightZb2.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2.ToString(StructureRegion.LevelRightZb2.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.GateHeight.Key);
+            Assert.AreEqual((StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING + StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER)
+                .ToString(StructureRegion.GateHeight.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosFreeGateFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS.ToString(StructureRegion.PosFreeGateFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosDrownGateFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_POS.ToString(StructureRegion.PosDrownGateFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosFreeWeirFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_POS.ToString(StructureRegion.PosFreeWeirFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosDrownWeirFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_POS.ToString(StructureRegion.PosDrownWeirFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PosContrCoefFreeGate.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_POS.ToString(StructureRegion.PosContrCoefFreeGate.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegFreeGateFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_NEG.ToString(StructureRegion.NegFreeGateFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegDrownGateFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_NEG.ToString(StructureRegion.NegDrownGateFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegFreeWeirFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG.ToString(StructureRegion.NegFreeWeirFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegDrownWeirFlowCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG.ToString(StructureRegion.NegDrownWeirFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NegContrCoefFreeGate.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG.ToString(StructureRegion.NegContrCoefFreeGate.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.ExtraResistance.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_EXTRA_RESISTANCE.ToString(StructureRegion.ExtraResistance.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_GeneralStructureWithExtraResistanceDisabled()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddGeneralStructure(
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_NAME,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CHAINAGE,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_EXTRA_RESISTANCE,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_W1,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_WSDL,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_CENTER,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_WSDR,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_W2,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZB1,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZBSL,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_POS,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG,
+                false);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(28, content.Properties.Count);
+            
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.ExtraResistance.Key);
+            const double expectedExtraResistance = 0.0;
+            Assert.AreEqual(expectedExtraResistance.ToString(StructureRegion.ExtraResistance.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_Culvert()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddCulvert(
+                StructureFileWriterTestHelper.CULVERT_ID,
+                StructureFileWriterTestHelper.CULVERT_NAME,
+                StructureFileWriterTestHelper.CULVERT_CHAINAGE,
+                StructureFileWriterTestHelper.CULVERT_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.CULVERT_INLET_LEVEL,
+                StructureFileWriterTestHelper.CULVERT_OUTLET_LEVEL,
+                StructureFileWriterTestHelper.CULVERT_LENGTH,
+                StructureFileWriterTestHelper.CULVERT_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.CULVERT_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.CULVERT_IS_GATED,
+                StructureFileWriterTestHelper.CULVERT_GATE_INITIAL_OPENING,
+                StructureFileWriterTestHelper.CULVERT_REL_OPENING.ToArray(),
+                StructureFileWriterTestHelper.CULVERT_LOSS_COEFF.ToArray(),
+                StructureFileWriterTestHelper.CULVERT_FRICTION,
+                StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ENABLED,
+                StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS);
+            
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(22, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Culvert, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.CULVERT_FLOW_DIRECTION).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LeftLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_INLET_LEVEL.ToString(StructureRegion.LeftLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.RightLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_OUTLET_LEVEL.ToString(StructureRegion.RightLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CsDefId.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_ID.ToString(), idProperty.Value);
+            
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Length.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_LENGTH.ToString(StructureRegion.Length.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.InletLossCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_INLET_LOSS_COEFF.ToString(StructureRegion.InletLossCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.OutletLossCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_OUTLET_LOSS_COEFF.ToString(StructureRegion.OutletLossCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.ValveOnOff.Key);
+            Assert.AreEqual(Convert.ToInt32(StructureFileWriterTestHelper.CULVERT_IS_GATED).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.IniValveOpen.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_GATE_INITIAL_OPENING.ToString(StructureRegion.IniValveOpen.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LossCoeffCount.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_LOSS_COEFF.Count.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.RelativeOpening.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.CULVERT_REL_OPENING.Select(v => v.ToString(StructureRegion.RelativeOpening.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LossCoefficient.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.CULVERT_LOSS_COEFF.Select(v => v.ToString(StructureRegion.LossCoefficient.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedFrictionType.Key);
+            Assert.AreEqual(((int)Friction.Chezy).ToString(), idProperty.Value); // Determined in Mock Class
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedFriction.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_FRICTION.ToString(StructureRegion.BedFriction.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.GroundFrictionType.Key);
+            Assert.AreEqual(((int)Friction.Chezy).ToString(), idProperty.Value); // Determined in Mock Class
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.GroundFriction.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_GROUNDLAYER_ROUGHNESS.ToString(StructureRegion.GroundFriction.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+        
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_InvertedSiphon()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddInvertedSiphon(
+                StructureFileWriterTestHelper.INV_SIPHON_ID,
+                StructureFileWriterTestHelper.INV_SIPHON_NAME,
+                StructureFileWriterTestHelper.INV_SIPHON_CHAINAGE,
+                StructureFileWriterTestHelper.INV_SIPHON_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.INV_SIPHON_INLET_LEVEL,
+                StructureFileWriterTestHelper.INV_SIPHON_OUTLET_LEVEL,
+                StructureFileWriterTestHelper.INV_SIPHON_LENGTH,
+                StructureFileWriterTestHelper.INV_SIPHON_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.INV_SIPHON_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.INV_SIPHON_IS_GATED,
+                StructureFileWriterTestHelper.INV_SIPHON_GATE_INITIAL_OPENING,
+                StructureFileWriterTestHelper.INV_SIPHON_REL_OPENING.ToArray(),
+                StructureFileWriterTestHelper.INV_SIPHON_LOSS_COEFF.ToArray(),
+                StructureFileWriterTestHelper.INV_SIPHON_FRICTION,
+                StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ENABLED,
+                StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
+                StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
+            
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(23, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.InvertedSiphon, idProperty.Value);
+
+            // Many common properties tested by Culvert test (above)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BendLossCoef.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF.ToString(StructureRegion.BendLossCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+        }
+        
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_Siphon()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddSiphon(
+                StructureFileWriterTestHelper.SIPHON_ID,
+                StructureFileWriterTestHelper.SIPHON_NAME,
+                StructureFileWriterTestHelper.SIPHON_CHAINAGE,
+                StructureFileWriterTestHelper.SIPHON_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.SIPHON_INLET_LEVEL,
+                StructureFileWriterTestHelper.SIPHON_OUTLET_LEVEL,
+                StructureFileWriterTestHelper.SIPHON_LENGTH,
+                StructureFileWriterTestHelper.SIPHON_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.SIPHON_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.SIPHON_IS_GATED,
+                StructureFileWriterTestHelper.SIPHON_GATE_INITIAL_OPENING,
+                StructureFileWriterTestHelper.SIPHON_REL_OPENING.ToArray(),
+                StructureFileWriterTestHelper.SIPHON_LOSS_COEFF.ToArray(),
+                StructureFileWriterTestHelper.SIPHON_FRICTION,
+                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ENABLED,
+                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ROUGHNESS,
+                StructureFileWriterTestHelper.SIPHON_BEND_LOSS_COEFF,
+                StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
+                StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(25, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Siphon, idProperty.Value);
+
+            // Many common properties tested by Inv Siphon & Culvert tests (above)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.TurnOnLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL.ToString(StructureRegion.TurnOnLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.TurnOffLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL.ToString(StructureRegion.TurnOffLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_Bridge()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddBridgeStandard(
+                StructureFileWriterTestHelper.BRIDGE_ID,
+                StructureFileWriterTestHelper.BRIDGE_NAME,
+                StructureFileWriterTestHelper.BRIDGE_CHAINAGE,
+                StructureFileWriterTestHelper.BRIDGE_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.BRIDGE_BED_LEVEL,
+                StructureFileWriterTestHelper.BRIDGE_CSDEF_ID,
+                StructureFileWriterTestHelper.BRIDGE_LENGTH,
+                StructureFileWriterTestHelper.BRIDGE_INLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.BRIDGE_OUTLET_LOSS_COEFF,
+                StructureFileWriterTestHelper.BRIDGE_FRICTION,
+                StructureFileWriterTestHelper.BRIDGE_GROUNDFRICTION,
+                StructureFileWriterTestHelper.BRIDGE_ENABLE_GROUNDLAYER);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(16, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Bridge, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.BRIDGE_FLOW_DIRECTION).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_BED_LEVEL.ToString(StructureRegion.BedLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CsDefId.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Length.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_LENGTH.ToString(StructureRegion.Length.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.InletLossCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_INLET_LOSS_COEFF.ToString(StructureRegion.InletLossCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.OutletLossCoeff.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_OUTLET_LOSS_COEFF.ToString(StructureRegion.OutletLossCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedFrictionType.Key);
+            Assert.AreEqual(((int)Friction.Chezy).ToString(), idProperty.Value); // Determined in Mock Class
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedFriction.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_FRICTION.ToString(StructureRegion.BedFriction.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.GroundFrictionType.Key);
+            Assert.AreEqual(((int)Friction.Chezy).ToString(), idProperty.Value); // Determined in Mock Class
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.GroundFriction.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_GROUNDFRICTION.ToString(StructureRegion.GroundFriction.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_BridgePillar()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddBridgePillar(
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_ID,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_NAME,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_CHAINAGE,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_FLOW_DIRECTION,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_BED_LEVEL,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_CSDEF_ID,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_WIDTH,
+                StructureFileWriterTestHelper.BRIDGE_PILLAR_FORM_FACTOR);
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(10, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.BridgePillar, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(((int)StructureFileWriterTestHelper.BRIDGE_PILLAR_FLOW_DIRECTION).ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_BED_LEVEL.ToString(StructureRegion.BedLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.PillarWidth.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_WIDTH.ToString(StructureRegion.PillarWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.FormFactor.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_FORM_FACTOR.ToString(StructureRegion.FormFactor.Format, CultureInfo.InvariantCulture), idProperty.Value);
+        }
+
+        [Test]
+        public void TestStructureFileWriterGivesExpectedResults_ExtraResistance()
+        {
+            var branch = network.Branches.First();
+            Assert.NotNull(branch, "No branched added to the network");
+
+            branch.AddExtraResistance(
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID,
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_NAME,
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE,
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.ToArray(),
+                StructureFileWriterTestHelper.EXTRA_RESISTANCE_KSI.ToArray());
+
+            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
+
+            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
+
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
+
+            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
+            Assert.AreEqual(9, content.Properties.Count);
+
+            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_NAME, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
+            Assert.AreEqual(branch.Name, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
+            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
+            Assert.AreEqual(StructureRegion.StructureTypeName.ExtraResistanceStructure, idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.NumValues.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.Count.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Levels.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.EXTRA_RESISTANCE_LEVELS.Select(v => v.ToString(StructureRegion.Levels.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Ksi.Key);
+            Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.EXTRA_RESISTANCE_KSI.Select(v => v.ToString(StructureRegion.Ksi.Format, CultureInfo.InvariantCulture))), idProperty.Value);
+        }
+
+    }
+}

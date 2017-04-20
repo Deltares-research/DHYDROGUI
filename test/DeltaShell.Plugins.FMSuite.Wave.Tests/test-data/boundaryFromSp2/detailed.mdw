@@ -1,0 +1,63 @@
+[WaveFileInformation]
+   FileVersion = 02.00
+[General]
+   ProjectName = 
+   ProjectNr   = 
+   Description1= 
+   Description2= 
+   Description3= 
+   ReferenceDate = 1996-01-01
+   DirConvention = nautical
+   SimMode = stationary
+   OnlyInputVerify = false
+   DirSpace = circle
+   NDir     = 36
+   FreqMin  =  5.0000001e-002
+   FreqMax  =  1.0000000e+000
+   NFreq    = 24
+   TimePoint = 1.5000000e+003
+   WaterLevel = 0.0000000e+000
+   XVeloc = 0.0000000e+000
+   YVeloc = 0.0000000e+000
+   WindSpeed = 6.0000000e+000
+   WindDir = 3.3000000e+002
+[Constants]
+   Gravity  = 9.8100004e+000
+   WaterDensity = 1.0250000e+003
+   NorthDir = 9.0000000e+001
+   MinimumDepth = 5.0000001e-002
+[Processes]
+   GenModePhys = 3
+   WaveSetup = false
+   WaveForces = dissipation
+   Breaking = true
+   BreakAlpha = 1.0000000e+000
+   BreakGamma = 7.3000002e-001
+   BedFriction = jonswap
+   BedFricCoeff = 6.7000002e-002
+   Triads = false
+   Diffraction = false
+   WindGrowth = true
+   WhiteCapping = Komen
+   Quadruplets = true
+   Refraction = true
+   FreqShift = true
+[Numerics]
+   DirSpaceCDD = 5.0000000e-001
+   FreqSpaceCSS = 5.0000000e-001
+   RChHsTm01 = 2.0000000e-002
+   RChMeanHs = 2.0000000e-002
+   RChMeanTm01 = 2.0000000e-002
+   PercWet = 9.5000000e+001
+   MaxIter = 5
+[Output]
+   TestOutputLevel = 0
+   TraceCalls = false
+   HotStart = true
+   MapWriteInterval = 1.2000000e+001
+[Domain]
+   Grid = wave_detail.grd
+   BedLevel = wave_detail.dep
+[Boundary]
+   Definition = fromsp2file
+   OverallSpecfile = Nest002.sp2

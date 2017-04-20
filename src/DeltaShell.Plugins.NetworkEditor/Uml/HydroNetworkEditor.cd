@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Forms.HydroNetworkEditor">
+    <Position X="8.5" Y="1" Width="3" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>HElCmwkRYCAAEpAIWlqA3QlGKCiQcRAFH1LkbcCDCAA=</HashCode>
+      <FileName>Forms\HydroNetworkEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="network" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetTopologySuite.Extensions.Networks.Network">
+    <Position X="0.75" Y="3" Width="4" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DelftTools.Hydro.HydroNetwork">
+    <Position X="0.5" Y="13" Width="4.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Forms.HydroNetworkEditorViewContext">
+    <Position X="5.25" Y="9.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgBAAAAAEAAAAAAAAAAAAABAAAAAACAAAAEA=</HashCode>
+      <FileName>Forms\HydroNetworkEditorViewContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.CustomRenderers.BranchFeatureRenderer">
+    <Position X="28.25" Y="9.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAEAACAAEgACQEAAAAAAAAAAABAACAAAABA=</HashCode>
+      <FileName>CustomRenderers\BranchFeatureRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.CustomRenderers.CatchmentAnchorPointRenderer" BaseTypeListCollapsed="true">
+    <Position X="39.25" Y="9.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAACAAEgAAAAAAAAAAAAAAABAACAAAAAA=</HashCode>
+      <FileName>CustomRenderers\CatchmentAnchorPointRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.CustomRenderers.CompositeStructureRenderer" BaseTypeListCollapsed="true">
+    <Position X="35.75" Y="9.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAEICEAACAAEgAAAAAAAAAEAAAAABAACAAAABA=</HashCode>
+      <FileName>CustomRenderers\CompositeStructureRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.CustomRenderers.CrossSectionRenderer">
+    <Position X="28" Y="13.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAgAAQAAAAAAAQAAAAAAAAAAAAAAAAAAABAAAAAAABA=</HashCode>
+      <FileName>CustomRenderers\CrossSectionRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.CustomRenderers.DiffuseLateralSourceRenderer">
+    <Position X="30.5" Y="13.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAEAAAAAAAAAAAAAAAABAAAAAAABA=</HashCode>
+      <FileName>CustomRenderers\DiffuseLateralSourceRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.CustomRenderers.StructureRenderer" BaseTypeListCollapsed="true">
+    <Position X="32" Y="9.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAEICEABCAAEgAAAAACAAEAAAAAABAACAAAABA=</HashCode>
+      <FileName>CustomRenderers\StructureRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.BranchEditor" BaseTypeListCollapsed="true">
+    <Position X="26.75" Y="28.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AQIAAAEAAAgAAAAAAAAAAAAAAAEAAAAIIAAAAAQCAAA=</HashCode>
+      <FileName>Editors\BranchEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.BranchFeatureEditor&lt;T&gt;">
+    <Position X="24.25" Y="28.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAIAAAAAAEAAAAAIAAAAAQCAAA=</HashCode>
+      <FileName>Editors\BranchFeatureEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.CatchmentFeatureEditor" BaseTypeListCollapsed="true">
+    <Position X="32.5" Y="24.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAgAIgAAAAAAAAQAAAAAAEAAAAAAAAAAAQCAAA=</HashCode>
+      <FileName>Editors\CatchmentFeatureEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.CompositeStructureEditor" BaseTypeListCollapsed="true">
+    <Position X="31.75" Y="31" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAgAAAAACAgEAAgAYIAACQAQCEAA=</HashCode>
+      <FileName>Editors\CompositeStructureEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.CrossSectionEditor" BaseTypeListCollapsed="true">
+    <Position X="36" Y="28.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>IAIgAAAAUCoggAAAAABQEABAAhAAAIAQIAASYQQCEAA=</HashCode>
+      <FileName>Editors\CrossSectionEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.DiffuseLateralSourceEditor" BaseTypeListCollapsed="true">
+    <Position X="28.5" Y="32.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAggAAIEAAAQAAAAAwAAAIAAIAACQQQCEAA=</HashCode>
+      <FileName>Editors\DiffuseLateralSourceEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.HydroLinkEditor" BaseTypeListCollapsed="true">
+    <Position X="29.25" Y="24.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAACAAAAAAAAEAAAAABAAAAAQCAAA=</HashCode>
+      <FileName>Editors\HydroLinkEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.NetworkLocationFeatureEditor">
+    <Position X="22.5" Y="32.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQIAAAAAAAAAA=</HashCode>
+      <FileName>Editors\NetworkLocationFeatureEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.NetworkSegmentFeatureEditor">
+    <Position X="25" Y="32.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Editors\NetworkLocationFeatureEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.NodeEditor">
+    <Position X="31.5" Y="28.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAYIAAAAAACAAA=</HashCode>
+      <FileName>Editors\NodeEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.StructureEditor&lt;T&gt;" BaseTypeListCollapsed="true">
+    <Position X="21.5" Y="25.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACgAAAAAAAAQAAAAAgEAAgAQIAAAAAQCEAA=</HashCode>
+      <FileName>Editors\StructureEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Editors.WasteWaterTreatmentPlantFeatureEditor" BaseTypeListCollapsed="true">
+    <Position X="35.25" Y="24.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAQCAAA=</HashCode>
+      <FileName>Editors\WasteWaterTreatmentPlantFeatureEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.RelationEditors.BranchToBranchFeatureRelationEditor&lt;T&gt;">
+    <Position X="2" Y="25.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAICAAAABQAAFAAAABAiAAAAAAAACCEAQAAAI=</HashCode>
+      <FileName>RelationEditors\BranchToBranchFeatureRelationEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.RelationEditors.BranchToBranchFeatureService">
+    <Position X="10.25" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>RelationEditors\BranchToBranchFeatureService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.RelationEditors.BranchToCrossSectionRelationEditor">
+    <Position X="8.75" Y="25.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAkEQAQAACAAAEBAAAFAAAABASAAIAAAAAAAQAQAAAA=</HashCode>
+      <FileName>RelationEditors\BranchToCrossSectionRelationEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.RelationEditors.FeatureRelationEditor">
+    <Position X="6.25" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAEAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RelationEditors\FeatureRelationEditor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.RelationEditors.NodeToBranchRelationEditor">
+    <Position X="5.25" Y="25.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAADAAAABIEANAAAABACAAIAAAMAAAAAAAAAA=</HashCode>
+      <FileName>RelationEditors\NodeToBranchRelationEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.RelationEditors.StructureFeatureToStructureRelationEditor">
+    <Position X="12.25" Y="25.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAABAAAEAAAABACEAIAAAAAAAQAQAAAA=</HashCode>
+      <FileName>RelationEditors\StructureFeatureToStructureRelationEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Snapping.BranchSnapRule">
+    <Position X="1.75" Y="30" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Snapping\BranchSnapRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Snapping.CrossSectionSnapRule">
+    <Position X="6" Y="30" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Snapping\CrossSectionSnapRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Snapping.LinkSnapRule" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="30" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAIAAAQgAAAAAAAAAAAAAAAAAAACAgIAEAA=</HashCode>
+      <FileName>Snapping\LinkSnapRule.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Snapping.NodeSnapRule">
+    <Position X="3.75" Y="30" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Snapping\NodeSnapRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Snapping.StructureSnapRule">
+    <Position X="8" Y="30" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAgAAAAAACQAAAAAAAAAAAAAAAAAAAAAAAAACEA=</HashCode>
+      <FileName>Snapping\StructureSnapRule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.PasteIntoBranchFeaturesMapTool">
+    <Position X="28" Y="2.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAIQAABJAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tools\PasteIntoBranchFeaturesMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.CopyBranchFeaturesMapTool">
+    <Position X="35" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIQABABAAAAAAABAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Tools\CopyBranchFeaturesMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.ExportCrossSectionToCsvMapTool">
+    <Position X="31.5" Y="2.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAIAAIQAABBAAAAAAAhAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tools\ExportCrossSectionToCsvMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.HydroNetworkEditorMapTool" BaseTypeListCollapsed="true">
+    <Position X="23.75" Y="2.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>ADACAAQAYCCCgN0QWDBQjiAAEQGgAQABNALJBJQnYQA=</HashCode>
+      <FileName>Tools\HydroNetworkEditorMapTool.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.HydroNetworkEditorMapToolHelper">
+    <Position X="20.5" Y="3.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIIAAAAAIAACAQAAAAQAgAAg=</HashCode>
+      <FileName>Tools\HydroNetworkEditorMapToolHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.ImportBranchesFromSelectionMapTool">
+    <Position X="35.25" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAQAAABAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tools\ImportBranchesFromSelectionMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.ImportBranchFeaturesFromSelectedFeaturesMapTool">
+    <Position X="31.5" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAACAIQAABBACAEAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tools\ImportBranchFeaturesFromSelectedFeaturesMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.ImportCrossSectionsFromCsvMapTool">
+    <Position X="28" Y="5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAABBQAAAAAAhAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tools\ImportCrossSectionsFromCsvMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Tools.PasteBranchFeaturesMapTool">
+    <Position X="38" Y="2.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAQIACAIQAABBAAABAABBBQAAAIAAAAAACAAA=</HashCode>
+      <FileName>Tools\PasteBranchFeaturesMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Topology.BranchNodeTopology">
+    <Position X="5.75" Y="33" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AoAgAgAAAABAAABCAAACCUAEAgAAAAAEBAAAAACAAYA=</HashCode>
+      <FileName>Topology\BranchNodeTopology.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Topology.HydroLinkNodeFinder" BaseTypeListCollapsed="true">
+    <Position X="1.5" Y="35.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAEAAAAAAAAAAAAAAAAAQAAAAAgAAQAIAA=</HashCode>
+      <FileName>Topology\HydroLinkNodeFinder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Topology.HydroLinkTopology">
+    <Position X="13.5" Y="33" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAABAAAAAAIAEAAAACAARAAAAAAAABAAAAAQAAAA=</HashCode>
+      <FileName>Topology\HydroLinkTopology.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Topology.StructureToCompositeStructureTopology&lt;T&gt;">
+    <Position X="9.25" Y="33" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAQCAAAAAAAAAAAQAAAAAAAECAgAAAQAAAA=</HashCode>
+      <FileName>Topology\StructureToCompositeStructureTopology.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Providers.HydroLinkFeature" BaseTypeListCollapsed="true">
+    <Position X="12.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAEAAAAAAAQAAAAAAAEAAAAAgAAgBA=</HashCode>
+      <FileName>Providers\HydroLinkFeature.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Providers.HydroLinksFeatureProvider">
+    <Position X="12.5" Y="3.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAQAAAAAAAABBAAAAAAAAAAABAASAAQAAAA=</HashCode>
+      <FileName>Providers\HydroLinksFeatureProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.NetworkEditor.Providers.HydroNetworkFeatureCollection" BaseTypeListCollapsed="true">
+    <Position X="12.5" Y="7" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABAEAABAAAQAAAAAAAEBBpAAAAAAQAAEBAAAABQAAAA=</HashCode>
+      <FileName>Providers\HydroNetworkFeatureCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="DelftTools.Hydro.IHydroNetwork">
+    <Position X="5.25" Y="2.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.NetworkEditor.Editors.IBranchMaintainableEditor">
+    <Position X="24.25" Y="27" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Editors\IBranchMaintainableEditor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.NetworkEditor.Editors.INetworkFeatureEditor">
+    <Position X="26.75" Y="27" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Editors\StructureEditor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.NetworkEditor.Tools.IHydroNetworkEditorMapTool">
+    <Position X="20.5" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Tools\IHydroNetworkEditorMapTool.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.NetworkEditor.Topology.IHydroLinkNodeFinder">
+    <Position X="1.5" Y="33" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAAgAAQAIAA=</HashCode>
+      <FileName>Topology\IHydroLinkNodeFinder.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

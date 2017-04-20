@@ -1,0 +1,754 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Common.Dependency;
+using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.CoordinateSystems;
+using DelftTools.Utils;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.Data.Providers;
+using SharpMap.SpatialOperations;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
+{
+    // TODO: Make this an [Entity]. Needs refactoring.
+    public class WaterFlowFMModelDefinition
+    {
+        public const string BathymetryDataItemName = "Bed Level";
+        public const string InitialWaterLevelDataItemName = "Initial Water Level";
+        public const string InitialSalinityDataItemName = "Initial Salinity";
+        public const string InitialTemperatureDataItemName = "Initial Temperature";
+        public const string RoughnessDataItemName = "Roughness";
+        public const string ViscosityDataItemName = "Viscosity";
+        public const string DiffusivityDataItemName = "Diffusivity";
+
+        public static readonly string[] SpatialDataItemNames =
+        {
+            BathymetryDataItemName,
+            InitialWaterLevelDataItemName,
+            InitialSalinityDataItemName,
+            InitialTemperatureDataItemName,
+            RoughnessDataItemName,
+            ViscosityDataItemName,
+            DiffusivityDataItemName
+        };
+
+        public List<string> InitialTracerNames { get; private set; }
+
+        private static StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
+        private static ModelSchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
+        public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
+        public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
+        {
+            get { return ModelPropertySchema.GuiPropertyGroups; }
+        }
+        public string ModelDirectory { get; set; }
+        public string ModelName { get; set; }
+        public ICoordinateSystem CoordinateSystem { get; set; }
+
+        public readonly IDictionary<string, IList<ISpatialOperation>> SpatialOperations;
+        public UnstructuredGridCoverage Bathymetry { get; set; } 
+        
+        public IList<ISpatialOperation> GetSpatialOperations(string quantityName)
+        {
+            IList<ISpatialOperation> result;
+            SpatialOperations.TryGetValue(quantityName, out result);
+            return result;
+        }
+        
+        public IEventedList<IWindField> WindFields { get; private set; } 
+
+        public HeatFluxModel HeatFluxModel { get; private set; }
+
+        public IEventedList<Feature2D> Boundaries { get; private set; }
+
+        public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
+
+        public StructureSchema<ModelPropertyDefinition> StructureSchema { get { return StructureSchemaInstance; } }
+
+        public IEnumerable<IBoundaryCondition> BoundaryConditions
+        {
+            get { return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions); }
+        }
+
+        public IEventedList<Feature2D> Pipes { get; private set; }
+        
+        public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
+        
+        public IList<Embankment> Embankments { get; set; }
+
+        static WaterFlowFMModelDefinition()
+        {
+            const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
+            const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
+
+            var assembly = typeof (WaterFlowFMModelDefinition).Assembly;
+            var assemblyLocation = assembly.Location;
+            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+            if (directoryInfo != null)
+            {
+                var path = directoryInfo.FullName;
+                var propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
+                ModelPropertySchema =
+                    new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,
+                        "MduGroup");
+
+                var structurePropertiesDefinitionFile = Path.Combine(path, dflowfmStructurePropertiesCsvFileName);
+                StructureSchemaInstance =
+                    new StructureFMPropertiesFile().ReadProperties(structurePropertiesDefinitionFile);
+            }
+            else
+            {
+                throw new Exception("Invalid path for DFlowFM properties definition file");
+            }
+        }
+
+        public WaterFlowFMModelDefinition()
+        {
+            HeatFluxModel = new HeatFluxModel();
+            Properties = new EventedList<WaterFlowFMProperty>();
+
+            ((INotifyPropertyChange)Properties).PropertyChanged += OnWaterFlowFMPropertyChanged;
+            Properties.CollectionChanged += OnWaterFlowFMCollectionChanged;
+
+            foreach (var propertyDefinition in ModelPropertySchema.PropertyDefinitions.Values)
+            {
+                SetModelProperty(propertyDefinition.MduPropertyName,
+                                 new WaterFlowFMProperty(propertyDefinition, propertyDefinition.DefaultValueAsString));
+            }
+
+            Dependencies.CompileEnabledDependencies(Properties);
+            Dependencies.CompileVisibleDependencies(Properties);
+
+            SetGuiTimePropertiesFromMduProperties();
+
+            Boundaries = new EventedList<Feature2D>();
+            BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
+            WindFields = new EventedList<IWindField>();
+            SourcesAndSinks = new EventedList<SourceAndSink>();
+            Pipes = new EventedList<Feature2D>();
+            SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
+            InitialTracerNames = new List<string>();
+            Embankments = new EventedList<Embankment>();
+        }
+
+        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add)
+            {
+                if (e.Item == GetModelProperty(KnownProperties.Temperature))
+                {
+                    var prop = (WaterFlowFMProperty) e.Item;
+                    HeatFluxModel.Type = (HeatFluxModelType) ((int)prop.Value);
+                }
+            }
+        }
+
+        private bool handlingPropertyChanged;
+
+        [EditAction]
+        private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (handlingPropertyChanged) return; //prevent recursion in syncing useTemperature with heat flux model type
+
+            handlingPropertyChanged = true;
+
+            try
+            {
+                var prop = (WaterFlowFMProperty) sender;
+                var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
+                if (prop == icdtypProp)
+                {
+                    var icdtyp = (int) icdtypProp.Value;
+                    if (icdtyp == 2 || icdtyp == 3)
+                    {
+                        var cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
+                        CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
+
+                        var windspeedbreakpointsProperty = GetModelProperty(KnownProperties.Windspeedbreakpoints);
+                        CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
+                    }
+                }
+
+                var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
+                var startTimeProp = GetModelProperty(GuiProperties.StartTime);
+                var refDateProp = GetModelProperty(KnownProperties.RefDate);
+                if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
+                {
+                    UpdateOutputTimes();
+                }
+
+                var temperatureProp = GetModelProperty(KnownProperties.Temperature);
+                var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
+                
+                if (temperatureProp == sender)
+                {
+                    HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
+                    useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
+                }
+                else if (useTemperatureProp == sender)
+                {
+                    var useTemperature = (bool) useTemperatureProp.Value;
+                    if (useTemperature)
+                    {
+                        temperatureProp.SetValueAsString("1");
+                        HeatFluxModel.Type = HeatFluxModelType.TransportOnly;
+                    }
+                    else
+                    {
+                        temperatureProp.SetValueAsString("0");
+                        HeatFluxModel.Type = HeatFluxModelType.None;
+                    }
+                }
+            }
+            finally
+            {
+                handlingPropertyChanged = false;
+            }
+        }
+
+        private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
+        {
+            var prop = GetModelProperty(mduPropertyName);
+            if (prop != null)
+            {
+                Properties[Properties.IndexOf(prop)] = property;
+            }
+            else
+            {
+                Properties.Add(property);
+            }
+        }
+
+        public WaterFlowFMProperty GetModelProperty(string propertyName)
+        {
+            return
+                Properties.FirstOrDefault(
+                    p =>
+                        p.PropertyDefinition.MduPropertyName.Equals(propertyName,
+                            StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
+        {
+            ModelDirectory = modelDir;
+            ModelName = modelName;
+        }
+
+        public int Kmx
+        {
+            get { return (int) GetModelProperty(KnownProperties.Kmx).Value; }
+            set { GetModelProperty(KnownProperties.Kmx).Value = value; }
+        }
+
+        public string RelativeMapFilePath
+        {
+            get { return GetFilePathFromProperty("MapFile", ModelName + "_map.nc"); }
+        }
+
+        public string RelativeHisFilePath
+        {
+            get { return GetFilePathFromProperty("HisFile", ModelName + "_his.nc"); }
+        }
+
+        private string GetFilePathFromProperty(string propertyName, string defaultName)
+        {
+            var property = Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
+            var fileName = property != null ? (string) property.Value : defaultName;
+
+            return Path.Combine(OutputDirectory, string.IsNullOrEmpty(fileName) ? defaultName : fileName);
+        }
+
+        public string RelativeComFilePath
+        {
+            get
+            {
+                var comFileName = ModelName + "_com.nc";
+                return Path.Combine(OutputDirectory, comFileName);
+            }
+        }
+
+        public string OutputDirectory
+        {
+            get
+            {
+                var defaultName = "DFM_OUTPUT_" + ModelName;
+
+                // if the list doesn't contain OutDir
+                if (!ContainsProperty(KnownProperties.OutDir))
+                    return defaultName;
+
+                var mduOutputDir = GetModelProperty(KnownProperties.OutDir).GetValueAsString().Trim();
+
+                if (String.IsNullOrEmpty(mduOutputDir))
+                    return defaultName; // empty string = default dir!!! (unexpected, yes)
+
+                if (String.Equals(mduOutputDir, ".")) // dot means current dir
+                    return ""; // mdu dir
+
+                return mduOutputDir;
+            }
+        }
+
+        // Add Z-layers whenever kernel suppports these
+        public static IEnumerable<DepthLayerType> SupportedDepthLayerTypes
+        {
+            get
+            {
+                yield return DepthLayerType.Single;
+                yield return DepthLayerType.Sigma;
+            }
+        }
+
+        // Enable when kernel supports non-equidistant layering
+        public static bool CanSpecifyLayerThicknesses { get { return false; } }
+
+        public void SetMduTimePropertiesFromGuiProperties()
+        {
+            var originalStartTime = GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStart).Value, true);
+            var originalStopTime = GetAbsoluteDateTime((double)GetModelProperty(KnownProperties.TStop).Value, true);
+            var modelStartTime = (DateTime)GetModelProperty(GuiProperties.StartTime).Value;
+            var modelStopTime = (DateTime)GetModelProperty(GuiProperties.StopTime).Value;
+
+            if (modelStartTime != originalStartTime
+                || modelStopTime != originalStopTime)
+            {
+                GetModelProperty(KnownProperties.TStart).Value = GetRelativeDateTime(modelStartTime, true);
+                GetModelProperty(KnownProperties.TStop).Value = GetRelativeDateTime(modelStopTime, true);
+            }
+
+            SetMduStartStopDeltaTFromGui(KnownProperties.HisInterval, GuiProperties.WriteHisFile, 
+                                         GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart, 
+                                         GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop, 
+                                         GuiProperties.HisOutputStopTime);
+
+            SetMduStartStopDeltaTFromGui(KnownProperties.MapInterval, GuiProperties.WriteMapFile, 
+                                         GuiProperties.MapOutputDeltaT, GuiProperties.SpecifyMapStart, 
+                                         GuiProperties.MapOutputStartTime, GuiProperties.SpecifyMapStop, 
+                                         GuiProperties.MapOutputStopTime);
+
+            SetMduStartStopDeltaTFromGui(KnownProperties.RstInterval, GuiProperties.WriteRstFile, 
+                                         GuiProperties.RstOutputDeltaT, GuiProperties.SpecifyRstStart, 
+                                         GuiProperties.RstOutputStartTime, GuiProperties.SpecifyRstStop, 
+                                         GuiProperties.RstOutputStopTime);
+
+            SetMduStartStopDeltaTFromGui(KnownProperties.WaqInterval, GuiProperties.SpecifyWaqOutputInterval,
+                             GuiProperties.WaqOutputDeltaT, GuiProperties.SpecifyWaqOutputStartTime,
+                             GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
+                             GuiProperties.WaqOutputStopTime);
+        }
+
+        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName, string deltaTPropName,
+                                                  string specifyStartPropName, string startTimePropName, string specifyStopPropName, 
+                                                  string stopTimePropName)
+        {
+            var timeFrame = new List<double>();
+            if ((bool)GetModelProperty(doWritePropName).Value)
+            {
+                double deltaT = ((double)((TimeSpan)GetModelProperty(deltaTPropName).Value).Ticks / TimeSpan.TicksPerSecond);
+                if (deltaT > 0)
+                {
+                    // delta t specified
+                    timeFrame.Add(deltaT);
+                }
+                if ((bool)GetModelProperty(specifyStartPropName).Value)
+                {
+                    // output start time specified
+                    timeFrame.Add(GetRelativeDateTime((DateTime)GetModelProperty(startTimePropName).Value, false));
+
+                    if ((bool)GetModelProperty(specifyStopPropName).Value)
+                    {
+                        // output stop time specified
+                        timeFrame.Add(GetRelativeDateTime((DateTime)GetModelProperty(stopTimePropName).Value, false));
+                    }
+                }
+            }
+            else
+            {
+                timeFrame.Add(0.0);
+            }
+            GetModelProperty(intervalPropName).Value = timeFrame;
+        }
+
+        public void SetGuiTimePropertiesFromMduProperties()
+        {
+            var mduStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
+            var mduStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
+
+            GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(mduStartTime, true);
+            GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(mduStopTime, true);
+
+            SetGuiStartStopDeltaTFromMdu(KnownProperties.HisInterval, GuiProperties.WriteHisFile,
+                                         GuiProperties.HisOutputDeltaT, GuiProperties.SpecifyHisStart, 
+                                         GuiProperties.HisOutputStartTime, GuiProperties.SpecifyHisStop,
+                                         GuiProperties.HisOutputStopTime);
+
+            SetGuiStartStopDeltaTFromMdu(KnownProperties.MapInterval, GuiProperties.WriteMapFile,
+                                         GuiProperties.MapOutputDeltaT, GuiProperties.SpecifyMapStart, 
+                                         GuiProperties.MapOutputStartTime, GuiProperties.SpecifyMapStop,
+                                         GuiProperties.MapOutputStopTime);
+
+            SetGuiStartStopDeltaTFromMdu(KnownProperties.RstInterval, GuiProperties.WriteRstFile,
+                                         GuiProperties.RstOutputDeltaT, GuiProperties.SpecifyRstStart, 
+                                         GuiProperties.RstOutputStartTime, GuiProperties.SpecifyRstStop,
+                                         GuiProperties.RstOutputStopTime);
+
+            SetGuiStartStopDeltaTFromMdu(KnownProperties.WaqInterval, GuiProperties.SpecifyWaqOutputInterval,
+                                         GuiProperties.WaqOutputDeltaT, GuiProperties.SpecifyWaqOutputStartTime,
+                                         GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
+                                         GuiProperties.WaqOutputStopTime);
+
+        }
+
+        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName,
+            string specifyStartPropName, string startTimePropName, string specifyStopPropName, string stopTimePropName)
+        {
+            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
+            if (timeFrame.Count == 0)
+            {
+                if (intervalPropName == KnownProperties.MapInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 20, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+                if (intervalPropName == KnownProperties.HisInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 2, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+                if (intervalPropName == KnownProperties.RstInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 24, 0, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+                if (intervalPropName == KnownProperties.WaqInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 0, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+            }
+
+            if (timeFrame.Count > 0)
+            {
+                // interval is present
+                var seconds = (int) Math.Floor(timeFrame[0]);
+                var millis = (int) ((timeFrame[0] - seconds)*1000d);
+                var interval = new TimeSpan(0, 0, 0, seconds, millis);
+                GetModelProperty(deltaTPropName).Value = interval;
+                GetModelProperty(doWritePropName).Value = interval.Ticks > 0;
+                    // 0 = off (for backward compatibility only)
+            }
+
+            if (timeFrame.Count > 1)
+            {
+                // output start time is specified
+                GetModelProperty(startTimePropName).Value = GetAbsoluteDateTime(timeFrame[1], false);
+                GetModelProperty(specifyStartPropName).Value = true;
+            }
+            else
+            {
+                // output start time not specified, set to model start time
+                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+            }
+
+            if (timeFrame.Count > 2)
+            {
+                // output stop time is specified
+                GetModelProperty(stopTimePropName).Value = GetAbsoluteDateTime(timeFrame[2], false);
+                GetModelProperty(specifyStopPropName).Value = true;
+            }
+            else
+            {
+                // output start time not specified, set to model stop time
+                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+            }
+        }
+
+        private DateTime GetAbsoluteDateTime(double relativeTime, bool useTUnit)
+        {
+            var unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
+
+            double timeUnitInSeconds = 1;
+            if (useTUnit)
+            {
+                if (unitString.ToLower().Equals("m"))
+                {
+                    timeUnitInSeconds = 60d;
+                }
+                else if (unitString.ToLower().Equals("h"))
+                {
+                    timeUnitInSeconds = 3600d;
+                }
+            }
+            var ticks = (long)(TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
+            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
+            return referenceDate.AddTicks(ticks);
+        }
+
+        private double GetRelativeDateTime(DateTime dateTime, bool useTUnit)
+        {
+            var unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
+
+            long numSecondsInTimeStep = 1;
+            if (useTUnit)
+            {
+                if (unitString.ToLower().Equals("m"))
+                {
+                    numSecondsInTimeStep = 60;
+                }
+                else if (unitString.ToLower().Equals("h"))
+                {
+                    numSecondsInTimeStep = 3600;
+                }
+            }
+            var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
+            double ticks = dateTime.Ticks - referenceDate.Ticks;
+            return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
+        }
+
+        private void UpdateOutputTimes()
+        {
+            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyHisStart, GuiProperties.HisOutputStartTime,
+                GuiProperties.SpecifyHisStop, GuiProperties.HisOutputStopTime);
+            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyMapStart, GuiProperties.MapOutputStartTime,
+                GuiProperties.SpecifyMapStop, GuiProperties.MapOutputStopTime);
+            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyRstStart, GuiProperties.RstOutputStartTime,
+                GuiProperties.SpecifyRstStop, GuiProperties.RstOutputStopTime);
+            UpdateOutputTimesFromSimulationPeriod(GuiProperties.SpecifyWaqOutputStartTime, GuiProperties.WaqOutputStartTime,
+                GuiProperties.SpecifyWaqOutputStopTime, GuiProperties.WaqOutputStopTime);/*rstoutput needs to be replaced */
+        }
+
+        private void UpdateOutputTimesFromSimulationPeriod(string specifyStartPropName, string startTimePropName,
+                                                           string specifyStopPropName, string stopTimePropName)
+        {
+            if (!(bool) GetModelProperty(specifyStartPropName).Value)
+            {
+                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+            }
+            if (!(bool) GetModelProperty(specifyStopPropName).Value)
+            {
+                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+            }
+        }
+
+        public bool ContainsProperty(string propertyKey)
+        {
+            return GetModelProperty(propertyKey) != null;
+        }
+
+        public void AddProperty(WaterFlowFMProperty waterFlowFmProperty)
+        {
+            Properties.Add(waterFlowFmProperty);
+        }
+
+        private void CorrectWindDragCoefficientBreakpointsCollection(WaterFlowFMProperty breakPointsProperty,
+                                                                     int icdtyp)
+        {
+            var cdbreakpoints = (IList<double>)breakPointsProperty.Value;
+            // Append new values:
+            if (cdbreakpoints.Count < icdtyp)
+            {
+                breakPointsProperty.Value = new List<double>(cdbreakpoints.Concat(Enumerable.Repeat(0.0, icdtyp - cdbreakpoints.Count)));
+            }
+            // Remove obsolete values:
+            if (cdbreakpoints.Count > icdtyp)
+            {
+                breakPointsProperty.Value = new List<double>(cdbreakpoints.Take(icdtyp));
+            }
+        }
+
+        /// <summary>
+        /// Update the heat flux model once when loading an mdu file.
+        /// Used because the events are off during the load of mdu files.
+        /// </summary>
+        public void UpdateHeatFluxModel()
+        {
+            HeatFluxModel.Type = (HeatFluxModelType) ((int) GetModelProperty(KnownProperties.Temperature).Value);
+            handlingPropertyChanged = true;
+            GetModelProperty(GuiProperties.UseTemperature).Value = (HeatFluxModel.Type != HeatFluxModelType.None);
+            handlingPropertyChanged = false;
+        }
+
+        public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions)
+        {
+            InitialTracerNames.Clear();
+            InitialTracerNames.AddRange(tracerDefinitions);
+            SpatialOperations.Clear();
+
+            var dataItemsFound = SpatialDataItemNames.Concat(InitialTracerNames).SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
+
+            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
+            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
+
+            foreach (var dataItem in dataItemsWithConverter)
+            {
+                var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
+                if (spatialOperationValueConverter.SpatialOperationSet.Operations.All(SupportedByExtForceFile))
+                {
+                    // put in everything except spatial operation sets,
+                    // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
+                    var spatialOperations = spatialOperationValueConverter.SpatialOperationSet.Operations
+                        .Where(s => !( s is ISpatialOperationSet )).Select(ConvertSpatialOperation)
+                        .ToList();
+
+                    SpatialOperations.Add(dataItem.Name, spatialOperations);
+                }
+                // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
+                else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
+                {
+                    // unsupported operations are converted to sample operations that are saved with an xyz file via the model definition.
+                    var coverage = spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as UnstructuredGridCoverage;
+
+                    // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
+                    // (This can happen when exporting spatial operations that comprise of added points but no interpolation
+                    // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
+                    if (coverage == null || ( coverage.Components[0].NoDataValues != null &&
+                    coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) ))
+                    {
+                        continue;
+                    }
+
+                    var newOperation = new AddSamplesOperation(false)
+                    {
+                        Name = spatialOperationValueConverter.SpatialOperationSet.Name
+                    };
+                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
+                        new PointCloudFeatureProvider
+                        {
+                            PointCloud = coverage.ToPointCloud(0, true),
+                        });
+
+                    SpatialOperations.Add(dataItem.Name, new[] { newOperation });
+                }
+            }
+
+            var coverageByType = dataItemsWithOutConverter.Select(di => di.Value).OfType<UnstructuredGridCoverage>().GroupBy(c => c.GetType()).ToList();
+            var dataItemNameLookup = dataItemsWithOutConverter.ToDictionary(di => di.Value,di => di.Name);
+
+            foreach (var coverageGrouping in coverageByType)
+            {
+                Coordinate[] coordinates = null;
+
+                foreach (var coverage in coverageGrouping)
+                {
+                    if (coverage.IsTimeDependent)
+                        throw new NotSupportedException("Converting time dependent spatial data to samples is not supported");
+
+                    var component = coverage.Components[0] as IVariable<double>;
+                    if (component == null)
+                    {
+                        throw new NotSupportedException("Converting a non-double valued coverage component to a point cloud is not supported");
+                    }
+
+                    var values = component.Values;
+                    double? noDataValue = (double?) component.NoDataValue;
+
+                    var pointCloud = new PointCloud();
+                    var i = 0;
+                    foreach (double v in values) // using enumerable next is faster than using index (for loop)
+                    {
+                        if (noDataValue.HasValue && v == noDataValue.Value)
+                        {
+                            i++;
+                            continue;
+                        }
+
+                        if (coordinates == null)
+                        {
+                            coordinates = coverage.Coordinates.ToArray();
+
+                            if (coordinates.Length != values.Count)
+                                throw new InvalidOperationException("Spatial data is not consistent: number of coordinate does not match number of values");
+                        }
+
+                        var coord = coordinates[i];
+                        pointCloud.PointValues.Add(new PointValue { X = coord.X, Y = coord.Y, Value = v });
+                        i++;
+                    }
+
+                    if (pointCloud.PointValues.Count == 0)
+                    {
+                        continue;
+                    }
+                                    
+                    var pointCloudFeatureProvider = new PointCloudFeatureProvider
+                    {
+                        PointCloud = pointCloud
+                    };
+
+                    var newOperation = new AddSamplesOperation(false) { Name = coverage.Name };
+                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
+
+                    SpatialOperations.Add(dataItemNameLookup[coverage], new[] { newOperation });
+                }
+            }
+        }
+
+        private static bool SupportedByExtForceFile(ISpatialOperation operation)
+        {
+            var valueOperation = operation as SetValueOperation;
+            if (valueOperation != null)
+            {
+                return ExtForceQuantNames.OperatorMapping.ContainsKey(valueOperation.OperationType);
+            }
+
+            var interpolateOperation = operation as InterpolateOperation;
+            if (interpolateOperation != null)
+            {
+                // only write interpolate operations that contain an importsamplesoperation as input samples
+                return interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation is ImportSamplesOperation;
+            }
+
+            // subsets are supported when only an importsamplesoperation is contained
+            var subSet = operation as ISpatialOperationSet;
+            if (subSet != null)
+            {
+                return subSet.Operations.Count == 1 && subSet.Operations[0] is ImportSamplesOperation;
+            }
+
+            return false;
+        }
+
+        private static ISpatialOperation ConvertSpatialOperation(ISpatialOperation operation)
+        {
+            var interpolateOperation = operation as InterpolateOperation;
+            if (interpolateOperation != null)
+            {
+                // only write interpolate operations that contain an importsamplesoperation as input samples
+                var importSamplesOperation =
+                    (ImportSamplesOperation)
+                        interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
+
+                operation = new ImportSamplesSpatialOperationExtension
+                {
+                    Name = importSamplesOperation.Name,
+                    FilePath = importSamplesOperation.FilePath,
+                    Enabled = importSamplesOperation.Enabled,
+                    InterpolationMethod = interpolateOperation.InterpolationMethod,
+                    AveragingMethod = interpolateOperation.GridCellAveragingMethod,
+                    RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize
+                };
+            }
+            return operation;
+        }
+    }
+}

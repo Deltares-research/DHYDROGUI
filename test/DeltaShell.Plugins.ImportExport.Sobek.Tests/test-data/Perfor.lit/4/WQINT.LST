@@ -1,0 +1,188 @@
+  WQ Interface Messages File
+ DIO Read ERROR:          203  :
+ Could not open   for reading                                                   
+  
+                                                                                
+                                                                                
+                                                                                
+                    
+ DIO Read ERROR:          203  :
+ Could not open   for reading                                                   
+  
+                                                                                
+                                                                                
+                                                                                
+                    
+segmnt(     1) =     1    1
+segmnt(     2) =     2    2
+segmnt(     3) =     4    1
+segmnt(     4) =     5    2
+segmnt(     5) =     7    3
+segmnt(     6) =    10    2
+segmnt(     7) =    12    1
+segmnt(     8) =    13    2
+segmnt(     9) =    15    1
+segmnt(    10) =    16    1
+segmnt(    11) =    17    1
+segmnt(    12) =    18    2
+segmnt(    13) =    20    1
+segmnt(    14) =    21    1
+segmnt(    15) =    22    1
+segmnt(    16) =    23    1
+segmnt(    17) =    24    1
+segmnt(    18) =    25    1
+segmnt(    19) =    26    2
+segmnt(    20) =    28    1
+strgar(     1) = [1_1                                     ]
+strgar(     2) = [1_5                                     ]
+strgar(     3) = [1_2                                     ]
+strgar(     4) = [1_6                                     ]
+strgar(     5) = [1_7                                     ]
+strgar(     6) = [1_s2                                    ]
+strgar(     7) = [1_8                                     ]
+strgar(     8) = [1_3                                     ]
+strgar(     9) = [@L1                                     ]
+strgar(    10) = [1_9                                     ]
+strgar(    11) = [1_4                                     ]
+strgar(    12) = [1_10                                    ]
+strgar(    13) = [1_12                                    ]
+strgar(    14) = [1_s3                                    ]
+strgar(    15) = [1_13                                    ]
+strgar(    16) = [1_14                                    ]
+strgar(    17) = [2                                       ]
+strgar(    18) = [2_1                                     ]
+strgar(    19) = [1                                       ]
+strgar(    20) = [2_2                                     ]
+strgar(    21) = [2_3                                     ]
+strgar(    22) = [2_4                                     ]
+strgar(    23) = [2_5                                     ]
+strgar(    24) = [2_6                                     ]
+strgar(    25) = [2_7                                     ]
+strgar(    26) = [2_8                                     ]
+strgar(    27) = [1_11                                    ]
+strgar(    28) = [2_9                                     ]
+NOBJM                      :    31
+NOBJ after reading segments:    28
+Junction(1) 1_1                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -2
+                                       1       1
+                                                       2       1       1       2
+Junction(1) 1_2                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -4
+                                       1       3
+                                                       3       2       1       2
+Junction(1) 1_4                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -7
+                                       1       6
+                                                       5       4       1       2
+Junction(1) 1_5                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -10
+                                       1       8
+                                                       6       5       1       2
+Junction(1) 1_6                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -12
+                                       1      11
+                                                       7       6       1       2
+Junction(1) 1_8                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -15
+                                       1      14
+                                                       9       8       1       2
+Junction(1) 3                    PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -17
+                                       1      16
+                                                      11      10       1       2
+Junction(1) 2_1                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -18
+                                       1      17
+                                                      12      11       1       2
+Junction(1) 2_9                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -28
+                                       1      27
+                                                      20      19       1       2
+Junction(1) 1_3                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -5
+                                       1       4
+                                                       4       3       1       2
+Junction(1) 1_7                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -13
+                                       1      12
+                                                       8       7       1       2
+Junction(1) 1_9                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -16
+                                       1      15
+                                                      10       9       1       2
+Junction(1) 2_2                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -20
+                                       1      19
+                                                      13      12       1       2
+Junction(1) 2_3                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -21
+                                       1      20
+                                                      14      13       1       2
+Junction(1) 2_4                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -22
+                                       1      21
+                                                      15      14       1       2
+Junction(1) 2_5                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -23
+                                       1      22
+                                                      16      15       1       2
+Junction(1) 2_6                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -24
+                                       1      23
+                                                      17      16       1       2
+Junction(1) 2_7                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -25
+                                       1      24
+                                                      18      17       1       2
+Junction(1) 2_8                  PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1     -26
+                                       1      25
+                                                      19      18       1       2
+Junction(3) 1                    PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      -1
+                                       3      29
+                                                      -1       1       2       1
+Junction(3) L1                   PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       3       9
+                                                      -2       5       1       0
+Junction(3) 21                   PlayTyp PlayObj FromSeg   ToSeg FroPlay  ToPlay
+                                       1      28
+                                       3      30
+                                                      -3      20       2       1
+NOBJ after reading exchanges:    30
+strgar(    29) = [@1                                      ]
+strgar(    30) = [@21                                     ]
+NOBJ after reading structures:    30
+NOBJ after mapping locations:    30
+NOTS                        : 61921
+ Evaporation correction flag:  T
+  Min Volume read:   1.0000000E-03
+ ChezyInStructureBranches=   50.00000    
+ ChezyInNodeObjects=   50.00000    
+Substance  1: Continuity          (g/m3)    
+Substance  2: NH4                 (gN/m3)   
+Substance  3: CBOD5               (gO2/m3)  
+Substance  4: CBOD5_2             (gO2/m3)  
+Substance  5: OXY                 (g/m3)    
+Hor. Surfaces used to scale initial conditions:
+surfi(   1)=     242.3
+surfi(   2)=     484.6
+surfi(   3)=     484.6
+surfi(   4)=     484.6
+surfi(   5)=     484.6
+surfi(   6)=     484.6
+surfi(   7)=     484.6
+surfi(   8)=     484.6
+surfi(   9)=     484.6
+surfi(  10)=     484.6
+surfi(  11)=     515.2
+surfi(  12)=     515.2
+surfi(  13)=     515.2
+surfi(  14)=     515.2
+surfi(  15)=     515.2
+surfi(  16)=     515.2
+surfi(  17)=     515.2
+surfi(  18)=     515.2
+surfi(  19)=     515.2
+surfi(  20)=     257.6

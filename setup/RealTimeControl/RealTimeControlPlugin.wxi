@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?include ..\Scripts\RealTimeControlScripts.wxi?>
+  <?define rtc_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl\"?>
+  <?define rtc_gui_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\"?>
+  <Directory Id="RealTimeControl" Name="DeltaShell.Plugins.RealTimeControl">
+    <Component Id="RealTimeControlPluginDll" Guid="397EC045-3A1C-4C9C-86FC-2CC8D1E209FD">
+      <File Id="DeltaShell.Plugins.DelftModels.RTCShapes.dll" Source="$(var.rtc_plugin_bin)DeltaShell.Plugins.DelftModels.RTCShapes.dll" />
+      <File Id="DeltaShell.Plugins.DelftModels.RealTimeControl.dll" Source="$(var.rtc_plugin_bin)DeltaShell.Plugins.DelftModels.RealTimeControl.dll" />
+      <File Id="DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.dll" Source="$(var.rtc_gui_plugin_bin)DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.dll" />
+    </Component>
+    
+    <Directory Id="xsd" Name="xsd">
+      <Component Id="RealTimeControlPluginXsd" Guid="0757B867-5ED0-44FB-A28B-26E3C8DADA8F">
+        <?define rtc_xsd_dir="$(var.rtc_plugin_bin)xsd\"?>
+        <File Id="pi_diag.xsd" Source="$(var.rtc_xsd_dir)pi_diag.xsd" />
+        <File Id="pi_modelparameters.xsd" Source="$(var.rtc_xsd_dir)pi_modelparameters.xsd" />
+        <File Id="pi_run.xsd" Source="$(var.rtc_xsd_dir)pi_run.xsd" />
+        <File Id="pi_sharedtypes.xsd" Source="$(var.rtc_xsd_dir)pi_sharedtypes.xsd" />
+        <File Id="pi_state.xsd" Source="$(var.rtc_xsd_dir)pi_state.xsd" />
+        <File Id="pi_timeseries.xsd" Source="$(var.rtc_xsd_dir)pi_timeseries.xsd" />
+        <File Id="rtcdataconfig.xsd" Source="$(var.rtc_xsd_dir)rtcdataconfig.xsd" />
+        <File Id="rtcObjectiveConfig.xsd" Source="$(var.rtc_xsd_dir)rtcObjectiveConfig.xsd" />
+        <File Id="rtcPostprocessingConfig.xsd" Source="$(var.rtc_xsd_dir)rtcPostprocessingConfig.xsd" />
+        <File Id="rtcRuntimeConfig.xsd" Source="$(var.rtc_xsd_dir)rtcRuntimeConfig.xsd" />
+        <File Id="rtcScenarioTreeConfig.xsd" Source="$(var.rtc_xsd_dir)rtcScenarioTreeConfig.xsd" />
+        <File Id="rtcsharedtypes.xsd" Source="$(var.rtc_xsd_dir)rtcsharedtypes.xsd" />
+        <File Id="rtcStateConfig.xsd" Source="$(var.rtc_xsd_dir)rtcStateConfig.xsd" />
+        <File Id="rtctoolsconfig.xsd" Source="$(var.rtc_xsd_dir)rtctoolsconfig.xsd" />
+        <File Id="treeVector.xsd" Source="$(var.rtc_xsd_dir)treeVector.xsd" />
+        <?undef rtc_xsd_dir ?>
+      </Component>
+    </Directory>
+    
+    <Directory Id="rtc_kernel_lib_folder" Name="rtc_kernel">
+      <?define rtc_kernels_lib_dir="$(var.rtc_plugin_bin)rtc_kernel\"?>
+      <Directory Id="x86_rtc_kernel_lib_folder" Name="x86">
+        <?ifndef var.NOKERNELS?>
+        <Component Id="x86_rtc_kernels" Guid="16205B1F-4C15-4A85-870C-B9D0134158F7" >
+          <?define x86_rtc_kernels_lib_dir="$(var.rtc_kernels_lib_dir)x86\"?>
+          <File Id="x86_rtc_IpOptFSS.dll" Source="$(var.x86_rtc_kernels_lib_dir)IpOptFSS.dll" />
+          <File Id="x86_rtc_IpOpt_vc10.dll" Source="$(var.x86_rtc_kernels_lib_dir)IpOpt-vc10.dll" />
+          <File Id="x86_rtc_rtc_msvcp100.dll" Source="$(var.x86_rtc_kernels_lib_dir)msvcp100.dll" />
+          <File Id="x86_rtc_msvcr100.dll" Source="$(var.x86_rtc_kernels_lib_dir)msvcr100.dll" />
+          <File Id="x86_rtc_RTCTools_BMI.dll" Source="$(var.x86_rtc_kernels_lib_dir)RTCTools_BMI.dll" />
+          <File Id="x86_rtc_RTCTools_OpenMI.dll" Source="$(var.x86_rtc_kernels_lib_dir)RTCTools_OpenMI.dll" />
+          <File Id="x86_rtc_vcomp100.dll" Source="$(var.x86_rtc_kernels_lib_dir)vcomp100.dll" />
+          <File Id="x86_rtc_xerces_c_3_1.dll" Source="$(var.x86_rtc_kernels_lib_dir)xerces-c_3_1.dll" />
+          <?undef x86_rtc_kernels_lib_dir ?>
+        </Component>
+        <?endif?>
+      </Directory>
+      <Directory Id="x64_rtc_kernel_lib_folder" Name="x64">
+        <?ifndef var.NOKERNELS?>
+        <Component Id="x64_rtc_kernels" Guid="1CE19292-8D7E-4526-95F2-B548D983BC27" >
+          <?define x64_rtc_kernels_lib_dir="$(var.rtc_kernels_lib_dir)x64\"?>
+          <File Id="x64_rtc_IpOptFSS.dll" Source="$(var.x64_rtc_kernels_lib_dir)IpOptFSS.dll" />
+          <File Id="x64_rtc_IpOpt_vc10.dll" Source="$(var.x64_rtc_kernels_lib_dir)IpOpt-vc10.dll" />
+          <File Id="x64_rtc_rtc_msvcp100.dll" Source="$(var.x64_rtc_kernels_lib_dir)msvcp100.dll" />
+          <File Id="x64_rtc_msvcr100.dll" Source="$(var.x64_rtc_kernels_lib_dir)msvcr100.dll" />
+          <File Id="x64_rtc_RTCTools_BMI.dll" Source="$(var.x64_rtc_kernels_lib_dir)RTCTools_BMI.dll" />
+          <File Id="x64_rtc_RTCTools_OpenMI.dll" Source="$(var.x64_rtc_kernels_lib_dir)RTCTools_OpenMI.dll" />
+          <File Id="x64_rtc_vcomp100.dll" Source="$(var.x64_rtc_kernels_lib_dir)vcomp100.dll" />
+          <File Id="x64_rtc_xerces_c_3_1.dll" Source="$(var.x64_rtc_kernels_lib_dir)xerces-c_3_1.dll" />
+          <?undef x64_rtc_kernels_lib_dir ?>
+        </Component>
+        <?endif?>
+      </Directory>
+      <?undef rtc_kernels_lib_dir ?>
+    </Directory>
+  </Directory>
+  <?undef rtc_gui_plugin_bin ?>
+  <?undef rtc_plugin_bin ?>
+</Include>

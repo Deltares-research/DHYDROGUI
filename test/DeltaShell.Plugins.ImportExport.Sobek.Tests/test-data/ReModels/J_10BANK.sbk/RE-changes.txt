@@ -1,0 +1,51 @@
+*Modeler:*
+Rolf Hulsbergen
+Deltares
+
+*Base cases:*
+26 JAMM2010; J10_4_mix; Perm 4000 m3/s   (=steady state calculation)
+21 JAMM2010; J10_4_mix; Golf 4000 m3/s 
+
+*Import-ready cases:
+1 J10_mix; Perm 4000 m3/s; No retention
+2 J10_mix; Perm 4000 m3/s; No retention; No 2nd stations
+3 J10_mix; Golf 4000 m3/s; No retention
+4 J10_mix; Golf 4000 m3/s; No retention; No 2nd stations
+
+Changes case 1 Perm; No retention:
+- Problem: retention import generates a mess in DS. Non-complete automation of this import is accepted.
+  6 Retention lateral discharges have been removed.
+  6 Structure descriptions have been removed.
+  6 Controllers have been removed.
+- Problem: mixing signs is not allowed in DS Q(H) boundaries.
+  The following Boundary node has been modified:
+    KeizerMSW: -2000 m3/s -> 1 m3/s
+- Problem: setting gate lower edge level below crest level is not allowed in DS.
+  The following Controller has been modified:
+    Kraaijplas_hyd: last two entries 0 m -> 3 m
+- Problem: setting crest level above gate lower edge level is not allowed in DS.
+  The following Controller has been modified:
+    afgedamde_Maas: last two entries 100 m -> 15.75 m
+- Problem: calculation node distribution in branch 006, Julianka differs from rest of model around structures.
+  This problem has not been fixed, uncertain is if this change of calculation node distribution is desired or not.
+- Problem: default minimum branch length (MinimumLength) in DS is 10, affecting some branches near weirs.
+  This problem cannot be fixed from within RE, either change DS default or include change this length to 1 in the automated test.
+  
+Changes case 2 Perm; No retention; No 2nd stations:
+- in addition to the above:
+- Problem: 2nd stations are not automatically linked in DS. This is accepted, but automation has been requested.
+  All Lateral discharges that are a 2nd station (15) or its input (15) are removed (leaving 0 lateral discharges).
+  
+Changes case 3 Golf; No retention:
+- Problem: retention import generates a mess in DS. Non-complete automation of this import is accepted.
+  30 Retention lateral discharges have been removed.
+  49 Structure descriptions have been removed.
+    (Negeno__in dependancy not visible in the RE GUI)
+  30 Controllers have been removed.
+  24 Triggers have been removed.
+- All other modifications as in Perm; No retention have also been made.
+
+Changes case 4 Golf; No retention; No 2nd stations:
+- in addition to the above:
+- Problem: 2nd stations are not automatically linked in DS. This is accepted, but automation has been requested.
+  All Lateral discharges that are a 2nd station (15) or its input (15) are removed (leaving 20 lateral discharges).

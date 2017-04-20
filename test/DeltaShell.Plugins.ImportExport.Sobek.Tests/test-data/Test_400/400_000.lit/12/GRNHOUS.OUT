@@ -1,0 +1,12 @@
+ Run datum (DD-MM-YY) and time:11- 2-2013  11:35
+
+ Case name                                     
+
+
+
+ Maxima per event
+
+ Event   Start     Node identification   Node         Total_storage  Total_discharge  Rainfall
+  nr  year-mon-day                       name               [m3]          [m3/s]       [m3/s]
+===============================================================================================
+   1 2010 Jan   1   3                                           0.000        0.075        0.076

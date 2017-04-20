@@ -1,0 +1,4083 @@
+configuration 'WAQS' serial 2008101501
+substance_group 'Organic micro pollutants' 
+    substance 'BaP' 
+    name      'Benzo(a)pyrene (BaP)' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Volat_BaP'  name  'Atmospheric exch. BaP (volatilization/intake)' active  0  
+            abbrev  'Los_WK_BaP'  name  'Overall loss of BaP from water column' active  1  
+            abbrev  'Sed_Bap'  name  'Sedimentation adsorbed Bap' active  1  
+            abbrev  'Res_Bap'  name  'Resuspension adsorbed Bap' active  1  
+            abbrev  'AtmDep_Bap'  name  'Atmospheric deposition Bap' active  0  
+            abbrev  'Dfwast_Bap'  name  'Diffusive waste Bap' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'BaPS1' 
+    name      'BaP in layer S1' 
+    unit      '(g)' 
+    active     0  
+    selected_processes
+            abbrev  'Los_S1_BaP'  name  'Overall loss of BaP from S1' active  0  
+            abbrev  'Sed_Bap'  name  'Sedimentation adsorbed Bap' active  1  
+            abbrev  'Res_Bap'  name  'Resuspension adsorbed Bap' active  1  
+            abbrev  'BurS1_Bap'  name  'Burial adsorbed Bap from S1' active  0  
+            abbrev  'DigS1_Bap'  name  'Digging adsorbed Bap to S1' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'Flu' 
+    name      'Fluoranthene (Flu)' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Volat_Flu'  name  'Atmospheric exch. Flu (volatilization/intake)' active  0  
+            abbrev  'Los_WK_Flu'  name  'Overall loss of Flu from water column' active  1  
+            abbrev  'Sed_Flu'  name  'Sedimentation adsorbed Flu' active  1  
+            abbrev  'Res_Flu'  name  'Resuspension adsorbed Flu' active  1  
+            abbrev  'AtmDep_Flu'  name  'Atmospheric deposition Flu' active  0  
+            abbrev  'Dfwast_Flu'  name  'Diffusive waste Flu' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'FluS1' 
+    name      'Flu in layer S1' 
+    unit      '(g)' 
+    active     0  
+    selected_processes
+            abbrev  'Los_S1_Flu'  name  'Overall loss of Flu from S1' active  1  
+            abbrev  'Sed_Flu'  name  'Sedimentation adsorbed Flu' active  1  
+            abbrev  'Res_Flu'  name  'Resuspension adsorbed Flu' active  1  
+            abbrev  'BurS1_Flu'  name  'Burial adsorbed Flu from S1' active  0  
+            abbrev  'DigS1_Flu'  name  'Digging adsorbed Flu to S1' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+substance_group 'Eutrophication' 
+    substance 'AAP' 
+    name      'adsorbed ortho phosphate' 
+    unit      '(gP/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'AdsPO4AAP'  name  'Ad(De)Sorption ortho phosphorus to inorg. matter' active  1  
+            abbrev  'Sed_AAP'  name  'Sedimentation AAP (adsorbed PO4)' active  0  
+            abbrev  'Res_AAP'  name  'Resuspension AAP (adsorbed PO4)' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'AAPS1' 
+    name      'adsorbed O-PO4 in layer S1' 
+    unit      '(gP)' 
+    active     0  
+    selected_processes
+            abbrev  'Deso_AAPS1'  name  'Desorption of adsorbed phosphates in sediment S1' active  0  
+            abbrev  'Sed_AAP'  name  'Sedimentation AAP (adsorbed PO4)' active  0  
+            abbrev  'Res_AAP'  name  'Resuspension AAP (adsorbed PO4)' active  0  
+            abbrev  'BurS1_AAP'  name  'Burial of AAP (adsorbed PO4) from sediment S1' active  0  
+            abbrev  'DigS1_AAP'  name  'Digging AAP (adsorbed PO4) towards sediment S1' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'DetC' 
+    name      'Detritus Carbon  (DetC)' 
+    unit      '(gC/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Compos'  name  'Composition' active  1  
+            abbrev  'WM_DetC'  name  'Mineralisation detritus carbon' active  1  
+            abbrev  'NutRel_Alg'  name  'Release (nutrients/detritus) by of mortality algae' active  0  
+            abbrev  'SedDetC'  name  'Sedimentation detritus carbon' active  1  
+            abbrev  'Res_DetC'  name  'Resuspension detritus carbon' active  1  
+            abbrev  'Secchi'  name  'Extinction of visible-light (370-680nm)' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'DetCS1' 
+    name      'DetC in layer S1' 
+    unit      '(gC)' 
+    active     0  
+    selected_processes
+            abbrev  'BMS1_DetC'  name  'Mineralisation detritus carbon in sediment S1' active  0  
+            abbrev  'NRAlg_S1'  name  'Nutrient release of algae in S1' active  0  
+            abbrev  'SedDetC'  name  'Sedimentation detritus carbon' active  1  
+            abbrev  'Res_DetC'  name  'Resuspension detritus carbon' active  1  
+            abbrev  'BurS1_DetC'  name  'Burial detritus carbon from sediment S1' active  0  
+            abbrev  'DigS1_DetC'  name  'Digging detritus carbon towards sediment S1' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'DetN' 
+    name      'Detritus Nitrogen (DetN)' 
+    unit      '(gN/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'WM_DetN'  name  'Mineralisation detritus nitrogen' active  1  
+            abbrev  'NutRel_Alg'  name  'Release (nutrients/detritus) by of mortality algae' active  0  
+            abbrev  'SedN_Det'  name  'Sedim. nutrients in detritus' active  1  
+            abbrev  'ResN_Det'  name  'Resuspension nutrients in detritus' active  0  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'SedDetC'  name  'Sedimentation detritus carbon' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'DetP' 
+    name      'Detritus Phosphorus (DetP)' 
+    unit      '(gP/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'WM_DetP'  name  'Mineralisation detritus phosphorus' active  1  
+            abbrev  'NutRel_Alg'  name  'Release (nutrients/detritus) by of mortality algae' active  0  
+            abbrev  'SedN_Det'  name  'Sedim. nutrients in detritus' active  1  
+            abbrev  'ResN_Det'  name  'Resuspension nutrients in detritus' active  0  
+            abbrev  'SedDetC'  name  'Sedimentation detritus carbon' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'NH4' 
+    name      'Ammonium (NH4)' 
+    unit      '(gN/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'NutUpt_Alg'  name  'Uptake of nutrients by growth of algae' active  0  
+            abbrev  'Compos'  name  'Composition' active  1  
+            abbrev  'Nitrif_NH4'  name  'Nitrification of ammonium' active  1  
+            abbrev  'BMS1_DetN'  name  'Mineralisation detritus nitrogen in sediment S1' active  0  
+            abbrev  'BMS2_DetN'  name  'Mineralisation detritus nitrogen in sediment S2' active  0  
+            abbrev  'BMS1_OON'  name  'Mineralisation other organic N in sediment S1' active  0  
+            abbrev  'BMS2_OON'  name  'Mineralisation other organic N in sediment S2' active  0  
+            abbrev  'WM_DetN'  name  'Mineralisation detritus nitrogen' active  1  
+            abbrev  'WM_OON'  name  'Mineralisation other organic nitrogen' active  0  
+            abbrev  'NutRel_Alg'  name  'Release (nutrients/detritus) by of mortality algae' active  0  
+            abbrev  'NRAlg_S1'  name  'Nutrient release of algae in S1' active  0  
+            abbrev  'NRAlg_S2'  name  'Nutrient release of algae in S2' active  0  
+            abbrev  'AtmDep_NH4'  name  'Atmospheric deposition NH4' active  0  
+            abbrev  'Dfwast_NH4'  name  'Diffusive waste NH4' active  0  
+            abbrev  'NH3free'  name  'Calculation conc. unionized ammonia' active  0  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'NO3' 
+    name      'Nitrate (NO3)' 
+    unit      '(gN/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'NutUpt_Alg'  name  'Uptake of nutrients by growth of algae' active  0  
+            abbrev  'Compos'  name  'Composition' active  1  
+            abbrev  'DenSed_NO3'  name  'Denitrification in sediment' active  0  
+            abbrev  'DenWat_NO3'  name  'Denitrification in water column' active  1  
+            abbrev  'Nitrif_NH4'  name  'Nitrification of ammonium' active  1  
+            abbrev  'AtmDep_NO3'  name  'Atmospheric deposition NO3' active  0  
+            abbrev  'Dfwast_NO3'  name  'Diffusive waste NO3' active  0  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'PO4' 
+    name      'Ortho-Phosphate (PO4)' 
+    unit      '(gP/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'NutUpt_Alg'  name  'Uptake of nutrients by growth of algae' active  0  
+            abbrev  'Compos'  name  'Composition' active  1  
+            abbrev  'AdsPO4AAP'  name  'Ad(De)Sorption ortho phosphorus to inorg. matter' active  1  
+            abbrev  'BMS1_DetP'  name  'Mineralisation detritus phosphorus in sediment S1' active  0  
+            abbrev  'BMS2_DetP'  name  'Mineralisation detritus phosphorus in sediment S2' active  0  
+            abbrev  'BMS1_OOP'  name  'Mineralisation other organic P in sediment S1' active  0  
+            abbrev  'BMS2_OOP'  name  'Mineralisation other organic P in sediment S2' active  0  
+            abbrev  'Deso_AAPS1'  name  'Desorption of adsorbed phosphates in sediment S1' active  0  
+            abbrev  'Deso_AAPS2'  name  'Desorption of adsorbed phosphates in sediment S2' active  0  
+            abbrev  'WM_DetP'  name  'Mineralisation detritus phosphorus' active  1  
+            abbrev  'WM_OOP'  name  'Mineralisation other organic phosphorus' active  0  
+            abbrev  'NutRel_Alg'  name  'Release (nutrients/detritus) by of mortality algae' active  0  
+            abbrev  'NRAlg_S1'  name  'Nutrient release of algae in S1' active  0  
+            abbrev  'NRAlg_S2'  name  'Nutrient release of algae in S2' active  0  
+            abbrev  'AtmDep_PO4'  name  'Atmospheric deposition PO4' active  0  
+            abbrev  'Dfwast_PO4'  name  'Diffusive waste PO4' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+substance_group 'Oxygen-BOD' 
+    substance 'CBOD5' 
+    name      'carbonaceous BOD (first pool) at 5 days' 
+    unit      '(gO2/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'BODCOD'  name  'Mineralisation BOD and COD' active  1  
+            abbrev  'DBOD_TEWOR'  name  'Oxydation of BOD' active  0  
+            abbrev  'S_CBOD51'  name  'Sedimentation CBOD5 (first pool)' active  1  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'CBOD5_2' 
+    name      'carbonaceous BOD (second pool) at 5 days' 
+    unit      '(gO2/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'BODCOD'  name  'Mineralisation BOD and COD' active  1  
+            abbrev  'DBOD_TEWOR'  name  'Oxydation of BOD' active  0  
+            abbrev  'S_CBOD52'  name  'Sedimentation CBOD5_2 (second pool)' active  1  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'OXY' 
+    name      'Dissolved Oxygen' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+            abbrev  'NutUpt_Alg'  name  'Uptake of nutrients by growth of algae' active  0  
+            abbrev  'DenWat_NO3'  name  'Denitrification in water column' active  1  
+            abbrev  'Nitrif_NH4'  name  'Nitrification of ammonium' active  1  
+            abbrev  'RearOXY'  name  'Reaeration of oxygen' active  1  
+            abbrev  'BMS1_DetC'  name  'Mineralisation detritus carbon in sediment S1' active  0  
+            abbrev  'BMS2_DetC'  name  'Mineralisation detritus carbon in sediment S2' active  0  
+            abbrev  'BMS1_OOC'  name  'Mineralisation other organic C in sediment S1' active  0  
+            abbrev  'BMS2_OOC'  name  'Mineralisation other organic C in sediment S2' active  0  
+            abbrev  'WM_DetC'  name  'Mineralisation detritus carbon' active  1  
+            abbrev  'WM_OOC'  name  'Mineralisation other organic carbon' active  0  
+            abbrev  'BODCOD'  name  'Mineralisation BOD and COD' active  1  
+            abbrev  'DBOD_TEWOR'  name  'Oxydation of BOD' active  0  
+            abbrev  'SedOXYDem'  name  'Sediment oxygen demand' active  1  
+            abbrev  'GroMrt_Gre'  name  'Nett primary production and mortality green algae' active  0  
+            abbrev  'GroMrt_Dia'  name  'Nett primary production and mortality diatoms' active  0  
+            abbrev  'PPrLim'  name  'Limitation (numerical) on primary production' active  0  
+            abbrev  'OXYMin'  name  'Potential mimimum dissolved oxygen concentration' active  0  
+            abbrev  'PosOXY'  name  'Positive oxygen concentration' active  1  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'Damrear'  name  'Reaeration at weirs' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'SOD' 
+    name      'Sediment oxygen demand (SOD)' 
+    unit      '(gO2/m3)' 
+    active     0  
+    selected_processes
+            abbrev  'SedOXYDem'  name  'Sediment oxygen demand' active  1  
+            abbrev  'SED_SOD'  name  'Sedimentation of oxygen demand' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+substance_group 'Heavy metals' 
+    substance 'Cu' 
+    name      'Copper (Cu)' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Sed_Cu'  name  'Sedimentation adsorbed Cu' active  1  
+            abbrev  'Res_Cu'  name  'Resuspension adsorbed Cu' active  1  
+            abbrev  'AtmDep_Cu'  name  'Atmospheric deposition Cu' active  0  
+            abbrev  'Dfwast_Cu'  name  'Diffusive waste Cu' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'CuS1' 
+    name      'Cu in layer S1' 
+    unit      '(g)' 
+    active     0  
+    selected_processes
+            abbrev  'Sed_Cu'  name  'Sedimentation adsorbed Cu' active  1  
+            abbrev  'Res_Cu'  name  'Resuspension adsorbed Cu' active  1  
+            abbrev  'BurS1_Cu'  name  'Burial adsorbed Cu from S1' active  0  
+            abbrev  'DigS1_Cu'  name  'Digging adsorbed Cu to S1' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'Zn' 
+    name      'Zinc (Zn)' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Sed_Zn'  name  'Sedimentation adsorbed Zn' active  1  
+            abbrev  'Res_Zn'  name  'Resuspension adsorbed Zn' active  1  
+            abbrev  'AtmDep_Zn'  name  'Atmospheric deposition Zn' active  0  
+            abbrev  'Dfwast_Zn'  name  'Diffusive waste Zn' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'ZnS1' 
+    name      'Zn in layer S1' 
+    unit      '(g)' 
+    active     0  
+    selected_processes
+            abbrev  'Sed_Zn'  name  'Sedimentation adsorbed Zn' active  1  
+            abbrev  'Res_Zn'  name  'Resuspension adsorbed Zn' active  1  
+            abbrev  'BurS1_Zn'  name  'Burial adsorbed Zn from S1' active  0  
+            abbrev  'DigS1_Zn'  name  'Digging adsorbed Zn to S1' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+substance_group 'General' 
+    substance 'Cl' 
+    name      'Chloride' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'ModTemp' 
+    name      'Water Temperature' 
+    unit      '(oC)' 
+    active     1  
+    selected_processes
+            abbrev  'Temperatur'  name  'Temperature and heat exchange' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+substance_group 'Coli-Bacteria' 
+    substance 'EColi' 
+    name      'E. Coli bacteria' 
+    unit      '(MPN/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'EColiMrt'  name  'Mortality EColi bacteria' active  1  
+            abbrev  'Prod_TEWOR'  name  'Production fluxes for TEWOR+' active  1  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+substance_group 'Suspended matter' 
+    substance 'IM1' 
+    name      'inorganic matter (IM1)' 
+    unit      '(gDM/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Compos'  name  'Composition' active  1  
+            abbrev  'Sed_IM1'  name  'Sedimentation IM1' active  1  
+            abbrev  'Res_IM1'  name  'Resuspension 1st inorganic matter' active  1  
+            abbrev  'AtmDep_IM1'  name  'Atmospheric deposition IM1' active  0  
+            abbrev  'Dfwast_IM1'  name  'Diffusive waste IM1' active  0  
+            abbrev  'Secchi'  name  'Extinction of visible-light (370-680nm)' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'IM1S1' 
+    name      'IM1 in layer S1' 
+    unit      '(gDM)' 
+    active     0  
+    selected_processes
+            abbrev  'Sed_IM1'  name  'Sedimentation IM1' active  1  
+            abbrev  'Res_IM1'  name  'Resuspension 1st inorganic matter' active  1  
+            abbrev  'BurS1_IM1'  name  'Burial 1st-inorganic matter from S1' active  0  
+            abbrev  'DigS1_IM1'  name  'Digging 1st-inorganic matter towards sediment S1' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'IM2' 
+    name      'inorganic matter (IM2)' 
+    unit      '(gDM/m3)' 
+    active     1  
+    selected_processes
+            abbrev  'Sed_IM2'  name  'Sedimentation IM2' active  1  
+            abbrev  'Res_IM2'  name  'Resuspension 2nd inorganic matter' active  1  
+            abbrev  'AtmDep_IM2'  name  'Atmospheric deposition IM2' active  0  
+            abbrev  'Dfwast_IM2'  name  'Diffusive waste IM2' active  0  
+            abbrev  'VertDisp'  name  'Vertical dispersion (segment -> exchange)' active  0  
+            abbrev  'HorzDisper'  name  'Horizontal dispersion in a 1D model' active  0  
+    end-selected_processes 
+    end-substance
+    substance 'IM2S1' 
+    name      'IM2 in layer S1' 
+    unit      '(gDM)' 
+    active     0  
+    selected_processes
+            abbrev  'Sed_IM2'  name  'Sedimentation IM2' active  1  
+            abbrev  'Res_IM2'  name  'Resuspension 2nd inorganic matter' active  1  
+            abbrev  'BurS1_IM2'  name  'Burial 2nd inorganic matter from S1' active  0  
+            abbrev  'DigS1_IM2'  name  'Digging 2nd inorganic matter to S1' active  0  
+    end-selected_processes 
+    end-substance
+end-substance_group
+process_parameter 'AAP'   
+    name          'adsorbed ortho phosphate'   
+    unit          '(gP/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'AAPS1'   
+    name          'adsorbed O-PO4 in layer S1'   
+    unit          '(gP)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BaP'   
+    name          'Benzo(a)pyrene (BaP)'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BaPS1'   
+    name          'BaP in layer S1'   
+    unit          '(g)'   
+    modelled       1    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'CBOD5'   
+    name          'carbonaceous BOD (first pool) at 5 days'   
+    unit          '(gO2/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'CBOD5_2'   
+    name          'carbonaceous BOD (second pool) at 5 days'   
+    unit          '(gO2/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Cl'   
+    name          'Chloride'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        2.000e+004
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Cu'   
+    name          'Copper (Cu)'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        -1.100e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'CuS1'   
+    name          'Cu in layer S1'   
+    unit          '(g)'   
+    modelled       1    
+    default        -1.100e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetC'   
+    name          'Detritus Carbon  (DetC)'   
+    unit          '(gC/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetCS1'   
+    name          'DetC in layer S1'   
+    unit          '(gC)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetN'   
+    name          'Detritus Nitrogen (DetN)'   
+    unit          '(gN/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetP'   
+    name          'Detritus Phosphorus (DetP)'   
+    unit          '(gP/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'EColi'   
+    name          'E. Coli bacteria'   
+    unit          '(MPN/m3)'   
+    modelled       1    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Flu'   
+    name          'Fluoranthene (Flu)'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FluS1'   
+    name          'Flu in layer S1'   
+    unit          '(g)'   
+    modelled       1    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM1'   
+    name          'inorganic matter (IM1)'   
+    unit          '(gDM/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM1S1'   
+    name          'IM1 in layer S1'   
+    unit          '(gDM)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM2'   
+    name          'inorganic matter (IM2)'   
+    unit          '(gDM/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM2S1'   
+    name          'IM2 in layer S1'   
+    unit          '(gDM)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'ModTemp'   
+    name          'Water Temperature'   
+    unit          '(oC)'   
+    modelled       1    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  'HeatBal'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'NH4'   
+    name          'Ammonium (NH4)'   
+    unit          '(gN/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'NO3'   
+    name          'Nitrate (NO3)'   
+    unit          '(gN/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'OXY'   
+    name          'Dissolved Oxygen'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        1.000e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PO4'   
+    name          'Ortho-Phosphate (PO4)'   
+    unit          '(gP/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'SOD'   
+    name          'Sediment oxygen demand (SOD)'   
+    unit          '(gO2/m3)'   
+    modelled       1    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Zn'   
+    name          'Zinc (Zn)'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        -1.100e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'ZnS1'   
+    name          'Zn in layer S1'   
+    unit          '(g)'   
+    modelled       1    
+    default        -1.100e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Depth'   
+    name          'depth of segment'   
+    unit          '(m)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'DynDepth'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TotalDepth'   
+    name          'total depth water column'   
+    unit          '(m)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'TotDepth'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PORS1'   
+    name          'porosity of sediment layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'POCnoa'   
+    name          'total POC (no algae)'   
+    unit          '(gC/m3)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'POC_Dyn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcMrtEColi'   
+    name          'first-order mortality rate EColi'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        8.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcMrtEColi'   
+    name          'temperature coefficient for mortality EColi'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.070e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'SWAdsP'   
+    name          'switch PO4 adsorption <0=Kd|1=Langmuir|2=pHdep>'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdPO4AAP'   
+    name          'distrib. coeff. (-) or ads. eq. const.'   
+    unit          '(m3/gP)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcDenWat'   
+    name          'temperature coefficient for denitrification'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.070e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'COXDEN'   
+    name          'critical oxygen concentration for denitrification'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        3.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcDenWat'   
+    name          'first-order denitrification rate in water column'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'OOXDEN'   
+    name          'optimum oxygen concentration for denitrification'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        1.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcNit'   
+    name          'temperature coefficient for nitrification'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.070e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'CTNit'   
+    name          'critical temperature for nitrification'   
+    unit          '(oC)'   
+    modelled       0    
+    default        3.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'COXNIT'   
+    name          'critical oxygen concentration for nitrification'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        1.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcNit'   
+    name          'first-order nitrification rate'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'OOXNIT'   
+    name          'optimum oxygen concentration for nitrification'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        5.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'SWRear'   
+    name          'switch for oxygen reaeration formulation (1-12)'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KLRear'   
+    name          'reaeration transfer coefficient'   
+    unit          '(m/d)'   
+    modelled       0    
+    default        1.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TCRear'   
+    name          'temperature coefficient for rearation'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.016e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'SaturOXY'   
+    name          'saturation concentration'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SaturOXY'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'CTMin'   
+    name          'critical temperature for mineralisation'   
+    unit          '(oC)'   
+    modelled       0    
+    default        3.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcDetC'   
+    name          'first-order mineralisation rate DetC'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.200e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcDetC'   
+    name          'temperature coefficient for mineralisation DetC'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.047e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcDetN'   
+    name          'first-order mineralisation rate DetN'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.200e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcDetN'   
+    name          'temperature coefficient for mineralisation DetN'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.047e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcDetP'   
+    name          'first-order mineralisation rate DetP'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        8.000e-002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcDetP'   
+    name          'temperature coefficient for mineralisation DetP'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.047e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcBOD'   
+    name          'decay rate BOD (first pool) at 20 oC'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        3.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcBOD_2'   
+    name          'decay rate BOD (second pool) at 20 oC'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.500e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TcBOD'   
+    name          'temperature coefficient decay BOD'   
+    unit          '(-)'   
+    modelled       0    
+    default        1.040e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'COXBOD'   
+    name          'critical oxygen concentration for BOD decay'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        1.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'OOXBOD'   
+    name          'optimum oxygen concentration for BOD decay'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        5.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'CFLBOD'   
+    name          'oxygen function level for oxygen below COXBOD'   
+    unit          '(-)'   
+    modelled       0    
+    default        3.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'CurvBOD'   
+    name          'curvature of DO function for mineralisation BOD'   
+    unit          '(-)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSOD'   
+    name          'zeroth-order sediment oxygen demand flux'   
+    unit          '(gO2/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcSOD'   
+    name          'decay rate SOD at 20 oC'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'SS'   
+    name          'suspended solids'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        1.000e+001
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'VSedIM1'   
+    name          'sedimentation velocity IM1'   
+    unit          '(m/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  'CalVS_IM1'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'Tau'   
+    name          'total bottom shear stress'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'CalTau'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'TaucSIM1'   
+    name          'critical shear stress for sedimentation IM1'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'VSedIM2'   
+    name          'sedimentation velocity IM2'   
+    unit          '(m/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  'CalVS_IM2'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TaucSIM2'   
+    name          'critical shear stress for sedimentation IM2'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'VSedDetC'   
+    name          'sedimentation velocity DetC'   
+    unit          '(m/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  'CalVS_DetC'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TauCSDetC'   
+    name          'critical shear stress for sedimentation DetC'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedDetC'   
+    name          'sedimentation flux DetC'   
+    unit          '(gC/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedDetC'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedDetC'   
+    name          'sedimentation velocity IM1'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'SedDetC'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VSedBOD5'   
+    name          'sedimentation velocity CBOD5'   
+    unit          '(m/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'TaucSBOD'   
+    name          'critical shear stress for sedimentation BOD'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        1.000e+012
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'VSedBOD5_2'   
+    name          'sedimentation velocity CBOD5_2'   
+    unit          '(m/d)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedIM1'   
+    name          'sedimentation flux IM1'   
+    unit          '(g/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'Sed_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedPOCnoa'   
+    name          'total sedimentation flux POC (no algae)'   
+    unit          '(gC/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'SedPODyn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedIM1'   
+    name          'sedimentation velocity IM1'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'Sed_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QPIM1'   
+    name          'quality IM1 for P'   
+    unit          '(gP/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'AdsPO4AAP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FPIM1'   
+    name          'fraction of P adsorbed on IM1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'AdsPO4AAP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FPIM2'   
+    name          'fraction of P adsorbed on IM2'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'AdsPO4AAP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FPIM3'   
+    name          'fraction of P adsorbed on IM3'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'AdsPO4AAP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DMS1'   
+    name          'total amount of dry matter in layer S1'   
+    unit          '(gDM)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'ZResDM'   
+    name          'zeroth-order resuspension flux'   
+    unit          '(gDM/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1DM'   
+    name          'total resuspension flux DM from layer S1'   
+    unit          '(g/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'Res_DM'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrIM1S1'   
+    name          'fraction IM1 in layer S1'   
+    unit          '(gDM/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  'S1_Comp'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrIM2S1'   
+    name          'fraction IM2 in layer S1'   
+    unit          '(gDM/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrIM3S1'   
+    name          'fraction IM3 in layer S1'   
+    unit          '(gDM/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrDetCS1'   
+    name          'fraction DetC in layer S1'   
+    unit          '(gC/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrOOCS1'   
+    name          'fraction OOC in layer S1'   
+    unit          '(gC/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrGreenS1'   
+    name          'fraction Greens in layer S1'   
+    unit          '(gC/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrDiatS1'   
+    name          'fraction Diatoms in layer S1'   
+    unit          '(gC/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1IM1'   
+    name          'resuspension flux IM1 from layer S1'   
+    unit          '(g/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'Res_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1TIM'   
+    name          'total resuspension flux TIM from layer S1'   
+    unit          '(g/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sum_ResS1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'ActThS1'   
+    name          'actual thickness layer S1'   
+    unit          '(m)'   
+    modelled       0    
+    default        1.000e-001
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'RHOS1'   
+    name          'overall bulk density layer S1'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdCuIM1'   
+    name          'partition coefficient Cu-IM1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        5.000e+001
+    internal       0    
+    specification  0    
+    input_process  'RFPART_Cu'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdCuIM2'   
+    name          'partition coefficient Cu-IM2'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        5.000e+001
+    internal       0    
+    specification  0    
+    input_process  'RFPART_Cu'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdZnIM1'   
+    name          'partition coefficient Zn-IM1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        1.100e+002
+    internal       0    
+    specification  0    
+    input_process  'RFPART_Zn'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdZnIM2'   
+    name          'partition coefficient Zn-IM2'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        1.100e+002
+    internal       0    
+    specification  0    
+    input_process  'RFPART_Zn'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdCuIM1S1'   
+    name          'partition coefficient Cu-IM1 in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        5.000e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdCuIM2S1'   
+    name          'partition coefficient Cu-IM2 in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        5.000e+001
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdZnIM1S1'   
+    name          'partition coefficient Zn-IM1 in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        1.110e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'KdZnIM2S1'   
+    name          'partition coefficient Zn-IM2 in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        1.110e+002
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'lKpocBaPS1'   
+    name          'log partition coefficient BaP-POC in layer S1'   
+    unit          '(l/kgC)'   
+    modelled       0    
+    default        7.300e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'lKpocFluS1'   
+    name          'log partition coefficient Flu-POC in layer S1'   
+    unit          '(l/kgC)'   
+    modelled       0    
+    default        6.400e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'lKpocBaP'   
+    name          'log partition coefficient BaP-POC'   
+    unit          '(l/kgC)'   
+    modelled       0    
+    default        7.300e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'lKpocFlu'   
+    name          'log partition coefficient Flu-POC'   
+    unit          '(l/kgC)'   
+    modelled       0    
+    default        6.400e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisFlu'   
+    name          'free dissolved Flu in water column'   
+    unit          '(gFlu/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'DisBaP'   
+    name          'free dissolved BaP in water column'   
+    unit          '(gBaP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'FrFluDis'   
+    name          'fraction free dissolved Flu in water column'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcFlu'   
+    name          'first-order loss rate Flu'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        1.000e-003
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrFluDOC'   
+    name          'fraction Flu adsorbed to DOC'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrBaPDis'   
+    name          'fraction free dissolved BaP in water column'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcBaP'   
+    name          'first-order loss rate BaP'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrBaPDOC'   
+    name          'fraction BaP adsorbed to DOC'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrFluDisS1'   
+    name          'fraction free dissolved Flu in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'RcFluS1'   
+    name          'first-order loss rate Flu in layer S1'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrFluDOCS1'   
+    name          'fraction Flu adsorbed to DOC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrBaPDisS1'   
+    name          'fraction free dissolved BaP in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrBaPDOCS1'   
+    name          'fraction BaP adsorbed to DOC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedPOCna'   
+    name          'sedimentation velocity POC (no algae)'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'SedPODyn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedPhyt'   
+    name          'sedimentation velocity phytoplankton'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'SedPhDyn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QCuIM1'   
+    name          'quality IM1 for Cu'   
+    unit          '(gCu/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QZnIM1'   
+    name          'quality IM1 for Zn'   
+    unit          '(gZn/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QFluPOC'   
+    name          'quality POC for Flu in water column'   
+    unit          '(gFlu/gC)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QBaPPOC'   
+    name          'quality POC for BaP in water column'   
+    unit          '(gBaP/gC)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1POC'   
+    name          'total resuspension flux POC from layer S1'   
+    unit          '(gC/m2/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  1    
+    input_process  'Sum_ResS1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QCuIM1S1'   
+    name          'quality IM1 for Cu in layer S1'   
+    unit          '(gCu/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QZnIM1S1'   
+    name          'quality IM1 for Zn in layer S1'   
+    unit          '(gZn/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QFluPOCS1'   
+    name          'quality POC for Flu in layer S1'   
+    unit          '(gFlu/gC)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QBaPPOCS1'   
+    name          'quality POC for BaP in layer S1'   
+    unit          '(gBaP/gC)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fTEWORBOD'   
+    name          'TEWOR production flux of CBOD5_2'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fTEWOROXY'   
+    name          'TEWOR production flux of OXY'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fTEWORORGN'   
+    name          'TEWOR production flux of Org-N'   
+    unit          '(gN/m3/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fTEWORNH4'   
+    name          'TEWOR production flux of NH4'   
+    unit          '(gN/m3/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fTEWORNO3'   
+    name          'TEWOR production flux of NO3'   
+    unit          '(gN/m3/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'fTEWORECol'   
+    name          'TEWOR production flux of EColi'   
+    unit          '(MPN/ml/d)'   
+    modelled       0    
+    default        0.000e+000
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'LocalDepth'   
+    name          'depth from water surface to bottom of segment'   
+    unit          '(m)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'TotDepth'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'RCHeat'   
+    name          'temperature exchange rate'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Temperatur'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'SurTemp'   
+    name          'Surplus temperature'   
+    unit          '(oC)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Temperatur'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TauVELOC'   
+    name          'bottom shear stress caused by flow velocities'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'CalTau'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TauWIND'   
+    name          'bottom shear stress caused by wind'   
+    unit          '(N/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'CalTau'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'CalVelTau'   
+    name          'calculated \'velocity\' from total tau'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'CalTau'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TIMS1'   
+    name          'total inorganic matter in layer S1'   
+    unit          '(gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'POMS1'   
+    name          'Particulate Organic Matter in layer S1'   
+    unit          '(gDW)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM1S1M2'   
+    name          'IM1 per m2 in layer S1'   
+    unit          '(gDM/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM2S1M2'   
+    name          'IM2 per m2 in layer S1'   
+    unit          '(gDM/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'IM3S1M2'   
+    name          'IM3 per m2 in layer S1'   
+    unit          '(gDM/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetCS1M2'   
+    name          'DetC per m2 in layer S1'   
+    unit          '(gC/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'OOCS1M2'   
+    name          'OOC per m2 in layer S1'   
+    unit          '(gC/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DiatS1M2'   
+    name          'Diatoms per m2 in layer S1'   
+    unit          '(gC/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'GreenS1M2'   
+    name          'Greens per m2 in layer S1'   
+    unit          '(gC/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'AAPS1M2'   
+    name          'adsorbed O-PO4 per m2 in layer S1'   
+    unit          '(gP/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetNS1M2'   
+    name          'DetN per m2 in layer S1'   
+    unit          '(gN/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetPS1M2'   
+    name          'DetP per m2 in layer S1'   
+    unit          '(gP/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DetSiS1M2'   
+    name          'DetSi per m2 in layer S1'   
+    unit          '(gSi/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'OONS1M2'   
+    name          'OON per m2 in layer S1'   
+    unit          '(gN/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'OOPS1M2'   
+    name          'OOP per m2 in layer S1'   
+    unit          '(gP/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'OOSiS1M2'   
+    name          'OOSi per m2 in layer S1'   
+    unit          '(gSi/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrMFB1S1'   
+    name          'fraction MFB1 in layer S1'   
+    unit          '(gC/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrMFB2S1'   
+    name          'fraction MFB2 in layer S1'   
+    unit          '(gC/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'MFB1S1M2'   
+    name          'MFB1 per m2 in layer S1'   
+    unit          '(gC/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'MFB2S1M2'   
+    name          'MFB2 per m2 in layer S1'   
+    unit          '(gC/m2)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S1_Comp'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TPM'   
+    name          'total particulate matter (including algae)'   
+    unit          '(gdw/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TPMnoalg'   
+    name          'total particulate matter (excluding algae)'   
+    unit          '(gdw/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'POM'   
+    name          'particulate org. matter (incl algae)'   
+    unit          '(gdw/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TOC'   
+    name          'total organic C (including algae)'   
+    unit          '(gC/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'POC'   
+    name          'Particulate Organic Carbon (including algae)'   
+    unit          '(gC/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TotN'   
+    name          'total nitrogen (including algae)'   
+    unit          '(gN/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KjelN'   
+    name          'Kjeldahl nitrogen'   
+    unit          '(gN/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'DIN'   
+    name          'dissolved inorganic nitrogen'   
+    unit          '(gN/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TON'   
+    name          'total organic N (including algae)'   
+    unit          '(gN/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PON'   
+    name          'Particulate Organic Nitrogen (including algae)'   
+    unit          '(gN/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TotP'   
+    name          'total phosphorus (including algae)'   
+    unit          '(gP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'TOP'   
+    name          'total organic P (including algae)'   
+    unit          '(gP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'POP'   
+    name          'particulate organic P (incl algae)'   
+    unit          '(gP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PIP'   
+    name          'Particulate Inorganic Phosphorus'   
+    unit          '(gP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrAAPTIM'   
+    name          'fraction AAP of total inorganic matter'   
+    unit          '(gP/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrPAPTIM'   
+    name          'fraction PAP of total suspended solids'   
+    unit          '(gP/gDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'TotSi'   
+    name          'total silica (including algae)'   
+    unit          '(gSi/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'MrtToEColi'   
+    name          'overall mortality rate EColi'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'EColiMrt'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'MrtRaEColi'   
+    name          'mortality rate due to by radiation EColi'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'EColiMrt'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'EqAAP'   
+    name          'equilibrium concentration of AAP'   
+    unit          '(gP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'AdsPO4AAP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'O2FuncDEN'   
+    name          'oxygen function for denitrification'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'DenWat_NO3'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'O2FuncNIT'   
+    name          'oxygen function for nitrification'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Nitrif_NH4'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'RCREAR'   
+    name          'rate constant for reaeration'   
+    unit          '(1/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'RearOXY'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'SatPercOXY'   
+    name          'Actual saturation percentage O2'   
+    unit          '(%)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'RearOXY'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'O2FuncBOD'   
+    name          'oxygen function for decay of CBOD'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  'DBOD_TEWOR'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'AgeFun'   
+    name          'age function for decay CBOD and NBOD'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BOD5'   
+    name          'BOD5'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  'DBOD_TEWOR'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'BODu'   
+    name          'calculated carbonaceous BOD at ultimate'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  0    
+    input_process  'DBOD_TEWOR'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'COD'   
+    name          'Chemical oxygen demand COD'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BOD5-POC'   
+    name          'contribution of POC to BOD5'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BODu-POC'   
+    name          'contribution of POC to calculated BODu'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BOD5-Phyt'   
+    name          'contribution of phytoplankton to BOD5'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BODu-Phyt'   
+    name          'contribution of Phyt to calculated BODu'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BODN'   
+    name          'calculated nitrogenous BOD at ultimate'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PSedIM1'   
+    name          'sedimentation probability <0-1> IM1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PSedIM2'   
+    name          'sedimentation probability <0-1> IM2'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_IM2'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PSedDetC'   
+    name          'sedimentation probability <0-1> DetC'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedDetC'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedDetN'   
+    name          'sedimentation flux DetN'   
+    unit          '(gN/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedDetP'   
+    name          'sedimentation flux DetP'   
+    unit          '(gP/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedDetSi'   
+    name          'sedimentation flux DetSi'   
+    unit          '(gSi/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedDetN'   
+    name          'sedimentation velocity DetC'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedDetP'   
+    name          'sedimentation velocity DetP'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedDetSi'   
+    name          'sedimentation velocity DetSi'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PSedBOD5'   
+    name          'sedimentation probability <0-1> CBOD5'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S_CBOD51'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedBOD5'   
+    name          'sedimentation velocity CBOD5'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S_CBOD51'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PSedBOD5_2'   
+    name          'sedimentation probability <0-1> CBOD5_2'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S_CBOD52'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedBOD52'   
+    name          'sedimentation velocity CBOD5_2'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S_CBOD52'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PResS1DM'   
+    name          'resuspension probability for layer S1 <0-inf>'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_DM'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'PResS2DM'   
+    name          'resuspension probability for layer S2 <0-inf>'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_DM'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuDis'   
+    name          'fraction free dissolved Cu in water column'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuDOC'   
+    name          'fraction Cu adsorbed to DOC'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisCu'   
+    name          'free dissolved Cu in water column'   
+    unit          '(gCu/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'DOCCu'   
+    name          'Cu adsorbed to DOC'   
+    unit          '(gCu/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Cutot'   
+    name          'total concentration Cu'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'QCuSS'   
+    name          'overall quality suspended solid for Cu'   
+    unit          '(mgCu/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdCuSS'   
+    name          'overall partition coefficient Cu in SS'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnDis'   
+    name          'fraction free dissolved Zn in water column'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnDOC'   
+    name          'fraction Zn adsorbed to DOC'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisZn'   
+    name          'free dissolved Zn in water column'   
+    unit          '(gZn/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'DOCZn'   
+    name          'Zn adsorbed to DOC'   
+    unit          '(gZn/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Zntot'   
+    name          'total concentration Zn'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'QZnSS'   
+    name          'overall quality suspended solid for Zn'   
+    unit          '(mgZn/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdZnSS'   
+    name          'overall partition coefficient Zn in SS'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuDisS1'   
+    name          'fraction free dissolved Cu in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuDOCS1'   
+    name          'fraction Cu adsorbed to DOC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuIM1S1'   
+    name          'fraction Cu adsorbed to IM1 in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuIM2S1'   
+    name          'fraction Cu adsorbed to IM2 in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuIM3S1'   
+    name          'fraction Cu adsorbed to IM3 in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuPOCS1'   
+    name          'fraction Cu adsorbed to POC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrCuPHYTS1'   
+    name          'fraction Cu adsorbed to phytoplankton in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisCuS1'   
+    name          'free dissolved Cu in pore water layer S1'   
+    unit          '(gCu/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DOCCuS1'   
+    name          'Cu adsorbed to DOC in pore water layer S1'   
+    unit          '(gCu/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'CuS1tot'   
+    name          'total mass Cu in layer S1'   
+    unit          '(g)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QCuDMS1'   
+    name          'overall sediment quality for Cu in layer S1'   
+    unit          '(mgCu/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdCuDMS1'   
+    name          'overall partition coefficient Cu in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnDisS1'   
+    name          'fraction free dissolved Zn in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnDOCS1'   
+    name          'fraction Zn adsorbed to DOC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnIM1S1'   
+    name          'fraction Zn adsorbed to IM1 in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnIM2S1'   
+    name          'fraction Zn adsorbed to IM2 in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnIM3S1'   
+    name          'fraction Zn adsorbed to IM3 in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnPOCS1'   
+    name          'fraction Zn adsorbed to POC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrZnPHYTS1'   
+    name          'fraction Zn adsorbed to phytoplankton in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisZnS1'   
+    name          'free dissolved Zn in pore water layer S1'   
+    unit          '(gZn/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DOCZnS1'   
+    name          'Zn adsorbed to DOC in pore water layer S1'   
+    unit          '(gZn/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'ZnS1tot'   
+    name          'total mass Zn in layer S1'   
+    unit          '(g)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QZnDMS1'   
+    name          'overall sediment quality for Zn in layer S1'   
+    unit          '(mgZn/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdZnDMS1'   
+    name          'overall partition coefficient Zn in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrBaPPOCS1'   
+    name          'fraction BaP adsorbed to POC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrBaPPHYS1'   
+    name          'fraction BaP adsorbed to phytoplankton in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisBaPS1'   
+    name          'free dissolved BaP in pore water layer S1'   
+    unit          '(gBaP/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DOCBaPS1'   
+    name          'BaP adsorbed to DOC in pore water layer S1'   
+    unit          '(gBaP/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BaPS1tot'   
+    name          'total mass BaP in layer S1'   
+    unit          '(g)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QBaPDMS1'   
+    name          'overall sediment quality for BaP in layer S1'   
+    unit          '(mgBaP/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdBaPDMS1'   
+    name          'overall partition coefficient BaP in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrFluPOCS1'   
+    name          'fraction Flu adsorbed to POC in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FrFluPHYS1'   
+    name          'fraction Flu adsorbed to phytoplankton in layer S1'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DisFluS1'   
+    name          'free dissolved Flu in pore water layer S1'   
+    unit          '(gFlu/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DOCFluS1'   
+    name          'Flu adsorbed to DOC in pore water layer S1'   
+    unit          '(gFlu/m3p)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'FluS1tot'   
+    name          'total mass Flu in layer S1'   
+    unit          '(g)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'QFluDMS1'   
+    name          'overall sediment quality for Flu in layer S1'   
+    unit          '(mgFlu/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdFluDMS1'   
+    name          'overall partition coefficient Flu in layer S1'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartS1_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DOCBaP'   
+    name          'BaP adsorbed to DOC'   
+    unit          '(gBaP/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'BaPtot'   
+    name          'concentration BaP in water column'   
+    unit          '(g/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'QBaPSS'   
+    name          'overall quality suspended solid for BaP'   
+    unit          '(mgBaP/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdBaPSS'   
+    name          'overall partition coefficient BaP in SS'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_BaP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DOCFlu'   
+    name          'Flu adsorbed to DOC'   
+    unit          '(gFlu/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Flutot'   
+    name          'concentration Flu in water column'   
+    unit          '(gFlu/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'QFluSS'   
+    name          'overall quality suspended solid for Flu'   
+    unit          '(mgFlu/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     1    
+end-process_parameter
+process_parameter 'KdFluSS'   
+    name          'overall partition coefficient Flu in SS'   
+    unit          '(m3/kgDM)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PartWK_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedCu'   
+    name          'sedimentation flux Cu'   
+    unit          '(gCu/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedCu'   
+    name          'sedimentation velocity Cu'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedZn'   
+    name          'sedimentation flux Zn'   
+    unit          '(gZn/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedZn'   
+    name          'sedimentation velocity Zn'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedFlu'   
+    name          'sedimentation flux Flu'   
+    unit          '(gFlu/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedFlu'   
+    name          'sedimentation velocity Flu'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fSedBap'   
+    name          'sedimentation flux BaP'   
+    unit          '(gBaP/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'VxSedBap'   
+    name          'sedimentation velocity BaP'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1Cu'   
+    name          'resuspension flux Cu from layer S1'   
+    unit          '(gCu/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS2Cu'   
+    name          'resuspension flux Cu from layer S2'   
+    unit          '(gCu/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1Zn'   
+    name          'resuspension flux Zn from layer S1'   
+    unit          '(gZn/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS2Zn'   
+    name          'resuspension flux Zn from layer S2'   
+    unit          '(gZn/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1Flu'   
+    name          'resuspension flux Flu from layer S1'   
+    unit          '(gFlu/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS2Flu'   
+    name          'resuspension flux Flu from layer S2'   
+    unit          '(gFlu/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS1Bap'   
+    name          'resuspension flux BaP from layer S1'   
+    unit          '(gBaP/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'fResS2Bap'   
+    name          'resuspension flux BaP from layer S2'   
+    unit          '(gBaP/m2/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'DO'   
+    name          'dissolved oxygen concentration'   
+    unit          '(gO2/m3)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PosOXY'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'Temp'   
+    name          'ambient water temperature'   
+    unit          '(oC)'   
+    modelled       0    
+    default        1.500e+001
+    internal       0    
+    specification  0    
+    input_process  'Temperatur'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'VWind'   
+    name          'wind speed'   
+    unit          '(m/s)'   
+    modelled       0    
+    default        3.000e+000
+    internal       0    
+    specification  0    
+    input_process  'Meteo'  
+    delft3d_par    1    
+    output_par     0    
+end-process_parameter
+process_parameter 'dModtemp'   
+    name          'temperature exchange flux'   
+    unit          '(oC/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Temperatur'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dDumCompos'   
+    name          'dummy flux to access Compos'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Compos'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dMrtEColi'   
+    name          'mortality flux EColi'   
+    unit          '(MPN/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'EColiMrt'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dAdsPO4AAP'   
+    name          'adsorption flux PO4 to AAP'   
+    unit          '(gP/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'AdsPO4AAP'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dDenitWat'   
+    name          'denitrification flux in the water column'   
+    unit          '(gN/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'DenWat_NO3'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dNitrif'   
+    name          'nitrification flux'   
+    unit          '(gN/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Nitrif_NH4'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dREAROXY'   
+    name          'reaeration flux of dissolved oxygen'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'RearOXY'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dCBOD5'   
+    name          'decay flux of CBOD5'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dCBOD5_2'   
+    name          'decay flux of CBOD5_2'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dCBODu'   
+    name          'decay flux of CBODu'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dCBODu_2'   
+    name          'decay flux of CBODu_2'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dNBOD5'   
+    name          'decay flux of NBOD5'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dNBODu'   
+    name          'decay flux of NBODu'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dCOD_Cr'   
+    name          'decay flux of COD_Cr'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dCOD_Mn'   
+    name          'decay flux of COD_Mn'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dOxyBODCOD'   
+    name          'oxygen consumption from decay BOD and COD'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'BODCOD'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedIM1'   
+    name          'sedimentation flux of IM1'   
+    unit          '(g/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedIM2'   
+    name          'sedimentation flux of IM2'   
+    unit          '(g/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_IM2'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedDetC'   
+    name          'sedimentation flux DetC'   
+    unit          '(gC/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedDetC'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedDetN'   
+    name          'sedimentation flux DetN'   
+    unit          '(gN/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedDetP'   
+    name          'sedimentation flux DetP'   
+    unit          '(gP/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedDetSi'   
+    name          'sedimentation flux DetSi'   
+    unit          '(gSi/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'SedN_Det'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedBOD5'   
+    name          'sedimentation flux CBOD5'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S_CBOD51'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedBOD5_2'   
+    name          'sedimentation flux CBOD5_2'   
+    unit          '(gO2/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'S_CBOD52'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS1IM1'   
+    name          'resuspension flux IM1 from layer S1'   
+    unit          '(g/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS2IM1'   
+    name          'resuspension flux IM1 from layer S2'   
+    unit          '(g/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_IM1'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedCu'   
+    name          'sedimentation flux Cu'   
+    unit          '(gCu/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedZn'   
+    name          'sedimentation flux Zn'   
+    unit          '(gZn/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedFlu'   
+    name          'sedimentation flux Flu'   
+    unit          '(gFlu/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dSedBap'   
+    name          'sedimentation flux BaP'   
+    unit          '(gBaP/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Sed_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS1Cu'   
+    name          'resuspension flux Cu from layer S1'   
+    unit          '(gCu/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS2Cu'   
+    name          'resuspension flux Cu from layer S2'   
+    unit          '(gCu/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Cu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS1Zn'   
+    name          'resuspension flux Zn from layer S1'   
+    unit          '(gZn/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS2Zn'   
+    name          'resuspension flux Zn from layer S2'   
+    unit          '(gZn/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Zn'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS1Flu'   
+    name          'resuspension flux Flu from layer S1'   
+    unit          '(gFlu/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS2Flu'   
+    name          'resuspension flux Flu from layer S2'   
+    unit          '(gFlu/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Flu'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS1Bap'   
+    name          'resuspension flux BaP from layer S1'   
+    unit          '(gBaP/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dResS2Bap'   
+    name          'resuspension flux BaP from layer S2'   
+    unit          '(gBaP/m3/d)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'Res_Bap'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter
+process_parameter 'dDumPosOXY'   
+    name          'dummy flux to access posoxy'   
+    unit          '(-)'   
+    modelled       0    
+    default        -9.990e+002
+    internal       0    
+    specification  1    
+    input_process  'PosOXY'  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter

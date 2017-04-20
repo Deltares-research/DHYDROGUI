@@ -1,0 +1,31 @@
+substance 'C' active
+   description        'Concentratie verontreiniging'
+   concentration-unit 'mg/l'
+   waste-load-unit    '-'
+end-substance
+parameter 'Kd'
+   description   'Snelheidsconstante verwijdering'
+   unit          '1/dag'
+   value            0.1000000    
+end-parameter
+parameter 'Sd'
+   description   'Gedistribueerde bron'
+   unit          'g/m2,dag'
+   value             1.000000    
+end-parameter
+output 'Z'
+   description   'water depth'
+end-output
+output 'dt'
+   description   'timestep of Duflow-quality calculation in seconds'
+end-output
+output 'N'
+   description   'C/10000'
+end-output
+output 'LogN'
+   description   'LOG(N)'
+end-output
+active-processes
+   name  'HydDuflow' 'HydDuflow'
+   name  'DECAY2' 'DECAY2'
+end-active-processes

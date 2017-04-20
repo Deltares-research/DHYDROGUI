@@ -1,0 +1,58 @@
+MEASWQ.*   \S212003\fixed\Rsdummy.dum
+RDSDWQ1.*  \S212003\fixed\Rsdummy.dum
+RDSDWQ2.*  \S212003\fixed\Rsdummy.dum
+RDSDWQ3.*  \S212003\fixed\Rsdummy.dum
+RDSDWQ4.*  \S212003\fixed\Rsdummy.dum
+RDSDWQ5.*  \S212003\fixed\Rsdummy.dum
+2RDSDWQ1.*  \S212003\fixed\Rsdummy.dum
+2RDSDWQ2.*  \S212003\fixed\Rsdummy.dum
+2RDSDWQ3.*  \S212003\fixed\Rsdummy.dum
+2RDSDWQ4.*  \S212003\fixed\Rsdummy.dum
+2RDSDWQ5.*  \S212003\fixed\Rsdummy.dum
+RESA_11.*  \S212003\fixed\Rsdummy.dum
+RESA_12.*  \S212003\fixed\Rsdummy.dum
+RESA_13.*  \S212003\fixed\Rsdummy.dum
+RESA_14.*  \S212003\fixed\Rsdummy.dum
+RESA_15.*  \S212003\fixed\Rsdummy.dum
+RESB_11.*  \S212003\fixed\Rsdummy.dum
+RESB_12.*  \S212003\fixed\Rsdummy.dum
+RESB_13.*  \S212003\fixed\Rsdummy.dum
+RESB_14.*  \S212003\fixed\Rsdummy.dum
+RESB_15.*  \S212003\fixed\Rsdummy.dum
+RESDES1.*  \S212003\fixed\Rsdummy.dum
+RESDES2.*  \S212003\fixed\Rsdummy.dum
+RESDES3.*  \S212003\fixed\Rsdummy.dum
+RESDES4.*  \S212003\fixed\Rsdummy.dum
+RESDES5.*  \S212003\fixed\Rsdummy.dum
+RSDWQ1.*   \S212003\fixed\Rsdummy.dum
+RSDWQ2.*   \S212003\fixed\Rsdummy.dum
+RSDWQ3.*   \S212003\fixed\Rsdummy.dum
+RSDWQ4.*   \S212003\fixed\Rsdummy.dum
+RSDWQ5.*   \S212003\fixed\Rsdummy.dum
+2RSDWQ1.*   \S212003\fixed\Rsdummy.dum
+2RSDWQ2.*   \S212003\fixed\Rsdummy.dum
+2RSDWQ3.*   \S212003\fixed\Rsdummy.dum
+2RSDWQ4.*   \S212003\fixed\Rsdummy.dum
+2RSDWQ5.*   \S212003\fixed\Rsdummy.dum
+RSDWQIN.*  \S212003\fixed\Rsdummy.dum
+RSDWQOUT.* \S212003\fixed\Rsdummy.dum
+2RSDWQI.*  \S212003\fixed\Rsdummy.dum
+2RSDWQO.*  \S212003\fixed\Rsdummy.dum
+
+RSRR_IN.*  \S212003\fixed\Rsdummy.dum
+RDSRR_IN.* \S212003\fixed\Rsdummy.dum
+RSRR_OUT.* \S212003\fixed\Rsdummy.dum
+RDSRROUT.* \S212003\fixed\Rsdummy.dum
+
+RESA_IN.*  \S212003\fixed\Rsdummy.dum
+RESA_OUT.* \S212003\fixed\Rsdummy.dum
+RESB_IN.*  \S212003\fixed\Rsdummy.dum
+RESB_OUT.* \S212003\fixed\Rsdummy.dum
+
+RSFLSIN.*  \S212003\fixed\Rsdummy.dum
+RDFLSIN.* \S212003\fixed\Rsdummy.dum
+RSFLSOUT.* \S212003\fixed\Rsdummy.dum
+RDFLSOUT.* \S212003\fixed\Rsdummy.dum
+
+
+NWRWCONT.* \S212003\fixed\Rsdummy.dum

@@ -1,0 +1,159 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text;
+using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.RegularExpressions;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
+using log4net;
+
+namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
+{
+    public class SobekRRBoundaryConditionsImporter : PartialSobekImporterBase
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRBoundaryConditionsImporter));
+        private string filePathBoundaryConditions = "";
+        private string filePathBoundaryTableConditions = "";
+
+        private const string displayName = "Rainfall Runoff boundary conditions data";
+        public override string DisplayName
+        {
+            get { return displayName; }
+        }
+
+        protected override void PartialImport()
+        {
+            var rainfallRunoffModel = GetModel<RainfallRunoffModel>();
+
+            if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)))
+            {
+                log.DebugFormat("Importing boundary conditions data ...");
+                
+                ReadAndSetBoundaryConditions(rainfallRunoffModel);
+            }
+        }
+
+        private void ReadAndSetBoundaryConditions(RainfallRunoffModel model)
+        {
+            var formatBCTable = new DataTable();
+            formatBCTable.Columns.Add(new DataColumn("DateTime", typeof(DateTime)));
+            formatBCTable.Columns.Add(new DataColumn("BoundaryLevel", typeof(double)));
+            formatBCTable.Columns.Add(new DataColumn("SaltConcentration", typeof(double)));
+
+            var rrNodesPath = GetFilePath(SobekFileNames.SobekRRNodeFileName);
+            var nodes = new SobekRRNodeReader().Read(rrNodesPath).ToDictionaryWithErrorDetails(rrNodesPath, n => n.Id, n => n.ObjectTypeName);
+            var links = new SobekRRLinkReader().Read(GetFilePath(SobekFileNames.SobekRRLinkFileName));
+            var importedBoundaryConditions = new SobekRRBoundaryReader().Read(filePathBoundaryConditions);
+            var dicBCTable = new SobekRRTableReader("BN_T", formatBCTable).Read(filePathBoundaryTableConditions).ToDictionaryWithErrorDetails(filePathBoundaryTableConditions, item => item.TableName, item => item);
+
+            var boundaryDatas = model.BoundaryData;
+            var unpavedDatas = model.GetAllModelData().OfType<UnpavedData>().ToList();
+
+            // If a standalone RR model is imported, also convert the 'Flow-RR Connections on Flow Channel' (type 35) to Runoff boundaries (TOOLS-20516). 
+            var integratedModel = TargetObject as ICompositeActivity;
+            bool rrStandalone = integratedModel != null && integratedModel.Activities.Count == 1;
+            
+            foreach (var bc in importedBoundaryConditions)
+            {
+                string type;
+                if (!nodes.TryGetValue(bc.Id, out type))
+                {
+                    log.WarnFormat("Could not find node with id {0} for boundary condition.", bc.Id);
+                    continue;
+                }
+
+                if (type == "3B_BOUNDARY" || (rrStandalone && type == "SBK_SBK-3B-NODE"))
+                {
+                    //put condition on the boundary itself
+                    var boundaryCondition = boundaryDatas.FirstOrDefault(bd => bd.Boundary.Name == bc.Id);
+                    if (boundaryCondition == null)
+                        continue;
+
+                    SetBoundaryCondition(boundaryCondition.Series, bc, dicBCTable);
+                }
+                else
+                {
+                    //put condition on the linked unpaved catchments
+                    var incomingLinksToBoundary = links.Where(l => l.NodeToId == bc.Id);
+
+                    foreach (var incomingLink in incomingLinksToBoundary)
+                    {
+                        var unpaved = unpavedDatas.FirstOrDefault(u => u.Catchment.Name == incomingLink.NodeFromId);
+
+                        if (unpaved == null)
+                            continue;
+
+                        if (!String.IsNullOrEmpty(bc.VariableLevel))
+                        {
+                            continue; //implicitly handled: water level will be grabbed from Flow where possible.
+                        }
+
+                        SetBoundaryCondition(unpaved.BoundaryData, bc, dicBCTable);
+                    }
+                }
+            }
+        }
+
+        private static void SetBoundaryCondition(RainfallRunoffBoundaryData boundaryData, SobekRRBoundary bc,
+                                                 Dictionary<string, DataTable> dicBCTable)
+        {
+            boundaryData.IsConstant = String.IsNullOrEmpty(bc.TableId);
+            boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
+            boundaryData.Value = bc.FixedLevel;
+            if (!String.IsNullOrEmpty(bc.TableId))
+            {
+                if (dicBCTable.ContainsKey(bc.TableId))
+                {
+                    var timeSeries = DataTableHelper.ConvertDataTableToTimeSeries(dicBCTable[bc.TableId],
+                                                                                  "boundary conditions");
+                    boundaryData.Data = timeSeries;
+                }
+                else
+                {
+                    log.ErrorFormat(
+                        "Unable to find RR boundary conditions table with id {0} for boundary with id {1}",
+                        bc.TableId, bc.Id);
+                }
+            }
+        }
+
+        private bool SetFilePath(string caseDescriptionFile)
+        {
+            if (!File.Exists(caseDescriptionFile))
+            {
+                log.ErrorFormat("Could not find file {0}.", caseDescriptionFile);
+                return false;
+            }
+
+            string caseDescriptionFileText = File.ReadAllText(caseDescriptionFile, Encoding.Default);
+
+            const string group = "filepath";
+            const string bound3b3bPattern = @"IO?\s*(?<" + group + ">" + RegularExpression.FileName + @"BOUND3B.3B)\s*";
+
+            //Boundary conditions
+            var matches = RegularExpression.GetMatches(bound3b3bPattern, caseDescriptionFileText);
+            if (matches.Count > 0)
+            {
+                filePathBoundaryConditions = GetFilePath(matches[0].Groups[group].Value);
+            }
+
+            const string bound3bTblPattern = @"IO?\s*(?<" + group + ">" + RegularExpression.FileName + @"BOUND3B.TBL)\s*";
+
+            //Boundary conditions table
+            matches = RegularExpression.GetMatches(bound3bTblPattern, caseDescriptionFileText);
+            if (matches.Count > 0)
+            {
+                filePathBoundaryTableConditions = GetFilePath(matches[0].Groups[group].Value);
+            }
+
+            return true;
+        }
+
+    }
+}

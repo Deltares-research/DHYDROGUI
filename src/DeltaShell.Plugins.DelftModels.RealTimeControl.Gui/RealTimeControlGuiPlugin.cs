@@ -1,0 +1,407 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+using DelftTools.Controls;
+using DelftTools.Controls.Swf;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
+using DelftTools.Shell.Gui.Swf.Validation;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using log4net;
+using Mono.Addins;
+using ValidationAspects;
+using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
+using TreeNode = DelftTools.Controls.Swf.TreeViewControls.TreeNode;
+using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
+
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
+{
+    [Extension(typeof(IPlugin))]
+    public class RealTimeControlGuiPlugin : GuiPlugin
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof (RealTimeControlGuiPlugin));
+
+        private IGui gui;
+        private ContextMenuStrip contextMenuStripControlGroups;
+        private ContextMenuStrip contextMenuStripControlGroup;
+        private ToolStripMenuItem addNewControlGroupToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
+        private ToolStripMenuItem copyXmlToClipboardToolStripMenuItem;
+        private ToolStripMenuItem copyToolsXmlToClipboardToolStripMenuItem;
+
+        public RealTimeControlGuiPlugin()
+        {
+            InitializeComponent();
+        }
+
+        public override string Name
+        {
+            get { return "Real Time Control (UI)"; }
+        }
+
+        public override string DisplayName
+        {
+            get { return "D-Real Time Control Plugin (UI)"; }
+        }
+
+        public override string Description
+        {
+            get { return RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description; }
+        }
+
+        public override string Version
+        {
+            get { return GetType().Assembly.GetName().Version.ToString(); }
+        }
+
+        public override string FileFormatVersion
+        {
+            get { return "3.5.0.0"; }
+        }
+
+        public override IGui Gui
+        {
+            get { return gui; }
+            set
+            {
+                if (base.Gui != null)
+                {
+                    Gui.Application.ProjectSaving -= ProjectServiceProjectSaving;
+                    Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
+                }
+
+                gui = value;
+                if (gui == null) return;
+
+                Gui.Application.ProjectSaving += ProjectServiceProjectSaving;
+                Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
+            }
+        }
+
+        [InvokeRequired]
+        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        {
+            if (!(sender is RealTimeControlModel) || e.NewStatus != ActivityStatus.Failed) return;
+
+            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+        public override IEnumerable<PropertyInfo> GetPropertyInfos()
+        {
+            yield return new PropertyInfo<RealTimeControlModel, RealTimeControlModelProperties>();
+            yield return new PropertyInfo<Output, OutputProperties>();
+            yield return new PropertyInfo<Input, InputProperties>();
+            yield return new PropertyInfo<LookupSignal,LookupSignalProperties>();
+            yield return new PropertyInfo<PIDRule, PIDRuleProperties>();
+            yield return new PropertyInfo<FactorRule, FactorRuleProperties>();
+            yield return new PropertyInfo<HydraulicRule, HydraulicRuleProperties>();
+            yield return new PropertyInfo<TimeRule, TimeRuleProperties>();
+            yield return new PropertyInfo<RelativeTimeRule, RelativeTimeRuleProperties>();
+            yield return new PropertyInfo<IntervalRule, IntervalRuleProperties>();
+            yield return new PropertyInfo<DirectionalCondition, DirectionalConditionProperties>();
+            yield return new PropertyInfo<TimeCondition, TimeConditionProperties>();
+            yield return new PropertyInfo<StandardCondition, StandardConditionProperties>();
+            yield return new PropertyInfo<ControlGroup, ControlGroupProperties>();
+        }
+
+        public override IEnumerable<ViewInfo> GetViewInfoObjects()
+        {
+            yield return new ViewInfo<ControlGroup, ControlGroupGraphView>
+                {
+                    Description = "Control Group Editor",
+                    AfterCreate = (v, o) =>
+                        {
+                            v.Gui = gui;
+                            v.Model = GetModel(o);
+                            v.EnsureVisible(o);
+                        }
+                };
+            yield return new ViewInfo<IEventedList<ControlGroup>, ControlGroupLayerEditorView>
+                {
+                    GetViewName = (v, o) => "Control Group Editor",
+                    Description = "Control groups",
+                    CompositeViewType = typeof(ProjectItemMapView),
+                    GetCompositeViewData = o => GetModel(o),
+                    AfterCreate = (v, o) =>
+                        {
+                            v.RtcModel = GetModel(o);
+                            v.OpenViewAction = ob => Gui.CommandHandler.OpenView(ob);
+                        }
+                };
+            yield return new ViewInfo<RealTimeControlModel, ValidationView>
+            {
+                Description = "Validation Report",
+                AfterCreate = (v, o) =>
+                {
+                    v.Gui = Gui;
+                    v.OnValidate = d => o.Validate();
+                }
+            };
+            yield return new ViewInfo<RealTimeControlModelExporter, RtcExporterDialog>();
+
+        }
+
+        public override IMapLayerProvider MapLayerProvider
+        {
+            get { return new RealTimeControlMapLayerProvider(); }
+        }
+
+        public override bool CanCopy(IProjectItem item)
+        {
+            // disable copy of RTC model by the user
+            if (item is RealTimeControlModel)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override bool CanCut(IProjectItem item)
+        {
+            // disable cut of RTC model by the user
+            if (item is RealTimeControlModel)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        public override void Dispose()
+        {
+            if (gui != null)
+            {
+                if (gui.DocumentViews != null)
+                {
+                    Gui.Application.ProjectSaving -= ProjectServiceProjectSaving;
+                }
+            }
+
+            base.Dispose();
+        }
+
+        public override void Activate()
+        {
+            IsActive = true;
+            gui.Application.ProjectClosing += Application_ProjectClosing;
+        }
+
+        public override void Deactivate()
+        {
+            gui.Application.ProjectClosing -= Application_ProjectClosing;
+            IsActive = false;
+        }
+
+        public override IMenuItem GetContextMenu(object sender, object data)
+        {
+            if (data is IEventedList<ControlGroup>)
+            {
+                contextMenuStripControlGroups.Items[0].Tag = sender;
+                return new MenuItemContextMenuStripAdapter(contextMenuStripControlGroups);
+            }
+            if (data is ControlGroup)
+            {
+                contextMenuStripControlGroup.Items[0].Tag = sender;
+                contextMenuStripControlGroup.Items[1].Tag = sender;
+                contextMenuStripControlGroup.Items[2].Tag = sender;
+                return new MenuItemContextMenuStripAdapter(contextMenuStripControlGroup);
+            }
+            return null;
+        }
+
+        public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
+        {
+            yield return new RealTimeControlModelNodePresenter(this);
+            yield return new RtcObjectNodePresenter { GuiPlugin = this };
+            yield return new InputNodePresenter { GuiPlugin = this };
+            yield return new OutputNodePresenter {GuiPlugin = this};
+            yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
+            yield return new ControlGroupNodePresenter(this);
+        }
+
+        public override IEnumerable<Assembly> GetPersistentAssemblies()
+        {
+            yield return GetType().Assembly;
+            yield return typeof(ShapeBase).Assembly;
+        }
+
+        private void InitializeComponent()
+        {
+            contextMenuStripControlGroups = new ContextMenuStrip {Name = "contextMenuStripControlGroups", Size = new Size(237, 50)};
+            contextMenuStripControlGroup = new ContextMenuStrip {Name = "contextMenuStripControlGroup", Size = new Size(254, 76)};
+
+            addNewControlGroupToolStripMenuItem = new ToolStripMenuItem
+                                                      {
+                                                          Image = RealTimeControl.Properties.Resources.controlgroup_add,
+                                                          Name = "addNewControlGroupToolStripMenuItem",
+                                                          Text = "Add New Control Group..."
+                                                      };
+            
+            deleteToolStripMenuItem = new ToolStripMenuItem
+                                          {
+                                              Image = RealTimeControl.Properties.Resources.DeleteHS,
+                                              Name = "deleteToolStripMenuItem",
+                                              Text = "Delete"
+                                          };
+
+            copyXmlToClipboardToolStripMenuItem = new ToolStripMenuItem
+                                                      {
+                                                          Name = "copyXmlToClipboardToolStripMenuItem",
+                                                          Text = "Copy Data Xml to clipboard"
+                                                      };
+
+            copyToolsXmlToClipboardToolStripMenuItem = new ToolStripMenuItem
+                                                           {
+                                                               Name = "copyToolsXmlToClipboardToolStripMenuItem",
+                                                               Text = "Copy Tools Xml to Clipboard"
+                                                           };
+
+            addNewControlGroupToolStripMenuItem.Click += AddNewControlGroupToolStripMenuItemClick;
+            deleteToolStripMenuItem.Click += ButtonDeleteRtcItemToolStripMenuItem_Click;
+            copyXmlToClipboardToolStripMenuItem.Click += CopyXmlToClipboardToolStripMenuItemClick;
+            copyToolsXmlToClipboardToolStripMenuItem.Click += CopyToolsXmlToClipboardToolStripMenuItemClick;
+
+            contextMenuStripControlGroup.Items.AddRange(new ToolStripItem[]
+                                                            {
+                                                                deleteToolStripMenuItem,
+                                                                copyXmlToClipboardToolStripMenuItem,
+                                                                copyToolsXmlToClipboardToolStripMenuItem
+                                                            });
+
+            contextMenuStripControlGroups.Items.AddRange(new ToolStripItem[]
+                                                             {
+                                                                 addNewControlGroupToolStripMenuItem
+                                                             });
+        }
+
+        private void ProjectServiceProjectSaving(Project project)
+        {
+            var views = Gui.DocumentViews.OfType<ControlGroupGraphView>();
+            foreach (var view in views)
+            {
+                //view.ControlGroupEditor.SyncViewContext();
+            }
+        }
+
+        private void Application_ProjectClosing(Project project)
+        {
+            RealTimeControlModelCopyPasteHelper.CopiedShapes = null;
+        }
+
+        private void AddNewControlGroupToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var realTimeControlModel = (RealTimeControlModel) ((ToolStripMenuItem) sender).Tag;
+
+            //var choices = new[] { emptyGroup, pidGroup, hydraulicGroup };
+            var choices = RealTimeControlModelHelper.StandardControlGroups.ToArray();
+
+            var dialog = new ListBasedDialog
+                             {
+                                 DataSource = choices,
+                                 SelectionMode = SelectionMode.One
+                             };
+            var name = RealTimeControlModelHelper.GetUniqueName("Control Group {0}",
+                                                                realTimeControlModel.ControlGroups, "?");
+            if (DialogResult.OK == dialog.ShowDialog())
+            {
+                var controlGroup = RealTimeControlModelHelper.CreateStandardControlGroup((string) dialog.SelectedItems[0]);
+                controlGroup.Name = name;
+                realTimeControlModel.ControlGroups.Add(controlGroup);
+
+                gui.Selection = controlGroup;
+                gui.CommandHandler.OpenViewForSelection();
+            }
+        }
+
+        private void CopyXmlToClipboardToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var controlGroupTreeNode = (TreeNode) ((ToolStripMenuItem) sender).Tag;
+            var controlGroup = (ControlGroup) controlGroupTreeNode.Tag;
+            if (controlGroup != null)
+            {
+                try
+                {
+                    if (!ValidateControlGroup(controlGroup))
+                    {
+                        return;
+                    }
+
+                    var model = (RealTimeControlModel) controlGroupTreeNode.Parent.Parent.Parent.Tag;
+
+                    var xDocument = RealTimeControlXmlWriter.GetDataConfigXml("", model, new List<ControlGroup> {controlGroup}, null);
+                    Clipboard.SetText(xDocument.ToString());
+                }
+                catch (Exception exception)
+                {
+                    Log.Error(exception.Message);
+                }
+            }
+        }
+
+        private void CopyToolsXmlToClipboardToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var controlGroup = (ControlGroup) ((TreeNode) ((ToolStripMenuItem) sender).Tag).Tag;
+            if (controlGroup != null)
+            {
+                try
+                {
+                    if (!ValidateControlGroup(controlGroup))
+                    {
+                        return;
+                    }
+                    var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml("", new List<ControlGroup> {controlGroup});
+                    Clipboard.SetText(xDocument.ToString());
+                }
+                catch (Exception exception)
+                {
+                    Log.Error(exception.Message);
+                }
+            }
+        }
+
+        private static bool ValidateControlGroup(ControlGroup controlGroup)
+        {
+            var result = controlGroup.Validate();
+            if (!result.IsValid)
+            {
+                result.Messages.ForEach(message => Log.Error(message));
+                return false;
+            }
+            return true;
+        }
+
+        private void ButtonDeleteRtcItemToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var node = (ITreeNode) ((ToolStripMenuItem) sender).Tag;
+            ((TreeView) node.TreeView).DeleteNodeData();
+        }
+
+        private RealTimeControlModel GetModel(IEventedList<ControlGroup> controlGroups)
+        {
+            var allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            return allRtcModels.First(m => m.ControlGroups.Equals(controlGroups));
+        }
+
+        private RealTimeControlModel GetModel(ControlGroup controlGroup)
+        {
+            var allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            return allRtcModels.First(m => m.ControlGroups.Contains(controlGroup));
+        }
+    }
+}

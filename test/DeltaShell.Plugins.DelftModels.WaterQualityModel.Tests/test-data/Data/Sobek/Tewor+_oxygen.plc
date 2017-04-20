@@ -1,0 +1,27 @@
+2008101501
+NC
+ 23
+COEFFICIENTS
+"TcNit",1.08
+"COXNIT",1
+"RcNit",.1
+"OOXNIT",5
+"fTEWORBOD",0
+"fTEWOROXY",0
+"fTEWORNH4",0
+"RcBOD",.6
+"RcBOD_2",.1
+"TcBOD",1.047
+"COXBOD",1
+"OOXBOD",5
+"CFLBOD",0
+"O2FuncBOD",0
+"BOD5",0
+"BODu",0
+"VSedBOD5",0
+"VSedBOD5_2",.1
+"SWRear",1
+"KLRear",.35
+"TCRear",1.024
+"fSOD",0
+"RcSOD",0

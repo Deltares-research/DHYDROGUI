@@ -1,0 +1,10 @@
+OBI1.0
+OBID id 'N1' ci 'SBK_BOUNDARY' obid
+OBID id 'LS1' ci 'SBK_LATERALFLOW' obid
+OBID id 'N3' ci 'SBK_CHANNELCONNECTION' obid
+OBID id 'LS2' ci 'SBK_LATERALFLOW' obid
+OBID id 'N2' ci 'SBK_BOUNDARY' obid
+OBID id 'N2a' ci 'SBK_BOUNDARY' obid
+OBID id 'LS3' ci 'SBK_LATERALFLOW' obid
+OBID id 'N4' ci 'SBK_BOUNDARY' obid
+OBID id 'LN2' ci 'SBK_CHANNEL_STORCONN&LAT' obid

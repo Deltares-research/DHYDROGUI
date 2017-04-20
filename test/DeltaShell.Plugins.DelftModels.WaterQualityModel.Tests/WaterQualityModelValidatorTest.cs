@@ -1,0 +1,900 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
+using NUnit.Framework;
+using Rhino.Mocks;
+
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
+{
+    [TestFixture]
+    public class WaterQualityModelValidatorTest
+    {
+        [Test]
+        public void ValidateEmptyModel()
+        {
+            var model = new WaterQualityModel();
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            Assert.AreEqual(0, report.Issues.Count());
+            Assert.AreEqual(2, report.AllErrors.Count()); // no substances and Hyd file
+        }
+
+        [Test]
+        [TestCase(@"segFileA.tau", true)]
+        [TestCase(@"segFileB.tau", false)]
+        [TestCase(@"", false)]
+        public void ValidateModelWithProcessCoeficientsSegmentFunctionType(string segmentFunctionFile,
+            bool validationExpected)
+        {
+            var model = new WaterQualityModel();
+            string dataDir = Path.Combine(TestHelper.GetDataDir(), @"TestSegFunctionFiles");
+            string segmentFunctionPath = segmentFunctionFile != "" ? Path.Combine(dataDir, segmentFunctionFile) : null;
+
+            // setup (we don't really care for the content, just for the path being valid or not.
+            var segFunc = WaterQualityFunctionFactory.CreateSegmentFunction("A", 1.2, "irrelevant", "g", "A",
+                segmentFunctionPath);
+            model.ProcessCoefficients.Add(segFunc);
+
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            Assert.AreEqual(0, report.Issues.Count());
+            Assert.That(report.AllErrors.Count(), Is.EqualTo(2 + (validationExpected ? 0 : 1))); // no substances and no hyd file initially.
+            if (!validationExpected)
+            {
+                var message = string.Format("Segmentation file for function: {0} not specified", segFunc.Name);
+                if (segmentFunctionFile != "")
+                {
+                    message = string.Format("Could not find segmentation file for function: {0}", segFunc.Name);
+                }
+                var validationFailed = new ValidationIssue(segFunc, ValidationSeverity.Error, message);
+                Assert.True(report.AllErrors.Contains(validationFailed));
+            }
+        }
+
+        [Test]
+        public void ModelWantingToUseTooManyThreads()
+        {
+            // Pretty sure this will be a valid 'too big' value for any machine available ^_^
+            var model = new WaterQualityModel { ModelSettings = { NrOfThreads = int.MaxValue } };
+            
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            AssertExpectedValidationIssue(report, "This machine cannot use more threads than ", i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Error);
+        }
+
+        #region Observation Point / Areas
+
+        [Test]
+        public void ModelWithSameNamedObservationPointAndObservationAreaIsInvalid()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            TestHydroDataStub data = new TestHydroDataStub();
+            model.ImportHydroData(data);
+            model.ObservationAreas.SetValuesAsLabels(new[]{"A","B", "A", "A"});
+            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessageA = "Observation point names should be unique and another observation area with name 'A' was already found.";
+            AssertExpectedValidationIssue(report, expectedMessageA,
+                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+        }
+        
+        [Test]
+        public void ModelWithNonUniqueNamedObservationPointsIsInvalid()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessageA = "Observation point names should be unique and another observation point with name 'A' was already found.";
+            AssertExpectedValidationIssue(report, expectedMessageA,
+                i => Equals(i.Subject, model.ObservationPoints[2]) && i.Severity == ValidationSeverity.Error);
+            AssertExpectedValidationIssue(report, expectedMessageA,
+                i => Equals(i.Subject, model.ObservationPoints[4]) && i.Severity == ValidationSeverity.Error);
+
+            const string expectedMessageB = "Observation point names should be unique and another observation point with name 'B' was already found.";
+            AssertExpectedValidationIssue(report, expectedMessageB,
+                i => Equals(i.Subject, model.ObservationPoints[3]) && i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        public void ModelWithObservationPointThatHaveNoDefinedZIsInvalid()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = ObservationPointType.SinglePoint,
+                Z = double.NaN
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessage = "Observation point 'A' has an undefined Z.";
+            AssertExpectedValidationIssue(report, expectedMessage,
+                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+
+            var expectedIlligalZMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
+                double.NaN);
+            Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedIlligalZMessage)),
+                "If Z is NaN, there should be no message about Z being out of a certain range.");
+        }
+
+        [Test]
+        public void ModelWithObservationPointsButLevelIsNone()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.ModelSettings.MonitoringOutputLevel = MonitoringOutputLevel.None;
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = ObservationPointType.SinglePoint,
+                Z = 0,
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+            var expectedMessage = "There are observation points available, but the monitoring output level excludes them from delwaq. Level: None";
+
+            AssertExpectedValidationIssue(report, expectedMessage, i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Warning);
+        }
+
+        [Test]
+        public void ModelWithObservationPointsButLevelIsAreas()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.ModelSettings.MonitoringOutputLevel = MonitoringOutputLevel.Areas;
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = ObservationPointType.SinglePoint,
+                Z = 0,
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+            var expectedMessage = "There are observation points available, but the monitoring output level excludes them from delwaq. Level: Areas";
+
+            AssertExpectedValidationIssue(report, expectedMessage, i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Warning);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ModelWithObservationPointThatHaveNoDefinedZAndIsNotSinglePointIsValid(
+            [Values(ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        {
+            // setup
+            Assert.AreNotEqual(ObservationPointType.SinglePoint, type,
+                "Test precondition: do not evaluate for SinglePoint");
+
+            var model = new WaterQualityModel();
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = type,
+                Z = double.NaN
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessage = "Observation point 'A' has an undefined Z.";
+            Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedMessage)),
+                "There should be no validation message about Z is NaN for non-SinglePoint types.");
+
+            var expectedIlligalZMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
+                double.NaN);
+            Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedIlligalZMessage)),
+                "There should be no validation message about Z is NaN for non-SinglePoint types.");
+        }
+
+        [Test]
+        [Combinatorial]
+        public void SigmaModelWithObservationPointWithIllegalZIsInvalid(
+            [Values(1.0 + 1e-6, 12.34, 0.0 - 1e-6, -34.56)] double z)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
+                "Precondition: Model is set up as Sigma (unstructured) model.");
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = ObservationPointType.SinglePoint,
+                X = 5, Y = 5, Z = z
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            var expectedMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
+                z);
+            AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void SigmaModelWithObservationPointsWithlegalZIsValid(
+            [Values(ObservationPointType.SinglePoint,
+                ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
+                "Precondition: Model is set up as Sigma (unstructured) model.");
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = 1.0
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "B",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = 0.34
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "C",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = 0.0
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            Assert.AreEqual(0, report.Issues.Count());
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ZlayerModelWithObservationPointWithIllegalZIsInvalid(
+            [Values(12.34, -2.5 + 1e-6, -6.8 - 1e-6, -34.56)]double z)
+        {
+            // setup
+            const double topLevel = -2.5;
+            const double bottomLevel = -6.8;
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = topLevel,
+                Zbot = bottomLevel
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(LayerType.ZLayer, model.LayerType,
+                "Precondition: Model is set up as Z-layer (unstructured) model.");
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = ObservationPointType.SinglePoint,
+                X = 5, Y = 5, Z = z
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            var expectedMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [{1}, {2}].",
+                z, bottomLevel, topLevel);
+            AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ZLayerModelWithObservationPointWithlegalZIsValid(
+            [Values(ObservationPointType.SinglePoint,
+                ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = -2.5,
+                Zbot = -6.8
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(LayerType.ZLayer, model.LayerType,
+                "Precondition: Model is set up as Z-layer (unstructured) model.");
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = -2.5
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "B",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = -4.69
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "C",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = -6.8
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            Assert.AreEqual(0, report.Issues.Count());
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ModelWithObservationPointsInsideInactiveCellGivesWarning(
+            [Values(ObservationPointType.SinglePoint,
+                ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0,
+                ThirdCellIsInactive = true
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = type,
+                X = 5, Y = 5, Z = 0.5
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "B",
+                ObservationPointType = type,
+                X = 5, Y = 15, Z = 0.5
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "C",
+                ObservationPointType = type,
+                X = 15, Y = 5, Z = 0.5
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "D",
+                ObservationPointType = type,
+                X = 15, Y = 15, Z = 0.5
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessageB = "Observation point 'B' is inside an inactive cell.";
+            AssertExpectedValidationIssue(report, expectedMessageB,
+                i => Equals(i.Subject, model.ObservationPoints[1]) && i.Severity == ValidationSeverity.Warning);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ModelWithObservationPointOutsideGridIsInvalid(
+            [Values(-12.34, 0.0 - 1e-6, 5.5, 20 + 1e-6, 56.78)] double x,
+            [Values(-12.34, 0.0 - 1e-6, 19.5, 20 + 1e-6, 56.78)] double y,
+            [Values(ObservationPointType.SinglePoint,
+                ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        {
+            if (0.0 < x && x < 20.0 && 0.0 < y && y < 20.0)
+            {
+                Assert.Ignore("Test precondition: only perform test for points outside square grid.");
+            }
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                ObservationPointType = type,
+                X = x,
+                Y = y,
+                Z = type == ObservationPointType.SinglePoint ? 0.5 : double.NaN,
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            AssertExpectedValidationIssue(report,
+                "Observation point 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ModelWithObservationPointAtAmbiguousLocationIsInvalid(
+            [Values(0.0, 10.0, 20)] double x,
+            [Values(0.0, 10.0, 20)] double y,
+            [Values(ObservationPointType.SinglePoint,
+                ObservationPointType.Average,
+                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "T",
+                ObservationPointType = type,
+                X = x, Y = y, Z = 0.5
+            });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            AssertExpectedValidationIssue(report,
+                "Observation point 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+        }
+
+        #endregion
+
+        #region Loads
+
+        [Test]
+        public void ModelWithMissingProcDefFileIsInvalid()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsNotNull(model.SubstanceProcessLibrary);
+
+            // set path to process definition files
+            model.SubstanceProcessLibrary.ProcessDefinitionFilesPath = "thisPathDoesNotExist";
+
+            // add a substance
+            model.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance { Name = "substance" });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            Assert.IsTrue(report.AllErrors.Any(e => e.Subject is SubstanceProcessLibrary));
+        }
+
+        [Test]
+        public void ModelWithNonUniqueNamedLoadsIsInvalid()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.Loads.Add(new WaterQualityLoad { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
+            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.Loads.Add(new WaterQualityLoad { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
+            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessageA = "Load names should be unique and another load with name 'A' was already found.";
+            AssertExpectedValidationIssue(report, expectedMessageA,
+                i => Equals(i.Subject, model.Loads[2]) && i.Severity == ValidationSeverity.Error);
+            AssertExpectedValidationIssue(report, expectedMessageA,
+                i => Equals(i.Subject, model.Loads[4]) && i.Severity == ValidationSeverity.Error);
+
+            const string expectedMessageB = "Load names should be unique and another load with name 'B' was already found.";
+            AssertExpectedValidationIssue(report, expectedMessageB,
+                i => Equals(i.Subject, model.Loads[3]) && i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        public void ModelWithLoadsThatHaveNoDefinedZIsInvalid()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = double.NaN });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessage = "Load 'A' has an undefined Z.";
+            AssertExpectedValidationIssue(report, expectedMessage,
+                i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
+
+            var expectedIlligalZMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [0, 1].",
+                double.NaN);
+            Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedIlligalZMessage)),
+                "If Z is NaN, there should be no message about Z being out of a certain range.");
+        }
+
+        [Test]
+        [TestCase(1.0 + 1e-6)]
+        [TestCase(12.34)]
+        [TestCase(0.0 - 1e-6)]
+        [TestCase(-34.56)]
+        public void SigmaModelWithLoadWithIllegalZIsInvalid(double z)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
+                "Precondition: Model is set up as Sigma (unstructured) model.");
+
+            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = z });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            var expectedMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [0, 1].", z);
+            AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        public void SigmaModelWithLoadWithlegalZIsValid()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
+                "Precondition: Model is set up as Sigma (unstructured) model.");
+
+            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = 1.0 });
+            model.Loads.Add(new WaterQualityLoad { Name = "B", X = 5, Y = 5, Z = 0.34 });
+            model.Loads.Add(new WaterQualityLoad { Name = "C", X = 5, Y = 5, Z = 0.0 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            Assert.AreEqual(0, report.Issues.Count());
+        }
+
+        [Test]
+        [TestCase(12.34)]
+        [TestCase(-2.5 + 1e-6)]
+        [TestCase(-6.8 - 1e-6)]
+        [TestCase(-34.56)]
+        public void ZlayerModelWithLoadWithIllegalZIsInvalid(double z)
+        {
+            // setup
+            const double topLevel = -2.5;
+            const double bottomLevel = -6.8;
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = topLevel,
+                Zbot = bottomLevel
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(LayerType.ZLayer, model.LayerType,
+                "Precondition: Model is set up as Z-layer (unstructured) model.");
+
+            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = z });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            var expectedMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [{1}, {2}].",
+                z, bottomLevel, topLevel);
+            AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        public void ZLayerModelWithLoadWithlegalZIsValid()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = -2.5,
+                Zbot = -6.8
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.AreEqual(LayerType.ZLayer, model.LayerType,
+                "Precondition: Model is set up as Z-layer (unstructured) model.");
+
+            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = -2.5 });
+            model.Loads.Add(new WaterQualityLoad { Name = "B", X = 5, Y = 5, Z = -4.69 });
+            model.Loads.Add(new WaterQualityLoad { Name = "C", X = 5, Y = 5, Z = -6.8 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            Assert.AreEqual(0, report.Issues.Count());
+        }
+
+        [Test]
+        public void ModelWithLoadInsideInactiveCellGivesWarning()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0,
+                ThirdCellIsInactive = true
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+
+            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad { Name = "B", X = 5, Y = 15, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad { Name = "C", X = 15, Y = 5, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad { Name = "D", X = 15, Y = 15, Z = 0.5 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            const string expectedMessageB = "Load 'B' is inside an inactive cell.";
+            AssertExpectedValidationIssue(report, expectedMessageB,
+                i => Equals(i.Subject, model.Loads[1]) && i.Severity == ValidationSeverity.Warning);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ModelWithLoadOutsideGridIsInvalid(
+            [Values(-12.34, 0.0 - 1e-6, 5.5, 20 + 1e-6, 56.78)] double x,
+            [Values(-12.34, 0.0 - 1e-6, 19.5, 20 + 1e-6, 56.78)] double y)
+        {
+            if (0.0 < x && x < 20.0 && 0.0 < y && y < 20.0)
+            {
+                Assert.Ignore("Test precondition: only perform test for points outside square grid.");
+            }
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+
+            model.Loads.Add(new WaterQualityLoad { Name = "A", X = x, Y = y, Z = 0.5 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            AssertExpectedValidationIssue(report,
+                "Load 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
+        }
+
+        [Test]
+        [Combinatorial]
+        public void ModelWithLoadAtAmbiguousLocationIsInvalid(
+            [Values(0.0, 10.0, 20)] double x,
+            [Values(0.0, 10.0, 20)] double y)
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                LayerType = LayerType.ZLayer,
+                Ztop = 3.0,
+                Zbot = -3.0
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+
+            model.Loads.Add(new WaterQualityLoad { Name = "T", X = x, Y = y, Z = 0.5 });
+
+            // call
+            var report = new WaterQualityModelValidator().Validate(model);
+
+            // assert
+            AssertExpectedValidationIssue(report,
+                "Load 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
+        }
+
+        #endregion
+        
+        #region Restart
+        
+        [Test]
+        public void WaqModelForFractionCalculationWithValidDataAndRestartWithoutMetadataValidation()
+        {
+            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+
+            var validRestartFilePath =
+                TestHelper.GetTestFilePath("valid_fractions_state_without_metadata_WAQ.zip");
+            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+            waterQualityModel.UseRestart = true;
+
+            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
+        }
+
+        [Test]
+        public void WaqModelForFractionCalculationWithFailingOptionalRequirementRestartState()
+        {
+            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+
+            var validRestartFilePath =
+                TestHelper.GetTestFilePath("valid_fractions_state_nonmatching_active_WAQ.zip");
+            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+            waterQualityModel.UseRestart = true;
+
+            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
+
+            /*
+            Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
+                "Warnings should not be thrown");
+
+            Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
+                "Active substances not relevant to fractions calculations: shouldn't throw");
+             */
+        }
+
+        [Test]
+        public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleModelTypeValidation()
+        {
+            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+
+            var validRestartFilePath =
+                TestHelper.GetTestFilePath("invalid_modeltype_state_WAQ.zip");
+            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+            waterQualityModel.UseRestart = true;
+
+            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            ExpectValidationIssue(report, "Model type of 'test' is not compatible.");
+        }
+
+        [Test]
+        public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleVersionValidation()
+        {
+            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+
+            var validRestartFilePath =
+                TestHelper.GetTestFilePath("invalid_version_state_WAQ.zip");
+            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+            waterQualityModel.UseRestart = true;
+
+            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            ExpectValidationIssue(report, "Version 2 is not supported.");
+        }
+
+        #endregion 
+
+        private static void AssertExpectedValidationIssue(ValidationReport report, string text, Func<ValidationIssue, bool> filter)
+        {
+            Assert.That(report.GetAllIssuesRecursive().Where(filter).Any(i => i.Message.Contains(text)),
+                "Expected message:" + Environment.NewLine +
+                text + Environment.NewLine +
+                "Available validation messages:" + Environment.NewLine +
+                string.Join(Environment.NewLine,
+                    report.GetAllIssuesRecursive().Select(i => string.Format("{0}: {1}", i.Severity, i.Message))));
+        }
+
+        private static void ExpectValidationIssue(ValidationReport report, string text)
+        {
+            AssertExpectedValidationIssue(report, text, i => true);
+        }
+        private static WaterQualityModel CreateValidFractionsWaterQualityModel()
+        {
+            var waterQualityModel = new WaterQualityModel();
+            var mocks = new MockRepository();
+            var hydroData = mocks.Stub<IHydroData>();
+
+            mocks.ReplayAll();
+
+            TypeUtils.SetPrivatePropertyValue(waterQualityModel, TypeUtils.GetMemberName(() => waterQualityModel.HydroData), hydroData);
+
+            waterQualityModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance { Name = "substance" });
+
+            return waterQualityModel;
+        }
+    }
+}

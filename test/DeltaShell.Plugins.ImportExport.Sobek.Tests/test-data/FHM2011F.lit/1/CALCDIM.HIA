@@ -1,0 +1,33 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=5
+NumberOfLocations=3459
+T0=2012.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Location Descriptions]
+28=0
+29=0
+30=0
+31=0
+33=0
+35=0
+37=0
+38=0
+40=0
+41=0
+42=0
+44=juction kali item dengan sungai sentiong
+46=0
+47=PLUIT_RESERVOIR
+48=Melati_Reservoir
+90=junction ancol storage dengan sungai anc
+102=AREA UNKNOWN THEREFORE ESTIMATED
+144=5.00000e-001
+145=4.00000e+000
+ 

@@ -1,0 +1,7 @@
+event.*   \SBKSALT\fixed\default.bui
+evapor.*  \SBKSALT\fixed\3b\evapor.gem
+wind.*    \SBKSALT\fixed\default.wdc
+delwaq.*  \SBKSALT\fixed\default.qsc
+wq_wind.* \SBKSALT\fixed\default.qwc
+temp.*    \SBKSALT\fixed\default.tmp
+rnff.*    \SBKSALT\fixed\default.rnf

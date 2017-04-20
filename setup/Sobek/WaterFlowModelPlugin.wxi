@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?include ..\Scripts\WFM1DScripts.wxi?>
+  <Directory Id="DeltaShell.Plugins.WaterFlowModel" Name="DeltaShell.Plugins.WaterFlowModel">
+    <?define waterflowmodeldir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.WaterFlowModel\"?>
+    
+    <Component Id="WaterFlowModelPlugin" Guid="1F4E160F-A4C7-4871-B954-9F65D389E44B">
+      <File Id="flow1d_DeltaShell.Plugins.DelftModels.WaterFlowModel.dll" Source="$(var.waterflowmodeldir)DeltaShell.Plugins.DelftModels.WaterFlowModel.dll" />
+      <File Id="flow1d_DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui\DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.dll" />
+      
+      <File Id="flow1d_parameters.xml" Source="$(var.waterflowmodeldir)parameters.xml" />
+	    <File Id="flow1d_template.zip" Source="$(var.waterflowmodeldir)template.zip" />
+    </Component>
+
+    <Directory Id="flow1d_kernel_folder" Name="flow1d_kernel">
+       <?define f1d_kernel_lib_dir="$(var.waterflowmodeldir)flow1d_kernel\"?>
+       <Directory Id="f1d_x86" Name="x86">
+          <Component Id="f1d_x86_kernel" Guid="DC1EB6A3-6BD9-439B-86C6-4D05688CA567">
+             <?define f1d_x86_dir="$(var.f1d_kernel_lib_dir)x86\"?>
+             <File Id="f1d_x86_cf_dll.dll" Source="$(var.f1d_x86_dir)cf_dll.dll" />
+             <File Id="f1d_x86_flow1d2d.dll" Source="$(var.f1d_x86_dir)flow1d2d.dll" />
+             <File Id="f1d_x86_libifcoremd.dll" Source="$(var.f1d_x86_dir)libifcoremd.dll" />
+             <File Id="f1d_x86_libifcoremdd.dll" Source="$(var.f1d_x86_dir)libifcoremdd.dll" /> 
+             <File Id="f1d_x86_libifportmd.dll" Source="$(var.f1d_x86_dir)libifportmd.dll" />
+             <File Id="f1d_x86_libmmd.dll" Source="$(var.f1d_x86_dir)libmmd.dll" />
+             <File Id="f1d_x86_libmmdd.dll" Source="$(var.f1d_x86_dir)libmmdd.dll" />
+             <File Id="f1d_x86_msvcr100.dll" Source="$(var.f1d_x86_dir)msvcr100.dll" />
+             <File Id="f1d_x86_msvcr110.dll" Source="$(var.f1d_x86_dir)msvcr110.dll" />
+             <File Id="f1d_x86_msvcr120.dll" Source="$(var.f1d_x86_dir)msvcr120.dll" />
+             <File Id="f1d_x86_netcdf.dll" Source="$(var.f1d_x86_dir)netcdf.dll" />
+             <File Id="f1d_x86_flow_pthreadVCE2.dll" Source="$(var.f1d_x86_dir)pthreadVCE2.dll" />
+             <File Id="f1d_x86_svml_dispmd.dll" Source="$(var.f1d_x86_dir)svml_dispmd.dll" /> 
+             <File Id="f1d_x86_vcruntime140.dll" Source="$(var.f1d_x86_dir)vcruntime140.dll" /> 
+             <?undef f1d_x86_dir?>
+          </Component>
+       </Directory>
+
+       <Directory Id="f1d_x64" Name="x64">
+          <Component Id="f1d_x64_kernel" Guid="E69B7AD0-D107-4DAD-8B22-A6CE1AF831B3">
+             <?define f1d_x64_dir="$(var.f1d_kernel_lib_dir)x64\"?>
+             <File Id="f1d_x64_cf_dll.dll" Source="$(var.f1d_x64_dir)cf_dll.dll" />
+             <File Id="f1d_x64_flow1d2d.dll" Source="$(var.f1d_x64_dir)flow1d2d.dll" />
+             <File Id="f1d_x64_libifcoremd.dll" Source="$(var.f1d_x64_dir)libifcoremd.dll" />
+             <File Id="f1d_x64_libifcoremdd.dll" Source="$(var.f1d_x64_dir)libifcoremdd.dll" />
+             <File Id="f1d_x64_libifportmd.dll" Source="$(var.f1d_x64_dir)libifportmd.dll" />
+             <File Id="f1d_x64_libmmd.dll" Source="$(var.f1d_x64_dir)libmmd.dll" />
+             <File Id="f1d_x64_libmmdd.dll" Source="$(var.f1d_x64_dir)libmmdd.dll" />
+             <File Id="f1d_x64_msvcr100.dll" Source="$(var.f1d_x64_dir)msvcr100.dll" />
+             <File Id="f1d_x64_msvcr110.dll" Source="$(var.f1d_x64_dir)msvcr110.dll" />
+             <File Id="f1d_x64_msvcr120.dll" Source="$(var.f1d_x64_dir)msvcr120.dll" />
+             <File Id="f1d_x64_netcdf.dll" Source="$(var.f1d_x64_dir)netcdf.dll" />
+             <File Id="f1d_x64_flow_pthreadVC2.dll" Source="$(var.f1d_x64_dir)pthreadVC2.dll" />
+             <File Id="f1d_x64_svml_dispmd.dll" Source="$(var.f1d_x64_dir)svml_dispmd.dll" />
+             <File Id="f1d_x64_vcruntime140.dll" Source="$(var.f1d_x64_dir)vcruntime140.dll" />
+             <?undef f1d_x64_dir?>
+          </Component>
+       </Directory>
+       <?undef f1d_kernel_lib_dir?>
+    </Directory>
+    <?undef waterflowmodeldir?>
+  </Directory>
+</Include>

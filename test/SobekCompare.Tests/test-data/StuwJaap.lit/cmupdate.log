@@ -1,0 +1,72 @@
+CMUPDATE: update of the application \SOBEK216\StuwJaap.lit
+1 tasks need update:PLUVIUS1,
+
+Updating case: 2 - TestFreeFlowWeir
+
+Updating case: 5 - TestPump
+
+Updating case: 6 - TestBridge
+
+Updating case: 7 - TestCulvert
+
+Updating case: 9 - TestBridgeConstQ
+
+Updating case: 10 - TestCulvertConstantQ
+
+Updating case: 12 - TestCulvertDrowned
+
+Updating case: 13 - TestCulvertConstantQFree
+
+Updating case: 18 - TestDrownedFlowWeir
+
+Updating case: 22 - TestPillarBridgeConstH
+
+Updating case: 24 - TestPIDController
+
+Updating case: 20 - TestBridgeFree
+
+Updating case: 11 - TestPillarBridgeConstQ
+
+Updating case: 4 - TestFreeUniversalWeir
+
+Updating case: 8 - TestDrownedUniversalWeir
+
+Updating case: 16 - TestFreeAdvancedWeir
+
+Updating case: 17 - TestDrownedAdvancedWeir
+
+Updating case: 1 - TestSiphon
+
+Updating case: 3 - TestInvertedSiphon
+
+Updating case: 14 - TestCulvertCunette
+
+Updating case: 15 - TestCulvertCunetteFree
+
+Updating case: 23 - TestDrownedGeneralStructure
+
+Updating case: 21 - TestFreeGeneralStructure
+
+Updating case: 25 - TestDrownedOrifice
+
+Updating case: 26 - TestFreeOrifice
+
+Updating case: 27 - TestFreeRiverWeir
+
+Updating case: 28 - TestDrownedRiverWeir
+
+Updating case: 30 - TestCulvertValve
+
+Updating case: 19 - TestCompoundWithControl
+
+Updating case: 29 - TestCompoundNoControl
+
+Updating case: 31 - TestCulvertTooLow
+
+ERROR: 98, The number of files in casedesc.cmt and descprot.cmt is not equal 
+\SOBEK216\STUWJAAP.LIT\31\c
+asedesc.cmt PLUVIUS1
+Erased files: 
+    none
+New files in the application :
+    none

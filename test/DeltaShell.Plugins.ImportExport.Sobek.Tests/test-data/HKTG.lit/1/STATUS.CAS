@@ -1,0 +1,27 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=SOBEK_river
+ImportDate=18-01-2011 09:41:03
+SuftableHasRun=-1
+Case Name=HvP  PID Cntrl  River Weir met Lateral
+QuantityResultsPresent=0
+UserId=ir. Stef Hummel
+UserName=hummel
+ComputerName=l00137
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\rsegsub.his=-1
+..\work\struc.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\controll.his=-1
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=-1
+..\work\qlat.his=-1

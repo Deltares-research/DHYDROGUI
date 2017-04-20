@@ -1,0 +1,31 @@
+LSM 1.0 = case uit LSM0_9d.lit, case LSM 0.9.25 versie Geert 17 Sept 2012 - jaarsom 2003 WQ-RekFac'
+
+LSM 1.01
+- initiele waterstanden NDB enkele vergeten takken gezet op -0.01
+- fixed calc. points VlaardingerDriesluizen verwijderd (korte takjes!)
+- Nodes.dat well levels / surface levels DO_CONN**** enkele punten aangepast
+- Nodes.dat surface levels N_NDB** 4 m
+
+- TODO: profile.dat records met rs 0 of ontbrekende rs info aanpassen voor streetlevel in SideView
+
+
+LSM 1.0 met NHI 3.0 G33-1996-2006 lateralenen correcties (initial, Nodes)  = som beschreven in achtergronddocument LSM 14 Nov 2012
+
+LSM 1.0 (NHI 3.0 G33-1996-2006) correcties 16Nov2012
+- boundlat.dat Den Helder compleet
+- Tacozijl inlaat uit IJsselmeer 
+- fixed calc. pnts VlaardingerDrieasluizen verwijderd; hiermee alles uit 1.01 case overgenomen (Nodes.dat en Initial.dat reeds eerder gedaan)
+- lateral Belgie Onl_DM5099 gecorrigeerd: vast op -5 m3/s gezet.
+- enkele rs 0 vervangen door hogere getallen in Profile.dat
+- sturing inlaat ZOF vanuit Markermeer via Blocq van Kuffeler naar Veluwemeer - variabel setpoint ingevuld voor 1967, 1976, 1878, 2003.
+- booster gemaal bij Groningen 2.5 m3/s naar Damsterdiep - Fivelingo toegevoegd (1.0 laag toeren, 2.5 hoog toeren; in model zat slechts 0.25 m3/s)
+- PMTR lateralen gecorrigeerd (DM/MZ ids zijn 6009 - 684 ipv 6006 - 684)
+= PMTR en PMGM debiet op bovenrand continue 0.30 m3/s en lateral in Maas -0.60 m3/s ter correctie (versnelling?)
+- sturing Maas-Julianakanaal
+- extra resistance uit RE overgenomen (vooral effect bij hoge afvoeren?)
+- dus ook extra rekenpunten, ander grid -> effect BIVAS etc.alleen op hoofdrivieren
+
+pm
+- check RenW knijpen
+- check Dommel knijpen
+- Delwaq opnieuw genereren

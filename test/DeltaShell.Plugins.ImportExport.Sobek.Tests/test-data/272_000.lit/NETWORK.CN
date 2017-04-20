@@ -1,0 +1,41 @@
+CN_1.1
+FLBO id 'T1_h1' ci 'T1_h1' flbo
+FLBO id 'T2_h1' ci 'T2_h1' flbo
+FLBO id 'T3_h1' ci 'T3_h1' flbo
+FLBO id 'T4_h1' ci 'T4_h1' flbo
+FLBO id 'T5_h1' ci 'T5_h1' flbo
+FLBO id 'T6_h1' ci 'T6_h1' flbo
+FLBO id 'T7_h1' ci 'T7_h1' flbo
+FLBO id 'T7_h6' ci 'T7_h6' flbo
+FLDI id 'l_T1_q1a' ci '1' fldi 
+FLDI id 'l_11' ci '1' fldi 
+FLDI id 'l_T1_q1b' ci '1' fldi 
+FLDI id 'l_T2_q1b' ci '2' fldi 
+FLDI id 'l_T2_q1a' ci '2' fldi 
+FLDI id 'l_21' ci '2' fldi 
+FLDI id 'l_T3_q1a' ci '3' fldi 
+FLDI id 'l_31' ci '3' fldi 
+FLDI id 'l_T3_q1b' ci '3' fldi 
+FLDI id 'l_T4_q1b' ci '4' fldi 
+FLDI id 'l_T4_q1a' ci '4' fldi 
+FLDI id 'l_12' ci '4' fldi 
+FLDI id 'l_T5_q1a' ci '5' fldi 
+FLDI id 'l_51' ci '5' fldi 
+FLDI id 'l_T5_q1b' ci '5' fldi 
+FLDI id 'l_T6_q1b' ci '6' fldi 
+FLDI id 'l_T6_q1a' ci '6' fldi 
+FLDI id 'l_20' ci '6' fldi 
+FLDI id 'l_T7_q1' ci '7' fldi 
+FLDI id 'l_15' ci '7' fldi 
+FLDI id 'l_T7_q2' ci '8' fldi 
+FLDI id 'l_18' ci '8' fldi 
+FLDI id 'l_T7_q3' ci '9' fldi 
+FLDI id 'l_19' ci '9' fldi 
+FLDI id 'l_T7_q4' ci '10' fldi 
+FLDI id 'l_22' ci '10' fldi 
+FLBR id 'T7_Qlat1' nm 'T7_Qlat1' ci '10' lc 150 flbr 
+FLDI id 'l_26' ci '10' fldi 
+FLBR id 'T7_Qlat2' nm 'T7_Qlat2' ci '10' lc 200 flbr 
+FLDI id 'l_1' ci '10' fldi 
+FLDI id 'l_T7_q5' ci '11' fldi 
+FLDI id 'l_23' ci '11' fldi 

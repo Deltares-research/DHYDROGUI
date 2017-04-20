@@ -1,0 +1,21 @@
+ Froude numbers higher than 0.8. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Branch name
+  - Coordinate
+  - Froude number gridpoint ( *** = supercritical flow )
+  - Froude number next cel ( *** = supercritical flow )
+  
+ Time step =     1 Iter. step =   2
+    RUHR                 X=   3145.00 Froude grdpnt=   0.66594    Froude next cel=   0.82652
+    RUHR                 X=   3679.00 Froude grdpnt=   0.97999    Froude next cel=   0.97092
+    RUHR                 X=   4214.00 Froude grdpnt=   0.96260    Froude next cel=   0.94620
+    RUHR                 X=   4749.00 Froude grdpnt=   0.92743    Froude next cel=   0.83555
+  
+ Time step =     5 Iter. step =   1
+    RUHR                 X=   5283.00 Froude grdpnt=   0.75557    Froude next cel=   0.87668
+  
+ Time step =     6 Iter. step =   1
+    RUHR                 X=   5283.00 Froude grdpnt=   1.06872*** Froude next cel=   1.11127***
+    RUHR                 X=   5818.00 Froude grdpnt=   1.16414*** Froude next cel=   0.65146
+  

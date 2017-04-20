@@ -1,0 +1,6 @@
+STRU id 'C_01##S_01' dd '01' ca 1 0 0 0 cj '01_ 1' '-1' '-1' '-1' cm 1 mo 'C_01' stru
+STRU id 'C_01##S_02' dd '02' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_01' stru
+STRU id 'C_02##S_03' dd '03' ca 1 0 0 0 cj '02_ 1' '-1' '-1' '-1' cm 1 mo 'C_02' stru
+STRU id 'C_02##S_04' dd '04' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_02' stru
+STRU id 'C_03##S_05' dd '05' ca 1 0 0 0 cj '03_ 1' '-1' '-1' '-1' cm 1 mo 'C_03' stru
+STRU id 'C_03##S_06' dd '06' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_03' stru

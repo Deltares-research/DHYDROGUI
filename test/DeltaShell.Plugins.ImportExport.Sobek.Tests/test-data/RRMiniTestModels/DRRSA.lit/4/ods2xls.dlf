@@ -1,0 +1,20 @@
+DLF1.0
+[Rainfall Runoff Module: Simulation Results]
+FILE "@balansdt.his"     LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Balances per Timestep
+FILE "@3blinks.his"      LAYER " " TYPE branch VAR 1 HISLOC 2 LINKSEP ""    = Flows on Links
+FILE "@pvstordt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Paved Nodes
+FILE "@bndflodt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Boundary Nodes
+FILE "@bndfltot.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Daily Totals towards Boundary
+FILE "@wwtpdt.his"      LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = WWTP Flows
+FILE "@rrbalans.his"    LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = System Balance per Timestep
+[Rainfall Runoff Module: Dimensions]
+FILE "@3bareas.his"      LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Node Areas
+[Flow Module: Results]
+FILE "@calcpnt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Results at Nodes
+FILE "@reachseg.his"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Results at Reach Segments
+FILE "@qlat.his"        LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Lateral Flows
+FILE "@qwb.his"         LAYER " " TYPE node VAR 1 HISLOC 2                 = Water Balance
+FILE "@flowanal.his"    LAYER " " TYPE reachgridvirtual VAR 6 HISLOC 2     = Simulation Info at the Reach Segments
+[Flow Module: Dimensions]
+FILE "@calcdim.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Nodes
+FILE "@reachdim.his"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Reach Segments

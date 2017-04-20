@@ -1,0 +1,103 @@
+8 'Case: ' 'Case: '
+; Sobek Advanced Version 2.12.001
+; InstallID Sobek212
+;
+SUFHYD 'C:\Sobek212\Programs\vervng32.exe C:\Sobek212\Programs\ini\vv_imp.ini+C:\Sobek212\Programs\import.exe C:\Sobek212\Programs\import.ini'
+CASEDEF1 'C:\Sobek212\Programs\vervng32.exe C:\Sobek212\Programs\ini\vv_schem.ini +C:\Sobek212\Programs\schemat.exe C:\Sobek212\Programs\schemat.ini'
+CONFIG1 'C:\Sobek212\Programs\settings.exe C:\Sobek212\Programs\settings.ini'
+EVENTS 'C:\Sobek212\Programs\vervng32.exe casedesc.cmt PLUVIUS1 C:\Sobek212\Programs\meteo.ini meteo.ini ..\descprot.cmt +C:\Sobek212\Programs\meteo.exe meteo.ini'
+PLUVIUS1 'C:\Sobek212\Programs\vervng32.exe casedesc.cmt PLUVIUS1 C:\Sobek212\Programs\simulate.ini simulate.ini ..\descprot.cmt +C:\Sobek212\Programs\simulate simulate.ini'
+MAPPER1 'C:\Sobek212\Programs\vervng32.exe C:\Sobek212\Programs\ini\vv_map.ini +C:\Sobek212\Programs\prepmapp.exe prepmapp.ini'
+VIEW1 'C:\Sobek212\Programs\vervng32.exe casedesc.cmt VIEW1 @tables.lst tables.lst ..\descprot.cmt +C:\Sobek212\Programs\vervng32.exe casedesc.cmt VIEW1 C:\Sobek212\Programs\suftable.fnm suftable.fnm ..\descprot.cmt +C:\Sobek212\Programs\suftable.exe suftable.fnm +C:\Sobek212\Programs\showlist.exe C:\Sobek212\Programs\showtab.ini tables.lst'
+VIEW2 'C:\Sobek212\Programs\vervng32.exe casedesc.cmt VIEW2 @ods2xls.dlf ods2xls.dlf ..\descprot.cmt +C:\Sobek212\Programs\showlist.exe C:\Sobek212\Programs\showhis.ini ODS2XLS.dlf'
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Projectie van blokken op scherm
+;
+0 0 100 100
+SUFHYD '+ + +Import Network' '+ + +Importeer netwerk' 41 5 59 19
+CASEDEF1  '+ + +Schematisation' '+ + +Schematisatie'  41 27 59 41
+CONFIG1  '+ + +Settings' '+ + +Instellingen'  8 27 26 41
+EVENTS  '+ + +Meteorological Data' '+ +Meteorologische +gegevens'  74 27 92 41
+PLUVIUS1  '+ + +Simulation' '+ + +Simulatie'  41 49 59 63
+MAPPER1  '+ + +Results in Maps' '+ + +Resultaten in kaarten'  8 71 26 85
+VIEW1  '+ + +Results in Tables' '+ + +Resultaten in tabellen'  74 71 92 85
+VIEW2  '+ + +Results in Charts' '+ + +Resultaten in grafieken'  41 71 59 85
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;afhankelijkheid van blokken
+;
+SUFHYD 1  CASEDEF1
+CASEDEF1 1 PLUVIUS1
+CONFIG1 1 CASEDEF1
+EVENTS 1 CASEDEF1
+PLUVIUS1 3 MAPPER1 VIEW1 VIEW2
+MAPPER1 0
+VIEW1 0
+VIEW2 0
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; definitie van pijlen
+;
+SUFHYD
+2  50  19  50  27
+CASEDEF1
+2  50  41  50  49
+CONFIG1
+2  26  34  41  34
+EVENTS
+2  74  34  59  34
+PLUVIUS1
+3  41  58  17  58  17  71
+3  59  58  83  58  83  71
+2  50  63  50  71
+MAPPER1
+VIEW1
+VIEW2
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; resultaten taakblok
+;
+SUFHYD    'C:\Sobek212\Programs\Showlist.exe C:\Sobek212\Programs\Showimp.ini C:\Sobek212\Programs\import.lst'
+CASEDEF1  ' '
+CONFIG1   ' '
+EVENTS    ' '
+PLUVIUS1  'C:\Sobek212\Programs\Showlist.exe C:\Sobek212\Programs\Showlog.ini C:\Sobek212\Programs\Logfiles.lst'
+MAPPER1   ' '
+VIEW1     ' '
+VIEW2     ' '
+;
+; definitie van de push-buttons op de blokjes
+;                #998 = vraagteken
+SUFHYD    0
+CASEDEF1  0
+CONFIG1   0
+EVENTS    0
+PLUVIUS1  0
+MAPPER1   0
+VIEW1     0
+VIEW2     0
+;
+;
+; definitie van de popup-menus per blokje (rechtermuisknop)
+;
+SUFHYD    3
+  '&Help' '&Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+  '-'   '-'  '-'
+  '&Import Messages' 'Taak &Informatie' 'C:\Sobek212\Programs\Showlist.exe C:\Sobek212\Programs\Showimp.ini C:\Sobek212\Programs\import.lst'
+CASEDEF1  1
+  '&Help' '&Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+CONFIG1   1
+  '&Help' '&Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+EVENTS    1
+  '&Help' '&Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+PLUVIUS1  3
+  '&Help' '&Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+  '-'   '-'  '-'
+  '&Simulation Messages' 'Taak &Informatie' 'C:\Sobek212\Programs\Showlist.exe C:\Sobek212\Programs\Showlog.ini C:\Sobek212\Programs\Logfiles.lst'
+MAPPER1   1
+  'Help' 'Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+VIEW1     1
+  'Help' 'Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+VIEW2     1
+  'Help' 'Hulp' 'hh.exe C:\Sobek212\Programs\help\sobek.chm '
+

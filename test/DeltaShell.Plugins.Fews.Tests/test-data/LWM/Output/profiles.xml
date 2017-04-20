@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wldelft.nl/fews/PI" xsi:schemaLocation="http://www.wldelft.nl/fews/PI http://fews.wldelft.nl/schemas/version1.0/pi-schemas/pi_profiles.xsd" version="1.2">
+    <geoDatum>Ordnance Survey Great Britain 1936</geoDatum>
+    <timeZone>0.0</timeZone>
+    <profile>
+        <locationId>route_1_grid_points</locationId>
+        <parameterId>water_level</parameterId>
+        <timeStep unit="minute" multiplier="15"/>
+		<startDate date="2012-03-01" time="15:00:00"/>
+		<endDate date="2012-03-02" time="15:00:00"/>
+    </profile>
+    <profile>
+        <locationId>route_1_reach_segments</locationId>
+        <parameterId>water_discharge</parameterId>
+        <timeStep unit="minute" multiplier="15"/>
+		<startDate date="2012-03-01" time="15:00:00"/>
+		<endDate date="2012-03-02" time="15:00:00"/>
+    </profile>
+</Profiles>

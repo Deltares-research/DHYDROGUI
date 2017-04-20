@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define nghs_io_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\"?>
+  <Directory Id='NGHS.IO' Name='DeltaShell.NGHS.IO'>
+    <!-- Same as SharpMapGisPlugin DeltaShell.Plugins.SharpMapGis to control the sequence of loading -->
+    <Component Id='NGHS.IO' Guid="BB9754C7-4C87-4CF7-9E48-38156880994A">
+     <File Id="DeltaShell.NGHS.IO.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.dll' />
+    </Component>
+
+    <Directory Id="nghsio_kernelsdir" Name="Kernels">
+      <?define kernels_lib_dir="$(var.nghs_io_plugin_bin)\Kernels\"?>
+      
+      <Directory Id="nghsiox86" Name="x86">
+        <Component Id="nghsx86_ugriddll" Guid="5E420568-D8F4-46CE-9B87-C54C9EE0B1A5">
+          <File Id="nghsx86_io_netcdf.dll" Source="$(var.kernels_lib_dir)x86\io_netcdf.dll" />
+          <File Id="nghsx86_libifcoremd.dll" Source="$(var.kernels_lib_dir)x86\libifcoremd.dll" />
+          <File Id="nghsx86_libmmd.dll" Source="$(var.kernels_lib_dir)x86\libmmd.dll" />
+          <File Id="nghsx86_msvcr110.dll" Source="$(var.kernels_lib_dir)x86\msvcr110.dll" />
+          <File Id="nghsx86_msvcr120.dll" Source="$(var.kernels_lib_dir)x86\msvcr120.dll" />
+          <File Id="nghsx86_netcdf.dll" Source="$(var.kernels_lib_dir)x86\netcdf.dll" />
+        </Component>
+      </Directory>
+
+      <Directory Id="nghsiox64" Name="x64">
+        <Component Id="nghsx64_ugriddll" Guid="AE90CEF5-0C5D-4584-9C7C-660DC1444842">
+          <File Id="nghsx64_io_netcdf.dll" Source="$(var.kernels_lib_dir)x64\io_netcdf.dll" />
+          <File Id="nghsx64_libifcoremd.dll" Source="$(var.kernels_lib_dir)x64\libifcoremd.dll" />
+          <File Id="nghsx64_libmmd.dll" Source="$(var.kernels_lib_dir)x64\libmmd.dll" />
+          <File Id="nghsx64_msvcr110.dll" Source="$(var.kernels_lib_dir)x64\msvcr110.dll" />
+          <File Id="nghsx64_msvcr120.dll" Source="$(var.kernels_lib_dir)x64\msvcr120.dll" />
+          <File Id="nghsx64_netcdf.dll" Source="$(var.kernels_lib_dir)x64\netcdf.dll" />
+        </Component>
+      </Directory>
+      <?undef kernels_lib_dir ?>
+    </Directory>
+  </Directory>
+  <?undef nghs_io_plugin_bin ?>
+</Include>

@@ -1,0 +1,190 @@
+ Last residues before crash or continuation without
+ convergence. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Maximum waterlevel residue with corresponding position
+  - Maximum discharge residue with corresponding position
+  
+ Time step =     1 Nr iter. = 500
+    Getijms1                       X=   9894.00 DH=  -0.00320
+    Getijms4                       X=  12564.00 DQ=    -3.414
+ Time step =     1 Nr iter. = 499
+    Getijms1                       X=   9894.00 DH=  -0.00323
+    Getijms4                       X=  12564.00 DQ=    -3.420
+ Time step =     1 Nr iter. = 498
+    Getijms1                       X=   9894.00 DH=  -0.00327
+    Getijms4                       X=  12564.00 DQ=    -3.460
+ Time step =     1 Nr iter. = 497
+    Getijms1                       X=   9894.00 DH=  -0.00331
+    Getijms4                       X=  12564.00 DQ=    -3.502
+ Time step =     1 Nr iter. = 496
+    Getijms1                       X=   9894.00 DH=  -0.00335
+    Getijms4                       X=  12564.00 DQ=    -3.544
+ Time step =     1 Nr iter. = 495
+    Getijms1                       X=   9894.00 DH=  -0.00339
+    Getijms4                       X=  12564.00 DQ=    -3.584
+ Time step =     1 Nr iter. = 494
+    Getijms1                       X=   9894.00 DH=  -0.00344
+    Getijms4                       X=  12564.00 DQ=    -3.626
+ Time step =     1 Nr iter. = 493
+    Getijms1                       X=   9894.00 DH=  -0.00348
+    Getijms4                       X=  12564.00 DQ=    -3.667
+ Time step =     1 Nr iter. = 492
+    Getijms1                       X=   9894.00 DH=  -0.00352
+    Getijms4                       X=  12564.00 DQ=    -3.709
+ Time step =     1 Nr iter. = 491
+    Getijms1                       X=   9894.00 DH=  -0.00356
+    Getijms4                       X=  12564.00 DQ=    -3.751
+ Time step =     1 Nr iter. = 490
+    Getijms1                       X=   9894.00 DH=  -0.00360
+    Getijms4                       X=  12564.00 DQ=    -3.794
+ Time step =     1 Nr iter. = 489
+    Getijms1                       X=   9894.00 DH=  -0.00364
+    Getijms4                       X=  12564.00 DQ=    -3.837
+ Time step =     1 Nr iter. = 488
+    Getijms1                       X=   9894.00 DH=  -0.00369
+    Getijms4                       X=  12564.00 DQ=    -3.880
+ Time step =     1 Nr iter. = 487
+    Getijms1                       X=   9894.00 DH=  -0.00373
+    Getijms4                       X=  12564.00 DQ=    -3.924
+ Time step =     1 Nr iter. = 486
+    Getijms1                       X=   9894.00 DH=  -0.00377
+    Getijms4                       X=  12564.00 DQ=    -3.967
+ Time step =     1 Nr iter. = 485
+    Getijms1                       X=   9894.00 DH=  -0.00382
+    Getijms4                       X=  12564.00 DQ=    -4.012
+ Time step =     1 Nr iter. = 484
+    Getijms1                       X=   9894.00 DH=  -0.00386
+    Getijms4                       X=  12564.00 DQ=    -4.056
+ Time step =     1 Nr iter. = 483
+    Getijms1                       X=   9894.00 DH=  -0.00390
+    Getijms4                       X=  12564.00 DQ=    -4.101
+ Time step =     1 Nr iter. = 482
+    Getijms1                       X=   9894.00 DH=  -0.00395
+    Getijms4                       X=  12564.00 DQ=    -4.146
+ Time step =     1 Nr iter. = 481
+    Getijms1                       X=   9894.00 DH=  -0.00399
+    Getijms4                       X=  12564.00 DQ=    -4.193
+  
+ Time step =     2 Nr iter. = 500
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.026
+ Time step =     2 Nr iter. = 499
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.026
+ Time step =     2 Nr iter. = 498
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.027
+ Time step =     2 Nr iter. = 497
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  11471.00 DQ=    -0.027
+ Time step =     2 Nr iter. = 496
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.027
+ Time step =     2 Nr iter. = 495
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.028
+ Time step =     2 Nr iter. = 494
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.028
+ Time step =     2 Nr iter. = 493
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.028
+ Time step =     2 Nr iter. = 492
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.029
+ Time step =     2 Nr iter. = 491
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12564.00 DQ=    -0.029
+ Time step =     2 Nr iter. = 490
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  10925.00 DQ=    -0.029
+ Time step =     2 Nr iter. = 489
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12564.00 DQ=    -0.030
+ Time step =     2 Nr iter. = 488
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12564.00 DQ=    -0.030
+ Time step =     2 Nr iter. = 487
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.031
+ Time step =     2 Nr iter. = 486
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.031
+ Time step =     2 Nr iter. = 485
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12564.00 DQ=    -0.031
+ Time step =     2 Nr iter. = 484
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.032
+ Time step =     2 Nr iter. = 483
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12564.00 DQ=    -0.032
+ Time step =     2 Nr iter. = 482
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.032
+ Time step =     2 Nr iter. = 481
+    Getijms2                       X=   9455.00 DH=  -0.00003
+    Getijms4                       X=  12017.00 DQ=    -0.033
+  
+ Time step =     3 Nr iter. = 500
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.019
+ Time step =     3 Nr iter. = 499
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.020
+ Time step =     3 Nr iter. = 498
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  10925.00 DQ=    -0.020
+ Time step =     3 Nr iter. = 497
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  11471.00 DQ=    -0.020
+ Time step =     3 Nr iter. = 496
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.020
+ Time step =     3 Nr iter. = 495
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=   9286.00 DQ=    -0.020
+ Time step =     3 Nr iter. = 494
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 493
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  11471.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 492
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  11471.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 491
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 490
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 489
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  10925.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 488
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  11471.00 DQ=    -0.021
+ Time step =     3 Nr iter. = 487
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.022
+ Time step =     3 Nr iter. = 486
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  10925.00 DQ=    -0.022
+ Time step =     3 Nr iter. = 485
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.022
+ Time step =     3 Nr iter. = 484
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  10925.00 DQ=    -0.022
+ Time step =     3 Nr iter. = 483
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12564.00 DQ=    -0.023
+ Time step =     3 Nr iter. = 482
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.023
+ Time step =     3 Nr iter. = 481
+    Getijms2                       X=   9455.00 DH=  -0.00002
+    Getijms4                       X=  12017.00 DQ=    -0.023
+  

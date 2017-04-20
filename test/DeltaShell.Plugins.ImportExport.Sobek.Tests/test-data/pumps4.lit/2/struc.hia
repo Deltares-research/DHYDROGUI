@@ -1,0 +1,18 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=5
+NumberOfLocations=2
+T0=2009.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+3=Waterlevel down (m AD)
+5=Gate lower edge level (m AD)
+ 
+[Long Locations]
+ 

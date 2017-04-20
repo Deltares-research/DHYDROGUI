@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define scripts_plugin_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Toolbox\Scripts\"?>
+  <Directory Id='WaterQualityScripts_DeltaShell.Plugins.Toolbox' Name='DeltaShell.Plugins.Toolbox'>
+    <Directory Id='WaterQualityScripts' Name='Scripts'>
+      <Directory Id="waq_scripts_examples" Name="Examples">
+        <?define waq_scripts_examples_dir="$(var.scripts_plugin_dir)Examples\"?>
+        <Component Id="WaterQuality_scripts_examples_files" Guid="B67B5512-C777-4180-ABB7-0A7F4435F801">
+          <File Id="waq_scripts_example_WaterQualityModel2D3D.py" Source="$(var.waq_scripts_examples_dir)WaterQualityModel2D3D.py" />
+        </Component>
+        <?undef waq_scripts_examples_dir ?>
+      </Directory>
+
+      <Directory Id="WaterQuality_scripts_libraries" Name="Libraries">
+        <?define waq_scripts_libraries_dir="$(var.scripts_plugin_dir)Libraries\"?>
+        <Component Id="WaterQuality_scripts_libraries_files" Guid="E2EA1560-81C4-4714-84C6-A0120C603FCC">
+          <File Id="waq_scripts_libraries_file_WaterQualityModel2D3DFunctions.py" Source="$(var.waq_scripts_libraries_dir)WaterQualityModel2D3DFunctions.py" />
+        </Component>
+        <?undef waq_scripts_libraries_dir ?>
+      </Directory>
+    </Directory>
+  </Directory>
+  <?undef scripts_plugin_dir ?>
+</Include>

@@ -1,0 +1,522 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeltaShell.Plugins.DelftModels.WaterFlowModel</RootNamespace>
+    <AssemblyName>DeltaShell.Plugins.DelftModels.WaterFlowModel</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <DontImportPostSharp>True</DontImportPostSharp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591</NoWarn>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BasicModelInterface">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\BasicModelInterface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37046, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LumenWorks.Framework.IO">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\LumenWorks.Framework.IO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ProtoBufRemote">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataObjects\TemperatureBoundaryConditionType.cs" />
+    <Compile Include="DispersionFormulationType.cs" />
+    <Compile Include="Commands\InitialConditionsCommand.cs" />
+    <Compile Include="DataObjects\SaltBoundaryConditionType.cs" />
+    <Compile Include="DataObjects\WaterFlowModel1DLateralDataType.cs" />
+    <Compile Include="EngineParameter.cs" />
+    <Compile Include="EngineParameters.cs" />
+    <Compile Include="FiniteVolumeDiscretizationProvider.cs" />
+    <Compile Include="FiniteVolumeDiscretizationType.cs" />
+    <Compile Include="Flow1DBasicModelInterface.cs" />
+    <Compile Include="ImportExport\BoundaryFileReader.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
+    <Compile Include="ImportExport\BoundaryFileWriterHelper.cs" />
+    <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
+    <Compile Include="ImportExport\CrossSectionFileReader.cs" />
+    <Compile Include="ImportExport\CrossSectionDefinitionFileWriter.cs" />
+    <Compile Include="ImportExport\Flow1DParameterGenerator.cs" />
+    <Compile Include="ImportExport\ModelDefinitionFileWriter.cs" />
+    <Compile Include="ImportExport\ModelDefinitionsRegion.cs" />
+    <Compile Include="ImportExport\FlowTimeSeriesCsvFileImporter.cs" />
+    <Compile Include="ImportExport\ModelFileNames.cs" />
+    <Compile Include="ImportExport\Roughness\RoughessCsvBranchData.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessBranchDataCsvReader.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessBranchDataMerger.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessCsvRecord.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessCsvSettings.cs" />
+    <Compile Include="ImportExport\Roughness\CalibratedRoughnessImporter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessDataFileReader.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessDataFileWriter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessDataRegion.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessFromCsvFileExporter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessFromCsvToSectionImporter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessFunctionCsvConverter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessNegativeIsPositiveCsvConverter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessSectionToDataTableConverter.cs" />
+    <Compile Include="ImportExport\Roughness\RoughnessTypeCsvConverter.cs" />
+    <Compile Include="ImportExport\SobekToFMExporter.cs" />
+    <Compile Include="ImportExport\StructureFileReader.cs" />
+    <Compile Include="ImportExport\StructureFileWriter.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DExporter.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DFileImporter.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DMorphologyFile.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DOutputCoverageMappings.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DOutputFileConstants.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DOutputFileMetaData.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DOutputFileReader.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DSalinityIniWriter.cs" />
+    <Compile Include="PhysicalParameters\DensityType.cs" />
+    <Compile Include="PhysicalParameters\MeteoFunction.cs" />
+    <Compile Include="PhysicalParameters\TemperatureModelType.cs" />
+    <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Validation\WaterFlowModel1DSalinityValidator.cs" />
+    <Compile Include="Validation\WaterFlowModel1DTemperatureValidator.cs" />
+    <Compile Include="Validation\WaterFlowModel1DOutputFileValidator.cs" />
+    <Compile Include="ImportExport\WaterFlowModelFileReader.cs" />
+    <Compile Include="ImportExport\WaterFlowModelFileWriter.cs" />
+    <Compile Include="InitialConditionsConverter.cs" />
+    <Compile Include="InitialConditionsType.cs" />
+    <Compile Include="ModelApiControllers\CrossSectionModelApiController.cs" />
+    <Compile Include="ModelApiControllers\IRemoteModelApiWrapper.cs" />
+    <Compile Include="ModelApiControllers\ModelApi\Flow1DApiDll.cs" />
+    <Compile Include="ModelApiControllers\ModelApi\IModelApi.cs" />
+    <Compile Include="ModelApiControllers\ModelApi\ModelApi.cs" />
+    <Compile Include="ModelApiControllers\ModelApi\ModelApiParameter.cs" />
+    <Compile Include="ModelApiControllers\ModelApi\ModelApiParameters.cs" />
+    <Compile Include="ModelApiControllers\ModelApi\WaterFlowModelParametersReader.cs" />
+    <Compile Include="ModelApiControllers\NetworkModelApiController.cs" />
+    <Compile Include="ModelApiControllers\LocalModelApiWrapper.cs" />
+    <Compile Include="ModelApiControllers\WaterFlowModelApiFactory.cs" />
+    <Compile Include="ModelApiControllers\ModelApiParameterTypeConverter.cs" />
+    <Compile Include="Roughness\ReverseRoughnessSection.cs" />
+    <Compile Include="Roughness\RoughnessFunction.cs" />
+    <Compile Include="Roughness\RoughnessNetworkCoverage.cs" />
+    <Compile Include="Roughness\RoughnessNetworkCoverage31LegacyLoader.cs" />
+    <Compile Include="Roughness\RoughnessSection.cs" />
+    <Compile Include="Roughness\RoughnessSectionChangeBranchFunction.cs" />
+    <Compile Include="Roughness\RoughnessSectionExtensions.cs" />
+    <Compile Include="Validation\WaterFlowModel1DDiscretizationValidator.cs" />
+    <Compile Include="Validation\WaterFlowModel1DHydroNetworkValidator.cs" />
+    <Compile Include="Validation\WaterFlowModel1DModelDataValidator.cs" />
+    <Compile Include="Validation\WaterFlowModel1DModelMergeHelper.cs" />
+    <Compile Include="Validation\WaterFlowModel1DModelMergeValidator.cs" />
+    <Compile Include="Validation\WaterFlowModel1DModelValidator.cs" />
+    <Compile Include="ImportExport\FlowDataCsvImporter.cs" />
+    <Compile Include="DataObjects\WaterFlowModel1DBoundaryNodeData.cs" />
+    <Compile Include="DataObjects\WaterFlowModel1DBoundaryNodeDataType.cs" />
+    <Compile Include="FlowParameter.cs" />
+    <Compile Include="DataObjects\WaterFlowModel1DLateralSourceData.cs" />
+    <Compile Include="WaterFlowModel1D30LegacyLoader.cs" />
+    <Compile Include="WaterFlowModel1D350LegacyLoader.cs" />
+    <Compile Include="WaterFlowModel1DDataAccessListener.cs" />
+    <Compile Include="WaterFlowModel1DDataSet.cs" />
+    <Compile Include="WaterFlowModel1DGridDataValueConverter.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DNetCdfFunctionStore.cs" />
+    <Compile Include="WaterFlowModel1DOutputSettingData.cs" />
+    <Compile Include="WaterFlowModel1DHelper.cs" />
+    <Compile Include="WaterFlowModelBranchFeatureValueConverter.cs" />
+    <Compile Include="WaterFlowModel1D.cs" />
+    <Compile Include="WaterFlowModel1DApplicationPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="FlowWaterLevelTable.cs" />
+    <Compile Include="WaterLevelParameter.cs" />
+    <Compile Include="WaterFlowModel1DConveyanceCalculator.cs" />
+    <Compile Include="WindFunction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
+      <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="template.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Resources\HBoundary.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QBoundary.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QHBoundary.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_with_data.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\feature_coverage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\feature_coverage_with_time.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WaterFlowModel1D.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\WaterFlowModel1DLateralSourceData.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataObjects\WaterFlowModel1DBoundaryNodeData.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QConst.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HConst.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FlowParameter.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WaterLevelParameter.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FlowWaterLevelTable.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WaterFlowModel1D.3.5.0.hbm.xml" />
+    <EmbeddedResource Include="Roughness\RoughnessNetworkCoverage.3.1.hbm.xml" />
+    <EmbeddedResource Include="Roughness\ReverseRoughnessSection.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Resources\Observation.png" />
+    <EmbeddedResource Include="WaterFlowModel1DOutputSettingData.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaterFlowModelBranchFeatureValueConverter.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EngineParameter.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Resources\Boundary.png" />
+    <None Include="Resources\30.png" />
+    <EmbeddedResource Include="WaterFlowModel1D.3.0.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModelApiControllers\ModelApi\ModelApiParameter.hbm.xml" />
+    <Content Include="flow1d_kernel\x64\cf_dll.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\flow1d2d.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\libifcoremd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\libifcoremdd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\libifportmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\libmmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\libmmdd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\msvcr100.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\msvcr110.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\pthreadVC2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\svml_dispmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x64\vcruntime140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\cf_dll.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\flow1d2d.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\libifcoremd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\libifcoremdd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\libifportmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\libmmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\libmmdd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\msvcr100.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\msvcr110.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\pthreadVCE2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="ImportExport\WaterFlowModel1DNetCdfFunctionStore.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="flow1d_kernel\x86\svml_dispmd.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="flow1d_kernel\x86\vcruntime140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="ImportExport\WaterFlowModel1DMorphologyFile.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="parameters.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="PhysicalParameters\MeteoFunction.hbm.xml" />
+    <Content Include="Resources\None.png" />
+    <None Include="Resources\ReverseRoughnessSection.png" />
+    <Content Include="Resources\RoughnessSection.png" />
+    <None Include="Resources\validation.png" />
+    <None Include="Resources\unstruc.png" />
+    <Content Include="Resources\Wind.png" />
+    <EmbeddedResource Include="Roughness\RoughnessNetworkCoverage.hbm.xml" />
+    <EmbeddedResource Include="Roughness\RoughnessSection.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WindFunction.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
+    <Error Condition="!Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y
+</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" />
+</Project>

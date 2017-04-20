@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
+
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
+{
+    /// <summary>
+    /// Exists for backward compatibility with 3.0. Remove (+mappings) when no longer required.
+    /// </summary>
+    public class RtcLegacyLoader30 : LegacyLoader
+    {
+        private readonly IList<RealTimeControlModel> rtcModels = new List<RealTimeControlModel>();
+
+        public override void OnAfterInitialize(object entity, IDbConnection dbConnection)
+        {
+            rtcModels.Add((RealTimeControlModel) entity);
+        }
+
+        public override void OnAfterProjectMigrated(Project project)
+        {
+            foreach (var rtcModel in rtcModels)
+            {
+                //trigger some lazy loading
+                project.RootFolder.GetDirectChildren();
+
+                var oldOwner = rtcModel.Owner as Folder;
+
+                if (oldOwner == null)
+                {
+                    throw new NotSupportedException("Model not in folder?!: " + rtcModel.Owner);
+                }
+
+                ITimeDependentModel flowModel = null;
+
+                var linkedChildDataItem = rtcModel.AllDataItems.Where(di => di.LinkedBy.Count > 0 || di.LinkedTo != null)
+                                                 .FirstOrDefault(di => di.Parent is DataItem);
+
+                if (linkedChildDataItem != null)
+                {
+                    var otherSide = linkedChildDataItem.LinkedBy.FirstOrDefault() ?? linkedChildDataItem.LinkedTo;
+                    flowModel = (ITimeDependentModel) otherSide.Parent.Owner;
+                }
+                else
+                {
+                    //rtc not linked to flow; no way to get the flow model (unless we directly access the db / session)
+                    throw new InvalidOperationException(
+                        "The RTC model in the legacy model has no items linked to the flow model; cannot continue." +
+                        " Please work around this issue by creating a control group in the original model with one " +
+                        " item (input or output) linked to flow. Then load the model again in this version of Delta Shell.");
+                }
+
+                // these are overwritten by hydro model :-(
+                var name = flowModel.Name;
+                var startTime = flowModel.StartTime;
+                var stopTime = flowModel.StopTime;
+                var timestep = flowModel.TimeStep;
+
+                // instantiate an empty hydro model
+                var hydroModelType =
+                    Type.GetType(
+                        "DeltaShell.Plugins.DelftModels.HydroModel.HydroModel, DeltaShell.Plugins.DelftModels.HydroModel",
+                        true);
+                var hydroModel = (ICompositeActivity) Activator.CreateInstance(hydroModelType);
+
+                // move network to hydro model and relink
+                var networkDataItem = Deproxify(flowModel.DataItems.First(di => di.Value is IHydroNetwork));
+                var network = (IHydroNetwork) networkDataItem.Value;
+
+                var hydroRegion = hydroModel.GetAllItemsRecursive().OfType<IHydroRegion>().First();
+                hydroRegion.SubRegions.Add(network);
+
+                var hydroModelNetworkDataItem = ((IModel) hydroModel).AllDataItems.First(di => di.Value == network);
+
+                //networkDataItem.LinkTo(hydroModelNetworkDataItem);
+
+                TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "LinkedTo",
+                                                   hydroModelNetworkDataItem);
+                TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "ComposedValue",
+                                                   null);
+
+                hydroModelNetworkDataItem.LinkedBy.Add(networkDataItem);
+
+                // add rtc & flow as activities
+                hydroModel.Activities.Add(rtcModel);
+                hydroModel.Activities.Add(flowModel);
+
+                // restore flow settings
+                flowModel.Name = name;
+                flowModel.StartTime = startTime;
+                flowModel.StopTime = stopTime;
+                flowModel.TimeStep = timestep;
+
+                // remove orphaned flow data items
+                var orphanedDataItems = flowModel.AllDataItems.Where(
+                    di => di.LinkedTo == null &&
+                          !di.LinkedBy.Any() &&
+                          di.ValueConverter != null &&
+                          di.ValueConverter.GetEntityType().Name == "WaterFlowModelBranchFeatureValueConverter")
+                                                 .ToList();
+
+                foreach (var orphanedDataItem in orphanedDataItems)
+                {
+                    if (orphanedDataItem.Parent != null)
+                        orphanedDataItem.Parent.Children.Remove(orphanedDataItem);
+                }
+
+                var hydroModelAsTimeDependent = (ITimeDependentModel) hydroModel;
+                hydroModelAsTimeDependent.StartTime = startTime;
+                hydroModelAsTimeDependent.StopTime = stopTime;
+                hydroModelAsTimeDependent.TimeStep = timestep;
+
+                // put hydro model in folder instead of rtc
+                oldOwner.Items.Remove(rtcModel);
+                oldOwner.Items.Add(hydroModel);
+            }
+        }
+    }
+}

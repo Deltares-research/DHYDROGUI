@@ -1,0 +1,106 @@
+CRSN id 'l_0-2063--2064' di 'Round 1250 mm' rl  .08 ll  .04 crsn
+CRSN id 'l_0-2063--2070' di 'Round 1000 mm' rl  0 ll  .07 crsn
+CRSN id 'l_0-2063--2111' di 'Round 500 mm' rl  0 ll  1.1 crsn
+CRSN id 'l_0-2064--2065' di 'Round 1250 mm' rl -.02 ll  .01 crsn
+CRSN id 'l_0-2065--2066' di 'Round 1250 mm' rl -.72 ll -.06 crsn
+CRSN id 'l_0-2066--2067' di 'Round 1250 mm' rl -.76 ll -.72 crsn
+CRSN id 'l_0-12066--12067' di 'Round 1250 mm' rl -.76 ll -.72 crsn
+CRSN id 'l_0-2067--2068' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-12067--12068' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-2068--2069' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-12068--12069' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-2066--12066' di 'Round 1250 mm' rl -.72 ll -.72 crsn
+CRSN id 'l_0-2067--12067' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-2068--12068' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-2069--12069' di 'Round 1250 mm' rl -.8 ll -.8 crsn
+CRSN id 'l_0-1402--2252' di 'Round 1000 mm' rl  .1 ll  .1 crsn
+CRSN id 'l_0-1402--2249' di 'Round 1000 mm' rl  .1 ll  .1 crsn
+CRSN id 'l_0-2249--2253' di 'Round 1000 mm' rl  .1 ll  .1 crsn
+CRSN id 'l_0-1401--2253' di 'Round 1000 mm' rl  .1 ll  .1 crsn
+CRSN id 'l_0-1401--2070' di 'Round 1000 mm' rl  .07 ll  .1 crsn
+CRSN id 'l_0-1401--2108' di 'Round 500 mm' rl  2.25 ll  1 crsn
+CRSN id 'l_0-1403--2263' di '3' rl -2.69 ll -2.7 crsn
+CRSN id 'l_0-1403--2545' di '3' rl -2.71 ll -2.7 crsn
+CRSN id 'l_0-2524--2545' di '3' rl -2.71 ll -2.72 crsn
+CRSN id 'l_0-2524--2544' di '3' rl -2.73 ll -2.72 crsn
+CRSN id 'l_0-2508--2544' di '3' rl -2.73 ll -2.74 crsn
+CRSN id 'l_0-2508--2509' di '3' rl -2.75 ll -2.74 crsn
+CRSN id 'l_0-2501--2513' di '3' rl -2.79 ll -2.8 crsn
+CRSN id 'l_0-2503--2504' di '3' rl -2.83 ll -2.82 crsn
+CRSN id 'l_0-2504--2505' di '3' rl -2.84 ll -2.83 crsn
+CRSN id 'l_0-2505--2506' di '3' rl -2.85 ll -2.84 crsn
+CRSN id 'l_0-2506--2507' di '3' rl -2.86 ll -2.85 crsn
+CRSN id 'l_0-1403--4676' di '3' rl -2.7 ll -2.7 crsn
+CRSN id 'l_0-1403--1404' di 'Round 1000 mm' rl -1 ll -1 crsn
+CRSN id 'l_0-2513--2514' di 'Round 500 mm' rl  .71 ll  .82 crsn
+CRSN id 'l_0-2514--2515' di 'Round 500 mm' rl  .55 ll  .7 crsn
+CRSN id 'l_0-2515--2516' di 'Round 500 mm' rl  .38 ll  .55 crsn
+CRSN id 'l_0-2516--2517' di 'Round 500 mm' rl  .27 ll  .34 crsn
+CRSN id 'l_0-2517--2518' di 'Round 1000 mm' rl  .13 ll  .12 crsn
+CRSN id 'l_0-2518--2519' di 'Round 1000 mm' rl  .08 ll  .13 crsn
+CRSN id 'l_0-2519--2520' di 'Round 1000 mm' rl  .09 ll  .13 crsn
+CRSN id 'l_0-2520--2521' di 'Round 1000 mm' rl  .06 ll  .15 crsn
+CRSN id 'l_0-2521--2548' di 'Round 1000 mm' rl  0 ll  .17 crsn
+CRSN id 'l_0-2523--2524' di 'Round 500 mm' rl  .56 ll  .55 crsn
+CRSN id 'l_0-2524--2525' di 'Round 500 mm' rl  .82 ll  .57 crsn
+CRSN id 'l_0-2525--2526' di 'Round 500 mm' rl  1.11 ll  .83 crsn
+CRSN id 'l_0-2546--2547' di 'Round 1000 mm' rl  .06 ll  .23 crsn
+CRSN id 'l_0-2546--4676' di 'Round 1000 mm' rl  0 ll  .23 crsn
+CRSN id 'l_0-2547--2548' di 'Round 1000 mm' rl  .06 ll  .06 crsn
+CRSN id 'l_0-2517--12066' di 'Round 1000 mm' rl  -0.5 ll  0.1 crsn
+CRSN  id '2' di '24' rl  -10 rs  3 crsn
+CRSN id '4' di '3' rl  -10 rs  2.5 crsn
+CRSN id '46' di '16' rl  -6 rs  4 crsn
+CRSN id '3' di '13' rl  -10 rs  2 crsn
+CRSN id '12' di '4' rl  0 rs  14 crsn
+CRSN id '9' di '14' rl  -10 rs  2 crsn
+CRSN  id '10' di '24' rl  -10 rs  3 crsn
+CRSN id '11' di '14' rl  -10 rs  2 crsn
+CRSN id '8' di '14' rl  -10 rs  2 crsn
+CRSN id '7' di '14' rl  -10 rs  2 crsn
+CRSN id '13' di '14' rl  -9 rs  3 crsn
+CRSN  id '5' di '23' rl  -9 rs  3 crsn
+CRSN id '33' di '15' rl  -5 rs  2 crsn
+CRSN id '48' di '15' rl  -1 rs  6 crsn
+CRSN id 'l_12' di '10' rl  -10 ll  -2.86 crsn
+CRSN id 'l_13' di '10' rl  -10 ll  -0.8 crsn
+CRSN id 'l_14' di '21' rl  -10 ll  0 crsn
+CRSN  id '26' di '18' rl  1.5 rs  5.5 crsn
+CRSN id '22' di '9' rl  1.2 rs  3 crsn
+CRSN id '29' di '9' rl  1.2 rs  3 crsn
+CRSN id '30' di 'Round 1250 mm' rl  0.3 rs  2 crsn
+CRSN id '31' di '9' rl  1 rs  3 crsn
+CRSN id 'l_23' di 'Round 1000 mm' rl  -2 ll  0.1 crsn
+CRSN id 'l_24' di 'Round 1000 mm' rl  0.5 ll  0.5 crsn
+CRSN id 'l_25' di 'Round 1000 mm' rl  1 ll  1.1 crsn
+CRSN id 'l_26' di '12' rl  1.3 ll  1.4 crsn
+CRSN id 'l_27' di '12' rl  0 ll  0 crsn
+CRSN id 'l_28' di 'Round 1250 mm' ll 0 rl 0 crsn
+CRSN id '32' di '4' rl  -10 rs  4 crsn
+CRSN id 'l_0-2548--2523' di 'Round 500 mm' rl  0.55 ll  0 crsn
+CRSN id 'l_0-2509--2511' di '3' rl  -2.77 ll  -2.75 crsn
+CRSN id 'l_0-2511--2513' di '3' rl  -2.79 ll  -2.77 crsn
+CRSN id 'l_0-2501--2503' di '3' rl  -2.82 ll  -2.8 crsn
+CRSN id 'l_0-2266--2263' di 'Round 1000 mm' rl  -2.6 ll  -2.4 crsn
+CRSN id '51' di '13' rl  0 crsn
+CRSN id '52' di '20' rl  0 crsn
+CRSN id '54' di '18' rl  0 rs  4 crsn
+CRSN id '56' di '21' rl  0 crsn
+CRSN id '58' di '18' rl  0 rs  4 crsn
+CRSN id '63' di '23' rl  0 crsn
+CRSN id 'l_60' di 'l_60' rl  -3  crsn
+CRSN id 'l_61' di 'l_61' rl  0  crsn
+CRSN id 'l_71' di 'l_71' rl  -1  crsn
+CRSN id '95' di 'Round 1250 mm' rl  0 ll  0 crsn
+CRSN id 'l_156' di '29' rl  -5 ll  -3.5 crsn
+CRSN id 'l_157' di 'Round 1250 mm' rl 2.22 ll 1.11 crsn
+CRSN id 'l_160' di '30' rl 8.88 ll 7.77 crsn
+CRSN id 'l_161' di '30' rl 6.66 ll 5.55 crsn
+CRSN id 'l_183' di '29' rl  -2.5 ll  -2 crsn
+CRSN id 'l_181' di '29' rl  -2.5 ll  -2 crsn
+CRSN id 'l_184' di '29' rl  -2 ll  -2.5 crsn
+CRSN id 'l_182' di '29' rl  -2 ll  -2.5 crsn
+CRSN id 'l_186' di '30' rl -2.5 ll -2 crsn
+CRSN id '248' di '35' rl  -1 rs  4 crsn
+CRSN id '182' di '36' rl  -1 crsn
+CRSN id 'l_185' di '30' rl 0 ll 0 crsn

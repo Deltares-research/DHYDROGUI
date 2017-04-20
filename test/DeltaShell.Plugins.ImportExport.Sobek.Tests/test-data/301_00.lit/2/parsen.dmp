@@ -1,0 +1,241 @@
+Sobek Parser V2.06.028.29797
+file_top_ntw = \SOBEK213\301_00.LIT\2\NETWORK.NTW                                              
+file_top_net = \SOBEK213\301_00.LIT\2\NETWORK.TP                                               
+file_top_obi = \SOBEK213\301_00.LIT\2\NETWORK.OBI                                              
+file_top_cpt = \SOBEK213\301_00.LIT\2\NETWORK.CP                                               
+file_top_nfl =                                                                                 
+file_top_dat = \SOBEK213\301_00.LIT\2\NODES.DAT                                                
+file_top_xyc = \SOBEK213\301_00.LIT\2\NETWORK.D12                                              
+file_crs_net = \SOBEK213\301_00.LIT\2\NETWORK.CR                                               
+file_crs_def = \SOBEK213\301_00.LIT\2\PROFILE.DEF                                              
+file_crs_dat = \SOBEK213\301_00.LIT\2\PROFILE.DAT                                              
+file_str_net = \SOBEK213\301_00.LIT\2\NETWORK.ST                                               
+file_str_def = \SOBEK213\301_00.LIT\2\STRUCT.DEF                                               
+file_str_dbs = \SOBEK213\301_00.LIT\2\STRUCT.DEF                                               
+file_str_dat = \SOBEK213\301_00.LIT\2\STRUCT.DAT                                               
+file_str_con = \SOBEK213\301_00.LIT\2\CONTROL.DEF                                              
+file_str_trg = \SOBEK213\301_00.LIT\2\TRIGGER.DEF                                              
+file_str_cmp = \SOBEK213\301_00.LIT\2\STRUCT.CMP                                               
+file_str_vlv = \SOBEK213\301_00.LIT\2\VALVE.TAB                                                
+file_str_mud =                                                                                 
+file_str_mum =                                                                                 
+file_frc_bed = \SOBEK213\301_00.LIT\2\FRICTION.DAT                                             
+file_frc_wnd = \SOBEK213\301_00.LIT\2\FRICTION.DAT                                             
+file_frc_exr = \SOBEK213\301_00.LIT\2\FRICTION.DAT                                             
+file_frc_glf = \SOBEK213\301_00.LIT\2\FRICTION.DAT                                             
+file_cnd_net = \SOBEK213\301_00.LIT\2\NETWORK.CN                                               
+file_cnd_flb = \SOBEK213\301_00.LIT\2\BOUNDARY.DAT                                             
+file_cnd_fll = \SOBEK213\301_00.LIT\2\LATERAL.DAT                                              
+file_cnd_fbd = \SOBEK213\301_00.LIT\2\BOUNDLAT.DAT                                             
+file_cnd_sab = \SOBEK213\301_00.LIT\2\BOUNDARY.SAL                                             
+file_cnd_sal = \SOBEK213\301_00.LIT\2\LATERAL.SAL                                              
+file_ini_igl = \SOBEK213\301_00.LIT\WORK\INITIAL.DAT                                           
+file_ini_ifl = \SOBEK213\301_00.LIT\WORK\INITIAL.DAT                                           
+file_ini_isa = \SOBEK213\301_00.LIT\2\INITIAL.SAL                                              
+file_met_wnd = \SOBEK213\FIXED\DEFAULT.WDC                                                     
+file_met_bui = \SOBEK213\FIXED\DEFAULT.BUI                                                     
+file_met_wat =                                                                                 
+file_dsp_gld = \SOBEK213\301_00.LIT\2\GLOBDISP.DAT                                             
+file_dsp_lod = \SOBEK213\301_00.LIT\2\LOKDISP.DAT                                              
+file_dsp_fwt = \SOBEK213\301_00.LIT\2\FRESHWAT.DAT                                             
+file_dsp_mou = \SOBEK213\301_00.LIT\2\MOUTH.DAT                                                
+file_dsp_brm = \SOBEK213\301_00.LIT\2\BRMOUTH.DAT                                              
+file_grd_net = \SOBEK213\301_00.LIT\2\NETWORK.GR                                               
+file_rtm_flt = ..\work\runtime.dat                                                             
+file_rtm_flm = ..\work\runtime.dat                                                             
+file_rtm_san = ..\work\runtime.dat                                                             
+file_rtm_gwn =                                                                                 
+file_gwm_gwm =                                                                                 
+file_mea_net = \SOBEK213\301_00.LIT\2\NETWORK.ME                                               
+Salt intrusion, estuary
+ConveyanceAccuracyFactor= 0.015
+DefaultDistrictCode=00
+D:\Sobek213\programs\ini\NtrPluv.ini                            
+CalculationPointMinDistDwn1=  0.50
+CalculationPointMinDistUp 1=  0.50
+CalculationPointMinDistDwn2=  0.50
+CalculationPointMinDistUp 2=  0.50
+CalculationPointMinDistDwn3=  0.50
+CalculationPointMinDistUp 3=  0.50
+CalculationPointMinDistDwn4=  0.50
+CalculationPointMinDistUp 4=  0.50
+CompoundObjectDistance= 10.00
+No range check
+Existance check
+ max_increase_width_with_h_subs=    99999.00    
+ max_increase_width_with_h_nosubs=    99999.00    
+ max_change_deltax_with_x =    99999.00    
+ max_change_totwidth_with_x =    99999.00    
+ max_change_flowwidth_with_x =    99999.00    
+ dx_structure =    1.000000    
+ dx_min =    1.000000    
+Conveyance tables created
+Output for total of sections only
+ applications: <ESTU><FLOW><SALT> 
+ Start parsing FLOW data
+ Counting objects ......
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.TP
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.CN
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.NTW
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.ME
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\CONTROL.DEF
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.ST
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\STRUCT.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\TRIGGER.DEF
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.CR
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\PROFILE.DEF
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+ Topography layer ......
+ Start Reading Topo Data
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.TP
+File Opened
+ Reading Obi Data
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.OBI
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.OBI
+File Opened
+ Start hashing branches, nodes
+ Start converting topo_1
+ Start converting topo_2
+ Start parsing pluvius nodes
+Opening File: \SOBEK213\301_00.LIT\2\NODES.DAT
+File Opened
+ Grid layer ......
+ Start reading cs-locations
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.CR
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\PROFILE.DAT
+File Opened
+ Start ordering cross-sections
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.NTW
+File Opened
+ Start reading struct locations
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.ST
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.ST
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\STRUCT.CMP
+File Opened
+ Start reading grid data
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.GR
+File Opened
+Opening File: ..\work\runtime.dat
+File Opened
+Opening File: \SOBEK213\FIXED\DEFAULT.BUI
+File Opened
+ Structure layer ......
+Opening File: \SOBEK213\301_00.LIT\2\STRUCT.DAT
+File Opened
+ Start converting grid data
+Opening File: \SOBEK213\301_00.LIT\2\STRUCT.DEF
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.TP
+File Opened
+ Start converting structure data
+Opening File: \SOBEK213\301_00.LIT\2\STRUCT.DEF
+File Opened
+ Conditions layer ......
+ Conditions layer ......
+ Read Condition Tables
+Opening File: \SOBEK213\301_00.LIT\2\BOUNDLAT.DAT
+File Opened
+ Read Condition Locations
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.CN
+File Opened
+ Convert Boundary Conditions
+Opening File: \SOBEK213\301_00.LIT\2\BOUNDARY.DAT
+File Opened
+ Convert Lateral Discharges
+Opening File: \SOBEK213\301_00.LIT\2\LATERAL.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.NTW
+File Opened
+ Convert Lateral U-Discharges
+ Cross sections layer ......
+ Start reading cs-definition data
+Opening File: \SOBEK213\301_00.LIT\2\PROFILE.DEF
+File Opened
+ No y/z-crossections, conveyance switched off
+ Start reading cs-location data
+Opening File: \SOBEK213\301_00.LIT\2\PROFILE.DAT
+File Opened
+ Friction layer ......
+ Global Friction
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+ Bed Friction
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+ Cross-Section Friction
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+ No section output
+ Convert Cross-Sections to Grid
+ Maximum number of conveyance levels computed:            0
+Opening File: \SOBEK213\301_00.LIT\2\FRICTION.DAT
+File Opened
+ Wind Friction
+Opening File: \SOBEK213\301_00.LIT\2\WND_LOC.DAT
+File Opened
+Opening File: \SOBEK213\FIXED\DEFAULT.WDC
+File Opened
+ Curving Points
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.CP
+File Opened
+ 2D-Connections
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.D12
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\NETWORK.GR
+File Opened
+ Initial conditions layer ......
+Opening File: \SOBEK213\301_00.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\WORK\INITIAL.DAT
+File Opened
+ Output options ......
+Opening File: ..\work\runtime.dat
+File Opened
+ Stop parsing FLOW data
+ Start Parsing Salt Data
+      Counting objects ......
+Opening File: \SOBEK213\301_00.LIT\2\MOUTH.DAT
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\FRESHWAT.DAT
+File Opened
+      Conditions layer ......
+Opening File: \SOBEK213\301_00.LIT\2\BOUNDARY.SAL
+File Opened
+Opening File: \SOBEK213\301_00.LIT\2\LATERAL.SAL
+File Opened
+      Initial conditions layer ......
+Opening File: \SOBEK213\301_00.LIT\2\INITIAL.SAL
+File Opened
+      Dispersion layer ......
+Opening File: \SOBEK213\301_00.LIT\2\GLOBDISP.DAT
+File Opened
+      Run time layer ......
+Opening File: ..\work\runtime.dat
+File Opened
+      Meteo layer ......
+ Stop Parsing Salt Data
+
+End of program

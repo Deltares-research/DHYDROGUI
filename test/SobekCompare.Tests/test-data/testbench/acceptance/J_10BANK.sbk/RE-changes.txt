@@ -1,0 +1,72 @@
+*Modeler:*
+Rolf Hulsbergen
+Deltares
+
+*Base cases:*
+26 JAMM2010; J10_4_mix; Perm 4000 m3/s   (=steady state calculation)
+21 JAMM2010; J10_4_mix; Golf 4000 m3/s 
+
+*Import-ready cases:*
+1 J10_4_mix; Perm 4000 m3/s; No retention                    (Based on case 26)
+2 J10_4_mix; Perm 4000 m3/s; No retention; No 2nd stations   (Based on case 2)
+3 J10_4_mix; Golf 4000 m3/s; No retention                    (Based on case 21)
+4 J10_4_mix; Golf 4000 m3/s; No retention; No 2nd stations   (Based on case 3)
+5 J10_4_mix; Perm 4000; Retention at Cross-Section           (Based on case 26)
+6 J10_4_mix; Golf 4000; Retention at Cross-Section           (Based on case 21)
+7 J10_4_mix; Golf 4000; No NaPlas or GRW                     (Based on case 6)
+
+# Changes case 1 Perm; No retention:
+- Problem: retention import generates a mess in DS. Non-complete automation of this import is accepted.
+  6 Retention lateral discharges have been removed.
+  6 Structure descriptions have been removed.
+  6 Controllers have been removed.
+- Problem: mixing signs is not allowed in DS Q(H) boundaries.
+  The following Boundary node has been modified:
+    KeizerMSW: -2000 m3/s -> 1 m3/s
+- Problem: setting gate lower edge level below crest level is not allowed in DS.
+  The following Controller has been modified:
+    Kraaijplas_hyd: last two entries 0 m -> 3 m
+- Problem: setting crest level above gate lower edge level is not allowed in DS.
+  The following Controller has been modified:
+    afgedamde_Maas: last two entries 100 m -> 15.75 m
+- Problem: default minimum branch length (MinumumLength) in DS is 10, affecting some branches near weirs.
+  This problem cannot be fixed from within RE, either change DS default or include changing this length to 1 in the automated test.
+  
+# Changes case 2 Perm; No retention; No 2nd stations:
+- in addition to the above:
+- Problem: 2nd stations are not automatically linked in DS. This is accepted, but automation has been requested.
+  All Lateral discharges that are a 2nd station (15) or its input (15) are removed (leaving 0 lateral discharges).
+  
+# Changes case 3 Golf; No retention:
+- Problem: retention import generates a mess in DS. Non-complete automation of this import is accepted.
+  30 Retention lateral discharges have been removed.
+  49 Structure descriptions have been removed.
+    (Negeno__in dependancy not visible in the RE GUI)
+  30 Controllers have been removed.
+  24 Triggers have been removed.
+- All other modifications as in Perm; No retention have also been made.
+
+# Changes case 4 Golf; No retention; No 2nd stations:
+- in addition to the above:
+- Problem: 2nd stations are not automatically linked in DS. This is accepted, but automation has been requested.
+  All Lateral discharges that are a 2nd station (15) or its input (15) are removed (leaving 20 lateral discharges).
+
+# Changes case 5 Perm; Retention at Cross-Section:
+- As case 1, but without removing retentions.
+- Problem: When a cut is made for a retention lateral, no cross-section information is known at node.
+  All Lateral discharges that are a retention (6) are moved to the closest cross-section on that branch.
+
+# Changes case 6 Golf; Retention at Cross-Section:
+- As case 3, but without removing retentions.
+- Problem: When a cut is made for a retention lateral, no cross-section information is known at node.
+  All Lateral discharges that are a retention (30) are moved to the closest cross-section on that branch.
+    Thorn___Ret: moved to chainage 559 instead of 1118, to prevent two retention laterals on the same location (gives import error).
+    
+# Changes case 7 Golf; No NAPlas or GRW:
+- As case 6, but with NaPlas and GRW retentions removed.
+- Problem: According to a memo by Rolf van der Veen (Gevoeligheidsonderzoek SOBEK 12 Jan 2009) some retentions should be removed.
+  13 Retention lateral discharges have been removed (NAPlas1-8 and GRW1-5).
+  21 Structure descriptions have been removed.
+  30 Controllers have been removed.
+  24 Triggers have been removed.
+
