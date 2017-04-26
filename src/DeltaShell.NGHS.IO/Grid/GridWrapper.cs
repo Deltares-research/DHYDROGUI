@@ -178,5 +178,203 @@ namespace DeltaShell.NGHS.IO.Grid
         public static extern int ionc_put_node_coordinates(ref int ioncid, ref int meshid, ref IntPtr c_xvalues_ptr, ref IntPtr c_yvalues_ptr, ref int nNode);
 
         #endregion
+        #region UGRID 1D Specifics
+
+        /// <summary>
+        /// This is a structure to pass arrays of chars arrays from c# to fortran.
+        /// </summary>
+        public const int idssize = 30;
+        public const int longnamessize = 80;
+        [StructLayout(LayoutKind.Sequential)]
+        public struct interop_charinfo
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = idssize)]
+            public char[] ids;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = longnamessize)]
+            public char[] longnames;
+        }
+        
+        /// <summary>
+        /// This function creates a new netCDF file
+        /// </summary>
+        /// <param name="c_path">The path where the file will be created (in)</param>
+        /// <param name="mode"> The netCDF opening mode (in)</param>
+        /// <param name="ioncid">The netCDF file id (out)</param>
+        /// <param name="iconvtype">The netCDF convention (in, e.g. 2 is UGRID)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_create([In] string c_path, [In] ref int mode, [In, Out] ref int ioncid, [In] ref int iconvtype);
+
+        /// <summary>
+        /// Create a 1d network in an opened netCDF file  
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (out)</param>
+        /// <param name="networkName">The network name (in) </param>
+        /// <param name="nNodes">The number of network nodes (in) </param>
+        /// <param name="nBranches">The number of network branches (in)</param>
+        /// <param name="nGeometry">The number of geometry points (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create_1d_network", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_create_1d_network([In] ref int ioncid, [In, Out] ref int networkid, [In] string networkName, [In] ref int nNodes, [In] ref int nBranches, [In] ref int nGeometry);
+
+        /// <summary>
+        /// Write the coordinates of the network nodes
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_nodesX">The x coordinates of the network nodes (in)</param>
+        /// <param name="c_nodesY">The y coordinates of the network nodes (in)</param>
+        /// <param name="nodesinfo">The network infos (in)</param>
+        /// <param name="nNodes">The number of network nodes (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_1d_network_nodes", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_write_1d_network_nodes([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_nodesX, [In] ref IntPtr c_nodesY, interop_charinfo[] nodesinfo, [In] ref int nNodes);
+
+        /// <summary>
+        /// Write the coordinates of the network branches
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_sourcenodeid">The source node id (in)</param>
+        /// <param name="c_targetnodeid">The target node id (in)</param>
+        /// <param name="branchinfo">The branch info (in)</param>
+        /// <param name="c_branchlengths">The branch lengths (in)</param>
+        /// <param name="c_nbranchgeometrypoints">The number of geometry points in each branch (in)</param>
+        /// <param name="nBranches">The number of branches (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_1d_network_branches", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_write_1d_network_branches( [In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_sourcenodeid, [In] ref IntPtr c_targetnodeid, interop_charinfo[] branchinfo, [In] ref IntPtr c_branchlengths, [In] ref IntPtr c_nbranchgeometrypoints, [In] ref int nBranches);
+ 
+        /// <summary>
+        /// Writes the branch geometry (the geometry points)  
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_geopointsX">The x coordinates of the geometry points (in)</param>
+        /// <param name="c_geopointsY">The y coordinates of the geometry points (in)</param>
+        /// <param name="nGeometry">The number of geometry points (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_1d_network_branches_geometry", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_write_1d_network_branches_geometry([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_geopointsX, [In] ref IntPtr c_geopointsY, [In] ref int nGeometry);
+
+        /// <summary>
+        /// Writes a 1d mesh. The geometrical features (e.g. the branches and geometry points) are described in the network above
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshname">The mesh name (in)</param>
+        /// <param name="nmeshpoints">The number of mesh points (in)</param>
+        /// <param name="nmeshedges">The number of mesh edges (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create_1d_mesh", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_create_1d_mesh([In] ref int ioncid, [In] ref int networkid, string meshname, [In] ref int nmeshpoints, [In] ref int nmeshedges);
+
+        /// <summary>
+        /// Writes the mesh coordinates points 
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_branchidx">The branch id for each mesh point (in)</param>
+        /// <param name="c_offset">The offset along the branch from the starting point (in)</param>
+        /// <param name="nmeshpoints">The number of mesh points (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_write_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, [In] ref int nmeshpoints);
+
+        /// <summary>
+        /// Get the number of network nodes
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="nNodes">The number of nodes(out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_network_nodes_count", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_1d_network_nodes_count([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int nNodes);
+        
+        /// <summary>
+        /// Get the number of branches
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="nBranches">The number of branches (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_network_branches_count", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_1d_network_branches_count([In] ref int ioncid, [In] ref int networkid, [In,Out] ref int nBranches);
+
+        /// <summary>
+        /// Get the number of geometry points
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="ngeometrypoints">The number of geometry points (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_network_branches_geometry_coordinate_count", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_1d_network_branches_geometry_coordinate_count([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int ngeometrypoints);
+
+        /// <summary>
+        /// Read the node coordinates and the charinfo
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_nodesX">The x coordinates of the network nodes (out)</param>
+        /// <param name="c_nodesY">The y coordinates of the network nodes (out)</param>
+        /// <param name="nodesinfo">The network infos (out)</param>
+        /// <param name="nNodes">The number of network nodes (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_read_1d_network_nodes", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_read_1d_network_nodes([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_nodesX, [In, Out] ref IntPtr c_nodesY, [In, Out]  interop_charinfo[] nodesinfo, [In] ref int nNodes);
+
+        /// <summary>
+        /// Read the coordinates of the network branches
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_sourcenodeid">The source node id (out)</param>
+        /// <param name="c_targetnodeid">The target node id (out)</param>
+        /// <param name="c_branchlengths">The branch lengths (out)</param>
+        /// <param name="branchinfo">The branch info (out)</param>
+        /// <param name="c_nbranchgeometrypoints">he number of geometry points in each branch (out)</param>
+        /// <param name="nBranches">The number of branches (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_read_1d_network_branches", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_read_1d_network_branches([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_sourcenodeid, [In, Out] ref IntPtr c_targetnodeid, [In, Out] ref IntPtr c_branchlengths, [In, Out]  interop_charinfo[] branchinfo, [In, Out] ref IntPtr c_nbranchgeometrypoints, [In] ref int nBranches);
+
+        /// <summary>
+        /// Reads the branch geometry
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_geopointsX">The x coordinates of the geometry points (out)</param>
+        /// <param name="c_geopointsY">The y coordinates of the geometry points (out)</param>
+        /// <param name="nNodes">The number of nodes (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_read_1d_network_branches_geometry", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_read_1d_network_branches_geometry( [In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_geopointsX, [In, Out] ref IntPtr c_geopointsY, [In] ref int nNodes);
+
+        /// <summary>
+        /// Get the number of mesh discretization points 
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="nmeshpoints">The number of mesh points (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_mesh_discretisation_points_count", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_1d_mesh_discretisation_points_count([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int nmeshpoints);
+
+        /// <summary>
+        /// Read the coordinates of the mesh points  
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_branchidx">The branch id for each mesh point (out)</param>
+        /// <param name="c_offset">The offset along the branch from the starting point (out)</param>
+        /// <param name="nmeshpoints">The number of mesh points (in)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_read_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_read_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
+        
+        #endregion
+
     }
 }
