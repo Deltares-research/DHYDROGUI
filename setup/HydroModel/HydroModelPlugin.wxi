@@ -17,7 +17,6 @@
         <?ifndef var.NOKERNELS?>
         <Component Id="x86_hydromodel_kernels" Guid="F1FFF510-78C9-4B28-B9F3-BDCB9699AC56">
           <?define x86_hydromodel_kernels_lib_dir="$(var.hydromodel_kernels_lib_dir)x86\"?>
-          <File Id="x86_hydromodel_cf_dll.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)cf_dll.dll" />
           <File Id="x86_hydromodel_flow1d2d.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)flow1d2d.dll" />
           <File Id="x86_hydromodel_libifcoremd.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)libifcoremd.dll" />
           <File Id="x86_hydromodel_libifportmd.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)libifportmd.dll" />
@@ -37,7 +36,6 @@
         <?ifndef var.NOKERNELS?>
         <Component Id="x64_hydromodel_kernels" Guid="48549F9C-B920-418A-8829-277F605B3A4B">
           <?define x64_hydromodel_kernels_lib_dir="$(var.hydromodel_kernels_lib_dir)x64\"?>
-          <File Id="x64_hydromodel_cf_dll.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)cf_dll.dll" />
           <File Id="x64_hydromodel_flow1d2d.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)flow1d2d.dll" />
           <File Id="x64_hydromodel_libifcoremd.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)libifcoremd.dll" />
           <File Id="x64_hydromodel_libifportmd.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)libifportmd.dll" />

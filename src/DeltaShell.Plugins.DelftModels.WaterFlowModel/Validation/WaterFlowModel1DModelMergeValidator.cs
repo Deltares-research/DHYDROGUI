@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;

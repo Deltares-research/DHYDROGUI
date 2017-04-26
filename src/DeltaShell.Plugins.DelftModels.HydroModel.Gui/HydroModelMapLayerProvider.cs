@@ -104,10 +104,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             {
                 var folderHydroModel = (HydroModel) modelFolder.Model;
 
-                var hydroModelWorkFlow = folderHydroModel.CurrentWorkflow as IHydroModelWorkFlow;
-                if (hydroModelWorkFlow != null && hydroModelWorkFlow.Data != null)
+                var modelWorkFlows = folderHydroModel.CurrentWorkflow.GetActivitiesOfType<IHydroModelWorkFlow>().Where(wf => wf != null && wf.Data != null).ToList();
+                foreach (var modelWorkFlow in modelWorkFlows)
                 {
-                    foreach (var coverage in hydroModelWorkFlow.Data.OutputDataItems.Select(di => di.Value).OfType<IFeatureCoverage>())
+                    foreach (var coverage in modelWorkFlow.Data.OutputDataItems.Select(di => di.Value).OfType<IFeatureCoverage>())
                     {
                         yield return coverage;
                     }

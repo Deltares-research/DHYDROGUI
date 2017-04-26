@@ -1,4 +1,5 @@
 ﻿using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties

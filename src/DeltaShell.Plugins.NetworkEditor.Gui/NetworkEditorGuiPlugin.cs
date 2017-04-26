@@ -226,6 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         },
                     AfterCreate = (v, o) =>
                         {
+                            // It seems that this Gui can be null while calling the function. Is that correct?
                             var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
                             if (centralMap == null) return;
 
@@ -347,16 +348,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return CreateAreaStructureCollectionViewInfo<IPump>(HydroArea.PumpsPluralName);
             yield return CreateAreaStructureCollectionViewInfo<IWeir>(HydroArea.WeirsPluralName);
             yield return CreateAreaStructureCollectionViewInfo<IGate>(HydroArea.GatesPluralName);
-
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.LandBoundariesPluralName, ha => ha.LandBoundaries, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.DryPointsPluralName, ha => ha.DryPoints, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.DryAreasPluralName, ha => ha.DryAreas, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.ThinDamsPluralName, ha => ha.ThinDams, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.FixedWeirsPluralName, ha => ha.FixedWeirs, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.ObservationPointsPluralName, ha => ha.ObservationPoints, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.ObservationCrossSectionsPluralName, ha => ha.ObservationCrossSections, () => Gui);
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo(HydroArea.EmbankmentsPluralName, ha => ha.Embankments, () => Gui);
             
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryAreas);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ThinDams);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.FixedWeirs);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationPoints);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationCrossSections);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Embankments);
+        }
+
+        private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEnumerable<TFeature>> getCollection)
+        {
+            var viewInfo1 = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
+
+            var viewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
+            viewInfo.AfterCreate = (view, features) =>
+            {
+                viewInfo1.AfterCreate(view, features);
+                view.CanAddDeleteAttributes = false;
+                view.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
+            };
+
+            return viewInfo;
         }
 
         private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructure

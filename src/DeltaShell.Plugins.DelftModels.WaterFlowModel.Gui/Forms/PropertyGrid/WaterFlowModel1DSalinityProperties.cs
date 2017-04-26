@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SalinityPath_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SalinityPath_Description")]
-        [Editor(typeof(SalinityPathEditor), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string SalinityPath
         {
             get { return data.SalinityPath; }

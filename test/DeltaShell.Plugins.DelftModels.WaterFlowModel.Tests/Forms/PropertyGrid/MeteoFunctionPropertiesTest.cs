@@ -69,9 +69,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
             model.UseMorphology = useMorphology;
             Assert.That(model.UseMorphology, Is.EqualTo(useMorphology));
 
-            Assert.That(morphologyProperties.ValidateDynamicAttributes("MorphologyPath"),
+            Assert.That(morphologyProperties.ValidateDynamicAttributes("MorphologyFile"),
                 Is.EqualTo(!useMorphology));
-            Assert.That(morphologyProperties.ValidateDynamicAttributes("SedimentPath"),
+            Assert.That(morphologyProperties.ValidateDynamicAttributes("SedimentFile"),
+                Is.EqualTo(!useMorphology));
+            Assert.That(morphologyProperties.ValidateDynamicAttributes("BcmFile"),
+                Is.EqualTo(!useMorphology));
+            Assert.That(morphologyProperties.ValidateDynamicAttributes("TraFile"),
                 Is.EqualTo(!useMorphology));
         }
 

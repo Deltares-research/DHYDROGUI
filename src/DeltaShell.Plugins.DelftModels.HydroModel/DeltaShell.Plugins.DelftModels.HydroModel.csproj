@@ -224,9 +224,6 @@
     <None Include="Resources\1d2d.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="kernels\x64\cf_dll.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="kernels\x64\flow1d2d.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -255,9 +252,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kernels\x64\svml_dispmd.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="kernels\x86\cf_dll.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kernels\x86\flow1d2d.dll">

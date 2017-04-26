@@ -189,6 +189,7 @@
     <Compile Include="Helpers\ActivityExtensions.cs" />
     <Compile Include="Helpers\ConveyanceCalculatorBase.cs" />
     <Compile Include="Helpers\CrossSectionConverter.cs" />
+    <Compile Include="Helpers\ICoordinateSystemExtensions.cs" />
     <Compile Include="Helpers\StandardCrossSectionsFactory.cs" />
     <Compile Include="Helpers\ThreadingHelper.cs" />
     <Compile Include="HydroArea.cs" />

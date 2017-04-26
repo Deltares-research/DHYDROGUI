@@ -32,8 +32,8 @@
             </Component>
           </Directory>
         </Directory>
-        <Directory Id="cli_win32_dmir" Name="dmir">
-          <Directory Id="cli_win32_dmir_bin" Name="bin">
+        <Directory Id="cli_win32_dimr" Name="dimr">
+          <Directory Id="cli_win32_dimr_bin" Name="bin">
             <Component Id="cli_x86_dimr_kernel" Guid="6D6E606E-9833-40F8-A8FD-87917B35A367">
               <?define x86_dimr_kernel_dir="$(var.dimr_kernel_dir)x86\"?>
               <File Id="cli_x86_dimr_dimr.exe" Source="$(var.x86_dimr_kernel_dir)dimr.exe" />
@@ -66,7 +66,7 @@
               <?undef x86_dimr_kernel_dir ?>
             </Component>
           </Directory>
-          <Directory Id="cli_win32_dmir_scripts" Name="scripts">
+          <Directory Id="cli_win32_dimr_scripts" Name="scripts">
             <Component Id="cli_x86_dimr_scripts" Guid="231B87B8-EAF0-4542-A7AB-3C78D473A905">
               <File Id="cli_x86_dimr_run_dimr_win32.bat" Source="$(var.dimr_scripts_dir)run_dimr_win32.bat" />
             </Component>
@@ -153,8 +153,8 @@
             </Component>
           </Directory>
         </Directory>
-        <Directory Id="cli_win64_dmir" Name="dmir">
-          <Directory Id="cli_win64_dmir_bin" Name="bin">
+        <Directory Id="cli_win64_dimr" Name="dimr">
+          <Directory Id="cli_win64_dimr_bin" Name="bin">
             <Component Id="cli_x64_dimr_kernel" Guid="F99F0F03-AEF3-4786-B63F-7ADC4764A730">
               <?define x64_dimr_kernel_dir="$(var.dimr_kernel_dir)x64\"?>           
               <File Id="cli_x64_dimr_dimr.exe" Source="$(var.x64_dimr_kernel_dir)dimr.exe" />
@@ -186,7 +186,7 @@
               <?undef x64_dimr_kernel_dir ?>
             </Component>
           </Directory>
-          <Directory Id="cli_win64_dmir_scripts" Name="scripts">
+          <Directory Id="cli_win64_dimr_scripts" Name="scripts">
             <Component Id="cli_x64_dimr_scripts" Guid="2C1F5B98-17EB-4005-8714-6A79A074462C">
               <File Id="cli_x64_dimr_run_dimr.bat" Source="$(var.dimr_scripts_dir)run_dimr.bat" />
               <File Id="cli_x64_dimr_run_dimr_parallel.bat" Source="$(var.dimr_scripts_dir)run_dimr_parallel.bat" />

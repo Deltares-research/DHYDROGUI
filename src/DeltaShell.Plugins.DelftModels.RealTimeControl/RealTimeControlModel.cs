@@ -27,6 +27,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -563,6 +564,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
         }
+
+        public virtual ICoordinateSystem CoordinateSystem { get; set; }
 
         private void SetOutputOutOfSync(object sender, PropertyChangedEventArgs e)
         {

@@ -253,4 +253,10 @@
   <data name="RealTimeControlModel_BrokenDataItemLinkDetected" xml:space="preserve">
     <value>Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established.</value>
   </data>
+  <data name="RealTimeControlModelProperties_CoordinateSystem_Description" xml:space="preserve">
+    <value>Coordinate system (geographic or projected) used for drawing.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_CoordinateSystem_DisplayName" xml:space="preserve">
+    <value>Coordinate System</value>
+  </data>
 </root>

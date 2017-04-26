@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -12,11 +11,12 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Globalization;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
+using Image = System.Drawing.Image;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
+using UserControl = System.Windows.Forms.UserControl;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {
@@ -29,10 +29,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         public HydroModelSettings()
         {
             InitializeComponent();
-
-            startTime.CustomFormat = RegionalSettingsManager.DateTimeFormat;
-            stopTime.CustomFormat = RegionalSettingsManager.DateTimeFormat;
-            timeStep.ValidatingType = typeof (TimeSpan);
             BackColorChanged += HydroModelSettingsBackColorChanged;
         }
 
@@ -67,6 +63,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 }
 
                 model = value;
+
+                userControl.Model = value;
                 
                 if(model != null)
                 {
@@ -84,15 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 }
 
                 Text = model.Name + " Settings";
-                startTime.Value = model.StartTime;
-                stopTime.Value = model.StopTime;
-                timeStep.Text = model.TimeStep.ToString();
-
-                UpdateDurationLabel();
-
-                checkBoxOverrideStartTime.Checked = HydroModel.OverrideStartTime;
-                checkBoxOverrideStopTime.Checked = HydroModel.OverrideStopTime;
-                checkBoxOverrideTimeStep.Checked = HydroModel.OverrideTimeStep;
 
                 bindingSourceHydroModel.DataSource = new BindingList<HydroModel>(new[] {model}){RaiseListChangedEvents = false};
 
@@ -255,159 +244,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 case "CurrentWorkflow":
                     workflowEditorControl.CurrentWorkflow = model.CurrentWorkflow;
                     break;
-                case "OverrideStartTime":
-                    checkBoxOverrideStartTime.Checked = model.OverrideStartTime;
-                    break;
-                case "OverrideStopTime":
-                    checkBoxOverrideStopTime.Checked = model.OverrideStopTime;
-                    break;
-                case "OverrideTimeStep":
-                    checkBoxOverrideTimeStep.Checked = model.OverrideTimeStep;
-                    break;
-            }
-
-            if (sender is Parameter && e.PropertyName == parameterValueName)
-            {
-                // these will bubble through Parameter<T>.Value prop change
-                startTime.Value = model.StartTime;
-                stopTime.Value = model.StopTime;
-                timeStep.Text = model.TimeStep.ToString();
             }
 
             updating = false;
-        }
-
-        private void checkBoxOverrideStartTime_CheckedChanged(object sender, EventArgs e)
-        {
-            startTime.Enabled = checkBoxOverrideStartTime.Checked;
-
-            if (updating) return;
-            updating = true;
-
-            ValidateChildren();
-
-            HydroModel.OverrideStartTime = checkBoxOverrideStartTime.Checked;
-
-            UpdateDurationLabel();
-            updating = false;
-        }
-
-        private void checkBoxOverrideStopTime_CheckedChanged(object sender, EventArgs e)
-        {
-            stopTime.Enabled = checkBoxOverrideStopTime.Checked;
-
-            if (updating) return;
-            updating = true;
-
-            ValidateChildren();
-
-            HydroModel.OverrideStopTime = checkBoxOverrideStopTime.Checked;
-
-            UpdateDurationLabel();
-            updating = false;
-        }
-
-        private void checkBoxOverrideTimeStep_CheckedChanged(object sender, EventArgs e)
-        {
-            timeStep.Enabled = checkBoxOverrideTimeStep.Checked;
-
-            if (updating) return;
-            updating = true;
-
-            ValidateChildren();
-
-            HydroModel.OverrideTimeStep = checkBoxOverrideTimeStep.Checked;
-            updating = false;
-        }
-
-        private void UpdateDurationLabel()
-        {
-            var duration = model.StopTime - model.StartTime;
-            labelDuration.Text = duration.Days + " days " + duration.Hours + " hours " + duration.Minutes + " minutes " +
-                                 duration.Seconds + " seconds";
-        }
-
-        private void startTime_ValueChanged(object sender, EventArgs e)
-        {
-            if (updating) return;
-            updating = true;
-            if (ValidateChildren())
-            {
-                HydroModel.StartTime = startTime.Value;
-                UpdateDurationLabel();
-            }
-            updating = false;
-        }
-
-        private void stopTime_ValueChanged(object sender, EventArgs e)
-        {
-            if (updating) return;
-            updating = true;
-            if (ValidateChildren())
-            {
-                HydroModel.StopTime = stopTime.Value;
-                UpdateDurationLabel();
-            }
-            updating = false;
-        }
-
-        private void timeStep_Validated(object sender, EventArgs e)
-        {
-            if (updating) return;
-            updating = true;
-            if (ValidateChildren())
-            {
-                var result = new TimeSpan();
-                if (TimeSpan.TryParse(timeStep.Text, out result))
-                {
-                    HydroModel.TimeStep = result;
-                }
-            }
-            updating = false;
-        }
-
-        private void startTime_Validating(object sender, CancelEventArgs e)
-        {
-            if (stopTime.Value < startTime.Value)
-            {
-                errorProvider1.SetError(startTime, "Start time must be less than stop time");
-            }
-            else
-            {
-                errorProvider1.SetError(startTime, "");
-            }
-        }
-
-        private void stopTime_Validating(object sender, CancelEventArgs e)
-        {
-            if (stopTime.Value < startTime.Value)
-            {
-                errorProvider1.SetError(stopTime, "Stop time must be greater than start time");
-            }
-            else
-            {
-                errorProvider1.SetError(stopTime, "");
-            }
-        }
-
-        private void timeStep_Validating(object sender, CancelEventArgs e)
-        {
-            var result = new TimeSpan();
-            if (TimeSpan.TryParse(timeStep.Text, out result))
-            {
-                if (result.TotalSeconds <= 0)
-                {
-                    errorProvider1.SetError(timeStep, "Time step must be positive");
-                    return;
-                }
-            }
-            else
-            {
-                errorProvider1.SetError(timeStep, "Can not parse time step");
-                return;
-            }
-
-            errorProvider1.SetError(timeStep, "");
         }
 
         private void workflowEditorControl_CurrentWorkflowChanged(object sender, EventArgs e)

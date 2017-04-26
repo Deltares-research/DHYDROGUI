@@ -16,9 +16,11 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using log4net;
 using Mono.Addins;
@@ -41,6 +43,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem copyXmlToClipboardToolStripMenuItem;
         private ToolStripMenuItem copyToolsXmlToClipboardToolStripMenuItem;
+        private ClonableToolStripMenuItem convertCoordinateSystemToolStripMenuItem;
+        private ContextMenuStrip convertCoordinateSystemContextMenu;
 
         public RealTimeControlGuiPlugin()
         {
@@ -222,6 +226,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 contextMenuStripControlGroup.Items[2].Tag = sender;
                 return new MenuItemContextMenuStripAdapter(contextMenuStripControlGroup);
             }
+            if (data is IRealTimeControlModel)
+            {
+                convertCoordinateSystemToolStripMenuItem.Tag = data;
+                return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
+            }
             return null;
         }
 
@@ -288,8 +297,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                                              {
                                                                  addNewControlGroupToolStripMenuItem
                                                              });
-        }
+            convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
+            {
+                Image = Properties.Resources.HydroRegion,
+                Name = "convertCoordinateSystemToolStripMenuItem",
+                Text = "Convert to Coordinate System..."
+            };
+            convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
 
+            convertCoordinateSystemContextMenu = new ContextMenuStrip { Name = "convertCoordinateSystemMenu" };
+            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[] { convertCoordinateSystemToolStripMenuItem });
+        }
+        private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var realTimeControlModel = ((ToolStripMenuItem)sender).Tag as IRealTimeControlModel;
+            if (realTimeControlModel == null)
+                throw new InvalidOperationException("Can not find model when converting the coordinate system.");
+
+            if (RTCModelCoordinateConvertor.Convert(realTimeControlModel))
+            {
+                var mapView = gui.GetFocusedMapView();
+                if (mapView != null && mapView.Map != null)
+                    mapView.Map.ZoomToExtents();
+            }
+        }
+       
         private void ProjectServiceProjectSaving(Project project)
         {
             var views = Gui.DocumentViews.OfType<ControlGroupGraphView>();

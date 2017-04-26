@@ -88,6 +88,7 @@
     <Compile Include="Forms\RtcExporterDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />
     <Compile Include="NodePresenters\InputNodePresenter.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="RealTimeControlGuiPlugin.cs" />
     <Compile Include="RealTimeControlMapLayerProvider.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelper.cs" />
+    <Compile Include="RealTimeControlModelProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
@@ -179,6 +181,14 @@
     </Reference>
     <Reference Include="SharpMap.Api">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.UI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -307,6 +317,7 @@
     <None Include="Resources\propertieshs1.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\region.png" />
     <Content Include="Resources\signal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

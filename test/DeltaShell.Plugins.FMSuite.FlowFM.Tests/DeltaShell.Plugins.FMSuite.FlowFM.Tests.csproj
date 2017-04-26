@@ -227,7 +227,11 @@
     <Compile Include="Gui\BcFileExportDialogTest.cs" />
     <Compile Include="Gui\BcFileImportDialogTest.cs" />
     <Compile Include="Gui\DataImportPointsListBoxTest.cs" />
+    <Compile Include="Gui\Editors\BoundaryConditionExtensionsTest.cs" />
+    <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
+    <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
+    <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
     <Compile Include="Gui\SupportPointSelectionFormTest.cs" />
     <Compile Include="Gui\FlowBoundaryPropertiesControlTest.cs" />
     <Compile Include="Gui\BoundaryDataMapSymbolsTest.cs" />

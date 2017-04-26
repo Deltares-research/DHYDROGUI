@@ -143,6 +143,7 @@
     </Reference>
     <Reference Include="Microsoft.Dynamic">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Windows.Shell, Version=3.5.41019.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
@@ -237,6 +238,7 @@
     <Compile Include="HydroModelExtensionsTest.cs" />
     <Compile Include="ValueConverters\HydroLinksFeatureCoverageValueConverterTest.cs" />
     <Compile Include="ValueConverters\HydroRegionFeatureCoverageFromNetworkCoverageValueConverterTest.cs" />
+    <Compile Include="ViewModels\HydroModelTimeSettingsUserControlTest.cs" />
     <Compile Include="WaterFlowFMModelRtcTest.cs" />
     <Compile Include="WaterFlowFMModelWaveTest.cs" />
     <Compile Include="WaterFlowModel1DBuilder.cs" />

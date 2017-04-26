@@ -10,7 +10,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
 {
     public static class FeatureCollectionViewInfoHelper
     {
@@ -48,7 +48,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                     v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    v.DynamicAttributeVisible = s => s==Feature2D.LocationKey;
+                    v.OpenViewMethod = f => getGui().CommandHandler.OpenView(f); 
+                    v.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
                     v.CanAddDeleteAttributes = false;
                 }
             };

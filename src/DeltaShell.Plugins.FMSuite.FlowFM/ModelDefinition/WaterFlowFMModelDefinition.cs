@@ -622,7 +622,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     // (This can happen when exporting spatial operations that comprise of added points but no interpolation
                     // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
                     if (coverage == null || ( coverage.Components[0].NoDataValues != null &&
-                    coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) ))
+                    coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) ) &&
+                    spatialOperationValueConverter.SpatialOperationSet.Operations.Any(op => !(op is EraseOperation)))
                     {
                         continue;
                     }

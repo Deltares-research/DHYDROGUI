@@ -164,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundaryDataMapSymbols.cs" />
+    <Compile Include="Editors\BoundaryConditionExtensions.cs" />
     <Compile Include="Editors\Buttons\EditCoverageLayersButton.cs" />
     <Compile Include="Editors\Buttons\EditDepthLayersButton.cs" />
     <Compile Include="Editors\EditTracersControlHelper.cs" />
@@ -194,6 +195,10 @@
     <Compile Include="Editors\GriddedWindView.Designer.cs">
       <DependentUpon>GriddedWindView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\HarmonicConditionsDialog.xaml.cs">
+      <DependentUpon>HarmonicConditionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\HarmonicConditionsDialogViewModel.cs" />
     <Compile Include="Editors\HeatFluxModelView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -521,6 +526,10 @@
     <Content Include="Resources\arrow.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\HarmonicConditionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ribbon\Ribbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

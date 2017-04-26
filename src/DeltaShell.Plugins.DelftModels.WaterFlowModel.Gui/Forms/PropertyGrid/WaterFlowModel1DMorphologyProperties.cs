@@ -3,7 +3,6 @@ using System.Drawing.Design;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
 {
@@ -40,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_MorphologyPath_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_MorphologyPath_Description")]
-        [Editor(typeof(MorphologyPathEditor), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string MorphologyFile
         {
             get { return data.MorphologyPath; }
@@ -54,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_BcmPath_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_BcmPath_Description")]
-        [Editor(typeof(MorphologyPathEditor), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string BcmFile
         {
             get { return data.BcmPath; }
@@ -68,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SedimentPath_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SedimentPath_Description")]
-        [Editor(typeof(MorphologyPathEditor), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string SedimentFile
         {
             get { return data.SedimentPath; }
@@ -79,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_TraPath_DisplayName")]
         [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_TraPath_Description")]
-        [Editor(typeof(MorphologyPathEditor), typeof(UITypeEditor))]
+        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
         public string TraFile
         {
             get { return data.TraPath; }

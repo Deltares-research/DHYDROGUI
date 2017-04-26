@@ -5,15 +5,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
 {
     public partial class SupportPointSelectionForm : Form
     {
-        public enum SupportPointMode
-        {
-            SelectedPoint,
-            ActivePoints,
-            InactivePoints,
-            AllPoints,
-            NoPoints
-        }
-
         public SupportPointSelectionForm()
         {
             InitializeComponent();

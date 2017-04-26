@@ -85,6 +85,10 @@
       <HintPath>..\..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NetTopologySuite.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
@@ -160,9 +164,9 @@
     <Compile Include="RealTimeControlModel.cs" />
     <Compile Include="Domain\RuleBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealTimeControlModelExtensions.cs" />
     <Compile Include="RealTimeControlModelHelper.cs" />
     <Compile Include="RealTimeControlModelMergeValidator.cs" />
-    <Compile Include="RealTimeControlModelProperties.cs" />
     <Compile Include="RealTimeControlApplicationPlugin.cs" />
     <Compile Include="RealTimeControlXMLFiles.cs" />
     <Compile Include="RtcDataAccessListener.cs" />

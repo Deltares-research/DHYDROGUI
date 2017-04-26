@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
                 editableObjectRefresh = value;
                 RefreshEventedList();
-
+                RefreshCoordinateSystem();
                 if (editableObjectRefresh is INotifyPropertyChanged)
                 {
                     ((INotifyPropertyChanged)editableObjectRefresh).PropertyChanged += EditableObjectPropertyChanged;
@@ -98,10 +99,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
         }
 
+        private void RefreshCoordinateSystem()
+        {
+            var realTimeControlModel = editableObjectRefresh as IRealTimeControlModel;
+            if (realTimeControlModel == null) return;
+            if(!CoordinateSystem.EqualsTo(realTimeControlModel.CoordinateSystem))
+            CoordinateSystem = realTimeControlModel.CoordinateSystem;
+        }
+
         void EditableObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != "IsEditing" || editableObjectRefresh.IsEditing) return;
-            RefreshEventedList();
+            if (e.PropertyName != "IsEditing" || editableObjectRefresh.IsEditing)
+            {
+                RefreshEventedList();
+            }
+            if (e.PropertyName == "CoordinateSystem")
+            {
+                RefreshCoordinateSystem();
+            }
+
+            
         }
 
         public override void Dispose()

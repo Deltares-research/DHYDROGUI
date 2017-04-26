@@ -19,5 +19,6 @@
       <property name="SaveStateStartTime" />
       <property name="SaveStateStopTime" />
       <property name="SaveStateTimeStep" />
+      <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis"/>
     </joined-subclass>
 </hibernate-mapping>

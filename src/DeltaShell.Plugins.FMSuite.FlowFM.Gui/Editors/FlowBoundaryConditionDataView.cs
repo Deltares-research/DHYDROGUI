@@ -286,14 +286,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public void RefreshBoundaryData()
         {
-            if (BoundaryCondition == null || SupportPointIndex == -1)
-            {
-                BoundaryConditionData = null;
-            }
-            else
-            {
-                BoundaryConditionData = BoundaryCondition.GetDataAtPoint(SupportPointIndex);
-            }
+            BoundaryConditionData = BoundaryCondition != null && SupportPointIndex != -1
+                ? BoundaryCondition.GetDataAtPoint(SupportPointIndex)
+                : null;
         }
 
         public void OnSupportPointChanged(object sender, EventArgs<int> e)
@@ -707,14 +702,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         void GenerateDataButtonClick(object sender, EventArgs e)
         {
-            if (BoundaryCondition != null && BoundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
+            if (BoundaryCondition != null)
             {
-                TimeSeriesDialog();
+                switch (BoundaryCondition.DataType)
+                {
+                    case BoundaryConditionDataType.TimeSeries:
+                        TimeSeriesDialog();
+                        break;
+                    case BoundaryConditionDataType.AstroComponents:
+                    case BoundaryConditionDataType.AstroCorrection:
+                        AstroComponentsDialog();
+                        break;
+                    case BoundaryConditionDataType.Harmonics:
+                        HarmonicComponentDialog();
+                        break;
+                    case BoundaryConditionDataType.HarmonicCorrection:
+                        HarmonicComponentDialog(true);
+                        break;
+                }
             }
-            if (BoundaryCondition != null && FourierDataType)
-            {
-                AstroComponentsDialog();
-            }
+
             RefreshBoundaryData();
             FillFunctionView();
         }
@@ -737,7 +744,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var startTime = ModelStartTime;
             var stopTime = ModelStopTime;
             var timeStep = ModelTimeStep;
-
+            generateDialog.StartPosition = FormStartPosition.CenterScreen;
             generateDialog.SetData(null, startTime, stopTime, timeStep);
 
             generateDialog.ShowDialog(this);
@@ -747,107 +754,115 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 return;
             }
 
+            ApplyBoundaryConditionsForSupportPointMode(new DateTime[] { },
+                (values, function) => GenerateTimeSeries(function, generateDialog), "Generate/modify timeseries");
+        }
+
+        private static bool GenerateTimeSeries(IFunction function, TimeSeriesGeneratorDialog generateDialog)
+        {
+            function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
+            var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            if (!generateDialog.Apply(argument))
+            {
+                function.EndEdit();
+                return true;
+            }
+            function.EndEdit();
+
+            return false;
+        }
+
+        private void HarmonicComponentDialog(bool correctionsEnabled = false)
+        {
+            var dialog = new HarmonicConditionsDialog(correctionsEnabled);
+
+            var dialogResult = dialog.ShowDialog();
+            if (!dialogResult.HasValue || !dialogResult.Value)
+            {
+                return;
+            }
+
+            var viewModel = (HarmonicConditionsDialogViewModel)dialog.DataContext;
+            var amplitude = viewModel.Amplitude;
+            var frequency = viewModel.Frequency;
+            var phase = viewModel.Phase;
+            var amplitudeCorrection = viewModel.AmplitudeCorrection;
+            var phaseCorrection = viewModel.PhaseCorrection;
+
+            double[] newComponentValues = { frequency, amplitude, phase, amplitudeCorrection, phaseCorrection };
+
+            ApplyBoundaryConditionsForSupportPointMode(newComponentValues, ApplyHarmonicComponentValues, "Generate/modify harmonic component values");
+        }
+
+        private void ApplyBoundaryConditionsForSupportPointMode<T>(T[] newComponentValues, Func<T[] ,IFunction,bool> applyToFunction, string actionName)
+        {
             var supportPointsDialog = new SupportPointSelectionForm();
             supportPointsDialog.ShowDialog(this);
             ClearFunctionView();
-            BoundaryCondition.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-            var count = BoundaryCondition.Feature.Geometry.Coordinates.Count();
 
-            switch (supportPointsDialog.SupportPointOperationMode)
-            {
-                case SupportPointSelectionForm.SupportPointMode.NoPoints:
-                    return;
-                case SupportPointSelectionForm.SupportPointMode.SelectedPoint:
-                    if (BoundaryConditionData == null)
-                    {
-                        BoundaryCondition.AddPoint(SupportPointIndex);
-                        RefreshBoundaryData();
-                    }
-                    BoundaryConditionData.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                    generateDialog.Apply(BoundaryConditionData.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault());
-                    BoundaryConditionData.EndEdit();
-                    break;
-                case SupportPointSelectionForm.SupportPointMode.ActivePoints:
-                    foreach (var function in BoundaryCondition.PointData)
-                    {
-                        function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                        var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
-                        if (!generateDialog.Apply(argument))
-                        {
-                            function.EndEdit();
-                            break;
-                        }
-                        function.EndEdit();
-                    }
-                    break;
-                case SupportPointSelectionForm.SupportPointMode.InactivePoints:
-                    for (var i = 0; i < count; ++i)
-                    {
-                        if (BoundaryCondition.DataPointIndices.Contains(i)) continue;
-                        BoundaryCondition.AddPoint(i);
-                        var function = BoundaryCondition.GetDataAtPoint(i);
-                        function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                        var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
-                        if (!generateDialog.Apply(argument))
-                        {
-                            function.EndEdit();
-                            break;
-                        }
-                        function.EndEdit();
-                    }
-                    break;
-                case SupportPointSelectionForm.SupportPointMode.AllPoints:
-                    
-                    for (var i = 0; i < count; ++i)
-                    {
-                        if (!BoundaryCondition.DataPointIndices.Contains(i))
-                        {
-                            BoundaryCondition.AddPoint(i);
-                        }
-                        var function = BoundaryCondition.GetDataAtPoint(i);
-                        function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
-                        var argument = function.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
-                        if (!generateDialog.Apply(argument))
-                        {
-                            function.EndEdit();
-                            break;
-                        }
-                        function.EndEdit();
-                    }
-                    break;
-                default:
-                    throw new NotImplementedException("Support point selection method not recognized.");
-                    
-            }
-            BoundaryCondition.EndEdit();
+            BoundaryCondition.ApplyForSupportPointMode(supportPointsDialog.SupportPointOperationMode, newComponentValues, applyToFunction, actionName, SupportPointIndex);
+
+            RefreshBoundaryData();
             FillFunctionView();
+            functionView.RefreshChartView();
         }
-
-        private bool ApplyAstroComponentSelection(IEnumerable<string> components, IFunction function)
+        private static bool ApplyHarmonicComponentValues(double[] newValues, IFunction function)
         {
             var variable = function.Arguments.FirstOrDefault();
-            if (variable is IVariable<string>)
+            if (variable == null)
             {
-                function.BeginEdit(new DefaultEditAction("Generate/modify astro component values"));
-                var previousValues = variable.Values.Cast<string>().ToList();
-                foreach (var value in previousValues.Except(components))
+                throw new Exception("Function has no arguments");
+            }
+
+            if (!(function.Components.Count == 2 || function.Components.Count == 4))
+            {
+                throw new Exception("Incorrect number of components");
+            }
+
+            var isCorrected = function.Components.Count == 4;
+
+            function.BeginEdit(new DefaultEditAction("Generate/modify harmonic component values"));
+
+            double frequency = newValues[0];
+            double amplitude = newValues[1];
+            double phase = newValues[2];
+
+            function.Clear();
+            function[frequency] = !isCorrected 
+                ? new[] { amplitude, phase} 
+                : new[]
                 {
-                    variable.Values.Remove(value);
-                }
-                variable.AddValues(components.Except(previousValues));
-                function.EndEdit();
-                return true;
-            }
-            if (variable is IVariable<double>)
+                    amplitude,
+                    phase,
+                    newValues[3],// Amplitude correction
+                    newValues[4] // Phase correction
+                };
+
+            function.EndEdit();
+            return true;
+            
+        }
+
+        private static bool ApplyAstroComponentSelection(string[] components, IFunction function)
+        {
+            var variable = function.Arguments.FirstOrDefault();
+            if (!(variable is IVariable<string>))
             {
-                function.BeginEdit(new DefaultEditAction("Generate/modify harmonic component values"));
-                var previousValues = variable.Values.Cast<double>().ToList();
-                var newValues = components.Select(c => AstroComponents[c]);
-                variable.AddValues(newValues.Except(previousValues));
-                function.EndEdit();
-                return true;
+                return false;
             }
-            return false;
+
+            function.BeginEdit(new DefaultEditAction("Generate/modify astro component values"));
+
+            var previousValues = variable.Values.Cast<string>().ToList();
+            foreach (var value in previousValues.Except(components))
+            {
+                variable.Values.Remove(value);
+            }
+            variable.AddValues(components.Except(previousValues));
+
+            function.EndEdit();
+
+            return true;
         }
 
         private void AstroComponentsDialog()
@@ -879,57 +894,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return;
             }
-            var selectedComponents = selectDialog.SelectedComponents.Select(kvp => kvp.Key).ToList();
 
-            var supportPointsDialog = new SupportPointSelectionForm();
-            supportPointsDialog.ShowDialog(this);
-            ClearFunctionView();
-            BoundaryCondition.BeginEdit(new DefaultEditAction("Generate/modify astro component values"));
-            var count = BoundaryCondition.Feature.Geometry.Coordinates.Count();
-            switch (supportPointsDialog.SupportPointOperationMode)
-            {
-                case SupportPointSelectionForm.SupportPointMode.NoPoints:
-                    return;
-                case SupportPointSelectionForm.SupportPointMode.SelectedPoint:
-                    if (BoundaryConditionData == null)
-                    {
-                        BoundaryCondition.AddPoint(SupportPointIndex);
-                        RefreshBoundaryData();
-                    }
-                    ApplyAstroComponentSelection(selectedComponents, BoundaryConditionData);
-                    break;
-                case SupportPointSelectionForm.SupportPointMode.ActivePoints:
-                    foreach (var function in BoundaryCondition.PointData)
-                    {
-                        ApplyAstroComponentSelection(selectedComponents, function);
-                    }
-                    break;
-                case SupportPointSelectionForm.SupportPointMode.InactivePoints:
+            var selectedComponents = selectDialog.SelectedComponents.Select(kvp => kvp.Key).ToArray();
 
-                    for (var i = 0; i < count; ++i)
-                    {
-                        if (BoundaryCondition.DataPointIndices.Contains(i)) continue;
-                        BoundaryCondition.AddPoint(i);
-                        ApplyAstroComponentSelection(selectedComponents, BoundaryCondition.GetDataAtPoint(i));
-                    }
-                    break;
-                case SupportPointSelectionForm.SupportPointMode.AllPoints:
-
-                    for (var i = 0; i < count; ++i)
-                    {
-                        if (!BoundaryCondition.DataPointIndices.Contains(i))
-                        {
-                            BoundaryCondition.AddPoint(i);
-                        }
-                        ApplyAstroComponentSelection(selectedComponents, BoundaryCondition.GetDataAtPoint(i));
-                    }
-                    break;
-                default:
-                    throw new NotImplementedException("Support point selection method not recognized.");
-            }
-            BoundaryCondition.EndEdit();
-            FillFunctionView();
-            functionView.RefreshChartView();
+            ApplyBoundaryConditionsForSupportPointMode(selectedComponents, ApplyAstroComponentSelection, "Generate/modify astro component values");
         }
 
         private void WpsImportButtonClick(object sender, EventArgs e)

@@ -162,6 +162,7 @@
       <DependentUpon>BoundaryConditionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\Buttons\ToolboxesPanel.cs" />
+    <Compile Include="Forms\SupportPointMode.cs" />
     <Compile Include="Forms\SupportPointPropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>

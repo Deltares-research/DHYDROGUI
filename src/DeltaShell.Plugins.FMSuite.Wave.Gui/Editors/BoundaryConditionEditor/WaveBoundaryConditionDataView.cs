@@ -230,9 +230,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             var boundaryConditionData = boundaryCondition.GetDataAtPoint(SelectedPointIndex);
             switch (supportPointsDialog.SupportPointOperationMode)
             {
-                case SupportPointSelectionForm.SupportPointMode.NoPoints:
+                case SupportPointMode.NoPoints:
                     return;
-                case SupportPointSelectionForm.SupportPointMode.SelectedPoint:
+                case SupportPointMode.SelectedPoint:
                     if (boundaryConditionData == null)
                     {
                         boundaryCondition.AddPoint(SelectedPointIndex);
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                     generateDialog.Apply(boundaryConditionData.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault());
                     boundaryConditionData.EndEdit();
                     break;
-                case SupportPointSelectionForm.SupportPointMode.ActivePoints:
+                case SupportPointMode.ActivePoints:
                     foreach (var function in boundaryCondition.PointData)
                     {
                         function.BeginEdit(new DefaultEditAction("Generate/modify timeseries"));
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                         function.EndEdit();
                     }
                     break;
-                case SupportPointSelectionForm.SupportPointMode.InactivePoints:
+                case SupportPointMode.InactivePoints:
 
                     for (var i = 0; i < count; ++i)
                     {
@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                         function.EndEdit();
                     }
                     break;
-                case SupportPointSelectionForm.SupportPointMode.AllPoints:
+                case SupportPointMode.AllPoints:
 
                     for (var i = 0; i < count; ++i)
                     {

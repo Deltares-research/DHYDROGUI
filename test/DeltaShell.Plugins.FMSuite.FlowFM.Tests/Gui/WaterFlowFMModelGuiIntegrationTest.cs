@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
@@ -8,6 +9,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -27,7 +29,9 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
 using NUnit.Framework;
+using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 
@@ -583,6 +587,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, onShown);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void GivenNoBedLevelInNetCdfFileWhenSetXYZSamplesAndSaveAndLoadThenBedLevelInNetCdfFile()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+
+                app.Run();
+                string path = "temp.dsproj";
+                var tempPath1 = Path.GetTempFileName();
+                File.Delete(tempPath1);
+                Directory.CreateDirectory(tempPath1);
+
+                app.SaveProjectAs(Path.Combine(tempPath1, path)); // save to initialize file repository..
+                var testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+                testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+                var model = new WaterFlowFMModel(testFilePath);
+                //default harlingen had bedlevel values :
+                Assert.IsFalse(model.Bathymetry.GetValues<double>().All(v=> Math.Abs(v - (-999.0d)) < 0.01));
+                app.Project.RootFolder.Add(model);
+                
+                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                    model.GetDataItemByValue(model.Bathymetry));
+
+                Assert.IsNotNull(valueConverter.SpatialOperationSet);
+
+                
+                // create polygon as big a bathemetry
+                var polygons = new[] { new Feature
+                {
+                    Geometry = model.Bathymetry.Coordinates.ToPolygon()
+                }};
+
+                var eraseOperation = new EraseOperation();
+                var mask = new FeatureCollection(polygons, typeof(Feature));
+                eraseOperation.SetInputData(SpatialOperation.MaskInputName, mask);
+                Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(eraseOperation));
+                //erase all bedlevel values
+                valueConverter.SpatialOperationSet.Execute();
+                app.SaveProject();
+                app.CloseProject();
+                app.CreateNewProject();
+                const string path2 = "temp2.dsproj";
+                var tempPath2 = Path.GetTempFileName();
+                File.Delete(tempPath2);
+                Directory.CreateDirectory(tempPath2);
+
+                app.SaveProjectAs(Path.Combine(tempPath2, path2));
+                var otherModel = new WaterFlowFMModel(tempPath1+@"\temp.dsproj_data\har\har.mdu");
+                Assert.IsTrue(otherModel.Bathymetry.GetValues<double>().All(v => Math.Abs(v - (-999.0d)) < 0.01));
+                app.Project.RootFolder.Add(otherModel);
+                valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                    otherModel.GetDataItemByValue(otherModel.Bathymetry));
+
+                Assert.IsNotNull(valueConverter.SpatialOperationSet);
+                var samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
+                var importSamples = new ImportSamplesOperation(false) { FilePath = samplesPath, Name = "Test import" };
+                Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(importSamples));
+
+                var interpolate = new InterpolateOperation
+                {
+                    InterpolationMethod = SpatialInterpolationMethod.Triangulation,
+                    OperationType = PointwiseOperationType.OverwriteWhereMissing
+                };
+                interpolate.LinkInput(InterpolateOperation.InputSamplesName, importSamples.Output);
+
+                valueConverter.SpatialOperationSet.AddOperation(interpolate);
+                valueConverter.SpatialOperationSet.Execute();
+
+                app.SaveProject();
+                app.CloseProject();
+                app.CreateNewProject();
+                var anotherModel = new WaterFlowFMModel(tempPath2+@"\temp2.dsproj_data\har\har.mdu");
+                Assert.IsFalse(anotherModel.Bathymetry.GetValues<double>().All(v => Math.Abs(v - (-999.0d)) < 0.01));
             }
         }
     }
