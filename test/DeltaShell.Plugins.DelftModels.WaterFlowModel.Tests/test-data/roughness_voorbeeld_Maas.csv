@@ -1,0 +1,167 @@
+Name,Chainage,RoughnessType,SectionType,Dependance,Interpolation,Pos/neg ,R_pos_constant,Q_pos,R_pos_f(Q),H_pos,R_pos__f(h),R_neg_constant,Q_neg,R_neg_f(Q),H_neg,R_neg_f(h)
+001,0,Chezy,Main ,Discharge,Linear,Same,,0,23.34,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,50,24.19,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,125,25.49,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,250,31,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,500,36,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,750,38,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,1000,38,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,1500,39.6667,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,2000,40.6667,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,2400,44,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,2800,44.75,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,4000,46.1,,,,,,,
+001,0,Chezy,Main ,Discharge,Linear,Same,,4600,47.4,,,,,,,
+001,8243,Chezy,Main ,Discharge,Linear,Same,,0,23.34,,,,,,,
+001,8243,Chezy,Main ,Discharge,Linear,Same,,50,24.19,,,,,,,
+001,8243,Chezy,Main ,Discharge,Linear,Same,,125,25.49
+001,8243,Chezy,Main ,Discharge,Linear,Same,,250,31
+001,8243,Chezy,Main ,Discharge,Linear,Same,,500,36
+001,8243,Chezy,Main ,Discharge,Linear,Same,,750,38
+001,8243,Chezy,Main ,Discharge,Linear,Same,,1000,38
+001,8243,Chezy,Main ,Discharge,Linear,Same,,1500,39.6667
+001,8243,Chezy,Main ,Discharge,Linear,Same,,2000,40.6667
+001,8243,Chezy,Main ,Discharge,Linear,Same,,2400,44
+001,8243,Chezy,Main ,Discharge,Linear,Same,,2800,44.75
+001,8243,Chezy,Main ,Discharge,Linear,Same,,4000,46.1
+001,8243,Chezy,Main ,Discharge,Linear,Same,,4600,47.4
+001,0,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,40.88
+001,0,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,26.26
+001,0,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,28.84
+001,0,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,29.54
+001,0,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,32.44
+001,550,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,15.57
+001,550,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,19
+001,550,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,16.55
+001,550,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,26.48
+001,550,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,27.02
+001,1099,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,16.24
+001,1099,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,18.1
+001,1099,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,14.6
+001,1099,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,24.17
+001,1099,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,25.84
+001,1649,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,34.52
+001,1649,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,38.6
+001,1649,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,26.61
+001,1649,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,25.63
+001,1649,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,24.82
+001,2198,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,41.4
+001,2198,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,35.98
+001,2198,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,14.4
+001,2198,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,10.78
+001,2198,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,18.45
+001,2748,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,41.03
+001,2748,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,24.04
+001,2748,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,26.73
+001,2748,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,16.66
+001,2748,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,13.78
+001,3297,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,47.93
+001,3297,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,33.01
+001,3297,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,27.54
+001,3297,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,20.14
+001,3297,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,20.41
+001,3847,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,47.41
+001,3847,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,23.37
+001,3847,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,26.4
+001,3847,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,19.37
+001,3847,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,20.81
+001,4396,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,32.96
+001,4396,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,25.26
+001,4396,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,21.62
+001,4396,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,22.34
+001,4396,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,22.64
+001,4946,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,43.12
+001,4946,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,31.6
+001,4946,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,28.98
+001,4946,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,25.74
+001,4946,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,27.2
+001,5496,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,44.73
+001,5496,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,37.09
+001,5496,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,32.09
+001,5496,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,29.07
+001,5496,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,28.15
+001,6045,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,39.89
+001,6045,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,42.55
+001,6045,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,37.24
+001,6045,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,35.11
+001,6045,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,36.39
+001,6595,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,40.95
+001,6595,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,44.45
+001,6595,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,41.88
+001,6595,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,40.4
+001,6595,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,43.19
+001,7144,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,55.35
+001,7144,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,45.11
+001,7144,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,38.21
+001,7144,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,33.71
+001,7144,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,38.25
+001,7694,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,50.98
+001,7694,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,45.53
+001,7694,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,33.85
+001,7694,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,35.51
+001,7694,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,36.8
+001,8243,Chezy,Floodplain 1,Discharge,Linear,Same,,1500,53.9
+001,8243,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,32.3
+001,8243,Chezy,Floodplain 1,Discharge,Linear,Same,,2800,30.44
+001,8243,Chezy,Floodplain 1,Discharge,Linear,Same,,4000,29.53
+001,8243,Chezy,Floodplain 1,Discharge,Linear,Same,,4600,30.3
+001,8243,Chezy,Floodplain 1,Discharge,Linear,Same,,,
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,0,23.34
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,50,24.19
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,125,25.49
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,250,31
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,500,36
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,750,38
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,1000,38
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,1500,39.6667
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,2000,40.6667
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,2400,44
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,2800,44.75
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,4000,46.1
+001,0,Chezy,Floodplain 2,Discharge,Linear,Same,,4600,47.4
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,0,23.34
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,50,24.19
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,125,25.49
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,250,31
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,500,36
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,750,38
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,1000,38
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,1500,39.6667
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,2000,40.6667
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,2400,44
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,2800,44.75
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,4000,46.1
+001,8243,Chezy,Floodplain 2,Discharge,Linear,Same,,4600,47.4
+006,0,Chezy,Main,Constant,Linear,Same,50,,
+006,0,Chezy,Floodplain 1,Constant,Linear,Same,50,,
+006,0,Chezy,Floodplain 2,Constant,Linear,Same,50,,
+009,0,Chezy,Main,Discharge,Linear,Same,,0,50
+009,5719,Chezy,Main,Discharge,Linear,Same,,2000,50
+009,0,Chezy,Floodplain 1,Discharge,Linear,Same,,0,50
+009,5719,Chezy,Floodplain 1,Discharge,Linear,Same,,2000,50
+009,0,White & Colebrook,Floodplain 2,Constant,Linear,Same,0.5,,
+009,5719,White & Colebrook,Floodplain 2,Constant,Linear,Same,0.5,,
+020,0,Chezy,Main,Discharge,Linear,Same,,0,50
+020,0,Chezy,Main,Discharge,Linear,Same,,2000,50
+020,4084,Chezy,Main,Discharge,Linear,Same,,0,50
+020,4084,Chezy,Main,Discharge,Linear,Same,,2000,50
+020,0,Chezy,Floodplain 1,Constant,Linear,Same,35,,
+020,0,White & Colebrook,Floodplain 2,Constant,Linear,Same,0.5,,
+020,4084,White & Colebrook,Floodplain 2,Constant,Linear,Same,0.5,,
+024,0,Chezy,Main,Constant,Linear,Same,45,,
+024,0,Chezy,Floodplain 1,Constant,Linear,Same,45,,
+024,0,Chezy,Floodplain 2,Constant,Linear,Same,45,,
+,,,,,,,,,
+
+
+
+
+
+
+
+
+
+
+
+
+,,,,,,,,,,,,,,,,,

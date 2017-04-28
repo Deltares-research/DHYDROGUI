@@ -1,0 +1,12 @@
+DLF1.0
+[Flow Module: Results]
+FILE "@calcpnt.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Results at Nodes
+FILE "@reachseg.his"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Results at Reach Segments
+FILE "@qlat.his"        LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Lateral Flows
+FILE "@struc.his"       LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Results at Structures
+FILE "@qwb.his"         LAYER " " TYPE node VAR 1 HISLOC 2                 = Water Balance
+FILE "@flowanal.his"    LAYER " " TYPE reachgridvirtual VAR 6 HISLOC 2     = Simulation Info at the Reach Segments
+[Flow Module: Dimensions]
+FILE "@calcdim.his"     LAYER " " TYPE node VAR 1 HISLOC 2                 = Nodes
+FILE "@reachdim.his"    LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Reach Segments
+FILE "@strucdim.his"    LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Structures

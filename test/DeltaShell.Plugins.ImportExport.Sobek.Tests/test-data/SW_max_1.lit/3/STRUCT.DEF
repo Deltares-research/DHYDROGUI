@@ -1,0 +1,50 @@
+STDS id 'brug_1' nm '' ty 12 tb 3 si 'brug_1' pw 0 vf 0 li 0.276 lo 1 dl 27 rl 0 rt 0   stds
+STDS id 'SW9360-SW9364-S570' nm '' ty 6 cl -4 cw 20 ce 1 sc 1 rt 0      stds
+STDS id 'brug_11' nm '' ty 12 tb 3 si 'brug_11' pw 0 vf 0 li 0.526 lo 1 dl 21 rl 0 rt 0          stds
+STDS id 'brug_10' nm '' ty 12 tb 3 si 'brug_10' pw 0 vf 0 li 0.526 lo 1 dl 21 rl 0 rt 0          stds
+STDS id 'brug_9' nm '' ty 12 tb 3 si 'brug_9' pw 0 vf 0 li 0.599 lo 1 dl 16 rl 0 rt 0   stds
+STDS id 'brug_8' nm '' ty 12 tb 3 si 'brug_8' pw 0 vf 0 li 0.486 lo 1 dl 6 rl 0 rt 0   stds
+STDS id 'brug_7' nm '' ty 12 tb 3 si 'brug_7' pw 0 vf 0 li 0.334 lo 1 dl 17 rl 0 rt 0   stds
+STDS id 'brug_5' nm '' ty 12 tb 3 si 'brug_5' pw 0 vf 0 li 0.184 lo 1 dl 14 rl 0 rt 0          stds
+STDS id 'brug_4' nm '' ty 12 tb 3 si 'brug_4' pw 0 vf 0 li 0.514 lo 1 dl 16 rl 0 rt 0          stds
+STDS id 'brug_3' nm '' ty 12 tb 3 si 'brug_3' pw 0 vf 0 li 0.105 lo 1 dl 30 rl 0 rt 0          stds
+STDS id 'brug_18' nm '' ty 12 tb 3 si 'brug_18' pw 0 vf 0 li 0.548 lo 1 dl 16 rl 0 rt 0   stds
+STDS id 'brug_17' nm '' ty 12 tb 3 si 'brug_17' pw 0 vf 0 li 0.347 lo 1 dl 13 rl 0 rt 0          stds
+STDS id 'brug_15' nm '' ty 12 tb 3 si 'brug_15' pw 0 vf 0 li 0.547 lo 1 dl 21 rl 0 rt 0          stds
+STDS id 'brug_14' nm '' ty 12 tb 3 si 'brug_14' pw 0 vf 0 li 0.58 lo 1 dl 4 rl 0 rt 0          stds
+STDS id 'brug_13' nm '' ty 12 tb 3 si 'brug_13' pw 0 vf 0 li 0.637 lo 1 dl 16 rl 0 rt 0          stds
+STDS id 'brug_39' nm '' ty 12 tb 3 si 'brug_39' pw 0 vf 0 li 0.102 lo 1 dl 6 rl 0 rt 0    stds
+STDS id 'brug_38' nm '' ty 12 tb 3 si 'brug_38' pw 0 vf 0 li 0.491 lo 1 dl 5 rl 0 rt 0          stds
+STDS id 'brug_37' nm '' ty 12 tb 3 si 'brug_37' pw 0 vf 0 li 0.497 lo 1 dl 11 rl 0 rt 0          stds
+STDS id 'brug_35' nm '' ty 12 tb 3 si 'brug_35' pw 0 vf 0 li 0.535 lo 1 dl 41 rl 0 rt 0   stds
+STDS id 'OK7000-OK7010-S36' nm '' ty 6 cl -0.45 cw 6 ce 1 sc 1 rt 0      stds
+STDS id 'SW4110-SW5070-S127' nm '' ty 6 cl 1 cw 8 ce 1 sc 1 rt 0      stds
+STDS id 'brug_27' nm '' ty 12 tb 3 si 'brug_27' pw 0 vf 0 li 0 lo 1 dl 5 rl -1 rt 0          stds
+STDS id 'brug_26' nm '' ty 12 tb 3 si 'brug_26' pw 0 vf 0 li 0 lo 1 dl 3 rl -1 rt 0      stds
+STDS id 'brug_25' nm '' ty 12 tb 3 si 'brug_25' pw 0 vf 0 li 0 lo 1 dl 7 rl -1 rt 0          stds
+STDS id 'brug_24' nm '' ty 12 tb 3 si 'brug_24' pw 0 vf 0 li 0 lo 1 dl 7 rl -1 rt 0          stds
+STDS id 'brug_23' nm '' ty 12 tb 3 si 'brug_23' pw 0 vf 0 li 0.063 lo 1 dl 9 rl -1 rt 0          stds
+STDS id 'brug_22' nm '' ty 12 tb 3 si 'brug_22' pw 0 vf 0 li 0.538 lo 1 dl 4 rl -1 rt 0          stds
+STDS id 'brug_21' nm '' ty 12 tb 3 si 'brug_21' pw 0 vf 0 li 0.497 lo 1 dl 11 rl -1 rt 0          stds
+STDS id 'brug_20' nm '' ty 12 tb 3 si 'brug_20' pw 0 vf 0 li 0.104 lo 1 dl 30 rl -1 rt 0          stds
+STDS id 'brug_19' nm '' ty 12 tb 3 si 'brug_19' pw 0 vf 0 li 0.583 lo 1 dl 4 rl -1 rt 0          stds
+STDS id 'brug_12' nm '' ty 12 tb 3 si 'brug_12' pw 0 vf 0 li 0.335 lo 1 dl 8.5 rl 0 rt 0          stds
+STDS id 'brug_44' nm '' ty 12 tb 3 si 'brug_44' pw 0 vf 0 li 0 lo 1 dl 3 rl 0 rt 0   stds
+STDS id 'OK5450-OK5460-S35' nm '' ty 6 cl 3.46 cw 5 ce 1 sc 1 rt 0      stds
+STDS id 'brug_43' nm '' ty 12 tb 3 si 'brug_43' pw 0 vf 0 li 0 lo 1 dl 13 rl 0 rt 0   stds
+STDS id 'OK5465-OK5470-S34' nm '' ty 6 cl 2.9 cw 6 ce 1 sc 1 rt 0      stds
+STDS id 'brug_42' nm '' ty 12 tb 3 si 'brug_42' pw 0 vf 0 li 0 lo 1 dl 9 rl 0 rt 0    stds
+STDS id 'brug_41' nm '' ty 12 tb 3 si 'brug_41' pw 0 vf 0 li 0 lo 1 dl 6 rl 0 rt 0    stds
+STDS id 'brug_40' nm '' ty 12 tb 3 si 'brug_40' pw 0 vf 0 li 0 lo 1 dl 50 rl 0 rt 0    stds
+STDS id 'OK5290-OK5334-S14' nm '' ty 6 cl 4.35 cw 6.25 ce 1 sc 1 rt 0      stds
+STDS id 'brug_47' nm '' ty 12 tb 3 si 'brug_47' pw 0 vf 0 li 0 lo 1 dl 14 rl 0 rt 0   stds
+STDS id 'brug_46' nm '' ty 12 tb 3 si 'brug_46' pw 0 vf 0 li 0 lo 1 dl 5 rl 0 rt 0   stds
+STDS id 'brug_45' nm '' ty 12 tb 3 si 'brug_45' pw 0 vf 0 li 0 lo 1 dl 40 rl 0 rt 0   stds
+STDS id 'OK5435-OK5440-S11' nm '' ty 6 cl 4.28 cw 5 ce 1 sc 1 rt 0      stds
+STDS id 'brug_34' nm '' ty 12 tb 3 si 'brug_34' pw 0 vf 0 li 0 lo 1 dl 6 rl -1 rt 0     stds
+STDS id 'brug_33' nm '' ty 12 tb 3 si 'brug_33' pw 0 vf 0 li 0 lo 1 dl 8 rl -1 rt 0     stds
+STDS id 'brug_32' nm '' ty 12 tb 3 si 'brug_32' pw 0 vf 0 li 0 lo 1 dl 8 rl -1 rt 0     stds
+STDS id 'brug_31' nm '' ty 12 tb 3 si 'brug_31' pw 0 vf 0 li 0 lo 1 dl 7 rl -1 rt 0     stds
+STDS id 'brug_30' nm '' ty 12 tb 3 si 'brug_30' pw 0 vf 0 li 0 lo 1 dl 7 rl -1 rt 0     stds
+STDS id 'brug_29' nm '' ty 12 tb 3 si 'brug_29' pw 0 vf 0 li 0 lo 1 dl 7 rl -1 rt 0     stds
+STDS id 'brug_28' nm '' ty 12 tb 3 si 'brug_28' pw 0 vf 0 li 0 lo 1 dl 24 rl -1 rt 0     stds

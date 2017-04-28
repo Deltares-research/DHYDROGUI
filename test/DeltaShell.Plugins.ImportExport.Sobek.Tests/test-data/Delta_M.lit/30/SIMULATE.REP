@@ -1,0 +1,100 @@
+Information about Simulation
+============================
+
+Simulation Mode                     : Run 1DFLOW (River) module, then 1DWAQ module
+
+Start                               : 10-december-2007 12:57:16
+End                                 : 10-december-2007 13:44:36
+
+Rainfall-Runoff Module used         : No
+Channel Module used                : No
+Sewer Module used                  : No
+1D2D Module used                   : No
+Real Time Control Module used      : No
+Water Quality Module used          : Yes
+Emission Module used               : No
+Ground Water Module used           : No
+Simulation parallel                : No
+Flow modules unsteady              : Yes
+2D Water Quality Module used       : No
+Delft3D Flow used                  : No
+Delft3D WAQ  used                  : No
+
+Network imported or started        : SOBEK_river
+Network imported at                : 14-10-2005 16:50:06
+Imported Sobek-River network       : 
+
+
+Balance of Flow Module
+======================
+
+Under License to                   :           SOBEK licensee
+
+
+Numerical Parameters Used
+=========================
+Accuracy Level                     : Low Speed/More Accurate
+Structure Stability Factor         :  0
+Conveyance factor K                :  T
+Conveyance factor K-Table          :  F
+Theta                              :            1.00
+Maximum Courant number             :            2.00
+Epsilon value Volume (m3/s)        :      0.00010000
+Epsilon value Level (m)            :      0.00010000
+Threshold Values ...
+Flooding (m)                       :         0.01000
+Drying (m)                         :         0.00100
+Minimum Length Reach Segment (     :            1.00
+Relaxation Factor (0..1)           :            1.00
+Structure Dynamics Factor          :            1.00
+Maximum Iterations                 :               8
+Gravity g (m2/s)                   :            9.81
+Fluid Density (m3)                 :         1000.00
+Timestep size (s) :                :       1200.0000
+Lowest Timestep (s) :              :         37.7569
+Largest Timestep (s) :             :       1200.0000
+
+External structure                  Spilled volume (m3)
+
+Boundaries in (m3)                 : ***************
+Boundaries out (m3)                : ***************
+Structures in (m3)                 :            0.00
+Structures out (m3)                :            0.00
+Lateral disch. in (m3)             :   1338277929.00
+Lateral disch. out (m3)            :    109561154.81
+Storage (m3)                       :       -14821.21
+Error (m3)                         :          -28.67
+vlerror(m3) =    28.6651821136475
+
+Initial conditions
+==================
+Flow Module                        : from restart file '..\work\2001.rda'
+Water Quality Module               : from restart file 'N2002'
+
+
+Version Information of Modules
+==============================
+
+Vervang                            : 27-06-2000 09:28:08, Version: 4.05.012
+Caseman                            : 08-12-2005 14:39:44, Version: 4.07.02
+CmUtil                             : 08-12-2005 14:39:44, Version: 4.07.00
+CmUpdate                           : 08-12-2005 14:39:44, Version: 4.07.00
+3B                                 : 10-04-2007 11:06:14, Version: 3.210.16
+Parsen                             : 03-04-2007 15:20:44, Version: 2.4.27
+Parsen2D                           : 24-05-2007 07:31:02, Version: 1.01.34
+Flow                               : 04-06-2007 11:21:28, Version: 3.07.93
+RTC-Matlab 5.3                     : 12-02-2007 10:34:20, Version: 3.210.06
+RTC-Matlab 6.0                     : 12-02-2007 10:34:20, Version: 3.210.06
+RTC-Matlab 6.1                     : 12-02-2007 10:34:20, Version: 3.210.06
+RTC-Matlab 6.5                     : 12-02-2007 10:34:20, Version: 3.210.06
+RTC-Matlab 7.0                     : 12-02-2007 10:34:20, Version: 3.210.06
+RTC-Matlab R2006b                  : 12-02-2007 10:34:20, Version: 3.210.06
+EM                                 : 08-12-2005 14:03:10, Version: 1.00.0001
+Delwaq1                            : 30-10-2007 10:54:16, Version: 4, 51, 21, 0
+Delwaq2                            : 30-10-2007 10:57:56, Version: 4, 51, 21, 0
+Waterbal                           : 22-04-2003 14:46:58, Version: 2.00.04
+Simulate                           : 12-07-2007 14:13:48, Version: 2.07.0110
+
+SOBEKVersion   = Sobek Advanced Version 2.11.000.21
+Case Name      = P: Gem-jaar: Katse Heule + Meer Graas, reductie bodemflux 2
+

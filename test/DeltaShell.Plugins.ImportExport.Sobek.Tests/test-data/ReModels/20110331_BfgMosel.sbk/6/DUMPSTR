@@ -1,0 +1,2420 @@
+ Structure data of last steps before crash
+ or continuation without convergence.
+ Each record contains:
+  - Time step number
+  - Iteration step number
+  - Per structure:
+  - Structure name
+  - Discharge
+  - Head
+  
+ Time step =     1 Nr iter. = 999
+    Detzem                         Q=  1169.993 DH=    -0.049
+    Fankel                         Q=  1064.524 DH=     0.010
+    St. Aldegund                   Q=  1209.916 DH=     0.141
+    Zeltingen                      Q=  1199.911 DH=     0.156
+    Wintrich                       Q=  1196.957 DH=     0.538
+    Enkirch                        Q=  1199.916 DH=     0.610
+    Fankel parallel                Q=   145.365 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.538
+ Time step =     1 Nr iter. = 998
+    Detzem                         Q=  1169.994 DH=    -0.049
+    Fankel                         Q=  1064.587 DH=     0.010
+    St. Aldegund                   Q=  1209.961 DH=     0.141
+    Zeltingen                      Q=  1199.950 DH=     0.156
+    Wintrich                       Q=  1189.831 DH=     0.552
+    Enkirch                        Q=  1199.959 DH=     0.610
+    Fankel parallel                Q=   145.374 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.552
+ Time step =     1 Nr iter. = 997
+    Detzem                         Q=  1169.998 DH=    -0.049
+    Fankel                         Q=  1064.734 DH=     0.010
+    St. Aldegund                   Q=  1210.082 DH=     0.141
+    Zeltingen                      Q=  1200.089 DH=     0.156
+    Wintrich                       Q=  1175.775 DH=     0.553
+    Enkirch                        Q=  1200.087 DH=     0.611
+    Fankel parallel                Q=   145.397 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.611
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.553
+ Time step =     1 Nr iter. = 996
+    Detzem                         Q=  1169.989 DH=    -0.049
+    Fankel                         Q=  1064.593 DH=     0.010
+    St. Aldegund                   Q=  1209.964 DH=     0.141
+    Zeltingen                      Q=  1199.972 DH=     0.156
+    Wintrich                       Q=  1197.085 DH=     0.524
+    Enkirch                        Q=  1199.969 DH=     0.610
+    Fankel parallel                Q=   145.376 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.524
+ Time step =     1 Nr iter. = 995
+    Detzem                         Q=  1169.993 DH=    -0.049
+    Fankel                         Q=  1064.524 DH=     0.010
+    St. Aldegund                   Q=  1209.916 DH=     0.141
+    Zeltingen                      Q=  1199.911 DH=     0.156
+    Wintrich                       Q=  1196.957 DH=     0.538
+    Enkirch                        Q=  1199.914 DH=     0.610
+    Fankel parallel                Q=   145.365 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.538
+ Time step =     1 Nr iter. = 994
+    Detzem                         Q=  1169.994 DH=    -0.049
+    Fankel                         Q=  1064.587 DH=     0.010
+    St. Aldegund                   Q=  1209.961 DH=     0.141
+    Zeltingen                      Q=  1199.950 DH=     0.156
+    Wintrich                       Q=  1189.831 DH=     0.552
+    Enkirch                        Q=  1199.956 DH=     0.610
+    Fankel parallel                Q=   145.374 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.552
+ Time step =     1 Nr iter. = 993
+    Detzem                         Q=  1169.998 DH=    -0.049
+    Fankel                         Q=  1064.734 DH=     0.010
+    St. Aldegund                   Q=  1210.082 DH=     0.141
+    Zeltingen                      Q=  1200.089 DH=     0.156
+    Wintrich                       Q=  1175.775 DH=     0.553
+    Enkirch                        Q=  1200.084 DH=     0.611
+    Fankel parallel                Q=   145.397 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.611
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.553
+ Time step =     1 Nr iter. = 992
+    Detzem                         Q=  1169.989 DH=    -0.049
+    Fankel                         Q=  1064.593 DH=     0.010
+    St. Aldegund                   Q=  1209.964 DH=     0.141
+    Zeltingen                      Q=  1199.972 DH=     0.156
+    Wintrich                       Q=  1197.085 DH=     0.524
+    Enkirch                        Q=  1199.968 DH=     0.610
+    Fankel parallel                Q=   145.376 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.524
+ Time step =     1 Nr iter. = 991
+    Detzem                         Q=  1169.993 DH=    -0.049
+    Fankel                         Q=  1064.524 DH=     0.010
+    St. Aldegund                   Q=  1209.916 DH=     0.141
+    Zeltingen                      Q=  1199.911 DH=     0.156
+    Wintrich                       Q=  1196.957 DH=     0.538
+    Enkirch                        Q=  1199.916 DH=     0.610
+    Fankel parallel                Q=   145.365 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.538
+ Time step =     1 Nr iter. = 990
+    Detzem                         Q=  1169.994 DH=    -0.049
+    Fankel                         Q=  1064.587 DH=     0.010
+    St. Aldegund                   Q=  1209.961 DH=     0.141
+    Zeltingen                      Q=  1199.950 DH=     0.156
+    Wintrich                       Q=  1189.831 DH=     0.552
+    Enkirch                        Q=  1199.959 DH=     0.610
+    Fankel parallel                Q=   145.374 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.552
+ Time step =     1 Nr iter. = 989
+    Detzem                         Q=  1169.998 DH=    -0.049
+    Fankel                         Q=  1064.734 DH=     0.010
+    St. Aldegund                   Q=  1210.082 DH=     0.141
+    Zeltingen                      Q=  1200.089 DH=     0.156
+    Wintrich                       Q=  1175.775 DH=     0.553
+    Enkirch                        Q=  1200.087 DH=     0.611
+    Fankel parallel                Q=   145.397 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.611
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.553
+ Time step =     1 Nr iter. = 988
+    Detzem                         Q=  1169.989 DH=    -0.049
+    Fankel                         Q=  1064.593 DH=     0.010
+    St. Aldegund                   Q=  1209.964 DH=     0.141
+    Zeltingen                      Q=  1199.972 DH=     0.156
+    Wintrich                       Q=  1197.085 DH=     0.524
+    Enkirch                        Q=  1199.969 DH=     0.610
+    Fankel parallel                Q=   145.376 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.524
+ Time step =     1 Nr iter. = 987
+    Detzem                         Q=  1169.993 DH=    -0.049
+    Fankel                         Q=  1064.524 DH=     0.010
+    St. Aldegund                   Q=  1209.916 DH=     0.141
+    Zeltingen                      Q=  1199.911 DH=     0.156
+    Wintrich                       Q=  1196.957 DH=     0.538
+    Enkirch                        Q=  1199.914 DH=     0.610
+    Fankel parallel                Q=   145.365 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.538
+ Time step =     1 Nr iter. = 986
+    Detzem                         Q=  1169.994 DH=    -0.049
+    Fankel                         Q=  1064.587 DH=     0.010
+    St. Aldegund                   Q=  1209.961 DH=     0.141
+    Zeltingen                      Q=  1199.950 DH=     0.156
+    Wintrich                       Q=  1189.831 DH=     0.552
+    Enkirch                        Q=  1199.956 DH=     0.610
+    Fankel parallel                Q=   145.374 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.552
+ Time step =     1 Nr iter. = 985
+    Detzem                         Q=  1169.998 DH=    -0.049
+    Fankel                         Q=  1064.734 DH=     0.010
+    St. Aldegund                   Q=  1210.082 DH=     0.141
+    Zeltingen                      Q=  1200.089 DH=     0.156
+    Wintrich                       Q=  1175.775 DH=     0.553
+    Enkirch                        Q=  1200.084 DH=     0.611
+    Fankel parallel                Q=   145.397 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.611
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.553
+ Time step =     1 Nr iter. = 984
+    Detzem                         Q=  1169.989 DH=    -0.049
+    Fankel                         Q=  1064.593 DH=     0.010
+    St. Aldegund                   Q=  1209.964 DH=     0.141
+    Zeltingen                      Q=  1199.972 DH=     0.156
+    Wintrich                       Q=  1197.085 DH=     0.524
+    Enkirch                        Q=  1199.968 DH=     0.610
+    Fankel parallel                Q=   145.376 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.524
+ Time step =     1 Nr iter. = 983
+    Detzem                         Q=  1169.993 DH=    -0.049
+    Fankel                         Q=  1064.524 DH=     0.010
+    St. Aldegund                   Q=  1209.916 DH=     0.141
+    Zeltingen                      Q=  1199.911 DH=     0.156
+    Wintrich                       Q=  1196.957 DH=     0.538
+    Enkirch                        Q=  1199.916 DH=     0.610
+    Fankel parallel                Q=   145.365 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.538
+ Time step =     1 Nr iter. = 982
+    Detzem                         Q=  1169.994 DH=    -0.049
+    Fankel                         Q=  1064.587 DH=     0.010
+    St. Aldegund                   Q=  1209.961 DH=     0.141
+    Zeltingen                      Q=  1199.950 DH=     0.156
+    Wintrich                       Q=  1189.831 DH=     0.552
+    Enkirch                        Q=  1199.959 DH=     0.610
+    Fankel parallel                Q=   145.374 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.552
+ Time step =     1 Nr iter. = 981
+    Detzem                         Q=  1169.998 DH=    -0.049
+    Fankel                         Q=  1064.734 DH=     0.010
+    St. Aldegund                   Q=  1210.082 DH=     0.141
+    Zeltingen                      Q=  1200.089 DH=     0.156
+    Wintrich                       Q=  1175.775 DH=     0.553
+    Enkirch                        Q=  1200.087 DH=     0.611
+    Fankel parallel                Q=   145.397 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.611
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.553
+ Time step =     1 Nr iter. = 980
+    Detzem                         Q=  1169.989 DH=    -0.049
+    Fankel                         Q=  1064.593 DH=     0.010
+    St. Aldegund                   Q=  1209.964 DH=     0.141
+    Zeltingen                      Q=  1199.972 DH=     0.156
+    Wintrich                       Q=  1197.085 DH=     0.524
+    Enkirch                        Q=  1199.969 DH=     0.610
+    Fankel parallel                Q=   145.376 DH=     0.010
+    St. Aldegund parallel          Q=     0.000 DH=     0.141
+    Enkirch parallel               Q=     0.000 DH=     0.610
+    Zeltingen parallel             Q=     0.000 DH=     0.156
+    Wintrich parallel              Q=     0.000 DH=     0.524
+  
+ Time step =   686 Nr iter. = 100
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   821.398 DH=     0.592
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.592
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  99
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   806.840 DH=     0.611
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.611
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  98
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   807.491 DH=     0.606
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.606
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  97
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   811.527 DH=     0.598
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.598
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  96
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   821.398 DH=     0.592
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.592
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  95
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   806.840 DH=     0.611
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.611
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  94
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   807.491 DH=     0.606
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.606
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  93
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   811.527 DH=     0.598
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.598
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  92
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   821.398 DH=     0.592
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.592
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  91
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   806.840 DH=     0.611
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.611
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  90
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   807.491 DH=     0.606
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.606
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  89
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   811.527 DH=     0.598
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.598
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  88
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   821.398 DH=     0.592
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.592
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  87
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   806.839 DH=     0.611
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.611
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  86
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   807.489 DH=     0.606
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.606
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  85
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   811.527 DH=     0.598
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.598
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  84
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   821.398 DH=     0.592
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.592
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  83
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   806.840 DH=     0.611
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.611
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  82
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   807.491 DH=     0.606
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.539 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.606
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+ Time step =   686 Nr iter. =  81
+    Detzem                         Q=   783.417 DH=     5.140
+    Fankel                         Q=   811.527 DH=     0.598
+    St. Aldegund                   Q=   814.290 DH=     3.676
+    Zeltingen                      Q=   804.540 DH=     2.531
+    Wintrich                       Q=   797.431 DH=     4.502
+    Enkirch                        Q=   806.180 DH=     3.829
+    Fankel parallel                Q=     0.000 DH=     0.598
+    St. Aldegund parallel          Q=     0.000 DH=     3.676
+    Enkirch parallel               Q=     0.000 DH=     3.829
+    Zeltingen parallel             Q=     0.000 DH=     2.531
+    Wintrich parallel              Q=     0.000 DH=     4.502
+  
+ Time step =   687 Nr iter. = 100
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.622 DH=     0.599
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.846 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  99
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.851 DH=     0.607
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.848 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  98
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   804.243 DH=     0.614
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.614
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  97
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.623 DH=     0.599
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  96
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.853 DH=     0.607
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.846 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  95
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   804.245 DH=     0.614
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.848 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.614
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  94
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.623 DH=     0.599
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  93
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.853 DH=     0.607
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  92
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   804.245 DH=     0.614
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.846 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.614
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  91
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.623 DH=     0.599
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.848 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  90
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.853 DH=     0.607
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  89
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   804.245 DH=     0.614
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.614
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  88
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.622 DH=     0.599
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.846 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  87
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.851 DH=     0.607
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.848 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  86
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   804.243 DH=     0.614
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.614
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  85
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.623 DH=     0.599
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  84
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.853 DH=     0.607
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.846 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  83
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   804.245 DH=     0.614
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.848 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.614
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  82
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   817.623 DH=     0.599
+    St. Aldegund                   Q=   813.702 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.599
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+ Time step =   687 Nr iter. =  81
+    Detzem                         Q=   782.834 DH=     5.142
+    Fankel                         Q=   813.853 DH=     0.607
+    St. Aldegund                   Q=   813.703 DH=     3.678
+    Zeltingen                      Q=   803.949 DH=     2.533
+    Wintrich                       Q=   796.847 DH=     4.503
+    Enkirch                        Q=   805.583 DH=     3.831
+    Fankel parallel                Q=     0.000 DH=     0.607
+    St. Aldegund parallel          Q=     0.000 DH=     3.678
+    Enkirch parallel               Q=     0.000 DH=     3.831
+    Zeltingen parallel             Q=     0.000 DH=     2.533
+    Wintrich parallel              Q=     0.000 DH=     4.503
+  
+ Time step =  2070 Nr iter. = 100
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1571.998 DH=     0.777
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.034 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.777
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  99
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1587.954 DH=     0.757
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.036 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.757
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  98
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1573.018 DH=     0.768
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.045 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.768
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  97
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1594.943 DH=     0.744
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.999 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.744
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  96
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1589.061 DH=     0.761
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.996 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.761
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  95
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1571.998 DH=     0.777
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.034 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.777
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  94
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1587.954 DH=     0.757
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.036 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.757
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  93
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1573.018 DH=     0.768
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.045 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.768
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  92
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1594.943 DH=     0.744
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.999 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.744
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  91
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1589.061 DH=     0.761
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.996 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.761
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  90
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1571.998 DH=     0.777
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.034 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.777
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  89
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1587.954 DH=     0.757
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.036 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.757
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  88
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1573.017 DH=     0.768
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.045 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.768
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  87
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1594.942 DH=     0.744
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.999 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.744
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  86
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1589.059 DH=     0.761
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.996 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.761
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  85
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1571.998 DH=     0.777
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.034 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.777
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  84
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1587.954 DH=     0.757
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.036 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.757
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  83
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1573.018 DH=     0.768
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1534.045 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.768
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  82
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1594.943 DH=     0.744
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.999 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.744
+    Wintrich parallel              Q=     0.000 DH=     2.621
+ Time step =  2070 Nr iter. =  81
+    Detzem                         Q=  1507.008 DH=     3.054
+    Fankel                         Q=  1439.172 DH=     1.648
+    St. Aldegund                   Q=  1502.528 DH=     1.483
+    Zeltingen                      Q=  1589.061 DH=     0.761
+    Wintrich                       Q=  1570.072 DH=     2.621
+    Enkirch                        Q=  1533.996 DH=     1.856
+    Fankel parallel                Q=     0.000 DH=     1.648
+    St. Aldegund parallel          Q=     0.000 DH=     1.483
+    Enkirch parallel               Q=     0.000 DH=     1.856
+    Zeltingen parallel             Q=     0.000 DH=     0.761
+    Wintrich parallel              Q=     0.000 DH=     2.621
+  
+ Time step =  2087 Nr iter. = 100
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.191 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  99
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.514 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  98
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.187 DH=     0.881
+    St. Aldegund                   Q=  1767.625 DH=     0.749
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.749
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  97
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.193 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  96
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.514 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  95
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.187 DH=     0.881
+    St. Aldegund                   Q=  1767.624 DH=     0.749
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.749
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  94
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.191 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  93
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.510 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  92
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.187 DH=     0.881
+    St. Aldegund                   Q=  1767.622 DH=     0.749
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.749
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  91
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.191 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  90
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.514 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  89
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.187 DH=     0.881
+    St. Aldegund                   Q=  1767.625 DH=     0.749
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.749
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  88
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.193 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  87
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.514 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  86
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.187 DH=     0.881
+    St. Aldegund                   Q=  1767.624 DH=     0.749
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.749
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  85
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.191 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  84
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.510 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  83
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.187 DH=     0.881
+    St. Aldegund                   Q=  1767.622 DH=     0.749
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.749
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  82
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.198 DH=     0.881
+    St. Aldegund                   Q=  1761.191 DH=     0.765
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.500 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.765
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+ Time step =  2087 Nr iter. =  81
+    Detzem                         Q=  1663.505 DH=     2.544
+    Fankel                         Q=  1736.227 DH=     0.881
+    St. Aldegund                   Q=  1744.514 DH=     0.775
+    Zeltingen                      Q=  1787.113 DH=     0.204
+    Wintrich                       Q=  1741.402 DH=     2.122
+    Enkirch                        Q=  1766.499 DH=     1.117
+    Fankel parallel                Q=     0.000 DH=     0.881
+    St. Aldegund parallel          Q=     0.000 DH=     0.775
+    Enkirch parallel               Q=     0.000 DH=     1.117
+    Zeltingen parallel             Q=     0.000 DH=     0.204
+    Wintrich parallel              Q=     0.000 DH=     2.122
+  
+ Time step =  2088 Nr iter. = 100
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.249 DH=     0.768
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  99
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.675 DH=     0.752
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  98
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.022 DH=     0.847
+    St. Aldegund                   Q=  1781.738 DH=     0.741
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.741
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  97
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.246 DH=     0.768
+    Zeltingen                      Q=  1791.107 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  96
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.674 DH=     0.752
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  95
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.022 DH=     0.847
+    St. Aldegund                   Q=  1781.742 DH=     0.741
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.741
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  94
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.249 DH=     0.768
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  93
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.675 DH=     0.752
+    Zeltingen                      Q=  1791.107 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  92
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.022 DH=     0.847
+    St. Aldegund                   Q=  1781.738 DH=     0.741
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.741
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  91
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.246 DH=     0.768
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  90
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.674 DH=     0.752
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  89
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.022 DH=     0.847
+    St. Aldegund                   Q=  1781.742 DH=     0.741
+    Zeltingen                      Q=  1791.107 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.741
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  88
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.249 DH=     0.768
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  87
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.675 DH=     0.752
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  86
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.022 DH=     0.847
+    St. Aldegund                   Q=  1781.738 DH=     0.741
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.741
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  85
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.246 DH=     0.768
+    Zeltingen                      Q=  1791.107 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  84
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.674 DH=     0.752
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  83
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.022 DH=     0.847
+    St. Aldegund                   Q=  1781.742 DH=     0.741
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.741
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  82
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.062 DH=     0.847
+    St. Aldegund                   Q=  1758.249 DH=     0.768
+    Zeltingen                      Q=  1791.108 DH=     0.168
+    Wintrich                       Q=  1743.957 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.768
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+ Time step =  2088 Nr iter. =  81
+    Detzem                         Q=  1659.819 DH=     2.533
+    Fankel                         Q=  1746.052 DH=     0.847
+    St. Aldegund                   Q=  1764.675 DH=     0.752
+    Zeltingen                      Q=  1791.107 DH=     0.168
+    Wintrich                       Q=  1743.959 DH=     2.104
+    Enkirch                        Q=  1776.541 DH=     1.080
+    Fankel parallel                Q=     0.000 DH=     0.847
+    St. Aldegund parallel          Q=     0.000 DH=     0.752
+    Enkirch parallel               Q=     0.000 DH=     1.080
+    Zeltingen parallel             Q=     0.000 DH=     0.168
+    Wintrich parallel              Q=     0.000 DH=     2.104
+  
+ Time step =  2092 Nr iter. = 100
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  99
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  98
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  97
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  96
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  95
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  94
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  93
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  92
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  91
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  90
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  89
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  88
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  87
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  86
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  85
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  84
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  83
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  82
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1767.222 DH=     0.772
+    St. Aldegund                   Q=  1812.348 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.772
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+ Time step =  2092 Nr iter. =  81
+    Detzem                         Q=  1625.191 DH=     2.523
+    Fankel                         Q=  1785.124 DH=     0.755
+    St. Aldegund                   Q=  1812.347 DH=     0.645
+    Zeltingen                      Q=  1789.121 DH=     0.157
+    Wintrich                       Q=  1737.980 DH=     2.055
+    Enkirch                        Q=  1793.314 DH=     0.965
+    Fankel parallel                Q=     0.000 DH=     0.755
+    St. Aldegund parallel          Q=     0.000 DH=     0.645
+    Enkirch parallel               Q=     0.000 DH=     0.965
+    Zeltingen parallel             Q=     0.000 DH=     0.157
+    Wintrich parallel              Q=     0.000 DH=     2.055
+  
+ Time step =  2121 Nr iter. = 100
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1677.881 DH=     0.704
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.704
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  99
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1653.485 DH=     0.736
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.736
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  98
+    Detzem                         Q=  1385.617 DH=     3.005
+    Fankel                         Q=  1654.026 DH=     0.726
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.726
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  97
+    Detzem                         Q=  1385.615 DH=     3.005
+    Fankel                         Q=  1661.050 DH=     0.712
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.712
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  96
+    Detzem                         Q=  1385.617 DH=     3.005
+    Fankel                         Q=  1677.881 DH=     0.704
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.704
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  95
+    Detzem                         Q=  1385.616 DH=     3.005
+    Fankel                         Q=  1653.485 DH=     0.736
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.736
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  94
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1654.026 DH=     0.726
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.726
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  93
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1661.050 DH=     0.712
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.712
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  92
+    Detzem                         Q=  1385.617 DH=     3.005
+    Fankel                         Q=  1677.881 DH=     0.704
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.704
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  91
+    Detzem                         Q=  1385.615 DH=     3.005
+    Fankel                         Q=  1653.485 DH=     0.736
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.736
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  90
+    Detzem                         Q=  1385.617 DH=     3.005
+    Fankel                         Q=  1654.026 DH=     0.726
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.726
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  89
+    Detzem                         Q=  1385.616 DH=     3.005
+    Fankel                         Q=  1661.050 DH=     0.712
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.712
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  88
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1677.881 DH=     0.704
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.704
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  87
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1653.485 DH=     0.736
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.736
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  86
+    Detzem                         Q=  1385.617 DH=     3.005
+    Fankel                         Q=  1654.026 DH=     0.726
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.726
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  85
+    Detzem                         Q=  1385.615 DH=     3.005
+    Fankel                         Q=  1661.050 DH=     0.712
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.712
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  84
+    Detzem                         Q=  1385.617 DH=     3.005
+    Fankel                         Q=  1677.881 DH=     0.704
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.704
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  83
+    Detzem                         Q=  1385.616 DH=     3.005
+    Fankel                         Q=  1653.485 DH=     0.736
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.736
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  82
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1654.026 DH=     0.726
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.726
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+ Time step =  2121 Nr iter. =  81
+    Detzem                         Q=  1385.618 DH=     3.005
+    Fankel                         Q=  1661.050 DH=     0.712
+    St. Aldegund                   Q=  1618.028 DH=     0.664
+    Zeltingen                      Q=  1508.715 DH=     0.244
+    Wintrich                       Q=  1454.651 DH=     2.456
+    Enkirch                        Q=  1538.910 DH=     1.239
+    Fankel parallel                Q=     0.000 DH=     0.712
+    St. Aldegund parallel          Q=     0.000 DH=     0.664
+    Enkirch parallel               Q=     0.000 DH=     1.239
+    Zeltingen parallel             Q=     0.000 DH=     0.244
+    Wintrich parallel              Q=     0.000 DH=     2.456
+  
+ Time step =  2122 Nr iter. = 100
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1655.661 DH=     0.710
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.710
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  99
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1654.939 DH=     0.720
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.720
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  98
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1647.983 DH=     0.734
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.734
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  97
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1631.761 DH=     0.741
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.741
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  96
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1655.664 DH=     0.710
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.710
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  95
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1654.940 DH=     0.720
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.720
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  94
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1647.981 DH=     0.734
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.734
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  93
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1631.757 DH=     0.741
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.741
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  92
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1655.662 DH=     0.710
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.710
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  91
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1654.940 DH=     0.720
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.720
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  90
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1647.982 DH=     0.734
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.734
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  89
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1631.759 DH=     0.741
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.741
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  88
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1655.660 DH=     0.710
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.710
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  87
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1654.938 DH=     0.720
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.720
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  86
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1647.981 DH=     0.734
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.734
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  85
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1631.761 DH=     0.741
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.741
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  84
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1655.664 DH=     0.710
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.710
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  83
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1654.940 DH=     0.720
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.720
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  82
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1647.981 DH=     0.734
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.734
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+ Time step =  2122 Nr iter. =  81
+    Detzem                         Q=  1379.411 DH=     3.019
+    Fankel                         Q=  1631.757 DH=     0.741
+    St. Aldegund                   Q=  1605.773 DH=     0.688
+    Zeltingen                      Q=  1500.500 DH=     0.254
+    Wintrich                       Q=  1449.301 DH=     2.472
+    Enkirch                        Q=  1528.463 DH=     1.265
+    Fankel parallel                Q=     0.000 DH=     0.741
+    St. Aldegund parallel          Q=     0.000 DH=     0.688
+    Enkirch parallel               Q=     0.000 DH=     1.265
+    Zeltingen parallel             Q=     0.000 DH=     0.254
+    Wintrich parallel              Q=     0.000 DH=     2.472
+  
+ Time step =  2124 Nr iter. = 100
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  99
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  98
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.431 DH=     0.801
+    St. Aldegund                   Q=  1599.163 DH=     0.704
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.704
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  97
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  96
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  95
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.431 DH=     0.801
+    St. Aldegund                   Q=  1599.163 DH=     0.704
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.704
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  94
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  93
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  92
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.431 DH=     0.801
+    St. Aldegund                   Q=  1599.163 DH=     0.704
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.704
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  91
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  90
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  89
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.431 DH=     0.801
+    St. Aldegund                   Q=  1599.163 DH=     0.704
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.704
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  88
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  87
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  86
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.431 DH=     0.801
+    St. Aldegund                   Q=  1599.163 DH=     0.704
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.704
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  85
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  84
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  83
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.431 DH=     0.801
+    St. Aldegund                   Q=  1599.163 DH=     0.704
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.704
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  82
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.465 DH=     0.801
+    St. Aldegund                   Q=  1577.337 DH=     0.730
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.730
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+ Time step =  2124 Nr iter. =  81
+    Detzem                         Q=  1364.392 DH=     3.051
+    Fankel                         Q=  1619.454 DH=     0.801
+    St. Aldegund                   Q=  1583.325 DH=     0.714
+    Zeltingen                      Q=  1485.901 DH=     0.277
+    Wintrich                       Q=  1438.403 DH=     2.502
+    Enkirch                        Q=  1509.515 DH=     1.317
+    Fankel parallel                Q=     0.000 DH=     0.801
+    St. Aldegund parallel          Q=     0.000 DH=     0.714
+    Enkirch parallel               Q=     0.000 DH=     1.317
+    Zeltingen parallel             Q=     0.000 DH=     0.277
+    Wintrich parallel              Q=     0.000 DH=     2.502
+  

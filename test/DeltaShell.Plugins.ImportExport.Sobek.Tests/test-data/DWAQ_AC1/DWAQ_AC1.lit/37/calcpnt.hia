@@ -1,0 +1,17 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=3
+NumberOfLocations=23
+T0=2010.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+1=Waterlevel mean (m AD)
+ 
+[Long Locations]
+ 

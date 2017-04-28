@@ -1,0 +1,16 @@
+StructureType,attributeName,Caption,Type,Default,Min,Max,StructureFileOnly,Description
+structure,type,Type:Weir|Pump|Gate,weir|pump|gate,,,,TRUE,Type of structure
+structure,id,Name,String,,,,FALSE,Name of the structure
+structure,x,X,Double,,,,FALSE,X coordinate for a 1D structure
+structure,y,Y,Double,,,,FALSE,Y coordinate for a 1D structure
+structure,polylinefile,Polyline filepath,FileName,,,,TRUE,*.pli; Polyline geometry definition for 2D structure
+weir,crest_level,Crest level,Steerable,,,,FALSE,Weir crest height (in [m])
+weir,crest_width,Crest width,Double,,,,FALSE,Weir crest width (in [m])
+weir,lat_contr_coeff,Lateral contraction coefficient,Double,1,,,FALSE,Lateral contraction coefficient
+pump,capacity,Capacity,Steerable,,,,FALSE,Pump capacity (in [m3/s])
+gate,sill_level,Sill level,Steerable,,,,FALSE,Gate sill level (in [m])
+gate,lower_edge_level,Lower edge level,Steerable,,,,FALSE,Gate lower edge level (in [m])
+gate,opening_width,Opening width,Steerable,,,,FALSE,Gate opening width (in [m])
+gate,door_height,Door height,Double,1,,,FALSE,Gate door height (in [m])
+gate,horizontal_opening_direction,Horizontal opening direction:Symmetric|From Left|From Right,symmetric|from_left|from_right,symmetric,,,FALSE,Horizontal direction of the opening doors
+gate,sill_width,Sill width,Double,,,,FALSE,Gate sill width (in [m])

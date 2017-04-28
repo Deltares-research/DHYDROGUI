@@ -1,0 +1,158 @@
+Warning IKVMC0107: skipping resource (name clash): "META-INF/MANIFEST.MF"
+Warning IKVMC0107: skipping resource (name clash): "META-INF/LICENSE"
+Warning IKVMC0107: skipping resource (name clash): "META-INF/NOTICE"
+Warning IKVMC0100: class "com.sun.jdmk.comm.HtmlAdaptorServer" not found
+Warning IKVMC0100: class "com.sun.jdmk.comm.CommunicatorServer" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.jmx.Agent.start()V"
+    ("com.sun.jdmk.comm.HtmlAdaptorServer")
+Warning IKVMC0100: class "javax.jms.TopicConnectionFactory" not found
+Warning IKVMC0100: class "javax.jms.TopicConnection" not found
+Warning IKVMC0100: class "javax.jms.TopicSession" not found
+Warning IKVMC0100: class "javax.jms.Topic" not found
+Warning IKVMC0100: class "javax.jms.TopicPublisher" not found
+Warning IKVMC0100: class "javax.jms.Connection" not found
+Warning IKVMC0100: class "javax.jms.Session" not found
+Warning IKVMC0100: class "javax.jms.ObjectMessage" not found
+Warning IKVMC0100: class "javax.jms.Message" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.JMSAppender.activateOptions()V"
+    ("javax.jms.TopicConnectionFactory")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.JMSAppender.close()V"
+    ("javax.jms.Session")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.JMSAppender.append(Lorg.apache.log4j.spi.LoggingEvent;)V"
+    ("javax.jms.Session")
+Warning IKVMC0105: unable to compile class "org.apache.log4j.net.JMSSink"
+    (missing class "javax.jms.MessageListener")
+Warning IKVMC0105: unable to compile class "org.apache.log4j.net.SMTPAppender$1"
+    (missing class "javax.mail.Authenticator")
+Warning IKVMC0100: class "javax.mail.Session" not found
+Warning IKVMC0100: class "javax.mail.internet.MimeMessage" not found
+Warning IKVMC0100: class "javax.mail.Message" not found
+Warning IKVMC0100: class "javax.mail.MessagingException" not found
+Warning IKVMC0100: class "javax.mail.internet.InternetAddress" not found
+Warning IKVMC0100: class "javax.mail.Address" not found
+Warning IKVMC0100: class "javax.mail.Message$RecipientType" not found
+Warning IKVMC0100: class "org.apache.log4j.net.SMTPAppender$1" not found
+Warning IKVMC0100: class "javax.mail.Authenticator" not found
+Warning IKVMC0100: class "javax.mail.internet.AddressException" not found
+Warning IKVMC0100: class "javax.mail.internet.MimeBodyPart" not found
+Warning IKVMC0100: class "javax.mail.internet.MimeMultipart" not found
+Warning IKVMC0100: class "javax.mail.Multipart" not found
+Warning IKVMC0100: class "javax.mail.BodyPart" not found
+Warning IKVMC0100: class "javax.mail.Transport" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.SMTPAppender.activateOptions()V"
+    ("javax.mail.internet.MimeMessage")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.SMTPAppender.addressMessage(Ljavax.mail.Message;)V"
+    ("javax.mail.Message")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.SMTPAppender.createSession()Ljavax.mail.Session;"
+    ("org.apache.log4j.net.SMTPAppender$1")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.SMTPAppender.getAddress(Ljava.lang.String;)Ljavax.mail.internet.InternetAddress;"
+    ("javax.mail.internet.InternetAddress")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.SMTPAppender.parseAddress(Ljava.lang.String;)[Ljavax.mail.internet.InternetAddress;"
+    ("javax.mail.internet.InternetAddress")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.net.SMTPAppender.sendBuffer()V"
+    ("javax.mail.internet.MimeBodyPart")
+Warning IKVMC0100: class "javax.jms.Destination" not found
+Warning IKVMC0100: class "javax.jms.JMSException" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.log4j.or.jms.MessageRenderer.doRender(Ljava.lang.Object;)Ljava.lang.String;"
+    ("javax.jms.Message")
+Warning IKVMC0119: emitted java.lang.VerificationError in "nl.wldelft.util.process.NativeProcess.exec(Ljava.io.File;[Ljava.lang.String;[Ljava.lang.String;Ljava.io.File;Lnl.wldelft.util.process.ShowWindow;)Lnl.wldelft.util.process.NativeProcess;"
+    ("Unexpected type nl.wldelft.util.process.Win32Process where nl.wldelft.util.process.NativeProcess was expected (class: nl.wldelft.util.process.NativeProcess, method: exec, signature: (Ljava.io.File;[Ljava.lang.String;[Ljava.lang.String;Ljava.io.File;Lnl.wldelft.util.process.ShowWindow;)Lnl.wldelft.util.process.NativeProcess;, offset: 19, instruction: areturn)")
+Warning IKVMC0100: class "org.apache.xml.resolver.CatalogManager" not found
+Warning IKVMC0100: class "org.apache.xml.resolver.Catalog" not found
+Warning IKVMC0100: class "org.apache.xml.resolver.readers.SAXCatalogReader" not found
+Warning IKVMC0100: class "org.apache.xml.resolver.readers.CatalogReader" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.setPreferPublic(Z)V"
+    ("org.apache.xml.resolver.CatalogManager")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.resolveSystem(Ljava.lang.String;)Ljava.lang.String;"
+    ("org.apache.xml.resolver.Catalog")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.resolvePublic(Ljava.lang.String;Ljava.lang.String;)Ljava.lang.String;"
+    ("org.apache.xml.resolver.Catalog")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.resolveURI(Ljava.lang.String;)Ljava.lang.String;"
+    ("org.apache.xml.resolver.Catalog")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.init([Ljava.lang.String;Z)V"
+    ("org.apache.xml.resolver.CatalogManager")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.parseCatalogs()V"
+    ("org.apache.xml.resolver.Catalog")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.apache.xerces.util.XMLCatalogResolver.attachReaderToCatalog(Lorg.apache.xml.resolver.Catalog;)V"
+    ("org.apache.xml.resolver.readers.SAXCatalogReader")
+Warning IKVMC0109: skipping class: "org.w3c.dom.html.HTMLDOMImplementation"
+    (class is already available in referenced assembly "IKVM.OpenJDK.XML.API, Version=0.44.0.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58")
+Warning IKVMC0100: class "netscape.ldap.LDAPAttributeSet" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPAttribute" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPEntry" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaEntryConsumer.startElement(Ljava.lang.String;Lorg.xml.sax.AttributeList;)V"
+    ("netscape.ldap.LDAPAttributeSet")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaEntryConsumer.endElement(Ljava.lang.String;)V"
+    ("netscape.ldap.LDAPEntry")
+Warning IKVMC0100: class "netscape.ldap.LDAPConnection" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPSearchResults" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPException" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPSchema" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaExporter.export(Lorg.xml.sax.DocumentHandler;ZZ)V"
+    ("netscape.ldap.LDAPConnection")
+Warning IKVMC0100: class "netscape.ldap.LDAPModificationSet" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaImporter.importEntry(Lnetscape.ldap.LDAPEntry;I)V"
+    ("netscape.ldap.LDAPEntry")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaImporter.importEntries(Ljava.util.Enumeration;)V"
+    ("netscape.ldap.LDAPEntry")
+Warning IKVMC0100: class "netscape.ldap.LDAPObjectClassSchema" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPAttributeSchema" not found
+Warning IKVMC0100: class "netscape.ldap.LDAPSchemaElement" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaProducer.produce(Lnetscape.ldap.LDAPEntry;)V"
+    ("netscape.ldap.LDAPEntry")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaProducer.produce(Lnetscape.ldap.LDAPSearchResults;)V"
+    ("netscape.ldap.LDAPSearchResults")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaProducer.produce(Lnetscape.ldap.LDAPSchema;)V"
+    ("netscape.ldap.LDAPSchema")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaProducer.produce(Lnetscape.ldap.LDAPObjectClassSchema;)V"
+    ("netscape.ldap.LDAPSchemaElement")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.dsml.mozilla.MozillaProducer.produce(Lnetscape.ldap.LDAPAttributeSchema;)V"
+    ("netscape.ldap.LDAPSchemaElement")
+Warning IKVMC0105: unable to compile class "org.exolab.castor.jdo.engine.DatabaseImpl"
+    (missing class "javax.transaction.Synchronization")
+Warning IKVMC0100: class "org.exolab.castor.jdo.engine.DatabaseImpl" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.engine.OQLQueryImpl.bind(Ljava.lang.Object;)V"
+    ("org.exolab.castor.jdo.engine.DatabaseImpl")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.engine.OQLQueryImpl.create(Ljava.lang.String;)V"
+    ("org.exolab.castor.jdo.engine.DatabaseImpl")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.engine.OQLQueryImpl.createCall(Ljava.lang.String;)V"
+    ("org.exolab.castor.jdo.engine.DatabaseImpl")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.engine.OQLQueryImpl.execute(Lorg.exolab.castor.mapping.AccessMode;Z)Lorg.exolab.castor.jdo.QueryResults;"
+    ("org.exolab.castor.jdo.engine.DatabaseImpl")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.engine.SimpleQueryExecutor.execute(Lorg.exolab.castor.persist.spi.QueryExpression;[Ljava.lang.Object;)Lorg.exolab.castor.jdo.QueryResults;"
+    ("org.exolab.castor.jdo.engine.DatabaseImpl")
+Warning IKVMC0100: class "javax.transaction.Transaction" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.engine.TxDatabaseMap.put(Ljavax.transaction.Transaction;Lorg.exolab.castor.jdo.engine.DatabaseImpl;)V"
+    ("org.exolab.castor.jdo.engine.DatabaseImpl")
+Warning IKVMC0100: class "javax.transaction.TransactionManager" not found
+Warning IKVMC0100: class "javax.transaction.Synchronization" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.jdo.JDO.getDatabase()Lorg.exolab.castor.jdo.Database;"
+    ("javax.transaction.TransactionManager")
+Warning IKVMC0105: unable to compile class "org.exolab.castor.tools.XSDCompiler"
+    (missing class "org.apache.tools.ant.Task")
+Warning IKVMC0100: class "org.apache.oro.text.regex.Perl5Pattern" not found
+Warning IKVMC0100: class "org.apache.oro.text.regex.Perl5Compiler" not found
+Warning IKVMC0100: class "org.apache.oro.text.regex.Pattern" not found
+Warning IKVMC0100: class "org.apache.oro.text.regex.MalformedPatternException" not found
+Warning IKVMC0100: class "org.apache.oro.text.regex.Perl5Matcher" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.util.JakartaOroEvaluator.setExpression(Ljava.lang.String;)V"
+    ("org.apache.oro.text.regex.Perl5Compiler")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.util.JakartaOroEvaluator.matches(Ljava.lang.String;)Z"
+    ("org.apache.oro.text.regex.Perl5Matcher")
+Warning IKVMC0100: class "org.apache.regexp.RE" not found
+Warning IKVMC0100: class "org.apache.regexp.RESyntaxException" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.util.JakartaRegExpEvaluator.setExpression(Ljava.lang.String;)V"
+    ("org.apache.regexp.RE")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.util.JakartaRegExpEvaluator.matches(Ljava.lang.String;)Z"
+    ("org.apache.regexp.RE")
+Warning IKVMC0100: class "org.apache.xerces.utils.regex.RegularExpression" not found
+Warning IKVMC0100: class "org.apache.xerces.utils.regex.ParseException" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.util.XercesRegExpEvaluator.setExpression(Ljava.lang.String;)V"
+    ("org.apache.xerces.utils.regex.RegularExpression")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "org.exolab.castor.util.XercesRegExpEvaluator.matches(Ljava.lang.String;)Z"
+    ("org.apache.xerces.utils.regex.RegularExpression")
+Warning IKVMC0100: class "nl.wldelft.csf.CsfRasterFile" not found
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "nl.wldelft.fews.pi.PcRasterParser.parse(Ljava.io.File;Lnl.wldelft.util.timeseries.TimeSeriesContentHandler;)V"
+    ("nl.wldelft.csf.CsfRasterFile")
+Warning IKVMC0111: emitted java.lang.NoClassDefFoundError in "nl.wldelft.fews.pi.PcRasterSerializer.serialize(Lnl.wldelft.util.timeseries.TimeSeriesContent;Ljava.io.File;)V"
+    ("nl.wldelft.csf.CsfRasterFile")

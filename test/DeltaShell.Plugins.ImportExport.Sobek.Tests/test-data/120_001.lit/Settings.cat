@@ -1,0 +1,24 @@
+[General]
+Title=120_001
+AppType=1
+Version=1.0.0
+CATTemplateFile=Fixed\Cat.tpl
+ThematicMapOption=2
+CATIniFile=F:\SBO212_1\Programs\Cat\cat.ini
+WQStandardsOption=0
+SaveTemplateonExit=True
+UserName=SOBEK
+
+[Functions]
+defaultini=F:\SBO212_1\Programs\Cat\functions.ini
+
+[Netter]
+NtpFile=F:\SBO212_1\Programs\cat\netter.ntp
+
+[CMTApps]
+NumberApps=1
+App1=\SBO212_1\120_001.lit, 120_001
+
+[StandAloneApps]
+NumberApps=0
+

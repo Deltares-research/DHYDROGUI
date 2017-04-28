@@ -1,0 +1,1 @@
+22 0 0; nr of exchanges in x, y, z

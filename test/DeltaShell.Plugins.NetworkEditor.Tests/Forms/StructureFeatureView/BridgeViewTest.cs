@@ -1,0 +1,105 @@
+﻿using System.Linq;
+using System.Windows.Forms;
+using DelftTools.Controls.Swf.Table;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
+{
+    [TestFixture]
+    public class BridgeViewTest
+    {
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowEmpty()
+        {
+            var bridgeView = new BridgeView {Data = null};
+            WindowsFormsTestHelper.ShowModal(bridgeView);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowBridgeView()
+        {
+            var bridge = new Bridge();
+            bridge.BridgeType = BridgeType.Rectangle;
+            bridge.FrictionType = BridgeFrictionType.WhiteColebrook;
+            bridge.Friction = 99.0;
+            bridge.OffsetY = 10.0;
+            bridge.SetRectangleCrossSection(0.0,5.0,2.0);
+            bridge.OutletLossCoefficient = 0.5;
+            bridge.InletLossCoefficient = 0.35;
+            //ground layer stuff
+            bridge.GroundLayerEnabled = true;
+            bridge.GroundLayerThickness = 0.5;
+            bridge.GroundLayerRoughness = 0.05;
+            bridge.AllowNegativeFlow = false;
+            bridge.AllowPositiveFlow = true;
+
+            var bridgeView = new BridgeView();
+            bridgeView.Data = bridge;
+            WindowsFormsTestHelper.ShowModal(bridgeView);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void BridgeViewWithPillarBridgeFunctionality()
+        {
+            var bridge = new Bridge();
+            bridge.BridgeType = BridgeType.Pillar;
+            bridge.AllowNegativeFlow = false;
+            bridge.AllowPositiveFlow = true;
+            bridge.PillarWidth = 84.2;
+            bridge.ShapeFactor = 1.2;
+
+            var bridgeView = new BridgeView();
+            bridgeView.Data = bridge;
+            bridgeView.Load += delegate
+                                   {
+                                       var txtPillarBridge = bridgeView.Controls.Find("textBoxPillarWidth", true).FirstOrDefault() as TextBox;
+                                       var txtShapeFactor = bridgeView.Controls.Find("textBoxShapeFactor", true).FirstOrDefault() as TextBox;
+                                       Assert.IsNotNull(txtPillarBridge);
+                                       Assert.IsNotNull(txtShapeFactor);
+                                       Assert.IsTrue(txtPillarBridge.Text.StartsWith("84"));
+                                       Assert.IsTrue(txtShapeFactor.Text.StartsWith("1"));
+                                       Assert.IsTrue(txtPillarBridge.Enabled);
+                                       Assert.IsTrue(txtShapeFactor.Enabled);
+                                       bridge.BridgeType = BridgeType.Rectangle;
+                                       Assert.IsFalse(txtPillarBridge.Enabled, "test after type change");
+                                       Assert.IsFalse(txtShapeFactor.Enabled);
+                                   };
+            WindowsFormsTestHelper.ShowModal(bridgeView);
+        }
+
+        [Test]
+        public void InputValidatorTest()
+        {
+            var bridge = new Bridge
+                {
+                    BridgeType = BridgeType.Tabulated
+                };
+            bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(0, 2, 0);
+            bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(2, 2, 0);
+
+            var view = new BridgeView { Data = bridge };
+            var tableView = TypeUtils.GetField<BridgeView, TableView>(view, "tableViewTabulatedData");
+            tableView.ExceptionMode = TableView.ValidationExceptionMode.NoAction;
+
+            Assert.AreEqual(2.0, tableView.GetCellValue(0, 0));
+            Assert.AreEqual(0.0, tableView.GetCellValue(1, 0));
+
+            var succes = true;
+            const string errorMsg = "Can not set value into cell [1, 0] reason:Validation of cell failed: Z must be unique.";
+            TestHelper.AssertLogMessageIsGenerated(() => succes = tableView.SetCellValue(1, 0, "2"), errorMsg, 1);
+            Assert.IsFalse(succes, "Should not allow a duplicate to be entered.");
+
+            // Verify that data is unchanged:
+            Assert.AreEqual(2.0, tableView.GetCellValue(0, 0));
+            Assert.AreEqual(0.0, tableView.GetCellValue(1, 0));
+        }
+    }
+}

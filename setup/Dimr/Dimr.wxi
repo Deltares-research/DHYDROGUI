@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define dimr_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\"?>
+  <Directory Id='Dimr' Name='DeltaShell.Dimr'>    
+    <Component Id='Dimr' Guid="F2B0CD16-E595-4E95-9AA8-681A6AD72DD2">
+     <File Id="DeltaShell.Dimr.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\DeltaShell.Dimr.dll' />
+      <?ifndef var.NOKERNELS?>
+     <File Id="run_dimr.bat" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\run_dimr.bat' />
+     <File Id="run_dimr_x86.bat" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\run_dimr_x86.bat' />
+      <?endif?>
+    </Component>
+
+    <Directory Id="dimr_kernelsdir" Name="kernels">
+      <?define dimr_kernels_lib_dir="$(var.dimr_plugin_bin)kernels\"?>
+      
+      <Directory Id="x86_dimr" Name="x86">
+        <?ifndef var.NOKERNELS?>
+        <Component Id="x86_dimr_kernels" Guid="0246010B-C451-47A0-A12F-062470DD280D">
+          <?define x86_dimr_kernels_lib_dir="$(var.dimr_kernels_lib_dir)x86\"?>
+          <File Id="x86_dimr_dimr.exe" Source="$(var.x86_dimr_kernels_lib_dir)dimr.exe" />
+          <File Id="x86_dimr_dimr_dll.dll" Source="$(var.x86_dimr_kernels_lib_dir)dimr_dll.dll" />
+          <File Id="x86_dimr_fmpe.dll" Source="$(var.x86_dimr_kernels_lib_dir)fmpe.dll" />
+          <File Id="x86_dimr_fmpich2.dll" Source="$(var.x86_dimr_kernels_lib_dir)fmpich2.dll" />
+          <File Id="x86_dimr_fmpich2g.dll" Source="$(var.x86_dimr_kernels_lib_dir)fmpich2g.dll" />
+          <File Id="x86_dimr_fmpich2s.dll" Source="$(var.x86_dimr_kernels_lib_dir)fmpich2s.dll" />
+          <File Id="x86_dimr_libexpat.dll" Source="$(var.x86_dimr_kernels_lib_dir)libexpat.dll" />
+          <File Id="x86_dimr_mpe.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpe.dll" />
+          <File Id="x86_dimr_mpich2.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2.dll" />
+          <File Id="x86_dimr_mpich2mpe.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2mpe.dll " />
+          <File Id="x86_dimr_mpich2mpi.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2mpi.dll" />
+          <File Id="x86_dimr_mpich2mt.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2mt.dll" />
+          <File Id="x86_dimr_mpich2mtp.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2mtp.dll" />
+          <File Id="x86_dimr_mpich2p.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2p.dll" />
+          <File Id="x86_dimr_mpich2shm.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2shm.dll" />
+          <File Id="x86_dimr_mpich2shmp.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2shmp.dll " />
+          <File Id="x86_dimr_mpich2ssm.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2ssm.dll" />
+          <File Id="x86_dimr_mpich2ssmp.dll" Source="$(var.x86_dimr_kernels_lib_dir)mpich2ssmp.dll" />
+          <File Id="x86_dimr_mpiexec.exe" Source="$(var.x86_dimr_kernels_lib_dir)mpiexec.exe" />
+          <File Id="x86_dimr_msvcp110.dll" Source="$(var.x86_dimr_kernels_lib_dir)msvcp110.dll" />
+          <File Id="x86_dimr_msvcp120.dll" Source="$(var.x86_dimr_kernels_lib_dir)msvcp120.dll" />
+          <File Id="x86_dimr_msvcr100.dll" Source="$(var.x86_dimr_kernels_lib_dir)msvcr100.dll" />
+          <File Id="x86_dimr_msvcr110.dll" Source="$(var.x86_dimr_kernels_lib_dir)msvcr110.dll" />
+          <File Id="x86_dimr_msvcr120.dll" Source="$(var.x86_dimr_kernels_lib_dir)msvcr120.dll" />
+          <File Id="x86_dimr_pthreadvce.dll" Source="$(var.x86_dimr_kernels_lib_dir)pthreadvce.dll" />
+          <File Id="x86_dimr_pthreadVCE2.dll" Source="$(var.x86_dimr_kernels_lib_dir)pthreadVCE2.dll" />
+          <File Id="x86_dimr_smpd.exe" Source="$(var.x86_dimr_kernels_lib_dir)smpd.exe" />
+          <?undef x86_dimr_kernels_lib_dir ?>
+        </Component>
+        <?endif?>
+      </Directory>
+
+      <Directory Id="x64_dimr" Name="x64">
+        <?ifndef var.NOKERNELS?>
+        <Component Id="x64_dimr_kernels" Guid="E87A6E42-5079-4CA0-8868-FF17CB97F4E5">
+          <?define x64_dimr_kernels_lib_dir="$(var.dimr_kernels_lib_dir)x64\"?>
+          <File Id="x64_dimr_dimr.exe" Source="$(var.x64_dimr_kernels_lib_dir)dimr.exe" />
+          <File Id="x64_dimr_dimr_dll.dll" Source="$(var.x64_dimr_kernels_lib_dir)dimr_dll.dll" />
+          <File Id="x64_dimr_fmpich2.dll" Source="$(var.x64_dimr_kernels_lib_dir)fmpich2.dll" />
+          <File Id="x64_dimr_fmpich2g.dll" Source="$(var.x64_dimr_kernels_lib_dir)fmpich2g.dll" />
+          <File Id="x64_dimr_fmpich2s.dll" Source="$(var.x64_dimr_kernels_lib_dir)fmpich2s.dll" />
+          <File Id="x64_dimr_irlog2rlog.exe" Source="$(var.x64_dimr_kernels_lib_dir)irlog2rlog.exe" />
+          <File Id="x64_dimr_libexpat.dll" Source="$(var.x64_dimr_kernels_lib_dir)libexpat.dll" />
+          <File Id="x64_dimr_mpe.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpe.dll" />
+          <File Id="x64_dimr_mpich2.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2.dll" />
+          <File Id="x64_dimr_mpich2mpe.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2mpe.dll " />
+          <File Id="x64_dimr_mpich2mpi.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2mpi.dll" />
+          <File Id="x64_dimr_mpich2mt.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2mt.dll" />
+          <File Id="x64_dimr_mpich2mtp.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2mtp.dll" />
+          <File Id="x64_dimr_mpich2nemesis.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2nemesis.dll" />
+          <File Id="x64_dimr_mpich2nemesisp.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2nemesisp.dll" />
+          <File Id="x64_dimr_mpich2p.dll" Source="$(var.x64_dimr_kernels_lib_dir)mpich2p.dll" />
+          <File Id="x64_dimr_mpiexec.exe" Source="$(var.x64_dimr_kernels_lib_dir)mpiexec.exe" />
+          <File Id="x64_dimr_msvcp110.dll" Source="$(var.x64_dimr_kernels_lib_dir)msvcp110.dll" />
+          <File Id="x64_dimr_msvcr100.dll" Source="$(var.x64_dimr_kernels_lib_dir)msvcr100.dll" />
+          <File Id="x64_dimr_msvcr110.dll" Source="$(var.x64_dimr_kernels_lib_dir)msvcr110.dll" />
+          <File Id="x64_dimr_pthreadGC2.dll" Source="$(var.x64_dimr_kernels_lib_dir)pthreadGC2.dll" />
+          <File Id="x64_dimr_pthreadVC2.dll" Source="$(var.x64_dimr_kernels_lib_dir)pthreadVC2.dll" />
+          <File Id="x64_dimr_smpd.exe" Source="$(var.x64_dimr_kernels_lib_dir)smpd.exe" />
+          <File Id="x64_dimr_wmpiconfig.exe" Source="$(var.x64_dimr_kernels_lib_dir)wmpiconfig.exe" />
+          <File Id="x64_dimr_wmpiexec.exe" Source="$(var.x64_dimr_kernels_lib_dir)wmpiexec.exe" />
+          <File Id="x64_dimr_wmpiregister.exe" Source="$(var.x64_dimr_kernels_lib_dir)wmpiregister.exe" />
+          <?undef x64_dimr_kernels_lib_dir ?>
+        </Component>
+        <?endif?>
+      </Directory>
+      
+      <?undef dimr_kernels_lib_dir ?>
+    </Directory>
+  </Directory>
+  <?undef dimr_plugin_bin ?>
+</Include>

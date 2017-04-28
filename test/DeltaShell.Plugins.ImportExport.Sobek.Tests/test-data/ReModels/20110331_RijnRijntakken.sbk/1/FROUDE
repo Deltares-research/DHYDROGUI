@@ -1,0 +1,364 @@
+ Froude numbers higher than 0.8. Each record contains:
+  - Time step number
+  - Iteration step number
+  - Branch name
+  - Coordinate
+  - Froude number gridpoint ( *** = supercritical flow )
+  - Froude number next cel ( *** = supercritical flow )
+  
+ Time step =  1281 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81233    Froude next cel=   0.80001
+ Time step =  1281 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81428    Froude next cel=   0.80202
+ Time step =  1281 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81544    Froude next cel=   0.80319
+ Time step =  1281 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81613    Froude next cel=   0.80390
+ Time step =  1281 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81655    Froude next cel=   0.80432
+ Time step =  1281 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81681    Froude next cel=   0.80458
+ Time step =  1281 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81697    Froude next cel=   0.80474
+ Time step =  1281 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81706    Froude next cel=   0.80483
+ Time step =  1281 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81712    Froude next cel=   0.80489
+ Time step =  1281 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81716    Froude next cel=   0.80493
+ Time step =  1281 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81718    Froude next cel=   0.80495
+ Time step =  1281 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81720    Froude next cel=   0.80496
+ Time step =  1281 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81721    Froude next cel=   0.80497
+ Time step =  1281 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81721    Froude next cel=   0.80498
+ Time step =  1281 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81722    Froude next cel=   0.80498
+  
+ Time step =  1282 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.81970    Froude next cel=   0.80799
+ Time step =  1282 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.82536    Froude next cel=   0.81482
+ Time step =  1282 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.82785    Froude next cel=   0.81756
+ Time step =  1282 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.82933    Froude next cel=   0.81904
+ Time step =  1282 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83021    Froude next cel=   0.81989
+ Time step =  1282 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83073    Froude next cel=   0.82041
+ Time step =  1282 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83104    Froude next cel=   0.82071
+ Time step =  1282 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83123    Froude next cel=   0.82090
+ Time step =  1282 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83135    Froude next cel=   0.82102
+ Time step =  1282 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83142    Froude next cel=   0.82109
+ Time step =  1282 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83147    Froude next cel=   0.82113
+ Time step =  1282 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83150    Froude next cel=   0.82116
+ Time step =  1282 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83151    Froude next cel=   0.82117
+ Time step =  1282 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83152    Froude next cel=   0.82118
+ Time step =  1282 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83153    Froude next cel=   0.82119
+ Time step =  1282 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83153    Froude next cel=   0.82119
+ Time step =  1282 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83154    Froude next cel=   0.82119
+  
+ Time step =  1283 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83273    Froude next cel=   0.82253
+ Time step =  1283 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83748    Froude next cel=   0.82828
+ Time step =  1283 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.83929    Froude next cel=   0.83018
+ Time step =  1283 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84036    Froude next cel=   0.83115
+ Time step =  1283 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84098    Froude next cel=   0.83172
+ Time step =  1283 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84135    Froude next cel=   0.83205
+ Time step =  1283 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84158    Froude next cel=   0.83226
+ Time step =  1283 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84171    Froude next cel=   0.83239
+ Time step =  1283 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84180    Froude next cel=   0.83246
+ Time step =  1283 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84185    Froude next cel=   0.83251
+ Time step =  1283 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84188    Froude next cel=   0.83254
+ Time step =  1283 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84190    Froude next cel=   0.83256
+ Time step =  1283 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84191    Froude next cel=   0.83257
+ Time step =  1283 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84192    Froude next cel=   0.83257
+ Time step =  1283 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84192    Froude next cel=   0.83258
+ Time step =  1283 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84193    Froude next cel=   0.83258
+ Time step =  1283 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84193    Froude next cel=   0.83258
+  
+ Time step =  1284 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84197    Froude next cel=   0.83211
+ Time step =  1284 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84596    Froude next cel=   0.83677
+ Time step =  1284 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84716    Froude next cel=   0.83781
+ Time step =  1284 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84787    Froude next cel=   0.83830
+ Time step =  1284 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84827    Froude next cel=   0.83858
+ Time step =  1284 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84851    Froude next cel=   0.83876
+ Time step =  1284 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84865    Froude next cel=   0.83887
+ Time step =  1284 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84874    Froude next cel=   0.83894
+ Time step =  1284 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84880    Froude next cel=   0.83899
+ Time step =  1284 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84883    Froude next cel=   0.83901
+ Time step =  1284 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84885    Froude next cel=   0.83903
+ Time step =  1284 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84887    Froude next cel=   0.83904
+ Time step =  1284 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84887    Froude next cel=   0.83905
+ Time step =  1284 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84888    Froude next cel=   0.83905
+ Time step =  1284 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84888    Froude next cel=   0.83905
+ Time step =  1284 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84888    Froude next cel=   0.83905
+ Time step =  1284 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84889    Froude next cel=   0.83905
+ Time step =  1284 Iter. step =  18
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84889    Froude next cel=   0.83906
+  
+ Time step =  1285 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84779    Froude next cel=   0.83653
+ Time step =  1285 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85121    Froude next cel=   0.84012
+ Time step =  1285 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85191    Froude next cel=   0.84031
+ Time step =  1285 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85228    Froude next cel=   0.84031
+ Time step =  1285 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85248    Froude next cel=   0.84032
+ Time step =  1285 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85260    Froude next cel=   0.84035
+ Time step =  1285 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85268    Froude next cel=   0.84037
+ Time step =  1285 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85272    Froude next cel=   0.84039
+ Time step =  1285 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85275    Froude next cel=   0.84040
+ Time step =  1285 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85277    Froude next cel=   0.84041
+ Time step =  1285 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85279    Froude next cel=   0.84041
+ Time step =  1285 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85279    Froude next cel=   0.84042
+ Time step =  1285 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85280    Froude next cel=   0.84042
+ Time step =  1285 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85280    Froude next cel=   0.84042
+ Time step =  1285 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85280    Froude next cel=   0.84042
+ Time step =  1285 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85281    Froude next cel=   0.84042
+ Time step =  1285 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85281    Froude next cel=   0.84042
+ Time step =  1285 Iter. step =  18
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85281    Froude next cel=   0.84042
+  
+ Time step =  1286 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85069    Froude next cel=   0.83565
+ Time step =  1286 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85363    Froude next cel=   0.83814
+ Time step =  1286 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85390    Froude next cel=   0.83747
+ Time step =  1286 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85397    Froude next cel=   0.83697
+ Time step =  1286 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85398    Froude next cel=   0.83671
+ Time step =  1286 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85399    Froude next cel=   0.83658
+ Time step =  1286 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85399    Froude next cel=   0.83652
+ Time step =  1286 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85400    Froude next cel=   0.83648
+ Time step =  1286 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85401    Froude next cel=   0.83646
+ Time step =  1286 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85402    Froude next cel=   0.83645
+ Time step =  1286 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85402    Froude next cel=   0.83645
+ Time step =  1286 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85402    Froude next cel=   0.83644
+ Time step =  1286 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85402    Froude next cel=   0.83644
+ Time step =  1286 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85403    Froude next cel=   0.83644
+ Time step =  1286 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85403    Froude next cel=   0.83644
+ Time step =  1286 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85403    Froude next cel=   0.83644
+ Time step =  1286 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85403    Froude next cel=   0.83644
+ Time step =  1286 Iter. step =  18
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85403    Froude next cel=   0.83644
+  
+ Time step =  1287 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85092    Froude next cel=   0.82917
+ Time step =  1287 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85340    Froude next cel=   0.83048
+ Time step =  1287 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85327    Froude next cel=   0.82893
+ Time step =  1287 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85308    Froude next cel=   0.82794
+ Time step =  1287 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85291    Froude next cel=   0.82741
+ Time step =  1287 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85281    Froude next cel=   0.82713
+ Time step =  1287 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85276    Froude next cel=   0.82698
+ Time step =  1287 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85273    Froude next cel=   0.82690
+ Time step =  1287 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85272    Froude next cel=   0.82685
+ Time step =  1287 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82682
+ Time step =  1287 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82681
+ Time step =  1287 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82680
+ Time step =  1287 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82679
+ Time step =  1287 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82679
+ Time step =  1287 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82679
+ Time step =  1287 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82679
+ Time step =  1287 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82679
+ Time step =  1287 Iter. step =  18
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85271    Froude next cel=   0.82678
+  
+ Time step =  1288 Iter. step =   1
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84860    Froude next cel=   0.81684
+ Time step =  1288 Iter. step =   2
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85057    Froude next cel=   0.81694
+ Time step =  1288 Iter. step =   3
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.85011    Froude next cel=   0.81458
+ Time step =  1288 Iter. step =   4
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84968    Froude next cel=   0.81314
+ Time step =  1288 Iter. step =   5
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84937    Froude next cel=   0.81236
+ Time step =  1288 Iter. step =   6
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84917    Froude next cel=   0.81195
+ Time step =  1288 Iter. step =   7
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84907    Froude next cel=   0.81172
+ Time step =  1288 Iter. step =   8
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84901    Froude next cel=   0.81159
+ Time step =  1288 Iter. step =   9
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84898    Froude next cel=   0.81152
+ Time step =  1288 Iter. step =  10
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84896    Froude next cel=   0.81148
+ Time step =  1288 Iter. step =  11
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84895    Froude next cel=   0.81146
+ Time step =  1288 Iter. step =  12
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84895    Froude next cel=   0.81144
+ Time step =  1288 Iter. step =  13
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84895    Froude next cel=   0.81143
+ Time step =  1288 Iter. step =  14
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84894    Froude next cel=   0.81143
+ Time step =  1288 Iter. step =  15
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84894    Froude next cel=   0.81142
+ Time step =  1288 Iter. step =  16
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84894    Froude next cel=   0.81142
+ Time step =  1288 Iter. step =  17
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84894    Froude next cel=   0.81142
+ Time step =  1288 Iter. step =  18
+    Yssel__1             X=  17548.00 Froude grdpnt=   0.84894    Froude next cel=   0.81142
+  
+ Time step =  1295 Iter. step =   3
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74683    Froude next cel=   0.80019
+ Time step =  1295 Iter. step =   4
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74595    Froude next cel=   0.80090
+ Time step =  1295 Iter. step =   5
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74537    Froude next cel=   0.80128
+ Time step =  1295 Iter. step =   6
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74502    Froude next cel=   0.80151
+ Time step =  1295 Iter. step =   7
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74481    Froude next cel=   0.80164
+ Time step =  1295 Iter. step =   8
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74468    Froude next cel=   0.80172
+ Time step =  1295 Iter. step =   9
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74460    Froude next cel=   0.80176
+ Time step =  1295 Iter. step =  10
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74456    Froude next cel=   0.80179
+ Time step =  1295 Iter. step =  11
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74453    Froude next cel=   0.80180
+ Time step =  1295 Iter. step =  12
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74451    Froude next cel=   0.80181
+ Time step =  1295 Iter. step =  13
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74450    Froude next cel=   0.80182
+ Time step =  1295 Iter. step =  14
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74450    Froude next cel=   0.80182
+ Time step =  1295 Iter. step =  15
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74450    Froude next cel=   0.80182
+ Time step =  1295 Iter. step =  16
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74449    Froude next cel=   0.80182
+ Time step =  1295 Iter. step =  17
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74449    Froude next cel=   0.80183
+ Time step =  1295 Iter. step =  18
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.74449    Froude next cel=   0.80183
+  
+ Time step =  1296 Iter. step =   1
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73547    Froude next cel=   0.80237
+ Time step =  1296 Iter. step =   2
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73683    Froude next cel=   0.80867
+ Time step =  1296 Iter. step =   3
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73580    Froude next cel=   0.81035
+ Time step =  1296 Iter. step =   4
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73469    Froude next cel=   0.81089
+ Time step =  1296 Iter. step =   5
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73392    Froude next cel=   0.81111
+ Time step =  1296 Iter. step =   6
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73343    Froude next cel=   0.81122
+ Time step =  1296 Iter. step =   7
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73312    Froude next cel=   0.81128
+ Time step =  1296 Iter. step =   8
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73293    Froude next cel=   0.81130
+ Time step =  1296 Iter. step =   9
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73281    Froude next cel=   0.81131
+ Time step =  1296 Iter. step =  10
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73274    Froude next cel=   0.81132
+ Time step =  1296 Iter. step =  11
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73270    Froude next cel=   0.81132
+ Time step =  1296 Iter. step =  12
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73267    Froude next cel=   0.81133
+ Time step =  1296 Iter. step =  13
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73266    Froude next cel=   0.81133
+ Time step =  1296 Iter. step =  14
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73265    Froude next cel=   0.81133
+ Time step =  1296 Iter. step =  15
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73264    Froude next cel=   0.81133
+ Time step =  1296 Iter. step =  16
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73264    Froude next cel=   0.81133
+ Time step =  1296 Iter. step =  17
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73264    Froude next cel=   0.81133
+ Time step =  1296 Iter. step =  18
+    Yssel__1             X=  18551.00 Froude grdpnt=   0.73263    Froude next cel=   0.81133
+  

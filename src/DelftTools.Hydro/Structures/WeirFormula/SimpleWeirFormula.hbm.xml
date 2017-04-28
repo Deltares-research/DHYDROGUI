@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DelftTools.Hydro.Structures.WeirFormula" assembly="DelftTools.Hydro">
+  <subclass name="SimpleWeirFormula" discriminator-value="simple_weir" extends="DelftTools.Hydro.Structures.IWeirFormula">
+    <property name="DischargeCoefficient" column="discharge_coefficient" />
+    <property name="LateralContraction" column="lateral_contraction" />
+  </subclass>
+</hibernate-mapping>

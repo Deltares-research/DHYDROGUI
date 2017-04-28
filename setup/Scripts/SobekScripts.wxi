@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define scripts_plugin_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Toolbox\Scripts\"?>
+  <Directory Id='SobekScripts_DeltaShell.Plugins.Toolbox' Name='DeltaShell.Plugins.Toolbox'>
+    <Directory Id='SobekScripts' Name='Scripts'>
+      <!--<Directory Id="sobek_scripts_examples" Name="Examples">
+        <?define sobek_scripts_examples_dir="$(var.scripts_plugin_dir)Examples\"?>
+        <Component Id="sobek_scripts_examples_files" Guid="FD5E39D5-44AF-46B5-995C-D27AB507F4F1">
+        </Component>
+        <?undef sobek_scripts_examples_dir ?>
+      </Directory>-->
+      <Directory Id="sobek_scripts_libraries" Name="Libraries">
+        <?define sobek_scripts_libraries_dir="$(var.scripts_plugin_dir)Libraries\"?>
+        <Component Id="sobek_scripts_libraries_files" Guid="868DEA32-6F1F-4744-B5E7-966C5098EDCD">
+          <File Id="sobek_scripts_libraries_file_Sobek2Functions.py" Source="$(var.sobek_scripts_libraries_dir)Sobek2Functions.py" />
+        </Component>
+        <?undef sobek_scripts_libraries_dir ?>
+      </Directory>
+    </Directory>
+  </Directory>
+  <?undef scripts_plugin_dir ?>
+</Include>

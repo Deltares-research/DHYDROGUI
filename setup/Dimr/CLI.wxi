@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define fm_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM\dflowfm_kernel\"?>
+  <?define dimr_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\kernels\"?>
+  <?define dimr_scripts_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\Scripts\"?>
+  <?define rtcTools_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl\rtc_kernel\"?>
+  <?define rtcTools_xsd_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl\xsd\"?>
+
+  <Directory Id='cli_dimr' Name='DeltaShell.Dimr'>
+    <Directory Id="cli_cli" Name="cli">
+      <Directory Id="cli_win32" Name="win32">
+        <Directory Id="cli_win32_dflowfm" Name="dflowfm">
+          <Directory Id="cli_win32_dflowfm_bin" Name="bin">
+            <Component Id="cli_x86_dflowfm_kernel" Guid="C163243D-76D9-4000-B817-DED656C0023C">
+              <?define x86_fm_kernel_dir="$(var.fm_kernel_dir)x86\"?>
+              <File Id="cli_x86_dflowfm_dflowfm.dll" Source="$(var.x86_fm_kernel_dir)dflowfm.dll" />
+              <File Id="cli_x86_dflowfm_fmpich2.dll" Source="$(var.x86_fm_kernel_dir)fmpich2.dll" />
+              <File Id="cli_x86_dflowfm_libifcoremd.dll" Source="$(var.x86_fm_kernel_dir)libifcoremd.dll" />
+              <File Id="cli_x86_dflowfm_libifportmd.dll" Source="$(var.x86_fm_kernel_dir)libifportmd.dll" />
+              <File Id="cli_x86_dflowfm_libiomp5md.dll" Source="$(var.x86_fm_kernel_dir)libiomp5md.dll" />
+              <File Id="cli_x86_dflowfm_libmmd.dll" Source="$(var.x86_fm_kernel_dir)libmmd.dll" />
+              <File Id="cli_x86_dflowfm_mpich2mpi.dll" Source="$(var.x86_fm_kernel_dir)mpich2mpi.dll" />
+              <File Id="cli_x86_dflowfm_msvcp100.dll" Source="$(var.x86_fm_kernel_dir)msvcp100.dll" />
+              <File Id="cli_x86_dflowfm_msvcp110.dll" Source="$(var.x86_fm_kernel_dir)msvcp110.dll" />
+              <File Id="cli_x86_dflowfm_msvcr100.dll" Source="$(var.x86_fm_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x86_dflowfm_msvcr110.dll" Source="$(var.x86_fm_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x86_dflowfm_netcdf.dll" Source="$(var.x86_fm_kernel_dir)netcdf.dll"/>
+              <File Id="cli_x86_dflowfm_pthreadVCE2.dll" Source="$(var.x86_fm_kernel_dir)pthreadVCE2.dll" />
+              <File Id="cli_x86_dflowfm_svml_dispmd.dll" Source="$(var.x86_fm_kernel_dir)svml_dispmd.dll" />
+              <File Id="cli_x86_dflowfm_unstruc_csharp.dll" Source="$(var.x86_fm_kernel_dir)unstruc-csharp.dll" />
+              <?undef x86_fm_kernel_dir ?>
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_win32_dimr" Name="dimr">
+          <Directory Id="cli_win32_dimr_bin" Name="bin">
+            <Component Id="cli_x86_dimr_kernel" Guid="6D6E606E-9833-40F8-A8FD-87917B35A367">
+              <?define x86_dimr_kernel_dir="$(var.dimr_kernel_dir)x86\"?>
+              <File Id="cli_x86_dimr_dimr.exe" Source="$(var.x86_dimr_kernel_dir)dimr.exe" />
+              <File Id="cli_x86_dimr_dimr_dll.dll" Source="$(var.x86_dimr_kernel_dir)dimr_dll.dll" />
+              <File Id="cli_x86_dimr_fmpe.dll" Source="$(var.x86_dimr_kernel_dir)fmpe.dll" />
+              <File Id="cli_x86_dimr_fmpich2.dll" Source="$(var.x86_dimr_kernel_dir)fmpich2.dll" />
+              <File Id="cli_x86_dimr_fmpich2g.dll" Source="$(var.x86_dimr_kernel_dir)fmpich2g.dll" />
+              <File Id="cli_x86_dimr_fmpich2s.dll" Source="$(var.x86_dimr_kernel_dir)fmpich2s.dll" />
+              <File Id="cli_x86_dimr_libexpat.dll" Source="$(var.x86_dimr_kernel_dir)libexpat.dll" />
+              <File Id="cli_x86_dimr_mpe.dll" Source="$(var.x86_dimr_kernel_dir)mpe.dll" />
+              <File Id="cli_x86_dimr_mpich2.dll" Source="$(var.x86_dimr_kernel_dir)mpich2.dll" />
+              <File Id="cli_x86_dimr_mpich2mpe.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mpe.dll " />
+              <File Id="cli_x86_dimr_mpich2mpi.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mpi.dll" />
+              <File Id="cli_x86_dimr_mpich2mt.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mt.dll" />
+              <File Id="cli_x86_dimr_mpich2mtp.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mtp.dll" />
+              <File Id="cli_x86_dimr_mpich2p.dll" Source="$(var.x86_dimr_kernel_dir)mpich2p.dll" />
+              <File Id="cli_x86_dimr_mpich2shm.dll" Source="$(var.x86_dimr_kernel_dir)mpich2shm.dll" />
+              <File Id="cli_x86_dimr_mpich2shmp.dll" Source="$(var.x86_dimr_kernel_dir)mpich2shmp.dll " />
+              <File Id="cli_x86_dimr_mpich2ssm.dll" Source="$(var.x86_dimr_kernel_dir)mpich2ssm.dll" />
+              <File Id="cli_x86_dimr_mpich2ssmp.dll" Source="$(var.x86_dimr_kernel_dir)mpich2ssmp.dll" />
+              <File Id="cli_x86_dimr_mpiexec.exe" Source="$(var.x86_dimr_kernel_dir)mpiexec.exe" />
+              <File Id="cli_x86_dimr_msvcp110.dll" Source="$(var.x86_dimr_kernel_dir)msvcp110.dll" />
+              <File Id="cli_x86_dimr_msvcp120.dll" Source="$(var.x86_dimr_kernel_dir)msvcp120.dll" />
+              <File Id="cli_x86_dimr_msvcr100.dll" Source="$(var.x86_dimr_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x86_dimr_msvcr110.dll" Source="$(var.x86_dimr_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x86_dimr_msvcr120.dll" Source="$(var.x86_dimr_kernel_dir)msvcr120.dll" />
+              <File Id="cli_x86_dimr_pthreadvce.dll" Source="$(var.x86_dimr_kernel_dir)pthreadvce.dll" />
+              <File Id="cli_x86_dimr_pthreadVCE2.dll" Source="$(var.x86_dimr_kernel_dir)pthreadVCE2.dll" />
+              <File Id="cli_x86_dimr_smpd.exe" Source="$(var.x86_dimr_kernel_dir)smpd.exe" />
+              <?undef x86_dimr_kernel_dir ?>
+            </Component>
+          </Directory>
+          <Directory Id="cli_win32_dimr_scripts" Name="scripts">
+            <Component Id="cli_x86_dimr_scripts" Guid="231B87B8-EAF0-4542-A7AB-3C78D473A905">
+              <File Id="cli_x86_dimr_run_dimr_win32.bat" Source="$(var.dimr_scripts_dir)run_dimr_win32.bat" />
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_win32_mpiexec" Name="mpiexec">
+          <Directory Id="cli_win32_mpiexec_bin" Name="bin">
+            <Component Id="cli_x86_mpiexec_bin" Guid="DF44A314-44FF-4680-A759-A075478946D8">
+              <?define x86_dimr_kernel_dir="$(var.dimr_kernel_dir)x86\"?>
+              <File Id="cli_x86_mpiexec_mpich2.dll" Source="$(var.x86_dimr_kernel_dir)mpich2.dll" />
+              <File Id="cli_x86_mpiexec_mpich2mpe.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mpe.dll " />
+              <File Id="cli_x86_mpiexec_mpich2mpi.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mpi.dll" />
+              <File Id="cli_x86_mpiexec_mpich2mt.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mt.dll" />
+              <File Id="cli_x86_mpiexec_mpich2mtp.dll" Source="$(var.x86_dimr_kernel_dir)mpich2mtp.dll" />
+              <File Id="cli_x86_mpiexec_mpich2p.dll" Source="$(var.x86_dimr_kernel_dir)mpich2p.dll" />
+              <File Id="cli_x86_mpiexec_mpich2shm.dll" Source="$(var.x86_dimr_kernel_dir)mpich2shm.dll" />
+              <File Id="cli_x86_mpiexec_mpich2shmp.dll" Source="$(var.x86_dimr_kernel_dir)mpich2shmp.dll " />
+              <File Id="cli_x86_mpiexec_mpich2ssm.dll" Source="$(var.x86_dimr_kernel_dir)mpich2ssm.dll" />
+              <File Id="cli_x86_mpiexec_mpich2ssmp.dll" Source="$(var.x86_dimr_kernel_dir)mpich2ssmp.dll" />
+              <File Id="cli_x86_mpiexec_mpiexec.exe" Source="$(var.x86_dimr_kernel_dir)mpiexec.exe" />
+              <File Id="cli_x86_mpiexe_smpd.exe" Source="$(var.x86_dimr_kernel_dir)smpd.exe" />
+              <?undef x86_dimr_kernel_dir ?>
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_win32_RTCTools" Name="RTCTools">
+          <Directory Id="cli_win32_RTCTools_bin" Name="bin">
+            <Component Id="cli_x86_rtc_kernel" Guid="F25930DC-EEDA-4AF4-B899-54BE3D59D9EC">
+              <?define x86_rtc_kernel_dir="$(var.rtcTools_kernel_dir)x86\"?>
+              <File Id="cli_x86_rtc_IpOptFSS.dll" Source="$(var.x86_rtc_kernel_dir)IpOptFSS.dll" />
+              <File Id="cli_x86_rtc_IpOpt_vc10.dll" Source="$(var.x86_rtc_kernel_dir)IpOpt-vc10.dll" />
+              <File Id="cli_x86_rtc_msvcr100.dll" Source="$(var.x86_rtc_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x86_rtc_RTCTools_OpenMI.dll" Source="$(var.x86_rtc_kernel_dir)RTCTools_OpenMI.dll" />
+              <File Id="cli_x86_rtc_RTCTools_BMI.dll" Source="$(var.x86_rtc_kernel_dir)RTCTools_BMI.dll" />
+              <File Id="cli_x86_rtc_vcomp100.dll" Source="$(var.x86_rtc_kernel_dir)vcomp100.dll" />
+              <File Id="cli_x86_rtc_rtc_msvcp100.dll" Source="$(var.x86_rtc_kernel_dir)msvcp100.dll" />
+              <File Id="cli_x86_rtc_xerces_c_3_1.dll" Source="$(var.x86_rtc_kernel_dir)xerces-c_3_1.dll" />
+              <File Id="cli_x86_rtc_xerces_c_3_1D.dll" Source="$(var.x86_rtc_kernel_dir)xerces-c_3_1D.dll" />
+              <?undef x86_rtc_kernel_dir ?>
+            </Component>
+            <Component Id="cli_x86_rtc_xsd" Guid="A023A1A6-D0BB-46B9-98A4-83CE5E782B08">
+              <File Id="cli_x86_rtc_pi_diag.xsd" Source="$(var.rtcTools_xsd_dir)pi_diag.xsd" />
+              <File Id="cli_x86_rtc_pi_modelparameters.xsd" Source="$(var.rtcTools_xsd_dir)pi_modelparameters.xsd" />
+              <File Id="cli_x86_rtc_pi_run.xsd" Source="$(var.rtcTools_xsd_dir)pi_run.xsd" />
+              <File Id="cli_x86_rtc_pi_sharedtypes.xsd" Source="$(var.rtcTools_xsd_dir)pi_sharedtypes.xsd" />
+              <File Id="cli_x86_rtc_pi_state.xsd" Source="$(var.rtcTools_xsd_dir)pi_state.xsd" />
+              <File Id="cli_x86_rtc_pi_timeseries.xsd" Source="$(var.rtcTools_xsd_dir)pi_timeseries.xsd" />
+              <File Id="cli_x86_rtc_rtcdataconfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcdataconfig.xsd" />
+              <File Id="cli_x86_rtc_rtcObjectiveConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcObjectiveConfig.xsd" />
+              <File Id="cli_x86_rtc_rtcPostprocessingConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcPostprocessingConfig.xsd" />
+              <File Id="cli_x86_rtc_rtcRuntimeConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcRuntimeConfig.xsd" />
+              <File Id="cli_x86_rtc_rtcScenarioTreeConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcScenarioTreeConfig.xsd" />
+              <File Id="cli_x86_rtc_rtcsharedtypes.xsd" Source="$(var.rtcTools_xsd_dir)rtcsharedtypes.xsd" />
+              <File Id="cli_x86_rtc_rtcStateConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcStateConfig.xsd" />
+              <File Id="cli_x86_rtc_rtctoolsconfig.xsd" Source="$(var.rtcTools_xsd_dir)rtctoolsconfig.xsd" />
+              <File Id="cli_x86_rtc_treeVector.xsd" Source="$(var.rtcTools_xsd_dir)treeVector.xsd" />
+            </Component>
+          </Directory>
+        </Directory> 
+      </Directory>
+      <Directory Id="cli_win64" Name="win64">
+        <Directory Id="cli_win64_dflowfm" Name="dflowfm">
+          <Directory Id="cli_win64_dflowfm_bin" Name="bin">
+            <Component Id="cli_x64_dflowfm_kernel" Guid="BA4E5016-1FD0-4535-AE38-573069272E7C">
+              <?define x64_fm_kernel_dir="$(var.fm_kernel_dir)x64\"?>
+              <File Id="cli_x64_dflowfm_dflowfm.dll" Source="$(var.x64_fm_kernel_dir)dflowfm.dll" />
+              <File Id="cli_x64_dflowfm_fmpich2.dll" Source="$(var.x64_fm_kernel_dir)fmpich2.dll" />
+              <File Id="cli_x64_dflowfm_libifcoremd.dll" Source="$(var.x64_fm_kernel_dir)libifcoremd.dll" />
+              <File Id="cli_x64_dflowfm_libifportmd.dll" Source="$(var.x64_fm_kernel_dir)libifportmd.dll" />
+              <File Id="cli_x64_dflowfm_libiomp5md.dll" Source="$(var.x64_fm_kernel_dir)libiomp5md.dll" />
+              <File Id="cli_x64_dflowfm_libmmd.dll" Source="$(var.x64_fm_kernel_dir)libmmd.dll" />
+              <File Id="cli_x64_dflowfm_mpich2mpi.dll" Source="$(var.x64_fm_kernel_dir)mpich2mpi.dll" />
+              <File Id="cli_x64_dflowfm_mpich2nemesis.dll" Source="$(var.x64_fm_kernel_dir)mpich2nemesis.dll" />
+              <File Id="cli_x64_dflowfm_msvcp90.dll" Source="$(var.x64_fm_kernel_dir)msvcp90.dll" />
+              <File Id="cli_x64_dflowfm_msvcp110.dll" Source="$(var.x64_fm_kernel_dir)msvcp110.dll" />
+              <File Id="cli_x64_dflowfm_msvcr90.dll" Source="$(var.x64_fm_kernel_dir)msvcr90.dll" />
+              <File Id="cli_x64_dflowfm_msvcr100.dll" Source="$(var.x64_fm_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x64_dflowfm_msvcr110.dll" Source="$(var.x64_fm_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x64_dflowfm_netcdf.dll" Source="$(var.x64_fm_kernel_dir)netcdf.dll" />
+              <File Id="cli_x64_dflowfm_pthreadVC2.dll" Source="$(var.x64_fm_kernel_dir)pthreadVC2.dll" />
+              <File Id="cli_x64_dflowfm_svml_dispmd.dll" Source="$(var.x64_fm_kernel_dir)svml_dispmd.dll" />
+              <File Id="cli_x64_dflowfm_tecio.dll" Source="$(var.x64_fm_kernel_dir)tecio.dll" />
+              <?undef x64_fm_kernel_dir ?>
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_win64_dimr" Name="dimr">
+          <Directory Id="cli_win64_dimr_bin" Name="bin">
+            <Component Id="cli_x64_dimr_kernel" Guid="F99F0F03-AEF3-4786-B63F-7ADC4764A730">
+              <?define x64_dimr_kernel_dir="$(var.dimr_kernel_dir)x64\"?>           
+              <File Id="cli_x64_dimr_dimr.exe" Source="$(var.x64_dimr_kernel_dir)dimr.exe" />
+              <File Id="cli_x64_dimr_dimr_dll.dll" Source="$(var.x64_dimr_kernel_dir)dimr_dll.dll" />
+              <File Id="cli_x64_dimr_fmpich2.dll" Source="$(var.x64_dimr_kernel_dir)fmpich2.dll" />
+              <File Id="cli_x64_dimr_fmpich2g.dll" Source="$(var.x64_dimr_kernel_dir)fmpich2g.dll" />
+              <File Id="cli_x64_dimr_fmpich2s.dll" Source="$(var.x64_dimr_kernel_dir)fmpich2s.dll" />
+              <File Id="cli_x64_dimr_irlog2rlog.exe" Source="$(var.x64_dimr_kernel_dir)irlog2rlog.exe" />
+              <File Id="cli_x64_dimr_libexpat.dll" Source="$(var.x64_dimr_kernel_dir)libexpat.dll" />
+              <File Id="cli_x64_dimr_mpe.dll" Source="$(var.x64_dimr_kernel_dir)mpe.dll" />
+              <File Id="cli_x64_dimr_mpich2.dll" Source="$(var.x64_dimr_kernel_dir)mpich2.dll" />
+              <File Id="cli_x64_dimr_mpich2mpe.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mpe.dll " />
+              <File Id="cli_x64_dimr_mpich2mpi.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mpi.dll" />
+              <File Id="cli_x64_dimr_mpich2mt.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mt.dll" />
+              <File Id="cli_x64_dimr_mpich2mtp.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mtp.dll" />
+              <File Id="cli_x64_dimr_mpich2nemesis.dll" Source="$(var.x64_dimr_kernel_dir)mpich2nemesis.dll" />
+              <File Id="cli_x64_dimr_mpich2nemesisp.dll" Source="$(var.x64_dimr_kernel_dir)mpich2nemesisp.dll" />
+              <File Id="cli_x64_dimr_mpich2p.dll" Source="$(var.x64_dimr_kernel_dir)mpich2p.dll" />
+              <File Id="cli_x64_dimr_mpiexec.exe" Source="$(var.x64_dimr_kernel_dir)mpiexec.exe" />
+              <File Id="cli_x64_dimr_msvcp110.dll" Source="$(var.x64_dimr_kernel_dir)msvcp110.dll" />
+              <File Id="cli_x64_dimr_msvcr100.dll" Source="$(var.x64_dimr_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x64_dimr_msvcr110.dll" Source="$(var.x64_dimr_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x64_dimr_pthreadGC2.dll" Source="$(var.x64_dimr_kernel_dir)pthreadGC2.dll" />
+              <File Id="cli_x64_dimr_pthreadVC2.dll" Source="$(var.x64_dimr_kernel_dir)pthreadVC2.dll" />
+              <File Id="cli_x64_dimr_smpd.exe" Source="$(var.x64_dimr_kernel_dir)smpd.exe" />
+              <File Id="cli_x64_dimr_wmpiconfig.exe" Source="$(var.x64_dimr_kernel_dir)wmpiconfig.exe" />
+              <File Id="cli_x64_dimr_wmpiexec.exe" Source="$(var.x64_dimr_kernel_dir)wmpiexec.exe" />
+              <File Id="cli_x64_dimr_wmpiregister.exe" Source="$(var.x64_dimr_kernel_dir)wmpiregister.exe" />
+              <?undef x64_dimr_kernel_dir ?>
+            </Component>
+          </Directory>
+          <Directory Id="cli_win64_dimr_scripts" Name="scripts">
+            <Component Id="cli_x64_dimr_scripts" Guid="2C1F5B98-17EB-4005-8714-6A79A074462C">
+              <File Id="cli_x64_dimr_run_dimr.bat" Source="$(var.dimr_scripts_dir)run_dimr.bat" />
+              <File Id="cli_x64_dimr_run_dimr_parallel.bat" Source="$(var.dimr_scripts_dir)run_dimr_parallel.bat" />
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_win64_mpiexec" Name="mpiexec">
+          <Directory Id="cli_win64_mpiexec_bin" Name="bin">
+            <Component Id="cli_x64_mpiexec_bin" Guid="A112046C-7D4B-4A0B-BDF1-7C68187EBAA3">
+              <?define x64_dimr_kernel_dir="$(var.dimr_kernel_dir)x64\"?>
+              <File Id="cli_x64_mpiexec_mpich2.dll" Source="$(var.x64_dimr_kernel_dir)mpich2.dll" />
+              <File Id="cli_x64_mpiexec_mpich2mpe.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mpe.dll " />
+              <File Id="cli_x64_mpiexec_mpich2mpi.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mpi.dll" />
+              <File Id="cli_x64_mpiexec_mpich2mt.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mt.dll" />
+              <File Id="cli_x64_mpiexec_mpich2mtp.dll" Source="$(var.x64_dimr_kernel_dir)mpich2mtp.dll" />
+              <File Id="cli_x64_mpiexec_mpich2nemesis.dll" Source="$(var.x64_dimr_kernel_dir)mpich2nemesis.dll" />
+              <File Id="cli_x64_mpiexec_mpich2nemesisp.dll" Source="$(var.x64_dimr_kernel_dir)mpich2nemesisp.dll" />
+              <File Id="cli_x64_mpiexec_mpich2p.dll" Source="$(var.x64_dimr_kernel_dir)mpich2p.dll" />
+              <File Id="cli_x64_mpiexec_mpiexec.exe" Source="$(var.x64_dimr_kernel_dir)mpiexec.exe" />
+              <File Id="cli_x64_mpiexe_smpd.exe" Source="$(var.x64_dimr_kernel_dir)smpd.exe" />
+              <?undef x64_dimr_kernel_dir ?>
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_win64_RTCTools" Name="RTCTools">
+          <Directory Id="cli_win64_RTCTools_bin" Name="bin">
+            <Component Id="cli_x64_rtc_kernel" Guid="4DD30B5C-1C82-4761-B259-1075CEE47F41">
+              <?define x64_rtc_kernel_dir="$(var.rtcTools_kernel_dir)x64\"?>
+              <File Id="cli_x64_rtc_IpOptFSS.dll" Source="$(var.x64_rtc_kernel_dir)IpOptFSS.dll" />
+              <File Id="cli_x64_rtc_IpOpt_vc10.dll" Source="$(var.x64_rtc_kernel_dir)IpOpt-vc10.dll" />
+              <File Id="cli_x64_rtc_msvcr100.dll" Source="$(var.x64_rtc_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x64_rtc_RTCTools_OpenMI.dll" Source="$(var.x64_rtc_kernel_dir)RTCTools_OpenMI.dll" />
+              <File Id="cli_x64_rtc_RTCTools_BMI.dll" Source="$(var.x64_rtc_kernel_dir)RTCTools_BMI.dll" />
+              <File Id="cli_x64_rtc_vcomp100.dll" Source="$(var.x64_rtc_kernel_dir)vcomp100.dll" />
+              <File Id="cli_x64_rtc_rtc_msvcp100.dll" Source="$(var.x64_rtc_kernel_dir)msvcp100.dll" />
+              <File Id="cli_x64_rtc_xerces_c_3_1.dll" Source="$(var.x64_rtc_kernel_dir)xerces-c_3_1.dll" />
+              <File Id="cli_x64_rtc_xerces_c_3_1D.dll" Source="$(var.x64_rtc_kernel_dir)xerces-c_3_1D.dll" />
+              <?undef x64_rtc_kernel_dir ?>
+            </Component>
+            <Component Id="cli_x64_rtc_xsd" Guid="1165F532-97DC-4F22-81C5-E65682FA1F72">
+              <File Id="cli_x64_rtc_pi_diag.xsd" Source="$(var.rtcTools_xsd_dir)pi_diag.xsd" />
+              <File Id="cli_x64_rtc_pi_modelparameters.xsd" Source="$(var.rtcTools_xsd_dir)pi_modelparameters.xsd" />
+              <File Id="cli_x64_rtc_pi_run.xsd" Source="$(var.rtcTools_xsd_dir)pi_run.xsd" />
+              <File Id="cli_x64_rtc_pi_sharedtypes.xsd" Source="$(var.rtcTools_xsd_dir)pi_sharedtypes.xsd" />
+              <File Id="cli_x64_rtc_pi_state.xsd" Source="$(var.rtcTools_xsd_dir)pi_state.xsd" />
+              <File Id="cli_x64_rtc_pi_timeseries.xsd" Source="$(var.rtcTools_xsd_dir)pi_timeseries.xsd" />
+              <File Id="cli_x64_rtc_rtcdataconfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcdataconfig.xsd" />
+              <File Id="cli_x64_rtc_rtcObjectiveConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcObjectiveConfig.xsd" />
+              <File Id="cli_x64_rtc_rtcPostprocessingConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcPostprocessingConfig.xsd" />
+              <File Id="cli_x64_rtc_rtcRuntimeConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcRuntimeConfig.xsd" />
+              <File Id="cli_x64_rtc_rtcScenarioTreeConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcScenarioTreeConfig.xsd" />
+              <File Id="cli_x64_rtc_rtcsharedtypes.xsd" Source="$(var.rtcTools_xsd_dir)rtcsharedtypes.xsd" />
+              <File Id="cli_x64_rtc_rtcStateConfig.xsd" Source="$(var.rtcTools_xsd_dir)rtcStateConfig.xsd" />
+              <File Id="cli_x64_rtc_rtctoolsconfig.xsd" Source="$(var.rtcTools_xsd_dir)rtctoolsconfig.xsd" />
+              <File Id="cli_x64_rtc_treeVector.xsd" Source="$(var.rtcTools_xsd_dir)treeVector.xsd" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Directory> 
+  
+  <?undef fm_kernel_dir ?>
+  <?undef dimr_kernel_dir ?>
+  <?undef dimr_scripts_dir ?>
+  <?undef rtcTools_kernel_dir ?>
+  <?undef rtcTools_xsd_dir ?>
+
+</Include>

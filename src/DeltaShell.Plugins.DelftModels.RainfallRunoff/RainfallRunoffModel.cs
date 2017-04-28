@@ -1,0 +1,1294 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO; 
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
+using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Core.Workflow.Restart;
+using DelftTools.Units;
+using DelftTools.Units.Generics;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
+using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.FunctionStores;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.FixedFiles;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
+using DeltaShell.Plugins.NetCDF;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Coverages;
+using log4net;
+using Comparer = DelftTools.Utils.Comparer;
+
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
+{
+    [Entity(FireOnCollectionChange=false)]
+    public class RainfallRunoffModel : TimeDependentModelBase, IRainfallRunoffAreaUnitManager, IRainfallRunoffModel, IDimrStateAwareModel, IDisposable, IDimrModel
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
+        private readonly DimrRunner runner;
+
+        private readonly RainfallRunoffBasinSynchronizer basinSyncer;
+        private RainfallRunoffChildDataItemProvider childDataItemProvider;
+        private RainfallRunoffModelController modelController;
+        private RainfallRunoffOutputSettingData outputSettings;
+        private IEventedList<CatchmentModelData> modelData;
+        private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
+
+        public RainfallRunoffModel() : base("Rainfall Runoff")
+        {
+            ((INotifyPropertyChanged) this).PropertyChanged += (s, e) =>
+                {
+                    if (ModelPropertyChanged != null)
+                    {
+                        ModelPropertyChanged(s, e);
+                    }
+                };
+
+            AddDataItem(new DrainageBasin {Name = "Basin"}, DataItemRole.Input, RainfallRunoffModelDataSet.BasinTag);
+
+            CapSim = false;
+            CapSimInitOption = RainfallRunoffEnums.CapsimInitOptions.AtEquilibriumMoisture;
+            CapSimCropAreaOption = RainfallRunoffEnums.CapsimCropAreaOptions.PerCropArea;
+
+            basinSyncer = new RainfallRunoffBasinSynchronizer(this);
+
+            // evaporation
+            var globalEvaporation = new MeteoData(MeteoDataAggregationType.Cumulative)
+                {
+                    Name = RainfallRunoffModelDataSet.EvaporationName
+                };
+            AddDataItem(globalEvaporation, RainfallRunoffModelDataSet.EvaporationName, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationTag);
+
+            // precipitation
+            var globalPrecipitation = new MeteoData(MeteoDataAggregationType.Cumulative)
+                {
+                    Name = RainfallRunoffModelDataSet.PrecipitationName
+                };
+            AddDataItem(globalPrecipitation, RainfallRunoffModelDataSet.PrecipitationName, DataItemRole.Input, RainfallRunoffModelDataSet.PrecipitationTag);
+
+            // temperature
+            var globalTemperature = new MeteoData(MeteoDataAggregationType.NonCumulative)
+                {
+                    Name = RainfallRunoffModelDataSet.TemperatureName
+                };
+            AddDataItem(globalTemperature, RainfallRunoffModelDataSet.TemperatureName, DataItemRole.Input, RainfallRunoffModelDataSet.TemperatureTag);
+
+            // input water level (used by unpaved only)
+            var inputWaterLevel = CreateCatchmentCoverage(RainfallRunoffModelDataSet.InputWaterLevelUnpaved, "Input water level", null, true);
+            inputWaterLevel.Components[0].NoDataValue = RainfallRunoffModelDataSet.UndefinedWaterLevel;
+            inputWaterLevel.Components[0].DefaultValue = RainfallRunoffModelDataSet.UndefinedWaterLevel;
+            AddDataItem(inputWaterLevel, RainfallRunoffModelDataSet.InputWaterLevelUnpaved, DataItemRole.Input, RainfallRunoffModelDataSet.InputWaterLevelTag);
+
+            // init output settings
+            OutputSettings = new RainfallRunoffOutputSettingData();
+
+            // model unit
+            var unit = new Parameter<int>
+                {
+                    Name = "Area Unit",
+                    ValueType = typeof (RainfallRunoffEnums.AreaUnit),
+                    Description = "Area Unit",
+                    Value = (int) RainfallRunoffEnums.AreaUnit.m2,
+                    DefaultValue = (int) RainfallRunoffEnums.AreaUnit.m2
+                };
+
+            // Minimum filling/storage percentage (Greenhouse)
+            var minFillingStoragePercentage = new Parameter<double>
+                {
+                    Name = "Minimum filling/storage percentage",
+                    ValueType = typeof (double),
+                    Description = "Minimum filling/storage percentage",
+                    Value = 10.0,
+                    DefaultValue = 10.0
+                };
+
+            // Start active period (evaporation)
+            var evaporationStartActivePeriod = new Parameter<int>
+                {
+                    Name = "Start active period (evaporation)",
+                    ValueType = typeof (int),
+                    Description = "Start active period (evaporation)",
+                    Value = 7,
+                    DefaultValue = 7,
+                    MinValidValue = 1,
+                    MaxValidValue = 24
+                };
+
+            // End active period (evaporation)
+            var evaporationEndActivePeriod = new Parameter<int>
+                {
+                    Name = "End active period (evaporation)",
+                    ValueType = typeof (int),
+                    Description = "End active period (evaporation)",
+                    Value = 19,
+                    DefaultValue = 19,
+                    MinValidValue = 1,
+                    MaxValidValue = 24
+                };
+
+            ModelData = new EventedList<CatchmentModelData>();
+            BoundaryData = new EventedList<RunoffBoundaryData>();
+            MeteoStations = new EventedList<string>();
+            TemperatureStations = new EventedList<string>();
+
+            AddDataItem(unit, RainfallRunoffModelDataSet.AreaUnitName, DataItemRole.Input, RainfallRunoffModelDataSet.AreaUnitTag);
+            AddDataItem(minFillingStoragePercentage, DataItemRole.Input, RainfallRunoffModelDataSet.MinimumFillingStoragePercentageTag);
+            AddDataItem(evaporationStartActivePeriod, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationStartActivePeriodTag);
+            AddDataItem(evaporationEndActivePeriod, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationEndActivePeriodTag);
+
+            OutputSettings.BoundaryDischarge = AggregationOptions.Current;
+
+            FixedFiles = new RainfallRunoffModelFixedFiles(this, AddDataItem);
+
+            ((ICatchmentCoverageMaintainer) new MeteoDataController(this)).Initialize(null);
+
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
+            WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.Add(new RainfallRunoffInWorkFlowTypeValidatorProvider());
+            runner = new DimrRunner(this);
+        }
+
+        public override bool IsLinkAllowed(IDataItem source, IDataItem target)
+        {
+            if (target.Value is DrainageBasin)
+            {
+                return source.Value is DrainageBasin;
+            }
+
+            return base.IsLinkAllowed(source, target);
+        }
+
+        public override bool IsDataItemActive(IDataItem dataItem)
+        {
+            if (dataItem.ValueType == typeof (RRInitialConditionsWrapper))
+            {
+                return !UseRestart;
+            }
+            return base.IsDataItemActive(dataItem);
+        }
+
+        public RainfallRunoffModelFixedFiles FixedFiles { get; set; }
+
+        public virtual IFeatureCoverage BoundaryDischarge
+        {
+            get
+            {
+                return(IFeatureCoverage) OutputCoverages.FirstOrDefault(
+                        cov => cov.Components[0].Name ==
+                        outputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).Name);
+            }
+        }
+
+        public RainfallRunoffModelController ModelController
+        {
+            get
+            {
+                return modelController ??
+                       (modelController = new RainfallRunoffModelController(this));
+            }
+            set { modelController = value; }
+        }
+
+        [NoNotifyPropertyChange]
+        public virtual TimeSpan OutputTimeStep
+        {
+            get { return OutputSettings.OutputTimeStep; }
+            set { OutputSettings.OutputTimeStep = value; }
+        }
+
+        public virtual IEnumerable<IFunction> OutputFunctions
+        {
+            get
+            {
+                return DataItems
+                    .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output && di.Value is IFunction)
+                    .Select(di => (IFunction)di.Value);
+            }
+        }
+
+        public virtual IEnumerable<ICoverage> OutputCoverages
+        {
+            get { return OutputFunctions.OfType<ICoverage>(); }
+        }
+
+        [NoNotifyPropertyChange]
+        public DrainageBasin Basin
+        {
+            get { return (DrainageBasin) GetDataItemValueByTag(RainfallRunoffModelDataSet.BasinTag); }
+            set
+            {
+                if (!basinSyncer.IsDifferentBasin(value))
+                {
+                    return;
+                }
+
+                GetDataItemByTag(RainfallRunoffModelDataSet.BasinTag).Value = value; //will trigger refresh in syncer
+            }
+        }
+
+        public bool InputWaterLevelIsLinked
+        {
+            get
+            {
+                var dataItem = GetDataItemByTag(RainfallRunoffModelDataSet.InputWaterLevelTag);
+                return dataItem.LinkedBy.Any() || dataItem.Children.Any(c => c.LinkedTo != null);
+            }
+        }
+
+        public virtual IFeatureCoverage InputWaterLevel
+        {
+            get { return (IFeatureCoverage) GetDataItemValueByTag(RainfallRunoffModelDataSet.InputWaterLevelTag); }
+        }
+
+        public MeteoData Precipitation
+        {
+            get { return (MeteoData) GetDataItemValueByTag(RainfallRunoffModelDataSet.PrecipitationTag); }
+            private set
+            {
+                if (value == Precipitation)
+                {
+                    return;
+                }
+                GetDataItemByTag(RainfallRunoffModelDataSet.PrecipitationTag).Value = value;
+            }
+        }
+
+        public MeteoData Evaporation
+        {
+            get { return (MeteoData)GetDataItemValueByTag(RainfallRunoffModelDataSet.EvaporationTag); }
+            private set
+            {
+                if (value == Evaporation)
+                {
+                    return;
+                }
+                GetDataItemByTag(RainfallRunoffModelDataSet.EvaporationTag).Value = value;
+            }
+        }
+
+        public MeteoData Temperature
+        {
+            get { return (MeteoData)GetDataItemValueByTag(RainfallRunoffModelDataSet.TemperatureTag); }
+            private set
+            {
+                if (value == Temperature)
+                {
+                    return;
+                }
+                GetDataItemByTag(RainfallRunoffModelDataSet.TemperatureTag).Value = value;
+            }
+        }
+
+        public IEventedList<string> MeteoStations
+        {
+            get { return meteoStations; }
+            set
+            {
+                if (meteoStations != null)
+                {
+                    meteoStations.CollectionChanging -= MeteoStationsCollectionChanging; 
+                    meteoStations.CollectionChanged -= MeteoStationsCollectionChanged;
+                }
+                meteoStations = value;
+                if (meteoStations != null)
+                {
+                    meteoStations.CollectionChanging += MeteoStationsCollectionChanging;
+                    meteoStations.CollectionChanged += MeteoStationsCollectionChanged;
+                }
+            }
+        }
+
+        void MeteoStationsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangingEvent(sender, e);
+        }
+
+        void MeteoStationsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangedEvent(sender, e);
+        }
+
+        public IEventedList<string> TemperatureStations
+        {
+            get { return temperatureStations; }
+            set
+            {
+                if (temperatureStations != null)
+                {
+                    temperatureStations.CollectionChanging -= TemperatureStationsCollectionChanging;
+                    temperatureStations.CollectionChanged -= TemperatureStationsCollectionChanged;
+                }
+                temperatureStations = value;
+                if (temperatureStations != null)
+                {
+                    temperatureStations.CollectionChanging += TemperatureStationsCollectionChanging;
+                    temperatureStations.CollectionChanged += TemperatureStationsCollectionChanged;
+                }
+            }
+        }
+
+        private void TemperatureStationsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangingEvent(sender, e);
+        }
+
+        private void TemperatureStationsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangedEvent(sender, e);
+        }
+
+        public bool ModelNeedsTemperatureData
+        {
+            get { return Basin.Catchments.Any(c => c.CatchmentType == CatchmentType.Hbv); }
+        }
+
+        public double MinimumFillingStoragePercentage
+        {
+            get { return GetDataItemValueByTag<Parameter<double>>(RainfallRunoffModelDataSet.MinimumFillingStoragePercentageTag).Value; }
+            set
+            {
+                if (Comparer.AlmostEqual2sComplement(value, MinimumFillingStoragePercentage))
+                {
+                    return;
+                }
+                GetDataItemValueByTag<Parameter<double>>(RainfallRunoffModelDataSet.MinimumFillingStoragePercentageTag).Value = value;
+            }
+        }
+
+        [NoNotifyPropertyChange]
+        public int EvaporationStartActivePeriod
+        {
+            get { return GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.EvaporationStartActivePeriodTag).Value; }
+            set
+            {
+                if (value == EvaporationStartActivePeriod)
+                {
+                    return;
+                }
+                GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.EvaporationStartActivePeriodTag).Value = value;
+            }
+        }
+
+        [NoNotifyPropertyChange]
+        public int EvaporationEndActivePeriod
+        {
+            get { return GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.EvaporationEndActivePeriodTag).Value; }
+            set
+            {
+                if (value == EvaporationEndActivePeriod)
+                {
+                    return;
+                }
+                GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.EvaporationEndActivePeriodTag).Value = value;
+            }
+        }
+
+        private RainfallRunoffChildDataItemProvider ChildDataItemProvider
+        {
+            get { return childDataItemProvider ?? (childDataItemProvider = new RainfallRunoffChildDataItemProvider(this)); }
+        }
+
+        public RainfallRunoffOutputSettingData OutputSettings
+        {
+            get { return outputSettings; }
+            set
+            {
+                if (outputSettings != null)
+                {
+                    ((INotifyPropertyChanged) OutputSettings).PropertyChanged -= OutputSettingsPropertyChanged;
+                }
+
+                outputSettings = value;
+
+                ((INotifyPropertyChanged) OutputSettings).PropertyChanged += OutputSettingsPropertyChanged;
+            }
+        }
+
+        /// <summary>
+        /// Set CapSim calculation on or off
+        /// </summary>
+        public bool CapSim { get; set; }
+
+        /// <summary>
+        /// CapSim init option  (At equilibrium moisture, At moisture content pF2, At moisture content pF3)
+        /// </summary>
+        public RainfallRunoffEnums.CapsimInitOptions CapSimInitOption { get; set; }
+
+        /// <summary>
+        /// CapSim for each crop area seperately otherwise CapSim with crop area averaged data once per unpaved area
+        /// </summary>
+        public RainfallRunoffEnums.CapsimCropAreaOptions CapSimCropAreaOption { get; set; }
+
+        protected virtual void BuildInputWaterLevelCoverage()
+        {
+            InputWaterLevel.Clear();
+
+            if (IsRunningParallelWithFlow())
+            {
+                var catchments = GetAllModelData().OfType<UnpavedData>().Select(ud => (IFeature) ud.Catchment).ToList();
+                InputWaterLevel.Features = new EventedList<IFeature>(catchments);
+                InputWaterLevel.FeatureVariable.AddValues(catchments);
+            }
+        }
+
+        private readonly string[] ignoreProperties = new[] { "IsEditing", "Dummy" };
+
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (ClearingOutput)
+                return;
+
+            if (ignoreProperties.Contains(e.PropertyName))
+                return;
+
+            if (IsBreakingPropertyChangeForOutput(sender, e))
+            {
+                base.OnInputPropertyChanged(sender, e);
+            }
+        }
+
+        private bool IsBreakingPropertyChangeForOutput(object sender, PropertyChangedEventArgs e)
+        {
+            if (Basin == null)
+                return false;
+
+            //only clear output if feature geometry was modified
+            if (sender is IFeature && e.PropertyName == "Geometry")
+                return true;
+
+            return false;
+        }
+
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (ClearingOutput)
+                return;
+
+            base.OnInputCollectionChanged(sender, e);
+        }
+
+        
+        private void AddOutputCoverage(EngineParameter modelParameter)
+        {
+            if (modelParameter.AggregationOptions == AggregationOptions.None)
+            {
+                return;
+            }
+
+            string functionName = modelParameter.Name; // +" [" + modelParameter.Unit.Symbol + "]";
+
+            if (modelParameter.ElementSet == ElementSet.BoundaryElmSet ||
+                modelParameter.ElementSet == ElementSet.LinkElmSet ||
+                modelParameter.ElementSet == ElementSet.BalanceNodeElmSet ||
+                modelParameter.ElementSet == ElementSet.WWTPElmSet)
+            {
+                IFeatureCoverage coverage = CreateFeatureCoverage(functionName, modelParameter.Name,
+                                                                  modelParameter.Unit, true);
+                coverage.IsEditable = false;
+                coverage.Components[0].NoDataValue = double.NaN;
+                AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+            }
+            else if (modelParameter.ElementSet == ElementSet.UnpavedElmSet ||
+                     modelParameter.ElementSet == ElementSet.PavedElmSet ||
+                     modelParameter.ElementSet == ElementSet.GreenhouseElmSet ||
+                     modelParameter.ElementSet == ElementSet.OpenWaterElmSet ||
+                     modelParameter.ElementSet == ElementSet.SacramentoElmSet ||
+                     modelParameter.ElementSet == ElementSet.HbvElmSet)
+            {
+                var coverage = CreateCatchmentCoverage(functionName, modelParameter.Name,
+                                                                    modelParameter.Unit, true);
+                coverage.IsEditable = false;
+                coverage.Components[0].NoDataValue = double.NaN;
+                AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+            }
+            else if (modelParameter.ElementSet == ElementSet.BalanceModelElmSet)
+            {
+                var timeSeries = new TimeSeries();
+                timeSeries.Name = functionName;
+                timeSeries.IsEditable = false;
+                timeSeries.Components.Add(new Variable<double>(modelParameter.Name, modelParameter.Unit));
+                timeSeries.Components[0].NoDataValue = double.NaN;
+                AddDataItem(timeSeries, DataItemRole.Output, timeSeries.Name);
+            }
+            else
+            {
+                throw new NotImplementedException(String.Format("Spatial data for elementset {0} not implemented yet.",
+                                                                Enum.GetName(typeof (ElementSet),
+                                                                             modelParameter.ElementSet)));
+            }
+        }
+        
+        public override string KernelVersions
+        {
+            get
+            {
+                var entryAssembly = GetType().Assembly;
+                if (entryAssembly == null) return "";
+
+                if (!File.Exists(RRModelEngineDll.DllPath))
+                    return "";
+
+                return "Kernel: " + Path.GetFileName(RRModelEngineDll.DllPath) + "  " + FileVersionInfo.GetVersionInfo(RRModelEngineDll.DllPath).FileVersion;
+            }
+        }
+        
+        #region IRainfallRunoffAreaUnitManager Members
+        
+        public RainfallRunoffEnums.AreaUnit AreaUnit
+        {
+            get { return (RainfallRunoffEnums.AreaUnit) GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.AreaUnitTag).Value; }
+            set
+            {
+                if (value == AreaUnit)
+                {
+                    return;
+                }
+                AfterAreaUnitSet(value);
+            }
+        }
+        
+        [EditAction]
+        private void AfterAreaUnitSet(RainfallRunoffEnums.AreaUnit value)
+        {
+            GetDataItemValueByTag<Parameter<int>>(RainfallRunoffModelDataSet.AreaUnitTag).Value = (int) value;
+            if (AreaUnitChanged != null)
+            {
+                AreaUnitChanged(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler AreaUnitChanged;
+
+        #endregion
+        
+        public event EventHandler ModelDataAdded;
+        public event EventHandler ModelDataRemoved;
+        public event PropertyChangedEventHandler ModelPropertyChanged;
+
+        public virtual IHydroRegion Region
+        {
+            get { return Basin; }
+        }
+
+        public virtual Type SupportedRegionType { get { return typeof (DrainageBasin); } }
+
+        public IEnumerable<CatchmentModelData> GetAllModelData()
+        {
+            return ModelData.Flatten(cmd => cmd.SubCatchmentModelData);
+        }
+
+        public IEventedList<CatchmentModelData> ModelData
+        {
+            get { return modelData; }
+            private set
+            {
+                if (modelData != null)
+                {
+                    modelData.CollectionChanging -= ModelDataCollectionChanging;
+                    modelData.CollectionChanged -= ModelDataCollectionChanged;
+                }
+                modelData = value;
+                if (modelData != null)
+                {
+                    modelData.CollectionChanging += ModelDataCollectionChanging;
+                    modelData.CollectionChanged += ModelDataCollectionChanged;
+                }
+            }
+        }
+
+        void ModelDataCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangingEvent(sender, e);
+        }
+
+        void ModelDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangedEvent(sender ,e);
+        }
+
+        public IEventedList<RunoffBoundaryData> BoundaryData
+        {
+            get { return boundaryData; }
+            set
+            {
+                if (boundaryData != null)
+                {
+                    boundaryData.CollectionChanging -= BoundaryDataCollectionChanging;
+                    boundaryData.CollectionChanged -= BoundaryDataCollectionChanged;
+                }
+                boundaryData = value;
+                if (boundaryData != null)
+                {
+                    boundaryData.CollectionChanging += BoundaryDataCollectionChanging;
+                    boundaryData.CollectionChanged += BoundaryDataCollectionChanged;
+                }
+            }
+        }
+
+        private void BoundaryDataCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangingEvent(sender, e);
+        }
+
+        private void BoundaryDataCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangedEvent(sender, e);
+        }
+
+        public CatchmentModelData GetCatchmentModelData(Catchment catchment)
+        {
+            return GetAllModelData().FirstOrDefault(cmd => Equals(cmd.Catchment, catchment));
+        }
+
+        [EditAction]
+        private void OutputSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is EngineParameter && e.PropertyName == "AggregationOptions")
+            {
+                var engineParameter = (EngineParameter) sender;
+
+                if (engineParameter.AggregationOptions == AggregationOptions.None)
+                {
+                    DataItems.RemoveAllWhere(
+                        di =>
+                        (di.Role & DataItemRole.Output) == DataItemRole.Output &&
+                        IsDataItemCoverageForEngineParameter(di, engineParameter));
+                }
+                else
+                {
+                    if (
+                        !DataItems.Any(
+                            di =>
+                            (di.Role & DataItemRole.Output) == DataItemRole.Output &&
+                            IsDataItemCoverageForEngineParameter(di, engineParameter)))
+                    {
+                        AddOutputCoverage((EngineParameter) sender);
+                    }
+                }
+            }
+        }
+
+        private static bool IsDataItemCoverageForEngineParameter(IDataItem dataItem, EngineParameter engineParameter)
+        {
+            if (dataItem == null)
+                return false;
+
+            var coverage = dataItem.Value as ICoverage;
+
+            if (coverage == null)
+                return false;
+
+            return coverage.Components[0].Name == engineParameter.Name;
+        }
+        
+        protected override void OnBeforeDataItemsSet()
+        {
+            base.OnBeforeDataItemsSet();
+            basinSyncer.BeforeDataItemsSet();
+        }
+
+        protected override void OnAfterDataItemsSet()
+        {
+            base.OnAfterDataItemsSet();
+            basinSyncer.AfterDataItemsSet();
+
+            OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
+        }
+
+        private static IFeatureCoverage CreateCatchmentCoverage(string name, string valueName = "Value", Unit valueUnit = null, bool timeDependent = false)
+        {
+            IFeatureCoverage catchmentCoverage = CreateFeatureCoverage(name, valueName, valueUnit, timeDependent);
+            catchmentCoverage.Arguments.Last().Name = "Catchment";
+
+            return catchmentCoverage;
+        }
+
+        private static IFeatureCoverage CreateFeatureCoverage(string name, string valueName = "Value", Unit valueUnit = null, bool timeDependent = false)
+        {
+            var featureCoverage = new FeatureCoverage(name) {IsTimeDependent = timeDependent};
+            var argument = new Variable<IFeature>("Feature") {FixedSize = 0};
+            featureCoverage.Arguments.Add(argument);
+            featureCoverage.Components.Add(new Variable<double>(valueName) {Unit = valueUnit});
+
+            return featureCoverage;
+        }
+        
+        public void FireModelDataAdded(CatchmentModelData catchmentModelData)
+        {
+            if (ModelDataAdded != null)
+            {
+                ModelDataAdded(catchmentModelData, EventArgs.Empty);
+            }
+        }
+
+        public void FireModelDataRemoved(CatchmentModelData removedModelData)
+        {
+            if (ModelDataRemoved != null)
+            {
+                ModelDataRemoved(removedModelData, EventArgs.Empty);
+            }
+        }
+        
+        public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
+        {
+            return ChildDataItemProvider.GetChildDataItemLocations(role);
+        }
+
+        public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
+        {
+            return ChildDataItemProvider.GetChildDataItems(location);
+        }
+
+        public override bool CanCopy(IDataItem item)
+        {
+            if (item.Value is FileBasedRestartState)
+            {
+                return true;
+            }
+
+            return base.CanCopy(item);
+        }
+
+        public override DelftTools.Shell.Core.IProjectItem DeepClone()
+        {
+            var clone = (RainfallRunoffModel) base.DeepClone();
+
+            // refresh basin syncer
+            clone.basinSyncer.BeforeDataItemsSet();
+            clone.basinSyncer.AfterDataItemsSet();
+
+            // copy output settings
+            clone.OutputSettings = (RainfallRunoffOutputSettingData)OutputSettings.Clone();
+
+            // clone model data
+            clone.ModelData = new EventedList<CatchmentModelData>(ModelData.Select(md => (CatchmentModelData) md.Clone()));
+
+            // clone boundary data
+            clone.BoundaryData = new EventedList<RunoffBoundaryData>(BoundaryData.Select(bd => (RunoffBoundaryData) bd.Clone()));
+
+            clone.MeteoStations = new EventedList<string>(meteoStations);
+            clone.TemperatureStations = new EventedList<string>(temperatureStations);
+
+            RefreshBasinRelatedData(clone, Basin);
+
+            return clone;
+        }
+
+        public static void RefreshBasinRelatedData(RainfallRunoffModel clone, DrainageBasin originalBasin)
+        {
+            if (Equals(clone.Basin, originalBasin))
+                return;
+
+            // replace catchments in model data
+            var allCatchments = originalBasin.AllCatchments.ToList();
+            var allClonedCatchments = clone.Basin.AllCatchments.ToList();
+
+            if (allCatchments.Count != allClonedCatchments.Count)
+                throw new InvalidOperationException("Error during clone: non matching catchments count");
+
+            foreach (var data in clone.GetAllModelData())
+            {
+                var indexInOriginal = allCatchments.IndexOf(data.Catchment);
+                ((ICatchmentSettable) data).CatchmentSetter = allClonedCatchments[indexInOriginal];
+            }
+
+            var allBoundaries = originalBasin.Boundaries.ToList();
+            var allClonedBoundaries = clone.Basin.Boundaries.ToList();
+
+            if (allBoundaries.Count != allClonedBoundaries.Count)
+                throw new InvalidOperationException("Error during clone: non matching catchments count");
+
+            foreach (var data in clone.BoundaryData)
+            {
+                var indexInOriginal = allBoundaries.IndexOf(data.Boundary);
+                data.Boundary = allClonedBoundaries[indexInOriginal];
+            }
+
+            // refresh InputWaterLevel
+            FeatureCoverage.RefreshAfterClone(clone.InputWaterLevel, originalBasin.AllHydroObjects.OfType<IFeature>(),
+                                              clone.Basin.AllHydroObjects.OfType<IFeature>());
+            
+            // refresh output coverages, hard cast: we want to crash if this is ever not a FeatureCoverage anymore
+            foreach (var clonedFeatureCoverage in clone.OutputCoverages.Cast<FeatureCoverage>())
+            {
+                FeatureCoverage.RefreshAfterClone(clonedFeatureCoverage,
+                                                  originalBasin.GetAllItemsRecursive().OfType<IFeature>(),
+                                                  clone.Basin.GetAllItemsRecursive().OfType<IFeature>());
+            }
+        }
+
+        #region IStateAwareModelEngine
+
+        private ModelFileBasedStateHandler modelStateHandler;
+        protected virtual bool ClearingOutput { get; set; }
+        private IEventedList<RunoffBoundaryData> boundaryData;
+        private IEventedList<string> meteoStations;
+        private IEventedList<string> temperatureStations; 
+        private static readonly int[] SupportedMetaDataVersions = new[] { 1 };
+
+        IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
+        {
+            return ModelStateHandler.GetState();
+        }
+
+        void IStateAwareModelEngine.SetState(IModelState modelState)
+        {
+            ModelStateHandler.FeedStateToModel(modelState);
+        }
+
+        void IStateAwareModelEngine.ReleaseState(IModelState modelState)
+        {
+            ModelStateHandler.ReleaseState(modelState);
+        }
+
+        IModelState IStateAwareModelEngine.CreateStateFromFile(string persistentStateFilePath)
+        {
+            return ModelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
+        }
+
+        #region Save State: Time Range
+
+        public virtual bool UseSaveStateTimeRange { get; set; }
+
+        public virtual DateTime SaveStateStartTime { get; set; }
+
+        public virtual DateTime SaveStateStopTime { get; set; }
+
+        public virtual TimeSpan SaveStateTimeStep { get; set; }
+
+        #endregion
+
+        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
+        {
+            if (UseSaveStateTimeRange)
+            {
+                var time = SaveStateStartTime;
+                while (time <= SaveStateStopTime)
+                {
+                    yield return time;
+
+                    time += SaveStateTimeStep;
+                }
+            }
+        }
+
+        void IStateAwareModelEngine.SaveStateToFile(IModelState modelState, string persistentStateFilePath)
+        {
+            modelState.MetaData = new ModelStateMetaData
+            {
+                ModelTypeId = "RainfallRunoffModel",
+                Version = SupportedMetaDataVersions.Last(),
+                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
+            };
+            ModelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
+        }
+
+        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
+        {
+            try
+            {
+                var modelState = (ModelStateFilesImpl)ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
+                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements, "RainfallRunoffModel");
+                warnings = Enumerable.Empty<string>();
+            }
+            catch (ArgumentException e)
+            {
+                errors = new[] {e.Message};
+                warnings = Enumerable.Empty<string>();
+            }
+        }
+
+        private Dictionary<string, string> GetMetaDataRequirements(int version)
+        {
+            if (version == 1)
+            {
+                return new Dictionary<string, string>
+                    {
+                        {
+                            "NrOfNoneCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.None))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfGreenHouseCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.GreenHouse))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfOpenWaterCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.OpenWater))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfPavedCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Paved))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfPolderCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Polder))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfUnpavedCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Unpaved))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfSacramentoCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Sacramento))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {
+                            "NrOfHbvCatchments",
+                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Hbv))
+                                 .ToString(CultureInfo.InvariantCulture)
+                        },
+                        {"NrOfBoundaries", Basin.Boundaries.Count.ToString(CultureInfo.InvariantCulture)}
+                    };
+            }
+
+            throw new NotImplementedException(String.Format("Meta data version {0} for model type {1} is not supported",
+                                                            version, "RainfallRunoffModel"));
+        }
+
+        internal ModelFileBasedStateHandler ModelStateHandler
+        {
+            get
+            {
+                if (modelStateHandler == null)
+                {
+                    IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
+                    //as defined in 'fixed' Sobek_3b.fnm (in RainfallRunoffModelEngine project)
+                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>("RSRR_OUT", "RSRR_IN")); 
+                    modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
+                }
+                return modelStateHandler;
+            }
+        }
+
+        #endregion
+
+        public bool IsRunningParallelWithFlow()
+        {
+            var owner = Owner as ICompositeActivity;
+            if (owner == null)
+                return false;
+
+            var simtaneousActivities = owner.GetActivitiesRunningSimultaneous(this);
+            return simtaneousActivities.Any(); //todo?
+        }
+        #region Implementation of IDimrModel
+
+        public virtual string LibraryName { get { return "rr_dll"; } }
+        public virtual string InputFile { get { return "Sobek_3b.fnm"; } }
+        public virtual string DirectoryName { get { return "rr"; } }
+        public virtual bool IsMasterTimeStep
+        {
+            get
+            {
+                if (Owner == null) return true;
+
+                var parent = Owner as ICompositeActivity;
+                if (parent == null) return true;
+                var otherDimrModels = parent.Activities.OfType<IDimrModel>()
+                    .Where(dm => !(dm is RainfallRunoffModel));
+
+                return otherDimrModels.Count(dm => dm.IsMasterTimeStep) == 0;
+            }
+        }
+
+        public virtual string ShortName { get { return "rr"; } }
+
+        public virtual string GetItemString(IDataItem value)
+        {
+            return null;
+        }
+
+        public virtual Type ExporterType { get { return typeof(RainfallRunoffModelExporter); } }
+        public virtual string GetExporterPath(string directoryName)
+        {
+            return directoryName;
+        }
+        public virtual string KernelDirectoryLocation { get { return Path.GetDirectoryName(RRModelEngineDll.DllPath); } }
+        public virtual void DisconnectOutput()
+        {
+            ClearOutput();
+            /*OutputCoverages.Select(c => c.Store).AsParallel().OfType<ReadOnlyMapHisFileFunctionStore>().ForAll(store =>
+            {
+                store.Close();
+                store.Path = null;
+            }); */
+        }
+
+        public virtual void ConnectOutput(string outputPath)
+        {
+            //OutputFunctions.AsParallel().ForAll(SetReadOnlyMapHisFileFunctionStoreLookups);
+            OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
+            OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
+            //OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
+            SetPathsOfFunctionStores(Path.Combine(outputPath, DirectoryName));
+        }
+        public virtual ValidationReport Validate()
+        {
+            return new RainfallRunoffModelValidator().Validate(this);
+        }
+        public new virtual ActivityStatus Status
+        {
+            get { return base.Status; }
+            set { base.Status = value; }
+        }
+
+        [EditAction]
+        public virtual bool IsRunByDimr { get; set; }
+
+        [NoNotifyPropertyChange]
+        public new virtual DateTime CurrentTime
+        {
+            get { return base.CurrentTime; }
+            set { base.CurrentTime = value; }
+        }
+        public virtual Array GetVar(string category, string itemName = null, string parameter = null)
+        {
+            return runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter));
+        }
+        public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
+        {
+            runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+        }
+        public virtual bool CanRunParallel { get { return false; } }
+        public virtual string MpiCommunicatorString { get { return null; } }
+
+        #endregion
+
+
+
+        protected virtual void SetReadOnlyMapHisFileFunctionStoreLookups(IFunction function)
+        {
+            var store = function.Store as ReadOnlyMapHisFileFunctionStore;
+            if (store == null) return;
+
+            store.GetParameterName = n => RainfallRunoffModelParameterHisFileMapping.HisFileParameterLookup[n].ParameterName;
+            var featureCoverage = function as FeatureCoverage;
+            if (featureCoverage == null) return;
+
+            store.LocationsFromStringToObject = s =>
+            {
+                if (GetElementSetForCoverage(featureCoverage) == ElementSet.BoundaryElmSet)
+                {
+                    var boundarySufix = "_boundary";
+                    if (s.EndsWith(boundarySufix))
+                    {
+                        s = s.Replace(boundarySufix, "");
+                    }
+                }
+                return featureCoverage.Features.OfType<INameable>().FirstOrDefault(n => n.Name == s);
+            };
+            store.LocationFromObjectToString = f =>
+            {
+                var sufix = GetElementSetForCoverage(featureCoverage) == ElementSet.BoundaryElmSet
+                    ? "_boundary"
+                    : "";
+
+                var fullName = ( (INameable) f ).Name + sufix;
+                return fullName.Truncate(20); // only 20 characters are allowed in his file
+            };
+        }
+
+        private ElementSet? GetElementSetForCoverage(IFunction function)
+        {
+            var engineParameters = OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ToList();
+            var parameter = engineParameters.FirstOrDefault(p => p.Name == function.Components[0].Name);
+
+            return parameter == null ? (ElementSet?) null : parameter.ElementSet;
+        }
+
+        public void Dispose()
+        {
+            // Ensure all stores are closed
+            var fileStores = AllDataItems.Where(di => di.LinkedTo == null && di.ValueType.Implements(typeof(IFunction)))
+                    .Select(di => di.Value).OfType<IFunction>()
+                    .Select(nc => nc.Store).OfType<IFileBased>();
+
+            foreach (var fileStore in fileStores)
+            {
+                fileStore.Close();
+            }
+
+            if (modelController == null) return;
+
+            try
+            {
+                modelController.Cleanup();
+                modelController = null;
+            }
+            catch (Exception ex)
+            {
+                log.ErrorFormat("Could not dispose model engine : {0}", ex.Message);
+            }
+        }
+
+        public virtual void ChangeToReadOnlyMapHisFileFunctionStore(IFunction outputFunction)
+        {
+            var ncStore = outputFunction.Store as NetCdfFunctionStore;
+
+            outputFunction.Store = new ReadOnlyMapHisFileFunctionStore
+            {
+                // set functions needed for storage (nhibernate)
+                Functions = new EventedList<IFunction>(outputFunction.Arguments.Concat(outputFunction.Components).Plus(outputFunction))
+            };
+            SetReadOnlyMapHisFileFunctionStoreLookups(outputFunction);
+
+            if (ncStore != null)
+            {
+                // remove old temporary nc file
+                ncStore.Dispose();
+                FileUtils.DeleteIfExists(ncStore.Path);
+            }
+        }
+
+        public virtual void SetPathsOfFunctionStores(string workingDir)
+        {
+            var functionLookup = OutputFunctions.ToDictionary(f => f.Name);
+
+            OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ForEach(parameter =>
+            //OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ForEach(parameter =>
+            {
+                var function = functionLookup[parameter.Name];
+                var fileName =
+                    RainfallRunoffModelParameterHisFileMapping.HisFileParameterLookup[parameter.Name]
+                        .HisFileName;
+
+                var readOnlyMapHisFileFunctionStore = function.Store as ReadOnlyMapHisFileFunctionStore;
+                if (readOnlyMapHisFileFunctionStore != null)
+                {
+                    readOnlyMapHisFileFunctionStore.Path = Path.Combine(workingDir, fileName);
+                }
+            });
+        }
+        #region TimeDependentModelBase
+        protected override void OnInitialize()
+        {
+            if (IsRunByDimr) return;
+
+            BuildInputWaterLevelCoverage();
+            runner.OnInitialize();
+        }
+        protected override void OnProgressChanged()
+        {
+            runner.OnProgressChanged();
+        }
+        protected override void OnExecute()
+        {
+            runner.OnExecute();
+        }
+        protected override void OnFinish()
+        {
+            runner.OnFinish();
+        }
+        protected override void OnCleanup()
+        {
+            runner.OnCleanup();
+        }
+        protected override void OnClearOutput()
+        {
+            if (SuspendClearOutputOnInputChange)
+                return;
+
+            ClearingOutput = true;
+
+            try
+            {
+                OutputOutOfSync = false;
+
+                foreach (var coverage in OutputCoverages)
+                {
+                    coverage.Filters.Clear();
+                    var hisStore = coverage.Store as ReadOnlyMapHisFileFunctionStore;
+                    if (hisStore != null)
+                    {
+                        hisStore.Close();
+                        hisStore.Path = null;
+                    }
+                    else
+                    {
+                        coverage.Clear();
+                    }
+                }
+
+                if (InputWaterLevel != null)
+                {
+                    InputWaterLevel.Clear();
+                }
+            }
+            finally
+            {
+                ClearingOutput = false;
+            }
+        }
+
+        #endregion
+
+        #region Implementation of IDimrStateAwareModel
+
+        public virtual void PrepareRestart()
+        {
+            ClearStatesIfRequired();
+        }
+
+        public virtual void WriteRestartFiles()
+        {
+            WriteRestartIfRequired(false);
+        }
+
+        public virtual void FinalizeRestart()
+        {
+            WriteRestartIfRequired(true);
+        }
+
+        #endregion
+    }
+
+    public interface IRainfallRunoffModel : IHydroModel
+    {
+        DateTime CurrentTime { get; }
+        
+        DateTime StartTime { get; }
+        
+        IFeatureCoverage InputWaterLevel { get; }
+        
+        bool CapSim { get; }
+
+        CatchmentModelData GetCatchmentModelData(Catchment c);
+
+        IEventedList<RunoffBoundaryData> BoundaryData { get; }
+
+        //duplicates PostSharps PropertyChanged, but that one cannot be included on the interface
+        event PropertyChangedEventHandler ModelPropertyChanged;
+        
+        event EventHandler ModelDataAdded;
+        
+        event EventHandler ModelDataRemoved;
+    }
+}

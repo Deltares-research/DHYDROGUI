@@ -1,0 +1,72 @@
+TP_1.0
+NODE id 'N_001' nm 'EysdenMSW' px 175810 py 307627 node
+NODE id 'N_002' nm 'StPietMSW' px 176868 py 315464 node
+NODE id 'N_003' nm 'km__14_84' px 176925 py 319425 node
+NODE id 'N_004' nm 'BorghdMSW' px 176377 py 320325 node
+NODE id 'N_005' nm 'MaaseiMSW' px 184055 py 345091 node
+NODE id 'N_051' nm 'SploudMaa' px 185097 py 345072 node
+NODE id 'N_052' nm 'SamoudMaa' px 188946 py 351150 node
+NODE id 'N_006' nm 'km__67_30' px 190010 py 352553 node
+NODE id 'N_007' nm 'HeelboMSW' px 191559 py 353080 node
+NODE id 'N_008' nm 'km_85_075' px 196957 py 359847 node
+NODE id 'N_009' nm 'VenBleMSW' px 208778 py 375631 node
+NODE id 'N_010' nm 'km__124_0' px 209316 py 390647 node
+NODE id 'N_011' nm 'WelldoMSW' px 203932 py 395616 node
+NODE id 'N_013' nm 'SluiWeurt' px 185000 py 429500 node
+NODE id 'N_014' nm 'PlakraMoo' px 182500 py 417500 node
+NODE id 'N_012' nm 'Mook__MSW' px 187960 py 418873 node
+NODE id 'N_015' nm 'LithdoMSW' px 158168 py 424653 node
+NODE id 'N_016' nm 'km_220_01' px 146725 py 416758 node
+NODE id 'N_018' nm 'SluiAndel' px 131661 py 422847 node
+NODE id 'N_020' nm 'beg_zytak' px 141055 py 417688 node
+NODE id 'N_019' nm 'splitpunt' px 138193 py 418494 node
+NODE id 'N_017' nm 'HeesbeMSW' px 136846 py 416503 node
+NODE id 'N_021' nm 'km__235_0' px 133053 py 414222 node
+NODE id 'N_023' nm 'A2_oostpl' px 152468 py 411638 node
+NODE id 'N_024' nm 'Aa____122' px 151657.3 py 411639 node
+NODE id 'N_025' nm 'Aa____124' px 151586.5 py 411631 node
+NODE id 'N_026' nm 'Aa____125' px 149088.7 py 411907 node
+NODE id 'N_027' nm 'Aa____126' px 149022 py 411951 node
+NODE id 'N_028' nm 'die_drong' px 148531 py 410412 node
+NODE id 'N_029' nm 'P10_domme' px 148619 py 410382 node
+NODE id 'N_030' nm 'boscbroek' px 150619 py 410382 node
+NODE id 'N_031' nm 'Drongkan2' px 145711 py 408888 node
+NODE id 'N_032' nm 'Drongkan3' px 143512 py 409026 node
+NODE id 'N_022' nm 'KeizerMSW' px 120857 py 414625 node
+BRCH id 'R_001' nm 'Kalkmas1' bn 'N_001' en 'N_002' al 8243.00000033022 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_002' nm 'Kalkmas2' bn 'N_002' en 'N_003' al 4038.99999961352 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_003' nm 'Grensms1' bn 'N_003' en 'N_004' al 1174.77995263933 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_004' nm 'Grensms2' bn 'N_004' en 'N_005' al 36842.9999946687 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_051' nm 'Grenms3a' bn 'N_005' en 'N_051' al 1152.10586129586 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_052' nm 'Grenms3b' bn 'N_051' en 'N_052' al 11185.9999992266 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_053' nm 'Grenms3c' bn 'N_052' en 'N_006' al 2618.93412612138 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_006' nm 'Julianka' bn 'N_003' en 'N_006' al 39965.6929573799 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_007' nm 'Zandmas1' bn 'N_006' en 'N_007' al 1673.18282030752 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_008' nm 'Zandmas2' bn 'N_007' en 'N_008' al 15002.9999998293 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_009' nm 'Lateralk' bn 'N_007' en 'N_008' al 8682.5411075193 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_010' nm 'Zandmas3' bn 'N_008' en 'N_009' al 21693.0000011014 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_011' nm 'Zandmas4' bn 'N_009' en 'N_010' al 16372.0000002282 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_012' nm 'Zandmas5' bn 'N_010' en 'N_011' al 8337.56390621688 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_013' nm 'Zandmas6' bn 'N_011' en 'N_012' al 32091.0000044276 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_014' nm 'Ma-Wa-ka' bn 'N_013' en 'N_012' al 11037.1165576554 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_015' nm 'Afs_plas' bn 'N_014' en 'N_012' al 5701.29598555443 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_016' nm 'Zandmas7' bn 'N_012' en 'N_015' al 36257.0000137751 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_017' nm 'Getijms1' bn 'N_015' en 'N_016' al 17590.0000008419 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_018' nm 'Getijms2' bn 'N_016' en 'N_017' al 10567.0000031031 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_019' nm 'Andelms1' bn 'N_018' en 'N_019' al 10050.0000007133 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_020' nm 'Andelms2' bn 'N_020' en 'N_019' al 4500.74379010409 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_021' nm 'Andelms3' bn 'N_019' en 'N_017' al 2537.4788513199 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_022' nm 'Getijms3' bn 'N_017' en 'N_021' al 4493.47555422955 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_023' nm 'Getijms4' bn 'N_021' en 'N_022' al 12628.9960989939 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_024' nm 'OudeMaas' bn 'N_051' en 'N_052' al 8420.79227428648 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_025' nm 'A_200100' bn 'N_023' en 'N_024' al 818.007000051761 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_026' nm 'A_200300' bn 'N_024' en 'N_025' al 71.2505438575619 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_027' nm 'A_200500' bn 'N_025' en 'N_026' al 3010.98000073887 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_028' nm 'A_163010' bn 'N_026' en 'N_027' al 79.9192000007765 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_029' nm 'Dieze__a' bn 'N_027' en 'N_016' al 6362.00000184469 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_030' nm 'Dieze__b' bn 'N_028' en 'N_027' al 1722.87000003681 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_031' nm 'Ben_Domm' bn 'N_029' en 'N_028' al 98.8993000168353 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_032' nm 'boscbroe' bn 'N_030' en 'N_028' al 3051.00000083333 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_033' nm 'Dronkan1' bn 'N_028' en 'N_031' al 3980.39000091033 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_034' nm 'Dronkan2' bn 'N_031' en 'N_032' al 2221.17000013491 vc_opt 1 vc_equi -1 vc_len 1000 brch
+BRCH id 'R_035' nm 'Dronkan3' bn 'N_032' en 'N_021' al 13606.0000033797 vc_opt 1 vc_equi -1 vc_len 1000 brch

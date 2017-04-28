@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Feature Id="WaqExtrasFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <ComponentRef Id="WaqExtras"/>
+  </Feature>
+  
+  <Feature Id="Waq" Title="!(loc.WaqFeatureName)" Description ="!(loc.WaqFeatureDescription)" Level="1" AllowAdvertise="no" Absent="disallow">
+    <?include WaqPlugin_FeatureContent.wxi?>
+  </Feature>
+</Include>

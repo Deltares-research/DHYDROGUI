@@ -1,0 +1,44 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=10
+NumberOfLocations=41
+T0=2003.08.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=15
+ 
+[Long Parameters]
+2=Gate lower edge level (m AD)
+10=Discharge Coefficient (-)
+ 
+[Long Locations]
+ 
+[Location Descriptions]
+18=hvl_1
+19=hvl_2
+20=hvl_3
+21=hvl_4
+22=hvl_5
+23=hvl_6
+24=hvl_7
+25=hvl_8
+26=hvl_9
+27=hvl_10
+28=hvl_11
+29=hvl_12
+30=hvl_13
+31=hvl_14
+32=hvl_15
+33=hvl_16
+34=hvl_17
+35=SVKW_b
+36=SVKW_a
+37=SVKW_c
+38=SVKH_breed_schuif
+39=SVKH_breed_top
+40=SVKH_smal_schuif
+41=SVKH_smal_top
+ 

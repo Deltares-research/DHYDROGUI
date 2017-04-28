@@ -1,0 +1,12 @@
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.035.46968, Aug  3 2016, 15:14:45
+** WARNING: Upstream Link Level Higher than Invert Level at Culvert 'Culvert, id = 5'
+** WARNING: Culvert(s) with Undesired Adjacent Link Levels Found Which May Cause Time Consuming Structure Drying
+            Better to Correct Levels By Hand or Using Option: 'Maximum Lowering of Cross-Section Bed Level at Culverts'
+** INFO   : cpu computation =       0.062400
+
+****************************************
+Info Messages :     2
+Warnings      :     2
+****************************************
+
+** Normal End of Sobeksim

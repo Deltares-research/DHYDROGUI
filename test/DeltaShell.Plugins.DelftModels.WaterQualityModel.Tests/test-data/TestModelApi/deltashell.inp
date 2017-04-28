@@ -1,0 +1,142 @@
+512 80 ';'
+;DELWAQ_VERSION_4.910                               ; Delwaq version number
+;PRINT_OUTPUT_OPTION_9                              ; Debug level
+
+; TEMPLATE FILE FOR WATER QUALITY CALCULATION
+; First input block
+'Water quality calculation'
+' '
+' '
+INCLUDE 'includes_deltashell\B1_t0.inc'             ; From UI: Time stamp
+INCLUDE 'includes_deltashell\B1_sublist.inc'        ; From UI: Substance list
+#1;
+
+;###############################################################################
+; Second input block
+INCLUDE 'includes_deltashell\B2_sysclock.inc'       ; From UI: System clock
+INCLUDE 'includes_deltashell\B2_numsettings.inc'    ; From UI: Simulation timers
+INCLUDE 'includes_deltashell\B2_simtimers.inc'      ; From UI: Simulation timers
+ 1                                                  ; Monitoring areas in this file
+INCLUDE 'includes_deltashell\B2_outlocs.inc'        ; From UI: Definition of output locations
+ 2                                                  ; No monitoring cross areas
+INCLUDE 'includes_deltashell\B2_outputtimers.inc'   ; From UI: Simulation timers
+
+#2;
+;###############################################################################
+; Third input block
+INCLUDE 'includes_deltashell\B3_nrofseg.inc'        ; From UI: Nr of segments
+ 2                                                  ; Structure matrix not used
+ 0                                                  ; Features of the computational elements
+ 0
+ 
+; Volumes (dummy values)
+ 1                                                  ; Volumes in this file
+ 2                                                  ; Constants with defaults
+ 1.0 1.0E008                                        ; Scale factor and default value
+ 0                                                  ; Number of overrides
+; Volumes added by Model API
+
+#3;
+;###############################################################################
+; Fourth input block
+INCLUDE 'includes_deltashell\B4_nrofexch.inc'       ; From UI: Nr of exchanges
+ 1                                                  ; Number of dispersion arrays
+INCLUDE 'includes_deltashell\B4_dispersion.inc'     ; From UI: Dispersion to all substances
+ 0                                                  ; Number of velocity arrays
+ 1                                                  ; Input format of the pointers
+
+-1                                                  ; Pointers from Auxilary file
+'includes_deltashell\B4_pointer.inc'                ; From UI: Pointers
+
+; START TODO
+     1                                              ; Dispersions in this file
+     1.0 1.0 1.0                                    ; Scale factors for 3 directions
+       0 0.0 0.0                                    ; Values (m2/s) for 3 directions
+; END TODO       		   			
+
+INCLUDE 'includes_deltashell\B4_dispx.inc'          ; From UI: Dispersion(x)
+
+; Areas (dummy values)
+ 1                                                  ; Areas in this file
+ 2                                                  ; Constants with defaults
+ 1.0 1.0E004                                        ; Scale factor and default value
+ 0                                                  ; Number of overrides
+; Areas added by Model API
+
+; Flows (dummy values)
+ 1                                                  ; Flows in this file
+ 2                                                  ; Constants with defaults
+ 1.0 0.2E004                                        ; Scale factor and default value
+ 0                                                  ; Number of overrides
+; Flows added by Model API
+
+; Lenght from binary files
+1                                                   ; Vary in space
+0                                                   ; From binary file
+ 'includes_flow\length.dat'
+
+#4;
+;###############################################################################
+; Fifth input block, water quality calculation
+
+; Boundary list
+INCLUDE 'includes_deltashell\B5_boundlist.inc'      ; From UI: Boundary data
+
+0                                                   ; No Tatcher-Harleman time lags
+
+; Boundary data (dummy value)
+INCLUDE 'includes_deltashell\B5_bounddata.inc'      ; From UI: Boundary data
+
+
+#5;
+;###############################################################################
+; Sixth input block, Dry Waste Loads block
+; Number of loads (dummy value)
+0                                                   ; Number of loads
+
+#6;
+;###############################################################################
+; Seventh input block
+
+CONSTANTS 'CLOSE_ERR'	DATA	1
+CONSTANTS  'ONLY_ACTIVE' 	DATA	0               ; Only active processes
+CONSTANTS  'Nothreads' 		DATA	0               ; Multicore
+CONSTANTS  'Iteration report' 	DATA	0		          
+
+INCLUDE 'includes_deltashell\B7_processes.inc'      ; From UI: Processes
+INCLUDE 'includes_deltashell\B7_meteo.inc'          ; From UI: Meteo
+INCLUDE 'includes_deltashell\B7_constants.inc'      ; From UI: Constants
+INCLUDE 'includes_deltashell\B7_functions.inc'      ; From UI: Functions
+INCLUDE 'includes_deltashell\B7_parameters.inc'     ; From UI: Parameters
+
+; Segment functions (dummy values)
+INCLUDE 'includes_deltashell\B7_chezy.inc'          ; Chezy
+INCLUDE 'includes_deltashell\B7_surf.inc'           ; Surface
+INCLUDE 'includes_deltashell\B7_velocity.inc'       ; Velocity
+INCLUDE 'includes_deltashell\B7_width.inc'          ; Width
+; Values added by Model API
+
+#7
+;###############################################################################
+; Eighth input block
+
+MASS/M2
+INCLUDE 'includes_deltashell\B8_initials.inc'       ; From UI: Initials
+
+#8
+;###############################################################################
+; Ninth input block
+ 1                                                  ; Conditions follow in this file
+ 1                                                  ; Monitor-file
+ 0                                                  ; Grid-file
+ INCLUDE 'includes_deltashell\B9_Hisvar.inc'        ; History-file
+ INCLUDE 'includes_deltashell\B9_Mapvar.inc'        ; Map-file
+                                                    ; Binary/Nefis and History/Map
+ 1                                                  ; Switch on binary History file
+ 1                                                  ; Switch on binary Map file
+ 0                                                  ; Switch off Nefis History file
+ 0                                                  ; Switch off Nefis Map file
+#9
+;###############################################################################
+; Tenth input block
+#10

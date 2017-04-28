@@ -1,0 +1,1 @@
+print 'Bathymetry script got uri: ' + uri.OriginalString

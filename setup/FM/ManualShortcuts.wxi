@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+
+  <?include Manuals\FMManualShortcuts.wxi?>
+  <?include ..\Wave\Manuals\WaveManualShortcuts.wxi?>
+  <?include ..\RealTimeControl\Manuals\RTCManualShortcuts.wxi?>
+  <?include ..\Dimr\Manuals\DIMRManualShortcuts.wxi?>
+  
+  <?ifndef var.NOWAQ?>
+  <?include ..\Waq\Manuals\WaqManualShortcuts.wxi?>
+  <?endif?>
+  
+</Include>

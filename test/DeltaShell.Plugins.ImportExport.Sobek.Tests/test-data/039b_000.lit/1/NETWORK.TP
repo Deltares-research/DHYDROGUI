@@ -1,0 +1,22 @@
+TP_1.0
+NODE id '5' nm 'B1_Q_Up' px 1500 py 3500 node
+NODE id 'B2&B3_h_x=0m' nm 'Interp B1 to B2' px 1500 py 2000 node
+NODE id '1' nm 'B2_h_dwnstr' px 0 py 0 node
+NODE id '6' nm 'B3_h_dwnstr' px 3500 py 500 node
+NODE id '12' nm 'B2A_Q_Upstr' px 150 py 2200 node
+NODE id '11' nm 'B2A_h_dwnstr' px -1500 py 0 node
+NODE id '15' nm 'B3A_Q_Upstr' px 2300 py 2150 node
+NODE id '14' nm 'B3A_h_dwnstr' px 4500 py 500 node
+NODE id '21' nm 'B5_Q_Up' px 6000 py 4000 node
+NODE id 'B7_h_x=0m' nm 'Interp B5 to B7' px 6000 py 2500 node
+NODE id '22' nm 'B8_Q_Up' px 7500 py 4000 node
+NODE id '13' nm 'B7_h_dwnstr' px 6000 py 0 node
+NODE id '19' nm 'B8_h_dwnstr' px 7500 py 0 node
+BRCH id '1' nm '' bn '5' en 'B2&B3_h_x=0m' al 1500 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '2' nm '' bn 'B2&B3_h_x=0m' en '1' al 2500 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '3' nm '' bn 'B2&B3_h_x=0m' en '6' al 2500 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '6' nm '' bn '12' en '11' al 2750 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '4' nm '' bn '15' en '14' al 2750 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '5' nm '' bn '21' en 'B7_h_x=0m' al 1500 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '7' nm '' bn 'B7_h_x=0m' en '13' al 2500 vc_opt 1 vc_equi -1 vc_len 250 brch
+BRCH id '8' nm '' bn '22' en '19' al 4000 vc_opt 1 vc_equi -1 vc_len 250 brch

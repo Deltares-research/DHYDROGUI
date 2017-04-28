@@ -1,0 +1,449 @@
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.72.000000, Aug 07 2013, 14:37:14
+* File creation date: 14:40:52, 07-08-2013
+** INFO   :  MAXIMUM NUMBER OF LINKS         :            2
+** INFO   :  MAXIMUM NUMBER OF NODES         :            0
+** INFO   :  RESOLUTION GRAPHICS SCREEN      :         1200         900
+** INFO   :  RESOLUTION TEXT     SCREEN      :          120          45
+** INFO   :  NUMBER OF COLOURS AVAILABLE     :          256
+** INFO   :              0        100002 NOD(KMAX)
+** INFO   :              6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :              6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :              6         50000 xlan(maxlan)
+** INFO   :              7         50000 ylan(maxlan)
+** INFO   :              7         50000 zlan(maxlan)
+** INFO   :              7         25000 nclan(maxlan)
+** INFO   : Load MDU-file                    (*.mdu)
+** INFO   : Opened file : flume.mdu
+** INFO   : Closed file : flume.mdu
+** INFO   :              8        100002 NOD(KMAX)
+** INFO   :             14        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :             14          1440 xsp(maxspl, maxsplen)
+** INFO   :             14          1440 ysp(maxspl, maxsplen)
+** INFO   :             14          1440 xsp2(maxspl, maxsplen)
+** INFO   :             14          1440 ysp2(maxspl, maxsplen)
+** INFO   :             14         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :             14         60000 xlan(maxlan)
+** INFO   :             15         60000 ylan(maxlan)
+** INFO   :             15         60000 zlan(maxlan)
+** INFO   :             16         30000 nclan(maxlan)
+ Until here copy of previous diagnostic file
+** INFO   : Opened Model definition file : flume.mdu
+** DEBUG  : Opened 'flume_net.nc' as #  3.
+** DEBUG  : Closed NetCDF file 'flume_net.nc.
+** INFO   : Opened file : flume_crs.pli
+** INFO   : Closed file : flume_crs.pli
+** INFO   : Load MDU-file                    (*.mdu)
+** INFO   : Opened file : flume.mdu
+** INFO   : Closed file : flume.mdu
+** INFO   :             16        100002 NOD(KMAX)
+** INFO   :             22        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :             22          2016 xsp(maxspl, maxsplen)
+** INFO   :             22          2016 ysp(maxspl, maxsplen)
+** INFO   :             22          2016 xsp2(maxspl, maxsplen)
+** INFO   :             22          2016 ysp2(maxspl, maxsplen)
+** INFO   :             22         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :             23         72000 xlan(maxlan)
+** INFO   :             23         72000 ylan(maxlan)
+** INFO   :             24         72000 zlan(maxlan)
+** INFO   :             24         36000 nclan(maxlan)
+** INFO   : Opened Model definition file : flume.mdu
+** DEBUG  : Opened 'flume_net.nc' as #  3.
+** DEBUG  : Closed NetCDF file 'flume_net.nc.
+** INFO   : Opened file : flume_crs.pli
+** INFO   : Closed file : flume_crs.pli
+** DEBUG  :  Renumber flow nodes...
+** DEBUG  :  Sumdiff:       17290  Sumdiff renum:        17290
+** DEBUG  :  Bandwidth:           3  Bandwidth renum:            3
+** INFO   : Opened file : flume.ext
+** INFO   :             24          3519 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpeu(nx)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumeleftlev.pli
+** INFO   : Closed file : flumeleftlev.pli
+** INFO   : waterlevelbnd flumeleftlev.pli       1 nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumeleftsal.pli
+** INFO   : Closed file : flumeleftsal.pli
+** INFO   : salinitybndflumeleftsal.pli       1nr of salinity bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumerightdis.pli
+** INFO   : Closed file : flumerightdis.pli
+** INFO   : dischargebndflumerightdis.pli       1nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumerightsal.pli
+** INFO   : Closed file : flumerightsal.pli
+** INFO   : salinitybndflumerightsal.pli       1nr of salinity bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   :             24          1056 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+** INFO   : cutcell_list; nr of *.cut files found =              0             4
+** INFO   : cutcell_list; nr of *.cut files found =              0             5
+** INFO   :             24          4160 walls(17,nw)
+** INFO   :             24          5808 ucx (ndkx) , ucy (ndkx)
+** INFO   :             24          2904 ucz (ndkx)
+** INFO   :             25          5808 uqcx(ndkx) , uqcy(ndkx)
+** INFO   :             25          5808 ucxq(ndkx) , ucyq(ndkx)
+** INFO   :             25          5808 qin (ndkx) , vih (ndkx)
+** INFO   :             25          5808 dvxc(ndkx) , dvyc(ndkx)
+** INFO   :             25          2904 cfli(ndkx)
+** INFO   :             25          2904 squ (ndkx)
+** INFO   :             25          2904 sqi (ndkx)
+** INFO   :             25          2904 vol0(ndkx)
+** INFO   :             25          2904 vol1(ndkx)
+** INFO   :             25          2904 zws (ndkx)
+** INFO   :             25          2904 zws0(ndkx)
+** INFO   :             25          2904 ww1 (ndkx)
+** INFO   :             25          2904 qw  (ndkx)
+** INFO   :             25          2904 rho (ndkx)
+** INFO   :             25          2882 turkin0  (Lnkx)
+** INFO   :             25          2882 turkin1  (Lnkx)
+** INFO   :             25          2882 tureps0  (Lnkx)
+** INFO   :             25          2882 tureps1  (Lnkx)
+** INFO   :             25          2904 tkepro   (ndkx)
+** INFO   :             25          2904 tkedis   (ndkx)
+** INFO   :             25          2882 vicwwu   (Lnkx)
+** INFO   :             25          2904 vicwws   (ndkx)
+** INFO   :             25          2904 turkinws (ndkx)
+** INFO   :             25          2904 turepsws (ndkx)
+** INFO   :             25          2904 turkinwsu(Lnkx)
+** INFO   :             25          2904 turepswsu(Lnkx)
+** INFO   :             25          2882 u0   (lnkx)
+** INFO   :             25          2882 u1   (lnkx)
+** INFO   :             25          2882 q1   (lnkx)
+** INFO   :             25          2882 qa   (lnkx)
+** INFO   :             25          2882 v    (lnkx)
+** INFO   :             25          2882 ucxu (lnkx)
+** INFO   :             25          2882 ucyu (lnkx)
+** INFO   :             25          2882 hu   (lnkx)
+** INFO   :             25          2882 huvli(lnkx)
+** INFO   :             25          2882 au   (lnkx)
+** INFO   :             25          2882 viu  (lnkx)
+** INFO   :             25          2882 cflj (lnkx)
+** INFO   :             25          2882 tetaj(lnkx)
+** INFO   :             25          2882 suu  (lnkx)
+** INFO   :             26          2882 advi (lnkx)
+** INFO   :             26          2882 adve (lnkx)
+** INFO   :             26          2882 rhou (lnkx)
+** INFO   :             26          2882 plotlin(max(lnkx,ndkx))
+** INFO   :             26          5808 sa0 (ndkx) , sa1 (ndkx)
+** INFO   :             26          2904 supq(ndkx)
+** INFO   : Enabled salinity while reading external forcings.
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'flumeleftlev.pli'.
+** INFO   : Opened file : flumeleftlev.pli
+** INFO   : Closed file : flumeleftlev.pli
+** INFO   : Opened file : flumeleftlev_0001.cmp
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'salinitybnd' from file 'flumeleftsal.pli'.
+** INFO   : Opened file : flumeleftsal.pli
+** INFO   : Closed file : flumeleftsal.pli
+** INFO   : Opened file : flumeleftsal_0001.cmp
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'dischargebnd' from file 'flumerightdis.pli'.
+** INFO   : Opened file : flumerightdis.pli
+** INFO   : Closed file : flumerightdis.pli
+** INFO   : Opened file : flumerightdis_0001.cmp
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : External Forcing or Initialising 'salinitybnd' from file 'flumerightsal.pli'.
+** INFO   : Opened file : flumerightsal.pli
+** INFO   : Closed file : flumerightsal.pli
+** INFO   : Opened file : flumerightsal_0001.cmp
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   : External Forcing or Initialising 'salinitybnd' from file 'flumerightsal.pli'.
+** INFO   : Closed file : flume.ext
+** INFO   : Closed file : flumeleftlev_0001.cmp
+** INFO   : Closed file : flumerightdis_0001.cmp
+** INFO   : Closed file : flumeleftsal_0001.cmp
+** INFO   : Closed file : flumerightsal_0001.cmp
+** INFO   : nogauss , nocg :            132             0
+** INFO   :             26          5786 qsho(lnkx), pp(ndkx)
+** INFO   : Modelinit finished   at: 14:46:54, 07-08-2013
+** INFO   : * Active Model definition:
+# Generated on 14:46:54, 07-08-2013
+# Deltares, D-Flow FM Version 1.1.72.000000, Aug 07 2013, 14:37:14
+
+[model]
+Program               = D-Flow FM
+Version               = 1.1.72.000000
+AutoStart             = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile               = flume_net.nc        # *_net.nc
+BathymetryFile        =                     # *.xyb
+WaterLevIniFile       =                     # Initial water levels sample file *.xyz
+LandBoundaryFile      =                     # Only for plotting
+ThinDamFile           =                     # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile         =                     # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProflocFile           =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile           =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile           =                     # *...
+WaterLevIni           = 0.                  # Initial water level
+Bedlevuni             = -0.2                # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+BedlevType            = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                            # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                            # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                            # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                            # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile         =                     # *_part.pol, polyline(s) x,y
+AngLat                = 0.                  # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D          = 3                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Makeorthocenters      = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+Dcenterinside         = 1.                  # limit cell center; 1.0:in cell <-> 0.0:on c/g
+Kmx                   = 20                  # Max nr of vertical layers
+
+[numerics]
+CFLMax                = 0.7                 # Max. Courant nr.
+CFLWaveFrac           = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType             = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtypmom             = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa              = 4                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver             = 4                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree             = 6                   # Maximum degree in Gauss elimination
+Slopedrop2D           = 0.3                 # Apply droplosses only if local bottom slope > Slopedrop2D
+Maxitverticalforester = 100                 # 0 : no vertical filter, > 0 = Max nr of iterations
+
+[physics]
+UnifFrictCoef         = 60.                 # Uniform friction coefficient, 0=no friction
+UnifFrictType         = 0                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+Vicouv                = 0.                  # Uniform horizontal eddy viscosity (m2/s)
+Dicouv                = 0.                  # Uniform horizontal eddy diffusivity (m2/s)
+Vicoww                = 5.000000000000003E-006# Uniform vertical eddy viscosity  (m2/s)
+Dicoww                = 0.                  # Uniform vertical eddy diffusivity  (m2/s)
+Smagorinsky           = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder                 = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov                  = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks               = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+TidalForcing          = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity              = 1                   # Include salinity, (0=no, 1=yes)
+InitialSalinity       = 0.                  # Inital salinity concentration (ppt)
+
+[wind]
+ICdtyp                = 2                   # ( ),1=const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints, 4=Charnock constant, e.g. 0.012
+Cdbreakpoints         = 6.3d-4 7.23d-3      # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints  = 0. 100.             # (m/s), e.g. 0.0      100.0
+
+[time]
+RefDate               = 19920901            # Reference date (yyyymmdd)
+Tunit                 =                     # Time units in MDU (H, M or S)
+DtUser                = 3.                  # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax                 = 1.5                 # Max timestep in seconds
+DtInit                = 1.5                 # Initial timestep in seconds
+AutoTimestep          = 4                   # Use CFL timestep limit or not (1/0)
+TStart                = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop                 = 6000.               # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile           =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime       =                     # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile          = flume.ext           # *.ext
+
+[output]
+OutputDir             = output              # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for no dir/current dir.
+ObsFile               =                     # *.xyn Coords+name of observation stations.
+CrsFile               = flume_crs.pli       # *_crs.pli Polyline(s) definining cross section(s).
+HisInterval           = 120.                # History output, given as "interval" "start period" "end period" (s)
+XLSInterval           = 0.                  # Interval (s) between XLS history
+FlowGeomFile          =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapInterval           = 0.                  # Map file output, given as "interval" "start period" "end period" (s)
+MapFormat             = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
+RstInterval           = 0.                  # Interval (s) between restart file outputs
+WaqInterval           = 0.                  # Interval (in s) between Delwaq file outputs
+StatsInterval         = 0.                  # Interval (in s) between simulation statistics output.
+SnapshotDir           =                     # Directory where snapshots/screendumps are saved.
+TimingsInterval       = 0.                  # Timings output interval
+TimeSplitInterval     = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapOutputTimeVector   =                     # File (.mpt) containing fixed map output times (s) w.r.t. RefDate
+FullGridOutput        = 0                   # 0:compact, 1:full time-varying grid data
+** INFO   : **
+* Active Model definition:
+# Generated on 14:46:54, 07-08-2013
+# Deltares, D-Flow FM Version 1.1.72.000000, Aug 07 2013, 14:37:14
+
+[model]
+Program               = D-Flow FM
+Version               = 1.1.72.000000
+AutoStart             = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
+
+[geometry]
+NetFile               = flume_net.nc        # *_net.nc
+BathymetryFile        =                     # *.xyb
+WaterLevIniFile       =                     # Initial water levels sample file *.xyz
+LandBoundaryFile      =                     # Only for plotting
+ThinDamFile           =                     # *_thd.pli, Polyline(s) for tracing thin dams.
+FixedWeirFile         =                     # *._fxw.pli, Polyline(s) x,y,z, z = fixed weir top levels
+ProflocFile           =                     # *_proflocation.xyz)    x,y,z, z = profile refnumber
+ProfdefFile           =                     # *_profdefinition.def) definition for all profile nrs
+ManholeFile           =                     # *...
+WaterLevIni           = 0.                  # Initial water level
+Bedlevuni             = -0.2                # Uniform bottom level, (only if bedlevtype>=3, used at missing z values in netfile
+BedlevType            = 3                   # 1 : Bottom levels at waterlevel cells (=flow nodes), like tiles xz, yz, bl , bob = max(bl left, bl right)
+                                            # 2 : Bottom levels at velocity points  (=flow links),            xu, yu, blu, bob = blu,    bl = lowest connected link
+                                            # 3 : Bottom levels at velocity points  (=flow links), using mean network levels xk, yk, zk  bl = lowest connected link
+                                            # 4 : Bottom levels at velocity points  (=flow links), using min  network levels xk, yk, zk  bl = lowest connected link
+                                            # 5 : Bottom levels at velocity points  (=flow links), using max  network levels xk, yk, zk  bl = lowest connected link
+PartitionFile         =                     # *_part.pol, polyline(s) x,y
+AngLat                = 0.                  # Angle of latitude (deg), 0=no Coriolis
+Conveyance2D          = 3                   # -1:R=HU,0:R=H, 1:R=A/P, 2:K=analytic-1D conv, 3:K=analytic-2D conv
+Makeorthocenters      = 0                   # 1=yes, 0=no switch from circumcentres to orthocentres in geominit
+Dcenterinside         = 1.                  # limit cell center; 1.0:in cell <-> 0.0:on c/g
+Kmx                   = 20                  # Max nr of vertical layers
+
+[numerics]
+CFLMax                = 0.7                 # Max. Courant nr.
+CFLWaveFrac           = 0.1                 # Wave velocity fraction, total courant vel = u + cflw*wavevelocity
+AdvecType             = 3                   # Adv type, 0=no, 1= Wenneker, qu-udzt, 2=1, q(uio-u), 3=Perot q(uio-u), 4=Perot q(ui-u), 5=Perot q(ui-u) without itself
+Limtypmom             = 4                   # Limiter type for cell center advection velocity, 0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Limtypsa              = 4                   # Limiter type for salinity transport,           0=no, 1=minmod,2=vanLeer,3=Kooren,4=Monotone Central
+Icgsolver             = 4                   # Solver type , 1 = sobekGS_OMP, 2 = sobekGS_OMPthreadsafe, 3 = sobekGS, 4 = sobekGS + Saadilud, 5 = parallel/global Saad, 6 = parallel/Petsc, 7 = parallel/GS
+Maxdegree             = 6                   # Maximum degree in Gauss elimination
+Slopedrop2D           = 0.3                 # Apply droplosses only if local bottom slope > Slopedrop2D
+Maxitverticalforester = 100                 # 0 : no vertical filter, > 0 = Max nr of iterations
+
+[physics]
+UnifFrictCoef         = 60.                 # Uniform friction coefficient, 0=no friction
+UnifFrictType         = 0                   # 0=Chezy, 1=Manning, 2=White Colebrook, 3=z0 etc
+Vicouv                = 0.                  # Uniform horizontal eddy viscosity (m2/s)
+Dicouv                = 0.                  # Uniform horizontal eddy diffusivity (m2/s)
+Vicoww                = 5.000000000000003E-006# Uniform vertical eddy viscosity  (m2/s)
+Dicoww                = 0.                  # Uniform vertical eddy diffusivity  (m2/s)
+Smagorinsky           = 0.                  # Add Smagorinsky horizontal turbulence : vicu = vicu + ( (Smagorinsky*dx)**2)*S, e.g. 0.1
+Elder                 = 0.                  # Add Elder contribution                : vicu = vicu + Elder*kappa*ustar*H/6),   e.g. 1.0
+irov                  = 0                   # 0=free slip, 1 = partial slip using wall_ks
+wall_ks               = 0.                  # Nikuradse roughness for side walls, wall_z0=wall_ks/30
+TidalForcing          = 1                   # Tidal forcing (0=no, 1=yes) (only for jsferic == 1)
+Salinity              = 1                   # Include salinity, (0=no, 1=yes)
+InitialSalinity       = 0.                  # Inital salinity concentration (ppt)
+
+[wind]
+ICdtyp                = 2                   # ( ),1=const, 2=S&B 2 breakpoints, 3= S&B 3 breakpoints, 4=Charnock constant, e.g. 0.012
+Cdbreakpoints         = 6.3d-4 7.23d-3      # ( ),   e.g. 0.00063  0.00723
+Windspeedbreakpoints  = 0. 100.             # (m/s), e.g. 0.0      100.0
+
+[time]
+RefDate               = 19920901            # Reference date (yyyymmdd)
+Tunit                 =                     # Time units in MDU (H, M or S)
+DtUser                = 3.                  # User timestep in seconds (interval for external forcing update & his/map output)
+DtMax                 = 1.5                 # Max timestep in seconds
+DtInit                = 1.5                 # Initial timestep in seconds
+AutoTimestep          = 4                   # Use CFL timestep limit or not (1/0)
+TStart                = 0.                  # Start time w.r.t. RefDate (in TUnit)
+TStop                 = 6000.               # Stop  time w.r.t. RefDate (in TUnit)
+
+[restart]
+RestartFile           =                     # Restart file, only map, hence: *_map.nc
+RestartDateTime       =                     # Restart time (YYYYMMDDHHMMSS)
+
+[external forcing]
+ExtForceFile          = flume.ext           # *.ext
+
+[output]
+OutputDir             = output              # Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for no dir/current dir.
+ObsFile               =                     # *.xyn Coords+name of observation stations.
+CrsFile               = flume_crs.pli       # *_crs.pli Polyline(s) definining cross section(s).
+HisInterval           = 120.                # History output, given as "interval" "start period" "end period" (s)
+XLSInterval           = 0.                  # Interval (s) between XLS history
+FlowGeomFile          =                     # *_flowgeom.nc Flow geometry file in NetCDF format.
+MapInterval           = 0.                  # Map file output, given as "interval" "start period" "end period" (s)
+MapFormat             = 1                   # Map file format, 1: netCDF, 2: Tecplot, 3: netCFD and Tecplot
+RstInterval           = 0.                  # Interval (s) between restart file outputs
+WaqInterval           = 0.                  # Interval (in s) between Delwaq file outputs
+StatsInterval         = 0.                  # Interval (in s) between simulation statistics output.
+SnapshotDir           =                     # Directory where snapshots/screendumps are saved.
+TimingsInterval       = 0.                  # Timings output interval
+TimeSplitInterval     = 0X                  # Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.
+MapOutputTimeVector   =                     # File (.mpt) containing fixed map output times (s) w.r.t. RefDate
+FullGridOutput        = 0                   # 0:compact, 1:full time-varying grid data
+**
+** DEBUG  : Opened NetCDF file 'output\flume_his.nc' as #  3.
+** DEBUG  : Opened NetCDF file 'output\flume_map.nc' as #  4.
+** INFO   : User interrupt
+** INFO   : (Re) initalise flow model geometry
+** DEBUG  :  Renumber flow nodes...
+** DEBUG  :  Sumdiff:       17290  Sumdiff renum:        17290
+** DEBUG  :  Bandwidth:           3  Bandwidth renum:            3
+** INFO   : Opened file : flume.ext
+** INFO   :             26          3519 kce(nx), kez(nx), keu(nx), kes(nx), kesd(nx), ket(nx), ken(nx), keg(nx), ked(nx), kep(nx), itpez(nx), itpeu(nx)
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumeleftlev.pli
+** INFO   : Closed file : flumeleftlev.pli
+** INFO   : waterlevelbnd flumeleftlev.pli       1 nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumeleftsal.pli
+** INFO   : Closed file : flumeleftsal.pli
+** INFO   : salinitybndflumeleftsal.pli       1nr of salinity bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumerightdis.pli
+** INFO   : Closed file : flumerightdis.pli
+** INFO   : dischargebndflumerightdis.pli       1nr of open bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : looking for keyword: FILENAME
+** INFO   : looking for keyword: FILETYPE
+** INFO   : looking for keyword: METHOD
+** INFO   : looking for keyword: OPERAND
+** INFO   : Opened file : flumerightsal.pli
+** INFO   : Closed file : flumerightsal.pli
+** INFO   : salinitybndflumerightsal.pli       1nr of salinity bndcells
+** INFO   : looking for keyword: QUANTITY
+** INFO   : keyword QUANTITY NOT found!
+** INFO   :             26          1056 nd(ndx), bl(ndx), bai(ndx), kcs(ndx), aif(ndx)
+** INFO   : cutcell_list; nr of *.cut files found =              0             4
+** INFO   : cutcell_list; nr of *.cut files found =              0             5
+** INFO   :             26          4160 walls(17,nw)
+** INFO   :             26          5808 ucx (ndkx) , ucy (ndkx)
+** INFO   :             26          2904 ucz (ndkx)
+** INFO   : Allocation Error  : ucz (ndkx)
+** INFO   : Allocate status   =            151
+** ERROR  : Integer parameter =           2904
+** INFO   : Closed file : flume.ext

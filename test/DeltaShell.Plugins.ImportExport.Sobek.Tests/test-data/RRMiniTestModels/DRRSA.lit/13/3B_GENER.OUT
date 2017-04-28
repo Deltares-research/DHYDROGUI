@@ -1,0 +1,43 @@
+ Run datum (DD-MM-YY) and time: 20- 3-2012  14:38
+
+ Summary of common data    
+ ===============================
+
+ Case name                                     
+ Number of nodes                4    212.23 ha
+ Number of links                2
+ Number of paved areas          0      0.00 ha
+ Number of unpaved areas        2    212.23 ha
+ Number of greenhouse-areas     0      0.00 ha
+           with basins                 0.00 ha
+ Number of open water nodes     0      0.00 ha
+ Number of structures           0
+ Number of boundaries           2
+ Number of NWRW nodes           0      0.00 ha
+ Number of Sacramento nodes     0      0.00 ha
+ Number of RR Runoff nodes      0      0.00 ha
+ Number of Cells                0      0.00 ha
+
+ Number of events               1
+ Timestepsize    (s)          900
+
+
+
+
+ Summary input data unpaved area          
+
+ Node identification    Node   Surface   Surf.Level max.storage Drainage     Infiltration Alfa-factors    Storagecoefficient
+                        name                       on land      depth        velocity     land  soil   (based on ref.level summer)
+                                  (ha)     (m NAP)    (mm)      (m NAP)      (mm/hour)      (1/day)       (mm)
+======================================================================================================================================
+GFE1022              1022           128.584     -1.60     10.00     -2.95     10.00    100.00      0.00    0.1493
+GFE1021              1021            83.651     -1.47     10.00     -2.82     99.00    100.00      0.00    0.0636
+
+
+ Summary input data boundaries      
+
+ Node identification   Node    Init.level variable  serie
+                       name      (m NAP)   (1=yes)   number
+================================================================
+cnGFE1022                           -2.850        0        0
+cnGFE1021                           -2.850        0        0

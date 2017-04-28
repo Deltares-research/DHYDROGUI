@@ -1,0 +1,10 @@
+010312  High Froude numbers (See froude file)
+000131  Maximum Froude number in cell = 0.80
+000141  (Time step    220 Iter. step    4 Branch LA1_Lahn02 X=  29939.00)
+000151  Maximum Froude number in grid point = 1.79
+000141  (Time step     49 Iter. step    3 Branch LA1_Lahn02 X=  11140.00)
+010322          2          timesteps without convergence (See residu file)
+010430  Chezy value in floodplain 2 limited because of low water depth
+010331  Minumum number of iterations         1
+010341  Maximum number of iterations       100
+010351  Mean number of iterations         9

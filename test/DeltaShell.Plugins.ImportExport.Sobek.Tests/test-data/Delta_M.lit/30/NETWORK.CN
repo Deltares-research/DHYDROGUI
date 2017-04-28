@@ -1,0 +1,101 @@
+CN_1.1
+FLBO id 'N_1' ci 'N_1' flbo
+FLBO id 'N_31' ci 'N_31' flbo
+FLBO id 'N_40' ci 'N_40' flbo
+FLBO id 'N_64' ci 'N_64' flbo
+FLBO id 'N_92' ci 'N_92' flbo
+FLBO id 'N_91' ci 'N_91' flbo
+FLBO id 'N_P_Volk_65' ci 'N_P_Volk_65' flbo
+FLBO id 'N_P_Volk_66' ci 'N_P_Volk_66' flbo
+FLBO id 'N_P_Volk_67' ci 'N_P_Volk_67' flbo
+FLBO id 'N_P_Volk_68' ci 'N_P_Volk_68' flbo
+FLBO id 'N_P_Volk_69' ci 'N_P_Volk_69' flbo
+FLBO id 'N_P_Volk_70' ci 'N_P_Volk_70' flbo
+FLBO id 'N_P_Volk_71' ci 'N_P_Volk_71' flbo
+FLBO id 'N_P_Volk_72' ci 'N_P_Volk_72' flbo
+FLBO id 'N_P_Volk_73' ci 'N_P_Volk_73' flbo
+FLBO id 'N_P_Volk_74' ci 'N_P_Volk_74' flbo
+FLBO id 'N_P_Volk_75' ci 'N_P_Volk_75' flbo
+FLBO id 'N_P_Volk_76' ci 'N_P_Volk_76' flbo
+FLBO id 'N_5657754' ci 'N_5657754' flbo
+FLBO id 'N_P_Grevel_21' ci 'N_P_Grevel_21' flbo
+FLBO id 'N_P_Grevel_22' ci 'N_P_Grevel_22' flbo
+FLBO id 'N_P_Grevel_24' ci 'N_P_Grevel_24' flbo
+FLBO id 'N_P_Grevel_25' ci 'N_P_Grevel_25' flbo
+FLBO id 'N_P_W_schelde_10' ci 'N_P_W_schelde_10' flbo
+FLBO id 'N_P_W_schelde_62' ci 'N_P_W_schelde_62' flbo
+FLBO id 'N_P_W_schelde_64' ci 'N_P_W_schelde_64' flbo
+FLBO id 'N_P_W_schelde_65' ci 'N_P_W_schelde_65' flbo
+FLBO id 'LozKanWalcheren' ci 'LozKanWalcheren' flbo
+FLBO id 'KanGentTern' ci 'KanGentTern' flbo
+FLBR id 'L_21639' nm '' ci 'R_29' lc 3055.00000000035 flbr 
+FLBR id 'L_21640' nm '' ci 'R_84' lc 10292.0000000004 flbr 
+FLBR id 'Vliet' nm 'Vliet' ci 'R_P_Volk_001' lc 2876.66432671137 flbr 
+FLBR id 'Gem_Volk' nm 'Gem_Volk' ci 'R_P_Volk_001' lc 4148.46802481609 flbr 
+FLBR id 'RWZI_Volk' nm 'RWZI_Volk' ci 'R_P_Volk_001' lc 7813.47976306804 flbr 
+FLBR id 'Dintel' nm '' ci 'R_P_Volk_001' lc 10215.7912743939 flbr 
+FLBR id 'Gem_zoom' nm 'Gem_zoom' ci 'R_P_Volk_004' lc 9306.15731783871 flbr 
+FLBR id 'RWZI_Tholen' nm 'RWZI_Tholen' ci 'R_P_Volk_004' lc 12898.9595074511 flbr 
+FLBR id 'Gem_Eendracht' nm 'Gem_Eendracht' ci 'R_P_Volk_004' lc 15688.9854472082 flbr 
+FLBR id 'Markiez' nm 'Markiez' ci 'R_P_Volk_005' lc 3957.91521211249 flbr 
+FLBR id 'P_OostSch1' nm '' ci 'R_P_Volk_052' lc 3875.41743956738 flbr 
+FLBR id 'E_OostSch1' nm '' ci 'R_P_Volk_052' lc 4280.37267990326 flbr 
+FLBR id 'PL_Prommel' nm 'PL_Prommel' ci 'R_P_Volk_054' lc 160.51551051841 flbr 
+FLBR id 'PL_Zuidhoek' nm 'PL_Zuidhoek' ci 'R_P_Volk_060' lc 268.958158335832 flbr 
+FLBR id 'PL_Sas' nm 'PL_Sas' ci 'R_P_Volk_061' lc 509.665272420466 flbr 
+FLBR id 'PL_Kattendijke' nm 'PL_Kattendijke' ci 'R_P_Volk_072' lc 4490.19282896343 flbr 
+FLBR id 'P_OostSch3' nm '' ci 'R_P_Volk_074' lc 747.492709466522 flbr 
+FLBR id 'E_OostSch3' nm '' ci 'R_P_Volk_074' lc 1409.42795680275 flbr 
+FLBR id 'PL_Noord' nm 'PL_Noord' ci 'R_P_Volk_076' lc 1909.65755792964 flbr 
+FLBR id 'PL_Loohoek' nm 'PL_Loohoek' ci 'R_P_Volk_080' lc 945.321679846175 flbr 
+FLBR id 'PL_Duiveland' nm 'PL_Duiveland' ci 'R_P_Volk_081' lc 692.217100352115 flbr 
+FLBR id 'P_OostSch4' nm '' ci 'R_P_Volk_082' lc 1244.57180498148 flbr 
+FLBR id 'E_OostSch4' nm '' ci 'R_P_Volk_082' lc 1751.21811229767 flbr 
+FLBR id 'PL_Luyster' nm 'PL_Luyster' ci 'R_P_Volk_083' lc 5680.36358308623 flbr 
+FLBR id 'PL_Moer' nm 'PL_Moer' ci 'R_P_Volk_093' lc 1686.69255169546 flbr 
+FLBR id 'P_OostSch6' nm '' ci 'R_P_Volk_097' lc 2146.02064124835 flbr 
+FLBR id 'E_OostSch6' nm '' ci 'R_P_Volk_097' lc 2889.23049758959 flbr 
+FLBR id 'PL_Rattekaai' nm 'PL_Rattekaai' ci 'R_P_Volk_099' lc 1689.66557133018 flbr 
+FLBR id 'P_OostSch5' nm '' ci 'R_P_Volk_102' lc 2153.73045674156 flbr 
+FLBR id 'E_OostSch5' nm '' ci 'R_P_Volk_102' lc 2946.53062811194 flbr 
+FLBR id 'Zoom' nm 'Zoom' ci 'R_P_Volk_107' lc 2499.3808409946 flbr 
+FLBR id 'PL_Vliet' nm 'PL_Vliet' ci 'R_P_Volk_107' lc 3602.50928787296 flbr 
+FLBR id 'P_OostSch2' nm '' ci 'R_P_Volk_115' lc 875.774915796681 flbr 
+FLBR id 'E_OostSch2' nm '' ci 'R_P_Volk_115' lc 1168.47555435758 flbr 
+FLBR id 'PL_Valle' nm 'PL_Valle' ci 'R_P_Volk_117' lc 731.985667584752 flbr 
+FLBR id 'P_Grev3' nm '' ci 'R_P_Grevel_001' lc 1244.28456716929 flbr 
+FLBR id 'E_Grev3' nm '' ci 'R_P_Grevel_001' lc 1862.72866102327 flbr 
+FLBR id 'PL_Dreischor' nm 'PL_Dreischor' ci 'R_P_Grevel_023' lc 2679.39812578546 flbr 
+FLBR id 'P_Grev2' nm '' ci 'R_P_Grevel_026' lc 5459.37093527882 flbr 
+FLBR id 'E_Grev2' nm '' ci 'R_P_Grevel_026' lc 6035.2480914779 flbr 
+FLBR id 'PL_De Kille' nm 'PL_De Kille' ci 'R_P_Grevel_030' lc 2562.93673306098 flbr 
+FLBR id 'E_Grev1' nm '' ci 'R_P_Grevel_033' lc 2399.64792350254 flbr 
+FLBR id 'P_Grev1' nm '' ci 'R_P_Grevel_033' lc 2962.77103284233 flbr 
+FLBR id 'PL_Herkingen' nm 'PL_Herkingen' ci 'R_P_Grevel_036' lc 846.191076855395 flbr 
+FLBR id 'PL_Battenoord' nm 'PL_Battenoord' ci 'R_P_Grevel_036' lc 3234.61160833027 flbr 
+FLBR id 'PL_Den Osse' nm 'PL_Den Osse' ci 'R_P_5657502' lc 804.499368973003 flbr 
+FLBR id 'PL_Wilhelmina' nm 'PL_Wilhelmina' ci 'R_5706933' lc 207.12885509354 flbr 
+FLBR id 'PL_Adriaan' nm 'PL_Adriaan' ci 'R_5706933' lc 2510.31686310294 flbr 
+FLBR id 'PL_Oosterland' nm 'PL_Oosterland' ci 'R_5706933' lc 3488.30657301095 flbr 
+FLBR id 'PL_Willem' nm 'PL_Willem' ci 'R_5706933' lc 7015.2202038404 flbr 
+FLBR id 'PL_De Piet' nm 'PL_De Piet' ci 'R_5706933' lc 11262.3431574357 flbr 
+FLBR id 'PL_Oostwateringe' nm 'PL_Oostwateringe' ci '12' lc 3272.79381992466 flbr 
+FLBR id 'PL_Kleverskerke' nm 'PL_Kleverskerke' ci '12' lc 3771.49325108546 flbr 
+FLBR id 'PL_Jacoba' nm 'PL_Jacoba' ci '12' lc 4398.20424223502 flbr 
+FLBR id 'PL_Hedwige(noWQ)' nm 'PL_Hedwige(noWQ)' ci 'W_R_P_W_Schelde_11' lc 2832.87164612298 flbr 
+FLBR id 'PL_Rhitthem(noWQ)' nm 'PL_Rhitthem(noWQ)' ci 'W_R_P_W_Schelde_26' lc 2734.70729354421 flbr 
+FLBR id 'PL_Quarles' nm 'PL_Quarles' ci 'W_R_P_W_Schelde_28' lc 3317.94120756093 flbr 
+FLBR id 'PL_Nieuwe Sluis' nm 'PL_Nieuwe Sluis' ci 'W_R_P_W_Schelde_34' lc 791.387126061267 flbr 
+FLBR id 'PL_Nol Zeven' nm 'PL_Nol Zeven' ci 'W_R_P_W_Schelde_35' lc 623.00450206085 flbr 
+FLBR id 'PL_Braakman' nm 'PL_Braakman' ci 'W_R_P_W_Schelde_44' lc 855.607447578431 flbr 
+FLBR id 'PL_W Rijkswl' nm 'PL_W Rijkswl' ci 'W_R_P_W_Schelde_44' lc 4212.1036862963 flbr 
+FLBR id 'PL_Othene kreek' nm 'PL_Othene kreek' ci 'W_R_P_W_Schelde_45' lc 1394.72548148916 flbr 
+FLBR id 'PL_Hellewout' nm 'PL_Hellewout' ci 'W_R_P_W_Schelde_52' lc 884.070561116841 flbr 
+FLBR id 'PL_Borssele' nm 'PL_Borssele' ci 'W_R_P_W_Schelde_56' lc 1010.55609403776 flbr 
+FLBR id 'PL_Groenewege' nm 'PL_Groenewege' ci 'W_R_P_W_Schelde_62' lc 3593.47366404809 flbr 
+FLBR id 'PL_Maalstede' nm 'PL_Maalstede' ci 'W_R_P_W_Schelde_63' lc 2154.87774720855 flbr 
+FLBR id 'PL_Campen' nm 'PL_Campen' ci 'W_R_P_W_Schelde_65' lc 2322.89148608657 flbr 
+FLBR id 'PL_Kruiningen' nm 'PL_Kruiningen' ci 'W_R_P_W_Schelde_75' lc 1829.40944302835 flbr 
+FLBR id 'PL_Waarde' nm 'PL_Waarde' ci 'W_R_P_W_Schelde_80' lc 608.477717263891 flbr 
+FLBR id 'PL_Paal' nm 'PL_Paal' ci 'W_R_P_W_Schelde_82' lc 1428.69252307645 flbr 
+FLBR id 'PL_Nr een' nm 'PL_Nr een' ci '316' lc 2857.35434019102 flbr 

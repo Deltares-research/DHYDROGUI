@@ -1,0 +1,71 @@
+BOUN id '-1' bl 0 0.5 is  0 boun
+UNPV id '-1' na  16 ar 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 lv  1.5 sd '-1' ad '-1' sp '-1' ic '-1' bt 1 ig 0 -999.99 gl  5 ms 'Station1' is  0 unpv
+INFC id '-1' nm 'Default' ic 5. infc
+ALFA id '-1'  nm 'Default' af 100 0.3 0.3 0.3 0.3 0.05 lv 0.2 0.4 0.6 alfa
+SEEP id '-1'  nm 'Default' sp 0 ss 0 seep
+PAVE id '-1' ar 0 lv 1.5 sd '-1' ss 0 qc 0  0 0 qo 0 1 ms 'Station1' is  0 np  0 dw '' pave
+GRHS id '-1' na 10  ar 0 0 0 0 0 0 0 0 0 0 sl 1.5 as 0 si '-1'  sd '-1'  ms 'Station1' is  0 grhs
+SILO id '-1' nm 'Default' sc 200 pc 0.02 silo
+OPWA id '-1' na  6 ar 10000 10000 10000 10000 10000 10000 lv 0.1 0.2 0.3 0.4 0.5 0.6 rl 0  al  1 ml 1 bl 0 tl 0 0.7 sp '-1' ms 'Station1' is  0 opwa
+STRU id '-12' dd '-12' ca 0 0 0 0  cj '-1' '-1' '-1' '-1' stru
+STDS id '-12' nm 'Default' ty  12 qv 0  0.01  0.02  0.03  0.04  0.05  hv 0  0.1  0.2  0.3  0.4  0.5  hr 2 stds
+STRU id '-11' dd '-11' ca 0 0 0 0  cj '-1' '-1' '-1' '-1' stru
+STDS id '-11' nm 'Default' ty  11 mn 0.02 cl 500 dp 1 bw 10 ss 0 stds
+STRU id '-10' dd '-10' ca 0 0 0 0  cj '-1' '-1' '-1' '-1' stru
+STDS id '-10' nm 'Default' ty  10 mu 0.63 dc 1 cw 2 cl 0.7 cp 0.5 gh 0.9 gs '' in 0  rt 0 stds
+STRU id '-9' dd '-9' ca 0 0 0 0  cj '-1' '-1' '-1' '-1' stru
+STDS id '-9' nm 'Default' ty  9 wt 1 sl 0 dc 1 cw 2 cl 0.7 cp 1.5 ws '' in 0  rt 0 stds
+STRU id '-8' dd '-8' ca 0 0 0 0  cj '-1' '-1' '-1' '-1' stru
+STDS id '-8' nm 'Default' ty  8 pc  .1 0  so '-1' in 0  dn 1 stds
+CNTL id '-1' nm 'Default' ty 10 cntl
+PLVG id '-1' ru 0.5 0.2 0.1 ms 0 0.5 1 0 0.5 1 0 2 4 2 4 6 ix 0 2 0 5 im 0 0.5 0 1 ic 0 3 0 3 dc 0 0.1 0 0.1 od 1 or 0 plvg
+DWA id '-1' nm 'Default' do 1 wc 0 wd 120 wh 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dwa
+NWRW id '-1' sl 1.5 ar  0  0  0  0  0  0  0  0  0  0  0  0 np  0 dw '-1' ms '' nwrw
+STDF id '-1' nm 'Default' ms 0 is 0 mr 0 0 ir 0 0  stdf
+STDF id '-2' nm 'Default' ml 0 il 0  stdf
+STDF id '-3' nm 'Default' mk 0 ik 0  stdf
+SWLV id '-1' nm 'Default' PDIN  1 0  pdin  TBLE
+'1997/01/01;00:00:00' .01 -.01 .01 -.01 .01 -.01 .01 -.01 <
+'1997/12/31;00:00:00' .01 -.01 .01 -.01 .01 -.01 .01 -.01 <  tble swlv
+DEMD id '-1' nm 'Default' PDIN  1 0  pdin  TBLE
+'1996/01/01;00:00:00' 0 <
+'1996/01/01;01:00:00' 0 <
+'1996/01/01;02:00:00' 0 <
+'1996/12/30;23:00:00' 0 <  tble demd
+INDU id '-1' co 2 rf 1 ds '' dm '-1' sc 0 indu
+WWTP id '-1' tb 0  wwtp
+SC_T id '-1' nm 'Default' PDIN  1 0  pdin  TBLE 
+ 0 1 < 
+ 100 1.5 <  tble sc_t
+BN_T id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 200 <
+'2002/12/31;23:59:00' 0 200 < tble  bn_t
+CAPS id '-1' uztwm 50 uztwc 50 uzfwm 150 uzfwc 150 lztwm 500 lztwc 450 lzfsm 150 lzfsc 100 lzfpm 150 lzfpc 150 uzk .2  lzsk .06 lzpk .004  caps
+DISC id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  disc
+DW_T id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  dw_t
+ERNS id '-1'  nm 'Default' cvi 100 cvo 0 0 0 0 cvs 100 lv 0 0 0  erns
+H0_T id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  h0_t
+IG_T id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  ig_t
+INST id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  inst
+MEAS id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  meas
+OPAR id '-1' zperc 10.0 rexp 2.0 pfree 0.2 rserv 0.3  pctim 0.024 adimp 0.2 sarva 0.0125 side 0.0 ssout 0.0 pm 0.0 pt1  0  pt2  0   opar
+OW_T id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  ow_t
+QC_T id '-1' nm 'Default' PDIN  1 1 '365;00:00:00' pdin  TBLE
+'2002/01/01;00:00:00' 0 <
+'2002/12/31;23:59:00' 0 < tble  qc_t
+SACR id '-1' nm '' ar 1000000 ms '' ca '-1' uh '-1' op '-1'  sacr
+UNIH id '-1' uh 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dt 1  unih

@@ -1,0 +1,3 @@
+id,Name,Data_type,level,Total width,Flow width,Profile_type,branch,chainage,width main channel,width floodplain 1,width floodplain 2,width sediment transport,Use Summerdike,Crest level summerdike,Floodplain baselevel behind summerdike,Flow area behind summerdike,Total area behind summerdike,Use groundlayer,Ground layer depth
+P_1378,Getijms1__203.48,meta,,,,ZW,,,142,782,0,142,1,4.67,3.17,251,542,0,0
+Getijms1__203.48,geom,P_1378,-5.22,11,11,,,,,,,,,,,,,,

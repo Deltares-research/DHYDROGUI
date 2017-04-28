@@ -1,0 +1,53 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=3
+NumberOfLocations=874
+T0=2000.12.15 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+ 
+[Long Locations]
+755=P_VUGHTERSTUW/DWPR 1a
+756=P_VUGHTERSTUW/DWPR 1b
+ 
+[Location Descriptions]
+1=EysdenMSW
+2=StPietMSW
+3=km__14_84
+4=BorghdMSW
+5=MaaseiMSW
+6=SploudMaa
+7=SamoudMaa
+8=km__67_30
+9=HeelboMSW
+10=km_85_075
+11=VenBleMSW
+12=km__124_0
+13=WelldoMSW
+14=SluiWeurt
+15=PlakraMoo
+16=Mook__MSW
+17=LithdoMSW
+18=km_220_01
+19=SluiAndel
+20=beg_zytak
+21=splitpunt
+22=HeesbeMSW
+23=km__235_0
+24=A2_oostpl
+25=Aa____122
+26=Aa____126
+27=die_drong
+28=P10_domme
+29=boscbroek
+30=Drongkan2
+31=Drongkan3
+32=KeizerMSW
+866=Aa____124
+ 

@@ -1,0 +1,25 @@
+OBI1.0
+OBID id 'T1_x=0m' ci 'SBK_CHANNEL_STORCONN&LAT' obid
+OBID id 'T1_x=250m' ci 'SBK_GRIDPOINT' obid
+OBID id '2' ci 'SBK_PROFILE' obid
+OBID id '1' ci 'SBK_BOUNDARY' obid
+OBID id 'T2_x=0m' ci 'SBK_CHANNEL_STORCONN&LAT' obid
+OBID id 'T2_x=250m' ci 'SBK_GRIDPOINT' obid
+OBID id '8' ci 'SBK_PROFILE' obid
+OBID id '4' ci 'SBK_BOUNDARY' obid
+OBID id 'T3_x=0m' ci 'SBK_CHANNEL_STORCONN&LAT' obid
+OBID id 'T3_x=250m' ci 'SBK_GRIDPOINT' obid
+OBID id '9' ci 'SBK_PROFILE' obid
+OBID id '5' ci 'SBK_BOUNDARY' obid
+OBID id 'T4_x=0m' ci 'SBK_CHANNEL_STORCONN&LAT' obid
+OBID id 'T4_x=250m' ci 'SBK_GRIDPOINT' obid
+OBID id '10' ci 'SBK_PROFILE' obid
+OBID id '6' ci 'SBK_BOUNDARY' obid
+OBID id 'T5_x=0m' ci 'SBK_CHANNEL_STORCONN&LAT' obid
+OBID id 'T5_x=250m' ci 'SBK_GRIDPOINT' obid
+OBID id '11' ci 'SBK_PROFILE' obid
+OBID id '7' ci 'SBK_BOUNDARY' obid
+OBID id 'T6_x=0m' ci 'SBK_CHANNEL_STORCONN&LAT' obid
+OBID id 'T6_x=250m' ci 'SBK_GRIDPOINT' obid
+OBID id '12' ci 'SBK_PROFILE' obid
+OBID id '3' ci 'SBK_BOUNDARY' obid

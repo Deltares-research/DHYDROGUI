@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityModel1D">
+    <Position X="4.25" Y="4.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="DelftTools.Shell.Core.Workflow.TimeDependentModelBase" FixedToPoint="true">
+      <Path>
+        <Point X="6.875" Y="3.941" />
+        <Point X="6.875" Y="4.2" />
+        <Point X="6.125" Y="4.2" />
+        <Point X="6.125" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="InitialConditions" Type="DelftTools.Functions.IFunction" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.438" Y="6.881" />
+        <Point X="6.438" Y="8.25" />
+        <Point X="9.5" Y="8.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.266" Y="0.07" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ProcessCoefficients" Type="DelftTools.Functions.IFunction" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.881" />
+        <Point X="6.25" Y="8.562" />
+        <Point X="9.5" Y="8.562" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="SubstanceProcessLibrary" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary" FixedFromPoint="true">
+      <Path>
+        <Point X="5.438" Y="4.5" />
+        <Point X="5.438" Y="2.552" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.185" Y="0.298" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="BoundaryNodesData" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData.WaterQualityBoundaryData" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="5.25" />
+        <Point X="9" Y="5.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="CalculationMethod" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaqCalculationMethod" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.625" Y="6.881" />
+        <Point X="5.625" Y="9.556" />
+        <Point X="5.625" Y="9.556" />
+        <Point X="5.625" Y="10.125" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.377" Y="0.235" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="CalculationType" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaqCalculationType" FixedFromPoint="true">
+      <Path>
+        <Point X="5.125" Y="6.881" />
+        <Point X="5.125" Y="10" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ComputationalGrid" Type="GeoAPI.Extensions.Coverages.IDiscretization" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.625" Y="6.881" />
+        <Point X="6.625" Y="7.125" />
+        <Point X="9.5" Y="7.125" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="LateralSourcesData" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData.WaterQualityBoundaryData" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="4.938" />
+        <Point X="9" Y="4.938" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Dispersion" Type="DelftTools.Functions.IFunction" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.875" Y="6.881" />
+        <Point X="5.875" Y="9.25" />
+        <Point X="9.5" Y="9.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="WaterFlowModelData" Type="DelftTools.Hydro.IWaterFlowModel1DFiniteVolumeData" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.75" Y="6.881" />
+        <Point X="4.75" Y="9.243" />
+        <Point X="3.25" Y="9.243" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Meteo" Type="DelftTools.Functions.IFunction" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.062" Y="6.881" />
+        <Point X="6.062" Y="8.851" />
+        <Point X="9.5" Y="8.851" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ObservationVariableOutputs" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.Forms.ProjectExplorer.WaterQualityObservationVariableOutput" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="6.062" />
+        <Point X="9" Y="6.062" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AwIKoZiQACfCAINIgGEigQTBQ+wGQAASoQEA6EMZAmI=</HashCode>
+      <FileName>WaterQualityModel1D.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SubstanceProcessLibrary" />
+      <Property Name="CalculationMethod" />
+      <Property Name="CalculationType" />
+      <Property Name="ComputationalGrid" />
+      <Property Name="ModelSettings" />
+      <Property Name="WaterFlowModelData" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="InitialConditions" />
+      <Property Name="ProcessCoefficients" />
+      <Property Name="BoundaryNodesData" />
+      <Property Name="LateralSourcesData" />
+      <Property Name="Dispersion" />
+      <Property Name="Meteo" />
+      <Property Name="ObservationVariableOutputs" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NetTopologySuite.Extensions.Features.Generic.FeatureData&lt;TData, TFeature&gt;" Collapsed="true">
+    <Position X="9" Y="3.25" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualitySubstance" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAgAAQMCAAAAAQAAAAAAAAgAAAgAAAAABA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualitySubstance.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityProcess" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualityProcess.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary">
+    <Position X="4.25" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Substances" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualitySubstance" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="2.125" />
+        <Point X="2.5" Y="2.125" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Processes" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityProcess" FixedToPoint="true">
+      <Path>
+        <Point X="4.25" Y="0.875" />
+        <Point X="2.5" Y="0.875" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="OutputParameters" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityOutputParameter" FixedFromPoint="true">
+      <Path>
+        <Point X="6.5" Y="2.062" />
+        <Point X="8" Y="2.062" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAFAAAAAAAEAAAAAAQAAAEAAAABIIAAAiCAAAE=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\SubstanceProcessLibrary.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Substances" />
+      <Property Name="Processes" />
+      <Property Name="OutputParameters" />
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData.WaterQualityBoundaryData" Collapsed="true">
+    <Position X="9" Y="4.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAIAAAAAAABAAAQIAAAAAAEAAAAACAAAABA=</HashCode>
+      <FileName>DataObjects\BoundaryData\WaterQualityBoundaryData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityModel1DSettings">
+    <Position X="0.5" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAACAIUCAIAAAAABAAgAAAEAACEAAABAAAYCAQQ=</HashCode>
+      <FileName>DataObjects\WaterQualityModel1DSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Forms.ProjectExplorer.WaterQualityObservationVariableOutput" Collapsed="true">
+    <Position X="9" Y="5.75" Width="3" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAECAAAAAwAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\ProjectExplorer\WaterQualityObservationVariableOutput.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="TimeSeries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityOutputParameter" Collapsed="true">
+    <Position X="8" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAAAAAQEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualityOutputParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityParameter" Collapsed="true">
+    <Position X="8" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAAAAAQAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DelftTools.Shell.Core.Workflow.TimeDependentModelBase" Collapsed="true">
+    <Position X="5.75" Y="3.25" Width="2.25" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DelftTools.Functions.TimeSeries" Collapsed="true">
+    <Position X="13" Y="5.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="DelftTools.Functions.IFunction" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="8" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Hydro.IWaterFlowModel1DFiniteVolumeData">
+    <Position X="0.5" Y="8" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="GeoAPI.Extensions.Coverages.IDiscretization" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="6.75" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaqCalculationMethod">
+    <Position X="5.5" Y="10" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>DataObjects\WaqCalculationMethod.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaqCalculationType">
+    <Position X="3.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAACAAAAA=</HashCode>
+      <FileName>DataObjects\WaqCalculationType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

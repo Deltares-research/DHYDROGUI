@@ -1,0 +1,41 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=10
+NumberOfLocations=32
+T0=2000.12.15 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+2=Gate lower edge level (m AD)
+10=Discharge Coefficient (-)
+ 
+[Long Locations]
+ 
+[Location Descriptions]
+12=stuw_Borgh_zom
+13=stuw_Borg_Bosv
+14=stuw_Borgh_win
+15=stuw_Linne_zom
+16=stuw Linnoverl
+17=stuw_Linne_win
+18=stuw_Roerm_zom
+19=stuw_Roerm_win
+20=stuw_Roermond_groene_rivier
+21=stuw_Belfe_zom
+22=stuw_Belfe_win
+23=Stuw_Belfe_sls
+24=stuw_Sambe_zom
+25=stuw_Sambe_win
+26=stuw_Grave_zom
+27=stuw_Grave_win
+28=stuw_Lith__zom
+29=stuw_Lith__win
+30=boscbro_in
+31=boscbro_uit
+32=bosschbroek_in2
+ 

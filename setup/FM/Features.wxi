@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?include ..\HydroModel\HydroModel_FeatureContent.wxi?>
+  
+  <Feature Id="FMExtrasFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <ComponentRef Id="FMExtras"/>
+  </Feature>
+  
+  <Feature Id="FM" Title="!(loc.FMFeatureName)" Description ="!(loc.FMFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
+    <?include FMPlugin_FeatureContent.wxi?>
+  </Feature>
+
+  <Feature Id="Wave" Title="!(loc.WaveFeatureName)" Description="!(loc.WaveFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
+    <?include ..\Wave\WavePlugin_FeatureContent.wxi?>
+  </Feature>
+
+  <Feature Id="RTC" Title="!(loc.RTCFeatureName)" Description ="!(loc.RTCFeatureDescription)" Level="1" Absent="allow" AllowAdvertise="no">
+    <?include ..\RealTimeControl\RealTimeControl_FeatureContent.wxi?>
+  </Feature>
+
+  <?ifndef var.NOWAQ?>
+  <Feature Id="Waq" Title="!(loc.WaqFeatureName)" Description ="!(loc.WaqFeatureDescription)" Absent="allow" Level="1000" AllowAdvertise="no">
+    <?include ..\Waq\WaqPlugin_FeatureContent.wxi?>
+  </Feature>
+  <?endif?>
+
+  <Feature Id="CLI" Title="!(loc.CLIFeatureName)" Description="!(loc.CLIFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
+    <?include ..\dimr\CLI_FeatureContent.wxi?>
+    <?include ..\dimr\CLI_WAVE_FeatureContent.wxi?>
+  </Feature>
+  
+</Include>

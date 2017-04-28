@@ -1,0 +1,56 @@
+** INFO   : Opened file : unstruc.hlp
+** INFO   : Closed file : unstruc.hlp
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+** INFO   : Opened file : ISOCOLOUR.hls
+** INFO   : Using Local FileISOCOLOUR.hls
+** INFO   : Closed file : ISOCOLOUR.hls
+* Deltares, D-Flow FM Version 1.1.72.000000, Sep 09 2013, 11:30:26
+* File creation date: 13:47:13, 09-09-2013
+** INFO   :  MAXIMUM NUMBER OF LINKS         :            2
+** INFO   :  MAXIMUM NUMBER OF NODES         :            0
+** INFO   :  RESOLUTION GRAPHICS SCREEN      :         1200         900
+** INFO   :  RESOLUTION TEXT     SCREEN      :          150          60
+** INFO   :  NUMBER OF COLOURS AVAILABLE     :          256
+** INFO   :              0        100002 NOD(KMAX)
+** INFO   :              6        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :              6         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :              6         50000 xlan(maxlan)
+** INFO   :              7         50000 ylan(maxlan)
+** INFO   :              7         50000 zlan(maxlan)
+** INFO   :              7         25000 nclan(maxlan)
+** INFO   : Load MDU-file                    (*.mdu)
+** INFO   : Opened file : par16.mdu
+** INFO   : Closed file : par16.mdu
+** INFO   :              8        100002 NOD(KMAX)
+** INFO   :             14        700014 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** INFO   :             14          1440 xsp(maxspl, maxsplen)
+** INFO   :             14          1440 ysp(maxspl, maxsplen)
+** INFO   :             14          1440 xsp2(maxspl, maxsplen)
+** INFO   :             14          1440 ysp2(maxspl, maxsplen)
+** INFO   :             14         10000 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** INFO   :             14         60000 xlan(maxlan)
+** INFO   :             15         60000 ylan(maxlan)
+** INFO   :             15         60000 zlan(maxlan)
+** INFO   :             16         30000 nclan(maxlan)
+ Until here copy of previous diagnostic file
+** INFO   : Opened Model definition file : par16.mdu
+** DEBUG  : Opened 'par16_net.nc' as #  3.
+** INFO   :             23        960131 NOD(KMAX)
+** INFO   :             77       6720917 XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** DEBUG  : Closed NetCDF file 'par16_net.nc.
+** INFO   : Opened file : mn_DCSMv6_02k._obs.xyn
+** INFO   : Closed file : mn_DCSMv6_02k._obs.xyn
+** INFO   : Opened file : dcsmv6_net.thd
+** INFO   : Closed file : dcsmv6_net.thd
+** INFO   : Change display   parameters
+** INFO   : You created SCREENDUMP 000001.pcx
+** INFO   :             87       1288861 netcell(numpx1)
+** INFO   :            101       1708476 lnn(numl)
+** INFO   :            128       3416952 lne(2,numl)
+** INFO   :            135        849102 xz(numc)
+** INFO   :            142        849102 yz(numc)
+** INFO   :            149        849102 xzw(numc)
+** INFO   :            156        849102 yzw(numc)
+** INFO   :            162        849102 ba(numc)

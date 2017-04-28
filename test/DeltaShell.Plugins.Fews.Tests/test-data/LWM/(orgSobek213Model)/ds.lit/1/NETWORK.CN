@@ -1,0 +1,14 @@
+CN_1.1
+FLBO id 'Friese_Sluis' ci 'Friese_Sluis' flbo
+FLBO id 'H_WATERWOLF_BOV' ci 'H_WATERWOLF_BOV' flbo
+FLBO id 'H_HDLOUWES_BEN' ci 'H_HDLOUWES_BEN' flbo
+FLBO id 'DNZ_friesland' ci 'DNZ_friesland' flbo
+FLBO id 'H_buiten_waddenzee' ci 'H_buiten_waddenzee' flbo
+FLBR id 'NSL_BOEZ7' nm '' ci 'ELC_HFDW_236' lc 3936.8355693145 flbr 
+FLBR id 'NSL_BOEZ6' nm '' ci 'ELC_HFDW_242' lc 4013.46739962805 flbr 
+FLBR id 'NSL_BOEZ1' nm '' ci 'ELC_HFDW_242' lc 6179.07490414896 flbr 
+FLBR id 'g_606' nm 'dummy_Instroom Dokkumer Nieuwe Zijlen' ci 'ELC_HFDW_242' lc 8091.61186115918 flbr 
+FLBR id 'NSL_BOEZ4' nm '' ci 'ELC_HFDW_242' lc 9327.53781412824 flbr 
+FLBR id 'NSL_BOEZ3' nm '' ci 'ELC_HFDW_242' lc 11079.4273534752 flbr 
+FLBR id 'NSL_BOEZ2' nm '' ci 'ELC_HFDW_242' lc 13431.3484789681 flbr 
+FLBR id 'NSL_BOEZ5' nm '' ci 'ELC_HFDW_281' lc 2527.50611335835 flbr 

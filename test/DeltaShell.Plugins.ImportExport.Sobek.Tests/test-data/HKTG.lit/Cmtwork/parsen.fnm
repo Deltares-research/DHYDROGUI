@@ -1,0 +1,83 @@
+[Sobek Ascii Layer definition]
+Version=2.01
+
+[General]
+SettingsFile=\SB213_14\HKTG.LIT\WORK\SETTINGS.DAT
+
+[Topography layer]
+NrOfFiles=3
+ntw=\SB213_14\HKTG.LIT\WORK\NETWORK.NTW
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.TP
+cpt=\SB213_14\HKTG.LIT\WORK\NETWORK.CP
+dat=\SB213_14\HKTG.LIT\WORK\NODES.DAT
+xyc=\SB213_14\HKTG.LIT\WORK\NETWORK.D12
+
+[Cross Section layer]
+NrOfFiles=3
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.CR
+def=\SB213_14\HKTG.LIT\WORK\PROFILE.DEF
+dat=\SB213_14\HKTG.LIT\WORK\PROFILE.DAT
+
+[Structure layer]
+NrOfFiles=8
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.ST
+def=\SB213_14\HKTG.LIT\WORK\STRUCT.DEF
+dat=\SB213_14\HKTG.LIT\WORK\STRUCT.DAT
+con=\SB213_14\HKTG.LIT\WORK\CONTROL.DEF
+trg=\SB213_14\HKTG.LIT\WORK\TRIGGER.DEF
+cmp=\SB213_14\HKTG.LIT\WORK\STRUCT.CMP
+vlv=\SB213_14\HKTG.LIT\WORK\VALVE.TAB
+dbs=\SB213_14\HKTG.LIT\WORK\STRUCT.DEF
+
+[Friction layer]
+NrOfFiles=1
+bed=\SB213_14\HKTG.LIT\WORK\FRICTION.DAT
+glf=\SB213_14\HKTG.LIT\WORK\FRICTION.DAT
+exr=\SB213_14\HKTG.LIT\WORK\FRICTION.DAT
+wnd=\SB213_14\HKTG.LIT\WORK\FRICTION.DAT
+
+[Grid layer]
+NrOfFiles=1
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.GR
+
+[Condition layer]
+NrOfFiles=5
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.CN
+flb=\SB213_14\HKTG.LIT\WORK\BOUNDARY.DAT
+fll=\SB213_14\HKTG.LIT\WORK\LATERAL.DAT
+sal=\SB213_14\HKTG.LIT\WORK\CONCSALT.DAT
+fbd=\SB213_14\HKTG.LIT\WORK\BOUNDLAT.DAT
+
+[Initial Conditions layer]
+NrOfFiles=3
+igl=\SB213_14\HKTG.LIT\WORK\INITIAL.DAT
+ifl=\SB213_14\HKTG.LIT\WORK\INITIAL.DAT
+isa=\SB213_14\HKTG.LIT\WORK\INITSALT.DAT
+
+[Runtime Data layer]
+NrOfFiles=4
+flt=..\work\runtime.dat
+fln=..\work\runtime.dat
+flm=..\work\runtime.dat
+flh=..\work\runtime.dat
+inc=\SB213_14\HKTG.LIT\WORK\INCCLASS.DAT
+net=\SB213_14\HKTG.LIT\WORK\NETWORK.ME
+
+[Meteo layer]
+NrOfFiles=3
+wnd=\SB213_14\FIXED\DEFAULT.WDC
+bui=\SB213_14\FIXED\DEFAULT.BUI
+wlc=\SB213_14\HKTG.LIT\WORK\WND_LOC.DAT
+
+[Parser Files]
+NrOfFiles=4
+ini=parsen.ini
+dmp=parsen.dmp
+msg=parsen.msg
+rtn=parsen.rtn
+lst=D:\Sb213_14\Programs\flow\mdftext.lst
+
+[Simulation Input]
+NrOfFiles=2
+mda=sobek.mda
+mdf=sobek.mdf

@@ -1,0 +1,22 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.07.06
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=5
+NumberOfLocations=103
+T0=2000.09.30 22:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=30
+ 
+[Long Parameters]
+3=Waterlevel down (m AD)
+5=Gate lower edge level (m AD)
+ 
+[Long Locations]
+3=S_belbo_restituzione1_84
+4=S_belbo_restituzione2_85
+66=P_Stura di Lanzo_33112
+71=P_Stura di Lanzo_60570
+ 

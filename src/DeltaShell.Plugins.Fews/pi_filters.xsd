@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Delft FEWS (Copyright 2003 WL | Delft Hydraulics) -->
+<schema xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="filters" type="fews:FiltersComplexType"/>
+	<complexType name="FiltersComplexType">
+		<sequence>
+			<element name="description" type="string" minOccurs="0"/>
+			<element name="filter" type="fews:FilterComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.9"/>
+	</complexType>
+	<!--    -->
+	<complexType name="FilterComplexType">
+		<sequence>
+            <element name="name" type="fews:nameString" minOccurs="0"/>
+			<element name="description" type="string" minOccurs="0"/>
+            <element name="child" type="fews:FilterComplexType" minOccurs="0"  maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="id" type="fews:idString" use="required"/>
+	</complexType>
+</schema>

@@ -1,0 +1,16 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=3
+NumberOfLocations=11
+T0=2010.01.01 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=1
+ 
+[Location Descriptions]
+1=Q(t)_boundary
+11=Closed end
+ 

@@ -1,0 +1,18 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.2926, Sep 11 2013, 14:58:57
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=5
+NumberOfLocations=362
+T0=2009.01.01 01:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Location Descriptions]
+130=cp134
+186=cp135
+193=1
+362=B_SuppletieSLP
+ 

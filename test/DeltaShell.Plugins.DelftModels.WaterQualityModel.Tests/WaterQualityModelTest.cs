@@ -1,0 +1,1060 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
+using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+
+using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
+
+using NUnit.Framework;
+using Rhino.Mocks;
+using SharpMap.Extensions.CoordinateSystems;
+using SharpMapTestUtils;
+
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
+{
+    [TestFixture]
+    public class WaterQualityModelTest
+    {
+        [Test]
+        public void DefaultWaqFolderFileStructureTest()
+        {
+            // setup
+
+            // call
+            var model = new WaterQualityModel();
+
+            // assert
+
+            // Expected folder layout:
+            // %temp%
+            // `-- <temp folder location determined by Waq Model>
+            //    |-- <waq_model_name>_output
+            //    |   `-- ... model work directory, with includes and *inp file etc.
+            //    |-- <waq_model_name>
+            //    |  |-- boundary_data_tables
+            //    |  |   `-- ... all boundary *.tbl and *.usefors files.
+            //    |  |-- load_data_tables
+            //    |  |   `-- ...  all load *.tbl and *.usefors files.
+            //    |  |-- model_run_output
+            //    |  |   `-- ... all output generated from waq run like *.lst, *.his, *.map files.
+
+            var tempPath = Path.GetTempPath();
+            StringAssert.StartsWith(tempPath, model.ModelSettings.WorkDirectory,
+                "Work directory should be located somewhere in temp folder.");
+            StringAssert.StartsWith(tempPath, model.ModelSettings.OutputDirectory,
+                "Output directory should be located somewhere in temp folder.");
+            StringAssert.StartsWith(tempPath, model.BoundaryDataManager.FolderPath,
+                "Boundary data directory should be located somewhere in temp folder.");
+            StringAssert.StartsWith(tempPath, model.LoadsDataManager.FolderPath,
+                "Loads data directory should be located somewhere in temp folder.");
+
+            var waqModelTempFolder = Path.GetDirectoryName(model.ModelSettings.WorkDirectory);
+            if (Directory.Exists(waqModelTempFolder))
+            {
+                FileUtils.DeleteIfExists(waqModelTempFolder);
+                Assert.Fail("Waq model temp folder should only be created when required.");
+            }
+
+            var parentFolderOfWaqModelTempFolder = Path.GetDirectoryName(waqModelTempFolder) + Path.DirectorySeparatorChar;
+            Assert.AreEqual(tempPath, parentFolderOfWaqModelTempFolder,
+                "Waq model temp folder should be located directly in temp folder.");
+            var waqModelFolderName = model.Name.Replace(" ", "_");
+            Assert.AreEqual(waqModelFolderName + "_output", Path.GetFileName(model.ModelSettings.WorkDirectory),
+                "Expected work directory name should be based on name of waq model and post-fixed with '_output'.");
+
+            var waqModelDataFolder = Path.GetDirectoryName(model.ModelSettings.OutputDirectory);
+            Assert.AreEqual(waqModelTempFolder, Path.GetDirectoryName(waqModelDataFolder),
+                "Expected waq model data folder to be direct child-folder of the work directory parent folder.");
+            Assert.AreEqual(waqModelFolderName, Path.GetFileName(waqModelDataFolder),
+                "Expected waq data directory name should be based on name of waq model without post-fix.");
+            Assert.AreEqual(waqModelDataFolder, Path.GetDirectoryName(model.BoundaryDataManager.FolderPath),
+                "Parent folder of boundary data manager should be the waq data directory.");
+            Assert.AreEqual(waqModelDataFolder, Path.GetDirectoryName(model.LoadsDataManager.FolderPath),
+                "Parent folder of load data manager should be the waq data directory.");
+        }
+        
+        [Test]
+        public void DefaultConstructorExpectedValuesTest()
+        {
+            // setup
+
+            // call
+            var model = new WaterQualityModel();
+
+            // assert
+            Assert.AreEqual("Water Quality", model.Name);
+            Assert.IsNotNull(model.ModelSettings);
+            Assert.IsNotNull(model.SubstanceProcessLibrary);
+            Assert.IsTrue(model.Grid.IsEmpty);
+            CollectionAssert.IsEmpty(model.Loads);
+            CollectionAssert.IsEmpty(model.InitialConditions);
+            CollectionAssert.IsEmpty(model.ProcessCoefficients);
+            Assert.IsNotNull(model.ObservationAreas);
+            Assert.IsNull(model.HydrodynamicLayerThicknesses);
+            Assert.IsNull(model.NumberOfHydrodynamicLayersPerWaqLayer);
+            Assert.AreEqual(HydroDynamicModelType.Undefined, model.ModelType);
+            Assert.AreEqual(LayerType.Undefined, model.LayerType);
+            Assert.IsFalse(model.HasHydroDataImported);
+
+            Assert.AreEqual("Boundary Data", model.BoundaryDataManager.Name);
+            Assert.AreEqual("Loads Data", model.LoadsDataManager.Name);
+
+            Assert.AreNotEqual(string.Empty, model.InputFileCommandLine.Content,
+                "Input file must have template set.");
+            Assert.AreNotEqual(string.Empty, model.InputFileHybrid.Content,
+                "Input file must have template set.");
+
+            const double expectedVerticalDispersion = 1.0;
+            Assert.AreEqual(expectedVerticalDispersion, model.HorizontalDispersion);
+            Assert.AreEqual(1e-7, model.VerticalDispersion);
+            Assert.IsFalse(model.UseAdditionalHydrodynamicVerticalDiffusion);
+
+            #region Default Dispersion Function
+
+            Assert.AreEqual(1, model.Dispersion.Count);
+            var dispersionFunction = model.Dispersion[0];
+            Assert.AreEqual("Dispersion", dispersionFunction.Name);
+            Assert.AreEqual(1, dispersionFunction.Components.Count);
+            var dispersionVariable = dispersionFunction.Components[0];
+            Assert.AreEqual("Dispersion", dispersionVariable.Name);
+            Assert.AreEqual(expectedVerticalDispersion, dispersionVariable.DefaultValue);
+            Assert.AreEqual("m2/s", dispersionVariable.Unit.Name);
+            Assert.AreEqual("m2/s", dispersionVariable.Unit.Symbol);
+            Assert.IsNull(dispersionVariable.Unit.Dimension);
+            Assert.IsTrue(dispersionFunction.IsConst());
+
+            #endregion
+        }
+
+        [Test]
+        public void GetKernelVersionsTest()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // call
+            var kernalVersionsText = model.KernelVersions;
+
+            // assert
+            StringAssert.IsMatch(@"^Kernel:\s+delwaq1.exe\s+\d+[\.\d+]*" + Environment.NewLine +
+                                  @"Kernel:\s+delwaq2.exe\s+\d+[\.\d+]*" + Environment.NewLine + "$", 
+                                 kernalVersionsText);
+        }
+
+        [Test]
+        public void DefaultWaterQualityModelSettingsTest()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // call
+            var settings = model.ModelSettings;
+
+            // assert
+            Assert.AreEqual(new TimeSpan(1, 0, 0, 0), settings.HisStopTime - settings.HisStartTime);
+            Assert.AreEqual(new TimeSpan(1, 0, 0, 0), settings.MapStopTime - settings.MapStartTime);
+            Assert.AreEqual(new TimeSpan(1, 0, 0, 0), settings.BalanceStopTime - settings.BalanceStartTime);
+
+            Assert.AreEqual(new TimeSpan(0, 1, 0, 0), settings.HisTimeStep);
+            Assert.AreEqual(new TimeSpan(0, 1, 0, 0), settings.MapTimeStep);
+            Assert.AreEqual(new TimeSpan(0, 1, 0, 0), settings.BalanceTimeStep);
+
+            Assert.AreEqual(BalanceUnit.Gram, settings.BalanceUnit);
+            Assert.AreEqual(NumericalScheme.Scheme15, settings.NumericalScheme);
+
+            Assert.IsFalse(settings.NoDispersionIfFlowIsZero);
+            Assert.IsTrue(settings.NoDispersionOverOpenBoundaries);
+
+            Assert.IsFalse(settings.UseFirstOrder);
+
+            Assert.IsTrue(settings.LumpProcesses);
+            Assert.IsTrue(settings.LumpTransport);
+            Assert.IsTrue(settings.LumpLoads);
+
+            Assert.IsTrue(settings.SuppressSpace);
+            Assert.IsTrue(settings.SuppressTime);
+
+            Assert.IsTrue(settings.NoBalanceMonitoringPoints);
+            Assert.IsTrue(settings.NoBalanceMonitoringAreas);
+            Assert.IsFalse(settings.NoBalanceMonitoringModelWide);
+
+            Assert.IsTrue(settings.ProcessesActive);
+            Assert.AreEqual(MonitoringOutputLevel.PointsAndAreas, settings.MonitoringOutputLevel);
+            Assert.IsTrue(settings.CorrectForEvaporation);
+        }
+
+        [Test]
+        public void InputDataItemsInitializationTest()
+        {
+            // setup
+
+            // call
+            var model = new WaterQualityModel();
+            
+            // assert
+            var inputFileDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileCommandLineTag);
+            Assert.AreEqual(DataItemRole.Input, inputFileDataItem.Role);
+            Assert.AreEqual("Input File", inputFileDataItem.Name);
+            Assert.AreEqual(typeof(TextDocument), inputFileDataItem.ValueType);
+            Assert.AreSame(model, inputFileDataItem.Owner);
+            Assert.AreSame(model.InputFileCommandLine, inputFileDataItem.Value);
+
+            var inputFileHybridDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileHybridTag);
+            Assert.AreEqual(DataItemRole.Input, inputFileHybridDataItem.Role);
+            Assert.AreEqual("Input File", inputFileHybridDataItem.Name);
+            Assert.AreEqual(typeof(TextDocument), inputFileHybridDataItem.ValueType);
+            Assert.AreSame(model, inputFileHybridDataItem.Owner);
+            Assert.AreSame(model.InputFileHybrid, inputFileHybridDataItem.Value);
+
+            var substanceProcessLibraryDataItem = model.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryTag);
+            Assert.AreEqual(DataItemRole.Input, substanceProcessLibraryDataItem.Role);
+            Assert.AreEqual("Process Library", substanceProcessLibraryDataItem.Name);
+            Assert.AreEqual(typeof(SubstanceProcessLibrary), substanceProcessLibraryDataItem.ValueType);
+            Assert.AreSame(model, substanceProcessLibraryDataItem.Owner);
+            Assert.AreSame(model.SubstanceProcessLibrary, substanceProcessLibraryDataItem.Value);
+
+            var gridDataItem = model.GetDataItemByTag(WaterQualityModel.GridTag);
+            Assert.AreEqual(DataItemRole.Input, gridDataItem.Role);
+            Assert.AreEqual("Grid", gridDataItem.Name);
+            Assert.AreEqual(typeof(UnstructuredGrid), gridDataItem.ValueType);
+            Assert.AreSame(model, gridDataItem.Owner);
+            Assert.AreSame(model.Grid, gridDataItem.Value);
+
+            var bathymetryDataItem = model.GetDataItemByTag(WaterQualityModel.BathymetryTag);
+            Assert.AreEqual(DataItemRole.Input, bathymetryDataItem.Role);
+            Assert.AreEqual("Bed Level", bathymetryDataItem.Name);
+            Assert.AreEqual(typeof(UnstructuredGridVertexCoverage), bathymetryDataItem.ValueType);
+            Assert.AreSame(model, bathymetryDataItem.Owner);
+            Assert.AreSame(model.Bathymetry, bathymetryDataItem.Value);
+
+            var boundaryDataDataItem = model.GetDataItemByTag(WaterQualityModel.BoundaryDataTag);
+            Assert.AreEqual(DataItemRole.Input, boundaryDataDataItem.Role);
+            Assert.AreEqual("Boundary Data", boundaryDataDataItem.Name);
+            Assert.AreEqual(typeof(DataTableManager), boundaryDataDataItem.ValueType);
+            Assert.AreSame(model, boundaryDataDataItem.Owner);
+            Assert.AreSame(model.BoundaryDataManager, boundaryDataDataItem.Value);
+
+            var loadsDataDataItem = model.GetDataItemByTag(WaterQualityModel.LoadsDataTag);
+            Assert.AreEqual(DataItemRole.Input, loadsDataDataItem.Role);
+            Assert.AreEqual("Loads Data", loadsDataDataItem.Name);
+            Assert.AreEqual(typeof(DataTableManager), loadsDataDataItem.ValueType);
+            Assert.AreSame(model, loadsDataDataItem.Owner);
+            Assert.AreSame(model.LoadsDataManager, loadsDataDataItem.Value);
+
+            var initialConditionsDataItemSet = model.GetDataItemByTag(WaterQualityModel.InitialConditionsTag);
+            Assert.AreEqual(DataItemRole.Input, initialConditionsDataItemSet.Role);
+            Assert.AreEqual("Initial Conditions", initialConditionsDataItemSet.Name);
+            Assert.AreEqual(typeof(IList<IDataItem>), initialConditionsDataItemSet.ValueType);
+            Assert.AreSame(model, initialConditionsDataItemSet.Owner);
+            var adapter = (IDataItemsEventedListAdapter)initialConditionsDataItemSet.Value;
+            Assert.AreEqual(typeof(IFunction), adapter.ItemType);
+            CollectionAssert.AreEqual(model.InitialConditions.ToArray(), adapter.DataItems.Select(di=>di.Value).ToArray());
+
+            var processCoefficientsDataItemSet = model.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsTag);
+            Assert.AreEqual(DataItemRole.Input, processCoefficientsDataItemSet.Role);
+            Assert.AreEqual("Process Coefficients", processCoefficientsDataItemSet.Name);
+            Assert.AreEqual(typeof(IList<IDataItem>), processCoefficientsDataItemSet.ValueType);
+            Assert.AreSame(model, processCoefficientsDataItemSet.Owner);
+            adapter = (IDataItemsEventedListAdapter)processCoefficientsDataItemSet.Value;
+            Assert.AreEqual(typeof(IFunction), adapter.ItemType);
+            CollectionAssert.AreEqual(model.ProcessCoefficients.ToArray(), adapter.DataItems.Select(di => di.Value).ToArray());
+
+            var dispersionDataItemSet = model.GetDataItemByTag(WaterQualityModel.DispersionTag);
+            Assert.AreEqual(DataItemRole.Input, dispersionDataItemSet.Role);
+            Assert.AreEqual("Horizontal Dispersion", dispersionDataItemSet.Name);
+            Assert.AreEqual(typeof(IList<IDataItem>), dispersionDataItemSet.ValueType);
+            Assert.AreSame(model, dispersionDataItemSet.Owner);
+            adapter = (IDataItemsEventedListAdapter)dispersionDataItemSet.Value;
+            Assert.AreEqual(typeof(IFunction), adapter.ItemType);
+            CollectionAssert.AreEqual(model.Dispersion.ToArray(), adapter.DataItems.Select(di => di.Value).ToArray());
+        }
+
+        [Test]
+        public void GetOutputCoveragesOnModelWithoutOutputDataItemsTest()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // the sets (Monitoring locations, Substances and Ouput parameters) have already been instantiated
+            Assert.AreEqual(3, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
+
+            // call
+            var outputItems = model.GetOutputCoverages().ToArray();
+
+            // assert
+            Assert.IsEmpty(outputItems);
+        }
+
+        [Test]
+        public void GetOutputCoveragesOnModelWithNonUnstructuredGridCellCoverageAsDataItemTest()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.DataItems.Add(new DataItem(1.1, DataItemRole.Output, "test"));
+
+            Assert.AreEqual(4, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output))); // the sets (Monitoring locations, Substances and Ouput parameters) and the coverage
+            Assert.AreEqual(0, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage));
+
+            // call
+            var outputItems = model.GetOutputCoverages().ToArray();
+
+            // assert
+            Assert.IsEmpty(outputItems);
+        }
+
+        [Test]
+        public void GetOutputCoveragesOnModelWithUnstructuredGridCellCoverageAsDataItemTest()
+        {
+            // setup
+            var unstructuredGridCellCoverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+
+            var model = new WaterQualityModel();
+            model.DataItems.Add(new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, "test"));
+
+            Assert.AreEqual(4, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output))); // the sets (Monitoring locations, Substances and Ouput parameters) and the test coverage
+            Assert.AreEqual(1, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output) && di.Value is UnstructuredGridCellCoverage));
+
+            // call
+            var outputItems = model.GetOutputCoverages().ToArray();
+
+            // assert
+            Assert.AreEqual(1, outputItems.Length);
+            Assert.AreSame(unstructuredGridCellCoverage, outputItems[0]);
+        }
+
+        [Test]
+        public void CallingClearOutputOnWaterQualityModelShouldClearAllOutputDataItem()
+        {
+            var model = new WaterQualityModel {ModelSettings = {MonitoringOutputLevel = MonitoringOutputLevel.None}};
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
+            var unstructuredGridCellCoverage = CreateUnstructuredGridCellCoverage(grid, false);
+            var timeDependentCellCoverage = CreateUnstructuredGridCellCoverage(grid, true);
+
+            var featureCoverage = new FeatureCoverage("Test coverage");
+            featureCoverage.Arguments.Add(new Variable<IFeature>("Feature argument"));
+            featureCoverage.Components.Add(new Variable<int>("Test component"));
+            featureCoverage[new Feature()] = 2;
+
+            var document = new TextDocument();
+            var document2 = new TextDocument();
+            
+            var outputItems = new List<IDataItem>
+                {
+                    new DataItem(unstructuredGridCellCoverage, DataItemRole.Output),
+                    new DataItem(timeDependentCellCoverage, DataItemRole.Output),
+                    new DataItem(document, DataItemRole.Output),
+                    new DataItem(document2, DataItemRole.Output),
+                    new DataItem(featureCoverage, DataItemRole.Output)
+                };
+
+            model.DataItems.AddRange(outputItems);
+
+            unstructuredGridCellCoverage.Components[0].DefaultValue = -999.0;
+            unstructuredGridCellCoverage.SetValues(Enumerable.Range(0, 100).Select(i => i * 1.0));
+
+            timeDependentCellCoverage.Time.AddValues(new []{DateTime.Now, DateTime.Now.AddDays(2)});
+            timeDependentCellCoverage.SetValues(Enumerable.Range(0, 200).Select(i => i * 1.0));
+
+            Assert.AreEqual(100, unstructuredGridCellCoverage.GetValues().Count);
+            Assert.AreEqual(200, timeDependentCellCoverage.GetValues().Count);
+
+            Assert.AreEqual(1, featureCoverage.GetValues().Count);
+            Assert.AreEqual(7, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
+
+            TypeUtils.SetPrivatePropertyValue(model, "OutputIsEmpty", false);
+            model.ClearOutput();
+
+            Assert.AreEqual(0, featureCoverage.GetValues().Count);
+            Assert.AreEqual(5, model.DataItems.Count(di => di.Role.HasFlag(DataItemRole.Output)));
+            Assert.IsNull(model.GetDataItemByValue(document2));
+
+            // Should be default values (cell argument is reset)
+            Assert.AreEqual(100, unstructuredGridCellCoverage.GetValues().Count);
+            Assert.IsTrue(unstructuredGridCellCoverage.GetValues<double>().Any(v => v == -999.0));
+
+            // Should be 0 (cell argument is reset but time argument is empty)
+            Assert.AreEqual(0, timeDependentCellCoverage.GetValues().Count);
+            Assert.AreEqual(0, timeDependentCellCoverage.Time.Values.Count);
+            Assert.AreEqual(100, timeDependentCellCoverage.Arguments[1].Values.Count);
+        }
+
+        private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(UnstructuredGrid grid, bool isTimeDependent)
+        {
+            var coverage = new UnstructuredGridCellCoverage(grid, isTimeDependent);
+            coverage.Components[0].NoDataValue = -999.0;
+            return coverage;
+        }
+
+        [Test]
+        public void ChangeInputCollectionSetsOutputOutOfSync()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            SetFakeOutputOnModel(model);
+
+            Assert.IsFalse(model.OutputOutOfSync);
+
+            model.ProcessCoefficients.Add(new Function());
+
+            // assert
+            Assert.IsTrue(model.OutputOutOfSync);
+        }
+
+        [Test]
+        public void SetHorizontalDispersionUpdatesHorizontalDispersionFunctionDefaultValue()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // call
+            const double horizontalDispersion = 1.7;
+            model.HorizontalDispersion = horizontalDispersion;
+
+            // assert
+            Assert.AreEqual(horizontalDispersion, model.Dispersion[0].Components[0].DefaultValue);
+        }
+
+        [Test]
+        public void CallingImportHydroDataWithNullThrowsArgumentNullException()
+        {
+            WaterQualityModel model = new WaterQualityModel();
+            TestDelegate call = () => model.ImportHydroData(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(call);
+            Assert.AreEqual("No hydrodynamics data was specified."+Environment.NewLine +
+                            "Parameter name: data", exception.Message);
+
+            Assert.IsFalse(model.HasHydroDataImported);
+        }
+        
+        #region ImportHydroData Twice
+
+        [Test]
+        [Category(TestCategory.Jira)] // TOOLS-22039
+        public void Import_SameHydFileData_HasHydroDataImportedIsTrue()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub();
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            Assert.IsTrue(model.HasHydroDataImported);
+            Assert.IsTrue(model.HasEverImportedHydroData);
+
+            // call
+            model.ImportHydroData(hydroData);
+
+            // assert
+            Assert.IsTrue(model.HasHydroDataImported);
+            Assert.IsTrue(model.HasEverImportedHydroData);
+        }
+        
+        [Test]
+        public void Import_DifferentModelTypeOnSecondImport_ChangeObservationPointAndLoadCoordinateZToNaN()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub { LayerType = LayerType.Sigma };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            model.Loads.AddRange(new[]
+            {
+                new WaterQualityLoad
+                {
+                    Z = 1.1
+                },
+                new WaterQualityLoad
+                {
+                    Z = 2.2
+                }
+            });
+
+            model.ObservationPoints.AddRange(new[]
+            {
+                new WaterQualityObservationPoint
+                {
+                    Z = 3.3
+                },
+                new WaterQualityObservationPoint
+                {
+                    Z = 4.4
+                }
+            });
+
+            hydroData = new TestHydroDataStub { LayerType = LayerType.ZLayer };
+
+            // call
+            model.ImportHydroData(hydroData);
+
+            // assert
+            foreach (var load in model.Loads)
+            {
+                Assert.AreEqual(0, load.Z);
+            }
+            foreach (var observationPoint in model.ObservationPoints)
+            {
+                Assert.AreEqual(0, observationPoint.Z);
+            }
+        }
+
+        [Test]
+        public void ImportWithHydData_ImportWithoutHydData_IsConstant()
+        {
+            const string functionName = "Salinity";
+            // 1st import:
+            var hydroData = CreateHydFileStubWithRelativePathOnFunction(functionName, "lalala.data");
+
+            WaterQualityModel model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            var subFilePath = TestHelper.GetTestFilePath(@"IO\03d_Tewor2003.sub");
+            new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
+
+            var firstFunction = FindFunctionInModel(functionName, model);
+            Assert.IsNotNull(firstFunction);
+            Assert.IsTrue(firstFunction.IsFromHydroDynamics());
+
+            var hydroDataImporter2 = CreateHydFileStubWithRelativePathOnFunction(functionName, string.Empty);
+
+            // 2nd import:
+            model.ImportHydroData(hydroDataImporter2);
+            var replacedFunction = FindFunctionInModel(functionName, model);
+
+            // the salinity function is now changed to a constant, because there was no data left
+            Assert.IsNotNull(replacedFunction);
+            Assert.AreNotEqual(firstFunction, replacedFunction); // check if the function has been replaced
+            Assert.IsTrue(replacedFunction.IsConst());
+        }
+
+        [Test]
+        public void ImportWithHydData_SetToConstant_ImportWithHydData_IsConstant()
+        {
+            const string functionName = "Salinity";
+
+            // 1st import:
+            var hydroData = CreateHydFileStubWithRelativePathOnFunction(functionName, "lalala.data");
+
+            WaterQualityModel model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            var subFilePath = TestHelper.GetTestFilePath(@"IO\03d_Tewor2003.sub");
+            new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
+
+            var firstFunction = FindFunctionInModel(functionName, model);
+            Assert.IsNotNull(firstFunction);
+            Assert.IsTrue(firstFunction.IsFromHydroDynamics());
+
+            // set to constant
+            var creator = FunctionTypeCreatorFactory.CreateConstantCreator();
+            FunctionTypeCreator.ReplaceFunctionUsingCreator(model.ProcessCoefficients, firstFunction, creator, model);
+
+            var constantFunction = FindFunctionInModel(functionName, model);
+            Assert.IsNotNull(constantFunction);
+            Assert.AreNotEqual(firstFunction, constantFunction);
+            Assert.IsTrue(constantFunction.IsConst());
+
+            // 2nd import:
+            model.ImportHydroData(hydroData);
+
+            // the salinity function is still a constant, because the user specified as such
+            var replacedFunction = FindFunctionInModel(functionName, model);
+            Assert.IsNotNull(replacedFunction);
+            Assert.AreEqual(constantFunction, replacedFunction); // the function should not be replaced, because it is the same
+            Assert.IsTrue(replacedFunction.IsConst());
+        }
+
+        private static IFunction FindFunctionInModel(string functionName, WaterQualityModel model)
+        {
+            return model.ProcessCoefficients.FirstOrDefault(f => f.Name == functionName);
+        }
+
+        [Test]
+        public void ImportWithoutHydData_ImportWithHydData_IsConstant()
+        {
+            const string functionName = "Salinity";
+
+            // 1st import:
+            var hydroData = CreateHydFileStubWithRelativePathOnFunction(functionName, string.Empty);
+
+            WaterQualityModel model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            var subFilePath = TestHelper.GetTestFilePath(@"IO\03d_Tewor2003.sub");
+            new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
+
+            var firstFunction = FindFunctionInModel(functionName, model);
+            Assert.IsNotNull(firstFunction);
+            Assert.IsTrue(firstFunction.IsConst());
+
+            var hydroData2 = CreateHydFileStubWithRelativePathOnFunction(functionName, "lalala.data");
+
+            // 2nd import:
+            model.ImportHydroData(hydroData2);
+
+            // the salinity function is now changed to a constant, because there was no data left
+            var replacedFunction = FindFunctionInModel(functionName, model);
+            Assert.IsNotNull(replacedFunction);
+            Assert.AreEqual(firstFunction, replacedFunction); // should be the same, because it hasn't changed
+            Assert.IsTrue(replacedFunction.IsConst());
+        }
+
+        /// <summary>
+        /// This function is used in the tests to create a hyd stub that sets a data path to a specific process function.
+        /// This is Salinity, Tau or Temp.
+        /// </summary>
+        /// <param name="functionName">Salinity, Tau or Temp</param>
+        /// <param name="dataFile">The string to specify. lalala.data or maybe just <see cref="string.Empty"/>.</param>
+        /// <returns>A new hyd file importer stub</returns>
+        private static TestHydroDataStub CreateHydFileStubWithRelativePathOnFunction(string functionName, string dataFile)
+        {
+            TestHydroDataStub hydroData;
+
+            switch (functionName)
+            {
+                case "Salinity":
+                    hydroData = new TestHydroDataStub(new HydFileData()
+                    {
+                        SalinityRelativePath = dataFile,
+                    });
+                    break;
+                case "Tau":
+                    hydroData = new TestHydroDataStub(new HydFileData()
+                    {
+                        ShearStressesRelativePath = dataFile,
+                    });
+                    break;
+                case "Temp":
+                    hydroData = new TestHydroDataStub(new HydFileData()
+                    {
+                        TemperatureRelativePath = dataFile,
+                    });
+                    break;
+                default:
+                    throw new InvalidOperationException("The test case is not supported by the model. " + functionName);
+            }
+            return hydroData;
+        }
+
+        #endregion Import Twice
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void HasDataInHydroDynamicsReturnsFalseWhenNoHydroDataImporterSet(bool fromFunction)
+        {
+            // setup
+            var model = new WaterQualityModel();
+            Assert.IsNull(model.HydroData);
+
+            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+
+            // call
+            var hasData = fromFunction ? model.HasDataInHydroDynamics(function) : model.HasDataInHydroDynamics(function.Name);
+
+            // assert
+            Assert.IsFalse(hasData);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void HasDataInHydroDynamicsReturnsFalseWhenFunctionIsNotAvailable(bool fromFunction)
+        {
+            // setup
+            var model = new WaterQualityModel();
+            SetUpModelToHaveFunctionInHydroDataWithName(model, "Test", "<some filepath>");
+
+            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+
+            // call
+            var hasData = fromFunction ? model.HasDataInHydroDynamics(function) : model.HasDataInHydroDynamics(function.Name);
+
+            // assert
+            Assert.IsFalse(hasData);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void HasDataInHydroDynamicsReturnsTrueWhenFunctionIsAvailable(bool fromFunction)
+        {
+            // setup
+            const string functionName = "Test";
+
+            var model = new WaterQualityModel();
+            SetUpModelToHaveFunctionInHydroDataWithName(model, functionName, "<some filepath>");
+
+            var function = WaterQualityFunctionFactory.CreateConst(functionName, 1.2, "No, really!", "g", "is it?");
+
+            // call
+            var hasData = fromFunction ? model.HasDataInHydroDynamics(function) : model.HasDataInHydroDynamics(function.Name);
+
+            // assert
+            Assert.IsTrue(hasData);
+        }
+
+        [Test]
+        public void GetFilePathFromHydroDynamicsThrowsInvalidOperationExceptionWhenFunctionNotAvailable()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            SetUpModelToHaveFunctionInHydroDataWithName(model, "Test", "<some filepath>");
+
+            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+
+            // call
+            TestDelegate testCall = () => model.GetFilePathFromHydroDynamics(function);
+
+            // assert
+            Assert.Throws<InvalidOperationException>(testCall);
+        }
+
+        [Test]
+        public void GetFilePathFromHydroDynamicsThrowsInvalidOperationExceptionWhenNoHydroDataImporterSet()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            Assert.IsNull(model.HydroData);
+
+            var function = WaterQualityFunctionFactory.CreateConst("Definitely not in hydro data", 1.2, "No, really!", "g", "is it?");
+
+            // call
+            TestDelegate testCall = () => model.GetFilePathFromHydroDynamics(function);
+
+            // assert
+            Assert.Throws<InvalidOperationException>(testCall);
+        }
+
+        [Test]
+        public void GetFilePathFromHydroDynamicsReturnsFilePathWhenFunctionIsAvailable()
+        {
+            // setup
+            const string functionName = "Test";
+
+            var model = new WaterQualityModel();
+            const string expectedFilePath = "<some valid filepath>";
+            SetUpModelToHaveFunctionInHydroDataWithName(model, functionName, expectedFilePath);
+
+            var function = WaterQualityFunctionFactory.CreateConst(functionName, 1.2, "No, really!", "g", "is it?");
+
+            // call
+            var filePath = model.GetFilePathFromHydroDynamics(function);
+
+            // assert
+            Assert.AreEqual(expectedFilePath, filePath);
+        }
+
+        [Test]
+        public void GetCellIdForLocationCalledWithoutImportedHydroDataThrowsInvalidOperationException()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // call
+            TestDelegate call = () => model.GetSegmentIndexForLocation(null);
+
+            // assert
+            var exception = Assert.Throws<InvalidOperationException>(call);
+            Assert.AreEqual("Cannot determine grid cell index for location as no hydro dynamic data was imported.", exception.Message);
+        }
+
+        [Test]
+        public void TestGetCellIdForLocation()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                ThirdCellIsInactive = true,
+                ModelType = HydroDynamicModelType.Unstructured
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            var z = (model.ZTop + model.ZBot) / 2;
+
+            // Grid:
+            //  (0,20)    (20,20)
+            //     O---O---O
+            //     | 3 | 4 |
+            //     O---O---O
+            //     | 1 | 2 |
+            //     O---O---O
+            //  (0,0)     (20,0)
+
+            // call & assert
+            Assert.AreEqual(1, model.GetSegmentIndexForLocation(new Coordinate(5, 5, 0.5)));
+            Assert.AreEqual(3, model.GetSegmentIndexForLocation(new Coordinate(5, 15, 0.5)));
+            Assert.AreEqual(2, model.GetSegmentIndexForLocation(new Coordinate(15, 5, 0.5)));
+            Assert.AreEqual(4, model.GetSegmentIndexForLocation(new Coordinate(15, 15, 0.5)));
+        }
+
+        [Test]
+        public void IsInsideActiveCellCalledWithoutImportedHydroDataThrowsInvalidOperationException()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // call
+            TestDelegate call = () => model.IsInsideActiveCell(null);
+
+            // assert
+            var exception = Assert.Throws<InvalidOperationException>(call);
+            Assert.AreEqual("Cannot determine if location is inside active cell as no hydro dynamic data was imported.", exception.Message);
+        }
+
+        [Test]
+        public void TestIsInsideActiveCell()
+        {
+            // setup
+            var hydroData = new TestHydroDataStub
+            {
+                ThirdCellIsInactive = true,
+                ModelType = HydroDynamicModelType.Unstructured
+            };
+
+            var model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            var z = (model.ZTop + model.ZBot) / 2;
+
+            // Grid:
+            //  (0,20)    (20,20)
+            //     O---O---O
+            //     |2 i|3 a|
+            //     O---O---O
+            //     |0 a|1 a|
+            //     O---O---O
+            //  (0,0)     (20,0)
+            // legend:
+            // first: cell index
+            // second: a = active, i = inactive
+
+            var expectedActiveLocations = new[]
+            {
+                new Coordinate(0 + 1e-6, 0 + 1e-6, z),
+                new Coordinate(20 - 1e-6, 0 + 1e-6, z),
+                new Coordinate(20 - 1e-6, 20 - 1e-6, z),
+                new Coordinate(10 + 1e-6, 20 - 1e-6, z),
+                new Coordinate(10 + 1e-6, 10 - 1e-6, z),
+                new Coordinate(0 + 1e-6, 10 - 1e-6, z),
+
+                new Coordinate(3, 2, z),
+                new Coordinate(17, 8, z),
+                new Coordinate(15, 15, z)
+            };
+            var expectedInactiveLocations = new[]
+            {
+                new Coordinate(0 + 1e-6, 10 + 1e-6, z),
+                new Coordinate(10 - 1e-6, 10 + 1e-6, z),
+                new Coordinate(10 - 1e-6, 20 - 1e-6, z),
+                new Coordinate(0 + 1e-6, 20 - 1e-6, z),
+
+                new Coordinate(6.7, 13.67, z)
+            };
+
+            // call & assert
+            foreach (var expectedActiveLocation in expectedActiveLocations)
+            {
+                Assert.IsTrue(model.IsInsideActiveCell(expectedActiveLocation),
+                    string.Format("Expected coordinate {0} to be active, but was not.", expectedActiveLocation));
+            }
+            foreach (var expectedInactiveLocation in expectedInactiveLocations)
+            {
+                Assert.IsFalse(model.IsInsideActiveCell(expectedInactiveLocation),
+                    string.Format("Expected coordinate {0} to be inactive, but actually was active.", expectedInactiveLocation));
+            }
+        }
+
+        [Test]
+        public void TestGetDirectChildren()
+        {
+            // setup
+            var model = new WaterQualityModel();
+            model.Loads.Add(new WaterQualityLoad());
+            model.ObservationPoints.Add(new WaterQualityObservationPoint());
+
+            // call
+            var children = model.GetDirectChildren().ToArray();
+
+            // assert
+            CollectionAssert.Contains(children, model.InitialConditions);
+            CollectionAssert.Contains(children, model.ProcessCoefficients);
+            CollectionAssert.Contains(children, model.Dispersion);
+            CollectionAssert.Contains(children, model.ObservationPoints);
+            CollectionAssert.Contains(children, model.Loads);
+            CollectionAssert.Contains(children, model.BoundaryDataManager);
+            CollectionAssert.Contains(children, model.LoadsDataManager);
+        }
+
+        [Test]
+        public void TestDeepCloneThrowsNotSupportedException()
+        {
+            // setup
+            var model = new WaterQualityModel();
+
+            // call
+            TestDelegate call = () => model.DeepClone();
+
+            // assert
+            var exception = Assert.Throws<NotSupportedException>(call);
+            Assert.AreEqual("WaterQualityModel does not support cloning.", exception.Message);
+        }
+
+        [Test]
+        public void ChangeCoordinateSystemTest()
+        {
+            var hydroData = new TestHydroDataStub();
+            WaterQualityModel model = new WaterQualityModel();
+
+            model.ImportHydroData(hydroData);
+
+
+            var subFilePath = Path.Combine(TestHelper.GetDataDir(), "IO", "03d_Tewor2003.sub");
+            new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
+
+            FunctionTypeCreator.ReplaceFunctionUsingCreator(
+                model.Dispersion, model.Dispersion[0],
+                FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(), model);
+            Assert.IsInstanceOf<ICoverage>(model.Dispersion[0]);
+
+            FunctionTypeCreator.ReplaceFunctionUsingCreator(
+                model.InitialConditions, model.InitialConditions[0],
+                FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(), model);
+            Assert.IsInstanceOf<ICoverage>(model.InitialConditions[0]);
+
+            FunctionTypeCreator.ReplaceFunctionUsingCreator(
+                model.ProcessCoefficients, model.ProcessCoefficients[0],
+                FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(), model);
+            Assert.IsInstanceOf<ICoverage>(model.ProcessCoefficients[0]);
+
+            ICoordinateSystem system = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
+
+            model.CoordinateSystem = system;
+
+            Assert.IsNotNull(model.CoordinateSystem);
+            Assert.AreEqual(system, model.Grid.CoordinateSystem);
+            Assert.AreEqual(system, model.Bathymetry.CoordinateSystem);
+            Assert.AreEqual(system, ((ICoverage)model.Dispersion[0]).CoordinateSystem);
+
+            Assert.AreEqual(system, ((ICoverage)model.InitialConditions[0]).CoordinateSystem);
+
+            Assert.AreEqual(system, model.ObservationAreas.CoordinateSystem);
+
+            Assert.AreEqual(system, ((ICoverage)model.ProcessCoefficients[0]).CoordinateSystem);
+        }
+
+        [Test] // DELFT3DFM-464: Waq output always loaded as 'OutOfDate'
+        public void TestChangeCoordinateSystemToSameAsExistingDoesNotFirePropertyChangedEventOnGrid()
+        {
+            var hydroData = new TestHydroDataStub();
+            WaterQualityModel model = new WaterQualityModel();
+            model.ImportHydroData(hydroData);
+
+            ICoordinateSystem system = new OgrCoordinateSystemFactory().CreateFromEPSG(25000);
+
+            var eventCounter = 0;
+            model.Grid.CoordinateSystemChanged += coordinateSystem => { eventCounter++; };
+            model.CoordinateSystem = system;
+
+            Assert.IsNotNull(model.CoordinateSystem);
+            Assert.AreEqual(system, model.Grid.CoordinateSystem);
+            Assert.AreEqual(1, eventCounter);
+
+            model.CoordinateSystem = system;
+
+            Assert.AreEqual(system, model.Grid.CoordinateSystem);
+            Assert.AreEqual(1, eventCounter, "Changing the CoordinateSystem to the same as existing should not fire a PropertyChangedEvent on the Grid");
+        }
+
+        [Test]
+        public void GetDefaultZ()
+        {
+            var model = new WaterQualityModel();
+
+            Assert.AreEqual(LayerType.Undefined, model.LayerType);
+            Assert.AreEqual(double.NaN, model.GetDefaultZ());
+
+            TypeUtils.SetField(model, "layerType", LayerType.Sigma);
+            Assert.AreEqual(LayerType.Sigma, model.LayerType);
+            Assert.AreEqual(0, model.GetDefaultZ());
+
+            TypeUtils.SetField(model, "layerType", LayerType.ZLayer);
+            Assert.AreEqual(LayerType.ZLayer, model.LayerType);
+            Assert.AreEqual(model.ZTop, model.GetDefaultZ());
+        }
+
+        private void SetUpModelToHaveFunctionInHydroDataWithName(WaterQualityModel model, string functionName, string someValidFilepath)
+        {
+            var hydroData = new TestHydroDataStub
+            {
+                HasDataForInjection = name => name == functionName,
+                GetFilePathForInjection = name =>
+                {
+                    if (name == functionName)
+                    {
+                        return someValidFilepath;
+                    }
+                    throw new NotImplementedException();
+                }
+            };
+            model.ImportHydroData(hydroData);
+        }
+
+        private void SetFakeOutputOnModel(WaterQualityModel model)
+        {
+            // Fake the output not being empty or out of sync
+            TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName<WaterQualityModel>(m => m.OutputIsEmpty), false);
+        }
+
+        [Test]
+        public void GivenWAQModelWhenSetEventedListObservationPointsOnLoadThenCollectionChangedEventShouldStillFire()
+		{   var model = new WaterQualityModel();
+            TypeUtils.SetPrivatePropertyValue(model, "ObservationPoints", new EventedList<WaterQualityObservationPoint>());
+            
+            Assert.That(model.ObservationPoints.Count, Is.EqualTo(0));
+            Assert.That(model.ObservationVariableOutputs.Count, Is.EqualTo(0));
+            model.ObservationPoints.Add(new WaterQualityObservationPoint());
+            Assert.That(model.ObservationPoints.Count, Is.EqualTo(1));
+            Assert.That(model.ObservationVariableOutputs.Count, Is.EqualTo(1));
+		}
+        [Test]
+        public void GivenWAQModelWhenSetEventedListLoadsOnLoadThenCollectionChangedEventShouldStillFire()
+		{   
+            var model = new WaterQualityModel();
+            TypeUtils.SetPrivatePropertyValue(model, "Loads", new EventedList<WaterQualityLoad>());
+            
+            Assert.That(model.Loads.Count, Is.EqualTo(0));
+            Assert.That(model.Loads.Count, Is.EqualTo(0));
+            model.Loads.Add(new WaterQualityLoad());
+            Assert.That(model.Loads.Count, Is.EqualTo(1));
+            //Assert.That(model.LoadsDataManager.Count, Is.EqualTo(1));
+		}
+    }
+}

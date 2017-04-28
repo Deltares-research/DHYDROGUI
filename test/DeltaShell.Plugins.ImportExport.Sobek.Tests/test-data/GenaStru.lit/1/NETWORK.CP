@@ -1,0 +1,6 @@
+CP_1.0
+BRCH id '1' cp 1 ct bc 
+TBLE
+17536.6806988542 47.7186488841093 <
+tble brch
+

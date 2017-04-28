@@ -1,0 +1,8 @@
+STDS id '5' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.8 0.6 0 0 <
+tble  stds
+STDS id '6' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+ 50 7 4 0 0 <
+tble stds

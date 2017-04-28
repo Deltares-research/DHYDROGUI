@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define flow1d_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.WaterFlowModel\flow1d_kernel\"?>
+  <?define hydromodel_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.HydroModel\kernels\"?>
+  <?define rr_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RainfallRunoff\rr_kernel\"?>
+  
+  <Directory Id='cli_sobek_dimr' Name='DeltaShell.Dimr'>
+    <Directory Id="cli_sobek_cli" Name="cli">
+      <Directory Id="cli_sobek_win32" Name="win32">
+        <Directory Id="cli_sobek_win32_flow1d2d" Name="flow1d2d">
+          <Directory Id="cli_sobek_win32_flow1d2d_bin" Name="bin">
+            <Component Id="cli_x86_f1d_kernel" Guid="F595491F-05AD-4B4F-B362-DC75E7F1C461">
+              <?define x86_f1d_kernel_dir="$(var.flow1d_kernel_dir)x86\"?>
+              <File Id="cli_x86_f1d_cf_dll.dll" Source="$(var.x86_f1d_kernel_dir)cf_dll.dll" />
+              <File Id="cli_x86_f1d_libifcoremd.dll" Source="$(var.x86_f1d_kernel_dir)libifcoremd.dll" />
+              <File Id="cli_x86_f1d_libifcoremdd.dll" Source="$(var.x86_f1d_kernel_dir)libifcoremdd.dll" />
+              <File Id="cli_x86_f1d_libifportmd.dll" Source="$(var.x86_f1d_kernel_dir)libifportmd.dll" />
+              <File Id="cli_x86_f1d_libmmd.dll" Source="$(var.x86_f1d_kernel_dir)libmmd.dll" />
+              <File Id="cli_x86_f1d_libmmdd.dll" Source="$(var.x86_f1d_kernel_dir)libmmdd.dll" />
+              <File Id="cli_x86_f1d_msvcr100.dll" Source="$(var.x86_f1d_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x86_f1d_msvcr110.dll" Source="$(var.x86_f1d_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x86_f1d_msvcr120.dll" Source="$(var.x86_f1d_kernel_dir)msvcr120.dll" />
+              <File Id="cli_x86_f1d_netcdf.dll" Source="$(var.x86_f1d_kernel_dir)netcdf.dll" />
+              <File Id="cli_x86_f1d_pthreadVCE2.dll" Source="$(var.x86_f1d_kernel_dir)pthreadVCE2.dll" />
+              <?undef x86_f1d_kernel_dir?>
+            </Component>
+            <Component Id="cli_x86_hydromodel_kernel" Guid="00250A90-C3F2-41CA-97C5-8614F2975F62">
+              <?define x86_hydromodel_kernel_dir="$(var.hydromodel_kernel_dir)x86\"?>
+              <File Id="cli_x86_hydromodel_flow1d2d.dll" Source="$(var.x86_hydromodel_kernel_dir)flow1d2d.dll" />
+              <?undef x86_hydromodel_kernel_dir ?>
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_sobek_win32_rr" Name="rr">
+          <Directory Id="cli_sobek_win32_rr_bin" Name="bin">
+            <Component Id="cli_x86_rr_kernel" Guid="7FE7B05F-DB9B-4DA0-BFA0-EA24F6E7A943">
+              <?define x86_rr_kernel_dir="$(var.rr_kernel_dir)x86\"?>
+              <File Id="cli_x86_rr_libifcoremd.dll" Source="$(var.x86_rr_kernel_dir)libifcoremd.dll" />
+              <File Id="cli_x86_rr_libifcoremdd.dll" Source="$(var.x86_rr_kernel_dir)libifcoremdd.dll" />
+              <File Id="cli_x86_rr_libifportmd.dll" Source="$(var.x86_rr_kernel_dir)libifportmd.dll" />
+              <File Id="cli_x86_rr_libmmd.dll" Source="$(var.x86_rr_kernel_dir)libmmd.dll" />
+              <File Id="cli_x86_rr_libmmdd.dll" Source="$(var.x86_rr_kernel_dir)libmmdd.dll" />
+              <File Id="cli_x86_rr_msvcr100.dll" Source="$(var.x86_rr_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x86_rr_msvcr110.dll" Source="$(var.x86_rr_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x86_rr_msvcr120.dll" Source="$(var.x86_rr_kernel_dir)msvcr120.dll" />
+              <File Id="cli_x86_rr_netcdf.dll" Source="$(var.x86_rr_kernel_dir)netcdf.dll" />
+              <File Id="cli_x86_rr_pthreadVCE2.dll" Source="$(var.x86_rr_kernel_dir)pthreadVCE2.dll" />
+              <File Id="cli_x86_rr_rr_dll.dll" Source="$(var.x86_rr_kernel_dir)rr_dll.dll" />
+              <File Id="cli_x86_rr_svml_dispmd.dll" Source="$(var.x86_rr_kernel_dir)svml_dispmd.dll" />
+              <?undef x86_rr_kernel_dir?>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="cli_sobek_win64" Name="win64">
+        <Directory Id="cli_sobek_win64_flow1d2d" Name="flow1d2d">
+          <Directory Id="cli_sobek_win64_flow1d2d_bin" Name="bin">
+            <Component Id="cli_x64_f1d_kernel" Guid="05E247EC-C72F-4827-8358-E9D47F075BBC">
+              <?define x64_f1d_kernel_dir="$(var.flow1d_kernel_dir)x64\"?>
+              <File Id="cli_x64_f1d_cf_dll.dll" Source="$(var.x64_f1d_kernel_dir)cf_dll.dll" />
+              <File Id="cli_x64_f1d_libifcoremd.dll" Source="$(var.x64_f1d_kernel_dir)libifcoremd.dll" />
+              <File Id="cli_x64_f1d_libifcoremdd.dll" Source="$(var.x64_f1d_kernel_dir)libifcoremdd.dll" />
+              <File Id="cli_x64_f1d_libifportmd.dll" Source="$(var.x64_f1d_kernel_dir)libifportmd.dll" />
+              <File Id="cli_x64_f1d_libmmd.dll" Source="$(var.x64_f1d_kernel_dir)libmmd.dll" />
+              <File Id="cli_x64_f1d_libmmdd.dll" Source="$(var.x64_f1d_kernel_dir)libmmdd.dll" />
+              <File Id="cli_x64_f1d_msvcr100.dll" Source="$(var.x64_f1d_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x64_f1d_msvcr110.dll" Source="$(var.x64_f1d_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x64_f1d_msvcr120.dll" Source="$(var.x64_f1d_kernel_dir)msvcr120.dll" />
+              <File Id="cli_x64_f1d_netcdf.dll" Source="$(var.x64_f1d_kernel_dir)netcdf.dll" />
+              <File Id="cli_x64_f1d_flow_pthreadVC2.dll" Source="$(var.x64_f1d_kernel_dir)pthreadVC2.dll" />
+              <?undef x64_f1d_kernel_dir?>
+            </Component>
+            <Component Id="cli_x64_hydromodel_kernel" Guid="C075C0BD-F670-4874-9C45-35F4623C1EE2">
+              <?define x64_hydromodel_kernel_dir="$(var.hydromodel_kernel_dir)x64\"?>
+              <File Id="cli_x64_hydromodel_flow1d2d.dll" Source="$(var.x64_hydromodel_kernel_dir)flow1d2d.dll" />
+              <?undef x64_hydromodel_kernel_dir ?>
+            </Component>
+          </Directory>
+        </Directory>
+        <Directory Id="cli_sobek_win64_rr" Name="rr">
+          <Directory Id="cli_sobek_win64_rr_bin" Name="bin">
+            <Component Id="cli_x64_rr_kernel" Guid="B49E5160-F344-4C3D-B773-91433A4F15E8">
+              <?define x64_rr_kernel_dir="$(var.rr_kernel_dir)x64\"?>
+              <File Id="cli_x64_rr_libifcoremd.dll" Source="$(var.x64_rr_kernel_dir)libifcoremd.dll" />
+              <File Id="cli_x64_rr_libifcoremdd.dll" Source="$(var.x64_rr_kernel_dir)libifcoremdd.dll" />
+              <File Id="cli_x64_rr_libifportmd.dll" Source="$(var.x64_rr_kernel_dir)libifportmd.dll" />
+              <File Id="cli_x64_rr_libmmd.dll" Source="$(var.x64_rr_kernel_dir)libmmd.dll" />
+              <File Id="cli_x64_rr_libmmdd.dll" Source="$(var.x64_rr_kernel_dir)libmmdd.dll" />
+              <File Id="cli_x64_rr_msvcr100.dll" Source="$(var.x64_rr_kernel_dir)msvcr100.dll" />
+              <File Id="cli_x64_rr_msvcr110.dll" Source="$(var.x64_rr_kernel_dir)msvcr110.dll" />
+              <File Id="cli_x64_rr_msvcr120.dll" Source="$(var.x64_rr_kernel_dir)msvcr120.dll" />
+              <File Id="cli_x64_rr_netcdf.dll" Source="$(var.x64_rr_kernel_dir)netcdf.dll" />
+              <File Id="cli_x64_rr_pthreadVC2.dll" Source="$(var.x64_rr_kernel_dir)pthreadVC2.dll" />
+              <File Id="cli_x64_rr_rr_dll.dll" Source="$(var.x64_rr_kernel_dir)rr_dll.dll" />
+              <File Id="cli_x64_rr_svml_dispmd.dll" Source="$(var.x64_rr_kernel_dir)svml_dispmd.dll" />
+              <?undef x64_rr_kernel_dir?>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Directory>
+
+  <?undef flow1d_kernel_dir ?>
+  <?undef hydromodel_kernel_dir ?>
+  <?undef rr_kernel_dir ?>
+  
+</Include>

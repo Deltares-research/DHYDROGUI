@@ -1,0 +1,8 @@
+DATA_ITEM
+'Inflow'
+CONCENTRATIONS
+INCLUDE 'includes_deltashell\boundary_data_tables\boundary_0D_flow.usefors'
+TIME BLOCK DATA
+'NH4' 'NO3' 'DetC' 'DetN' 'DetP' 'PO4' 'Si' 'Continuity'
+2014/01/01-00:00:00 0.0125 0.6 0.1 0.01 0 0.05 3 1
+

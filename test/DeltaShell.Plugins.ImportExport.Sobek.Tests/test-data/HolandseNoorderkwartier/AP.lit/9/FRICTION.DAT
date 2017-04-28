@@ -1,0 +1,1954 @@
+GLFR id '0'
+BDFR id '0' ci '0' mf 7 sf 7 mr cp 0 30 0 mt cp 0 30 0 st cp 0 30 0 sr cp 0 30 bdfr glfr
+BDFR id 'PRIMAIR_83' ci 'PRIMAIR_83' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_65' ci 'SECUNDAIR_65' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_76' ci 'VER_76' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_77' ci 'VER_77' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_88' ci 'PRIMAIR_88' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_89' ci 'PRIMAIR_89' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_90' ci 'PRIMAIR_90' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_91' ci 'PRIMAIR_91' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_94' ci 'PRIMAIR_94' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_84' ci 'AFWG_84' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_96' ci 'PRIMAIR_96' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_97' ci 'PRIMAIR_97' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_79' ci 'SECUNDAIR_79' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_100' ci 'PRIMAIR_100' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1341' ci 'SECUNDAIR_1341' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_102' ci 'PRIMAIR_102' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_105' ci 'PRIMAIR_105' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_232' ci 'AFWG_232' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_107' ci 'PRIMAIR_107' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_108' ci 'PRIMAIR_108' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_265' ci 'AFWG_265' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_101' ci 'VER_101' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_102' ci 'VER_102' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_220' ci 'AFWG_220' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_113' ci 'PRIMAIR_113' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_114' ci 'PRIMAIR_114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1372' ci 'SECUNDAIR_1372' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1373' ci 'SECUNDAIR_1373' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1580' ci 'SECUNDAIR_1580' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1581' ci 'SECUNDAIR_1581' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_115' ci 'PRIMAIR_115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_231' ci 'AFWG_231' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_98' ci 'SECUNDAIR_98' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_118' ci 'PRIMAIR_118' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_119' ci 'PRIMAIR_119' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_197' ci 'AFWG_197' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_114' ci 'VER_114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_115' ci 'VER_115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_1' ci 'AFWG_1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_167' ci 'AFWG_167' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_127' ci 'PRIMAIR_127' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_170' ci 'AFWG_170' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_217' ci 'AFWG_217' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_121' ci 'VER_121' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_122' ci 'VER_122' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_132' ci 'PRIMAIR_132' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_114' ci 'SECUNDAIR_114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_115' ci 'SECUNDAIR_115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_132' ci 'AFWG_132' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_117' ci 'SECUNDAIR_117' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_137' ci 'PRIMAIR_137' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_129' ci 'VER_129' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_130' ci 'VER_130' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_140' ci 'PRIMAIR_140' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_122' ci 'SECUNDAIR_122' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_142' ci 'PRIMAIR_142' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_144' ci 'PRIMAIR_144' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_126' ci 'SECUNDAIR_126' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_146' ci 'PRIMAIR_146' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_128' ci 'SECUNDAIR_128' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1638' ci 'VER_1638' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1639' ci 'VER_1639' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1641' ci 'VER_1641' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1642' ci 'VER_1642' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_129' ci 'SECUNDAIR_129' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_130' ci 'SECUNDAIR_130' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_150' ci 'PRIMAIR_150' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_129' ci 'AFWG_129' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_45' ci 'AFWG_45' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_136' ci 'SECUNDAIR_136' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_137' ci 'SECUNDAIR_137' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_157' ci 'PRIMAIR_157' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_141' ci 'AFWG_141' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_160' ci 'PRIMAIR_160' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_153' ci 'VER_153' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_154' ci 'VER_154' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_194' ci 'AFWG_194' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_165' ci 'PRIMAIR_165' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_166' ci 'PRIMAIR_166' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_148' ci 'SECUNDAIR_148' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_149' ci 'SECUNDAIR_149' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_169' ci 'PRIMAIR_169' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_12' ci 'AFWG_12' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_153' ci 'SECUNDAIR_153' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_173' ci 'PRIMAIR_173' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_284' ci 'AFWG_284' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_176' ci 'PRIMAIR_176' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_178' ci 'PRIMAIR_178' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_179' ci 'PRIMAIR_179' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1238' ci 'SECUNDAIR_1238' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1239' ci 'SECUNDAIR_1239' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1582' ci 'SECUNDAIR_1582' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1583' ci 'SECUNDAIR_1583' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1649' ci 'VER_1649' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3224' ci 'VER_3224' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3225' ci 'SECUNDAIR_3225' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1633' ci 'SECUNDAIR_1633' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1634' ci 'SECUNDAIR_1634' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1654' ci 'PRIMAIR_1654' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_60' ci 'AFWG_60' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_48' ci 'AFWG_48' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1263' ci 'SECUNDAIR_1263' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1586' ci 'SECUNDAIR_1586' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1469' ci 'SECUNDAIR_1469' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1408' ci 'SECUNDAIR_1408' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1171' ci 'PRIMAIR_1171' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1172' ci 'PRIMAIR_1172' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1173' ci 'PRIMAIR_1173' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1155' ci 'SECUNDAIR_1155' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1156' ci 'SECUNDAIR_1156' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1157' ci 'SECUNDAIR_1157' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1354' ci 'PRIMAIR_1354' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1793' ci 'PRIMAIR_1793' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1775' ci 'SECUNDAIR_1775' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1776' ci 'SECUNDAIR_1776' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_20' ci 'AFWG_20' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1797' ci 'PRIMAIR_1797' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1202' ci 'PRIMAIR_1202' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1203' ci 'PRIMAIR_1203' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1204' ci 'PRIMAIR_1204' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1186' ci 'SECUNDAIR_1186' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1294' ci 'VER_1294' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1305' ci 'PRIMAIR_1305' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1520' ci 'SECUNDAIR_1520' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1521' ci 'SECUNDAIR_1521' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1522' ci 'SECUNDAIR_1522' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1655' ci 'VER_1655' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_697' ci 'DUIKER_697' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_32' ci 'AFWG_32' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1158' ci 'SECUNDAIR_1158' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1159' ci 'SECUNDAIR_1159' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1160' ci 'SECUNDAIR_1160' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1161' ci 'SECUNDAIR_1161' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1162' ci 'SECUNDAIR_1162' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_112' ci 'AFWG_112' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_183' ci 'AFWG_183' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_111' ci 'AFWG_111' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_181' ci 'AFWG_181' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1194' ci 'PRIMAIR_1194' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1187' ci 'SECUNDAIR_1187' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1339' ci 'SECUNDAIR_1339' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1340' ci 'SECUNDAIR_1340' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1422' ci 'VER_1422' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1423' ci 'VER_1423' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1587' ci 'SECUNDAIR_1587' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1588' ci 'SECUNDAIR_1588' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1589' ci 'SECUNDAIR_1589' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_142' ci 'AFWG_142' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1481' ci 'PRIMAIR_1481' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2722' ci 'SECUNDAIR_2722' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_294' ci 'AFWG_294' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1048' ci 'PRIMAIR_1048' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3106' ci 'SECUNDAIR_3106' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1047' ci 'PRIMAIR_1047' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_3240' ci 'DUIKER_3240' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3241' ci 'SECUNDAIR_3241' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1657' ci 'SECUNDAIR_1657' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1658' ci 'SECUNDAIR_1658' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1659' ci 'SECUNDAIR_1659' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_211' ci 'AFWG_211' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_185' ci 'AFWG_185' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1673' ci 'VER_1673' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1167' ci 'SECUNDAIR_1167' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1168' ci 'SECUNDAIR_1168' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_95' ci 'AFWG_95' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_7' ci 'AFWG_7' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1171' ci 'SECUNDAIR_1171' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1192' ci 'PRIMAIR_1192' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1193' ci 'PRIMAIR_1193' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1550' ci 'SECUNDAIR_1550' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1551' ci 'SECUNDAIR_1551' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_177' ci 'AFWG_177' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1647' ci 'VER_1647' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1657' ci 'PRIMAIR_1657' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1639' ci 'SECUNDAIR_1639' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1640' ci 'SECUNDAIR_1640' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1660' ci 'PRIMAIR_1660' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1674' ci 'VER_1674' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1676' ci 'VER_1676' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1677' ci 'VER_1677' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1705' ci 'PRIMAIR_1705' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1706' ci 'PRIMAIR_1706' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1689' ci 'SECUNDAIR_1689' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1195' ci 'PRIMAIR_1195' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1177' ci 'SECUNDAIR_1177' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1188' ci 'SECUNDAIR_1188' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1191' ci 'SECUNDAIR_1191' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1196' ci 'SECUNDAIR_1196' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1197' ci 'SECUNDAIR_1197' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_300' ci 'AFWG_300' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1610' ci 'PRIMAIR_1610' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1661' ci 'PRIMAIR_1661' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1643' ci 'SECUNDAIR_1643' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1644' ci 'SECUNDAIR_1644' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1645' ci 'SECUNDAIR_1645' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_223' ci 'AFWG_223' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1225' ci 'PRIMAIR_1225' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1207' ci 'SECUNDAIR_1207' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1208' ci 'SECUNDAIR_1208' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1209' ci 'SECUNDAIR_1209' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_126' ci 'AFWG_126' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1211' ci 'SECUNDAIR_1211' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1212' ci 'SECUNDAIR_1212' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_144' ci 'AFWG_144' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1234' ci 'PRIMAIR_1234' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1216' ci 'SECUNDAIR_1216' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1217' ci 'SECUNDAIR_1217' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_125' ci 'AFWG_125' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1219' ci 'SECUNDAIR_1219' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_174' ci 'AFWG_174' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1221' ci 'SECUNDAIR_1221' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1222' ci 'SECUNDAIR_1222' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1223' ci 'SECUNDAIR_1223' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1224' ci 'SECUNDAIR_1224' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1225' ci 'SECUNDAIR_1225' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1315' ci 'SECUNDAIR_1315' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1326' ci 'VER_1326' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1327' ci 'VER_1327' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1318' ci 'SECUNDAIR_1318' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1555' ci 'SECUNDAIR_1555' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1556' ci 'SECUNDAIR_1556' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1576' ci 'PRIMAIR_1576' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1558' ci 'SECUNDAIR_1558' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1559' ci 'SECUNDAIR_1559' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1593' ci 'SECUNDAIR_1593' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1594' ci 'SECUNDAIR_1594' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1595' ci 'SECUNDAIR_1595' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_195' ci 'AFWG_195' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1228' ci 'SECUNDAIR_1228' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1229' ci 'SECUNDAIR_1229' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1230' ci 'SECUNDAIR_1230' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_106' ci 'AFWG_106' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1233' ci 'SECUNDAIR_1233' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1236' ci 'SECUNDAIR_1236' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_128' ci 'AFWG_128' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1560' ci 'SECUNDAIR_1560' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1561' ci 'SECUNDAIR_1561' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1615' ci 'PRIMAIR_1615' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1627' ci 'VER_1627' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_188' ci 'AFWG_188' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_283' ci 'AFWG_283' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_287' ci 'AFWG_287' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1260' ci 'PRIMAIR_1260' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1264' ci 'PRIMAIR_1264' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1256' ci 'VER_1256' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1247' ci 'SECUNDAIR_1247' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1258' ci 'VER_1258' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1259' ci 'VER_1259' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1250' ci 'SECUNDAIR_1250' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_288' ci 'AFWG_288' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1272' ci 'PRIMAIR_1272' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1264' ci 'VER_1264' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1274' ci 'PRIMAIR_1274' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1267' ci 'VER_1267' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1258' ci 'SECUNDAIR_1258' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1269' ci 'VER_1269' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1261' ci 'SECUNDAIR_1261' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1358' ci 'SECUNDAIR_1358' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1' ci 'PRIMAIR_1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_127' ci 'AFWG_127' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3' ci 'PRIMAIR_3' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_4' ci 'PRIMAIR_4' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_5' ci 'PRIMAIR_5' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_135' ci 'AFWG_135' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_8' ci 'PRIMAIR_8' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_9' ci 'PRIMAIR_9' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1' ci 'VER_1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_2' ci 'VER_2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_230' ci 'AFWG_230' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_13' ci 'PRIMAIR_13' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_14' ci 'PRIMAIR_14' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_15' ci 'PRIMAIR_15' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_16' ci 'PRIMAIR_16' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_148' ci 'AFWG_148' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_140' ci 'AFWG_140' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1' ci 'SECUNDAIR_1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_22' ci 'PRIMAIR_22' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_23' ci 'PRIMAIR_23' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_234' ci 'AFWG_234' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_133' ci 'AFWG_133' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1628' ci 'VER_1628' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1619' ci 'SECUNDAIR_1619' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1671' ci 'SECUNDAIR_1671' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3235' ci 'VER_3235' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3226' ci 'SECUNDAIR_3226' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_298' ci 'VER_298' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_299' ci 'VER_299' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_310' ci 'PRIMAIR_310' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_311' ci 'PRIMAIR_311' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_43' ci 'AFWG_43' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_313' ci 'PRIMAIR_313' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_314' ci 'PRIMAIR_314' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_315' ci 'PRIMAIR_315' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_316' ci 'PRIMAIR_316' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_317' ci 'PRIMAIR_317' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_320' ci 'PRIMAIR_320' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_336' ci 'STEDELIJK_336' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_322' ci 'PRIMAIR_322' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_40' ci 'AFWG_40' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_324' ci 'PRIMAIR_324' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_325' ci 'PRIMAIR_325' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_341' ci 'STEDELIJK_341' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_327' ci 'PRIMAIR_327' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_328' ci 'PRIMAIR_328' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_310' ci 'SECUNDAIR_310' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_330' ci 'PRIMAIR_330' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_331' ci 'PRIMAIR_331' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_347' ci 'STEDELIJK_347' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_333' ci 'PRIMAIR_333' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_315' ci 'SECUNDAIR_315' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_336' ci 'PRIMAIR_336' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1378' ci 'PRIMAIR_1378' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1362' ci 'SECUNDAIR_1362' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_22' ci 'AFWG_22' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1383' ci 'PRIMAIR_1383' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1563' ci 'SECUNDAIR_1563' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1672' ci 'SECUNDAIR_1672' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1673' ci 'SECUNDAIR_1673' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1674' ci 'SECUNDAIR_1674' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_237' ci 'AFWG_237' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_318' ci 'SECUNDAIR_318' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_338' ci 'PRIMAIR_338' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_357' ci 'STEDELIJK_357' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_342' ci 'PRIMAIR_342' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_343' ci 'PRIMAIR_343' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_346' ci 'PRIMAIR_346' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_348' ci 'PRIMAIR_348' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_131' ci 'AFWG_131' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_298' ci 'AFWG_298' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_352' ci 'PRIMAIR_352' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_353' ci 'PRIMAIR_353' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_355' ci 'PRIMAIR_355' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_348' ci 'VER_348' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_361' ci 'PRIMAIR_361' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_363' ci 'PRIMAIR_363' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_175' ci 'AFWG_175' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_365' ci 'PRIMAIR_365' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_347' ci 'SECUNDAIR_347' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1274' ci 'VER_1274' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1384' ci 'PRIMAIR_1384' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1366' ci 'SECUNDAIR_1366' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1367' ci 'SECUNDAIR_1367' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1387' ci 'PRIMAIR_1387' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1597' ci 'SECUNDAIR_1597' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1598' ci 'SECUNDAIR_1598' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1599' ci 'SECUNDAIR_1599' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1600' ci 'SECUNDAIR_1600' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_55' ci 'AFWG_55' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2935' ci 'SECUNDAIR_2935' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1677' ci 'SECUNDAIR_1677' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1678' ci 'SECUNDAIR_1678' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_301' ci 'AFWG_301' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1680' ci 'SECUNDAIR_1680' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1700' ci 'PRIMAIR_1700' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1682' ci 'SECUNDAIR_1682' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1683' ci 'SECUNDAIR_1683' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1684' ci 'SECUNDAIR_1684' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_110' ci 'AFWG_110' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_370' ci 'PRIMAIR_370' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_371' ci 'PRIMAIR_371' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1' ci 'DUIKER_1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_356' ci 'SECUNDAIR_356' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_376' ci 'PRIMAIR_376' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_153' ci 'AFWG_153' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_381' ci 'PRIMAIR_381' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_382' ci 'PRIMAIR_382' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_213' ci 'AFWG_213' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_384' ci 'PRIMAIR_384' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_385' ci 'PRIMAIR_385' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_377' ci 'VER_377' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_378' ci 'VER_378' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_389' ci 'PRIMAIR_389' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_390' ci 'PRIMAIR_390' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_410' ci 'STEDELIJK_410' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_392' ci 'PRIMAIR_392' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_412' ci 'STEDELIJK_412' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_394' ci 'PRIMAIR_394' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_395' ci 'PRIMAIR_395' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_396' ci 'PRIMAIR_396' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_397' ci 'PRIMAIR_397' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_417' ci 'STEDELIJK_417' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_399' ci 'PRIMAIR_399' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1389' ci 'PRIMAIR_1389' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_290' ci 'AFWG_290' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_382' ci 'SECUNDAIR_382' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_381' ci 'SECUNDAIR_381' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_403' ci 'PRIMAIR_403' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_404' ci 'PRIMAIR_404' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_405' ci 'PRIMAIR_405' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_397' ci 'VER_397' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_398' ci 'VER_398' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_408' ci 'PRIMAIR_408' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_410' ci 'PRIMAIR_410' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_411' ci 'PRIMAIR_411' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_393' ci 'SECUNDAIR_393' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_227' ci 'AFWG_227' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_414' ci 'PRIMAIR_414' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_415' ci 'PRIMAIR_415' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_416' ci 'PRIMAIR_416' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_418' ci 'PRIMAIR_418' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_437' ci 'STEDELIJK_437' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_54' ci 'AFWG_54' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_421' ci 'PRIMAIR_421' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_312' ci 'AFWG_312' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_424' ci 'PRIMAIR_424' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_406' ci 'SECUNDAIR_406' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_426' ci 'PRIMAIR_426' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_427' ci 'PRIMAIR_427' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_446' ci 'STEDELIJK_446' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_447' ci 'STEDELIJK_447' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_448' ci 'STEDELIJK_448' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_449' ci 'STEDELIJK_449' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_432' ci 'PRIMAIR_432' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_414' ci 'SECUNDAIR_414' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_434' ci 'PRIMAIR_434' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_435' ci 'PRIMAIR_435' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_455' ci 'STEDELIJK_455' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_456' ci 'STEDELIJK_456' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_439' ci 'PRIMAIR_439' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_440' ci 'PRIMAIR_440' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_441' ci 'PRIMAIR_441' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_442' ci 'PRIMAIR_442' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_443' ci 'PRIMAIR_443' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_444' ci 'PRIMAIR_444' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_445' ci 'PRIMAIR_445' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_466' ci 'STEDELIJK_466' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_165' ci 'AFWG_165' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_448' ci 'PRIMAIR_448' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_449' ci 'PRIMAIR_449' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_451' ci 'PRIMAIR_451' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_452' ci 'PRIMAIR_452' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_453' ci 'PRIMAIR_453' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_454' ci 'PRIMAIR_454' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_477' ci 'STEDELIJK_477' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_447' ci 'VER_447' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_448' ci 'VER_448' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_458' ci 'PRIMAIR_458' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_214' ci 'AFWG_214' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_460' ci 'PRIMAIR_460' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_461' ci 'PRIMAIR_461' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_462' ci 'PRIMAIR_462' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_485' ci 'STEDELIJK_485' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_464' ci 'PRIMAIR_464' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_169' ci 'AFWG_169' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_467' ci 'PRIMAIR_467' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_468' ci 'PRIMAIR_468' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_469' ci 'PRIMAIR_469' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_470' ci 'PRIMAIR_470' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_471' ci 'PRIMAIR_471' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_472' ci 'PRIMAIR_472' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_473' ci 'PRIMAIR_473' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_474' ci 'PRIMAIR_474' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_475' ci 'PRIMAIR_475' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_269' ci 'AFWG_269' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_477' ci 'PRIMAIR_477' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_478' ci 'PRIMAIR_478' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_479' ci 'PRIMAIR_479' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_480' ci 'PRIMAIR_480' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_30' ci 'AFWG_30' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_505' ci 'STEDELIJK_505' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_464' ci 'SECUNDAIR_464' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_484' ci 'PRIMAIR_484' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_154' ci 'AFWG_154' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_477' ci 'VER_477' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_478' ci 'VER_478' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_488' ci 'PRIMAIR_488' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_489' ci 'PRIMAIR_489' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_471' ci 'SECUNDAIR_471' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_492' ci 'PRIMAIR_492' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_493' ci 'PRIMAIR_493' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_494' ci 'PRIMAIR_494' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_495' ci 'PRIMAIR_495' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_171' ci 'AFWG_171' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1342' ci 'SECUNDAIR_1342' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1343' ci 'SECUNDAIR_1343' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_496' ci 'PRIMAIR_496' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_497' ci 'PRIMAIR_497' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_168' ci 'AFWG_168' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_221' ci 'AFWG_221' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_501' ci 'PRIMAIR_501' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_503' ci 'PRIMAIR_503' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_495' ci 'VER_495' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_486' ci 'SECUNDAIR_486' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_506' ci 'PRIMAIR_506' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_505' ci 'PRIMAIR_505' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_508' ci 'PRIMAIR_508' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_509' ci 'PRIMAIR_509' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_510' ci 'PRIMAIR_510' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_512' ci 'PRIMAIR_512' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_515' ci 'PRIMAIR_515' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_516' ci 'PRIMAIR_516' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_517' ci 'PRIMAIR_517' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_518' ci 'PRIMAIR_518' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_519' ci 'PRIMAIR_519' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_511' ci 'VER_511' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_512' ci 'VER_512' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_513' ci 'VER_513' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_514' ci 'VER_514' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_524' ci 'PRIMAIR_524' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_525' ci 'PRIMAIR_525' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_517' ci 'VER_517' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_518' ci 'VER_518' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_528' ci 'PRIMAIR_528' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1344' ci 'SECUNDAIR_1344' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1345' ci 'SECUNDAIR_1345' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1365' ci 'PRIMAIR_1365' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1347' ci 'SECUNDAIR_1347' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_529' ci 'PRIMAIR_529' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_530' ci 'PRIMAIR_530' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_532' ci 'PRIMAIR_532' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_533' ci 'PRIMAIR_533' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_41' ci 'AFWG_41' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_535' ci 'PRIMAIR_535' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_537' ci 'PRIMAIR_537' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_538' ci 'PRIMAIR_538' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_539' ci 'PRIMAIR_539' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_540' ci 'PRIMAIR_540' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_532' ci 'VER_532' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_542' ci 'PRIMAIR_542' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_534' ci 'VER_534' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_544' ci 'PRIMAIR_544' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_545' ci 'PRIMAIR_545' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_546' ci 'PRIMAIR_546' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_547' ci 'PRIMAIR_547' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_548' ci 'PRIMAIR_548' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_549' ci 'PRIMAIR_549' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_541' ci 'VER_541' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_542' ci 'VER_542' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_552' ci 'PRIMAIR_552' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_553' ci 'PRIMAIR_553' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_25' ci 'AFWG_25' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_536' ci 'SECUNDAIR_536' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_556' ci 'PRIMAIR_556' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_557' ci 'PRIMAIR_557' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_558' ci 'PRIMAIR_558' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_540' ci 'SECUNDAIR_540' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_24' ci 'AFWG_24' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_562' ci 'PRIMAIR_562' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_544' ci 'SECUNDAIR_544' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_566' ci 'PRIMAIR_566' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_567' ci 'PRIMAIR_567' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_549' ci 'SECUNDAIR_549' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_122' ci 'AFWG_122' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_551' ci 'SECUNDAIR_551' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_571' ci 'PRIMAIR_571' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_572' ci 'PRIMAIR_572' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_573' ci 'PRIMAIR_573' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_556' ci 'SECUNDAIR_556' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_558' ci 'SECUNDAIR_558' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_579' ci 'PRIMAIR_579' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_561' ci 'SECUNDAIR_561' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_581' ci 'PRIMAIR_581' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_582' ci 'PRIMAIR_582' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_583' ci 'PRIMAIR_583' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_565' ci 'SECUNDAIR_565' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_585' ci 'PRIMAIR_585' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_586' ci 'PRIMAIR_586' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_588' ci 'PRIMAIR_588' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_570' ci 'SECUNDAIR_570' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_590' ci 'PRIMAIR_590' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_591' ci 'PRIMAIR_591' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_583' ci 'VER_583' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_593' ci 'PRIMAIR_593' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_576' ci 'SECUNDAIR_576' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_598' ci 'PRIMAIR_598' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_123' ci 'AFWG_123' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_581' ci 'SECUNDAIR_581' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_601' ci 'PRIMAIR_601' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_594' ci 'VER_594' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_604' ci 'PRIMAIR_604' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_605' ci 'PRIMAIR_605' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_587' ci 'SECUNDAIR_587' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_598' ci 'VER_598' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_590' ci 'SECUNDAIR_590' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_19' ci 'AFWG_19' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_593' ci 'SECUNDAIR_593' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_613' ci 'PRIMAIR_613' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_596' ci 'SECUNDAIR_596' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_616' ci 'PRIMAIR_616' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_618' ci 'PRIMAIR_618' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_619' ci 'PRIMAIR_619' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_160' ci 'AFWG_160' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_602' ci 'SECUNDAIR_602' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_113' ci 'AFWG_113' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_604' ci 'SECUNDAIR_604' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_615' ci 'VER_615' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1298' ci 'SECUNDAIR_1298' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1299' ci 'SECUNDAIR_1299' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1330' ci 'VER_1330' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1331' ci 'VER_1331' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1332' ci 'VER_1332' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1564' ci 'SECUNDAIR_1564' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1565' ci 'SECUNDAIR_1565' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_176' ci 'AFWG_176' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_291' ci 'AFWG_291' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1627' ci 'SECUNDAIR_1627' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_82' ci 'AFWG_82' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_657' ci 'PRIMAIR_657' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_658' ci 'PRIMAIR_658' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_660' ci 'PRIMAIR_660' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_90' ci 'AFWG_90' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_663' ci 'PRIMAIR_663' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_46' ci 'AFWG_46' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_665' ci 'PRIMAIR_665' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_647' ci 'SECUNDAIR_647' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_667' ci 'PRIMAIR_667' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_668' ci 'PRIMAIR_668' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_670' ci 'PRIMAIR_670' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_671' ci 'PRIMAIR_671' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_672' ci 'PRIMAIR_672' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_654' ci 'SECUNDAIR_654' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_674' ci 'PRIMAIR_674' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_675' ci 'PRIMAIR_675' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_668' ci 'VER_668' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_678' ci 'PRIMAIR_678' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_670' ci 'VER_670' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_671' ci 'VER_671' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_672' ci 'VER_672' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_673' ci 'VER_673' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_683' ci 'PRIMAIR_683' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_684' ci 'PRIMAIR_684' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_685' ci 'PRIMAIR_685' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_686' ci 'PRIMAIR_686' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_678' ci 'VER_678' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_130' ci 'AFWG_130' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2861' ci 'SECUNDAIR_2861' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_215' ci 'AFWG_215' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_692' ci 'PRIMAIR_692' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_674' ci 'SECUNDAIR_674' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_93' ci 'AFWG_93' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_116' ci 'AFWG_116' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_696' ci 'PRIMAIR_696' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_699' ci 'PRIMAIR_699' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_700' ci 'PRIMAIR_700' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_701' ci 'PRIMAIR_701' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_685' ci 'SECUNDAIR_685' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_705' ci 'PRIMAIR_705' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_706' ci 'PRIMAIR_706' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_709' ci 'PRIMAIR_709' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_180' ci 'AFWG_180' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_695' ci 'SECUNDAIR_695' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_715' ci 'PRIMAIR_715' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_716' ci 'PRIMAIR_716' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_717' ci 'PRIMAIR_717' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_714' ci 'PRIMAIR_714' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_719' ci 'PRIMAIR_719' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_720' ci 'PRIMAIR_720' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_702' ci 'SECUNDAIR_702' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_161' ci 'AFWG_161' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_722' ci 'PRIMAIR_722' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_723' ci 'PRIMAIR_723' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_724' ci 'PRIMAIR_724' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_725' ci 'PRIMAIR_725' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_272' ci 'AFWG_272' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_728' ci 'PRIMAIR_728' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_730' ci 'PRIMAIR_730' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_731' ci 'PRIMAIR_731' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_713' ci 'SECUNDAIR_713' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_733' ci 'PRIMAIR_733' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_735' ci 'PRIMAIR_735' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_718' ci 'SECUNDAIR_718' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_738' ci 'PRIMAIR_738' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_739' ci 'PRIMAIR_739' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_162' ci 'AFWG_162' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_722' ci 'SECUNDAIR_722' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_723' ci 'SECUNDAIR_723' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_743' ci 'PRIMAIR_743' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_52' ci 'AFWG_52' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_745' ci 'PRIMAIR_745' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_747' ci 'PRIMAIR_747' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_748' ci 'PRIMAIR_748' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_751' ci 'PRIMAIR_751' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1333' ci 'VER_1333' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1325' ci 'SECUNDAIR_1325' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1525' ci 'SECUNDAIR_1525' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1526' ci 'SECUNDAIR_1526' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1527' ci 'SECUNDAIR_1527' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1528' ci 'SECUNDAIR_1528' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_61' ci 'AFWG_61' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_81' ci 'AFWG_81' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_76' ci 'AFWG_76' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_270' ci 'AFWG_270' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_718' ci 'PRIMAIR_718' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3174' ci 'PRIMAIR_3174' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_735' ci 'SECUNDAIR_735' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_114' ci 'AFWG_114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_756' ci 'PRIMAIR_756' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_738' ci 'SECUNDAIR_738' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_758' ci 'PRIMAIR_758' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_388' ci 'DUIKER_388' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_751' ci 'VER_751' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_752' ci 'VER_752' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_762' ci 'PRIMAIR_762' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_763' ci 'PRIMAIR_763' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_764' ci 'PRIMAIR_764' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_765' ci 'PRIMAIR_765' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_767' ci 'PRIMAIR_767' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_768' ci 'PRIMAIR_768' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_772' ci 'PRIMAIR_772' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_755' ci 'SECUNDAIR_755' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_777' ci 'PRIMAIR_777' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_118' ci 'AFWG_118' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_779' ci 'PRIMAIR_779' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_409' ci 'DUIKER_409' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_762' ci 'SECUNDAIR_762' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_763' ci 'SECUNDAIR_763' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_783' ci 'PRIMAIR_783' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_784' ci 'PRIMAIR_784' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1062' ci 'DUIKER_1062' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1415' ci 'SECUNDAIR_1415' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1424' ci 'SECUNDAIR_1424' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1530' ci 'SECUNDAIR_1530' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1532' ci 'SECUNDAIR_1532' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1533' ci 'SECUNDAIR_1533' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1779' ci 'SECUNDAIR_1779' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1780' ci 'SECUNDAIR_1780' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1781' ci 'SECUNDAIR_1781' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_799' ci 'SECUNDAIR_799' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_819' ci 'PRIMAIR_819' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_820' ci 'PRIMAIR_820' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_821' ci 'PRIMAIR_821' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_822' ci 'PRIMAIR_822' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_823' ci 'PRIMAIR_823' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_824' ci 'PRIMAIR_824' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_92' ci 'AFWG_92' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_826' ci 'PRIMAIR_826' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_193' ci 'AFWG_193' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_828' ci 'PRIMAIR_828' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_829' ci 'PRIMAIR_829' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_812' ci 'SECUNDAIR_812' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_823' ci 'VER_823' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_814' ci 'SECUNDAIR_814' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_835' ci 'PRIMAIR_835' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_836' ci 'PRIMAIR_836' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_818' ci 'SECUNDAIR_818' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_820' ci 'SECUNDAIR_820' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_840' ci 'PRIMAIR_840' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_842' ci 'PRIMAIR_842' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_824' ci 'SECUNDAIR_824' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_844' ci 'PRIMAIR_844' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_202' ci 'AFWG_202' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_846' ci 'PRIMAIR_846' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_849' ci 'PRIMAIR_849' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3176' ci 'VER_3176' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3177' ci 'VER_3177' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_184' ci 'AFWG_184' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_850' ci 'PRIMAIR_850' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_851' ci 'PRIMAIR_851' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_852' ci 'PRIMAIR_852' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_853' ci 'PRIMAIR_853' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_835' ci 'SECUNDAIR_835' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_855' ci 'PRIMAIR_855' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_837' ci 'SECUNDAIR_837' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_839' ci 'SECUNDAIR_839' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_859' ci 'PRIMAIR_859' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_271' ci 'AFWG_271' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_842' ci 'SECUNDAIR_842' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_862' ci 'PRIMAIR_862' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_854' ci 'VER_854' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_855' ci 'VER_855' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_865' ci 'PRIMAIR_865' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_866' ci 'PRIMAIR_866' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_94' ci 'AFWG_94' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_868' ci 'PRIMAIR_868' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_850' ci 'SECUNDAIR_850' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_870' ci 'PRIMAIR_870' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_871' ci 'PRIMAIR_871' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_872' ci 'PRIMAIR_872' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_873' ci 'PRIMAIR_873' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_856' ci 'SECUNDAIR_856' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_876' ci 'PRIMAIR_876' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_877' ci 'PRIMAIR_877' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_246' ci 'AFWG_246' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_880' ci 'PRIMAIR_880' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_862' ci 'SECUNDAIR_862' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1075' ci 'SECUNDAIR_1075' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_91' ci 'AFWG_91' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_882' ci 'PRIMAIR_882' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_883' ci 'PRIMAIR_883' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_865' ci 'SECUNDAIR_865' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_867' ci 'SECUNDAIR_867' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_868' ci 'SECUNDAIR_868' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_888' ci 'PRIMAIR_888' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_871' ci 'SECUNDAIR_871' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_302' ci 'AFWG_302' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_892' ci 'PRIMAIR_892' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_894' ci 'PRIMAIR_894' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_886' ci 'VER_886' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_887' ci 'VER_887' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_897' ci 'PRIMAIR_897' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_898' ci 'PRIMAIR_898' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_880' ci 'SECUNDAIR_880' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_881' ci 'SECUNDAIR_881' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_903' ci 'PRIMAIR_903' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_38' ci 'AFWG_38' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_886' ci 'SECUNDAIR_886' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_906' ci 'PRIMAIR_906' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_907' ci 'PRIMAIR_907' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_37' ci 'AFWG_37' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_909' ci 'PRIMAIR_909' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_910' ci 'PRIMAIR_910' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_892' ci 'SECUNDAIR_892' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_893' ci 'SECUNDAIR_893' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_894' ci 'SECUNDAIR_894' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1266' ci 'SECUNDAIR_1266' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1065' ci 'DUIKER_1065' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1418' ci 'SECUNDAIR_1418' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1429' ci 'VER_1429' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1068' ci 'DUIKER_1068' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_895' ci 'SECUNDAIR_895' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_107' ci 'AFWG_107' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_245' ci 'AFWG_245' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_209' ci 'AFWG_209' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_919' ci 'PRIMAIR_919' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_921' ci 'PRIMAIR_921' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_276' ci 'AFWG_276' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_925' ci 'PRIMAIR_925' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_926' ci 'PRIMAIR_926' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_927' ci 'PRIMAIR_927' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_985' ci 'STEDELIJK_985' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_249' ci 'AFWG_249' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_932' ci 'PRIMAIR_932' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_934' ci 'PRIMAIR_934' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_917' ci 'SECUNDAIR_917' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_937' ci 'PRIMAIR_937' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_938' ci 'PRIMAIR_938' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_923' ci 'SECUNDAIR_923' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_924' ci 'SECUNDAIR_924' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1069' ci 'DUIKER_1069' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1422' ci 'SECUNDAIR_1422' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1442' ci 'PRIMAIR_1442' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1425' ci 'SECUNDAIR_1425' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1426' ci 'SECUNDAIR_1426' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1465' ci 'SECUNDAIR_1465' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1115' ci 'DUIKER_1115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2727' ci 'SECUNDAIR_2727' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2726' ci 'SECUNDAIR_2726' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1470' ci 'SECUNDAIR_1470' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1471' ci 'SECUNDAIR_1471' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_946' ci 'PRIMAIR_946' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_947' ci 'PRIMAIR_947' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_577' ci 'DUIKER_577' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_951' ci 'PRIMAIR_951' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_248' ci 'AFWG_248' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_956' ci 'PRIMAIR_956' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_957' ci 'PRIMAIR_957' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_959' ci 'PRIMAIR_959' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_941' ci 'SECUNDAIR_941' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_961' ci 'PRIMAIR_961' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_943' ci 'SECUNDAIR_943' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_963' ci 'PRIMAIR_963' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_964' ci 'PRIMAIR_964' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_965' ci 'PRIMAIR_965' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_968' ci 'PRIMAIR_968' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_969' ci 'PRIMAIR_969' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_951' ci 'SECUNDAIR_951' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_62' ci 'AFWG_62' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_972' ci 'PRIMAIR_972' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_974' ci 'PRIMAIR_974' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_975' ci 'PRIMAIR_975' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_976' ci 'PRIMAIR_976' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_977' ci 'PRIMAIR_977' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1690' ci 'SECUNDAIR_1690' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1691' ci 'SECUNDAIR_1691' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1692' ci 'SECUNDAIR_1692' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_978' ci 'PRIMAIR_978' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_979' ci 'PRIMAIR_979' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_980' ci 'PRIMAIR_980' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_253' ci 'AFWG_253' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_981' ci 'PRIMAIR_981' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_983' ci 'PRIMAIR_983' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_984' ci 'PRIMAIR_984' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_79' ci 'AFWG_79' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_987' ci 'PRIMAIR_987' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_274' ci 'AFWG_274' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_991' ci 'PRIMAIR_991' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_992' ci 'PRIMAIR_992' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_993' ci 'PRIMAIR_993' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_278' ci 'AFWG_278' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_625' ci 'DUIKER_625' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_997' ci 'PRIMAIR_997' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_628' ci 'DUIKER_628' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_279' ci 'AFWG_279' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_69' ci 'AFWG_69' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_637' ci 'DUIKER_637' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1009' ci 'PRIMAIR_1009' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_991' ci 'SECUNDAIR_991' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1075' ci 'DUIKER_1075' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1076' ci 'DUIKER_1076' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1439' ci 'VER_1439' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1078' ci 'DUIKER_1078' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1441' ci 'VER_1441' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1432' ci 'SECUNDAIR_1432' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1433' ci 'SECUNDAIR_1433' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1434' ci 'SECUNDAIR_1434' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1435' ci 'SECUNDAIR_1435' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1436' ci 'SECUNDAIR_1436' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1676' ci 'SECUNDAIR_1676' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_807' ci 'PRIMAIR_807' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1013' ci 'PRIMAIR_1013' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_258' ci 'AFWG_258' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_645' ci 'DUIKER_645' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_252' ci 'AFWG_252' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1018' ci 'PRIMAIR_1018' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1019' ci 'PRIMAIR_1019' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1021' ci 'PRIMAIR_1021' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1022' ci 'PRIMAIR_1022' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1004' ci 'SECUNDAIR_1004' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1027' ci 'PRIMAIR_1027' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1029' ci 'PRIMAIR_1029' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1031' ci 'PRIMAIR_1031' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1032' ci 'PRIMAIR_1032' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1027' ci 'VER_1027' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1028' ci 'VER_1028' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1038' ci 'PRIMAIR_1038' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_295' ci 'AFWG_295' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_292' ci 'AFWG_292' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_2281' ci 'PRIMAIR_2281' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_671' ci 'DUIKER_671' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1043' ci 'PRIMAIR_1043' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1437' ci 'SECUNDAIR_1437' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1438' ci 'SECUNDAIR_1438' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1497' ci 'SECUNDAIR_1497' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1667' ci 'PRIMAIR_1667' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1649' ci 'SECUNDAIR_1649' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3109' ci 'SECUNDAIR_3109' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3110' ci 'PRIMAIR_3110' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1062' ci 'PRIMAIR_1062' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3112' ci 'SECUNDAIR_3112' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_192' ci 'AFWG_192' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_203' ci 'AFWG_203' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1395' ci 'SECUNDAIR_1395' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_306' ci 'AFWG_306' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_307' ci 'AFWG_307' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_21' ci 'AFWG_21' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_191' ci 'AFWG_191' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1046' ci 'PRIMAIR_1046' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_2287' ci 'PRIMAIR_2287' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_36' ci 'AFWG_36' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1051' ci 'PRIMAIR_1051' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1053' ci 'PRIMAIR_1053' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_71' ci 'AFWG_71' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_310' ci 'AFWG_310' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_313' ci 'AFWG_313' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_260' ci 'AFWG_260' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1060' ci 'PRIMAIR_1060' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1061' ci 'PRIMAIR_1061' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_2302' ci 'PRIMAIR_2302' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1044' ci 'SECUNDAIR_1044' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_1131' ci 'STEDELIJK_1131' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1066' ci 'PRIMAIR_1066' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1067' ci 'PRIMAIR_1067' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_696' ci 'DUIKER_696' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1050' ci 'SECUNDAIR_1050' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1051' ci 'SECUNDAIR_1051' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_700' ci 'DUIKER_700' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_701' ci 'DUIKER_701' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1495' ci 'PRIMAIR_1495' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_182' ci 'AFWG_182' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_178' ci 'AFWG_178' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_35' ci 'AFWG_35' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1716' ci 'PRIMAIR_1716' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1782' ci 'SECUNDAIR_1782' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1783' ci 'SECUNDAIR_1783' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1784' ci 'SECUNDAIR_1784' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_239' ci 'AFWG_239' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_78' ci 'AFWG_78' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_11' ci 'AFWG_11' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_15' ci 'AFWG_15' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3142' ci 'PRIMAIR_3142' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_2' ci 'AFWG_2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_3' ci 'AFWG_3' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_5' ci 'AFWG_5' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_64' ci 'AFWG_64' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_10' ci 'AFWG_10' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_6' ci 'AFWG_6' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3149' ci 'PRIMAIR_3149' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1089' ci 'SECUNDAIR_1089' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1090' ci 'SECUNDAIR_1090' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1091' ci 'SECUNDAIR_1091' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1111' ci 'PRIMAIR_1111' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1093' ci 'SECUNDAIR_1093' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1094' ci 'SECUNDAIR_1094' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1114' ci 'PRIMAIR_1114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1098' ci 'SECUNDAIR_1098' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1118' ci 'PRIMAIR_1118' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1100' ci 'SECUNDAIR_1100' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1120' ci 'PRIMAIR_1120' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1121' ci 'PRIMAIR_1121' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1113' ci 'VER_1113' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1124' ci 'PRIMAIR_1124' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_104' ci 'AFWG_104' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_85' ci 'AFWG_85' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_187' ci 'AFWG_187' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_305' ci 'AFWG_305' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_159' ci 'AFWG_159' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_163' ci 'AFWG_163' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_164' ci 'AFWG_164' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_277' ci 'AFWG_277' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_65' ci 'AFWG_65' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_314' ci 'AFWG_314' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_8' ci 'AFWG_8' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_219' ci 'AFWG_219' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_222' ci 'AFWG_222' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1717' ci 'PRIMAIR_1717' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1718' ci 'PRIMAIR_1718' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1700' ci 'SECUNDAIR_1700' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1701' ci 'SECUNDAIR_1701' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1702' ci 'SECUNDAIR_1702' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_240' ci 'AFWG_240' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1788' ci 'SECUNDAIR_1788' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1808' ci 'PRIMAIR_1808' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_39' ci 'AFWG_39' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_226' ci 'AFWG_226' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_228' ci 'AFWG_228' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_109' ci 'AFWG_109' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_210' ci 'AFWG_210' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_66' ci 'AFWG_66' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_296' ci 'AFWG_296' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_29' ci 'AFWG_29' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_4' ci 'AFWG_4' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_282' ci 'AFWG_282' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_206' ci 'AFWG_206' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_205' ci 'AFWG_205' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_243' ci 'AFWG_243' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_263' ci 'AFWG_263' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_254' ci 'AFWG_254' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_103' ci 'AFWG_103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_201' ci 'AFWG_201' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_108' ci 'AFWG_108' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_238' ci 'AFWG_238' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_115' ci 'AFWG_115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_242' ci 'AFWG_242' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_152' ci 'AFWG_152' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_158' ci 'AFWG_158' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_143' ci 'AFWG_143' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1267' ci 'SECUNDAIR_1267' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3217' ci 'SECUNDAIR_3217' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3218' ci 'SECUNDAIR_3218' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3219' ci 'SECUNDAIR_3219' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1287' ci 'PRIMAIR_1287' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1269' ci 'SECUNDAIR_1269' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1270' ci 'SECUNDAIR_1270' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1290' ci 'PRIMAIR_1290' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1703' ci 'SECUNDAIR_1703' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_121' ci 'AFWG_121' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_120' ci 'AFWG_120' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1706' ci 'SECUNDAIR_1706' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1707' ci 'SECUNDAIR_1707' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1708' ci 'SECUNDAIR_1708' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1272' ci 'SECUNDAIR_1272' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1350' ci 'SECUNDAIR_1350' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1351' ci 'SECUNDAIR_1351' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1477' ci 'SECUNDAIR_1477' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1478' ci 'SECUNDAIR_1478' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_172' ci 'AFWG_172' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1709' ci 'SECUNDAIR_1709' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1729' ci 'PRIMAIR_1729' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_124' ci 'AFWG_124' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_119' ci 'AFWG_119' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3245' ci 'PRIMAIR_3245' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3246' ci 'PRIMAIR_3246' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3247' ci 'PRIMAIR_3247' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3248' ci 'PRIMAIR_3248' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3249' ci 'PRIMAIR_3249' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_207' ci 'AFWG_207' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3222' ci 'PRIMAIR_3222' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_311' ci 'AFWG_311' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1275' ci 'SECUNDAIR_1275' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1276' ci 'SECUNDAIR_1276' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1296' ci 'PRIMAIR_1296' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_87' ci 'AFWG_87' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1279' ci 'SECUNDAIR_1279' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1650' ci 'SECUNDAIR_1650' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_80' ci 'AFWG_80' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1652' ci 'SECUNDAIR_1652' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1672' ci 'PRIMAIR_1672' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_33' ci 'AFWG_33' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_74' ci 'AFWG_74' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_53' ci 'AFWG_53' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_44' ci 'AFWG_44' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_23' ci 'AFWG_23' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_27' ci 'AFWG_27' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_233' ci 'AFWG_233' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1440' ci 'SECUNDAIR_1440' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1442' ci 'DUIKER_1442' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1443' ci 'SECUNDAIR_1443' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1444' ci 'SECUNDAIR_1444' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1464' ci 'PRIMAIR_1464' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1465' ci 'PRIMAIR_1465' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1447' ci 'SECUNDAIR_1447' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1448' ci 'SECUNDAIR_1448' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2739' ci 'SECUNDAIR_2739' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1500' ci 'PRIMAIR_1500' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1482' ci 'SECUNDAIR_1482' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1483' ci 'SECUNDAIR_1483' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1484' ci 'SECUNDAIR_1484' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1499' ci 'SECUNDAIR_1499' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_117' ci 'AFWG_117' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_145' ci 'AFWG_145' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1377' ci 'SECUNDAIR_1377' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1397' ci 'PRIMAIR_1397' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_184' ci 'STEDELIJK_184' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1665' ci 'VER_1665' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1791' ci 'SECUNDAIR_1791' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1792' ci 'SECUNDAIR_1792' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1793' ci 'SECUNDAIR_1793' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1794' ci 'SECUNDAIR_1794' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1795' ci 'SECUNDAIR_1795' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1380' ci 'SECUNDAIR_1380' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1381' ci 'SECUNDAIR_1381' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_224' ci 'AFWG_224' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1291' ci 'SECUNDAIR_1291' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1311' ci 'PRIMAIR_1311' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1293' ci 'SECUNDAIR_1293' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1313' ci 'PRIMAIR_1313' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1295' ci 'SECUNDAIR_1295' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1296' ci 'SECUNDAIR_1296' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_151' ci 'AFWG_151' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1327' ci 'SECUNDAIR_1327' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1329' ci 'SECUNDAIR_1329' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1732' ci 'PRIMAIR_1732' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1714' ci 'SECUNDAIR_1714' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1715' ci 'SECUNDAIR_1715' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_150' ci 'AFWG_150' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1301' ci 'SECUNDAIR_1301' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1312' ci 'VER_1312' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1304' ci 'SECUNDAIR_1304' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1306' ci 'SECUNDAIR_1306' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1308' ci 'SECUNDAIR_1308' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1309' ci 'SECUNDAIR_1309' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1330' ci 'SECUNDAIR_1330' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1450' ci 'SECUNDAIR_1450' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_308' ci 'AFWG_308' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_262' ci 'AFWG_262' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3243' ci 'VER_3243' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3244' ci 'VER_3244' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1329' ci 'PRIMAIR_1329' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1311' ci 'SECUNDAIR_1311' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1312' ci 'SECUNDAIR_1312' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1313' ci 'SECUNDAIR_1313' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1451' ci 'SECUNDAIR_1451' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1462' ci 'VER_1462' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1454' ci 'SECUNDAIR_1454' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1486' ci 'SECUNDAIR_1486' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1506' ci 'PRIMAIR_1506' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1488' ci 'SECUNDAIR_1488' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1489' ci 'SECUNDAIR_1489' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1500' ci 'SECUNDAIR_1500' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1501' ci 'SECUNDAIR_1501' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_190' ci 'AFWG_190' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_289' ci 'AFWG_289' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_26' ci 'AFWG_26' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_50' ci 'AFWG_50' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1350' ci 'PRIMAIR_1350' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1352' ci 'SECUNDAIR_1352' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1372' ci 'PRIMAIR_1372' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1716' ci 'SECUNDAIR_1716' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1717' ci 'SECUNDAIR_1717' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_100' ci 'AFWG_100' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_102' ci 'AFWG_102' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_18' ci 'AFWG_18' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1740' ci 'PRIMAIR_1740' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_257' ci 'AFWG_257' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_73' ci 'AFWG_73' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1373' ci 'PRIMAIR_1373' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1355' ci 'SECUNDAIR_1355' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1357' ci 'SECUNDAIR_1357' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1603' ci 'SECUNDAIR_1603' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1604' ci 'SECUNDAIR_1604' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1605' ci 'SECUNDAIR_1605' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1606' ci 'SECUNDAIR_1606' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1741' ci 'PRIMAIR_1741' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1742' ci 'PRIMAIR_1742' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1724' ci 'SECUNDAIR_1724' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1725' ci 'SECUNDAIR_1725' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_10' ci 'SECUNDAIR_10' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_30' ci 'PRIMAIR_30' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_31' ci 'PRIMAIR_31' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1382' ci 'SECUNDAIR_1382' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1394' ci 'VER_1394' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1405' ci 'PRIMAIR_1405' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1387' ci 'SECUNDAIR_1387' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1408' ci 'PRIMAIR_1408' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1391' ci 'SECUNDAIR_1391' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1392' ci 'SECUNDAIR_1392' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1393' ci 'SECUNDAIR_1393' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1413' ci 'PRIMAIR_1413' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_2654' ci 'SECUNDAIR_2654' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1397' ci 'SECUNDAIR_1397' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1398' ci 'SECUNDAIR_1398' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1418' ci 'PRIMAIR_1418' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1400' ci 'SECUNDAIR_1400' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1401' ci 'SECUNDAIR_1401' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1422' ci 'PRIMAIR_1422' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1404' ci 'SECUNDAIR_1404' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1405' ci 'SECUNDAIR_1405' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1455' ci 'SECUNDAIR_1455' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1456' ci 'SECUNDAIR_1456' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1476' ci 'PRIMAIR_1476' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1607' ci 'VER_1607' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1618' ci 'VER_1618' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1610' ci 'VER_1610' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1621' ci 'VER_1621' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1631' ci 'PRIMAIR_1631' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1634' ci 'VER_1634' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1406' ci 'SECUNDAIR_1406' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1407' ci 'SECUNDAIR_1407' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1410' ci 'SECUNDAIR_1410' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1458' ci 'SECUNDAIR_1458' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1459' ci 'SECUNDAIR_1459' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1479' ci 'PRIMAIR_1479' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1471' ci 'VER_1471' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1491' ci 'SECUNDAIR_1491' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1492' ci 'SECUNDAIR_1492' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1493' ci 'SECUNDAIR_1493' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1494' ci 'SECUNDAIR_1494' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1495' ci 'SECUNDAIR_1495' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1534' ci 'SECUNDAIR_1534' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1726' ci 'SECUNDAIR_1726' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1727' ci 'SECUNDAIR_1727' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_101' ci 'AFWG_101' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_13' ci 'AFWG_13' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3125' ci 'SECUNDAIR_3125' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_14' ci 'AFWG_14' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3237' ci 'SECUNDAIR_3237' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3238' ci 'SECUNDAIR_3238' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3250' ci 'PRIMAIR_3250' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3251' ci 'PRIMAIR_3251' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_35' ci 'PRIMAIR_35' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_36' ci 'PRIMAIR_36' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_38' ci 'PRIMAIR_38' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_137' ci 'AFWG_137' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_40' ci 'PRIMAIR_40' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_41' ci 'PRIMAIR_41' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_216' ci 'AFWG_216' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_43' ci 'PRIMAIR_43' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_44' ci 'PRIMAIR_44' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_134' ci 'AFWG_134' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_46' ci 'PRIMAIR_46' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_28' ci 'SECUNDAIR_28' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_48' ci 'PRIMAIR_48' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_285' ci 'AFWG_285' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_229' ci 'AFWG_229' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1502' ci 'SECUNDAIR_1502' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1151' ci 'DUIKER_1151' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1505' ci 'SECUNDAIR_1505' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1506' ci 'SECUNDAIR_1506' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1507' ci 'SECUNDAIR_1507' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1508' ci 'SECUNDAIR_1508' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1509' ci 'SECUNDAIR_1509' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1510' ci 'SECUNDAIR_1510' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1511' ci 'SECUNDAIR_1511' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_16' ci 'AFWG_16' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_259' ci 'AFWG_259' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1049' ci 'SECUNDAIR_1049' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_247' ci 'AFWG_247' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_33' ci 'SECUNDAIR_33' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_53' ci 'PRIMAIR_53' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_42' ci 'AFWG_42' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_55' ci 'PRIMAIR_55' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_37' ci 'SECUNDAIR_37' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_57' ci 'PRIMAIR_57' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_139' ci 'AFWG_139' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_59' ci 'PRIMAIR_59' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_49' ci 'AFWG_49' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_61' ci 'PRIMAIR_61' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_62' ci 'PRIMAIR_62' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_63' ci 'PRIMAIR_63' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1512' ci 'SECUNDAIR_1512' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1532' ci 'PRIMAIR_1532' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1514' ci 'SECUNDAIR_1514' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1515' ci 'SECUNDAIR_1515' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1516' ci 'SECUNDAIR_1516' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1517' ci 'SECUNDAIR_1517' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1518' ci 'SECUNDAIR_1518' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1519' ci 'SECUNDAIR_1519' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1535' ci 'SECUNDAIR_1535' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1555' ci 'PRIMAIR_1555' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_146' ci 'AFWG_146' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_17' ci 'AFWG_17' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_28' ci 'AFWG_28' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_58' ci 'AFWG_58' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1602' ci 'SECUNDAIR_1602' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_64' ci 'PRIMAIR_64' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_147' ci 'AFWG_147' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_66' ci 'PRIMAIR_66' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_67' ci 'PRIMAIR_67' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_34' ci 'AFWG_34' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_60' ci 'VER_60' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_61' ci 'VER_61' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_71' ci 'PRIMAIR_71' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_286' ci 'AFWG_286' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_73' ci 'PRIMAIR_73' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1556' ci 'PRIMAIR_1556' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1538' ci 'SECUNDAIR_1538' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1539' ci 'SECUNDAIR_1539' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1540' ci 'SECUNDAIR_1540' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1544' ci 'SECUNDAIR_1544' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1545' ci 'SECUNDAIR_1545' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1546' ci 'SECUNDAIR_1546' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1547' ci 'SECUNDAIR_1547' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1548' ci 'SECUNDAIR_1548' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1549' ci 'SECUNDAIR_1549' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1567' ci 'SECUNDAIR_1567' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1625' ci 'SECUNDAIR_1625' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1626' ci 'SECUNDAIR_1626' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3228' ci 'PRIMAIR_3228' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3229' ci 'PRIMAIR_3229' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_76' ci 'PRIMAIR_76' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_138' ci 'AFWG_138' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1568' ci 'SECUNDAIR_1568' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1571' ci 'SECUNDAIR_1571' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1572' ci 'SECUNDAIR_1572' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_196' ci 'AFWG_196' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1574' ci 'SECUNDAIR_1574' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1575' ci 'SECUNDAIR_1575' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1586' ci 'VER_1586' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1577' ci 'SECUNDAIR_1577' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_51' ci 'AFWG_51' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1579' ci 'SECUNDAIR_1579' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1623' ci 'VER_1623' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1624' ci 'VER_1624' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1615' ci 'SECUNDAIR_1615' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_157' ci 'AFWG_157' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_99' ci 'AFWG_99' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_208' ci 'AFWG_208' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3230' ci 'SECUNDAIR_3230' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_218' ci 'AFWG_218' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_57' ci 'AFWG_57' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1730' ci 'SECUNDAIR_1730' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1731' ci 'SECUNDAIR_1731' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1732' ci 'SECUNDAIR_1732' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1753' ci 'PRIMAIR_1753' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1754' ci 'PRIMAIR_1754' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1755' ci 'PRIMAIR_1755' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1756' ci 'PRIMAIR_1756' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_88' ci 'AFWG_88' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1739' ci 'SECUNDAIR_1739' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1740' ci 'SECUNDAIR_1740' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1741' ci 'SECUNDAIR_1741' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1742' ci 'SECUNDAIR_1742' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_97' ci 'AFWG_97' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1763' ci 'PRIMAIR_1763' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1764' ci 'PRIMAIR_1764' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1765' ci 'PRIMAIR_1765' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1747' ci 'SECUNDAIR_1747' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1748' ci 'SECUNDAIR_1748' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1749' ci 'SECUNDAIR_1749' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1750' ci 'SECUNDAIR_1750' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_86' ci 'AFWG_86' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_98' ci 'AFWG_98' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1772' ci 'PRIMAIR_1772' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1773' ci 'PRIMAIR_1773' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1774' ci 'PRIMAIR_1774' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1756' ci 'SECUNDAIR_1756' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1757' ci 'SECUNDAIR_1757' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1758' ci 'SECUNDAIR_1758' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1759' ci 'SECUNDAIR_1759' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_96' ci 'AFWG_96' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_89' ci 'AFWG_89' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1772' ci 'VER_1772' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1782' ci 'PRIMAIR_1782' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1783' ci 'PRIMAIR_1783' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1784' ci 'PRIMAIR_1784' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1766' ci 'SECUNDAIR_1766' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1670' ci 'SECUNDAIR_1670' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3191' ci 'SECUNDAIR_3191' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_80' ci 'PRIMAIR_80' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_81' ci 'PRIMAIR_81' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1767' ci 'SECUNDAIR_1767' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1765' ci 'SECUNDAIR_1765' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1769' ci 'SECUNDAIR_1769' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1770' ci 'SECUNDAIR_1770' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1771' ci 'SECUNDAIR_1771' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_199' ci 'AFWG_199' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_31' ci 'AFWG_31' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1796' ci 'SECUNDAIR_1796' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1816' ci 'PRIMAIR_1816' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1817' ci 'PRIMAIR_1817' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1799' ci 'SECUNDAIR_1799' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1800' ci 'SECUNDAIR_1800' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1801' ci 'SECUNDAIR_1801' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1802' ci 'SECUNDAIR_1802' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_268' ci 'AFWG_268' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_189' ci 'AFWG_189' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_267' ci 'AFWG_267' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3192' ci 'SECUNDAIR_3192' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_982' ci 'PRIMAIR_982' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_204' ci 'AFWG_204' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_180' ci 'PRIMAIR_180' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_149' ci 'AFWG_149' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_163' ci 'SECUNDAIR_163' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_183' ci 'PRIMAIR_183' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_198' ci 'AFWG_198' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_167' ci 'SECUNDAIR_167' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_105' ci 'AFWG_105' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_198' ci 'STEDELIJK_198' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_173' ci 'AFWG_173' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_171' ci 'SECUNDAIR_171' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_201' ci 'STEDELIJK_201' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_202' ci 'STEDELIJK_202' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_194' ci 'PRIMAIR_194' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_188' ci 'VER_188' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_180' ci 'SECUNDAIR_180' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_47' ci 'AFWG_47' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_212' ci 'AFWG_212' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_212' ci 'STEDELIJK_212' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_213' ci 'STEDELIJK_213' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_185' ci 'SECUNDAIR_185' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_205' ci 'PRIMAIR_205' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_187' ci 'SECUNDAIR_187' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_217' ci 'STEDELIJK_217' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_218' ci 'STEDELIJK_218' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_219' ci 'STEDELIJK_219' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_210' ci 'PRIMAIR_210' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_213' ci 'PRIMAIR_213' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_225' ci 'AFWG_225' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_197' ci 'SECUNDAIR_197' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_198' ci 'SECUNDAIR_198' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_202' ci 'SECUNDAIR_202' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_223' ci 'PRIMAIR_223' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_225' ci 'PRIMAIR_225' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_227' ci 'PRIMAIR_227' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_228' ci 'PRIMAIR_228' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_229' ci 'PRIMAIR_229' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_211' ci 'SECUNDAIR_211' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_222' ci 'VER_222' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_223' ci 'VER_223' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_214' ci 'SECUNDAIR_214' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_250' ci 'STEDELIJK_250' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_220' ci 'SECUNDAIR_220' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_240' ci 'PRIMAIR_240' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_299' ci 'AFWG_299' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_223' ci 'SECUNDAIR_223' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_243' ci 'PRIMAIR_243' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_245' ci 'PRIMAIR_245' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_247' ci 'PRIMAIR_247' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_260' ci 'STEDELIJK_260' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_230' ci 'SECUNDAIR_230' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_262' ci 'STEDELIJK_262' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_263' ci 'STEDELIJK_263' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_252' ci 'PRIMAIR_252' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_253' ci 'PRIMAIR_253' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_254' ci 'PRIMAIR_254' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_247' ci 'VER_247' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_186' ci 'AFWG_186' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_276' ci 'STEDELIJK_276' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_277' ci 'STEDELIJK_277' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_267' ci 'PRIMAIR_267' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_282' ci 'STEDELIJK_282' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_283' ci 'STEDELIJK_283' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_253' ci 'SECUNDAIR_253' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_286' ci 'STEDELIJK_286' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_1456' ci 'DUIKER_1456' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_63' ci 'AFWG_63' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3232' ci 'VER_3232' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3233' ci 'VER_3233' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_275' ci 'PRIMAIR_275' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_276' ci 'PRIMAIR_276' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_258' ci 'SECUNDAIR_258' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_155' ci 'AFWG_155' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_279' ci 'PRIMAIR_279' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_272' ci 'VER_272' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_297' ci 'AFWG_297' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_283' ci 'PRIMAIR_283' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_297' ci 'STEDELIJK_297' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_156' ci 'AFWG_156' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_288' ci 'PRIMAIR_288' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_290' ci 'PRIMAIR_290' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_291' ci 'PRIMAIR_291' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_273' ci 'SECUNDAIR_273' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_293' ci 'PRIMAIR_293' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_166' ci 'AFWG_166' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_295' ci 'PRIMAIR_295' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_298' ci 'PRIMAIR_298' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_136' ci 'AFWG_136' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_300' ci 'PRIMAIR_300' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_301' ci 'PRIMAIR_301' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'STEDELIJK_316' ci 'STEDELIJK_316' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_303' ci 'PRIMAIR_303' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_304' ci 'PRIMAIR_304' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_616' ci 'VER_616' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_626' ci 'PRIMAIR_626' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_628' ci 'PRIMAIR_628' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_629' ci 'PRIMAIR_629' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_630' ci 'PRIMAIR_630' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_622' ci 'VER_622' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_623' ci 'VER_623' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_614' ci 'SECUNDAIR_614' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_634' ci 'PRIMAIR_634' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_635' ci 'PRIMAIR_635' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_636' ci 'PRIMAIR_636' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_637' ci 'PRIMAIR_637' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_638' ci 'PRIMAIR_638' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_639' ci 'PRIMAIR_639' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_640' ci 'PRIMAIR_640' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_641' ci 'PRIMAIR_641' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_633' ci 'VER_633' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_634' ci 'VER_634' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_626' ci 'SECUNDAIR_626' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_628' ci 'SECUNDAIR_628' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_68' ci 'AFWG_68' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_630' ci 'SECUNDAIR_630' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_631' ci 'SECUNDAIR_631' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_651' ci 'PRIMAIR_651' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_652' ci 'PRIMAIR_652' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_654' ci 'PRIMAIR_654' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_655' ci 'PRIMAIR_655' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_656' ci 'PRIMAIR_656' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_786' ci 'PRIMAIR_786' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_787' ci 'PRIMAIR_787' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_788' ci 'PRIMAIR_788' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_770' ci 'SECUNDAIR_770' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_790' ci 'PRIMAIR_790' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_791' ci 'PRIMAIR_791' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_200' ci 'AFWG_200' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_794' ci 'PRIMAIR_794' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_797' ci 'PRIMAIR_797' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_798' ci 'PRIMAIR_798' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_799' ci 'PRIMAIR_799' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_791' ci 'VER_791' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_792' ci 'VER_792' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_244' ci 'AFWG_244' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_803' ci 'PRIMAIR_803' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_804' ci 'PRIMAIR_804' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_805' ci 'PRIMAIR_805' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_2047' ci 'PRIMAIR_2047' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_808' ci 'PRIMAIR_808' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_303' ci 'AFWG_303' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_810' ci 'PRIMAIR_810' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_811' ci 'PRIMAIR_811' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_803' ci 'VER_803' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_813' ci 'PRIMAIR_813' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_795' ci 'SECUNDAIR_795' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_815' ci 'PRIMAIR_815' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_817' ci 'PRIMAIR_817' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1076' ci 'PRIMAIR_1076' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1077' ci 'PRIMAIR_1077' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1078' ci 'PRIMAIR_1078' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'DUIKER_708' ci 'DUIKER_708' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_264' ci 'AFWG_264' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1073' ci 'VER_1073' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1076' ci 'VER_1076' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1071' ci 'SECUNDAIR_1071' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1073' ci 'SECUNDAIR_1073' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1074' ci 'SECUNDAIR_1074' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1072' ci 'SECUNDAIR_1072' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1076' ci 'SECUNDAIR_1076' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1079' ci 'SECUNDAIR_1079' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1080' ci 'SECUNDAIR_1080' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1081' ci 'SECUNDAIR_1081' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1082' ci 'SECUNDAIR_1082' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_1093' ci 'VER_1093' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_1103' ci 'PRIMAIR_1103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1085' ci 'SECUNDAIR_1085' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1086' ci 'SECUNDAIR_1086' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1087' ci 'SECUNDAIR_1087' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1088' ci 'SECUNDAIR_1088' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3206' ci 'SECUNDAIR_3206' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_82' ci 'SECUNDAIR_82' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_82' ci 'VER_82' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'VER_3209' ci 'VER_3209' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_304' ci 'AFWG_304' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_70' ci 'AFWG_70' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_241' ci 'AFWG_241' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3085' ci 'SECUNDAIR_3085' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_250' ci 'AFWG_250' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_251' ci 'AFWG_251' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3090' ci 'SECUNDAIR_3090' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3091' ci 'SECUNDAIR_3091' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_255' ci 'AFWG_255' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_256' ci 'AFWG_256' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_281' ci 'AFWG_281' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_261' ci 'AFWG_261' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_309' ci 'AFWG_309' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1468' ci 'SECUNDAIR_1468' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3101' ci 'SECUNDAIR_3101' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1480' ci 'SECUNDAIR_1480' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3103' ci 'SECUNDAIR_3103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_236' ci 'AFWG_236' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_235' ci 'AFWG_235' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3134' ci 'SECUNDAIR_3134' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_83' ci 'AFWG_83' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_383' ci 'SECUNDAIR_383' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_266' ci 'AFWG_266' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3199' ci 'SECUNDAIR_3199' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3200' ci 'SECUNDAIR_3200' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3201' ci 'SECUNDAIR_3201' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1768' ci 'SECUNDAIR_1768' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_179' ci 'AFWG_179' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_507' ci 'PRIMAIR_507' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_9' ci 'AFWG_9' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_3234' ci 'SECUNDAIR_3234' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1030' ci 'SECUNDAIR_1030' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'PRIMAIR_3242' ci 'PRIMAIR_3242' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_293' ci 'AFWG_293' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_280' ci 'AFWG_280' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'SECUNDAIR_1463' ci 'SECUNDAIR_1463' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_273' ci 'AFWG_273' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_275' ci 'AFWG_275' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id 'AFWG_67' ci 'AFWG_67' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id '1' ci '1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id '2' ci '2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id '3' ci '3' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+BDFR id '4' ci '4' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6    bdfr
+STFR id 'fr_KDU-Q-889' ci 'sd_KDU-Q-889' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1972' ci 'sd_KDU-Q-1972' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1265' ci 'sd_KDU-Q-1265' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1573' ci 'sd_KDU-Q-1573' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_12' ci 'sd_KDU-duiker_12' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1845' ci 'sd_KDU-Q-1845' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1273' ci 'sd_KDU-Q-1273' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1977' ci 'sd_KDU-Q-1977' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1266' ci 'sd_KDU-Q-1266' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-42' ci 'sd_KDU-BA-42' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6636' ci 'sd_KDU-Q-6636' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-2116' ci 'sd_KDU-Q-2116' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-P-409' ci 'sd_KDU-P-409' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-7062' ci 'sd_KDU-Q-7062' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8684' ci 'sd_KBR-Q-8684' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-5099' ci 'sd_KDU-Q-5099' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2253' ci 'sd_KDU-Q-2253' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2049' ci 'sd_KDU-Q-2049' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-AA-2' ci 'sd_KSY-AA-2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-1961' ci 'sd_KDU-Q-1961' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8686' ci 'sd_KBR-Q-8686' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_07' ci 'sd_KDU-duiker_07' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23160' ci 'sd_KSY-Q-23160' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-160' ci 'sd_KDU-BA-160' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-875' ci 'sd_KDU-Q-875' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2115' ci 'sd_KDU-Q-2115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8588' ci 'sd_KBR-Q-8588' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3842' ci 'sd_KDU-Q-3842' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1861' ci 'sd_KDU-Q-1861' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AFWG_131' ci 'sd_KDU-AFWG_131' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AFWG_192' ci 'sd_KDU-AFWG_192' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2026' ci 'sd_KDU-Q-2026' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2000' ci 'sd_KDU-Q-2000' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2017' ci 'sd_KDU-Q-2017' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2827' ci 'sd_KDU-Q-2827' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-OH-1235' ci 'sd_KDU-OH-1235' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8619' ci 'sd_KBR-Q-8619' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-J-130' ci 'sd_KSY-J-130' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23208' ci 'sd_KSY-Q-23208' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-1269' ci 'sd_KDU-Q-1269' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5303' ci 'sd_KDU-Q-5303' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1637' ci 'sd_KBR-A-1637' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-OH-1237' ci 'sd_KDU-OH-1237' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-OH-1236' ci 'sd_KDU-OH-1236' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-OH-887' ci 'sd_KDU-OH-887' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1635' ci 'sd_KBR-A-1635' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-772' ci 'sd_KBR-Q-772' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-7392' ci 'sd_KDU-Q-7392' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1638' ci 'sd_KDU-A-1638' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1636' ci 'sd_KBR-A-1636' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8681' ci 'sd_KBR-Q-8681' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2353' ci 'sd_KDU-Q-2353' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4019' ci 'sd_KDU-Q-4019' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1264' ci 'sd_KDU-Q-1264' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-duiker_13' ci 'sd_KDU-duiker_13' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-duiker_14' ci 'sd_KDU-duiker_14' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_16' ci 'sd_KDU-duiker_16' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2056' ci 'sd_KDU-Q-2056' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4811' ci 'sd_KDU-Q-4811' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8572' ci 'sd_KBR-Q-8572' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2040' ci 'sd_KDU-Q-2040' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1787' ci 'sd_KDU-Q-1787' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1641' ci 'sd_KBR-A-1641' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1643' ci 'sd_KBR-A-1643' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1640' ci 'sd_KBR-A-1640' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-756' ci 'sd_KBR-Q-756' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-122' ci 'sd_KDU-AA-122' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-duiker_15' ci 'sd_KDU-duiker_15' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-759' ci 'sd_KBR-Q-759' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23158' ci 'sd_KSY-Q-23158' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8594' ci 'sd_KBR-Q-8594' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8595' ci 'sd_KBR-Q-8595' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1291' ci 'sd_KDU-Q-1291' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2085' ci 'sd_KDU-Q-2085' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-23' ci 'sd_KDU-BA-23' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1812' ci 'sd_KDU-Q-1812' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-138' ci 'sd_KDU-BA-138' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3719' ci 'sd_KDU-Q-3719' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1785' ci 'sd_KDU-Q-1785' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-3062' ci 'sd_KDU-A-3062' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-B-595' ci 'sd_KDU-B-595' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-805' ci 'sd_KBR-Q-805' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-168' ci 'sd_KDU-BA-168' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6970' ci 'sd_KDU-Q-6970' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4988' ci 'sd_KDU-Q-4988' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23209' ci 'sd_KSY-Q-23209' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1642' ci 'sd_KDU-A-1642' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4475' ci 'sd_KDU-Q-4475' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2050' ci 'sd_KDU-Q-2050' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-110' ci 'sd_KDU-BA-110' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8367' ci 'sd_KDU-Q-8367' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1634' ci 'sd_KDU-A-1634' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1635' ci 'sd_KDU-A-1635' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-P-104' ci 'sd_KDU-P-104' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8617' ci 'sd_KBR-Q-8617' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-177' ci 'sd_KDU-BA-177' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-117' ci 'sd_KDU-BA-117' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-109' ci 'sd_KDU-BA-109' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-102' ci 'sd_KDU-BA-102' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-BA-103' ci 'sd_KDU-BA-103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5217' ci 'sd_KDU-Q-5217' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-104' ci 'sd_KDU-BA-104' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-B-828' ci 'sd_KDU-B-828' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1808' ci 'sd_KDU-Q-1808' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1965' ci 'sd_KDU-Q-1965' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1968' ci 'sd_KDU-Q-1968' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1262' ci 'sd_KDU-Q-1262' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3375' ci 'sd_KDU-Q-3375' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23172' ci 'sd_KSY-Q-23172' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1813' ci 'sd_KDU-Q-1813' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-876' ci 'sd_KDU-Q-876' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2185' ci 'sd_KDU-Q-2185' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1263' ci 'sd_KDU-Q-1263' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1789' ci 'sd_KDU-Q-1789' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1791' ci 'sd_KDU-Q-1791' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KST-A-1839' ci 'sd_KST-A-1839' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-133' ci 'sd_KDU-BA-133' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1292' ci 'sd_KDU-Q-1292' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1846' ci 'sd_KDU-A-1846' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6867' ci 'sd_KDU-Q-6867' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6352' ci 'sd_KDU-Q-6352' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1845' ci 'sd_KDU-A-1845' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-2434' ci 'sd_KDU-A-2434' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1280' ci 'sd_KDU-Q-1280' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-2432' ci 'sd_KDU-A-2432' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-2433' ci 'sd_KDU-A-2433' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-95' ci 'sd_KDU-BA-95' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1797' ci 'sd_KDU-A-1797' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1839' ci 'sd_KDU-A-1839' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1840' ci 'sd_KDU-A-1840' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2117' ci 'sd_KDU-Q-2117' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-P-103' ci 'sd_KDU-P-103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-86' ci 'sd_KDU-BA-86' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1966' ci 'sd_KDU-Q-1966' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-J-428' ci 'sd_KDU-J-428' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1800' ci 'sd_KDU-A-1800' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-66' ci 'sd_KDU-BA-66' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4551' ci 'sd_KDU-Q-4551' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-803' ci 'sd_KBR-Q-803' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-856' ci 'sd_KBR-Q-856' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-852' ci 'sd_KBR-Q-852' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-844' ci 'sd_KBR-Q-844' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2086' ci 'sd_KDU-Q-2086' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2664' ci 'sd_KDU-Q-2664' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-81' ci 'sd_KDU-BA-81' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5425' ci 'sd_KDU-Q-5425' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3039' ci 'sd_KDU-Q-3039' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1492' ci 'sd_KDU-Q-1492' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-84' ci 'sd_KDU-BA-84' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-87' ci 'sd_KDU-BA-87' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2009' ci 'sd_KDU-Q-2009' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-840' ci 'sd_KBR-Q-840' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-2435' ci 'sd_KBR-A-2435' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2057' ci 'sd_KDU-Q-2057' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-27' ci 'sd_KDU-BA-27' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1494' ci 'sd_KDU-Q-1494' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1790' ci 'sd_KDU-Q-1790' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-93' ci 'sd_KDU-AA-93' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-86' ci 'sd_KDU-AA-86' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3083' ci 'sd_KDU-Q-3083' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3600' ci 'sd_KDU-Q-3600' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-88' ci 'sd_KDU-AA-88' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-89' ci 'sd_KDU-AA-89' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2008' ci 'sd_KDU-Q-2008' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1860' ci 'sd_KDU-Q-1860' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23157' ci 'sd_KSY-Q-23157' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-872' ci 'sd_KDU-Q-872' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5602' ci 'sd_KDU-Q-5602' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-871' ci 'sd_KDU-Q-871' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2007' ci 'sd_KDU-Q-2007' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6316' ci 'sd_KDU-Q-6316' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-16' ci 'sd_KDU-BA-16' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1908' ci 'sd_KDU-Q-1908' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-7981' ci 'sd_KDU-Q-7981' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4503' ci 'sd_KDU-Q-4503' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_02' ci 'sd_KDU-duiker_02' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4292' ci 'sd_KDU-Q-4292' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_03' ci 'sd_KDU-duiker_03' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_04' ci 'sd_KDU-duiker_04' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_05' ci 'sd_KDU-duiker_05' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_06' ci 'sd_KDU-duiker_06' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6844' ci 'sd_KDU-Q-6844' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_01' ci 'sd_KDU-duiker_01' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1859' ci 'sd_KDU-Q-1859' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1849' ci 'sd_KDU-Q-1849' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-3122' ci 'sd_KDU-Q-3122' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3191' ci 'sd_KDU-Q-3191' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8687' ci 'sd_KBR-Q-8687' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-2436' ci 'sd_KBR-A-2436' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3734' ci 'sd_KDU-Q-3734' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8679' ci 'sd_KBR-Q-8679' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1856' ci 'sd_KDU-Q-1856' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8688' ci 'sd_KBR-Q-8688' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8243' ci 'sd_KDU-Q-8243' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1855' ci 'sd_KDU-Q-1855' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8262' ci 'sd_KDU-Q-8262' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8241' ci 'sd_KDU-Q-8241' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8249' ci 'sd_KDU-Q-8249' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8280' ci 'sd_KDU-Q-8280' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-2437' ci 'sd_KBR-A-2437' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-OH-1332' ci 'sd_KDU-OH-1332' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8263' ci 'sd_KDU-Q-8263' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8253' ci 'sd_KDU-Q-8253' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8254' ci 'sd_KDU-Q-8254' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8242' ci 'sd_KDU-Q-8242' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8246' ci 'sd_KDU-Q-8246' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8250' ci 'sd_KDU-Q-8250' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8245' ci 'sd_KDU-Q-8245' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8261' ci 'sd_KDU-Q-8261' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8244' ci 'sd_KDU-Q-8244' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8251' ci 'sd_KDU-Q-8251' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8690' ci 'sd_KBR-Q-8690' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1736' ci 'sd_KDU-Q-1736' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1271' ci 'sd_KDU-Q-1271' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8259' ci 'sd_KDU-Q-8259' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3413' ci 'sd_KDU-Q-3413' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4188' ci 'sd_KDU-Q-4188' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1283' ci 'sd_KDU-Q-1283' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1270' ci 'sd_KDU-Q-1270' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8689' ci 'sd_KBR-Q-8689' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1332' ci 'sd_KDU-Q-1332' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1347' ci 'sd_KDU-Q-1347' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1348' ci 'sd_KDU-Q-1348' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1329' ci 'sd_KDU-Q-1329' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1330' ci 'sd_KDU-Q-1330' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1282' ci 'sd_KDU-Q-1282' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1327' ci 'sd_KDU-Q-1327' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2013' ci 'sd_KDU-Q-2013' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2006' ci 'sd_KDU-Q-2006' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2103' ci 'sd_KDU-Q-2103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1331' ci 'sd_KDU-Q-1331' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4422' ci 'sd_KDU-Q-4422' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-80' ci 'sd_KDU-BA-80' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-87' ci 'sd_KDU-AA-87' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-AA-1' ci 'sd_KSY-AA-1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5311' ci 'sd_KDU-Q-5311' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-25' ci 'sd_KDU-BA-25' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-83' ci 'sd_KDU-BA-83' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8281' ci 'sd_KDU-Q-8281' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-94' ci 'sd_KDU-BA-94' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8257' ci 'sd_KDU-Q-8257' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8257_2' ci 'sd_KDU-Q-8257_2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8258' ci 'sd_KDU-Q-8258' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8258_2' ci 'sd_KDU-Q-8258_2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-2118' ci 'sd_KDU-Q-2118' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-6410' ci 'sd_KDU-Q-6410' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8552' ci 'sd_KBR-Q-8552' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23168' ci 'sd_KSY-Q-23168' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1274' ci 'sd_KDU-Q-1274' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_10' ci 'sd_KDU-duiker_10' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8549' ci 'sd_KBR-Q-8549' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-117' ci 'sd_KDU-AA-117' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1277' ci 'sd_KDU-Q-1277' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-nieuw' ci 'sd_KDU-nieuw' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-O-835' ci 'sd_KDU-O-835' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_08' ci 'sd_KDU-duiker_08' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2828' ci 'sd_KDU-Q-2828' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-1975' ci 'sd_KDU-Q-1975' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 4 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8252' ci 'sd_KDU-Q-8252' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-8252_2' ci 'sd_KDU-Q-8252_2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2002' ci 'sd_KDU-Q-2002' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-2058' ci 'sd_KDU-Q-2058' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1511' ci 'sd_KDU-Q-1511' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1284' ci 'sd_KDU-Q-1284' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1964' ci 'sd_KDU-Q-1964' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1963' ci 'sd_KDU-Q-1963' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_09' ci 'sd_KDU-duiker_09' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'sd_KDU-Q-1846' ci 'sd_KDU-Q-1846' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3032' ci 'sd_KDU-Q-3032' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1272' ci 'sd_KDU-Q-1272' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1260' ci 'sd_KDU-Q-1260' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1260_2' ci 'sd_KDU-Q-1260_2' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1827' ci 'sd_KDU-A-1827' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-B-829' ci 'sd_KDU-B-829' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1832' ci 'sd_KDU-A-1832' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1836' ci 'sd_KDU-A-1836' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1847' ci 'sd_KDU-Q-1847' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-111' ci 'sd_KDU-AA-111' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-AA-110' ci 'sd_KDU-AA-110' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8623' ci 'sd_KBR-Q-8623' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-825' ci 'sd_KBR-Q-825' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-801' ci 'sd_KBR-Q-801' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1632' ci 'sd_KDU-A-1632' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1633' ci 'sd_KDU-A-1633' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-7366' ci 'sd_KDU-Q-7366' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4220' ci 'sd_KDU-Q-4220' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-773' ci 'sd_KBR-Q-773' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8548' ci 'sd_KBR-Q-8548' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_11' ci 'sd_KDU-duiker_11' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3664' ci 'sd_KDU-Q-3664' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1962' ci 'sd_KDU-Q-1962' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-798' ci 'sd_KBR-Q-798' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4659' ci 'sd_KDU-Q-4659' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1691' ci 'sd_KBR-A-1691' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-A-1693' ci 'sd_KBR-A-1693' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1637' ci 'sd_KDU-A-1637' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1630' ci 'sd_KDU-A-1630' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-BA-50' ci 'sd_KBR-BA-50' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1786' ci 'sd_KDU-Q-1786' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1693' ci 'sd_KDU-A-1693' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8567' ci 'sd_KBR-Q-8567' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1788' ci 'sd_KDU-Q-1788' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1631' ci 'sd_KDU-A-1631' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-3328' ci 'sd_KDU-Q-3328' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-OH-1237' ci 'sd_KBR-OH-1237' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-OH-1236' ci 'sd_KBR-OH-1236' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1261' ci 'sd_KDU-Q-1261' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-A-1627' ci 'sd_KSY-A-1627' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4775' ci 'sd_KDU-Q-4775' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-7141' ci 'sd_KDU-Q-7141' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5182' ci 'sd_KDU-Q-5182' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-D-1' ci 'sd_KDU-D-1' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1967' ci 'sd_KDU-Q-1967' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-92' ci 'sd_KDU-BA-92' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-790' ci 'sd_KBR-Q-790' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1300' ci 'sd_KDU-Q-1300' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1301' ci 'sd_KDU-Q-1301' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2113' ci 'sd_KDU-Q-2113' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1317' ci 'sd_KDU-Q-1317' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-91' ci 'sd_KDU-BA-91' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-862' ci 'sd_KBR-Q-862' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2284' ci 'sd_KDU-Q-2284' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5519' ci 'sd_KDU-Q-5519' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-4953' ci 'sd_KDU-Q-4953' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-1798' ci 'sd_KDU-A-1798' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-2014' ci 'sd_KDU-Q-2014' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5760' ci 'sd_KDU-Q-5760' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-5460' ci 'sd_KDU-Q-5460' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KSY-Q-23194' ci 'sd_KSY-Q-23194' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-771' ci 'sd_KBR-Q-771' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-33422' ci 'sd_KBR-Q-33422' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8557' ci 'sd_KBR-Q-8557' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8568' ci 'sd_KBR-Q-8568' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8556' ci 'sd_KBR-Q-8556' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8569' ci 'sd_KBR-Q-8569' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KBR-Q-8555' ci 'sd_KBR-Q-8555' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-183' ci 'sd_KDU-BA-183' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-184' ci 'sd_KDU-BA-184' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_18' ci 'sd_KDU-duiker_18' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-duiker_17' ci 'sd_KDU-duiker_17' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-BA-114' ci 'sd_KDU-BA-114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-Q-1862' ci 'sd_KDU-Q-1862' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-S-100' ci 'sd_KDU-S-100' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-A-2237' ci 'sd_KDU-A-2237' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'fr_KDU-S-101' ci 'sd_KDU-S-101' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'KDU-duiker_19' ci 'KDU-duiker_19' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr

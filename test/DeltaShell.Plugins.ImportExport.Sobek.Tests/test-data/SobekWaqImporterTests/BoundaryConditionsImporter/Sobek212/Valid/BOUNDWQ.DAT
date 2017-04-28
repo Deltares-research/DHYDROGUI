@@ -1,0 +1,143 @@
+
+
+ITEM
+USEFOR 'nN1' 'nN1'
+CONCENTRATION
+USEFOR 'AAP' 'AAP'
+USEFOR 'DetC' 'DetC'
+USEFOR 'DetN' 'DetN'
+USEFOR 'DetP' 'DetP'
+USEFOR 'GREEN' 'GREEN'
+USEFOR 'NH4' 'NH4'
+USEFOR 'NO3' 'NO3'
+USEFOR 'PO4' 'PO4'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Cl' 'Cl'
+USEFOR 'IM1' 'IM1'
+DATA           'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1'        'Missing1' 
+              123.456       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999          -999 
+
+ITEM
+USEFOR 'nLS1' 'nLS1'
+CONCENTRATION
+USEFOR 'AAP' 'AAP'
+USEFOR 'DetC' 'DetC'
+USEFOR 'DetN' 'DetN'
+USEFOR 'DetP' 'DetP'
+USEFOR 'GREEN' 'GREEN'
+USEFOR 'NH4' 'NH4'
+USEFOR 'NO3' 'NO3'
+USEFOR 'PO4' 'PO4'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Cl' 'Cl'
+USEFOR 'IM1' 'IM1'
+DATA           'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1'        'Missing1'
+              111.222       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999          -999
+
+;; ITEM
+;; USEFOR 'nLS2' 'nLS2'
+;; CONCENTRATION
+;; USEFOR 'AAP' 'AAP'
+;; USEFOR 'DetC' 'DetC'
+;; USEFOR 'DetN' 'DetN'
+;; USEFOR 'DetP' 'DetP'
+;; USEFOR 'GREEN' 'GREEN'
+;; USEFOR 'NH4' 'NH4'
+;; USEFOR 'NO3' 'NO3'
+;; USEFOR 'PO4' 'PO4'
+;; USEFOR 'OXY' 'OXY'
+;; USEFOR 'Cl' 'Cl'
+;; USEFOR 'IM1' 'IM1'
+;; DATA        'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1' 
+;;            222.121       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999 
+
+ITEM
+USEFOR 'nN2' 'nN2'
+ABSOLUTE TIME
+CONCENTRATION
+USEFOR 'AAP' 'AAP'
+USEFOR 'DetC' 'DetC'
+USEFOR 'DetN' 'DetN'
+USEFOR 'DetP' 'DetP'
+USEFOR 'GREEN' 'GREEN'
+USEFOR 'NH4' 'NH4'
+USEFOR 'NO3' 'NO3'
+USEFOR 'PO4' 'PO4'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Cl' 'Cl'
+USEFOR 'IM1' 'IM1'
+DATA                         'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1'       'Missing2' 
+'1997/01/01-12:00:00'       222.123       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999         -999
+'1997/02/01-12:00:00'       222.124       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999         -999
+
+;; ITEM
+;; USEFOR 'nN2a' 'nN2a'
+;; CONCENTRATION
+;; USEFOR 'AAP' 'AAP'
+;; USEFOR 'DetC' 'DetC'
+;; USEFOR 'DetN' 'DetN'
+;; USEFOR 'DetP' 'DetP'
+;; USEFOR 'GREEN' 'GREEN'
+;; USEFOR 'NH4' 'NH4'
+;; USEFOR 'NO3' 'NO3'
+;; USEFOR 'PO4' 'PO4'
+;; USEFOR 'OXY' 'OXY'
+;; USEFOR 'Cl' 'Cl'
+;; USEFOR 'IM1' 'IM1'
+;; DATA        'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1' 
+;;            222.222       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999 
+
+ITEM
+USEFOR 'bl_3' 'bl_3'
+CONCENTRATION
+USEFOR 'AAP' 'AAP'
+USEFOR 'DetC' 'DetC'
+USEFOR 'DetN' 'DetN'
+USEFOR 'DetP' 'DetP'
+USEFOR 'GREEN' 'GREEN'
+USEFOR 'NH4' 'NH4'
+USEFOR 'NO3' 'NO3'
+USEFOR 'PO4' 'PO4'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Cl' 'Cl'
+USEFOR 'IM1' 'IM1'
+DATA           'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1' 
+              323.111       -999          -999          -999          -999          -999          -999          -999          -999          -999          -999 
+
+ITEM
+USEFOR 'nLS2' 'nLS2'
+ABSOLUTE TIME
+CONCENTRATION
+USEFOR 'AAP' 'AAP'
+USEFOR 'DetC' 'DetC'
+USEFOR 'DetN' 'DetN'
+USEFOR 'DetP' 'DetP'
+USEFOR 'GREEN' 'GREEN'
+USEFOR 'NH4' 'NH4'
+USEFOR 'NO3' 'NO3'
+USEFOR 'PO4' 'PO4'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Cl' 'Cl'
+USEFOR 'IM1' 'IM1'
+LINEAR DATA                 'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1'        'Missing3' 
+'1997/01/01-12:00:00'       135.1         -999          -999          -999          -999          -999          -999          -999          -999          -999          -999          -999
+'1997/02/01-12:00:00'       135.2         -999          -999          -999          -999          -999          -999          -999          -999          -999          -999          -999
+
+
+ITEM
+USEFOR 'nLN1' 'nLN1'
+CONCENTRATION
+USEFOR 'AAP' 'AAP'
+USEFOR 'DetC' 'DetC'
+USEFOR 'DetN' 'DetN'
+USEFOR 'DetP' 'DetP'
+USEFOR 'GREEN' 'GREEN'
+USEFOR 'NH4' 'NH4'
+USEFOR 'NO3' 'NO3'
+USEFOR 'PO4' 'PO4'
+USEFOR 'OXY' 'OXY'
+USEFOR 'Cl' 'Cl'
+USEFOR 'IM1' 'IM1'
+DATA           'AAP'         'DetC'        'DetN'        'DetP'        'GREEN'       'NH4'         'NO3'         'PO4'         'OXY'         'Cl'          'IM1' 
+              142           -999          -999          -999          -999          -999          -999          -999          -999          -999          -999 
+

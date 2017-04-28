@@ -1,0 +1,1388 @@
+GLIN FLIN id '-1' nm 'initial' ci '-1' ty 0 lv ll 0 5 q_ lq 0 0 flin glin
+FLIN id 'R_0' nm 'initial' ci 'R_0' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1405 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 3008 <
+1405 3008 <
+tble flin
+FLIN id 'R_1' nm 'initial' ci 'R_1' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1342 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 3008 <
+1342 3008 <
+tble flin
+FLIN id 'R_2' nm 'initial' ci 'R_2' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+4153 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+4153 0 <
+tble flin
+FLIN id 'R_3' nm 'initial' ci 'R_3' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+2657 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 2846.12 <
+2657 2846.12 <
+tble flin
+FLIN id 'R_5' nm 'initial' ci 'R_5' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+3085 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+3085 0 <
+tble flin
+FLIN id 'R_6' nm 'initial' ci 'R_6' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+1004 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1004 0 <
+tble flin
+FLIN id 'R_7' nm 'initial' ci 'R_7' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+696 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+696 0 <
+tble flin
+FLIN id 'R_8' nm 'initial' ci 'R_8' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+1884 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1884 0 <
+tble flin
+FLIN id 'R_9' nm 'initial' ci 'R_9' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+1631 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+1631 1152.65 <
+tble flin
+FLIN id 'R_10' nm 'initial' ci 'R_10' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+1608 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1608 0 <
+tble flin
+FLIN id 'R_11' nm 'initial' ci 'R_11' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.25 <
+1741 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+1741 1152.65 <
+tble flin
+FLIN id 'R_12' nm 'initial' ci 'R_12' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+856 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 3008 <
+856 3008 <
+tble flin
+FLIN id 'R_13' nm 'initial' ci 'R_13' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.25 <
+1736 0.25 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1736 0 <
+tble flin
+FLIN id 'R_14' nm 'initial' ci 'R_14' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.25 <
+2016 0.25 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+2016 1152.65 <
+tble flin
+FLIN id 'R_15' nm 'initial' ci 'R_15' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.25 <
+3288 0.25 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+3288 0 <
+tble flin
+FLIN id 'R_16' nm 'initial' ci 'R_16' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.25 <
+3076 0.25 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+3076 1152.65 <
+tble flin
+FLIN id 'R_17' nm 'initial' ci 'R_17' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.25 <
+2649 0.25 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+2649 0 <
+tble flin
+FLIN id 'R_18' nm 'initial' ci 'R_18' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+2077 0.25 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+2077 1152.65 <
+tble flin
+FLIN id 'R_19' nm 'initial' ci 'R_19' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+1951 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1951 0 <
+tble flin
+FLIN id 'R_20' nm 'initial' ci 'R_20' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+1074 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+1074 1152.65 <
+tble flin
+FLIN id 'R_97' nm 'initial' ci 'R_97' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+818 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+818 0 <
+tble flin
+FLIN id 'R_21' nm 'initial' ci 'R_21' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+966 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+966 0 <
+tble flin
+FLIN id 'R_22' nm 'initial' ci 'R_22' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.27 <
+921 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+921 1152.65 <
+tble flin
+FLIN id 'R_23' nm 'initial' ci 'R_23' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.27 <
+1486 0.27 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 810.5 <
+1486 810.5 <
+tble flin
+FLIN id 'R_24' nm 'initial' ci 'R_24' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.27 <
+1144 0.27 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 342.15 <
+1144 342.15 <
+tble flin
+FLIN id 'R_25' nm 'initial' ci 'R_25' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.33 <
+5183 0.27 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1152.65 <
+5183 1152.65 <
+tble flin
+FLIN id 'R_26' nm 'initial' ci 'R_26' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.36 <
+5014 0.33 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1140.25 <
+5014 1140.25 <
+tble flin
+FLIN id 'R_27' nm 'initial' ci 'R_27' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.36 <
+4195 0.33 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 12.4 <
+4195 12.4 <
+tble flin
+FLIN id 'R_28' nm 'initial' ci 'R_28' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.33 <
+941 0.33 <
+2114 0.33 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 12.4 <
+941 12.4 <
+2114 12.4 <
+tble flin
+FLIN id 'R_29' nm 'initial' ci 'R_29' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.33 <
+814 0.33 <
+1842 0.33 <
+2930 0.33 <
+3938 0.33 <
+4977 0.33 <
+6080 0.33 <
+7100 0.33 <
+8038 0.33 <
+9121 0.33 <
+10120 0.33 <
+11033 0.33 <
+12028 0.33 <
+12869 0.33 <
+14079 0.33 <
+15171 0.33 <
+16247 0.33 <
+17060 0.33 <
+18109 0.33 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+814 0 <
+1842 0 <
+2930 0 <
+3938 0 <
+4977 0 <
+6080 0 <
+7100 0 <
+8038 0 <
+9121 0 <
+10120 0 <
+11033 0 <
+12028 0 <
+12869 0 <
+14079 0 <
+15171 0 <
+16247 0 <
+17060 0 <
+18109 0 <
+tble flin
+FLIN id 'R_33' nm 'initial' ci 'R_33' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+979 0.25 <
+1859 0.25 <
+2913 0.24 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1855.35 <
+979 1855.35 <
+1859 1855.35 <
+2913 1855.35 <
+tble flin
+FLIN id 'R_34' nm 'initial' ci 'R_34' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.31 <
+747 0.3 <
+1767 0.29 <
+2778 0.28 <
+3755 0.28 <
+4802 0.27 <
+5840 0.26 <
+6759 0.26 <
+7627 0.26 <
+8203 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1855.35 <
+747 1855.35 <
+1767 1855.35 <
+2778 1855.35 <
+3755 1855.35 <
+4802 1855.35 <
+5840 1855.35 <
+6759 1855.35 <
+7627 1855.35 <
+8203 1855.35 <
+tble flin
+FLIN id 'R_35' nm 'initial' ci 'R_35' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.47 <
+1566 0.45 <
+2674 0.44 <
+3748 0.42 <
+4773 0.41 <
+5648 0.4 <
+6540 0.39 <
+7801 0.37 <
+8886 0.36 <
+10014 0.35 <
+10929 0.34 <
+11914 0.34 <
+12886 0.33 <
+13836 0.32 <
+14818 0.31 <
+15735 0.31 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 1299.08 <
+1566 1299.08 <
+2674 1299.08 <
+3748 1299.08 <
+4773 1299.08 <
+5648 1299.08 <
+6540 1299.08 <
+7801 1299.08 <
+8886 1299.08 <
+10014 1299.08 <
+10929 1299.08 <
+11914 1299.08 <
+12886 1299.08 <
+13836 1299.08 <
+14818 1299.08 <
+15735 1299.08 <
+tble flin
+FLIN id 'R_36' nm 'initial' ci 'R_36' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.47 <
+2008 0.47 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+2008 0 <
+tble flin
+FLIN id 'R_37' nm 'initial' ci 'R_37' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.47 <
+621 0.47 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -4.55 <
+621 -4.55 <
+tble flin
+FLIN id 'R_38' nm 'initial' ci 'R_38' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.47 <
+728 0.47 <
+1656 0.47 <
+2837 0.47 <
+3635 0.47 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -4.55 <
+728 -4.55 <
+1656 -4.55 <
+2837 -4.55 <
+3635 -4.55 <
+tble flin
+FLIN id 'R_43' nm 'initial' ci 'R_43' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1337 0.56 <
+2249 0.56 <
+2942 0.56 <
+4267 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -0.02 <
+1337 -0.02 <
+2249 -0.02 <
+2942 -0.02 <
+4267 -0.02 <
+tble flin
+FLIN id 'R_44' nm 'initial' ci 'R_44' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1171 0.56 <
+2462 0.56 <
+4430 0.56 <
+5929 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0.02 <
+1171 0.02 <
+2462 0.02 <
+4430 0.02 <
+5929 0.02 <
+tble flin
+FLIN id 'R_45' nm 'initial' ci 'R_45' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1281 0.56 <
+2288 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -297.85 <
+1281 -297.85 <
+2288 -297.85 <
+tble flin
+FLIN id 'R_46' nm 'initial' ci 'R_46' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1061 0.56 <
+1849 0.56 <
+3201.89 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 297.85 <
+1061 297.85 <
+1849 297.85 <
+3201.89 297.85 <
+tble flin
+FLIN id 'R_47' nm 'initial' ci 'R_47' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1249.2 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 258.42 <
+1249.2 258.42 <
+tble flin
+FLIN id 'R_48' nm 'initial' ci 'R_48' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+984 0.56 <
+1890 0.56 <
+2991.76 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 556.28 <
+984 556.28 <
+1890 556.28 <
+2991.76 556.28 <
+tble flin
+FLIN id 'R_49' nm 'initial' ci 'R_49' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+702 0.56 <
+1919 0.56 <
+3018 0.56 <
+4222 0.56 <
+5461 0.56 <
+6682 0.56 <
+7864 0.56 <
+9493.18 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 371.93 <
+702 371.93 <
+1919 371.93 <
+3018 371.93 <
+4222 371.93 <
+5461 371.93 <
+6682 371.93 <
+7864 371.93 <
+9493.18 371.93 <
+tble flin
+FLIN id 'R_50' nm 'initial' ci 'R_50' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1170 0.56 <
+2401 0.56 <
+3408 0.56 <
+4632 0.56 <
+5889 0.56 <
+7126 0.56 <
+7955 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 184.35 <
+1170 184.35 <
+2401 184.35 <
+3408 184.35 <
+4632 184.35 <
+5889 184.35 <
+7126 184.35 <
+7955 184.35 <
+tble flin
+FLIN id 'R_51' nm 'initial' ci 'R_51' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1087 0.56 <
+2046 0.56 <
+2986 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 157.74 <
+1087 157.74 <
+2046 157.74 <
+2986 157.74 <
+tble flin
+FLIN id 'R_52' nm 'initial' ci 'R_52' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+2343 0.56 <
+3809 0.56 <
+5099 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 556.28 <
+2343 556.28 <
+3809 556.28 <
+5099 556.28 <
+tble flin
+FLIN id 'R_53' nm 'initial' ci 'R_53' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1488 0.56 <
+2583 0.56 <
+3601 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 26.61 <
+1488 26.61 <
+2583 26.61 <
+3601 26.61 <
+tble flin
+FLIN id 'R_55' nm 'initial' ci 'R_55' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1445 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 556.28 <
+1445 556.28 <
+tble flin
+FLIN id 'R_56' nm 'initial' ci 'R_56' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1142 0.56 <
+2456 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 376.89 <
+1142 376.89 <
+2456 376.89 <
+tble flin
+FLIN id 'R_57' nm 'initial' ci 'R_57' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1384 0.56 <
+2694 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 179.39 <
+1384 179.39 <
+2694 179.39 <
+tble flin
+FLIN id 'R_58' nm 'initial' ci 'R_58' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1039 0.56 <
+2121 0.56 <
+3199 0.56 <
+4230 0.56 <
+5470 0.56 <
+6520 0.56 <
+7533 0.56 <
+8416 0.56 <
+9685 0.56 <
+10870 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 556.28 <
+1039 556.28 <
+2121 556.28 <
+3199 556.28 <
+4230 556.28 <
+5470 556.28 <
+6520 556.28 <
+7533 556.28 <
+8416 556.28 <
+9685 556.28 <
+10870 556.28 <
+tble flin
+FLIN id 'R_73' nm 'initial' ci 'R_73' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.47 <
+932 0.48 <
+2189 0.5 <
+3161 0.51 <
+4102 0.52 <
+5075 0.53 <
+6330 0.54 <
+7527 0.55 <
+8758 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -1303.63 <
+932 -1303.63 <
+2189 -1303.63 <
+3161 -1303.63 <
+4102 -1303.63 <
+5075 -1303.63 <
+6330 -1303.63 <
+7527 -1303.63 <
+8758 -1303.63 <
+tble flin
+FLIN id 'R_75' nm 'initial' ci 'R_75' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.46 <
+985 0.45 <
+2489 0.44 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 612.12 <
+985 612.12 <
+2489 612.12 <
+tble flin
+FLIN id 'R_76' nm 'initial' ci 'R_76' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.47 <
+894 0.46 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 686.65 <
+894 686.65 <
+tble flin
+FLIN id 'R_77' nm 'initial' ci 'R_77' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.46 <
+1021 0.45 <
+2174 0.44 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 74.53 <
+1021 74.53 <
+2174 74.53 <
+tble flin
+FLIN id 'R_78' nm 'initial' ci 'R_78' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.44 <
+1047 0.42 <
+2171 0.41 <
+3150 0.4 <
+4180 0.38 <
+5437 0.36 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 686.65 <
+1047 686.65 <
+2171 686.65 <
+3150 686.65 <
+4180 686.65 <
+5437 686.65 <
+tble flin
+FLIN id 'R_80' nm 'initial' ci 'R_80' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+868 0.26 <
+1759 0.26 <
+2565 0.26 <
+3574 0.26 <
+4663 0.26 <
+5703 0.26 <
+6736 0.26 <
+7834 0.26 <
+8864 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+868 0 <
+1759 0 <
+2565 0 <
+3574 0 <
+4663 0 <
+5703 0 <
+6736 0 <
+7834 0 <
+8864 0 <
+tble flin
+FLIN id 'R_83' nm 'initial' ci 'R_83' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+1301 0.26 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1301 0 <
+tble flin
+FLIN id 'R_84' nm 'initial' ci 'R_84' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.31 <
+733 0.32 <
+1736 0.33 <
+2931 0.34 <
+3979 0.36 <
+5181 0.38 <
+6279 0.4 <
+7453 0.42 <
+8679 0.45 <
+9670 0.46 <
+10155 0.47 <
+10925 0.48 <
+12007 0.49 <
+12930 0.5 <
+13872 0.52 <
+14871 0.53 <
+15861 0.54 <
+17041 0.55 <
+18143 0.56 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -556.28 <
+733 -556.28 <
+1736 -556.28 <
+2931 -556.28 <
+3979 -556.28 <
+5181 -556.28 <
+6279 -556.28 <
+7453 -556.28 <
+8679 -556.28 <
+9670 -556.28 <
+10155 -556.28 <
+10925 -556.28 <
+12007 -556.28 <
+12930 -556.28 <
+13872 -556.28 <
+14871 -556.28 <
+15861 -556.28 <
+17041 -556.28 <
+18143 -556.28 <
+tble flin
+FLIN id 'R_86' nm 'initial' ci 'R_86' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+235 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 -161.88 <
+235 -161.88 <
+tble flin
+FLIN id 'R_87' nm 'initial' ci 'R_87' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1025 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 161.88 <
+1025 161.88 <
+tble flin
+FLIN id 'R_88' nm 'initial' ci 'R_88' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1029 0.19 <
+2017 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 161.88 <
+1029 161.88 <
+2017 161.88 <
+tble flin
+FLIN id 'R_89' nm 'initial' ci 'R_89' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1067 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1067 0 <
+tble flin
+FLIN id 'R_90' nm 'initial' ci 'R_90' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+930 0.19 <
+1883 0.19 <
+2861 0.19 <
+3850 0.19 <
+4856 0.19 <
+5834 0.19 <
+6837 0.19 <
+7892 0.19 <
+8916 0.19 <
+9949 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+930 0 <
+1883 0 <
+2861 0 <
+3850 0 <
+4856 0 <
+5834 0 <
+6837 0 <
+7892 0 <
+8916 0 <
+9949 0 <
+tble flin
+FLIN id 'R_91' nm 'initial' ci 'R_91' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+725 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+725 0 <
+tble flin
+FLIN id 'R_92' nm 'initial' ci 'R_92' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1238 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1238 0 <
+tble flin
+FLIN id 'R_93' nm 'initial' ci 'R_93' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+899 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+899 0 <
+tble flin
+FLIN id 'R_95' nm 'initial' ci 'R_95' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+3233 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+3233 0 <
+tble flin
+FLIN id 'R_96' nm 'initial' ci 'R_96' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.19 <
+1708 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1708 0 <
+tble flin
+FLIN id 'R_98' nm 'initial' ci 'R_98' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+1229 0.56 <
+2172 0.56 <
+3313 0.56 <
+4371 0.56 <
+5196 0.56 <
+6411 0.56 <
+6412 0.19 <
+6611 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1229 0 <
+2172 0 <
+3313 0 <
+4371 0 <
+5196 0 <
+6411 0 <
+6412 0 <
+6611 0 <
+tble flin
+FLIN id 'R_100' nm 'initial' ci 'R_100' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_101' nm 'initial' ci 'R_101' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_102' nm 'initial' ci 'R_102' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_103' nm 'initial' ci 'R_103' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_104' nm 'initial' ci 'R_104' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_105' nm 'initial' ci 'R_105' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_106' nm 'initial' ci 'R_106' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_107' nm 'initial' ci 'R_107' ty 1 lv ll 0 -0.5 q_ lq 0 0 flin
+FLIN id 'R_109' nm 'initial' ci 'R_109' ty 1 lv ll 0 0.2 q_ lq 0 0 flin
+FLIN id 'R_110' nm 'initial' ci 'R_110' ty 1 lv ll 0 0.2 q_ lq 0 0 flin
+FLIN id 'R_111' nm 'initial' ci 'R_111' ty 1 lv ll 0 0.19 q_ lq 0 0 flin
+FLIN id 'R_113' nm 'initial' ci 'R_113' ty 1 lv ll 0 0.26 q_ lq 0 0 flin
+FLIN id 'R_4066' nm 'initial' ci 'R_4066' ty 1 lv ll 0 0.26 q_ lq 0 0 flin
+FLIN id 'R_4067' nm 'initial' ci 'R_4067' ty 1 lv ll 0 0.26 q_ lq 0 0 flin
+FLIN id 'R_9445' nm 'initial' ci 'R_9445' ty 1 lv ll 0 0.24 q_ lq 0 0 flin
+FLIN id 'R_14478' nm 'initial' ci 'R_14478' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.26 <
+4424 0.26 <
+tble q_ lq 0 0 flin
+FLIN id 'R_P_P_63' nm 'initial' ci 'R_P_P_63' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.66 <
+1038 0.66 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 0 <
+1038 0 <
+tble flin
+FLIN id 'R_P_P_23051' nm 'initial' ci 'R_P_P_23051' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.37 <
+726 0.36 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 466 <
+726 466 <
+tble flin
+FLIN id 'R_P_P_P_54' nm 'initial' ci 'R_P_P_P_54' ty 1 lv ll 0 0.56 q_ lq 0 400 flin
+FLIN id 'R_P_P_P_74' nm 'initial' ci 'R_P_P_P_74' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.74 <
+8296 0.661075 <
+tble q_ lq 0 800 flin
+FLIN id 'R_P_P_5579897' nm 'initial' ci 'R_P_P_5579897' ty 1 lv ll 0 0.56 q_ lq 0 1000 flin
+FLIN id 'R_P_P_5579909' nm 'initial' ci 'R_P_P_5579909' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_P_5581286' nm 'initial' ci 'R_P_P_5581286' ty 1 lv ll 0 0.6 q_ lq 0 400 flin
+FLIN id 'R_P_P_5581291' nm 'initial' ci 'R_P_P_5581291' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_P_5582704' nm 'initial' ci 'R_P_P_5582704' ty 1 lv ll 0 0.56 q_ lq 0 400 flin
+FLIN id 'R_P_P_5582705' nm 'initial' ci 'R_P_P_5582705' ty 1 lv ll 0 0.56 q_ lq 0 400 flin
+FLIN id 'R_P_P_5582709' nm 'initial' ci 'R_P_P_5582709' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_P_5582714' nm 'initial' ci 'R_P_P_5582714' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_P_5582718' nm 'initial' ci 'R_P_P_5582718' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_P_5582721' nm 'initial' ci 'R_P_P_5582721' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_003' nm 'initial' ci 'R_P_003' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 6.11 <
+499 6.02 <
+999 5.96 <
+1498 5.9 <
+1997 5.84 <
+2496 5.76 <
+2996 5.7 <
+3495 5.64 <
+3994 5.56 <
+4493 5.48 <
+4993 5.41 <
+5492 5.35 <
+5991 5.27 <
+6490 5.2 <
+6990 5.13 <
+7489 5.07 <
+7988 4.99 <
+8487 4.94 <
+8987 4.87 <
+9486 4.81 <
+9985 4.74 <
+10484 4.69 <
+10984 4.61 <
+11483 4.56 <
+11982 4.49 <
+12481 4.44 <
+12981 4.4 <
+13480 4.31 <
+13979 4.25 <
+14479 4.19 <
+14978 4.13 <
+15477 4.07 <
+15976 4.01 <
+16476 3.95 <
+16975 3.9 <
+17474 3.84 <
+17973 3.77 <
+18473 3.71 <
+18972 3.65 <
+19471 3.58 <
+19970 3.51 <
+20470 3.44 <
+20969 3.39 <
+21468 3.32 <
+21967 3.25 <
+22467 3.18 <
+22966 3.12 <
+23465 3.05 <
+23964 2.99 <
+24464 2.93 <
+24963 2.88 <
+25462 2.81 <
+25961 2.76 <
+26461 2.69 <
+26960 2.64 <
+27459 2.57 <
+27958 2.53 <
+28458 2.47 <
+28957 2.42 <
+29456 2.37 <
+29956 2.33 <
+30455 2.27 <
+30954 2.23 <
+31453 2.16 <
+31953 2.12 <
+32452 2.05 <
+32951 1.99 <
+33450 1.94 <
+33950 1.88 <
+34449 1.82 <
+34948 1.76 <
+35447 1.71 <
+35947 1.67 <
+36446 1.62 <
+36945 1.58 <
+37444 1.54 <
+37944 1.49 <
+38443 1.45 <
+38942 1.4 <
+39441 1.36 <
+39941 1.31 <
+40440 1.26 <
+40939 1.22 <
+41438 1.17 <
+41938 1.12 <
+42437 1.08 <
+42936 1.03 <
+43436 0.99 <
+43935 0.94 <
+44434 0.89 <
+44933 0.85 <
+45433 0.8 <
+45892 0.76 <
+46324 0.71 <
+46761 0.66 <
+tble q_ lq 0 2292 flin
+FLIN id 'R_P_007' nm 'initial' ci 'R_P_007' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.94 <
+502 0.93 <
+1003 0.92 <
+1505 0.91 <
+2007 0.89 <
+2509 0.88 <
+3010 0.87 <
+3512 0.86 <
+4014 0.85 <
+4515 0.84 <
+5017 0.82 <
+5519 0.81 <
+6021 0.8 <
+6522 0.79 <
+7024 0.78 <
+7526 0.77 <
+8028 0.75 <
+8529 0.74 <
+9031 0.73 <
+9533 0.72 <
+10034 0.71 <
+10536 0.7 <
+11038 0.68 <
+11540 0.67 <
+12041 0.66 <
+12543 0.65 <
+13045 0.64 <
+13546 0.63 <
+14048 0.62 <
+14550 0.6 <
+15052 0.59 <
+15553 0.58 <
+16055 0.57 <
+16557 0.56 <
+17059 0.55 <
+17560 0.53 <
+18062 0.52 <
+18564 0.51 <
+19065 0.5 <
+19567 0.49 <
+20069 0.48 <
+20571 0.46 <
+21072 0.45 <
+21574 0.44 <
+22076 0.43 <
+22577 0.42 <
+23079 0.41 <
+23581 0.39 <
+24083 0.38 <
+24584 0.37 <
+25086 0.36 <
+25588 0.35 <
+26089 0.34 <
+26591 0.32 <
+27093 0.31 <
+27595 0.3 <
+28096 0.29 <
+28598 0.28 <
+29100 0.27 <
+29602 0.26 <
+30103 0.24 <
+30605 0.23 <
+31107 0.22 <
+31608 0.21 <
+32110 0.2 <
+32612 0.19 <
+33114 0.17 <
+33615 0.16 <
+34117 0.15 <
+34619 0.14 <
+35120 0.13 <
+35622 0.12 <
+36124 0.1 <
+36626 0.09 <
+37127 0.08 <
+37629 0.07 <
+38131 0.06 <
+38633 0.05 <
+39134 0.03 <
+39636 0.02 <
+40138 0.01 <
+40639 0 <
+tble q_ lq 0 648 flin
+FLIN id 'R_P_017' nm 'initial' ci 'R_P_017' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.56 <
+550 0.56 <
+1099 0.56 <
+1649 0.55 <
+2199 0.55 <
+2748 0.55 <
+3298 0.55 <
+3848 0.55 <
+4398 0.55 <
+4947 0.54 <
+5497 0.54 <
+6047 0.54 <
+6596 0.54 <
+7146 0.54 <
+7696 0.54 <
+8245 0.54 <
+8795 0.53 <
+9345 0.53 <
+9894 0.53 <
+10444 0.53 <
+10994 0.53 <
+11544 0.53 <
+12093 0.53 <
+12643 0.53 <
+13193 0.53 <
+13742 0.53 <
+14292 0.53 <
+14842 0.52 <
+15391 0.52 <
+15941 0.52 <
+16491 0.52 <
+17040 0.52 <
+17590 0.52 <
+tble q_ lq 0 125 flin
+FLIN id 'R_P_018' nm 'initial' ci 'R_P_018' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.52 <
+556 0.52 <
+1112 0.52 <
+1669 0.52 <
+2225 0.52 <
+2781 0.52 <
+3337 0.52 <
+3893 0.52 <
+4449 0.52 <
+5006 0.52 <
+5562 0.52 <
+6118 0.51 <
+6674 0.51 <
+7230 0.51 <
+7787 0.51 <
+8343 0.51 <
+8899 0.51 <
+9455 0.51 <
+10011 0.51 <
+10567 0.51 <
+tble q_ lq 0 125 flin
+FLIN id 'R_P_019' nm 'initial' ci 'R_P_019' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.51 <
+558 0.51 <
+1117 0.51 <
+1675 0.51 <
+2233 0.51 <
+2792 0.51 <
+3350 0.51 <
+3908 0.51 <
+4467 0.51 <
+5025 0.51 <
+5584 0.51 <
+6142 0.51 <
+6700 0.51 <
+7259 0.51 <
+7817 0.51 <
+8375 0.51 <
+8934 0.51 <
+9492 0.51 <
+10050 0.51 <
+tble q_ lq 0 0 flin
+FLIN id 'R_P_020' nm 'initial' ci 'R_P_020' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.51 <
+583 0.51 <
+1167 0.51 <
+1750 0.51 <
+2333 0.51 <
+2917 0.51 <
+3500 0.51 <
+4084 0.51 <
+tble q_ lq 0 0 flin
+FLIN id 'R_P_021' nm 'initial' ci 'R_P_021' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.51 <
+509 0.51 <
+1018 0.51 <
+1527 0.51 <
+2037 0.51 <
+tble q_ lq 0 0 flin
+FLIN id 'R_P_022' nm 'initial' ci 'R_P_022' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.51 <
+559 0.51 <
+1118 0.51 <
+1676 0.51 <
+2235 0.51 <
+2794 0.51 <
+3353 0.51 <
+3912 0.51 <
+4471 0.51 <
+tble q_ lq 0 125 flin
+FLIN id 'R_P_023' nm 'initial' ci 'R_P_023' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.51 <
+546 0.51 <
+1093 0.51 <
+1639 0.51 <
+2185 0.51 <
+2731 0.51 <
+3277 0.51 <
+3824 0.51 <
+4370 0.5 <
+4916 0.5 <
+5462 0.5 <
+6009 0.5 <
+6555 0.5 <
+7101 0.5 <
+7647 0.5 <
+8194 0.5 <
+8740 0.5 <
+9286 0.5 <
+9832 0.5 <
+10379 0.5 <
+10925 0.5 <
+11471 0.5 <
+12017 0.5 <
+12564 0.5 <
+tble q_ lq 0 125 flin
+FLIN id 'R_5579416' nm 'initial' ci 'R_5579416' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_5579425' nm 'initial' ci 'R_5579425' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.661075 <
+2413 0.638118 <
+tble q_ lq 0 800 flin
+FLIN id 'R_5579434' nm 'initial' ci 'R_5579434' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.638118 <
+6473.4 0.576533 <
+tble q_ lq 0 800 flin
+FLIN id 'R_P_33301' nm 'initial' ci 'R_P_33301' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33302' nm 'initial' ci 'R_P_33302' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33304' nm 'initial' ci 'R_P_33304' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33306' nm 'initial' ci 'R_P_33306' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33308' nm 'initial' ci 'R_P_33308' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33310' nm 'initial' ci 'R_P_33310' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33311' nm 'initial' ci 'R_P_33311' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_P_33312' nm 'initial' ci 'R_P_33312' ty 1 lv ll 0 1 q_ lq 0 0 flin
+FLIN id 'R_5585170' nm 'initial' ci 'R_5585170' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_5586721' nm 'initial' ci 'R_P_5586721' ty 1 lv ll 0 0.5 q_ lq 0 0 flin
+FLIN id 'R_P_5586722' nm 'initial' ci 'R_P_5586722' ty 1 lv ll 0 0.5 q_ lq 0 0 flin
+FLIN id 'R_P_5586723' nm 'initial' ci 'R_P_5586723' ty 1 lv ll 0 0.5 q_ lq 0 0 flin
+FLIN id 'R_P_5586720' nm 'initial' ci 'R_P_5586720' ty 1 lv ll 0 0.5 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5582700' nm 'initial' ci 'R_P_P_P_5582700' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.7 <
+2624.5 0.605472 <
+tble q_ lq 0 400 flin
+FLIN id 'R_P_P_P_5582707' nm 'initial' ci 'R_P_P_P_5582707' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_5598164' nm 'initial' ci 'R_P_5598164' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.605472 <
+1262.5 0.56 <
+tble q_ lq 0 400 flin
+FLIN id 'R_5591112' nm 'initial' ci 'R_5591112' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.566811 <
+715.9 0.56 <
+tble q_ lq 0 800 flin
+FLIN id 'R_5591122' nm 'initial' ci 'R_5591122' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.571672 <
+511 0.566811 <
+tble q_ lq 0 800 flin
+FLIN id 'R_5591132' nm 'initial' ci 'R_5591132' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.576533 <
+510.9 0.571672 <
+tble q_ lq 0 800 flin
+FLIN id 'R_5594767' nm 'initial' ci 'R_5594767' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5582715' nm 'initial' ci 'R_P_P_P_5582715' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_5610761' nm 'initial' ci 'R_P_5610761' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_5610771' nm 'initial' ci 'R_P_5610771' ty 1 lv ll 0 0.56 q_ lq 0 0 flin
+FLIN id 'R_P_5614026' nm 'initial' ci 'R_P_5614026' ty 1 lv ll 0 0.6 q_ lq 0 0 flin
+FLIN id 'R_P_5614027' nm 'initial' ci 'R_P_5614027' ty 1 lv ll 0 0.6 q_ lq 0 0 flin
+FLIN id 'R_P_5614028' nm 'initial' ci 'R_P_5614028' ty 1 lv ll 0 0.6 q_ lq 0 0 flin
+FLIN id 'R_P_4' nm 'initial' ci 'R_P_4' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 0.24 <
+16144 0.19 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 3008 <
+16144 3008 <
+tble flin
+FLIN id 'R_P_108' nm 'initial' ci 'R_P_108' ty 1 lv ll 0 0.26 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_P_5582702' nm 'initial' ci 'R_P_P_P_P_5582702' ty 1 lv ll 0 0.56 q_ lq 0 400 flin
+FLIN id 'R_P_P_5683144' nm 'initial' ci 'R_P_P_5683144' ty 1 lv ll 0 0.56 q_ lq 0 400 flin
+FLIN id 'R_P_P_5683155' nm 'initial' ci 'R_P_P_5683155' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5686153' nm 'initial' ci 'R_P_P_P_5686153' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_P_59' nm 'initial' ci 'R_P_P_P_P_59' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5686151' nm 'initial' ci 'R_P_P_P_5686151' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5686150' nm 'initial' ci 'R_P_P_P_5686150' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_002' nm 'initial' ci 'R_P_P_P_Volk_002' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5729653' nm 'initial' ci 'R_P_P_P_5729653' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5734696' nm 'initial' ci 'R_P_P_P_5734696' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_004' nm 'initial' ci 'R_P_P_P_Volk_004' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_005' nm 'initial' ci 'R_P_P_P_Volk_005' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_080' nm 'initial' ci 'R_P_P_P_Volk_080' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 -0.5 <
+3858 -0.5 <
+3859 0.15 <
+7018 0.15 <
+tble q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5670452' nm 'initial' ci 'R_P_P_P_5670452' ty 1 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+0 -0.5 <
+2726 -0.5 <
+2727 0.15 <
+3621.69 0.15 <
+tble q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_088' nm 'initial' ci 'R_P_P_P_Volk_088' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_090' nm 'initial' ci 'R_P_P_P_Volk_090' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_091' nm 'initial' ci 'R_P_P_P_Volk_091' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_092' nm 'initial' ci 'R_P_P_P_Volk_092' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_5717410' nm 'initial' ci 'R_P_P_P_5717410' ty 1 lv ll 0 0.15 q_ lq 0 0 flin
+FLIN id 'R_P_P_P_Volk_107' nm 'initial' ci 'R_P_P_P_Volk_107' ty 1 lv ll 0 0.15 q_ lq 0 0 flin

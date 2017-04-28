@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <ComponentRef Id="FMSuiteCommon"/>
+  <ComponentRef Id="WavePlugin"/>
+
+  <Feature Id="WAVE_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    <?ifndef var.NOKERNELS?>
+    <ComponentRef Id="wave_idx64_bin"/>
+    <ComponentRef Id="wave_idx64_default"/>
+    <ComponentRef Id="swan_idx64_bin"/>
+    <ComponentRef Id="swan_idx64_scripts"/>
+    <ComponentRef Id="esmf_idx64_bin"/>
+    <ComponentRef Id="esmf_idx64_scripts"/>
+    <?endif?>
+  </Feature>
+</Include>

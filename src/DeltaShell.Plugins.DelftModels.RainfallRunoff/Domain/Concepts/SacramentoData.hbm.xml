@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts"
+                   assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
+  <joined-subclass extends="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.CatchmentModelData"
+                   name="SacramentoData" table="rr_sacramento" lazy="false">
+
+    <key column="Id"/>
+    
+    <property name="PercolationIncrease" />
+    <property name="PercolationExponent" />
+    <property name="PercolatedWaterFraction" />
+    <property name="FreeWaterFraction" />
+    <property name="RatioUnobservedToObservedBaseFlow" />
+    <property name="SubSurfaceOutflow" />
+    <property name="PermanentlyImperviousFraction" />
+    <property name="RainfallImperviousFraction" />
+    <property name="WaterAndVegetationAreaFraction" />
+    <property name="UpperRainfallThreshold" />
+    <property name="LowerRainfallThreshold" />
+    <property name="TimeIntervalIncrement" />
+    <property name="UpperZoneTensionWaterStorageCapacity" />
+    <property name="UpperZoneTensionWaterInitialContent" />
+    <property name="UpperZoneFreeWaterStorageCapacity" />
+    <property name="UpperZoneFreeWaterInitialContent" />
+    <property name="UpperZoneFreeWaterDrainageRate" />
+    <property name="LowerZoneTensionWaterStorageCapacity" />
+    <property name="LowerZoneTensionWaterInitialContent" />
+    <property name="LowerZoneSupplementalFreeWaterStorageCapacity" />
+    <property name="LowerZoneSupplementalFreeWaterInitialContent" />
+    <property name="LowerZoneSupplementalFreeWaterDrainageRate" />
+    <property name="LowerZonePrimaryFreeWaterStorageCapacity" />
+    <property name="LowerZonePrimaryFreeWaterInitialContent" />
+    <property name="LowerZonePrimaryFreeWaterDrainageRate" />
+    <property name="HydrographStep" />
+    <list name="HydrographValues" batch-size="36" cascade="save-update" collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[System.Double]], DeltaShell.Plugins.Data.NHibernate"  >
+      <key column="hydrograph_value" />
+      <index column="index_in_parent" />
+      <element column="list_value" type="System.Double" />
+<!--      <element type="DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao.DoubleUserType" />-->
+     </list>
+  </joined-subclass>
+</hibernate-mapping>

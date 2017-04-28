@@ -1,0 +1,13 @@
+5 Number of transport formula IFORM
+*--------------------------------------------------------
+#5 BIJKER with wave effect
+ 5       -Par 1- Coefficient shallow water BS
+ 2       -Par 2- Coefficient deep water BD
+ .4      -Par 3- Shallow water limit CRITS
+ .05     -Par 4- Deep water limit CRITD
+ .000300 -Par 5- D90 grain size D90
+ .05     -Par 6- Bottom roughness height RK
+ .016    -Par 7- Particle fall velocity W
+ .4      -Par 8- Porosity POR
+ 7.0     -Par 9- Wave Period T
+# End of specification of transport relation

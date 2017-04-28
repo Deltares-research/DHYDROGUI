@@ -1,0 +1,13 @@
+CMUPDATE: update of the application \SOBEK212\POup_GV.lit
+6 tasks need update:SUFHYD,CASEDEF1,PLUVIUS1,MAPPER1,VIEW1,VIEW2,
+
+Updating case: 1 - Default
+
+Updating case: 3 - POUPPER_AA2 vDELTARES19-03-2010v2
+
+Erased files: 
+    none
+New files in the application :
+\SOBEK212\FIXED\DEFAULT.TMP
+\SOBEK212\FIXED\DEFAULT.RNF
+..\3\NETWORK.OBI   created as empty file

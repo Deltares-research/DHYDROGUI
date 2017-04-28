@@ -1,0 +1,46 @@
+GLFR  st 0 dd 1.65 s1 0.0474 s2 0.55 p1 -6 p2 2.75 p3 5.5 p4 -4.125 p5 -0.2 p6 2.447 a1 0.0005 a2 6e-005 ra 1 BDFR id '0' ci '0' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 bdfr glfr
+BDFR id '1' ci '1' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '2' ci '2' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '4' ci '4' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '5' ci '5' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '6' ci '6' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '7' ci '7' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '8' ci '8' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '9' ci '9' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '10' ci '10' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '11' ci '11' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 bdfr
+BDFR id '12' nm 'null' ci '12' em 1 er 0 e1 1 e2 0 e3 1 e4 0 mf 0 mt cp 0 45
+mr cp 0 45
+s1 6 c1 cp 0 45
+r1 cp 0 45
+s2 6 c2 cp 0 45
+r2 cp 0 45
+d9 f9 0  0.001 PDIN 0 0 '' pdin TBLE
+tble
+sf 4 st cp 0 0.003 0 sr cp 0 0.003 bdfr
+CRFR id '26' nm 'Friction' cs '26'
+lt ys
+TBLE
+-3 3 <
+tble
+ft ys
+TBLE
+0 45 <
+tble
+fr ys
+TBLE
+0 45 <
+tble crfr
+CRFR id '25' nm 'Friction' cs '25'
+lt ys
+TBLE
+-5 5 <
+tble
+ft ys
+TBLE
+0 45 <
+tble
+fr ys
+TBLE
+0 45 <
+tble crfr

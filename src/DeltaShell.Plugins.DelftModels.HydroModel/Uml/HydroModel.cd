@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.HydroModel" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>gAIAICAAgCIAAKABIIIAAABAAIAiIEAAAAgIAIAGCBA=</HashCode>
+      <FileName>HydroModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.HydroModelBuilder">
+    <Position X="3.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAEAAAAAGAAAAAAAA=</HashCode>
+      <FileName>HydroModelBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters.HydroRegionCoverageValueConverterBase&lt;TOrig, TConv&gt;">
+    <Position X="9" Y="0.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAQBBAAIQCCAKKgQAAAAKAEQAAACACABAAAkAA=</HashCode>
+      <FileName>ValueConverters\HydroRegionCoverageValueConverterBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters.HydroRegionFeatureCoverageToNetworkCoverageValueConverter">
+    <Position X="6.25" Y="7.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAACAIAIAAAAAIAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ValueConverters\HydroRegionFeatureCoverageToNetworkCoverageValueConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters.HydroRegionNetworkCoverageToFeatureCoverageValueConverter">
+    <Position X="11.25" Y="7.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAIAAAAAAAIAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ValueConverters\HydroRegionNetworkCoverageToFeatureCoverageValueConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,4 @@
+INITIALS
+'NH4' 'CBOD5' 'CBOD5_2' 'OXY' 'Continuity' 'SOD' 
+DEFAULTS
+1 0 1 5.5 1 0 

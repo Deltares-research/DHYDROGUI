@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9BFE4F50-7809-4BB6-A967-51B08E7359F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeltaShell.Plugins.FMSuite.Wave.Gui</RootNamespace>
+    <AssemblyName>DeltaShell.Plugins.FMSuite.Wave.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <DontImportPostSharp>True</DontImportPostSharp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DelftTools.Controls">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37046, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Fluent">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\Fluent.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Windows.Shell, Version=3.5.41019.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.UI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.Designer.cs">
+      <DependentUpon>WaveConstantParametersEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.Designer.cs">
+      <DependentUpon>WaveBoundaryConditionDataView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\MeteoFileSelectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\MeteoFileSelectionControl.Designer.cs">
+      <DependentUpon>MeteoFileSelectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveDomainEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaveDomainEditor.Designer.cs">
+      <DependentUpon>WaveDomainEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveGridEditor.cs" />
+    <Compile Include="Editors\WaveBoundaryConditionEditorController.cs" />
+    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.Designer.cs">
+      <DependentUpon>WaveBoundaryConditionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveBoundaryConditionListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaveBoundaryConditionListView.Designer.cs">
+      <DependentUpon>WaveBoundaryConditionListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.Designer.cs">
+      <DependentUpon>WaveBoundaryConditionPropertiesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveMeteoDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaveMeteoDataEditor.Designer.cs">
+      <DependentUpon>WaveMeteoDataEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveObstacleListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaveObstacleListView.Designer.cs">
+      <DependentUpon>WaveObstacleListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveOverallSpectrumFileSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaveOverallSpectrumFileSelection.Designer.cs">
+      <DependentUpon>WaveOverallSpectrumFileSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.Designer.cs">
+      <DependentUpon>WaveSpectrumFileSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.Designer.cs">
+      <DependentUpon>WaveSpectrumParametersEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaveTimePointEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaveTimePointEditor.Designer.cs">
+      <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BoundaryConditionImportDialog.cs" />
+    <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.Designer.cs">
+      <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
+    <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
+    <Compile Include="NodePresenters\WaveTreeShortcutNodePresenter.cs" />
+    <Compile Include="NodePresenters\WavmFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="NodePresenters\WaveModelNodePresenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ribbon\Ribbon.xaml.cs">
+      <DependentUpon>Ribbon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WaveGridBasedDataSource.cs" />
+    <Compile Include="WaveGuiPlugin.cs" />
+    <Compile Include="WaveMapViewDecorator.cs" />
+    <Compile Include="WaveModelMapLayerProvider.cs" />
+    <Compile Include="WaveModelUIDescription.cs" />
+    <Compile Include="WaveModelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WaveModelView.Designer.cs">
+      <DependentUpon>WaveModelView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WaveTreeShortcut.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
+      <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
+      <Project>{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
+      <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj">
+      <Project>{6C01336E-AA42-44E2-B72C-430CD2AC4469}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Wave</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Grid2D.png" />
+    <Resource Include="Resources\wall_brick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.resx">
+      <DependentUpon>WaveBoundaryConditionDataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.resx">
+      <DependentUpon>WaveBoundaryConditionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.resx">
+      <DependentUpon>WaveConstantParametersEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\MeteoFileSelectionControl.resx">
+      <DependentUpon>MeteoFileSelectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaveBoundaryConditionListView.resx">
+      <DependentUpon>WaveBoundaryConditionListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.resx">
+      <DependentUpon>WaveBoundaryConditionPropertiesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaveDomainEditor.resx">
+      <DependentUpon>WaveDomainEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaveMeteoDataEditor.resx">
+      <DependentUpon>WaveMeteoDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaveOverallSpectrumFileSelection.resx">
+      <DependentUpon>WaveOverallSpectrumFileSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.resx">
+      <DependentUpon>WaveSpectrumFileSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.resx">
+      <DependentUpon>WaveSpectrumParametersEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaveTimePointEditor.resx">
+      <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WaveBoundaryTimeSelectionDialog.resx">
+      <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaveModelView.resx">
+      <DependentUpon>WaveModelView.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Ribbon\Ribbon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\compass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\wave.png" />
+    <None Include="packages.config" />
+    <None Include="Resources\hurricane2.png" />
+    <Content Include="Resources\folder_domain.png" />
+    <Content Include="Resources\domain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Editors\Buttons\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
+    <Error Condition="!Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+  </Target>
+  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" />
+</Project>

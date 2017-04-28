@@ -1,0 +1,115 @@
+WWTP id 'delfland' tb 0 wwtp
+WWTP id '186' tb 0  wwtp
+WWTP id '154' tb 0  wwtp
+WWTP id '176' tb 0  wwtp
+WWTP id '173' tb 0  wwtp
+WWTP id '162' tb 0  wwtp
+WWTP id '175' tb 0  wwtp
+WWTP id '158' tb 0  wwtp
+WWTP id '164' tb 0  wwtp
+WWTP id '168' tb 0  wwtp
+WWTP id '170' tb 0  wwtp
+WWTP id '169' tb 0  wwtp
+WWTP id '155' tb 0  wwtp
+WWTP id '163' tb 0  wwtp
+WWTP id '171' tb 0  wwtp
+WWTP id '161' tb 0  wwtp
+WWTP id '159' tb 0  wwtp
+WWTP id '177' tb 0  wwtp
+WWTP id '153' tb 0  wwtp
+WWTP id '185' tb 0  wwtp
+WWTP id '172' tb 0  wwtp
+WWTP id '167' tb 0  wwtp
+WWTP id '182' tb 0  wwtp
+WWTP id '157' tb 0  wwtp
+WWTP id '166' tb 0  wwtp
+WWTP id '165' tb 0  wwtp
+WWTP id 'AWZI-HGM' tb 0  wwtp
+WWTP id 'AWZI-WBR' tb 0  wwtp
+WWTP id 'AWZI-LAN' tb 0  wwtp
+WWTP id '174' tb 0  wwtp
+WWTP id '160' tb 0  wwtp
+WWTP id '186' tb 0  wwtp
+WWTP id '154' tb 0  wwtp
+WWTP id '176' tb 0  wwtp
+WWTP id '173' tb 0  wwtp
+WWTP id '162' tb 0  wwtp
+WWTP id '175' tb 0  wwtp
+WWTP id '158' tb 0  wwtp
+WWTP id '164' tb 0  wwtp
+WWTP id '168' tb 0  wwtp
+WWTP id '170' tb 0  wwtp
+WWTP id '169' tb 0  wwtp
+WWTP id '155' tb 0  wwtp
+WWTP id '163' tb 0  wwtp
+WWTP id '171' tb 0  wwtp
+WWTP id '161' tb 0  wwtp
+WWTP id '159' tb 0  wwtp
+WWTP id '177' tb 0  wwtp
+WWTP id '153' tb 0  wwtp
+WWTP id '185' tb 0  wwtp
+WWTP id '172' tb 0  wwtp
+WWTP id '167' tb 0  wwtp
+WWTP id '182' tb 0  wwtp
+WWTP id '157' tb 0  wwtp
+WWTP id '166' tb 0  wwtp
+WWTP id '165' tb 0  wwtp
+WWTP id 'AWZI-HGM' tb 0  wwtp
+WWTP id 'AWZI-WBR' tb 0  wwtp
+WWTP id 'AWZI-LAN' tb 0  wwtp
+WWTP id '174' tb 0  wwtp
+WWTP id '160' tb 0  wwtp
+WWTP id 'W1wwtp' tb 1 'P11_P01_4' wwtp
+WWTP id 'W3wwtp' tb 1 'P11_P01_5' wwtp
+WWTP id 'W4wwtp' tb 1 'P11_P01_6' wwtp
+WWTP id 'Wwwtp' tb 1 'P11_P01_11' wwtp
+WWTP id 'W11wwtp' tb 0 wwtp
+WWTP id 'W12wwtp' tb 1 'P11_P01_2' wwtp
+WWTP id 'W14wwtp' tb 1 'P11_P01_3' wwtp
+WWTP id 'NO2wwtp' tb 1 'P11_P01_1' wwtp
+WWTP id 'ZO1wwtp' tb 1 'P11_P01_7' wwtp
+WWTP id 'ZO2wwtp' tb 1 'P11_P01_8' wwtp
+WWTP id 'ZO4wwtp' tb 1 'P11_P01_12' wwtp
+WWTP id 'ZO5wwtp' tb 1 'P11_P01_9' wwtp
+WWTP id 'ZO6wwtp' tb 1 'P11_P01_10' wwtp
+WWTP id 'DEFAULT_BOEZEM' tb 0 wwtp
+WWTP id 'delfland' tb 0 wwtp
+WWTP id 'WAL_1wwtp' tb 0 wwtp
+WWTP id 'NBEV_1wwtp' tb 0 wwtp
+WWTP id 'NBEV_2wwtp' tb 0 wwtp
+WWTP id 'SCHE_1wwtp' tb 0 wwtp
+WWTP id 'WWTP_1' tb 0  wwtp
+WWTP id 'A1wwtp' tb 0 wwtp
+WWTP id '1wwtp' tb 0 wwtp
+WWTP id '562' tb 0  wwtp
+WWTP id '569' tb 0  wwtp
+WWTP id 'bunZUIVERING' tb 0  wwtp
+WWTP id '562' tb 0  wwtp
+WWTP id '569' tb 0  wwtp
+WWTP id 'AWZI_vgs' tb 0  wwtp
+WWTP id 'AWZI-gemengd' tb 0  wwtp
+WWTP id '45' tb 0  wwtp
+WWTP id '61' tb 1 'P22_P01_1' wwtp
+WWTP id '368' tb 1 'P22_1' wwtp
+WWTP id 'RWZI_HA' tb 0 wwtp
+WWTP id 'WWTP_Almere' tb 0  wwtp
+WWTP id 'WWTP_Dronten' tb 0  wwtp
+WWTP id 'RWZI_Lelystad' tb 0  wwtp
+WWTP id 'RWZI_NOP' tb 0 wwtp
+WWTP id 'rwzi_Biest_Houtakker_1' tb 1 'P28_rwzi_Biest_Houtakker_1' wwtp
+WWTP id 'rwzi_Boxtel_2' tb 1 'P28_rwzi_Boxtel_2' wwtp
+WWTP id 'rwzi_dbosch_9' tb 1 'P28_rwzi_dbosch_9' wwtp
+WWTP id 'rwzi_Eindhoven_7' tb 1 'P28_rwzi_Eindhoven_7' wwtp
+WWTP id 'rwzi_Haaren_0' tb 1 'P28_rwzi_Haaren_0' wwtp
+WWTP id 'rwzi_Hapert_4' tb 1 'P28_rwzi_Hapert_4' wwtp
+WWTP id 'rwzi_Soerendonk_5' tb 1 'P28_rwzi_Soerendonk_5' wwtp
+WWTP id 'rwzi_St_Oedenrode_6' tb 1 'P28_rwzi_St_Oedenrode_6' wwtp
+WWTP id 'rwzi_Tilburg_3' tb 1 'P28_rwzi_Tilburg_3' wwtp
+WWTP id 'RWZI Biest-Houtakker' tb 0  wwtp
+WWTP id 'RWZI_Hapert' tb 0  wwtp
+WWTP id 'RWZI_Sint-Oedenrode' tb 0  wwtp
+WWTP id 'RWZI_Soerendonk' tb 0  wwtp
+WWTP id 'RWZI_Boxtel' tb 0  wwtp
+WWTP id 'RWZI_Eindhoven' tb 0  wwtp
+WWTP id 'RWZI_Haaren' tb 0  wwtp
+WWTP id 'RWZI_Tilburg' tb 0  wwtp

@@ -1,0 +1,19 @@
+ST_1.0
+STRU id '5' nm '' ci '1' lc 126.058126952211 stru
+STRU id '6' nm '' ci '1' lc 235.164478144194 stru
+STRU id '7' nm '' ci '1' lc 324.631686121621 stru
+STRU id '8' nm '' ci '1' lc 414.098894099048 stru
+STRU id '9' nm '' ci '1' lc 516.658864219512 stru
+STRU id '10' nm '' ci '1' lc 617.036707316137 stru
+STRU id '11' nm '' ci '1' lc 695.593280174366 stru
+STRU id '12' nm '' ci '1' lc 806.881758390189 stru
+STRU id '13' nm '' ci '1' lc 896.348966367616 stru
+STRU id '14' nm '' ci '2' lc 49.166662362182 stru
+STRU id '15' nm '' ci '2' lc 160.455140578002 stru
+STRU id '16' nm '' ci '2' lc 256.468729626952 stru
+STRU id '17' nm '' ci '2' lc 341.571683556692 stru
+STRU id '18' nm '' ci '2' lc 433.221018557962 stru
+STRU id '19' nm '' ci '2' lc 551.055877845302 stru
+STRU id '20' nm '' ci '2' lc 664.526483084972 stru
+STRU id '22' nm '' ci '2' lc 760.540072133912 stru
+STRU id '23' nm '' ci '2' lc 863.100042254382 stru

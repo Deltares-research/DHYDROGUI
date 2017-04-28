@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <ComponentRef Id="WaterFlowModelPlugin"/>
+  <ComponentRef Id="wfm1d_scripts_examples_files"/>
+  <ComponentRef Id="wfm1d_scripts_libraries_files"/>
+
+  <!--<ComponentRef Id="sobek_scripts_examples_files"/>-->
+  <ComponentRef Id="sobek_scripts_libraries_files"/>
+
+  <ComponentRef Id="NetworkEditorPlugin"/>
+  <ComponentRef Id="network_editor_scripts_examples_files"/>
+  <ComponentRef Id="network_editor_scripts_libraries_files"/>
+
+  
+  <ComponentRef Id="NGHS.IO"/>
+  
+  <ComponentRef Id="ImportExportSobekPlugin"/>
+  <ComponentRef Id="RealTimeControlPluginDll"/>
+  <ComponentRef Id="RealTimeControlPluginXsd"/>
+  <ComponentRef Id="RealTimeControl_scripts_examples_files"/>
+  <ComponentRef Id="RealTimeControl_scripts_libraries_files"/>
+
+  <ComponentRef Id="f1d_x86_kernel"/>
+
+  <ComponentRef Id="Dimr"/>
+  <ComponentRef Id="x86_dimr_kernels"/>
+  
+  <Feature Id="F1D_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    <ComponentRef Id="f1d_x64_kernel"/>
+    <ComponentRef Id="x64_dimr_kernels"/>
+  </Feature>
+
+</Include>

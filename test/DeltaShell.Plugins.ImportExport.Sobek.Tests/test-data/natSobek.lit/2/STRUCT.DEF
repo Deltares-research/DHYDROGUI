@@ -1,0 +1,942 @@
+STDS id 'NDB_0' nm 'NDB_haringvlietsluis 1' ty 2 w1 992.5 wl 992.5 ws 57.5 wr 992.5 w2 992.5 z1 -8 zl -8 zs -5.5 zr -8 z2 -8 gh -5.5 pg 1 pd 1 pi 1 pr 1 pc 0.83 ng 1 nd 1 nf 1 nr 1 nc 0.83 er 0 stds
+STDS id 'NDB_1' nm 'NDB_svkw_schuif' ty 2 w1 360 wl 360 ws 0 wr 360 w2 360 z1 -17 zl -17 zs -17 zr -17 z2 -17 gh -7 pg 1 pd 0.85 pi 1 pr 0.65 pc 1 ng 1 nd 0.85 nf 1 nr 0.65 nc 1 er 0 stds
+STDS id 'NDB_2' nm 'NDB_svkw_overlaat' ty 2 w1 360 wl 360 ws 360 wr 360 w2 360 z1 -17 zl -17 zs -17 zr -17 z2 -17 gh 13 pg 1 pd 0.85 pi 1 pr 0.65 pc 1 ng 1 nd 0.85 nf 1 nr 0.65 nc 1 er 0 stds
+STDS id 'NDB_3' nm 'NDB_svkh_breed_schuif' ty 2 w1 150 wl 95.5 ws 95.5 wr 95.5 w2 150 z1 -6.5 zl -6.5 zs -6.5 zr -6.5 z2 -6.5 gh 13.5 pg 0.71 pd 0.64 pi 1 pr 0.8 pc 1 ng 0.71 nd 0.64 nf 1 nr 0.8 nc 1 er 0 stds
+STDS id 'NDB_4' nm 'NDB_svkh_smal_schuif' ty 2 w1 75 wl 46.8 ws 46.8 wr 46.8 w2 75 z1 -6.5 zl -6.5 zs -6.5 zr -6.5 z2 -6.5 gh 13.5 pg 0.71 pd 0.64 pi 1 pr 0.8 pc 1 ng 0.71 nd 0.64 nf 1 nr 0.8 nc 1 er 0 stds
+STDS id 'NDB_5' nm 'NDB_svkw_overtop' ty 2 w1 360 wl 360 ws 360 wr 360 w2 360 z1 -17 zl -17 zs 15 zr -17 z2 -17 gh 35 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'NDB_6' nm 'NDB_svkh_breed_overtop' ty 2 w1 150 wl 95.5 ws 95.5 wr 95.5 w2 150 z1 -6.5 zl -6.5 zs 23 zr -6.5 z2 -6.5 gh 43 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'NDB_7' nm 'NDB_svkh_smal_overtop' ty 2 w1 75 wl 46.8 ws 46.8 wr 46.8 w2 75 z1 -6.5 zl -6.5 zs 23 zr -6.5 z2 -6.5 gh 43 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'NDB_24' nm 'NDB_stormstuw HY' ty 2 w1 80 wl 80 ws 80 wr 80 w2 80 z1 -6.5 zl -6.5 zs -6.5 zr -6.5 z2 -6.5 gh 2.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'NDB_16223' nm 'NDB_haringvlietsluis2' ty 2 w1 992.5 wl 992.5 ws 58.5 wr 992.5 w2 992.5 z1 -8 zl -8 zs -5.5 zr -8 z2 -8 gh -5.5 pg 1 pd 1 pi 1 pr 1 pc 0.83 ng 1 nd 1 nf 1 nr 1 nc 0.83 er 0 stds
+STDS id 'MS_01' nm 'MS_stuw_Borgh_zom' ty 2 w1 123 wl 119 ws 99 wr 118 w2 135 z1 37.64 zl 37.94 zs 39.6 zr 38.12 z2 37.82 gh 139.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_02' nm 'MS_stuw_Borg_Bosv' ty 0 cl 44 cw 100 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_03' nm 'MS_stuw_Borgh_win' ty 0 cl 45 cw 250 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_04' nm 'MS_sluis___Limmel' ty 2 w1 56 wl 54 ws 35 wr 54 w2 56 z1 39.1 zl 39.4 zs 39.6 zr 39.4 z2 39.1 gh 139.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_05' nm 'MS_sluis_Born' ty 2 w1 56 wl 54 ws 50 wr 79 w2 81 z1 39.1 zl 39.4 zs 100 zr 28.05 z2 27.75 gh 199.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_06' nm 'MS_sluis_Maasbrac' ty 2 w1 75 wl 73 ws 50 wr 73 w2 75 z1 22.95 zl 23.25 zs 32.4 zr 15.39 z2 15.09 gh 132.3 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_07' nm 'MS_stuw_Linne_zom' ty 2 w1 156 wl 144 ws 111 wr 130 w2 144 z1 14.95 zl 15.25 zs 15.95 zr 12.45 z2 12.15 gh 115.85 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_08' nm 'MS_stuw_Linnoverl' ty 0 cl 21.6 cw 50 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble  stds
+STDS id 'MS_09' nm 'MS_stuw_Linne_win' ty 0 cl 21.8 cw 818 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_10' nm 'MS_stuw_Roerm_zom' ty 2 w1 130 wl 122 ws 102 wr 116 w2 130 z1 10.65 zl 10.95 zs 12.18 zr 7.46 z2 7.16 gh 112.08 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_11' nm 'MS_stuw_Roerm_win' ty 0 cl 18.4 cw 974 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_12' nm 'MS_sluis_Heel' ty 2 w1 75 wl 70 ws 25 wr 70 w2 75 z1 14.95 zl 15.25 zs 25 zr 9.4 z2 9.1 gh 124.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_13' nm 'MS_stuw_Belfe_zom' ty 2 w1 142 wl 131 ws 97 wr 140 w2 155 z1 7.79 zl 8.09 zs 9.5 zr 5.87 z2 5.57 gh 109.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_14' nm 'MS_stuw_Belfe_win' ty 0 cl 17.25 cw 100 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_15' nm 'MS_stuw_Sambe_zom' ty 2 w1 151 wl 136 ws 97 wr 140 w2 156 z1 4.09 zl 4.39 zs 4.4 zr 3.75 z2 3.45 gh 104.3 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_16' nm 'MS_stuw_Sambe_win' ty 0 cl 11.2 cw 2035 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble  stds
+STDS id 'MS_17' nm 'MS_sluis_Heumen' ty 2 w1 96 wl 91 ws 25 wr 91 w2 93 z1 2.7 zl 2.8 zs 3 zr 2.8 z2 2.7 gh 102.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_18' nm 'MS_sluis_Kraaijpl' ty 2 w1 64 wl 59 ws 25 wr 59 w2 64 z1 2.7 zl 2.8 zs 3 zr 2.8 z2 2.7 gh 102.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_19' nm 'MS_stuw_Grave_zom' ty 2 w1 144 wl 133 ws 110 wr 130 w2 140 z1 0.83 zl 1.13 zs 0.9 zr -2.89 z2 -3.19 gh 100.8 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_20' nm 'MS_stuw_Grave_win' ty 0 cl 8.2 cw 300 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_21' nm 'MS_stuw_Lith_zom' ty 2 w1 156 wl 150 ws 114 wr 151 w2 159 z1 -3.19 zl -2.89 zs -3 zr -5.84 z2 -6.14 gh 16.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_22' nm 'MS_stuw_Lith_win' ty 0 cl 5.14 cw 100 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_4471' nm 'MS_stuw_Roermond_groene rivier' ty 0 cl 17.25 cw 50 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MS_4919' nm 'MS_kering_afgedamde_Maas' ty 2 w1 145 wl 135 ws 85 wr 135 w2 145 z1 -5.5 zl -5.4 zs -5.25 zr -5.4 z2 -5.5 gh 14.75 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_101' nm 'MS_Plasmol_in' ty 2 w1 5000 wl 5000 ws 4829 wr 5000 w2 5000 z1 11.4 zl 11.4 zs 12.9 zr 11.4 z2 11.4 gh 32.9 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_102' nm 'MS_Plasmol_uit' ty 2 w1 5000 wl 5000 ws 500 wr 5000 w2 5000 z1 11.4 zl 11.4 zs 11.4 zr 11.4 z2 11.4 gh 31.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_103' nm 'MS_Milsbee__in' ty 2 w1 1200 wl 1200 ws 1041 wr 1200 w2 1200 z1 12.4 zl 12.4 zs 13.4 zr 12.4 z2 12.4 gh 33.4 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_104' nm 'MS_Milsbee_uit' ty 2 w1 1200 wl 1200 ws 500 wr 1200 w2 1200 z1 12.4 zl 12.4 zs 12.4 zr 12.4 z2 12.4 gh 32.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_105' nm 'MS_Heijen___in' ty 2 w1 1500 wl 1500 ws 1371 wr 1500 w2 1500 z1 13.2 zl 13.2 zs 13.9 zr 13.2 z2 13.2 gh 33.9 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_106' nm 'MS_Heijen__uit' ty 2 w1 1500 wl 1500 ws 500 wr 1500 w2 1500 z1 13.2 zl 13.2 zs 13.2 zr 13.2 z2 13.2 gh 33.2 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_107' nm 'MS_Vortum___in' ty 2 w1 1750 wl 1750 ws 1618 wr 1618 w2 1618 z1 13.7 zl 13.7 zs 14.7 zr 13.7 z2 13.7 gh 34.7 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_108' nm 'MS_Vortum__uit' ty 2 w1 1750 wl 1750 ws 500 wr 1618 w2 1618 z1 13.7 zl 13.7 zs 13.7 zr 13.7 z2 13.7 gh 33.7 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_109' nm 'MS_Nw_Berg__in' ty 2 w1 600 wl 600 ws 528 wr 600 w2 600 z1 14.6 zl 14.6 zs 14.7 zr 14.6 z2 14.6 gh 34.7 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_110' nm 'MS_Nw_Berg_uit' ty 2 w1 600 wl 600 ws 500 wr 600 w2 600 z1 14.6 zl 14.6 zs 14.6 zr 14.6 z2 14.6 gh 34.6 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_111' nm 'MS_Bergen___in' ty 2 w1 7000 wl 7000 ws 6505 wr 7000 w2 7000 z1 13.6 zl 13.6 zs 14.8 zr 13.6 z2 13.6 gh 34.8 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_112' nm 'MS_Bergen__uit' ty 2 w1 7000 wl 7000 ws 500 wr 7000 w2 7000 z1 13.6 zl 13.6 zs 13.6 zr 13.6 z2 13.6 gh 33.6 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_113' nm 'MS_Well_____in' ty 2 w1 5500 wl 5500 ws 5014 wr 5500 w2 5500 z1 14 zl 14 zs 15.5 zr 14 z2 14 gh 35.5 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_114' nm 'MS_Well____uit' ty 2 w1 5500 wl 5500 ws 500 wr 5500 w2 5500 z1 14 zl 14 zs 14 zr 14 z2 14 gh 34 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_115' nm 'MS_Wanssum__in' ty 2 w1 7000 wl 7000 ws 6704 wr 7000 w2 7000 z1 14.7 zl 14.7 zs 15.5 zr 14.7 z2 14.7 gh 35.5 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_116' nm 'MS_Wanssum_uit' ty 2 w1 7000 wl 7000 ws 500 wr 7000 w2 7000 z1 14.7 zl 14.7 zs 14.7 zr 14.7 z2 14.7 gh 34.7 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_117' nm 'MS_Blitter__in' ty 2 w1 4000 wl 4000 ws 3561 wr 4000 w2 4000 z1 15.4 zl 15.4 zs 16.7 zr 15.4 z2 15.4 gh 36.7 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_118' nm 'MS_Blitter_uit' ty 2 w1 4000 wl 4000 ws 500 wr 4000 w2 4000 z1 15.4 zl 15.4 zs 15.4 zr 15.4 z2 15.4 gh 35.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_119' nm 'MS_Arcen____in' ty 2 w1 4000 wl 4000 ws 3809 wr 4000 w2 4000 z1 15.9 zl 15.9 zs 17 zr 15.9 z2 15.9 gh 37 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_120' nm 'MS_Arcen___uit' ty 2 w1 4000 wl 4000 ws 500 wr 4000 w2 4000 z1 15.9 zl 15.9 zs 15.9 zr 15.9 z2 15.9 gh 35.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_121' nm 'MS_Lottum___in' ty 2 w1 1500 wl 1500 ws 1282 wr 1500 w2 1500 z1 16.2 zl 16.2 zs 17.2 zr 16.2 z2 16.2 gh 37.2 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_122' nm 'MS_Lottum__uit' ty 2 w1 1500 wl 1500 ws 500 wr 1500 w2 1500 z1 16.2 zl 16.2 zs 16.2 zr 16.2 z2 16.2 gh 36.2 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_123' nm 'MS_Velden___in' ty 2 w1 5500 wl 5500 ws 5016 wr 5500 w2 5500 z1 16.9 zl 16.9 zs 17.8 zr 16.9 z2 16.9 gh 37.8 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_124' nm 'MS_Velden__uit' ty 2 w1 5500 wl 5500 ws 500 wr 5500 w2 5500 z1 16.9 zl 16.9 zs 16.9 zr 16.9 z2 16.9 gh 36.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_125' nm 'MS_Grubben__in' ty 2 w1 1000 wl 1000 ws 745 wr 1000 w2 1000 z1 17.8 zl 17.8 zs 17.9 zr 17.8 z2 17.8 gh 37.9 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_126' nm 'MS_Grubben_uit' ty 2 w1 1000 wl 1000 ws 500 wr 1000 w2 1000 z1 17.8 zl 17.8 zs 17.8 zr 17.8 z2 17.8 gh 37.8 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_127' nm 'MS_Ubroek___in' ty 2 w1 4500 wl 4500 ws 4236 wr 4500 w2 4500 z1 18.4 zl 18.4 zs 18.5 zr 18.4 z2 18.4 gh 38.5 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_128' nm 'MS_Ubroek__uit' ty 2 w1 4500 wl 4500 ws 500 wr 4500 w2 4500 z1 18.4 zl 18.4 zs 18.4 zr 18.4 z2 18.4 gh 38.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_129' nm 'MS_Tegelen__in' ty 2 w1 8000 wl 8000 ws 7860 wr 8000 w2 8000 z1 18.7 zl 18.7 zs 18.8 zr 18.7 z2 18.7 gh 38.8 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_130' nm 'MS_Tegelen_uit' ty 2 w1 8000 wl 8000 ws 500 wr 8000 w2 8000 z1 18.7 zl 18.7 zs 18.7 zr 18.7 z2 18.7 gh 38.7 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_131' nm 'MS_Baarlo___in' ty 2 w1 5000 wl 5000 ws 4806 wr 5000 w2 5000 z1 18.5 zl 18.5 zs 19.2 zr 18.5 z2 18.5 gh 39.2 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_132' nm 'MS_Baarlo__uit' ty 2 w1 5000 wl 5000 ws 500 wr 5000 w2 5000 z1 18.5 zl 18.5 zs 18.5 zr 18.5 z2 18.5 gh 38.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_133' nm 'MS_Belfeld__in' ty 2 w1 1000 wl 1000 ws 945 wr 1000 w2 1000 z1 19 zl 19 zs 19.3 zr 19 z2 19 gh 39.3 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_134' nm 'MS_Belfeld_uit' ty 2 w1 1000 wl 1000 ws 500 wr 1000 w2 1000 z1 19 zl 19 zs 19 zr 19 z2 19 gh 39 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_135' nm 'MS_Beesel___in' ty 2 w1 1500 wl 1500 ws 1098 wr 1500 w2 1500 z1 19.9 zl 19 zs 20.3 zr 19.9 z2 19.9 gh 40.3 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_136' nm 'MS_Beesel__uit' ty 2 w1 1500 wl 1500 ws 500 wr 1500 w2 1500 z1 19.9 zl 19.9 zs 19.9 zr 19.9 z2 19.9 gh 39.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_137' nm 'MS_Hanssum__in' ty 2 w1 1000 wl 1000 ws 514 wr 1000 w2 1000 z1 20.3 zl 20.3 zs 20.4 zr 20.3 z2 20.3 gh 40.4 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_138' nm 'MS_Hanssum_uit' ty 2 w1 1000 wl 1000 ws 500 wr 1000 w2 1000 z1 20.3 zl 20.3 zs 20.3 zr 20.3 z2 20.3 gh 40.3 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_139' nm 'MS_Buggenu__in' ty 2 w1 1500 wl 1500 ws 1132 wr 1500 w2 1500 z1 19.2 zl 19.2 zs 20.7 zr 19.2 z2 19.2 gh 40.7 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_140' nm 'MS_Buggenu_uit' ty 2 w1 1500 wl 1500 ws 500 wr 1500 w2 1500 z1 19.2 zl 19.2 zs 19.2 zr 19.2 z2 19.2 gh 39.2 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_141' nm 'MS_Roermon__in' ty 2 w1 1500 wl 1500 ws 1494 wr 1500 w2 1500 z1 20.8 zl 20.8 zs 20.9 zr 20.8 z2 20.8 gh 40.9 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_142' nm 'MS_Roermon_uit' ty 2 w1 1500 wl 1500 ws 500 wr 1500 w2 1500 z1 20.8 zl 20.8 zs 20.8 zr 20.8 z2 20.8 gh 40.8 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_143' nm 'MS_Herten___in' ty 2 w1 5500 wl 5500 ws 5414 wr 5500 w2 5500 z1 19.5 zl 19.5 zs 21.6 zr 19.5 z2 19.5 gh 41.6 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_144' nm 'MS_Herten__uit' ty 2 w1 5500 wl 5500 ws 500 wr 5500 w2 5500 z1 19.5 zl 19.5 zs 19.5 zr 19.5 z2 19.5 gh 39.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_145' nm 'MS_Latkanw__in' ty 2 w1 5500 wl 5500 ws 5400 wr 5500 w2 5500 z1 19.1 zl 19.1 zs 20.2 zr 19.1 z2 19.1 gh 40.2 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_146' nm 'MS_Latkanw_uit' ty 2 w1 5500 wl 5500 ws 500 wr 5500 w2 5500 z1 19.1 zl 19.1 zs 19.1 zr 19.1 z2 19.1 gh 39.1 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_147' nm 'MS_Ohe______in' ty 2 w1 5500 wl 5500 ws 5119 wr 5500 w2 5500 z1 25.6 zl 25.6 zs 27.7 zr 25.6 z2 25.6 gh 47.7 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_148' nm 'MS_Ohe_____uit' ty 2 w1 5500 wl 5500 ws 500 wr 5500 w2 5500 z1 25.6 zl 25.6 zs 25.6 zr 25.6 z2 25.6 gh 45.6 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_149' nm 'MS_Aasterb__in' ty 2 w1 1000 wl 1000 ws 794 wr 1000 w2 1000 z1 27.1 zl 27.1 zs 28.4 zr 27.1 z2 27.1 gh 48.4 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_150' nm 'MS_Aasterb_uit' ty 2 w1 1000 wl 1000 ws 500 wr 1000 w2 1000 z1 27.1 zl 27.1 zs 27.1 zr 27.1 z2 27.1 gh 47.1 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_151' nm 'MS_Rooster__in' ty 2 w1 8000 wl 8000 ws 7374 wr 8000 w2 8000 z1 28.5 zl 28.5 zs 30.9 zr 28.5 z2 28.5 gh 50.9 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_152' nm 'MS_Rooster_uit' ty 2 w1 8000 wl 8000 ws 500 wr 8000 w2 8000 z1 28.5 zl 28.5 zs 28.5 zr 28.5 z2 28.5 gh 48.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_153' nm 'MS_Grevenb__in' ty 2 w1 1000 wl 1000 ws 665 wr 1000 w2 1000 z1 32.8 zl 32.8 zs 34.2 zr 32.8 z2 32.8 gh 54.2 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_154' nm 'MS_Grevenb_uit' ty 2 w1 1000 wl 1000 ws 500 wr 1000 w2 1000 z1 32.8 zl 32.8 zs 32.8 zr 32.8 z2 32.8 gh 52.8 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_155' nm 'MS_Meers____in' ty 2 w1 5000 wl 5000 ws 4653 wr 5000 w2 5000 z1 36.5 zl 36.5 zs 38.3 zr 36.5 z2 36.5 gh 58.3 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_156' nm 'MS_Meers___uit' ty 2 w1 5000 wl 5000 ws 500 wr 5000 w2 5000 z1 36.5 zl 36.5 zs 36.5 zr 36.5 z2 36.5 gh 56.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_157' nm 'MS_ad_Maas__in' ty 2 w1 3000 wl 3000 ws 2675 wr 3000 w2 3000 z1 41.4 zl 41.4 zs 43.2 zr 41.4 z2 41.4 gh 63.2 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_158' nm 'MS_ad_Maas_uit' ty 2 w1 3000 wl 3000 ws 500 wr 3000 w2 3000 z1 41.4 zl 41.4 zs 41.4 zr 41.4 z2 41.4 gh 61.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_159' nm 'MS_Voulwam__in' ty 2 w1 1000 wl 1000 ws 672 wr 1000 w2 1000 z1 42.8 zl 42.8 zs 44.4 zr 42.8 z2 42.8 gh 64.4 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_160' nm 'MS_Voulwam_uit' ty 2 w1 1000 wl 1000 ws 500 wr 1000 w2 1000 z1 42.8 zl 42.8 zs 42.8 zr 42.8 z2 42.8 gh 62.8 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_161' nm 'MS_Itteren__in' ty 2 w1 4000 wl 4000 ws 3493 wr 4000 w2 4000 z1 43.4 zl 43.4 zs 45.2 zr 43.4 z2 43.4 gh 65.2 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_162' nm 'MS_Itteren_uit' ty 2 w1 4000 wl 4000 ws 500 wr 4000 w2 4000 z1 43.4 zl 43.4 zs 43.4 zr 43.4 z2 43.4 gh 63.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_163' nm 'MS_Borghar__in' ty 2 w1 4000 wl 4000 ws 3382 wr 4000 w2 4000 z1 44.9 zl 44.9 zs 46.1 zr 44.9 z2 44.9 gh 66.1 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_164' nm 'MS_Borghar_uit' ty 2 w1 4000 wl 4000 ws 500 wr 4000 w2 4000 z1 44.9 zl 44.9 zs 44.9 zr 44.9 z2 44.9 gh 64.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_165' nm 'MS_Smeerma_in' ty 2 w1 1500 wl 1500 ws 1410 wr 1500 w2 1500 z1 44.6 zl 44.6 zs 45.8 zr 44.6 z2 44.6 gh 65.8 pg 0 pd 0 pi 0 pr 0 pc 0 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_166' nm 'MS_Smeerma_uit' ty 2 w1 1500 wl 1500 ws 500 wr 1500 w2 1500 z1 44.6 zl 44.6 zs 44.6 zr 44.6 z2 44.6 gh 64.6 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'MS_501' nm 'MS_Hoch_grw' ty 2 w1 500 wl 500 ws 1 wr 500 w2 500 z1 36.7 zl 36.7 zs 36.75 zr 36.7 z2 36.7 gh 38.75 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_502' nm 'MS_Hoch_ret' ty 2 w1 500 wl 500 ws 8 wr 500 w2 500 z1 36.7 zl 36.7 zs 40.38 zr 36.7 z2 36.7 gh 46.08 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_503' nm 'MS_Maas_grw' ty 2 w1 500 wl 500 ws 1 wr 500 w2 500 z1 28.5 zl 28.5 zs 28.55 zr 28.5 z2 28.5 gh 30.55 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_504' nm 'MS_Maas_ret' ty 2 w1 500 wl 500 ws 12 wr 500 w2 500 z1 28.5 zl 28.5 zs 34.13 zr 28.5 z2 28.5 gh 42.23 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_505' nm 'MS_Obbi_grw' ty 2 w1 500 wl 500 ws 1 wr 500 w2 500 z1 25.7 zl 25.7 zs 25.75 zr 25.7 z2 25.7 gh 27.75 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_506' nm 'MS_Obbi_ret' ty 2 w1 500 wl 500 ws 6 wr 500 w2 500 z1 25.7 zl 25.7 zs 30.25 zr 25.7 z2 25.7 gh 37.6 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_507' nm 'MS_Grev_grw' ty 2 w1 500 wl 500 ws 1 wr 500 w2 500 z1 24.85 zl 24.85 zs 24.9 zr 24.85 z2 24.85 gh 26.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_508' nm 'MS_Grev_ret' ty 2 w1 500 wl 500 ws 8 wr 500 w2 500 z1 24.85 zl 24.85 zs 31.28 zr 24.85 z2 24.85 gh 37.88 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_509' nm 'MS_Laak_grw' ty 2 w1 500 wl 500 ws 1 wr 500 w2 500 z1 20.85 zl 20.85 zs 20.9 zr 20.85 z2 20.85 gh 22.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MS_510' nm 'MS_Laak_ret' ty 2 w1 500 wl 500 ws 8 wr 500 w2 500 z1 20.85 zl 20.85 zs 22.51 zr 20.85 z2 20.85 gh 26.21 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'RT_01' nm 'RT_stuw Driel zom' ty 2 w1 122 wl 112 ws 96 wr 115 w2 127 z1 2.26 zl 2.36 zs 2.7 zr 2.16 z2 2.06 gh 21.7 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'RT_02' nm 'RT_stuw Driel win' ty 0 cl 10.29 cw 720 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble  stds
+STDS id 'RT_03' nm 'RT_stuw Amero zom' ty 2 w1 139 wl 127 ws 96 wr 132 w2 143 z1 -1.68 zl -1.58 zs -1 zr -1.51 z2 -1.61 gh 18.4 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'RT_04' nm 'RT_stuw Amero win' ty 0 cl 5.99 cw 1620 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble  stds
+STDS id 'RT_05' nm 'RT_stuw Hages zom' ty 2 w1 143 wl 133 ws 96 wr 136 w2 146 z1 -4.58 zl -4.48 zs -3.5 zr -5 z2 -5.1 gh 15.9 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'RT_06' nm 'RT_stuw Hages win' ty 0 cl 4.55 cw 918 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.5 <
+1 0 <
+tble  stds
+STDS id 'RT_2137' nm 'RT_stuw Driel omloop' ty 2 w1 20 wl 15 ws 10 wr 15 w2 20 z1 2.26 zl 2.36 zs 2.7 zr 2.16 z2 2.06 gh 17.7 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'RT_2574' nm 'RT_stuw Amero omloop' ty 2 w1 20 wl 15 ws 10 wr 15 w2 20 z1 -1.68 zl -1.58 zs -1 zr -1.51 z2 -1.61 gh 14 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'RT_2695' nm 'RT_stuw Hages omloop' ty 2 w1 20 wl 15 ws 10 wr 15 w2 20 z1 -4.58 zl -4.48 zs -3.5 zr -5 z2 -5.1 gh 11.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'ARK_0' nm 'ARK_IJmu_sluis' ty 2 w1 50 wl 50 ws 41.3 wr 50 w2 50 z1 -10 zl -10 zs -9.25 zr -10 z2 -10 gh 1.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'ARK_1' nm 'ARK_Oranjesluis' ty 2 w1 40 wl 40 ws 34.6 wr 40 w2 40 z1 -5 zl -5 zs -4.5 zr -5 z2 -5 gh 0.5 pg 0.95 pd 0.95 pi 0.95 pr 0.95 pc 0.95 ng 0.95 nd 0.95 nf 0.95 nr 0.95 nc 0.95 er 0 stds
+STDS id 'ARK_2' nm 'ARK_Muidersluis' ty 2 w1 9 wl 9 ws 7.89 wr 9 w2 9 z1 -3.5 zl -3.5 zs -3.09 zr -3.5 z2 -3.5 gh -2.09 pg 0.95 pd 0.95 pi 0.95 pr 0.95 pc 0.95 ng 0.95 nd 0.95 nf 0.95 nr 0.95 nc 0.95 er 0 stds
+STDS id 'ARK_3' nm 'ARK_HAV{1...4}' ty 2 w1 25 wl 10 ws 5 wr 10 w2 25 z1 -2.5 zl -2.5 zs -2.4 zr -2.5 z2 -2.5 gh 1.6 pg 0.9 pd 0.9 pi 0.9 pr 0.9 pc 0.9 ng 0.9 nd 0.9 nf 0.9 nr 0.9 nc 0.9 er 0 stds
+STDS id 'ARK_4' nm 'ARK_IJfront' ty 2 w1 200 wl 200 ws 150 wr 200 w2 200 z1 -3 zl -3 zs -2.5 zr -3 z2 -3 gh 1.5 pg 0.9 pd 0.9 pi 0.9 pr 0.9 pc 0.9 ng 0.9 nd 0.9 nf 0.9 nr 0.9 nc 0.9 er 0 stds
+STDS id 'ARK_8' nm 'ARK_Amstelfront' ty 2 w1 90 wl 90 ws 75 wr 90 w2 90 z1 -3 zl -3 zs -2.5 zr -3 z2 -3 gh 1.5 pg 0.9 pd 0.9 pi 0.9 pr 0.9 pc 0.9 ng 0.9 nd 0.9 nf 0.9 nr 0.9 nc 0.9 er 0 stds
+STDS id 'ARK_9' nm 'ARK_Diemerdammersluis' ty 2 w1 25 wl 5.7 ws 5.7 wr 5.7 w2 25 z1 -3.5 zl -3 zs -2.1 zr -3 z2 -3.5 gh 1.5 pg 0.95 pd 0.95 pi 0.95 pr 0.95 pc 0.95 ng 0.95 nd 0.95 nf 0.95 nr 0.95 nc 0.95 er 0 stds
+STDS id 'ARK_10' nm 'ARK_Ipenslotersluis' ty 2 w1 25 wl 4 ws 4 wr 4 w2 25 z1 -3.5 zl -3 zs -2.5 zr -3 z2 -3.5 gh 1.5 pg 0.95 pd 0.95 pi 0.95 pr 0.95 pc 0.95 ng 0.95 nd 0.95 nf 0.95 nr 0.95 nc 0.95 er 0 stds
+STDS id 'ARK_11' nm 'ARK_HAV5' ty 2 w1 20 wl 20 ws 15 wr 20 w2 20 z1 -1.5 zl -1.5 zs -1.4 zr -1.5 z2 -1.5 gh 1.6 pg 0.9 pd 0.9 pi 0.9 pr 0.9 pc 0.9 ng 0.9 nd 0.9 nf 0.9 nr 0.9 nc 0.9 er 0 stds
+STDS id 'ARK_12' nm 'ARK_Leksluizen' ty 2 w1 36 wl 36 ws 20 wr 20 w2 36 z1 -6.4 zl -6.4 zs -6.4 zr -6.4 z2 -6.4 gh -6.4 pg 0.95 pd 0.95 pi 0.95 pr 0.95 pc 0.95 ng 0.95 nd 0.95 nf 0.95 nr 0.95 nc 0.95 er 0 stds
+STDS id 'ARK_7143' nm 'ARK_Pr.Marijkesluis' ty 2 w1 100 wl 100 ws 90 wr 100 w2 100 z1 -6 zl -6 zs -5.5 zr -6 z2 -6 gh 34.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'ARK_7144' nm 'ARK_Bernhardsluis' ty 2 w1 100 wl 100 ws 90 wr 100 w2 100 z1 -6 zl -6 zs -5.5 zr -6 z2 -6 gh -5.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'MAK_1700' nm 'MAK_Krab-sluis' ty 2 w1 400 wl 130 ws 36 wr 130 w2 400 z1 -5 zl -5 zs -4.5 zr -5 z2 -5 gh -4.5 pg 1 pd 1 pi 0.8 pr 1 pc 1 ng 1 nd 1 nf 0.8 nr 1 nc 1 er 0 stds
+STDS id 'MAK_1702' nm 'MAK_Hout-sluis' ty 2 w1 400 wl 260 ws 108 wr 260 w2 400 z1 -5 zl -5 zs -4.5 zr -5 z2 -5 gh 5.5 pg 1 pd 1 pi 0.8 pr 1 pc 1 ng 1 nd 1 nf 0.8 nr 1 nc 1 er 0 stds
+STDS id 'MAK_1704' nm 'MAK_Gouwzee-gat' ty 0 cl -3 cw 1300 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MAK_1705' nm 'MAK_Strekdam' ty 0 cl 1.7 cw 800 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MAK_1708' nm 'MAK_Hollandbrug' ty 0 cl -6 cw 250 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MAK_1709' nm 'MAK_Stichtsebrug' ty 0 cl -4 cw 220 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MAK_3360' nm 'MAK_Lelystadhaven' ty 0 cl -4 cw 150 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'MAK_3361' nm 'MAK_Broekhaven' ty 0 cl -3.5 cw 150 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_2833' nm 'YSV_Haandrik_st' ty 2 w1 38 wl 30 ws 21 wr 30 w2 38 z1 3.8 zl 5.25 zs 6.97 zr 5.9 z2 5.1 gh 26.97 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_2848' nm 'YSV_Hardenberg_st' ty 2 w1 38 wl 33 ws 27 wr 33 w2 38 z1 3.9 zl 4.4 zs 5.21 zr 4.05 z2 3.2 gh 25.21 pg 1 pd 1 pi 0.9 pr 0.9 pc 1 ng 1 nd 1 nf 0.9 nr 0.9 nc 1 er 0 stds
+STDS id 'YSV_P_2850' nm 'YSV_Marienberg_st' ty 2 w1 38 wl 33 ws 27 wr 33 w2 28 z1 2.15 zl 2.8 zs 3.79 zr 2 z2 0.56 gh 23.79 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_2851' nm 'YSV_Junne_st' ty 2 w1 39 wl 33 ws 27 wr 33 w2 39 z1 1.4 zl 1.8 zs 2.5 zr 1.1 z2 0 gh 22.5 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_2852' nm 'YSV_Vilsteren_st' ty 2 w1 70 wl 53 ws 36 wr 53 w2 70 z1 -0.8 zl -0.3 zs 0.45 zr -0.8 z2 -1.73 gh 20.45 pg 1 pd 1 pi 0.9 pr 0.9 pc 1 ng 1 nd 1 nf 0.9 nr 0.9 nc 1 er 0 stds
+STDS id 'YSV_P_2853' nm 'YSV_Vechterw_st' ty 2 w1 60 wl 50 ws 36 wr 50 w2 60 z1 -2.2 zl -1.85 zs -1.2 zr -2.35 z2 -3.2 gh 18.8 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15612' nm 'YSV_Haandrik_vis' ty 2 w1 7 wl 7 ws 7 wr 7 w2 7 z1 3.8 zl 5.25 zs 8.65 zr 5.9 z2 5.1 gh 28.65 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15615' nm 'YSV_Hardenberg_vis' ty 2 w1 7 wl 7 ws 7 wr 7 w2 7 z1 3.9 zl 4.4 zs 6.5 zr 4.05 z2 3.2 gh 26.5 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15616' nm 'YSV_Hardenb_uitw_1' ty 2 w1 96 wl 68 ws 39 wr 50 w2 61 z1 7.19 zl 7.25 zs 7.3 zr 7.15 z2 7.01 gh 27.3 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15617' nm 'YSV_Hardenb_uitw_2' ty 2 w1 114 wl 101 ws 88 wr 75 w2 61 z1 7.56 zl 7.6 zs 7.65 zr 7.5 z2 7.34 gh 27.65 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15618' nm 'YSV_Hardenb_uitw_3' ty 2 w1 22 wl 22 ws 22 wr 22 w2 23 z1 8.36 zl 8.4 zs 8.45 zr 8.3 z2 8.16 gh 28.45 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15633' nm 'YSV_Marienb_uitw_1' ty 2 w1 86 wl 58 ws 30 wr 35 w2 39 z1 6.4 zl 6.45 zs 6.5 zr 6.3 z2 6.07 gh 26.5 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15634' nm 'YSV_Marienberg_vis' ty 2 w1 7 wl 7 ws 7 wr 7 w2 7 z1 2.15 zl 2.8 zs 4.8 zr 2 z2 0.56 gh 24.8 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15704' nm 'YSV_Junne_vis' ty 2 w1 6 wl 6 ws 6 wr 6 w2 6 z1 1.42 zl 1.8 zs 3.9 zr 1.1 z2 0 gh 23.9 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15705' nm 'YSV_Junne_uitw1' ty 2 w1 100 wl 100 ws 100 wr 100 w2 100 z1 5.7 zl 5.9 zs 6.15 zr 6.1 z2 6.05 gh 26.15 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15708' nm 'YSV_Junne_uitw2' ty 2 w1 363 wl 388 ws 412 wr 436 w2 461 z1 6.35 zl 6.4 zs 6.45 zr 6.4 z2 6.35 gh 26.45 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15709' nm 'YSV_Junne_uitw3' ty 2 w1 52 wl 46 ws 40 wr 33 w2 27 z1 7.05 zl 7.15 zs 7.2 zr 7.15 z2 7.1 gh 27.2 pg 1 pd 1 pi 1 pr 1 pc 1 ng 1 nd 1 nf 1 nr 1 nc 1 er 0 stds
+STDS id 'YSV_P_15711' nm 'YSV_Vilsteren_vis' ty 2 w1 6 wl 6 ws 6 wr 6 w2 6 z1 -0.8 zl -0.3 zs 2.15 zr -0.8 z2 -1.73 gh 22.15 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15712' nm 'YSV_Vilster_uitw1' ty 2 w1 61 wl 45 ws 30 wr 37 w2 44 z1 2.2 zl 2.25 zs 2.3 zr 2.2 z2 2.15 gh 22.3 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15713' nm 'YSV_Vilster_uitw2' ty 2 w1 73 wl 76 ws 80 wr 84 w2 88 z1 2.9 zl 2.95 zs 3 zr 2.95 z2 2.9 gh 23 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15714' nm 'YSV_Vilster_uitw3' ty 2 w1 66 wl 66 ws 65 wr 64 w2 64 z1 3.55 zl 3.6 zs 3.65 zr 3.6 z2 3.55 gh 23.65 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15716' nm 'YSV_Vechterw_vis' ty 2 w1 6 wl 6 ws 6 wr 6 w2 6 z1 -2.2 zl -1.85 zs 0.75 zr -2.35 z2 -3.2 gh 20.75 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15717' nm 'YSV_Vechterw_uitw1' ty 2 w1 139 wl 125 ws 111 wr 145 w2 180 z1 1.5 zl 1.6 zs 1.65 zr 1.6 z2 1.55 gh 21.65 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_15718' nm 'YSV_Vechterw_uitw2' ty 2 w1 106 wl 106 ws 107 wr 108 w2 108 z1 2.36 zl 2.45 zs 2.5 zr 2.45 z2 2.39 gh 22.5 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_20318' nm 'YSV_Zwolle_brug' ty 2 w1 55 wl 52 ws 50 wr 52 w2 55 z1 -4 zl -4 zs -4 zr -4 z2 -4 gh 16 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_20319' nm 'YSV_Dalfsen_brug' ty 2 w1 40 wl 38 ws 36 wr 38 w2 40 z1 -2.21 zl -2.21 zs -2.21 zr -2.21 z2 -2.21 gh 17.79 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_20320' nm 'YSV_Ommen_brug' ty 2 w1 45 wl 39 ws 33 wr 39 w2 45 z1 0.25 zl 0.25 zs 0.25 zr 0.25 z2 0.25 gh 20.25 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_20321' nm 'YSV_Hdrik_sprbrug' ty 2 w1 60 wl 40 ws 20 wr 40 w2 60 z1 5 zl 5 zs 5 zr 5 z2 5 gh 25 pg 1 pd 1 pi 0.6 pr 0.6 pc 1 ng 1 nd 1 nf 0.6 nr 0.6 nc 1 er 0 stds
+STDS id 'YSV_P_120144' nm 'YSV_Kampeil_NW' ty 0 cl 2.5 cw 1500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120145' nm 'YSV_Kampeil_W' ty 0 cl 1.9 cw 1400 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120147' nm 'YSV_Kampeil_NM' ty 0 cl 2 cw 3000 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120148' nm 'YSV_Kampeil_N' ty 0 cl 1.5 cw 2000 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120149' nm 'YSV_Kampeil_NO' ty 0 cl 2 cw 3500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120150' nm 'YSV_Kampeil_O' ty 0 cl 2.1 cw 1500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120151' nm 'YSV_Kampeil_ZW' ty 0 cl 3.3 cw 2400 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120162' nm 'YSV_Mandwrd_N' ty 0 cl 1.6 cw 2600 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120163' nm 'YSV_Mandwrd_Mid' ty 0 cl 1.6 cw 1500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120165' nm 'YSV_Mandwrd_Z' ty 0 cl 1.8 cw 2000 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120166' nm 'YSV_Pieper_W' ty 0 cl 1.4 cw 1500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120167' nm 'YSV_Pieper_O' ty 0 cl 1.7 cw 1500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120168' nm 'YSV_ZZ_Polder_W' ty 0 cl 1 cw 2100 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_120169' nm 'YSV_ZZ_Polder_O' ty 0 cl 1.9 cw 2100 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_121870' nm 'YSV_Ramsgeul_st' ty 2 w1 200 wl 200 ws 160 wr 200 w2 200 z1 -4.5 zl -4.5 zs -4.5 zr -4.5 z2 -4.5 gh 3.5 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_121873' nm 'YSV_Ramsdiep_st' ty 2 w1 100 wl 100 ws 80 wr 100 w2 100 z1 -4.25 zl -4.25 zs -4.25 zr -4.25 z2 -4.25 gh 3.75 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_146152' nm 'YSV_SGM_B01_des' ty 2 w1 30 wl 30 ws 30 wr 30 w2 30 z1 -3 zl -3 zs -3 zr -3 z2 -3 gh 17 pg 1 pd 1 pi 0.6 pr 0.6 pc 1 ng 1 nd 1 nf 0.6 nr 0.6 nc 1 er 0 stds
+STDS id 'YSV_P_146422' nm 'YSV_SW_B50_des' ty 2 w1 20 wl 20 ws 20 wr 20 w2 20 z1 -2 zl -2 zs -2 zr -2 z2 -2 gh 18 pg 1 pd 1 pi 0.6 pr 0.6 pc 1 ng 1 nd 1 nf 0.6 nr 0.6 nc 1 er 0 stds
+STDS id 'YSV_P_146423' nm 'YSV_SW_B50A_des' ty 2 w1 15 wl 15 ws 15 wr 15 w2 15 z1 -2.92 zl -2.92 zs -2.92 zr -2.92 z2 -2.92 gh 17.08 pg 1 pd 1 pi 0.6 pr 0.6 pc 1 ng 1 nd 1 nf 0.6 nr 0.6 nc 1 er 0 stds
+STDS id 'YSV_P_146424' nm 'YSV_SW_B51_des' ty 2 w1 20 wl 20 ws 20 wr 20 w2 20 z1 -2.39 zl -2.39 zs -2.39 zr -2.39 z2 -2.39 gh 17.61 pg 1 pd 1 pi 0.6 pr 0.6 pc 1 ng 1 nd 1 nf 0.6 nr 0.6 nc 1 er 0 stds
+STDS id 'YSV_P_146435' nm 'YSV_SW_B18_des' ty 2 w1 30 wl 30 ws 30 wr 30 w2 30 z1 -2.84 zl -2.84 zs -2.84 zr -2.84 z2 -2.84 gh 17.16 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_146436' nm 'YSV_SW_B19_des' ty 2 w1 22.5 wl 22.5 ws 22.5 wr 22.5 w2 22.5 z1 -3.15 zl -3.15 zs -3.15 zr -3.15 z2 -3.15 gh 16.85 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'YSV_P_5540632' nm 'YSV_Denoever_sl' ty 2 w1 600 wl 600 ws 180 wr 600 w2 600 z1 -6 zl -6 zs -4.4 zr -6 z2 -6 gh -4.4 pg 0.95 pd 0.9 pi 0.95 pr 0.95 pc 0.95 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'YSV_P_5540633' nm 'YSV_Kornwznd_sl' ty 2 w1 600 wl 600 ws 120 wr 600 w2 600 z1 -5 zl -5 zs -4.4 zr -5 z2 -5 gh -4.4 pg 0.85 pd 0.8 pi 0.85 pr 0.85 pc 1 ng 0 nd 0 nf 0 nr 0 nc 0 er 0 stds
+STDS id 'YSV_P_5584261' nm 'YSV_Pieper_NO' ty 0 cl 1.6 cw 1500 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_P_5584262' nm 'YSV_Pieper_ZW' ty 0 cl 1.6 cw 1000 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_5639520' nm 'YSV_Kadoelen-str' ty 0 cl 10 cw 200 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'YSV_5643719' nm 'YSV_Zwolle-sluis' ty 2 w1 60 wl 60 ws 20 wr 60 w2 60 z1 -4 zl -4 zs -4 zr -4 z2 -4 gh 6 pg 1 pd 1 pi 0.8 pr 0.8 pc 1 ng 1 nd 1 nf 0.8 nr 0.8 nc 1 er 0 stds
+STDS id 'RND_1956' nm 'RND_Nijkerksluis' ty 2 w1 120 wl 80 ws 60 wr 80 w2 120 z1 -3 zl -3 zs -2.5 zr -3 z2 -3 gh -2.5 pg 0.6 pd 0.5 pi 0.6 pr 0.6 pc 0.5 ng 0.6 nd 0.5 nf 0.6 nr 0.6 nc 0.5 er 0 stds
+STDS id 'RND_1959' nm 'RND_Roggebotsluis' ty 2 w1 15 wl 15 ws 10 wr 15 w2 15 z1 -4.5 zl -4.5 zs -4.2 zr -4.5 z2 -4.5 gh -4.2 pg 0.6 pd 0.5 pi 0.6 pr 0.6 pc 0.5 ng 0.6 nd 0.5 nf 0.6 nr 0.6 nc 0.5 er 0 stds
+STDS id 'RND_2245' nm 'RND_Knardyk-W-open' ty 0 cl 7 cw 50 cs 0 po 1 ps 0.82 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 1 ns 0.82 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'RND_2246' nm 'RND_Kanrdyk-O-open' ty 0 cl -3 cw 19 cs 0 po 0.6 ps 0.6 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 0.6 ns 0.6 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'RND_2547' nm 'RND_Knardyk-W-schf' ty 0 cl 7 cw 25 cs 0 po 0.6 ps 0.5 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 0.6 ns 0.5 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'RND_2655' nm 'RND_Elburgbrug' ty 0 cl -3 cw 80 cs 0 po 0.6 ps 0.5 pt pr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble no 0.6 ns 0.5 nt nr PDIN 0 0 '' pdin CLTT 'h2/h1' 'Reduction' cltt CLID '(null)' '(null)' clid 
+TBLE 
+0.82 1 <
+0.86 0.95 <
+0.9 0.9 <
+0.94 0.8 <
+0.96 0.7 <
+0.97 0.6 <
+1 0 <
+tble  stds
+STDS id 'RND_3793' nm 'RND_Roggebot-omloop' ty 2 w1 4 wl 4 ws 3 wr 4 w2 4 z1 -2.5 zl -2.5 zs -2.2 zr -2.5 z2 -2.5 gh -2.2 pg 0.6 pd 0.5 pi 0.6 pr 0.6 pc 0.5 ng 0.6 nd 0.5 nf 0.6 nr 0.6 nc 0.5 er 0 stds
+STDS id '5668071' nm 'ARK_Zeeburg-Pmp1' ty 3 dn 1 rt cr 0 0.87 0 ct lt 1 
+TBLE 
+42.3 -0.25 -0.31 0 0 <
+tble  stds
+STDS id '5668072' nm 'ARK_Zeeburg-Pmp2' ty 3 dn -2 rt cr 0 0.13 0 ct lt 1 
+TBLE 
+26.3 0 0 -0.7 -0.32 <
+tble  stds
+STDS id '5668074' nm 'ARK_IJmu-Pmp1' ty 3 dn 1 rt cr 0 0.8 0 ct lt 1 
+TBLE 
+40 -0.37 -0.4 0 0 <
+tble  stds
+STDS id '5668075' nm 'ARK_IJmu-Pmp2' ty 3 dn 1 rt cr 0 0.8 0 ct lt 1 
+TBLE 
+40 -0.35 -0.4 0 0 <
+tble  stds
+STDS id '5668076' nm 'ARK_IJmu-Pmp3' ty 3 dn 1 rt cr 0 0.75 0 ct lt 1 
+TBLE 
+80 -0.33 -0.4 0 0 <
+tble  stds

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts"
+                   assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
+  <joined-subclass extends="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.CatchmentModelData"
+                   name="HbvData" table="rr_hbv" lazy="false">
+
+    <key column="Id"/>
+    <property name="SurfaceLevel" />
+    <property name="SnowFallTemperature" />
+    <property name="SnowMeltTemperature" />
+    <property name="SnowMeltingConstant" />
+    <property name="TemperatureAltitudeConstant" />
+    <property name="FreezingEfficiency" />
+    <property name="FreeWaterFraction" />
+    <property name="Beta" />
+    <property name="FieldCapacity" />
+    <property name="FieldCapacityThreshold" />
+    <property name="BaseFlowReservoirConstant" />
+    <property name="InterflowReservoirConstant" />
+    <property name="QuickFlowReservoirConstant" />
+    <property name="UpperZoneThreshold" />
+    <property name="MaximumPercolation" />
+    <property name="TemperatureStationName" />
+    <property name="InitialDrySnowContent" />
+    <property name="InitialFreeWaterContent" />
+    <property name="InitialSoilMoistureContents" />
+    <property name="InitialUpperZoneContent" />
+    <property name="InitialLowerZoneContent" />
+
+  </joined-subclass>
+</hibernate-mapping>

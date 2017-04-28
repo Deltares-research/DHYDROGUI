@@ -1,0 +1,25 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=1.08.00
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=29
+NumberOfLocations=1
+T0=1900. 7. 3  2: 0: 0
+TimeStepUnit=Second
+TimeStepMultiplyer=300
+ 
+[Long Parameters]
+1=Rainfall (+ext.irrigation supply)
+3=Evap.+Irr.Loss.Unpaved
+11=Net Seepage OpenWater
+18=Storage Routing Sacramento
+19=Storage RR routing links
+26=External inflow RRRunoff
+27=Evaporation RRRunoff-HBV
+28=Storage change RRRunoff
+29=Balance error RR Rural
+ 
+[Long Locations]
+ 

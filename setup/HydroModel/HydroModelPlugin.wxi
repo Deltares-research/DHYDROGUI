@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?include ..\Scripts\HydroModelScripts.wxi?>
+  <?define hydromodel_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.HydroModel\"?>
+  <?define hydromodel_gui_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.HydroModel.Gui\"?>
+  <Directory Id='DeltaShell.Plugins.HydroModel' Name='DeltaShell.Plugins.HydroModel'>
+    <Component Id='HydroModelPlugin' Guid="95E1BB75-2C26-45EB-A883-279DCC5094CB">
+      <File Id="DeltaShell.Plugins.DelftModels.HydroModel.dll" Source='$(var.hydromodel_plugin_bin)DeltaShell.Plugins.DelftModels.HydroModel.dll' />
+      <File Id="DeltaShell.Plugins.DelftModels.HydroModel.Gui.dll" Source='$(var.hydromodel_gui_plugin_bin)DeltaShell.Plugins.DelftModels.HydroModel.Gui.dll' />
+      <File Id="HydroModel_Newtonsoft.Json.Net35.dll" Source='$(var.hydromodel_plugin_bin)Newtonsoft.Json.Net35.dll' />
+    </Component>
+
+    <Directory Id="hydromodel_kernelsdir" Name="kernels">
+      <?define hydromodel_kernels_lib_dir="$(var.hydromodel_plugin_bin)kernels\"?>
+
+      <Directory Id="x86_hydromodel" Name="x86">
+        <?ifndef var.NOKERNELS?>
+        <Component Id="x86_hydromodel_kernels" Guid="F1FFF510-78C9-4B28-B9F3-BDCB9699AC56">
+          <?define x86_hydromodel_kernels_lib_dir="$(var.hydromodel_kernels_lib_dir)x86\"?>
+          <File Id="x86_hydromodel_flow1d2d.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)flow1d2d.dll" />
+          <File Id="x86_hydromodel_libifcoremd.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)libifcoremd.dll" />
+          <File Id="x86_hydromodel_libifportmd.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)libifportmd.dll" />
+          <File Id="x86_hydromodel_libmmd.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)libmmd.dll" />
+          <File Id="x86_hydromodel_msvcr100.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)msvcr100.dll" />
+          <File Id="x86_hydromodel_msvcr110.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)msvcr110.dll" />
+          <File Id="x86_hydromodel_msvcr120.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)msvcr120.dll" />
+          <File Id="x86_hydromodel_netcdf.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)netcdf.dll" />
+          <File Id="x86_hydromodel_pthreadVCE2.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)pthreadVCE2.dll" />
+          <File Id="x86_hydromodel_svml_dispmd.dll" Source="$(var.x86_hydromodel_kernels_lib_dir)svml_dispmd.dll" />
+          <?undef x86_hydromodel_kernels_lib_dir ?>
+        </Component>
+        <?endif?>
+      </Directory>
+
+      <Directory Id="x64_hydromodel" Name="x64">
+        <?ifndef var.NOKERNELS?>
+        <Component Id="x64_hydromodel_kernels" Guid="48549F9C-B920-418A-8829-277F605B3A4B">
+          <?define x64_hydromodel_kernels_lib_dir="$(var.hydromodel_kernels_lib_dir)x64\"?>
+          <File Id="x64_hydromodel_flow1d2d.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)flow1d2d.dll" />
+          <File Id="x64_hydromodel_libifcoremd.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)libifcoremd.dll" />
+          <File Id="x64_hydromodel_libifportmd.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)libifportmd.dll" />
+          <File Id="x64_hydromodel_libmmd.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)libmmd.dll" />
+          <File Id="x64_hydromodel_msvcr100.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)msvcr100.dll" />
+          <File Id="x64_hydromodel_msvcr110.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)msvcr110.dll" />
+          <File Id="x64_hydromodel_msvcr120.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)msvcr120.dll" />
+          <File Id="x64_hydromodel_netcdf.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)netcdf.dll" />
+          <File Id="x64_hydromodel_pthreadVC2.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)pthreadVC2.dll" />
+          <File Id="x64_hydromodel_svml_dispmd.dll" Source="$(var.x64_hydromodel_kernels_lib_dir)svml_dispmd.dll" />
+          <?undef x64_hydromodel_kernels_lib_dir ?>
+        </Component>
+        <?endif?>
+      </Directory>
+
+      <?undef hydromodel_kernels_lib_dir ?>
+    </Directory>
+  </Directory>
+  <?undef hydromodel_gui_plugin_bin ?>
+  <?undef hydromodel_plugin_bin ?>
+  
+</Include>

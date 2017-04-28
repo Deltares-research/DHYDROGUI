@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"  namespace="DeltaShell.Plugins.DelftModels.WaterFlowModel" assembly="DeltaShell.Plugins.DelftModels.WaterFlowModel">
+  <!-- map as subclass -->
+  <joined-subclass name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1D" extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="water_flow_model_1d_model">    
+    <key column="project_item_id"/>
+
+    <many-to-one class="WaterFlowModel1DOutputSettingData" access="property" name="OutputSettings" cascade="all-delete-orphan" />
+
+    <list name="ParameterSettings" access="property" lazy="false" cascade="all">
+      <key column="waterFlowModel1D_parametersettings_id"/>
+      <index column="waterFlowModel1D_parametersettings_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi.ModelApiParameter, DeltaShell.Plugins.DelftModels.WaterFlowModel" />
+    </list>
+
+    <property name="UseSaveStateTimeRange" />
+    <property name="SaveStateStartTime" />
+    <property name="SaveStateStopTime" />
+    <property name="SaveStateTimeStep" />
+
+    <property name="UseMorphology" />
+    <property name="AdditionalMorphologyOutput" />
+
+    <property name="SalinityPath"/>
+
+    <property name="BackgroundTemperature"/>
+    <property name="SurfaceArea"/>
+    <property name="AtmosphericPressure"/>
+    <property name="StantonNumber"/>
+    <property name="DaltonNumber"/>
+    <property name="HeatCapacityWater"/>
+
+    <property name="Latitude"/>
+    <property name="Longitude"/>
+    
+  </joined-subclass>
+</hibernate-mapping>

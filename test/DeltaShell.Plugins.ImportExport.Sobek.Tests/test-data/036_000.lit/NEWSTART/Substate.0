@@ -1,0 +1,21 @@
+configuration 'WAQS' serial 2003022101
+substance_group 'General' 
+    substance 'Cl' 
+    name      'Chloride' 
+    unit      '(g/m3)' 
+    active     1  
+    selected_processes
+    end-selected_processes 
+    end-substance
+end-substance_group
+process_parameter 'Cl'   
+    name          'Chloride'   
+    unit          '(g/m3)'   
+    modelled       1    
+    default        2.000e+004
+    internal       0    
+    specification  0    
+    input_process  '  '  
+    delft3d_par    0    
+    output_par     0    
+end-process_parameter

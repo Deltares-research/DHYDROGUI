@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TimeSeries xmlns="http://www.wldelft.nl/fews/PI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wldelft.nl/fews/PI http://fews.wldelft.nl/schemas/version1.0/pi-schemas/pi_timeseries.xsd" version="1.4">
+    <timeZone>1.0</timeZone>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Weir1_IntervalCntrl</locationId>
+            <parameterId>structure_crest_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Weir1_IntervalCntrl -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Weir2_TimeCntrl</locationId>
+            <parameterId>structure_crest_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Weir2_TimeCntrl -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Weir3_HydraulicCntrl</locationId>
+            <parameterId>structure_crest_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Weir3_HydraulicCntrl -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Weir4_PIDCntr</locationId>
+            <parameterId>structure_crest_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Weir4_PIDCntr -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Weir5_RelTimeCntrl</locationId>
+            <parameterId>structure_crest_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Weir5_RelTimeCntrl -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>Weir6_RelValueCntrl</locationId>
+            <parameterId>structure_crest_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Weir6_RelValueCntrl -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>1_75</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>1_75 -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>2_75</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>2_75 -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>3_75</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>3_75 -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>4_75</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>4_75 -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>5_75</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>5_75 -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>7_75</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2012-03-01" time="12:00:00"/>
+            <endDate date="2012-03-03" time="12:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>7_75 -</stationName>
+            <units>m AD</units>
+        </header>
+    </series>
+</TimeSeries>

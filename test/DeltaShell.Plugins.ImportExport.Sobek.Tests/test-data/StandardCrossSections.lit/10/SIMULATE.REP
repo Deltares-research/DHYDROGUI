@@ -1,0 +1,337 @@
+Information about Simulation
+============================
+
+SOBEKVersion                       : Sobek Advanced Version 2.13.000.11
+Case Name                          : Parameters for Special profiles Old and New Profiles
+
+Simulation Mode                    : Run 1DFLOW (Rural), 1DFLOW (Urban) and 1DFLOW (River) module simultaneously
+
+Start                              : 23-november-2011 16:37:04
+End                                : 23-november-2011 16:37:13
+
+Rainfall-Runoff Module used        : No
+Channel Module used                : Yes
+Sewer Module used                  : Yes
+River Module used                  : Yes
+1D Morphology Module used          : No
+1D2D Module used                   : No
+Real Time Control Module used      : No
+Water Quality Module used          : No
+Emission Module used               : No
+Ground Water Module used           : No
+Simulation parallel                : No
+Flow modules unsteady              : Yes
+2D Water Quality Module used       : No
+Delft3D Flow used                  : No
+Delft3D WAQ  used                  : No
+
+Network imported or started        : FromScratch
+Network imported at                : 14-11-2011 11:05:15
+
+
+Overview of Flow Module
+=======================
+
+Under License to                   :           SOBEK licensee
+
+
+Numerical Parameters Used
+=========================
+Accuracy Level                     : Low Speed/More Accurate
+Structure Stability Factor         :  0
+Conveyance factor K                :  T
+Conveyance factor K-Table          :  F
+Theta                              :            1.00
+Maximum Courant number             :            1.00
+Epsilon value Volume (m3/s)        :      0.00010000
+Epsilon value Level (m)            :      0.00010000
+Threshold Values ...
+Flooding (m)                       :         0.01000
+Drying (m)                         :         0.00100
+Minimum Length Reach Segment (     :            1.00
+Relaxation Factor (0..1)           :            1.00
+Structure Dynamics Factor          :            1.00
+Maximum Iterations                 :               8
+Gravity g (m2/s)                   :            9.81
+Fluid Density (m3)                 :         1000.00
+upwindculvert (-)     :               1
+Relaxation structures alfa (-)     :            0.90
+Timestep size (s) :                :         60.0000
+Lowest Timestep (s) :              :          0.0164
+Largest Timestep (s) :             :         60.0000
+
+External structure                  Spilled volume (m3)
+
+Boundaries in (m3)                 :      2220644.43
+Boundaries out (m3)                :      2134521.13
+Structures in (m3)                 :            0.00
+Structures out (m3)                :            0.00
+Lateral disch. in (m3)             :            0.00
+Lateral disch. out (m3)            :            0.00
+Storage (m3)                       :        86123.31
+Error (m3)                         :           -0.01
+
+Initial conditions
+==================
+Flow Module                        : user defined
+
+
+Version Information of Modules
+==============================
+
+Vervang                            : 16-08-2007 14:09:06, Version: 4.05.012
+Caseman                            : 19-12-2008 13:32:46, Version: 4.07.03
+CmUtil                             : 19-12-2008 13:32:46, Version: 4.07.03
+CmUpdate                           : 19-12-2008 13:32:46, Version: 4.07.03
+Sobek_3B (RR)                      : 09-09-2011 09:17:06, Version: 3.212.41.18434
+Parsen                             : 11-11-2011 16:16:49, Version: 2.05.010.19211M
+Parsen2D                           : 12-03-2009 11:54:22, Version: 1.01.37
+Flow (Delftflow) (Details Below)   : 10-11-2011 15:23:31, Version: 1.01.00.19321
+RTC-Matlab 6.5                     : 11-05-2011 10:17:40, Version: 3.212.08
+RTC-Matlab 7.0                     : 11-05-2011 10:17:38, Version: 3.212.08
+RTC-Matlab R2006b                  : 11-05-2011 10:17:40, Version: 3.212.08
+RTC-Matlab R2007a                  : 11-05-2011 10:17:40, Version: 3.212.08
+EM                                 : 16-08-2007 14:09:06, Version: 1.00.0001
+WQInt                              : 05-10-2011 08:22:12, Version: 2.02.10
+Delwaq1                            : 31-03-2010 13:18:28, Version: 4.52.04.6864
+Delwaq2                            : 31-03-2010 13:18:28, Version: 4.52.04.6864
+Waterbal                           : 16-08-2007 14:09:06, Version: 2.00.04
+Simulate                           : 24-05-2011 15:13:38, Version: 2.12.0030
+
+
+Detailed Information about Flow (DelftFlow):
+============================================
+
+Intel Fortran RTL Message Catalog   V11.0-103 23-Dec-2008
+Deltares, Authorisation module, Version 5.02.00.92, Sep 15 2009, 15:51:42
+FLEXnet Licensing v11.5.0.0 build 56285 i86_n3 (lmgr.lib), Copyright (c) 1988-2007 Macrovision Europe Ltd. and/or Macrovision Corporation. All Rights Reserved.
+Deltares, NEFIS Version 5.06.00.1010, Nov 10 2011, 15:17:39
+Deltares, WL_OPENMI_SUPPORT Version 1.00.00.19321, Nov 10 2011, 15:18:13
+Deltares, GW_SOBEK Version 0.08.00.19321, Nov 10 2011, 15:18:07
+Deltares, SOBEKSIM Version 4.03.92.19321, Nov 10 2011, 15:18:44
+Deltares, DELFTIO Version 1.08.00.1010, Nov 10 2011, 15:17:15
+Deltares, RR_RTC_TOOLS Version 1.00.00.19321, Nov 10 2011, 15:18:09
+Deltares, DELFTFLOW Version 1.01.00.19321, Nov 10 2011, 15:18:39
+
+
+SOBEKVersion   = Sobek Advanced Version 2.13.000.11
+Case Name      = Parameters for Special profiles Old and New Profiles
+
+License Vendor Strings:
+Feature SOBEK: Deltares
+Feature SOBEK_CF: Deltares
+Feature SOBEK_SF: Deltares
+Feature SOBEK_RF: Deltares
+
+
+===== Start Contents of SOBEKSIM.INI =====
+
+[General]
+Version=PLUV2.70
+Language=1
+DLGFunctionality=-1
+
+[NetworkOptions]
+NetworkChanged=-1
+PluviusNetworkInformation=0
+
+[InitialConditions]
+InitialEmptyWells=0
+InitialSalinity=0.0
+
+[RunoffOptions]
+ContinueAtLargeNegativeQlat=-1
+FixedQlatAtReach=-1
+MultipleStormEvents=0
+SplitQlatAtReach=0
+
+[ResultsNodes]
+Freeboard=-1
+LevelFromStreetLevel=-1
+RunOff=-1
+Salinity=0
+TimeWaterOnStreet=-1
+TotalArea=-1
+TotalWidth=-1
+Volume=-1
+VolumesOnStreet=-1
+WaterDepth=-1
+WaterLevel=-1
+WaterOnStreet=-1
+
+[ResultsBranches]
+Discharge=-1
+Levelsoutputonpipes=-1
+SedimentFrijlink=0
+SedimentVanRijn=0
+Velocity=-1
+Wind=-1
+WaterLevelSlope=-1
+Chezy=-1
+RiverSubsectionParameters=-1
+Froude=-1
+
+[ResultsStructures]
+CrestLevelOpeningsHeight=0
+Discharge=-1
+Head=-1
+OpeningsWidth=0
+PressureDifference=-1
+Velocity=-1
+WaterLevel=-1
+Waterleveloncrest=-1
+CrestWidth=-1
+OpeningsArea=-1
+CrestLevel=-1
+GateLowerEdgeLevel=-1
+ThresholdForSpillCountInHours=24
+
+[ResultsGeneral]
+ActualValue=-1
+DelwaqNoStaggeredGrid=-1
+MaximumValue=0
+MeanValue=0
+SobeksimStamp=-1
+Zero2DRainEvap2Delwaq=0
+ReducedIdResults=0
+
+[ResultsGrid]
+1DFlowDischargeMeasuringSection=0
+
+[Sediment]
+LevelAffectedBySediment=.3
+D50=.0005
+D90=.001
+
+[TimeStepEstimation]
+FromAvailableVolumes=-1
+
+[Specials]
+DesignFactorDLG=1
+
+[Indication]
+VelocityReachSegments=.5
+VelocityStructures=.75
+
+[NumericalParameters]
+AccelerationTermFactor=1
+AccurateVersusSpeed=3
+CourantNumber=1
+DtMinimum=.001
+EpsilonValueVolume=.0001
+EpsilonValueWaterDepth=.0001
+LowerTimeStepsLargeQlat=0
+MaxDegree=6
+MaxIterations=8
+MinimumSurfaceatStreet=.1
+MinimumSurfaceinNode=.1
+MinimumLength=1
+MinumumTimeStepNegativeQlat=1
+RelaxationFactor=1
+Rho=1000
+StructureInertiaDampingFactor=1
+Theta=1
+ThresholdValueFlooding=.01
+ThresholdValueFloodingFLS=.001
+UseTimeStepReducerStructures=0
+
+[SimulationOptions]
+allowablelargertimestep=0
+ASCIIFileUVComponent=0
+Cflcheckalllinks=0
+Channel=-1
+CommunicationWithSRW=0
+ConveyanceTableUsed=0
+ConveyanceUsed=-1
+ConvtabYzprof=-1
+CorrectionforCulverts=-1
+Debug=0
+DebugTime=0
+DepthsBelowBobs=0
+DispMaxFactor=0.1
+DumpInput=0
+Manhloss=0
+MaxAdjacentEdges=20
+MissingValue=-999.999
+NewRTCCoupling=-1
+NewRTCWriteformat=-1
+NoAdvec=0
+NoReduce=0
+Onlineplot=0
+OnLineWQ=0
+PercentAllowableVolumeError=1
+PreissmannMinClosedManholes=0.001
+Readsamples=0
+RiverStucturesAllowed=-1
+RTCInUse=0
+RunoffInUse=0
+Salinity=0
+Sewer=-1
+SimulationSynchron=0
+SiphonUpstreamThresholdSwitchOff=0.1
+StructureStabilityFactor=0
+Treat2DFrictiontermsameas1D=0
+TypeDikeLvl=0
+Use1D2DNode=-1
+Use1D2DRestartInputFile=0
+Use1D2DRestartOutputFile=0
+Use2DWindFrictSameAs1DFormulation=-1
+UseCGSolver=0
+UseConservativeMemoryAllocation=-1
+UseExtraFrictionDepth1D=-1
+UseFls=0
+UseGridAsSurface=-1
+Usevariableteta=0
+VolumeCheck=0
+Writesamples=0
+StructureDynamicsFactor=1
+VolumeCorrection=0
+WaterQualityInUse=0
+OnlineRunoff=0
+River=-1
+1DMOR=0
+SimulationTimeFromEvents=0
+OnlineDelft3DFlow=0
+UseRestart=0
+Use1DRestartInputFile=0
+Use1DRestartOutputFile=0
+
+[SteadyState]
+ComputeSteadyState=0
+Dtsteady=7200
+EpsMaxU=1e-6
+Ntendcontrolsteady=200
+Ntintcontrolsteady=20
+Ntmaxsteady=1500
+
+[Salinity]
+DiffusionAtBoundaries=false
+
+[AdvancedOptions]
+ExtraResistanceGeneralStructure=0
+TransitionHeightSD=1
+NoNegativeQlatWhenThereIsNoWater=-1
+MaxVolFact=0.9
+
+[Overland Flow]
+2DEddyViscosity=0.0
+DefaultChezy1D2DConnections=
+Limtyp=1
+Noslip=0
+Use2DDikeLimiter=-1
+Minimum2DDikeHeightLimit=0.50
+
+[ResultsARCVIEW]
+FilePath=..\WORK\
+UvelocityVvelocityResultingvelocityNoDecimalsInASCIIMapFiles=4
+WaterlevelWaterdepthBedlevelNoDecimalsInASCIIMapFiles=4
+[ResultsFLS]
+MAPParamH=0
+MAPParamC=0
+MAPParamZ=0
+MAPParamU=0
+MAPParamV=0
+AsciiOutput=0
+
+===== End Contents of SOBEKSIM.INI =====
+

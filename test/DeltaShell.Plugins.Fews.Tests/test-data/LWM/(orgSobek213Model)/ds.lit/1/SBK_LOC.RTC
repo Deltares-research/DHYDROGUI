@@ -1,0 +1,32 @@
+SBKO id 'H_DDD_huiten' nm 'Buitenwaterstand Eems' in 'H_buiten_Eems' sbko
+SBKO id 'H_lauw_buiten_wzee' nm 'buitenwaterstand Waddenzee' in 'H_buiten_waddenzee' sbko
+SBKO id 'H_abelstok_2eschil' nm 'peil Abelstok bovenstrooms' in 'H_ABELSTOK_BOV' sbko
+SBKO id 'H_DDD_binnen' nm 'peil Delfzijl bovenstrooms' in 'H_DDD_BOV' sbko
+SBKO id 'H_dendeel_1e_schil' nm 'peil Den Deel bovenstrooms' in 'H_DENDEEL_BOV' sbko
+SBKO id 'H_els' nm 'peil Elswerd' in 'H_ELSWERD' sbko
+SBKO id 'H_grk' nm 'peil Gaarkeuken' in 'H_GAARKEUKEN_BEN' sbko
+SBKO id 'H_HDL_beneden' nm 'peil HD Louwes benedenstrooms' in 'H_HDLOUWES_BEN' sbko
+SBKO id 'H_hd' nm 'peil HD Louwes bovenstrooms' in 'H_HDLOUWES_BOV' sbko
+SBKO id 'H_lauw_binnen_lwm' nm 'peil Lauwerssluizen bovenstrooms' in 'H_LAUWERSSLUIZEN_BOV' sbko
+SBKO id 'H_lm' nm 'peil Leekstermeer' in 'H_LEEKSTERMEER' sbko
+SBKO id 'H_odd' nm 'peil Onderdendam' in 'H_ONDERDENDAM' sbko
+SBKO id 'H_MeetpuntOostersluis' nm 'peil Oostersluis van Starkenborghkanaal' in 'H_OOSTERSLUIS' sbko
+SBKO id 'H_schaphals_3eschil' nm 'peil Schaphalsterzijl benedenstrooms' in 'H_SCHAPHALSTERZIJL_BEN' sbko
+SBKO id 'H_schaphals_2eschil' nm 'peil Schaphalsterzijl bovenstrooms' in 'H_SCHAPHALSTERZIJL_BOV' sbko
+SBKO id 'H_benedenstrooms_Slimsluis' nm 'peil Slimsluis benedenstrooms' in 'H_SLIMSLUIS_BEN' sbko
+SBKO id 'H_stadlande_2eschil' nm 'peil Stad en Lande bovenstrooms' in 'H_STADENLANDE_BOV' sbko
+SBKO id 'H_Tilburgbovenstrooms' nm 'peil Tilburg bovenstrooms' in 'H_TILBURG_BOV' sbko
+SBKO id 'H_ww_benedenstrooms' nm 'peil Waterwolf benedenstrooms' in 'H_WATERWOLF_BEN' sbko
+SBKO id 'H_ww' nm 'peil Waterwolf bovenstrooms' in 'H_WATERWOLF_BOV' sbko
+SBKO id 'H_wdh' nm 'peil Wehe den Hoorn' in 'H_WEHEDENHOORN' sbko
+SBKO id 'H_Winneweer' nm 'peil Winneweer' in 'H_WINNEWEER' sbko
+SBKO id 'H_zout' nm 'peil Zoutkamp' in 'H_ZOUTKAMP_BEN' sbko
+SBKO id 'Q_Gaarkeuken' nm 'debiet Gaarkeuken' ir 'ELC_HFDW_63_1' sbko
+SBKO id 'Q_ww' nm 'debiet Waterwolf pomp' ir 'ELC_HFDW_236_1' sbko
+SBKO id 'Q_hd' nm 'debiet HD Louwes pomp' ir 'ELC_HFDW_120_1' sbko
+SBKO id 'Q_DDD_diesel' nm 'debiet Delfzijl dieselgemaal' ir 'FIV_HFDW_258_56' sbko
+SBKO id 'Q_DDD_electrisch' nm 'debiet Delfzijl electrisch gemaal' ir '927' sbko
+SBKO id 'Q_lauw' nm 'debiet Lauwersoog' ir '166_s1' sbko
+SBKO id 'Q_hd_waakdeur' nm 'debiet HD Louwes Waakdeur' ir 'ELC_HFDW_167_1' sbko
+SBKO id 'Q_ww_waakdeur' nm 'debiet Waterwolf waakdeur' ir 'ELC_HFDW_189_1' sbko
+SBKO id 'Q_DDD_waakdeur' nm 'debiet Delfzijl spuisluis' ir '969' sbko

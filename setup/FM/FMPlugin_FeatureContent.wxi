@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <ComponentRef Id="FMSuiteCommon"/>
+  <ComponentRef Id="FMSuiteCommonGui"/>
+  <ComponentRef Id="NetworkEditorPlugin"/>
+  <ComponentRef Id="network_editor_scripts_examples_files"/>
+  <ComponentRef Id="network_editor_scripts_libraries_files"/>
+  
+  <ComponentRef Id="NGHS.IO"/>
+  <!-- currently only fm is using ugrid api dlls -->
+  <ComponentRef Id="nghsx86_ugriddll"/>
+
+  <ComponentRef Id="Dimr"/>
+
+  <ComponentRef Id="FMPlugin"/>
+  <ComponentRef Id="fm_scripts_examples_files"/>
+  <ComponentRef Id="fm_scripts_libraries_files"/>
+  
+
+  <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
+  <ComponentRef Id="HydroModelPlugin"/>
+
+  <?ifndef var.NOKERNELS?>
+  <ComponentRef Id="x86_hydromodel_kernels"/>
+  <ComponentRef Id="x86_dimr_kernels"/>
+  <ComponentRef Id="fmx86_dflowfmdll"/>
+  <?endif?>
+  
+  <ComponentRef Id="FM_toolboxes"/>
+  <ComponentRef Id="FM_rgfgrid_bin_x86"/>
+  <ComponentRef Id="FM_rgfgrid_platforms_x86"/>
+  <ComponentRef Id="FM_rgfgrid_colormaps_x86"/>
+  <ComponentRef Id="FM_rgfgrid_icons_x86"/>
+  <ComponentRef Id="FM_rgfgrid_manuals_x86"/>
+  
+
+  <Feature Id="FM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    <ComponentRef Id="FM_rgfgrid_platforms_x64"/>
+    <ComponentRef Id="FM_rgfgrid_icons_x64"/>
+    <ComponentRef Id="FM_rgfgrid_manuals_x64"/>
+    <ComponentRef Id="FM_rgfgrid_colormaps_x64"/>
+    <ComponentRef Id="FM_rgfgrid_bin_x64"/>
+    
+    <?ifndef var.NOKERNELS?>
+    <ComponentRef Id="fmx64_dflowfmdll"/>
+    <ComponentRef Id="x64_dimr_kernels"/>
+    <ComponentRef Id="x64_hydromodel_kernels"/>
+    <?endif?>
+    
+    <!-- currently only fm is using ugrid api dlls -->
+    <ComponentRef Id="nghsx64_ugriddll"/>
+  </Feature>
+  
+</Include>

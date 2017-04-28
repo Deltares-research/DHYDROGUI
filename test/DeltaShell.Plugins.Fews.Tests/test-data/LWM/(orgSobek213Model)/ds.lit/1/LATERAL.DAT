@@ -1,0 +1,21 @@
+FLNO id 'cKGM16' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG59' ii 0 ar 589232 flno
+FLNO id 'cKGM127' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id 'cKGM128' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id 'cKGM196' sc 0 lt 0 dc lt 0 0 0 flno
+FLNO id 'cAFW44' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG1' ii 0 ar 643585 flno
+FLNO id 'cAFW168' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG1' ii 0 ar 80881 flno
+FLNO id 'cAFW169' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG1' ii 0 ar 565121 flno
+FLNO id 'cAFW170' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG1' ii 0 ar 1193148 flno
+FLNO id 'cAFW171' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG1' ii 0 ar 472179 flno
+FLBR id 'NSL_BOEZ7' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 1811681.34139 flbr
+FLBR id 'NSL_BOEZ6' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 1947162.02536 flbr
+FLBR id 'NSL_BOEZ1' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 8218078.54077 flbr
+FLBR id 'g_606' sc 0 lt 0 dc lt 1 0 0 PDIN 0 0  pdin
+TBLE
+'2001/01/01;00:00:00' 0 <
+'2003/01/01;00:00:00' 0 <
+tble flbr
+FLBR id 'NSL_BOEZ4' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 5690930.43961 flbr
+FLBR id 'NSL_BOEZ3' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 5241194.07884 flbr
+FLBR id 'NSL_BOEZ2' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 5501429.40846 flbr
+FLBR id 'NSL_BOEZ5' sc 0 lt 0 dc lt 7 ir 0 ms 'GPG10' ii 0 ar 2719015.06527 flbr

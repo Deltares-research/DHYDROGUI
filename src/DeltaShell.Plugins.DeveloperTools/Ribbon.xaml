@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.DeveloperTools.Ribbon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
+             mc:Ignorable="d" Width="686.4" Height="168" Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml"/>
+    </UserControl.Resources>
+    <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
+        <fluent:RibbonTabItem Header="Developer">
+            <fluent:RibbonGroupBox Header="Developer">
+                <fluent:DropDownButton Header="Add demo model..." LargeIcon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Name="Test">
+                    <fluent:Gallery GroupBy="Tag"><!-- Group Tags: Other, Integrated Model -->
+                        <!-- Other -->
+
+                        <fluent:Button x:Name="ButtonCreateTestNetworkWithMap" Header="Create Demo Network" ToolTip="Create dummy network and add it to Map" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonCreateTestNetworkWithMap_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Other"/>
+                        <fluent:Button x:Name="ButtonCreateFlowModel1dDemoNetworkCommand" Header="Create Demo 1D Model" ToolTip="Create flow model 1D demo network" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonCreateFlowModel1dDemoNetworkCommand_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Other"/>
+                        <fluent:Button x:Name="ButtonCreateFlowModel1DRectangleNetworkCommand" Header="Create Demo 1D Model 2" ToolTip="Create flow model rectangular n x n demo network" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonCreateFlowModel1DRectangleNetworkCommand_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Other"/>
+                        <fluent:Button x:Name="ButtonAddWaterQualityModel1DAcceptanceModel1Command" Header="Flow model 1" ToolTip="Add flow model used in Waq tutorial" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonAddWaterQualityModel1DAcceptanceModel1Command_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Other"/>
+                        <fluent:Button x:Name="ButtonAddWaterQualityModel1DAcceptanceModel2Command" Header="Flow model 2" ToolTip="Add flow model with reverse flow" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonAddWaterQualityModel1DAcceptanceModel2Command_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Other"/>
+                        <!-- Integrated Model -->
+                        <fluent:Button x:Name="ButtonAddWaqAcceptanceModel1IntegratedModel" Header="Integrated model with flow" ToolTip="Creates a simple Integrated acceptance model with Flow" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonWaqAcceptenceModel1IntegratedModel_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Integrated Model"/>
+                        <fluent:Button x:Name="ButtonAddIntegratedModelAC2a" Header="Integrated model with flow and RR" ToolTip="Creates an Integrated Model with RR and Flow" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonDWAQ_AC2a_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Integrated Model"/>
+                        <fluent:Button x:Name="ButtonAddIntegratedModelAC2aWithRtc" Header="Integrated model with flow, RR and RTC" ToolTip="Creates an Integrated Model with RR, Flow and RTC" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonDWAQ_AC2a_rtc_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Integrated Model"/>
+                        <fluent:Button x:Name="ButtonAddIntegratedModel1d2d" Header="1d/2d-model" ToolTip="Creates an Integrated Model Flow and FlowFM" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="Button1d2d_Click" Size="Middle" SizeDefinition="Middle,Small,Small" Tag="Integrated Model"/>
+                    </fluent:Gallery>
+                </fluent:DropDownButton>
+                <fluent:DropDownButton Header="Other..." LargeIcon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png">
+                    <fluent:Gallery>
+                        <fluent:Button x:Name="ButtonAddProjectedNetwork" Header="Add projected Network" ToolTip="" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonAddProjectedNetwork_Click" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                        <fluent:Button x:Name="ButtonImportNetwork" Header="Import Network" ToolTip="Import network and add it to a new map" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonImportNetwork_Click" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                        <fluent:Button x:Name="ButtonCollectMemory" Header="Collect Memory" ToolTip="Call GC Collect" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonCollectMemory_Click" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                        <fluent:Button x:Name="ButtonAllocate" Header="OutOfMemory" ToolTip="Allocate too much memory" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonAllocate_Click" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                        <fluent:Button x:Name="ButtonShowMemoryUsage" Header="Show Memory" ToolTip="Show memory usage" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonShowMemoryUsage_Click" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                        <fluent:Button x:Name="ButtonNuNL" Header="NU.NL" ToolTip="Navigate to NU.NL" Icon="/DeltaShell.Plugins.DeveloperTools;component\Resources\candy-cane.png" Click="ButtonNuNL_Click" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                    </fluent:Gallery>
+                </fluent:DropDownButton>
+            </fluent:RibbonGroupBox>
+        </fluent:RibbonTabItem>
+    </fluent:Ribbon>
+</UserControl>

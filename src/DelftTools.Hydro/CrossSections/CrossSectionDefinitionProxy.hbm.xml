@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <subclass name="DelftTools.Hydro.CrossSections.CrossSectionDefinitionProxy, DelftTools.Hydro" lazy="false" discriminator-value="cross_section_proxy" extends="DelftTools.Hydro.CrossSections.ICrossSectionDefinition, DelftTools.Hydro" batch-size="500">
+    <many-to-one name="InnerDefinition" column="definition_id" />
+    <property name="LevelShift" />
+  </subclass>
+</hibernate-mapping>

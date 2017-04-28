@@ -1,0 +1,23 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=FromScratch
+ImportDate=03-08-2011 12:53:14
+Case Name=REF 263_000 Flow-Connection node (no Rational model)
+SuftableHasRun=-1
+QuantityResultsPresent=0
+UserId=Thieu van Mierlo
+UserName=mierlo
+ComputerName=wl01343
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\qlat.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=0

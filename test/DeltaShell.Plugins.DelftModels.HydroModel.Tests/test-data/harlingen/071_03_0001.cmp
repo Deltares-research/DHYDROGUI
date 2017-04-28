@@ -1,0 +1,6 @@
+* COLUMNN=3
+* COLUMN1=Period (min) or Astronomical Componentname
+* COLUMN2=Amplitude (ISO)
+* COLUMN3=Phase (deg) 
+* TODO: add M2  2.0  0.0 (mix astro and period)
+740 1.0  0.0

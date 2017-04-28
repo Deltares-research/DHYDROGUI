@@ -1,0 +1,557 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{96CD03F1-2715-4827-95E1-3277A2DEADAE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeltaShell.Plugins.FMSuite.FlowFM.Gui</RootNamespace>
+    <AssemblyName>DeltaShell.Plugins.FMSuite.FlowFM.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <DontImportPostSharp>True</DontImportPostSharp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BasicModelInterface">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\BasicModelInterface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37046, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Fluent">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\Fluent.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Windows.Shell, Version=3.5.41019.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\Microsoft.Windows.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.UI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37110\lib\net40\DeltaShell\SharpMap.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BoundaryDataMapSymbols.cs" />
+    <Compile Include="Editors\BoundaryConditionExtensions.cs" />
+    <Compile Include="Editors\Buttons\EditCoverageLayersButton.cs" />
+    <Compile Include="Editors\Buttons\EditDepthLayersButton.cs" />
+    <Compile Include="Editors\EditTracersControlHelper.cs" />
+    <Compile Include="Editors\FlowBoundaryConditionDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\FlowBoundaryConditionDataView.Designer.cs">
+      <DependentUpon>FlowBoundaryConditionDataView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\BoundaryConditionListView.Designer.cs">
+      <DependentUpon>BoundaryConditionListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\FlowBoundaryConditionPropertiesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\FlowBoundaryConditionPropertiesControl.Designer.cs">
+      <DependentUpon>FlowBoundaryConditionPropertiesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\FlowBoundaryConditionEditorController.cs" />
+    <Compile Include="Editors\FlowBoundaryConditionSeriesFactory.cs" />
+    <Compile Include="Editors\FMToolboxesPanel.cs" />
+    <Compile Include="Editors\GriddedWindView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\GriddedWindView.Designer.cs">
+      <DependentUpon>GriddedWindView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\HarmonicConditionsDialog.xaml.cs">
+      <DependentUpon>HarmonicConditionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\HarmonicConditionsDialogViewModel.cs" />
+    <Compile Include="Editors\HeatFluxModelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\HeatFluxModelView.Designer.cs">
+      <DependentUpon>HeatFluxModelView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\SourceAndSinkView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\SourceAndSinkView.Designer.cs">
+      <DependentUpon>SourceAndSinkView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TracerDefinitionsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\TracerDefinitionsEditor.Designer.cs">
+      <DependentUpon>TracerDefinitionsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaterFlowFMGuiPropertyExtractor.cs" />
+    <Compile Include="Editors\WaterFlowFMFileStructureView.cs" />
+    <Compile Include="Editors\WaterFlowFMFileStructureView.Designer.cs">
+      <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WaterFlowFMModelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WaterFlowFMModelView.Designer.cs">
+      <DependentUpon>WaterFlowFMModelView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlowFMGuiPlugin.cs" />
+    <Compile Include="FlowFMMapViewDecorator.cs" />
+    <Compile Include="Forms\FMModelInspectionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FMModelInspectionWindow.Designer.cs">
+      <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BcFileExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BcFileExportDialog.Designer.cs">
+      <DependentUpon>BcFileExportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BcFileImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BcFileImportDialog.Designer.cs">
+      <DependentUpon>BcFileImportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BoundaryConditionDialogLauncher.cs" />
+    <Compile Include="Forms\BoundaryConditionWpsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BoundaryConditionWpsDialog.Designer.cs">
+      <DependentUpon>BoundaryConditionWpsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BoundaryConditionBcFileImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BoundaryConditionBcFileImportDialog.Designer.cs">
+      <DependentUpon>BoundaryConditionBcFileImportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BoundaryDataImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BoundaryDataImportDialog.Designer.cs">
+      <DependentUpon>BoundaryDataImportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Feature2DImportExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Feature2DImportExportDialog.Designer.cs">
+      <DependentUpon>Feature2DImportExportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMPartitionExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FMPartitionExportDialog.Designer.cs">
+      <DependentUpon>FMPartitionExportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMWeirProperties.cs" />
+    <Compile Include="Forms\GenerateEmbankmentsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GenerateEmbankmentsDialog.Designer.cs">
+      <DependentUpon>GenerateEmbankmentsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GridWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GridWizard.Designer.cs">
+      <DependentUpon>GridWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RemoveBoundaryPointDialog.cs" />
+    <Compile Include="Forms\DataImportPointsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\WindSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WindSelectionDialog.Designer.cs">
+      <DependentUpon>WindSelectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapTools\GenerateEmbankmentsMapTool.cs" />
+    <Compile Include="MapTools\GridWizardMapTool.cs" />
+    <Compile Include="MapTools\GridWizardMapToolHelper.cs" />
+    <Compile Include="MapTools\MergeEmbankmentsMapTool.cs" />
+    <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
+    <Compile Include="NodePresenters\FMHisFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="NodePresenters\FMMapFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="NodePresenters\HeatFluxModelNodePresenter.cs" />
+    <Compile Include="NodePresenters\ImportedFMNetFileNodePresenter.cs" />
+    <Compile Include="NodePresenters\SourceSinkNodePresenter.cs" />
+    <Compile Include="NodePresenters\WaterFlowFMFileBasedItemNodePresenter.cs" />
+    <Compile Include="NodePresenters\FlowFMTreeShortcutNodePresenter.cs" />
+    <Compile Include="NodePresenters\WindItemListNodePresenter.cs" />
+    <Compile Include="NodePresenters\WindItemNodePresenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NodePresenters\WaterFlowFMModelNodePresenter.cs" />
+    <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Ribbon\Ribbon.xaml.cs">
+      <DependentUpon>Ribbon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FlowFMTreeShortcut.cs" />
+    <Compile Include="FlowFMMapLayerProvider.cs" />
+    <Compile Include="Editors\WindFieldListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\WindFieldListView.Designer.cs">
+      <DependentUpon>WindFieldListView.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
+      <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
+      <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
+      <Project>{7f3d15d6-3425-47a6-afd4-9b6e054ee8be}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
+      <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
+      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editors\BoundaryConditionListView.resx">
+      <DependentUpon>BoundaryConditionListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FlowBoundaryConditionDataView.resx">
+      <DependentUpon>FlowBoundaryConditionDataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FlowBoundaryConditionPropertiesControl.resx">
+      <DependentUpon>FlowBoundaryConditionPropertiesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\GriddedWindView.resx">
+      <DependentUpon>GriddedWindView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\HeatFluxModelView.resx">
+      <DependentUpon>HeatFluxModelView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\SourceAndSinkView.resx">
+      <DependentUpon>SourceAndSinkView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\TracerDefinitionsEditor.resx">
+      <DependentUpon>TracerDefinitionsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaterFlowFMFileStructureView.resx">
+      <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WaterFlowFMModelView.resx">
+      <DependentUpon>WaterFlowFMModelView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMModelInspectionWindow.resx">
+      <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BcFileExportDialog.resx">
+      <DependentUpon>BcFileExportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BcFileImportDialog.resx">
+      <DependentUpon>BcFileImportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BoundaryConditionWpsDialog.resx">
+      <DependentUpon>BoundaryConditionWpsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BoundaryConditionBcFileImportDialog.resx">
+      <DependentUpon>BoundaryConditionBcFileImportDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BoundaryDataImportDialog.resx">
+      <DependentUpon>BoundaryDataImportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DataImportPointsListBox.resx">
+      <DependentUpon>DataImportPointsListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Feature2DImportExportDialog.resx">
+      <DependentUpon>Feature2DImportExportDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMPartitionExportDialog.resx">
+      <DependentUpon>FMPartitionExportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GenerateEmbankmentsDialog.resx">
+      <DependentUpon>GenerateEmbankmentsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GridWizard.resx">
+      <DependentUpon>GridWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WindSelectionDialog.resx">
+      <DependentUpon>WindSelectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\WindFieldListView.resx">
+      <DependentUpon>WindFieldListView.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\unstruc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\unstrucWater.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\dredging.png" />
+    <Resource Include="Resources\dumping.png" />
+    <None Include="Resources\Roughness.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BoundaryType_Undefined.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BoundaryType_AstroComponent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BoundaryType_TimeSeries.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BoundaryType_Qh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BoundaryType_Harmonics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\deletehs.png" />
+    <Resource Include="Resources\hurricane2.png" />
+    <Resource Include="Resources\grid_2d.png" />
+    <None Include="Resources\paint-tube.png" />
+    <Resource Include="Resources\LateralSourceMap.png" />
+    <Resource Include="Resources\gridwizard.png" />
+    <Resource Include="Resources\wrenchPlus.png" />
+    <Resource Include="Resources\guide.png" />
+    <None Include="Resources\gate.png" />
+    <None Include="Resources\weir.png" />
+    <None Include="Resources\pump.png" />
+    <None Include="Resources\dry_point.png" />
+    <None Include="Resources\dry_area.png" />
+    <None Include="Resources\landboundary.png" />
+    <None Include="Resources\fixedweir.png" />
+    <None Include="Resources\thindam.png" />
+    <None Include="Resources\pipette.png" />
+    <Resource Include="Resources\SourceSinkFolder.png" />
+    <Resource Include="Resources\SourceSink.png" />
+    <Resource Include="Resources\empty.png" />
+    <None Include="Resources\none.png" />
+    <None Include="Resources\map.png" />
+    <None Include="Resources\function_timeseries.png" />
+    <None Include="Resources\thermometer.png" />
+    <None Include="Resources\weather-cloudy.png" />
+    <None Include="Resources\Wind1.png" />
+    <None Include="Resources\document-import.png" />
+    <None Include="Resources\document-export.png" />
+    <None Include="Resources\waterLayers.png" />
+    <None Include="Resources\initial_folder.png" />
+    <Resource Include="Resources\arrow_switch.png" />
+    <None Include="Resources\salt.png" />
+    <None Include="Resources\viscosity.png" />
+    <None Include="Resources\unstrucmodel.png" />
+    <None Include="Resources\refresh.png" />
+    <None Include="Resources\polygon.png" />
+    <None Include="Resources\generate_data.png" />
+    <None Include="Resources\Delete.png" />
+    <None Include="Resources\add.png" />
+    <Content Include="Resources\112_Plus_Blue_16x16_72.png" />
+    <Content Include="Resources\arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Editors\HarmonicConditionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ribbon\Ribbon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
+    <Error Condition="!Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+  </Target>
+  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37110\build\net40\DeltaShell.Framework.targets')" />
+</Project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
+  <ComponentRef Id="RealTimeControlPluginDll"/>
+  <ComponentRef Id="RealTimeControlPluginXsd"/>
+  <ComponentRef Id="RealTimeControl_scripts_examples_files"/>
+  <ComponentRef Id="RealTimeControl_scripts_libraries_files"/>
+
+  <?ifndef var.NOKERNELS?>
+  <ComponentRef Id="x86_rtc_kernels"/>
+  <Feature Id="RTC_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    <ComponentRef Id="x64_rtc_kernels"/>
+  </Feature>
+  <?endif?>  
+</Include>

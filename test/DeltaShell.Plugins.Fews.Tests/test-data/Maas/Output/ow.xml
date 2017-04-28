@@ -1,0 +1,1018 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TimeSeries xmlns="http://www.wldelft.nl/fews/PI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wldelft.nl/fews/PI http://fews.wldelft.nl/schemas/version1.0/pi-schemas/pi_timeseries.xsd" version="1.4">
+    <timeZone>1.0</timeZone>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Eijsden_grens</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Eijsden</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Maastricht_(St.Piet)</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>St. Pieter</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Borgharen_dorp</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Borgharen-Dorp</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>001_0</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Lanaken</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Borgharen_Jul.kanaal</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Borgharen_Jul.kanaal</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Elsloo</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Elsloo</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Grevenbicht</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Grevenbicht</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Maaseik</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Maaseik</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Stevensweert</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Stevensweert</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Heel_boven</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Heel_boven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Linne_beneden</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Linne_beneden</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Roermond_boven</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Roermond_boven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Heel_beneden</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Heel_beneden</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Neer</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Neer</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Kessel</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Kessel</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Belfeld_boven</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Belfeld_boven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Belfeld_beneden</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Belfeld_beneden</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Venlo-Blerick</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Venlo-Blerick</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Well_dorp</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Well</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Sambeek_boven</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Sambeek_boven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Sambeek_beneden</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Sambeek_beneden</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Gennep</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Gennep</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Mook</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Mook</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Grave_boven</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Grave_boven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Grave_beneden</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Grave_beneden</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Megen</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Megen</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Lith_boven</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Lith_boven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Lith_dorp</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Lith_dorp</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Heesbeen</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Heesbeen</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_13546</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Keizersveer</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_2736</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Dieze-Hedel (Crevecoeur)</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>009_4399</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Drongels Kanaal</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>002_0</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Uikhoven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>002_4039</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Mazenhoven</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>006_33272</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Meeswijk veer</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_0</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Negenoord</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_11959</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Buggenum</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_2596</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Bunde</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>002_0</locationId>
+            <parameterId>water_discharge</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Echt</stationName>
+            <units>m3/s</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Eijsden_grens</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Eijsden</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Maastricht_(St.Piet)</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>St. Pieter</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Borgharen_dorp</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Borgharen-Dorp</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>001_0</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Lanaken</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Borgharen_Jul.kanaal</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Borgharen_Jul.kanaal</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Elsloo</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Elsloo</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Grevenbicht</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Grevenbicht</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Maaseik</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Maaseik</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Stevensweert</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Stevensweert</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Heel_boven</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Heel_boven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Linne_beneden</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Linne_beneden</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Roermond_boven</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Roermond_boven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Heel_beneden</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Heel_beneden</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Neer</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Neer</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Kessel</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Kessel</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Belfeld_boven</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Belfeld_boven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Belfeld_beneden</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Belfeld_beneden</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Venlo-Blerick</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Venlo-Blerick</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Well_dorp</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Well</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Sambeek_boven</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Sambeek_boven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Sambeek_beneden</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Sambeek_beneden</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Gennep</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Gennep</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Mook</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Mook</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Grave_boven</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Grave_boven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Grave_beneden</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Grave_beneden</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Megen</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Megen</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Lith_boven</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Lith_boven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Lith_dorp</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Lith_dorp</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>H_Heesbeen</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Heesbeen</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_13546</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Keizersveer</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_2736</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Dieze-Hedel (Crevecoeur)</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>009_4399</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Drongels Kanaal</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>002_0</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Uikhoven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>002_4039</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Mazenhoven</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>006_33272</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Meeswijk veer</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_0</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Negenoord</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_11959</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Buggenum</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>008_2596</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Bunde</stationName>
+            <units>m</units>
+        </header>
+    </series>
+    <series>
+        <header>
+            <type>instantaneous</type>
+            <locationId>002_0</locationId>
+            <parameterId>water_level</parameterId>
+            <timeStep unit="second" multiplier="3600"/>
+            <startDate date="2013-01-08" time="01:00:00"/>
+            <endDate date="2013-01-13" time="13:00:00"/>
+            <missVal>NaN</missVal>
+            <stationName>Echt</stationName>
+            <units>m</units>
+        </header>
+    </series>
+</TimeSeries>

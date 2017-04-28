@@ -1,0 +1,2 @@
+Name,Chainage,RoughnessType,SectionType,Dependance,Interpolation,Pos/neg ,R_pos_constant,Q_pos,R_pos_f(Q),H_pos,R_pos__f(h),R_neg_constant,Q_neg,R_neg_f(Q),H_neg,R_neg_f(h)
+001,0,Unknown,Main ,Discharge,Linear,Same,,0,23.34,,,,,,,

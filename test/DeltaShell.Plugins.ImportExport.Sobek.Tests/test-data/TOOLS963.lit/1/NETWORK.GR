@@ -1,0 +1,7 @@
+GR_1.2
+GRID id '1' ci '1' re 0 dc 0 gr gr 
+'GridPoint Table' PDIN 0 0 '' pdin CLTT 'Location' '1/R' cltt CLID '' '' clid
+TBLE
+0 0 '' '1' '1' 105289.820807524 466830.389223224 '' '' '' <
+5437.30926751336 0 '10' '2' '' 110310.540542268 468917.661466066 '' '' '' <
+tble grid

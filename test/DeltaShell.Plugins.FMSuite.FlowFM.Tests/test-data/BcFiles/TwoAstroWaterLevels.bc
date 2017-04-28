@@ -1,0 +1,30 @@
+
+[forcing]
+Name 			= pli1_0001
+Function		= astronomic
+Quantity		= astronomic component		
+Unit			= -
+# comment
+Quantity		= waterlevelbnd amplitude		
+Unit			= m
+Quantity		= waterlevelbnd phase			
+Unit			= rad/deg/minutes
+M2	0.9	  10
+S2	0.95	-7.5
+
+#
+# blablabla some comment here
+#
+
+[forcing]
+Name 			= pli1_0002
+Function		= astronomic
+Quantity		= astronomic component		
+Unit			= -
+Quantity		= waterlevelbnd amplitude
+Unit			= m
+Quantity		= waterlevelbnd phase			
+Unit			= rad/deg/minutes 
+# comment: what kind of unit is that?
+M2	0.8	20
+S2	1.1	-11.5

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="DelftTools.Hydro.CrossSections.CrossSectionSection, DelftTools.Hydro" table="CrossSectionSection" lazy="false" batch-size="500">
+    <id name="Id" column="id" type="Int64" unsaved-value="0">
+        <generator class="increment" />
+    </id>
+    <property name="MinY" />
+    <property name="MaxY" />
+    
+    <many-to-one 
+                name="SectionType"
+                class="DelftTools.Hydro.CrossSections.CrossSectionSectionType, DelftTools.Hydro"
+                column="section_type_id" />
+    
+  </class>
+</hibernate-mapping>

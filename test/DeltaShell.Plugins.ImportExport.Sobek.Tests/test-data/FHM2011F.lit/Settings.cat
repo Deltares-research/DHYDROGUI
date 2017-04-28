@@ -1,0 +1,24 @@
+[General]
+Title=FHM2011A
+AppType=1
+Version=1.0.0
+CATTemplateFile=Fixed\Cat.tpl
+ThematicMapOption=2
+CATIniFile=D:\SK212_3A\Programs\Cat\cat.ini
+WQStandardsOption=0
+SaveTemplateonExit=True
+UserName=SOBEK
+
+[Functions]
+defaultini=D:\SK212_3A\Programs\Cat\functions.ini
+
+[Netter]
+NtpFile=D:\SK212_3A\Programs\cat\netter.ntp
+
+[CMTApps]
+NumberApps=1
+App1=\SK212_3A\FHM2011A.lit, FHM2011A
+
+[StandAloneApps]
+NumberApps=0
+

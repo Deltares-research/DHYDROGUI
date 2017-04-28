@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NetworkFeatureFromGisImporterSettingsCollection>
+  <Collection>
+    <NetworkFeatureFromGisImporterSettings>
+      <NetworkFeatureImporterFromGisImporterType>DeltaShell.Plugins.NetworkEditor.Import.ChannelFromGisImporter</NetworkFeatureImporterFromGisImporterType>
+      <NetworkFeatureType>Channels</NetworkFeatureType>
+      <Path>D:/src/src/test-data/Plugins/NetworkEditor/DeltaShell.Plugins.NetworkEditor.Tests/HydroBaseCF_Basis.mdb</Path>
+      <TableName>Channel</TableName>
+      <ColumnNameID>ChannelID</ColumnNameID>
+      <DiscriminatorColumn>hahaColumn</DiscriminatorColumn>
+      <DiscriminatorValue>hihiColumn</DiscriminatorValue>
+      <GeometryColumn>
+        <TableName>Channel</TableName>
+        <ColumnName>Shape</ColumnName>
+        <IsNullValue>false</IsNullValue>
+      </GeometryColumn>
+      <RelatedTables>
+        <RelatedTable>
+          <TableName>haha</TableName>
+          <ForeignKeyColumnName>hihi</ForeignKeyColumnName>
+        </RelatedTable>
+        <RelatedTable>
+          <TableName>hoho</TableName>
+          <ForeignKeyColumnName>hehe</ForeignKeyColumnName>
+        </RelatedTable>
+      </RelatedTables>
+      <PropertiesMapping>
+        <PropertyMapping>
+          <PropertyName>ID</PropertyName>
+          <IsUnique>true</IsUnique>
+          <IsRequired>true</IsRequired>
+          <MappingColumn>
+            <TableName>Channel</TableName>
+            <ColumnName>OVKIDENT</ColumnName>
+            <IsNullValue>false</IsNullValue>
+          </MappingColumn>
+        </PropertyMapping>
+        <PropertyMapping>
+          <PropertyName>Name</PropertyName>
+          <IsUnique>false</IsUnique>
+          <IsRequired>false</IsRequired>
+          <MappingColumn>
+            <TableName>Channel</TableName>
+            <ColumnName>OVK_Name</ColumnName>
+            <IsNullValue>true</IsNullValue>
+          </MappingColumn>
+        </PropertyMapping>
+        <PropertyMapping>
+          <PropertyName>Node_From ID</PropertyName>
+          <IsUnique>false</IsUnique>
+          <IsRequired>false</IsRequired>
+          <MappingColumn>
+            <IsNullValue>false</IsNullValue>
+          </MappingColumn>
+        </PropertyMapping>
+        <PropertyMapping>
+          <PropertyName>Node_To ID</PropertyName>
+          <IsUnique>false</IsUnique>
+          <IsRequired>false</IsRequired>
+          <MappingColumn>
+            <IsNullValue>false</IsNullValue>
+          </MappingColumn>
+        </PropertyMapping>
+      </PropertiesMapping>
+    </NetworkFeatureFromGisImporterSettings>
+  </Collection>
+</NetworkFeatureFromGisImporterSettingsCollection>

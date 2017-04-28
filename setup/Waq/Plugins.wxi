@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?include ..\NGHS.IO\NGHS.IO.wxi?>
+  <?include WaterQualityModelPlugin.wxi?>
+  <?include WaterQualityModelGuiPlugin.wxi?>
+</Include>

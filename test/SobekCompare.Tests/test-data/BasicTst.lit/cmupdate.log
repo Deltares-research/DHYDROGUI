@@ -1,0 +1,62 @@
+CMUPDATE: update of the application \SOBEK216\BasicTst.lit
+1 tasks need update:PLUVIUS1,
+
+Updating case: 13 - InitialDepth
+
+Updating case: 1 - CSBasic
+
+Updating case: 2 - CSCase2
+
+Updating case: 3 - FrictionManning
+
+Updating case: 4 - FrictionStrickler
+
+Updating case: 5 - Weir
+
+Updating case: 7 - Orifice
+
+Updating case: 8 - RiverWeir
+
+Updating case: 9 - UniWeir
+
+Updating case: 10 - AdvancedWeir
+
+Updating case: 11 - InitialFlow
+
+Updating case: 12 - InitalLevel
+
+Updating case: 14 - FlowBoundary
+
+Updating case: 16 - LateralConstant
+
+Updating case: 17 - LateralTimeSeries
+
+Updating case: 18 - Pump
+
+Updating case: 20 - Bridge
+
+Updating case: 21 - TabulatedCrossSectionWithStorage
+
+Updating case: 22 - RiverProfileMainOnly
+
+Updating case: 23 - Weir_CA
+
+Updating case: 24 - RiverProfileMainFP1
+
+Updating case: 25 - RiverProfileMainFP1FP2
+
+Updating case: 27 - UniWeirConstantQ
+
+Updating case: 19 - RiverPump
+
+Updating case: 26 - PumpSwitching
+
+Updating case: 15 - LevelBoundary
+
+Updating case: 6 - Culvert
+
+Erased files: 
+    none
+New files in the application :
+..\15\NETWORKL.DBF   created as empty file
+..\6\NETWORKL.DBF   created as empty file

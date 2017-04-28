@@ -1,0 +1,10 @@
+*Name of this file: \SOBEK212\FIXED\T25D24.EVP
+*Date and time of construction: 02-03-2012   16:36:12
+*Evaporation file
+*Meteo data: evaporation intensity in mm/day
+*First record: start date, data in mm/day
+*Datum (year month day), verdamping (mm/dag) voor elk weerstation
+*jaar maand dag verdamping[mm]
+ 2005  12  31 0
+ 2006  1  1 0
+ 2006  1  2 0

@@ -1,0 +1,34 @@
+
+
+;; ITEM
+;; USEFOR 'n1' 'n1'
+;; CONCENTRATION
+;; USEFOR 'NH4' 'NH4'
+;; USEFOR 'CBOD5' 'CBOD5'
+;; USEFOR 'CBOD5_2' 'CBOD5_2'
+;; USEFOR 'OXY' 'OXY'
+;; DATA        'NH4'         'CBOD5'       'CBOD5_2'     'OXY' 
+;;            -999          -999          -999          -999 
+
+;; ITEM
+;; USEFOR 'nL1' 'nL1'
+;; CONCENTRATION
+;; USEFOR 'NH4' 'NH4'
+;; USEFOR 'CBOD5' 'CBOD5'
+;; USEFOR 'CBOD5_2' 'CBOD5_2'
+;; USEFOR 'OXY' 'OXY'
+;; USEFOR 'Continuity' 'Continuity'
+;; DATA        'NH4'         'CBOD5'       'CBOD5_2'     'OXY'         'Continuity' 
+;;            -999          -999          -999          -999          -999 
+
+;; ITEM
+;; USEFOR 'n21' 'n21'
+;; CONCENTRATION
+;; USEFOR 'NH4' 'NH4'
+;; USEFOR 'CBOD5' 'CBOD5'
+;; USEFOR 'CBOD5_2' 'CBOD5_2'
+;; USEFOR 'OXY' 'OXY'
+;; USEFOR 'Continuity' 'Continuity'
+;; DATA        'NH4'         'CBOD5'       'CBOD5_2'     'OXY'         'Continuity' 
+;;            -999          -999          -999          -999          -999 
+

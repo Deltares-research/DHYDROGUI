@@ -1,0 +1,116 @@
+PAR2 id 'KST74_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST74_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST74_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST74_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST74_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST74_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST67_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST67_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST67_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST67_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST67_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST67_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST74_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST74_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST74_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST74_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST74_klep' va 5 ca 0 cb -1.55 cn 0 data par2
+PAR2 id 'KST74_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST74_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST74_klep' va 5 ca 0 cb -2.95 cn 0 data par2
+PAR2 id 'KST67_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST67_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST67_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST67_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST67_klep' va 5 ca 0 cb -1.95 cn 0 data par2
+PAR2 id 'KST67_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST67_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST67_klep' va 5 ca 0 cb -3.17 cn 0 data par2
+PAR2 id 'KST606_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST606_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST606_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST606_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST606_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST606_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST606_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST606_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST606_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST606_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST606_klep' va 5 ca 0 cb -0.6 cn 0 data par2
+PAR2 id 'KST606_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST606_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST606_klep' va 5 ca 0 cb -1.5 cn 0 data par2
+PAR2 id 'KST70_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST70_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST70_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST70_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST70_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST70_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST70_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST70_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST70_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST70_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST70_klep' va 5 ca 0 cb -1.25 cn 0 data par2
+PAR2 id 'KST70_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST70_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST70_klep' va 5 ca 0 cb -2.05 cn 0 data par2
+PAR2 id 'KST68_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST68_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST68_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST68_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST68_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST68_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST68_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST68_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST68_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST68_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST68_klep' va 5 ca 0 cb -0.55 cn 0 data par2
+PAR2 id 'KST68_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST68_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST68_klep' va 5 ca 0 cb -1.04 cn 0 data par2
+PAR2 id 'KST69_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST69_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST69_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST69_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST69_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST69_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST69_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST69_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST69_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST69_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST69_klep' va 5 ca 0 cb -1.65 cn 0 data par2
+PAR2 id 'KST69_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST69_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST69_klep' va 5 ca 0 cb -2.77 cn 0 data par2
+PAR2 id 'KST441_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST441_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST441_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST441_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST441_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST441_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST441_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST441_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST441_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST441_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST441_klep' va 5 ca 0 cb -1.55 cn 0 data par2
+PAR2 id 'KST441_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST441_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST441_klep' va 5 ca 0 cb -3.18 cn 0 data par2
+PAR2 id 'KST442_Hbov' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST442_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST442_Hben' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST442_Hben' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST442_Hoogwater' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST442_Hoogwater' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST442_Klepstand' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'KST442_klep' va 5 ca 1 cb 0 cn 0 data par2
+PAR2 id 'KST442_Klepstand_omhoog' nm '' do 'min'
+DATA ty 'FlowLoc' lo 'KST442_klep' va 5 ca 1 cb 0.02 cn 0 data
+DATA ty 'FlowLoc' lo 'KST442_klep' va 5 ca 0 cb -0.75 cn 0 data par2
+PAR2 id 'KST442_Klepstand_omlaag' nm '' do 'max'
+DATA ty 'FlowLoc' lo 'KST442_klep' va 5 ca 1 cb -0.01 cn 0 data
+DATA ty 'FlowLoc' lo 'KST442_klep' va 5 ca 0 cb -1.59 cn 0 data par2
+PAR2 id 'Bath_H' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'Bath_Hbov' va 1 ca 1 cb 0 cn 0 data par2
+PAR2 id 'Brugweg_Q' nm '' do 'none'
+DATA ty 'FlowLoc' lo 'Brugweg_Qbov' va 2 ca 1 cb 0 cn 0 data par2

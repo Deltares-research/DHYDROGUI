@@ -1,0 +1,282 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+
+namespace DelftTools.Hydro
+{
+    [DisplayName("Region")]
+    [Entity]
+    public class HydroRegion : RegionBase, IHydroRegion
+    {
+        private IEventedList<HydroLink> links;
+
+        private bool isCloning;
+
+        public HydroRegion()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            Links = new EventedList<HydroLink>();
+        }
+
+        public override IEventedList<IRegion> SubRegions
+        {
+            get { return base.SubRegions; } 
+            set
+            {
+                if (base.SubRegions != null)
+                {
+                    base.SubRegions.CollectionChanging -= OnSubRegionsCollectionChanging;
+                }
+                
+                base.SubRegions = value;
+
+                if (base.SubRegions != null)
+                {
+                    foreach (var subregion in base.SubRegions)
+                    {
+                        subregion.Parent = this;
+                    }
+                    base.SubRegions.CollectionChanging += OnSubRegionsCollectionChanging;
+                }
+            }
+        }
+
+        public virtual IEnumerable<IHydroObject> AllHydroObjects { get { return SubRegions.OfType<IHydroRegion>().SelectMany(r => r.AllHydroObjects); } }
+
+        public virtual IEventedList<HydroLink> Links
+        {
+            get { return links; }
+            set
+            {
+                if (links != null)
+                {
+                    links.CollectionChanged -= OnLinksCollectionChanged;
+                }
+
+                links = value;
+
+                if (links != null)
+                {
+                    links.CollectionChanged += OnLinksCollectionChanged;
+                }
+            }
+        }
+
+        public override object Clone()
+        {
+            var clone = (HydroRegion) base.Clone();
+            clone.Initialize();
+            clone.Name = Name;
+            clone.Geometry = (IGeometry) (Geometry != null ? Geometry.Clone() : null);
+            clone.Attributes = (IFeatureAttributeCollection) (Attributes != null ? Attributes.Clone() : null);
+            
+            clone.isCloning = true;
+            CloneAndAddLinks(this, clone);
+            clone.isCloning = false;
+            return clone;
+        }
+
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            return SubRegions.Cast<object>().Union(Links.Cast<object>());
+        }
+
+        public static HydroLink AddNewLink(IHydroObject source, IHydroObject target)
+        {
+            var link = new HydroLink(source, target);
+            
+            var commonRegion = GetCommonRegion(source, target);
+            commonRegion.Links.Add(link);
+
+            return link;
+        }
+
+        public static void RemoveLink(IHydroObject source, IHydroObject target)
+        {
+            var link = source.Links.First(l => Equals(l.Source, source) && Equals(l.Target, target));
+
+            var commonRegion = GetCommonRegion(source, target);
+            
+            commonRegion.Links.Remove(link);
+        }
+
+        public static bool CanLinkTo(IHydroObject source, IHydroObject target)
+        {
+            if (!source.CanBeLinkSource)
+            {
+                return false;
+            }
+
+            if (!target.CanBeLinkTarget)
+            {
+                return false;
+            }
+
+            if (Equals(source, target))
+            {
+                return false;
+            }
+
+            // source and target have common parent region
+            if(GetCommonRegion(source, target) == null)
+            {
+                return false;
+            }
+
+            // allowed links
+            if ((source is Catchment || source is WasteWaterTreatmentPlant)
+                && (target is Catchment || target is WasteWaterTreatmentPlant || target is RunoffBoundary || target is LateralSource || target is HydroNode))
+            {
+                var catchmentSource = source as Catchment;
+                if (catchmentSource != null)
+                { 
+                    //for now: if you can have subcatchments, you cannot be linked directly yourself (will probably change in the future)
+                    return catchmentSource.CatchmentType != null && !catchmentSource.CatchmentType.SubCatchmentTypes.Any();
+                }
+
+                return true;
+            }
+
+            if (source is Embankment && target is LateralSource)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static IHydroRegion GetCommonRegion(IHydroObject source, IHydroObject target)
+        {
+            if (Equals(source.Region, target.Region))
+            {
+                return source.Region;
+            }
+
+            var sourceParent = source.Region.Parent as IHydroRegion;
+            var targetParent = target.Region.Parent as IHydroRegion;
+
+            return Equals(sourceParent, targetParent) ? sourceParent : null;
+        }
+
+        /// <summary>
+        /// Adds links to the <paramref name="clone"/> region based on the links of <paramref name="original"/> region.
+        /// </summary>
+        public static void CloneAndAddLinks(IHydroRegion original, IHydroRegion clone)
+        {
+            
+            var originalObjects = original.AllHydroObjects.ToList();
+            var clonedObjects = clone.AllHydroObjects.ToList();
+
+            foreach (var link in original.Links)
+            {
+                var linkClone = (HydroLink) link.Clone();
+
+                // repair link
+                linkClone.Source = clonedObjects[originalObjects.IndexOf(link.Source)];
+                linkClone.Target = clonedObjects[originalObjects.IndexOf(link.Target)];
+
+                // replace link in source and target objects
+                var linkInSourceIndex = linkClone.Source.Links.IndexOf(link);
+                linkClone.Source.Links[linkInSourceIndex] = linkClone;
+
+                var linkInTargetIndex = linkClone.Target.Links.IndexOf(link);
+                linkClone.Target.Links[linkInTargetIndex] = linkClone;
+
+                clone.Links.Add(linkClone);
+            }
+        }
+
+        public static IEnumerable<IHydroRegion> GetAllRegions(IHydroRegion parentRegion)
+        {
+            yield return parentRegion;
+            foreach (var subRegion in parentRegion.SubRegions.OfType<IHydroRegion>().SelectMany(GetAllRegions))
+            {
+                yield return subRegion;
+            }
+        }
+
+        public static void RemoveLink(HydroLink link)
+        {
+            RemoveLink(link.Source, link.Target);
+        }
+
+        [EditAction]
+        private void OnSubRegionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (!Equals(sender, SubRegions))
+            {
+                return;
+            }
+
+            var subRegion = (IHydroRegion) e.Item;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    subRegion.Parent = this;
+                    break;
+
+                case NotifyCollectionChangeAction.Remove:
+                    var links = subRegion.GetAllItemsRecursive().OfType<IHydroObject>().Where(o => o.Links != null)
+                        .SelectMany(o => o.Links).Where(l => Links.Contains(l)).ToArray();
+                    foreach (var link in links)
+                    {
+                        RemoveLink(link);
+                    }
+                    break;
+            }
+        }
+
+        [EditAction]
+        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (isCloning)
+            {
+                return;
+            }
+            var link = e.Item as HydroLink;
+
+            if (e.Action == NotifyCollectionChangeAction.Remove)
+            {
+                link.Source.Links.Remove(link);
+                link.Target.Links.Remove(link);
+            }
+            else if (e.Action == NotifyCollectionChangeAction.Add)
+            {
+                link.Source.Links.Add(link);
+                link.Target.Links.Add(link);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        void IHydroRegion.RemoveLink(IHydroObject source, IHydroObject target)
+        {
+            RemoveLink(source, target);
+        }
+
+        bool IHydroRegion.CanLinkTo(IHydroObject source, IHydroObject target)
+        {
+            return CanLinkTo(source, target);
+        }
+
+        HydroLink IHydroRegion.AddNewLink(IHydroObject source, IHydroObject target)
+        {
+            return AddNewLink(source, target);
+        }
+    }
+}

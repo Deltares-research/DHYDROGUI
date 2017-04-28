@@ -1,0 +1,14 @@
+$node
+1 Land
+2 Sea
+$branch
+1 Branch001
+$structure
+$lat_discharge
+$segment
+$controller
+$trigger
+$h_bound
+1 Sea
+$Q_bound
+1 Land

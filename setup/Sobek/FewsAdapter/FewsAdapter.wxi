@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <Directory Id="FewsAdapterDir" Name="DeltaShell.Plugins.Fews">
+    <?define fewsPluginDir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Fews\"?>
+    <?define fewsPiDir="$(var.deltashell_output_folder)plugins\Deltares.IO.FewsPI\"?>
+    <Component Id='FewsAdapterComponent' Guid="F15A2BE5-A986-429D-9F3F-F764FCC1B575">
+      <File Id="fews_adapter_file_56" Source='$(var.deltashell_gui_bin)DelftTools.ModelExchange.dll' />
+      <File Id="fews_adapter_file_67" Source='$(var.fewsPiDir)Deltares.IO.FewsPI.dll' />
+      <File Id="fews_adapter_file_79" Source='$(var.fewsPluginDir)DeltaShell.Plugins.Fews.dll' />
+      <File Id="fews_adapter_file_92" Source='$(var.fewsPluginDir)FEWSPiForDotNet.dll' />
+      <File Id="fews_adapter_file_101" Source='$(var.fewsPiDir)IKVM.OpenJDK.Core.dll' />
+      <File Id="fews_adapter_file_102" Source='$(var.fewsPiDir)IKVM.OpenJDK.Text.dll' />
+      <File Id="fews_adapter_file_104" Source='$(var.fewsPiDir)IKVM.OpenJDK.Util.dll' />
+      <File Id="fews_adapter_file_105" Source='$(var.fewsPiDir)IKVM.OpenJDK.XML.API.dll' />
+      <File Id="fews_adapter_file_108" Source='$(var.fewsPiDir)IKVM.OpenJDK.XML.Parse.dll' />
+      <File Id="fews_adapter_file_112" Source='$(var.fewsPluginDir)IKVM.Runtime.dll' />
+      <File Id="fews_adapter_file_113" Source='$(var.fewsPluginDir)IKVM.Runtime.JNI.dll' />
+    </Component>
+  </Directory>
+</Include>

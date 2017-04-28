@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diag xmlns="http://www.wldelft.nl/fews/PI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
+    <line level="3" description="di 08-01-2013 13:19:34 Started FewsAdapter, Version 1.0.0.0, runinfo from D:\fews\fss\wd\rvmc00\fss00\FewsShell\Rivieren\Modules\Sobek3\Maas/Input/pi-run.xml diagnostics into D:\fews\fss\wd\rvmc00\fss00\FewsShell\Rivieren\Modules\Sobek3\Maas\Logs\diagnostics.xml"/>
+    <line level="4" description="di 08-01-2013 13:19:34 DeltaShell/Plugin versions: DeltaShell Application 1.0.0.0, 1D water flow model 3.0.1.0, Real-Time Control 3.0.1.0"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Simulation period 01/08/2013 00:00:00 - 01/13/2013 12:00:00"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: piTimeSeriesAsBin = true"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: workDir|Maas_2003_midden = D:\fews\fss\wd\rvmc00\fss00\FewsShell\Rivieren\Modules\Sobek3\Maas/WorkFlow1D"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: model = Maas"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: deltaShellProjectFile = D:\fews\fss\wd\rvmc00\fss00\FewsShell\Rivieren\Modules\Sobek3\Maas\DSModel\j03mid_19728_FEWS_v007.dsproj"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: workDir|Maas = D:\fews\fss\wd\rvmc00\fss00\FewsShell\Rivieren\Modules\Sobek3\Maas/WorkRTC"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: saveResultsInCopyOfProject = true"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Input property: checkBackwardsCompatibility = true"/>
+    <line level="4" description="di 08-01-2013 13:19:34 Loading project from j03mid_19728_FEWS_v007.dsproj"/>
+    <line level="4" description="di 08-01-2013 13:19:46 Loading project from j03mid_19728_FEWS_v007.dsproj done"/>
+    <line level="4" description="di 08-01-2013 13:19:46 Providing restart files to model(s)"/>
+    <line level="4" description="di 08-01-2013 13:19:46 Feeding restart file(s) from 'restart_files_in.zip' to model 'Maas'"/>
+    <line level="4" description="di 08-01-2013 13:19:46 Feeding restart file(s) from 'restart_files_in.zip' to model 'Maas_2003_midden'"/>
+    <line level="4" description="di 08-01-2013 13:19:46 Providing restart files to model(s) done"/>
+    <line level="4" description="di 08-01-2013 13:19:46 Providing input to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Keizersveer' and parameterId 'water_level' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Eijsden' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Jeker' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Roer' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Quarles-gemaal' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Gewande-gemaal' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Geul' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'bekenBelgie' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Geleenbeek' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'UffThornerbeek' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Dommel-B' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Aa-B' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Zandleij' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Vlootbeek' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Swalm' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Neerbeek' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Peel' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'NO-Brabant' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Niers' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Bloemers-gemaal' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'AfgedMaas-gemaal' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Ternaaien' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Julkanaal-uit' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Z-Willemsvaart' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Linne-schut-uit' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Feeding timeseries for locationId 'Heel-schut-uit' and parameterId 'water_discharge' to model"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Providing input to model done"/>
+    <line level="4" description="di 08-01-2013 13:19:57 Initializing model"/>
+    <line level="4" description="di 08-01-2013 13:20:04 Initializing model done"/>
+    <line level="3" description="di 08-01-2013 13:20:04 Model Maas execute start"/>
+    <line level="3" description="di 08-01-2013 13:22:13 Model Maas execute done"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output time series"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Eijsden_grens' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Maastricht_(St.Piet)' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Borgharen_dorp' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId '001_0' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Borgharen_Jul.kanaal' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Elsloo' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Grevenbicht' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Maaseik' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Stevensweert' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Heel_boven' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Linne_beneden' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Roermond_boven' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Heel_beneden' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Neer' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Kessel' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:13 Providing output for locationId 'H_Belfeld_boven' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Belfeld_beneden' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Venlo-Blerick' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Well_dorp' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Sambeek_boven' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Sambeek_beneden' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Gennep' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Mook' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Grave_boven' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Grave_beneden' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Megen' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Lith_boven' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Lith_dorp' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Heesbeen' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '008_13546' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '008_2736' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '009_4399' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '002_0' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '002_4039' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '006_33272' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '008_0' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '008_11959' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '008_2596' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId '002_0' and parameterId 'water_discharge'"/>
+    <line level="4" description="di 08-01-2013 13:22:14 Providing output for locationId 'H_Eijsden_grens' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Maastricht_(St.Piet)' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Borgharen_dorp' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId '001_0' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Borgharen_Jul.kanaal' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Elsloo' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Grevenbicht' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Maaseik' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Stevensweert' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Heel_boven' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Linne_beneden' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Roermond_boven' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Heel_beneden' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Neer' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Kessel' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Belfeld_boven' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Belfeld_beneden' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Venlo-Blerick' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Well_dorp' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Sambeek_boven' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Sambeek_beneden' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Gennep' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Mook' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:15 Providing output for locationId 'H_Grave_boven' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId 'H_Grave_beneden' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId 'H_Megen' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId 'H_Lith_boven' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId 'H_Lith_dorp' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId 'H_Heesbeen' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '008_13546' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '008_2736' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '009_4399' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '002_0' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '002_4039' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '006_33272' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '008_0' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '008_11959' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '008_2596' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output for locationId '002_0' and parameterId 'water_level'"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Providing output time series done"/>
+    <line level="4" description="di 08-01-2013 13:22:16 Saving copy of DeltaShell project to D:\fews\fss\wd\rvmc00\fss00\FewsShell\Rivieren\Modules\Sobek3\Maas\DSModel\CopyOfj03mid_19728_FEWS_v007.dsproj"/>
+    <line level="3" description="di 08-01-2013 13:22:20 Fews Adapter Run completed"/>
+</Diag>

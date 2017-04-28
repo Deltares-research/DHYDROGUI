@@ -1,0 +1,22 @@
+[
+  {
+    "SourceModelName": "dflow-fm",
+    "TargetModelName": "real-time control",
+    "Exchanges": [
+      {
+        "SourceName": "party.salinity",
+        "TargetName": "Control Group 1.input1"
+      }
+    ]
+  },
+  {
+    "SourceModelName": "real-time control",
+    "TargetModelName": "dflow-fm",
+    "Exchanges": [
+      {
+        "SourceName": "Control Group 1.output0",
+        "TargetName": "weir02.crest_level"
+      }
+    ]
+  }
+]

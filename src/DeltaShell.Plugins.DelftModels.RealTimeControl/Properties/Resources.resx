@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="output" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\output.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StopHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StopHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rule" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\rule.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rtcmodel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rtcmodel.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="condition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\condition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="controlgroup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\controlgroup.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="brick_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brick_add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="input" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\input.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PlayHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlayHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PropertiesHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PropertiesHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="controlgroup_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\controlgroup_add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopyHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CopyHS.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="directionalcondition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\directionalcondition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="timecondition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\timecondition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="standardcondition" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\standardcondition.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cog1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cog_active" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\cog_active.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExclamationOverlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\exclamation-small.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="validation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\validation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RealTimeControlModelProperties_Name_Description" xml:space="preserve">
+    <value>Name of the Real-Time Control Model.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_LimitMemory_Description" xml:space="preserve">
+    <value>Option to limit memory usage.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseSaveStateTimeRange_DisplayName" xml:space="preserve">
+    <value>Use save state time range</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseSaveStateTimeRange_Description" xml:space="preserve">
+    <value>Determines whether or not to write model states on specified time instances.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStartTime_DisplayName" xml:space="preserve">
+    <value>Save state time range: start time</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStartTime_Description" xml:space="preserve">
+    <value>Start writing model states when simulation time is equal or larger than this time.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStopTime_DisplayName" xml:space="preserve">
+    <value>Save state time range: stop time</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateStopTime_Description" xml:space="preserve">
+    <value>Stop writing model states when simulation time is beyond this time.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateTimeStep_DisplayName" xml:space="preserve">
+    <value>Save state time range: time step interval</value>
+  </data>
+  <data name="RealTimeControlModelProperties_SaveStateTimeStep_Description" xml:space="preserve">
+    <value>Write model state at each multiple of this time step after the 'Save state start time'.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseRestart_DisplayName" xml:space="preserve">
+    <value>Use restart</value>
+  </data>
+  <data name="RealTimeControlModelProperties_UseRestart_Description" xml:space="preserve">
+    <value>Use provided (restart) state as initial condition.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_WriteRestart_DisplayName" xml:space="preserve">
+    <value>Write restart</value>
+  </data>
+  <data name="RealTimeControlModelProperties_WriteRestart_Description" xml:space="preserve">
+    <value>Determines whether or not to write model states (can be used to restart from). On true, a state is written at the end of the model run.</value>
+  </data>
+  <data name="Categories_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Common_Name_DisplayName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="RealTimeControlModelProperties_Category_RunParameters" xml:space="preserve">
+    <value>Run parameters</value>
+  </data>
+  <data name="RealTimeControlModelProperties_DisplayName" xml:space="preserve">
+    <value>Real-Time Control Model</value>
+  </data>
+  <data name="RealTimeControlModelProperties_LimitMemory_DisplayName" xml:space="preserve">
+    <value>Limit memory</value>
+  </data>
+  <data name="RealTimeControlModelProperties_OutputTimeStep_Description" xml:space="preserve">
+    <value>Determines at which interval the model output is written</value>
+  </data>
+  <data name="RealTimeControlModelProperties_OutputTimeStep_DisplayName" xml:space="preserve">
+    <value>Output timestep</value>
+  </data>
+  <data name="signal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\signal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RealTimeControlApplicationPlugin_Description" xml:space="preserve">
+    <value>Allows to simulate Real-Time Control for models, such as D-Flow 1D.</value>
+  </data>
+  <data name="RealTimeControlModel_BrokenDataItemLinkDetected" xml:space="preserve">
+    <value>Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_CoordinateSystem_Description" xml:space="preserve">
+    <value>Coordinate system (geographic or projected) used for drawing.</value>
+  </data>
+  <data name="RealTimeControlModelProperties_CoordinateSystem_DisplayName" xml:space="preserve">
+    <value>Coordinate System</value>
+  </data>
+</root>

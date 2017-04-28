@@ -1,0 +1,793 @@
+@(#)Deltares, SOBEKSIM Version 4.03.05.12609, Sep  1 2010, 16:22:16
+opened file : D:\Sobek212\Programs\flow\sobeksim.lng
+closed file : D:\Sobek212\Programs\flow\sobeksim.lng
+ConvtabYzprof
+Opened file : branch.tbl
+closed file : branch.tbl
+Opened file : node.tbl
+closed file : node.tbl
+Opened file : qlat.tbl
+closed file : qlat.tbl
+Opened file : grid.tbl
+closed file : grid.tbl
+Opened file : reachdwn.tbl
+closed file : reachdwn.tbl
+Opened file : reachup.tbl
+closed file : reachup.tbl
+Opened file : structup.tbl
+closed file : structup.tbl
+Opened file : structdwn.tbl
+closed file : structdwn.tbl
+Opened file : casedesc.cmt
+closed file : casedesc.cmt
+Minimum Length set for reachsegment 32_1       1.031891     10.000000
+Minimum Length set for reachsegment 76_s3       0.021057     10.000000
+Minimum Length set for reachsegment 094455_s7       9.002380     10.000000
+Minimum Length set for reachsegment 091397_2       2.020172     10.000000
+Minimum Length set for reachsegment 089421_1       9.963490     10.000000
+Minimum Length set for reachsegment 094446_1       9.886079     10.000000
+Minimum Length set for reachsegment 109725_1       8.152603     10.000000
+Minimum Length set for reachsegment 120_1       8.076973     10.000000
+Minimum Length set for reachsegment 123       6.541809     10.000000
+Minimum Length set for reachsegment 091321_5       4.818939     10.000000
+Minimum Length set for reachsegment 091265_1       9.811234     10.000000
+Minimum Length set for reachsegment 090629_1       0.922594     10.000000
+Minimum Length set for reachsegment 093666_1       5.171397     10.000000
+Minimum Length set for reachsegment 193_1       5.124374     10.000000
+Minimum Length set for reachsegment 232_2       0.016388     10.000000
+Minimum Length set for reachsegment 091402_1       8.235736     10.000000
+Minimum Length set for reachsegment 089388_s2       1.022171     10.000000
+Minimum Length set for reachsegment 091305_1       0.953544     10.000000
+Minimum Length set for reachsegment 091305_s2       0.097611     10.000000
+Minimum Length set for reachsegment 278_1       3.127458     10.000000
+Minimum Length set for reachsegment 094364_1       6.159967     10.000000
+Minimum Length set for reachsegment 351_1       4.002491     10.000000
+Minimum Length set for reachsegment 383_s2       1.070503     10.000000
+Minimum Length set for reachsegment 093650_s3       8.876221     10.000000
+Minimum Length set for reachsegment 091389_1       8.989002     10.000000
+Minimum Length set for reachsegment 097036_s4       2.718948     10.000000
+Minimum Length set for reachsegment 089433_1       0.285054     10.000000
+Minimum Length set for reachsegment 451_s3       1.791870     10.000000
+Minimum Length set for reachsegment 470_s2       5.130371     10.000000
+Minimum Length set for reachsegment 464_1       6.947144     10.000000
+Minimum Length set for reachsegment 094341_s1       3.263754     10.000000
+Minimum Length set for reachsegment 501_1       1.082503     10.000000
+Minimum Length set for reachsegment 095568_13       8.878418     10.000000
+Minimum Length set for reachsegment 093747_1       9.755386     10.000000
+Minimum Length set for reachsegment 093649_23       2.883057     10.000000
+Minimum Length set for reachsegment 560_1       2.906193     10.000000
+Minimum Length set for reachsegment 566_1       6.043289     10.000000
+Minimum Length set for reachsegment 610_1       5.841273     10.000000
+Minimum Length set for reachsegment 094372_s1       1.847076     10.000000
+Minimum Length set for reachsegment 093577_1       5.145597     10.000000
+Minimum Length set for reachsegment 089372_1       6.715024     10.000000
+Minimum Length set for reachsegment 093660_1       4.467632     10.000000
+Minimum Length set for reachsegment 091291_s6       2.004822     10.000000
+Minimum Length set for reachsegment 712_s1       0.985184     10.000000
+Minimum Length set for reachsegment 756_2       9.501175     10.000000
+Minimum Length set for reachsegment 768_s2       0.931648     10.000000
+Minimum Length set for reachsegment 093643_1       4.170886     10.000000
+Minimum Length set for reachsegment 091392_1       7.334414     10.000000
+Minimum Length set for reachsegment 090622_s1       4.022331     10.000000
+Minimum Length set for reachsegment 786_3       7.359863     10.000000
+Minimum Length set for reachsegment 413       2.883194     10.000000
+Minimum Length set for reachsegment 795_1       8.791009     10.000000
+Minimum Length set for reachsegment 803_1       2.827210     10.000000
+Minimum Length set for reachsegment 804_1       3.133269     10.000000
+Minimum Length set for reachsegment 817_1       1.466583     10.000000
+Minimum Length set for reachsegment 76       0.723267     10.000000
+Minimum Length set for reachsegment 819_1       1.363705     10.000000
+Minimum Length set for reachsegment AFW_382_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_382_s15       5.222694     10.000000
+Minimum Length set for reachsegment AFW_383_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_383_s15       4.643044     10.000000
+Minimum Length set for reachsegment AFW_379_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_379_s15       5.270248     10.000000
+Minimum Length set for reachsegment AFW_381_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_381_s15       5.199524     10.000000
+Minimum Length set for reachsegment AFW_384_s15       5.033058     10.000000
+Minimum Length set for reachsegment AFW_385_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_385_s15       5.347748     10.000000
+Minimum Length set for reachsegment AFW_377_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_377_s15       5.420456     10.000000
+Minimum Length set for reachsegment AFW_387_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_387_s15       5.132011     10.000000
+Minimum Length set for reachsegment AFW_378_s15       4.660454     10.000000
+Minimum Length set for reachsegment AFW_386_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_386_s15       4.982758     10.000000
+Minimum Length set for reachsegment AFW_376_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_376_s15       5.314987     10.000000
+Minimum Length set for reachsegment AFW_356_s15       5.151077     10.000000
+Minimum Length set for reachsegment AFW_402_s15       4.507874     10.000000
+Minimum Length set for reachsegment AFW_388_s15       5.102821     10.000000
+Minimum Length set for reachsegment AFW_352_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_352_s15       4.928749     10.000000
+Minimum Length set for reachsegment AFW_359_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_359_s15       5.399078     10.000000
+Minimum Length set for reachsegment AFW_405_s15       5.276070     10.000000
+Minimum Length set for reachsegment AFW_357_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_357_s15       5.008041     10.000000
+Minimum Length set for reachsegment AFW_351_s15       5.112808     10.000000
+Minimum Length set for reachsegment AFW_370_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_370_s15       4.665901     10.000000
+Minimum Length set for reachsegment AFW_353_s15       4.503204     10.000000
+Minimum Length set for reachsegment AFW_403_s15       4.877029     10.000000
+Minimum Length set for reachsegment AFW_371_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_371_s15       4.553833     10.000000
+Minimum Length set for reachsegment AFW_406_s15       4.997284     10.000000
+Minimum Length set for reachsegment AFW_404_s15       5.206627     10.000000
+Minimum Length set for reachsegment AFW_358_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_358_s15       4.924011     10.000000
+Minimum Length set for reachsegment AFW_350_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_350_s15       5.133034     10.000000
+Minimum Length set for reachsegment AFW_426_s13       4.787239     10.000000
+Minimum Length set for reachsegment AFW_396_s15       5.477669     10.000000
+Minimum Length set for reachsegment AFW_354_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_354_s15       4.549667     10.000000
+Minimum Length set for reachsegment AFW_349_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_349_s15       5.449448     10.000000
+Minimum Length set for reachsegment AFW_374_s15       4.500198     10.000000
+Minimum Length set for reachsegment AFW_400_s15       5.020004     10.000000
+Minimum Length set for reachsegment AFW_401_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_401_s15       5.488426     10.000000
+Minimum Length set for reachsegment AFW_397_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_397_s15       4.891556     10.000000
+Minimum Length set for reachsegment AFW_398_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_398_s15       5.029152     10.000000
+Minimum Length set for reachsegment AFW_366_s15       4.546982     10.000000
+Minimum Length set for reachsegment AFW_355_s15       4.561508     10.000000
+Minimum Length set for reachsegment AFW_347_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_347_s15       5.241196     10.000000
+Minimum Length set for reachsegment AFW_399_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_399_s15       4.581413     10.000000
+Minimum Length set for reachsegment AFW_394_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_394_s15       5.000488     10.000000
+Minimum Length set for reachsegment AFW_348_s15       5.085991     10.000000
+Minimum Length set for reachsegment AFW_368_s15       5.070374     10.000000
+Minimum Length set for reachsegment AFW_365_s15       5.405991     10.000000
+Minimum Length set for reachsegment AFW_373_s8       9.999998     10.000000
+Minimum Length set for reachsegment AFW_373_s15       5.329964     10.000000
+Minimum Length set for reachsegment AFW_367_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_367_s15       5.296486     10.000000
+Minimum Length set for reachsegment AFW_219_s14       5.114662     10.000000
+Minimum Length set for reachsegment AFW_393_s15       5.022751     10.000000
+Minimum Length set for reachsegment AFW_407_s15       5.438377     10.000000
+Minimum Length set for reachsegment AFW_364_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_364_s15       5.023018     10.000000
+Minimum Length set for reachsegment AFW_391_s15       5.106529     10.000000
+Minimum Length set for reachsegment AFW_346_s15       4.683945     10.000000
+Minimum Length set for reachsegment AFW_345_s15       5.228584     10.000000
+Minimum Length set for reachsegment AFW_218_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_218_s15       5.075119     10.000000
+Minimum Length set for reachsegment AFW_363_s15       4.769958     10.000000
+Minimum Length set for reachsegment AFW_372_s15       5.250023     10.000000
+Minimum Length set for reachsegment AFW_409_s15       4.706085     10.000000
+Minimum Length set for reachsegment AFW_220_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_220_s15       4.804779     10.000000
+Minimum Length set for reachsegment AFW_338_s15       4.986404     10.000000
+Minimum Length set for reachsegment AFW_337_s1       9.998514     10.000000
+Minimum Length set for reachsegment AFW_337_s9       9.998512     10.000000
+Minimum Length set for reachsegment AFW_337_s10       9.998512     10.000000
+Minimum Length set for reachsegment AFW_337_s11       9.998516     10.000000
+Minimum Length set for reachsegment AFW_337_s12       9.998512     10.000000
+Minimum Length set for reachsegment AFW_337_s14       9.998512     10.000000
+Minimum Length set for reachsegment AFW_222_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_222_s15       4.642479     10.000000
+Minimum Length set for reachsegment AFW_361_s15       5.389992     10.000000
+Minimum Length set for reachsegment AFW_362_s15       4.983589     10.000000
+Minimum Length set for reachsegment AFW_408_s15       4.933220     10.000000
+Minimum Length set for reachsegment AFW_339_s15       4.918884     10.000000
+Minimum Length set for reachsegment AFW_344_s15       4.776100     10.000000
+Minimum Length set for reachsegment AFW_223_s15       4.760361     10.000000
+Minimum Length set for reachsegment AFW_340_s15       5.314529     10.000000
+Minimum Length set for reachsegment AFW_360_s15       5.442154     10.000000
+Minimum Length set for reachsegment AFW_331_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_331_s15       4.994980     10.000000
+Minimum Length set for reachsegment AFW_343_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_343_s15       5.119720     10.000000
+Minimum Length set for reachsegment AFW_342_s15       5.365089     10.000000
+Minimum Length set for reachsegment AFW_332_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_332_s15       5.225571     10.000000
+Minimum Length set for reachsegment AFW_316_s15       5.264999     10.000000
+Minimum Length set for reachsegment AFW_341_s15       5.041504     10.000000
+Minimum Length set for reachsegment AFW_215_s15       4.929192     10.000000
+Minimum Length set for reachsegment AFW_330_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_330_s15       4.729828     10.000000
+Minimum Length set for reachsegment AFW_319_s15       4.729637     10.000000
+Minimum Length set for reachsegment AFW_334_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_334_s15       4.812836     10.000000
+Minimum Length set for reachsegment AFW_328_s15       5.290024     10.000000
+Minimum Length set for reachsegment AFW_317_s15       4.957092     10.000000
+Minimum Length set for reachsegment AFW_311_s15       4.528358     10.000000
+Minimum Length set for reachsegment AFW_325_s15       5.464737     10.000000
+Minimum Length set for reachsegment AFW_333_s15       5.082985     10.000000
+Minimum Length set for reachsegment AFW_335_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_335_s15       4.853165     10.000000
+Minimum Length set for reachsegment AFW_336_s15       4.954346     10.000000
+Minimum Length set for reachsegment AFW_213_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_213_s15       5.385834     10.000000
+Minimum Length set for reachsegment AFW_324_s15       5.407845     10.000000
+Minimum Length set for reachsegment AFW_322_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_322_s15       5.275497     10.000000
+Minimum Length set for reachsegment AFW_326_s15       5.355492     10.000000
+Minimum Length set for reachsegment AFW_318_s15       4.577515     10.000000
+Minimum Length set for reachsegment AFW_327_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_327_s15       4.512039     10.000000
+Minimum Length set for reachsegment AFW_321_s15       4.977638     10.000000
+Minimum Length set for reachsegment AFW_211_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_211_s15       4.646698     10.000000
+Minimum Length set for reachsegment AFW_279_s15       4.917030     10.000000
+Minimum Length set for reachsegment AFW_276_s15       4.672035     10.000000
+Minimum Length set for reachsegment AFW_278_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_278_s15       5.260010     10.000000
+Minimum Length set for reachsegment AFW_320_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_320_s15       5.106026     10.000000
+Minimum Length set for reachsegment AFW_274_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_274_s15       5.408424     10.000000
+Minimum Length set for reachsegment AFW_210_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_210_s15       5.280556     10.000000
+Minimum Length set for reachsegment AFW_280_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_280_s15       4.637611     10.000000
+Minimum Length set for reachsegment AFW_273_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_273_s15       5.245995     10.000000
+Minimum Length set for reachsegment AFW_308_s15       4.724327     10.000000
+Minimum Length set for reachsegment AFW_203_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_203_s15       4.902573     10.000000
+Minimum Length set for reachsegment AFW_271_s15       5.473061     10.000000
+Minimum Length set for reachsegment AFW_209_s15       5.311653     10.000000
+Minimum Length set for reachsegment AFW_277_s15       5.146919     10.000000
+Minimum Length set for reachsegment AFW_307_s15       4.628197     10.000000
+Minimum Length set for reachsegment AFW_207_s15       4.802345     10.000000
+Minimum Length set for reachsegment AFW_270_s8       4.587814     10.000000
+Minimum Length set for reachsegment AFW_204_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_204_s15       4.897072     10.000000
+Minimum Length set for reachsegment AFW_275_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_275_s15       5.434982     10.000000
+Minimum Length set for reachsegment AFW_208_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_208_s15       5.372009     10.000000
+Minimum Length set for reachsegment AFW_202_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_202_s15       4.835442     10.000000
+Minimum Length set for reachsegment AFW_281_s15       4.671654     10.000000
+Minimum Length set for reachsegment AFW_266_s15       5.252319     10.000000
+Minimum Length set for reachsegment AFW_206_s15       5.016685     10.000000
+Minimum Length set for reachsegment AFW_272_s15       5.488747     10.000000
+Minimum Length set for reachsegment AFW_201_s15       5.331116     10.000000
+Minimum Length set for reachsegment AFW_205_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_205_s15       5.081451     10.000000
+Minimum Length set for reachsegment AFW_269_s15       4.849121     10.000000
+Minimum Length set for reachsegment AFW_282_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_282_s15       5.047272     10.000000
+Minimum Length set for reachsegment AFW_229_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_229_s15       5.324203     10.000000
+Minimum Length set for reachsegment AFW_265_s15       5.393059     10.000000
+Minimum Length set for reachsegment AFW_235_s15       5.242538     10.000000
+Minimum Length set for reachsegment AFW_200_s15       5.284904     10.000000
+Minimum Length set for reachsegment AFW_199_s15       5.468651     10.000000
+Minimum Length set for reachsegment AFW_284_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_284_s15       4.707947     10.000000
+Minimum Length set for reachsegment AFW_268_s15       4.605545     10.000000
+Minimum Length set for reachsegment AFW_264_s15       4.936035     10.000000
+Minimum Length set for reachsegment AFW_237_s15       5.278893     10.000000
+Minimum Length set for reachsegment AFW_286_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_286_s15       4.903336     10.000000
+Minimum Length set for reachsegment AFW_231_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_231_s15       4.842155     10.000000
+Minimum Length set for reachsegment AFW_198_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_198_s15       4.797295     10.000000
+Minimum Length set for reachsegment AFW_283_s15       5.218216     10.000000
+Minimum Length set for reachsegment AFW_267_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_267_s15       4.617447     10.000000
+Minimum Length set for reachsegment AFW_287_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_287_s15       4.535652     10.000000
+Minimum Length set for reachsegment AFW_233_s15       5.230316     10.000000
+Minimum Length set for reachsegment AFW_197_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_197_s15       5.110703     10.000000
+Minimum Length set for reachsegment AFW_288_s15       5.437927     10.000000
+Minimum Length set for reachsegment AFW_289_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_289_s15       5.313065     10.000000
+Minimum Length set for reachsegment AFW_263_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_263_s15       4.738472     10.000000
+Minimum Length set for reachsegment AFW_297_s15       5.034019     10.000000
+Minimum Length set for reachsegment AFW_232_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_232_s15       4.927017     10.000000
+Minimum Length set for reachsegment AFW_153_s15       5.119781     10.000000
+Minimum Length set for reachsegment AFW_262_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_262_s15       4.682724     10.000000
+Minimum Length set for reachsegment AFW_194_s15       4.794731     10.000000
+Minimum Length set for reachsegment AFW_227_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_227_s15       5.168495     10.000000
+Minimum Length set for reachsegment AFW_228_s15       5.151527     10.000000
+Minimum Length set for reachsegment AFW_154_s15       4.828392     10.000000
+Minimum Length set for reachsegment AFW_261_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_261_s15       5.338531     10.000000
+Minimum Length set for reachsegment AFW_291_s15       4.656166     10.000000
+Minimum Length set for reachsegment AFW_296_s15       4.930984     10.000000
+Minimum Length set for reachsegment AFW_298_s15       4.643814     10.000000
+Minimum Length set for reachsegment AFW_300_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_300_s15       4.586540     10.000000
+Minimum Length set for reachsegment AFW_159_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_159_s15       4.667496     10.000000
+Minimum Length set for reachsegment AFW_224_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_224_s15       5.026024     10.000000
+Minimum Length set for reachsegment AFW_260_s15       5.100899     10.000000
+Minimum Length set for reachsegment AFW_157_s15       5.086754     10.000000
+Minimum Length set for reachsegment AFW_193_s15       5.017830     10.000000
+Minimum Length set for reachsegment AFW_225_s15       5.074730     10.000000
+Minimum Length set for reachsegment AFW_259_s15       4.741089     10.000000
+Minimum Length set for reachsegment AFW_299_s15       4.551270     10.000000
+Minimum Length set for reachsegment AFW_158_s15       5.050529     10.000000
+Minimum Length set for reachsegment AFW_160_s15       5.343460     10.000000
+Minimum Length set for reachsegment AFW_226_s15       4.665001     10.000000
+Minimum Length set for reachsegment AFW_292_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_292_s15       4.693741     10.000000
+Minimum Length set for reachsegment AFW_419_s15       4.932259     10.000000
+Minimum Length set for reachsegment AFW_294_s15       5.366951     10.000000
+Minimum Length set for reachsegment AFW_242_s15       5.226212     10.000000
+Minimum Length set for reachsegment AFW_192_s15       4.596077     10.000000
+Minimum Length set for reachsegment AFW_258_s15       4.990761     10.000000
+Minimum Length set for reachsegment AFW_190_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_190_s15       4.882286     10.000000
+Minimum Length set for reachsegment AFW_295_s15       5.341476     10.000000
+Minimum Length set for reachsegment AFW_161_s15       4.912354     10.000000
+Minimum Length set for reachsegment AFW_152_s15       5.138084     10.000000
+Minimum Length set for reachsegment AFW_191_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_191_s15       5.183083     10.000000
+Minimum Length set for reachsegment AFW_256_s15       5.038437     10.000000
+Minimum Length set for reachsegment AFW_293_s15       4.992867     10.000000
+Minimum Length set for reachsegment AFW_151_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_151_s15       5.063972     10.000000
+Minimum Length set for reachsegment AFW_156_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_156_s15       5.477226     10.000000
+Minimum Length set for reachsegment AFW_241_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_241_s15       4.624420     10.000000
+Minimum Length set for reachsegment AFW_255_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_255_s15       4.637032     10.000000
+Minimum Length set for reachsegment AFW_155_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_155_s15       5.075935     10.000000
+Minimum Length set for reachsegment AFW_239_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_239_s15       4.584686     10.000000
+Minimum Length set for reachsegment AFW_254_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_254_s15       4.928810     10.000000
+Minimum Length set for reachsegment AFW_150_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_150_s15       5.343079     10.000000
+Minimum Length set for reachsegment AFW_187_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_187_s15       4.770790     10.000000
+Minimum Length set for reachsegment AFW_189_s2       9.999998     10.000000
+Minimum Length set for reachsegment AFW_189_s10       5.097321     10.000000
+Minimum Length set for reachsegment AFW_421_s15       4.928101     10.000000
+Minimum Length set for reachsegment AFW_240_s15       5.381927     10.000000
+Minimum Length set for reachsegment AFW_142_s15       4.800804     10.000000
+Minimum Length set for reachsegment AFW_305_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_305_s15       4.744873     10.000000
+Minimum Length set for reachsegment AFW_179_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_179_s15       5.494125     10.000000
+Minimum Length set for reachsegment AFW_164_s15       4.667046     10.000000
+Minimum Length set for reachsegment AFW_149_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_149_s15       4.819748     10.000000
+Minimum Length set for reachsegment AFW_304_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_304_s15       5.439980     10.000000
+Minimum Length set for reachsegment AFW_251_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_251_s15       5.128098     10.000000
+Minimum Length set for reachsegment AFW_147_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_147_s15       5.109795     10.000000
+Minimum Length set for reachsegment AFW_253_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_253_s15       4.521317     10.000000
+Minimum Length set for reachsegment AFW_141_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_141_s15       5.492073     10.000000
+Minimum Length set for reachsegment AFW_422_s15       5.355553     10.000000
+Minimum Length set for reachsegment AFW_67_s10       7.068050     10.000000
+Minimum Length set for reachsegment AFW_67_s11       7.068054     10.000000
+Minimum Length set for reachsegment AFW_67_s12       7.068054     10.000000
+Minimum Length set for reachsegment AFW_67_s14       7.068054     10.000000
+Minimum Length set for reachsegment AFW_67_s13       7.068054     10.000000
+Minimum Length set for reachsegment AFW_67_s15       3.754982     10.000000
+Minimum Length set for reachsegment AFW_252_s15       5.300514     10.000000
+Minimum Length set for reachsegment AFW_301_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_301_s15       5.433578     10.000000
+Minimum Length set for reachsegment AFW_302_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_302_s15       5.446571     10.000000
+Minimum Length set for reachsegment AFW_65_s15       4.806755     10.000000
+Minimum Length set for reachsegment AFW_66_s15       5.127777     10.000000
+Minimum Length set for reachsegment AFW_68_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_68_s15       5.420517     10.000000
+Minimum Length set for reachsegment AFW_188_s15       4.824104     10.000000
+Minimum Length set for reachsegment AFW_148_s15       4.761124     10.000000
+Minimum Length set for reachsegment AFW_146_s15       5.111969     10.000000
+Minimum Length set for reachsegment AFW_181_s15       5.086823     10.000000
+Minimum Length set for reachsegment AFW_64_s15       5.370850     10.000000
+Minimum Length set for reachsegment AFW_303_s1       9.999998     10.000000
+Minimum Length set for reachsegment AFW_303_s15       4.976486     10.000000
+Minimum Length set for reachsegment AFW_246_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_246_s15       4.902824     10.000000
+Minimum Length set for reachsegment AFW_139_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_139_s15       4.632805     10.000000
+Minimum Length set for reachsegment AFW_178_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_178_s15       5.326187     10.000000
+Minimum Length set for reachsegment AFW_247_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_247_s15       5.006119     10.000000
+Minimum Length set for reachsegment AFW_143_s15       4.587555     10.000000
+Minimum Length set for reachsegment AFW_250_s15       5.224678     10.000000
+Minimum Length set for reachsegment AFW_63_s15       4.652000     10.000000
+Minimum Length set for reachsegment AFW_182_s15       5.492004     10.000000
+Minimum Length set for reachsegment AFW_145_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_145_s15       5.378532     10.000000
+Minimum Length set for reachsegment AFW_69_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_69_s15       5.496101     10.000000
+Minimum Length set for reachsegment AFW_249_s15       4.784676     10.000000
+Minimum Length set for reachsegment AFW_177_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_177_s15       5.289001     10.000000
+Minimum Length set for reachsegment AFW_173_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_173_s15       5.405220     10.000000
+Minimum Length set for reachsegment AFW_243_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_243_s15       4.858795     10.000000
+Minimum Length set for reachsegment AFW_183_s15       5.308777     10.000000
+Minimum Length set for reachsegment AFW_144_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_144_s15       4.796326     10.000000
+Minimum Length set for reachsegment AFW_248_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_248_s15       5.184486     10.000000
+Minimum Length set for reachsegment AFW_245_s15       5.169312     10.000000
+Minimum Length set for reachsegment AFW_138_s15       4.965919     10.000000
+Minimum Length set for reachsegment AFW_171_s15       4.820007     10.000000
+Minimum Length set for reachsegment AFW_137_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_137_s15       4.786217     10.000000
+Minimum Length set for reachsegment AFW_61_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_61_s15       5.143906     10.000000
+Minimum Length set for reachsegment AFW_176_s15       5.363693     10.000000
+Minimum Length set for reachsegment AFW_125_s15       5.120544     10.000000
+Minimum Length set for reachsegment AFW_135_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_135_s15       5.270119     10.000000
+Minimum Length set for reachsegment AFW_184_s15       4.743011     10.000000
+Minimum Length set for reachsegment AFW_175_s15       5.479660     10.000000
+Minimum Length set for reachsegment AFW_62_s15       5.413727     10.000000
+Minimum Length set for reachsegment AFW_51_s15       5.164963     10.000000
+Minimum Length set for reachsegment AFW_123_s15       5.094055     10.000000
+Minimum Length set for reachsegment AFW_136_s15       4.943016     10.000000
+Minimum Length set for reachsegment AFW_134_s15       4.895523     10.000000
+Minimum Length set for reachsegment AFW_53_s15       4.587227     10.000000
+Minimum Length set for reachsegment AFW_170_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_170_s15       5.244972     10.000000
+Minimum Length set for reachsegment AFW_122_s15       5.223335     10.000000
+Minimum Length set for reachsegment AFW_185_s15       5.370728     10.000000
+Minimum Length set for reachsegment AFW_244_s15       4.895653     10.000000
+Minimum Length set for reachsegment AFW_52_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_52_s15       4.605858     10.000000
+Minimum Length set for reachsegment AFW_133_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_133_s15       4.876648     10.000000
+Minimum Length set for reachsegment AFW_126_s15       4.932961     10.000000
+Minimum Length set for reachsegment AFW_420_s15       5.488937     10.000000
+Minimum Length set for reachsegment AFW_124_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_124_s15       4.931625     10.000000
+Minimum Length set for reachsegment AFW_121_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_121_s15       4.504036     10.000000
+Minimum Length set for reachsegment AFW_168_s15       4.722023     10.000000
+Minimum Length set for reachsegment AFW_132_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_132_s15       5.410027     10.000000
+Minimum Length set for reachsegment AFW_59_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_59_s15       5.106148     10.000000
+Minimum Length set for reachsegment AFW_105_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_105_s15       5.179878     10.000000
+Minimum Length set for reachsegment AFW_60_s15       4.580254     10.000000
+Minimum Length set for reachsegment AFW_48_s15       5.479004     10.000000
+Minimum Length set for reachsegment AFW_130_s15       5.062691     10.000000
+Minimum Length set for reachsegment AFW_169_s15       5.367912     10.000000
+Minimum Length set for reachsegment AFW_167_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_167_s15       4.830055     10.000000
+Minimum Length set for reachsegment AFW_120_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_120_s15       5.455528     10.000000
+Minimum Length set for reachsegment AFW_117_s15       5.457123     10.000000
+Minimum Length set for reachsegment AFW_50_s15       5.138977     10.000000
+Minimum Length set for reachsegment AFW_131_s15       5.242599     10.000000
+Minimum Length set for reachsegment AFW_166_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_166_s15       5.143013     10.000000
+Minimum Length set for reachsegment AFW_55_s15       4.980827     10.000000
+Minimum Length set for reachsegment AFW_118_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_118_s15       5.448997     10.000000
+Minimum Length set for reachsegment AFW_95_s15       4.781029     10.000000
+Minimum Length set for reachsegment AFW_94_s15       5.109161     10.000000
+Minimum Length set for reachsegment AFW_47_s15       5.474915     10.000000
+Minimum Length set for reachsegment AFW_113_s15       5.055206     10.000000
+Minimum Length set for reachsegment AFW_128_s15       4.678558     10.000000
+Minimum Length set for reachsegment AFW_96_s15       5.361382     10.000000
+Minimum Length set for reachsegment AFW_129_s15       4.624542     10.000000
+Minimum Length set for reachsegment AFW_93_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_93_s15       5.255272     10.000000
+Minimum Length set for reachsegment AFW_417_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_417_s15       4.856102     10.000000
+Minimum Length set for reachsegment AFW_54_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_54_s15       5.396828     10.000000
+Minimum Length set for reachsegment AFW_57_s15       4.626915     10.000000
+Minimum Length set for reachsegment AFW_165_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_165_s15       5.289703     10.000000
+Minimum Length set for reachsegment AFW_116_s15       5.228645     10.000000
+Minimum Length set for reachsegment AFW_46_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_46_s15       4.975525     10.000000
+Minimum Length set for reachsegment AFW_15_s15       5.295845     10.000000
+Minimum Length set for reachsegment AFW_127_s15       4.569000     10.000000
+Minimum Length set for reachsegment AFW_92_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_92_s15       5.197990     10.000000
+Minimum Length set for reachsegment AFW_97_s15       5.355431     10.000000
+Minimum Length set for reachsegment AFW_58_s15       5.180000     10.000000
+Minimum Length set for reachsegment AFW_99_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_99_s15       5.022186     10.000000
+Minimum Length set for reachsegment AFW_42_s15       5.356506     10.000000
+Minimum Length set for reachsegment AFW_45_s15       4.654045     10.000000
+Minimum Length set for reachsegment AFW_91_s15       4.501289     10.000000
+Minimum Length set for reachsegment AFW_98_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_98_s15       5.431465     10.000000
+Minimum Length set for reachsegment AFW_80_s15       4.979042     10.000000
+Minimum Length set for reachsegment AFW_77_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_77_s15       5.338341     10.000000
+Minimum Length set for reachsegment AFW_43_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_43_s15       5.200798     10.000000
+Minimum Length set for reachsegment AFW_90_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_90_s15       4.677544     10.000000
+Minimum Length set for reachsegment AFW_56_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_56_s15       4.540581     10.000000
+Minimum Length set for reachsegment AFW_423_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_423_s15       5.023018     10.000000
+Minimum Length set for reachsegment AFW_424_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_424_s15       4.789032     10.000000
+Minimum Length set for reachsegment AFW_111_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_111_s15       4.589165     10.000000
+Minimum Length set for reachsegment AFW_425_s16       5.343719     10.000000
+Minimum Length set for reachsegment AFW_76_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_76_s15       5.214310     10.000000
+Minimum Length set for reachsegment AFW_14_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_14_s15       5.308578     10.000000
+Minimum Length set for reachsegment AFW_38_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_38_s15       4.907036     10.000000
+Minimum Length set for reachsegment AFW_41_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_41_s15       4.662880     10.000000
+Minimum Length set for reachsegment AFW_79_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_79_s15       5.022118     10.000000
+Minimum Length set for reachsegment AFW_44_s15       5.485924     10.000000
+Minimum Length set for reachsegment AFW_36_s15       5.381020     10.000000
+Minimum Length set for reachsegment AFW_37_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_37_s15       5.093025     10.000000
+Minimum Length set for reachsegment AFW_108_s15       5.354019     10.000000
+Minimum Length set for reachsegment AFW_89_s15       5.229736     10.000000
+Minimum Length set for reachsegment AFW_78_s15       5.028069     10.000000
+Minimum Length set for reachsegment AFW_18_s7       9.999876     10.000000
+Minimum Length set for reachsegment AFW_18_s8       9.999878     10.000000
+Minimum Length set for reachsegment AFW_18_s10       9.999874     10.000000
+Minimum Length set for reachsegment AFW_18_s11       9.999882     10.000000
+Minimum Length set for reachsegment AFW_18_s12       9.999870     10.000000
+Minimum Length set for reachsegment AFW_18_s14       9.999878     10.000000
+Minimum Length set for reachsegment AFW_18_s13       9.999878     10.000000
+Minimum Length set for reachsegment AFW_18_s15       7.752678     10.000000
+Minimum Length set for reachsegment AFW_33_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_33_s15       4.971619     10.000000
+Minimum Length set for reachsegment AFW_39_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_39_s15       5.160034     10.000000
+Minimum Length set for reachsegment AFW_74_s15       5.058273     10.000000
+Minimum Length set for reachsegment AFW_13_s15       5.263199     10.000000
+Minimum Length set for reachsegment AFW_87_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_87_s15       4.597549     10.000000
+Minimum Length set for reachsegment AFW_34_s15       5.487007     10.000000
+Minimum Length set for reachsegment AFW_32_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_32_s15       5.149986     10.000000
+Minimum Length set for reachsegment AFW_75_s15       4.541924     10.000000
+Minimum Length set for reachsegment AFW_40_s15       5.372063     10.000000
+Minimum Length set for reachsegment AFW_19_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_19_s15       5.035110     10.000000
+Minimum Length set for reachsegment AFW_110_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_110_s15       4.913002     10.000000
+Minimum Length set for reachsegment AFW_35_s15       5.279968     10.000000
+Minimum Length set for reachsegment AFW_85_s16       5.304039     10.000000
+Minimum Length set for reachsegment AFW_86_s14       5.040291     10.000000
+Minimum Length set for reachsegment AFW_418_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_418_s15       4.667557     10.000000
+Minimum Length set for reachsegment AFW_104_s8       9.999998     10.000000
+Minimum Length set for reachsegment AFW_104_s15       5.109932     10.000000
+Minimum Length set for reachsegment AFW_16_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_16_s15       4.815582     10.000000
+Minimum Length set for reachsegment AFW_107_s15       4.535782     10.000000
+Minimum Length set for reachsegment AFW_106_s15       4.820007     10.000000
+Minimum Length set for reachsegment AFW_12_s15       4.925789     10.000000
+Minimum Length set for reachsegment AFW_31_s15       5.266014     10.000000
+Minimum Length set for reachsegment AFW_28_s15       5.396385     10.000000
+Minimum Length set for reachsegment AFW_17_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_17_s15       5.295074     10.000000
+Minimum Length set for reachsegment AFW_103_s15       4.615715     10.000000
+Minimum Length set for reachsegment AFW_29_s15       4.801308     10.000000
+Minimum Length set for reachsegment AFW_73_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_73_s15       5.400040     10.000000
+Minimum Length set for reachsegment AFW_416_s11       9.999996     10.000000
+Minimum Length set for reachsegment AFW_416_s15       4.649834     10.000000
+Minimum Length set for reachsegment AFW_30_s15       4.917023     10.000000
+Minimum Length set for reachsegment AFW_83_s15       4.753830     10.000000
+Minimum Length set for reachsegment AFW_25_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_25_s15       4.907867     10.000000
+Minimum Length set for reachsegment AFW_27_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_27_s15       4.823456     10.000000
+Minimum Length set for reachsegment AFW_102_s15       4.722153     10.000000
+Minimum Length set for reachsegment AFW_101_s15       4.863014     10.000000
+Minimum Length set for reachsegment AFW_72_s15       4.770599     10.000000
+Minimum Length set for reachsegment AFW_26_s15       5.431198     10.000000
+Minimum Length set for reachsegment AFW_22_s15       5.240089     10.000000
+Minimum Length set for reachsegment AFW_23_s15       5.485527     10.000000
+Minimum Length set for reachsegment AFW_24_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_24_s15       4.799263     10.000000
+Minimum Length set for reachsegment AFW_81_s15       4.942184     10.000000
+Minimum Length set for reachsegment AFW_10_s15       5.251038     10.000000
+Minimum Length set for reachsegment AFW_21_s15       5.139999     10.000000
+Minimum Length set for reachsegment AFW_8_s7       9.999998     10.000000
+Minimum Length set for reachsegment AFW_8_s15       5.478432     10.000000
+Minimum Length set for reachsegment AFW_5_s15       4.853600     10.000000
+Minimum Length set for reachsegment AFW_4_s15       5.431969     10.000000
+Minimum Length set for reachsegment AFW_1_s15       5.255707     10.000000
+Minimum Length set for reachsegment AFW_3_s15       4.766045     10.000000
+Minimum Length set for reachsegment AFW_2_s15       4.680161     10.000000
+Minimum Length set for reachsegment k315_1       4.687351     10.000000
+Minimum Length set for reachsegment k315_s3       9.999996     10.000000
+Minimum Length set for reachsegment 317_4       0.083008     10.000000
+Minimum Length set for reachsegment 19_2       0.107971     10.000000
+Minimum Length set for reachsegment 090560_5       3.767334     10.000000
+Minimum Length set for reachsegment x13       5.079400     10.000000
+Minimum Length set for reachsegment 36_s14       9.999999     10.000000
+Minimum Length set for reachsegment x23       3.816316     10.000000
+Minimum Length set for reachsegment x37       4.976100     10.000000
+Minimum Length set for reachsegment 57_s10       9.999996     10.000000
+Minimum Length set for reachsegment x47       4.682000     10.000000
+Minimum Length set for reachsegment 64_s13       9.999999     10.000000
+Minimum Length set for reachsegment x83       5.238200     10.000000
+Minimum Length set for reachsegment 66_s13       9.999999     10.000000
+Minimum Length set for reachsegment 66_s10       9.999996     10.000000
+Minimum Length set for reachsegment x105       5.057000     10.000000
+Minimum Length set for reachsegment 67_s13       9.999999     10.000000
+Minimum Length set for reachsegment x135       5.346384     10.000000
+Minimum Length set for reachsegment 73_s15       9.874821     10.000000
+Minimum Length set for reachsegment 73_s13       9.874821     10.000000
+Minimum Length set for reachsegment 73_s14       9.874826     10.000000
+Minimum Length set for reachsegment 73_s12       9.874825     10.000000
+Minimum Length set for reachsegment 73_s11       9.874821     10.000000
+Minimum Length set for reachsegment 73_s10       9.874817     10.000000
+Minimum Length set for reachsegment 73_s9       9.874825     10.000000
+Minimum Length set for reachsegment x153       4.744600     10.000000
+Minimum Length set for reachsegment 75_s14       9.999998     10.000000
+Minimum Length set for reachsegment x159       4.644000     10.000000
+Minimum Length set for reachsegment 77_s12       9.999999     10.000000
+Minimum Length set for reachsegment 77_s9       9.999996     10.000000
+Minimum Length set for reachsegment x165       4.508500     10.000000
+Minimum Length set for reachsegment 78_s13       9.999999     10.000000
+Minimum Length set for reachsegment x175       5.040600     10.000000
+Minimum Length set for reachsegment x179       4.639100     10.000000
+Minimum Length set for reachsegment 84_s13       9.999999     10.000000
+Minimum Length set for reachsegment x181       4.948900     10.000000
+Minimum Length set for reachsegment 86_s14       9.999998     10.000000
+Minimum Length set for reachsegment x203       4.699000     10.000000
+Minimum Length set for reachsegment 94_s13       9.999999     10.000000
+Minimum Length set for reachsegment 94_s10       9.999996     10.000000
+Minimum Length set for reachsegment x211       4.527500     10.000000
+Minimum Length set for reachsegment 95_s10       9.999996     10.000000
+Minimum Length set for reachsegment x223       5.108100     10.000000
+Minimum Length set for reachsegment x231       4.834600     10.000000
+Minimum Length set for reachsegment 97_s14       9.999998     10.000000
+Minimum Length set for reachsegment x299       5.320000     10.000000
+Minimum Length set for reachsegment x311       4.709100     10.000000
+Minimum Length set for reachsegment 100_s14       9.999998     10.000000
+Minimum Length set for reachsegment x315       4.806000     10.000000
+Minimum Length set for reachsegment x417       4.873200     10.000000
+Minimum Length set for reachsegment 108_s13       9.999999     10.000000
+Minimum Length set for reachsegment x449       5.321600     10.000000
+Minimum Length set for reachsegment x483       5.391000     10.000000
+Minimum Length set for reachsegment 111_s14       9.999998     10.000000
+Minimum Length set for reachsegment x493       5.001800     10.000000
+Minimum Length set for reachsegment x529       5.159458     10.000000
+Minimum Length set for reachsegment 207       9.780142     10.000000
+Minimum Length set for reachsegment 116_s10       9.999996     10.000000
+Minimum Length set for reachsegment x583       5.301000     10.000000
+Minimum Length set for reachsegment 120_s14       9.999998     10.000000
+Minimum Length set for reachsegment x597       5.374300     10.000000
+Minimum Length set for reachsegment 123_s14       9.999998     10.000000
+Minimum Length set for reachsegment x627       4.693000     10.000000
+Minimum Length set for reachsegment x641       5.002700     10.000000
+Minimum Length set for reachsegment x659       4.890000     10.000000
+Minimum Length set for reachsegment 131_s13       9.999999     10.000000
+Minimum Length set for reachsegment x691       5.475000     10.000000
+Minimum Length set for reachsegment 134_s14       9.999998     10.000000
+Minimum Length set for reachsegment x693       5.453100     10.000000
+Minimum Length set for reachsegment 137_s14       9.999998     10.000000
+Minimum Length set for reachsegment x743       3.840742     10.000000
+Minimum Length set for reachsegment 275       6.564832     10.000000
+Minimum Length set for reachsegment 276       7.658406     10.000000
+Minimum Length set for reachsegment 277       8.889786     10.000000
+Minimum Length set for reachsegment 278       9.983356     10.000000
+Minimum Length set for reachsegment 286       9.162788     10.000000
+Minimum Length set for reachsegment 288       6.746994     10.000000
+Minimum Length set for reachsegment x757       5.174100     10.000000
+Minimum Length set for reachsegment 139_s13       9.999998     10.000000
+Minimum Length set for reachsegment 139_s7       9.958694     10.000000
+Minimum Length set for reachsegment x787       4.650600     10.000000
+Minimum Length set for reachsegment 146_s11       9.999996     10.000000
+Minimum Length set for reachsegment x799       5.291000     10.000000
+Minimum Length set for reachsegment x801       4.507900     10.000000
+Minimum Length set for reachsegment 150_s10       9.999996     10.000000
+Minimum Length set for reachsegment x279       5.303308     10.000000
+Minimum Length set for reachsegment 297       9.378391     10.000000
+Minimum Length set for reachsegment x403       5.133700     10.000000
+Minimum Length set for reachsegment 172_s11       9.999999     10.000000
+Minimum Length set for reachsegment 172_s3       9.999996     10.000000
+Minimum Length set for reachsegment x407       4.551000     10.000000
+Minimum Length set for reachsegment 176_s7       9.999998     10.000000
+Minimum Length set for reachsegment x735       4.656400     10.000000
+Minimum Length set for reachsegment 180_s7       9.999998     10.000000
+Minimum Length set for reachsegment x755       5.065000     10.000000
+Minimum Length set for reachsegment 189_s7       9.999998     10.000000
+Minimum Length set for reachsegment 300       5.064044     10.000000
+Minimum Length set for reachsegment 301       8.311541     10.000000
+Minimum Length set for reachsegment 302       8.652030     10.000000
+Minimum Length set for reachsegment 49_6       2.767014     10.000000
+ Warning in subroutine initial
+ Crest level adjusted to bed level in structure Weir, id= 024246
+ Warning in subroutine initial
+ Crest level adjusted to bed level in structure Weir, id= 024380
+ Warning in subroutine plchst
+ Structure Orifice, id= inlaat_mb might generate numerical oscillations due to b
+ road crest and small storage area around the structure
+ Warning in subroutine plchst
+ Structure Weir, id= 024246 might generate numerical oscillations due to broad c
+ rest and small storage area around the structure
+ Warning in subroutine plchst
+ Structure Weir, id= 024370 might generate numerical oscillations due to broad c
+ rest and small storage area around the structure
+ Warning in subroutine plchst
+ Structure Weir, id= 024238 might generate numerical oscillations due to broad c
+ rest and small storage area around the structure
+ Warning in subroutine plchst
+ Structure Weir, id= 024380 might generate numerical oscillations due to broad c
+ rest and small storage area around the structure
+ Warning in subroutine plchst
+ Structure Weir, id= 024231 might generate numerical oscillations due to broad c
+ rest and small storage area around the structure
+ Warning in subroutine plchst
+ Structure Weir, id= 024364 might generate numerical oscillations due to broad c
+ rest and small storage area around the structure
+simloc.inp exists
+branch.tbl exists
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 255
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 229
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 255
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 229
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 255
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 229
+setback dt=       9.000000
+setback dt=       9.000000
+setback dt=       9.000000
+setback dt=       8.910000
+setback dt=       8.820900
+setback dt=       8.732691
+setback dt=       8.645364
+setback dt=       8.558910
+setback dt=       8.473321
+setback dt=       4.194294
+setback dt=       4.173323
+setback dt=       2.768304
+setback dt=       2.069307
+setback dt=       1.651307
+setback dt=       1.373337
+setback dt=       0.914032
+setback dt=       4.500000
+setback dt=       2.250000
+setback dt=       9.000000
+setback dt=       9.000000
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 255
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 229
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 255
+ Warning in subroutine plstru
+ Crest level adjusted to bed level in structure Weir, id= 229
+opened file : ..\work\flow_bal.out
+closed file : ..\work\flow_bal.out
+cpu computation =    2587.406250
+---------------------------------
+Normal end of Sobeksim
+closed file : ..\work\sobek.log

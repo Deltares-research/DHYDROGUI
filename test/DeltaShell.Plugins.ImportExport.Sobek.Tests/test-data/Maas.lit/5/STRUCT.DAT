@@ -1,0 +1,32 @@
+STRU id 'C_01##S_01' nm 'stuw_Borgh_zom' dd '01' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_01' stru
+STRU id 'C_01##S_02' nm 'stuw_Borg_Bosv' dd '02' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_01' stru
+STRU id 'C_01##S_03' nm 'stuw_Borgh_win' dd '03' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_01' stru
+STRU id 'C_02##S_07' nm 'stuw_Linne_zom' dd '07' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_02' stru
+STRU id 'C_02##S_08' nm 'stuw Linnoverl' dd '08' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_02' stru
+STRU id 'C_02##S_09' nm 'stuw_Linne_win' dd '09' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_02' stru
+STRU id 'C_4477##S_10' nm 'stuw_Roerm_zom' dd '10' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_4477' stru
+STRU id 'C_4477##S_11' nm 'stuw_Roerm_win' dd '11' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_4477' stru
+STRU id 'C_4477##S_4473' nm 'stuw_Roermond_groene_rivier' dd '4471' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_4477' stru
+STRU id 'C_04##S_13' nm 'stuw_Belfe_zom' dd '13' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_04' stru
+STRU id 'C_04##S_14' nm 'stuw_Belfe_win' dd '14' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_04' stru
+STRU id 'C_04##S_5579058' nm 'Stuw_Belfe_sls' dd '14b' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_04' stru
+STRU id 'C_05##S_15' nm 'stuw_Sambe_zom' dd '15' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_05' stru
+STRU id 'C_05##S_16' nm 'stuw_Sambe_win' dd '16' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_05' stru
+STRU id 'C_06##S_19' nm 'stuw_Grave_zom' dd '19' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_06' stru
+STRU id 'C_06##S_20' nm 'stuw_Grave_win' dd '20' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_06' stru
+STRU id 'C_07##S_21' nm 'stuw_Lith__zom' dd '21' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_07' stru
+STRU id 'C_07##S_22' nm 'stuw_Lith__win' dd '22' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_07' stru
+STRU id 'C_5576954##S_5574716' nm 'boscbro_in' dd '5573285' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_5576954' stru
+STRU id 'C_5576954##S_5574717' nm 'boscbro_uit' dd '5574714' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 1 mo 'C_5576954' stru
+STRU id 'C_5576954##S_5576952' nm 'bosschbroek_in2' dd '5576950' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 1 mo 'C_5576954' stru
+STRU id 'S_04' nm '' dd '04' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_05' nm 'sluis_____Born' dd '05' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_06' nm '' dd '06' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_5577336' nm 'oudems_in' dd '5577333' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_5577337' nm 'oudems_brug' dd '5577334' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_12' nm 'sluis_____Heel' dd '12' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_17' nm '' dd '17' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_18' nm '' dd '18' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_5172' nm '' dd '5574714' ca 0 0 0 0 cj '-1' '-1' '-1' '-1' cm 0 stru
+STRU id 'S_285' nm 'Bovenl_Sls' dd '285' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru
+STRU id 'S_286' nm 'Crevecoeur' dd '286' ca 0 0 0 0 cj '-1' '-1' '-1' '-1'  cm 0 stru

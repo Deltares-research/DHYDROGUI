@@ -1,0 +1,58 @@
+MEASWQ.*   \SBK212_2\fixed\Rsdummy.dum
+RDSDWQ1.*  \SBK212_2\fixed\Rsdummy.dum
+RDSDWQ2.*  \SBK212_2\fixed\Rsdummy.dum
+RDSDWQ3.*  \SBK212_2\fixed\Rsdummy.dum
+RDSDWQ4.*  \SBK212_2\fixed\Rsdummy.dum
+RDSDWQ5.*  \SBK212_2\fixed\Rsdummy.dum
+2RDSDWQ1.*  \SBK212_2\fixed\Rsdummy.dum
+2RDSDWQ2.*  \SBK212_2\fixed\Rsdummy.dum
+2RDSDWQ3.*  \SBK212_2\fixed\Rsdummy.dum
+2RDSDWQ4.*  \SBK212_2\fixed\Rsdummy.dum
+2RDSDWQ5.*  \SBK212_2\fixed\Rsdummy.dum
+RESA_11.*  \SBK212_2\fixed\Rsdummy.dum
+RESA_12.*  \SBK212_2\fixed\Rsdummy.dum
+RESA_13.*  \SBK212_2\fixed\Rsdummy.dum
+RESA_14.*  \SBK212_2\fixed\Rsdummy.dum
+RESA_15.*  \SBK212_2\fixed\Rsdummy.dum
+RESB_11.*  \SBK212_2\fixed\Rsdummy.dum
+RESB_12.*  \SBK212_2\fixed\Rsdummy.dum
+RESB_13.*  \SBK212_2\fixed\Rsdummy.dum
+RESB_14.*  \SBK212_2\fixed\Rsdummy.dum
+RESB_15.*  \SBK212_2\fixed\Rsdummy.dum
+RESDES1.*  \SBK212_2\fixed\Rsdummy.dum
+RESDES2.*  \SBK212_2\fixed\Rsdummy.dum
+RESDES3.*  \SBK212_2\fixed\Rsdummy.dum
+RESDES4.*  \SBK212_2\fixed\Rsdummy.dum
+RESDES5.*  \SBK212_2\fixed\Rsdummy.dum
+RSDWQ1.*   \SBK212_2\fixed\Rsdummy.dum
+RSDWQ2.*   \SBK212_2\fixed\Rsdummy.dum
+RSDWQ3.*   \SBK212_2\fixed\Rsdummy.dum
+RSDWQ4.*   \SBK212_2\fixed\Rsdummy.dum
+RSDWQ5.*   \SBK212_2\fixed\Rsdummy.dum
+2RSDWQ1.*   \SBK212_2\fixed\Rsdummy.dum
+2RSDWQ2.*   \SBK212_2\fixed\Rsdummy.dum
+2RSDWQ3.*   \SBK212_2\fixed\Rsdummy.dum
+2RSDWQ4.*   \SBK212_2\fixed\Rsdummy.dum
+2RSDWQ5.*   \SBK212_2\fixed\Rsdummy.dum
+RSDWQIN.*  \SBK212_2\fixed\Rsdummy.dum
+RSDWQOUT.* \SBK212_2\fixed\Rsdummy.dum
+2RSDWQI.*  \SBK212_2\fixed\Rsdummy.dum
+2RSDWQO.*  \SBK212_2\fixed\Rsdummy.dum
+
+RSRR_IN.*  \SBK212_2\fixed\Rsdummy.dum
+RDSRR_IN.* \SBK212_2\fixed\Rsdummy.dum
+RSRR_OUT.* \SBK212_2\fixed\Rsdummy.dum
+RDSRROUT.* \SBK212_2\fixed\Rsdummy.dum
+
+RESA_IN.*  \SBK212_2\fixed\Rsdummy.dum
+RESA_OUT.* \SBK212_2\fixed\Rsdummy.dum
+RESB_IN.*  \SBK212_2\fixed\Rsdummy.dum
+RESB_OUT.* \SBK212_2\fixed\Rsdummy.dum
+
+RSFLSIN.*  \SBK212_2\fixed\Rsdummy.dum
+RDFLSIN.* \SBK212_2\fixed\Rsdummy.dum
+RSFLSOUT.* \SBK212_2\fixed\Rsdummy.dum
+RDFLSOUT.* \SBK212_2\fixed\Rsdummy.dum
+
+
+NWRWCONT.* \SBK212_2\fixed\Rsdummy.dum

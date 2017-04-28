@@ -1,0 +1,10 @@
+GLIN FLIN id '-1' nm '' ci '-1' ty 1 lv ll 0 1.25 q_ lq 0 0 flin glin
+FLIN id '1' nm 'initial' ci '1' ty 0 lv ll 1 PDIN 0 0 '' pdin
+TBLE
+100 5 <
+4900 5 <
+tble q_ lq 1 PDIN 0 0 '' pdin
+TBLE
+0 3 <
+2000 3 <
+tble flin

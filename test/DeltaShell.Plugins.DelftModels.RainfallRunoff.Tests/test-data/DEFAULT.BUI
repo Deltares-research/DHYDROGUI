@@ -1,0 +1,57 @@
+*Name of this file: \SOB_LITE\FIXED\DEFAULT.BUI
+*Date and time of construction: 17-04-1997   17:13:50
+*Enige algemene wenken:
+*Gebruik de default dataset voor overige invoer (altijd 1)
+1
+*Aantal stations
+ 1
+*Namen van stations
+'Station1'
+*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)
+*en het aantal seconden per waarnemingstijdstap
+1  3600
+*Elke commentaarregel wordt begonnen met een * (asteriks).
+*Eerste record bevat startdatum en -tijd, lengte van de gebeurtenis in dd hh mm ss
+*Het format is: yyyymmdd:hhmmss:ddhhmmss
+*Daarna voor elk station de neerslag in mm per tijdstap.
+ 1951 1 1 0 0 0 1 16 0 0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 1.2
+ 0.7
+ 0.0
+ 7.5
+ 6.0
+ 0.0
+ 0.0
+ 0.0
+ 0.2
+ 1.7
+ 2.3
+ 2.4
+ 6.7
+ 0.0
+ 2.4
+ 1.2
+ 0.2
+ 0.0
+ 0.0
+ 0.0
+ 0.4
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0

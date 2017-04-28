@@ -1,0 +1,7 @@
+SEEP id 'SEEP1' nm 'SEEP1' co 1 sp 1 ss 0 cv 3 seep
+SEEP id 'SEEP2' nm 'SEEP2' co 1 sp -1.5 ss 0 cv 3 seep
+SEEP id 'SEEP3' nm 'SEEP3' co 1 sp 0.5 ss 0 cv 3 seep
+SEEP id 'SEEP4' nm 'SEEP4' co 1 sp 0 ss 0 cv 3 seep
+SEEP id 'SEEP5' nm 'SEEP5' co 1 sp -0.5 ss 0 cv 3 seep
+SEEP id 'SEEP6' nm 'SEEP6' co 1 sp -1 ss 0 cv 3 seep
+SEEP id 'Kwel=0' nm 'Kwel=0' co 1 sp 0 ss 0 cv 3 seep

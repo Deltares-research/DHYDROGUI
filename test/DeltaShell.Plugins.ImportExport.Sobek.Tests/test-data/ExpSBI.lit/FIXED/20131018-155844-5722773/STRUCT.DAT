@@ -1,0 +1,3 @@
+STRU id 'INL001' nm 'INLAAT_SBI_MAP' dd 'sd_INL001' stru
+STRU id 'INL002' nm 'INLAAT_SBI_OBP_HOOG' dd 'sd_INL002' stru
+STRU id 'WEI1085' nm 'KST_SL_BIN_MIDDEL_1698' dd 'sd_WEI1085' stru
