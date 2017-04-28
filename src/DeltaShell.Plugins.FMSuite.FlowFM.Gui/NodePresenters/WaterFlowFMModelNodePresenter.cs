@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public static readonly Bitmap DryPointIcon = new Bitmap(Resources.dry_point, 16, 16);
         public static readonly Bitmap ObsIcon = new Bitmap(Common.Gui.Properties.Resources.Observation, 16, 16);
         public static readonly Bitmap ObsCSIcon = new Bitmap(Common.Gui.Properties.Resources.ObservationCS, 16, 16);
-        public static readonly Bitmap NetworkIcon = new Bitmap(NetworkEditor.Gui.Properties.Resources.Network, 16, 16);
         public static readonly Bitmap UnstrucIcon = new Bitmap(Resources.unstruc, 16, 16);
         private static readonly Bitmap ProcessesIcon = new Bitmap(Common.Gui.Properties.Resources.processes, 16, 16);
         private static readonly Bitmap TimeFrameIcon = new Bitmap(Common.Gui.Properties.Resources.timers, 16, 16);
@@ -38,6 +37,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
         private static readonly Bitmap OutParamIcon = new Bitmap(Common.Gui.Properties.Resources.output_param, 16, 16);
         private static readonly Bitmap WindIcon = new Bitmap(Resources.Wind1, 16,16);
+        private static readonly Bitmap NetworkIcon = new Bitmap(NetworkEditor.Gui.Properties.Resources.Network, 16, 16);
+        private static readonly Bitmap NetworkDiscretizationIcon = new Bitmap(SharpMapGis.Gui.Properties.Resources.discretization, 16, 16);
 
         // boolean is used only the first time to expand the node after creation.
         private bool firstTimeCreate = true;
@@ -81,6 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FlowFMTreeShortcut("General", NumParamIcon, model);
             yield return model.GetDataItemByValue(model.Area);
             yield return new FlowFMTreeShortcut(model.Network.Name, NetworkIcon, model, model.Network);
+            yield return new FlowFMTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization);
             yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
             yield return
                 new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>("Bed Level",

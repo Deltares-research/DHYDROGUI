@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -16,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public partial class WaterFlowFMModel
     {
         private IHydroNetwork network;
+        private IDiscretization networkDiscretization;
 
         [NoNotifyPropertyChange]
         public IHydroNetwork Network
@@ -38,6 +40,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 RefreshNetworkRelatedData();
             }
         }
+
+        [NoNotifyPropertyChange]
+        public IDiscretization NetworkDiscretization
+        {
+            get { return networkDiscretization; }
+            set { networkDiscretization = value; }
+        }
+
 
         private void SubscribeToNetwork()
         {
@@ -153,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             if (sender == Network && e.PropertyName == "IsEditing" && Network.CurrentEditAction is BranchSplitAction &&
-                !Network.IsEditing) //&& NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any() 
+                !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any() )
             {
                 OnEndingBranchSplit((BranchSplitAction) Network.CurrentEditAction);
             }
@@ -166,6 +176,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshNetworkRelatedData()
         {
             ClearOutput();
+            if (NetworkDiscretization != null && NetworkDiscretization.Network != Network)
+            {
+                NetworkDiscretization.Network = Network;
+                NetworkDiscretization.Clear();
+                if(string.IsNullOrEmpty(NetworkDiscretization.Name))
+                    NetworkDiscretization.Name = "Computational 1D Grid";
+            }
 
             // update network in output coverages
             DataItems
@@ -189,12 +206,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 : null);
 
-            /*if (locations != null)
+            if (locations != null)
             {
                 NetworkDiscretization.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
                 NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
                 NetworkDiscretization.EndEdit();
-            }*/
+            }
         }
     }
 }

@@ -69,6 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             // network
             Network = new HydroNetwork { Name = "Network" };
+            // Computational Grid For network
+            NetworkDiscretization = new Discretization { Network = network, Name = "Computational 1D Grid" };
 
             // Create empty model definition
             ModelDefinition = new WaterFlowFMModelDefinition();

@@ -67,15 +67,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 }
                 if (MatchProperty(data, KnownProperties.StructuresFile))
                 {
-                    return Properties.Resources.Pump;
+                    return Properties.Resources.Pump;       
                 }
                 if (MatchProperty(data, KnownProperties.NetFile))
                 {
                     return WaterFlowFMModelNodePresenter.UnstrucIcon;
-                }
-                if (MatchProperty(data, KnownProperties.Network))
-                {
-                    return WaterFlowFMModelNodePresenter.NetworkIcon;
                 }
                 if (MatchProperty(data, KnownProperties.DryPointsFile))
                 {

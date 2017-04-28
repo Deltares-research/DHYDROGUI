@@ -204,6 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     yield return model.Area;
                 }
                 yield return model.Network;
+                yield return model.NetworkDiscretization;
 
                 yield return model.BoundaryConditionSets;
                 yield return model.Boundaries;

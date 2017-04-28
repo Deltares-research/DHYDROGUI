@@ -16,10 +16,8 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
@@ -37,11 +35,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Extensions.Coverages;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -547,6 +546,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
             yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
+            yield return new PropertyInfo<FlowFMTreeShortcut, HydroNetworkProperties>
+            {
+                AdditionalDataCheck = w => w.TargetData is IHydroNetwork,
+                GetObjectPropertiesData = o => o.TargetData
+            };
+            yield return new PropertyInfo<FlowFMTreeShortcut, DiscretizationProperties>
+            {
+                AdditionalDataCheck = w => w.TargetData is IDiscretization,
+                GetObjectPropertiesData = o => o.TargetData
+            };
         }
 
         public override IMapLayerProvider MapLayerProvider
