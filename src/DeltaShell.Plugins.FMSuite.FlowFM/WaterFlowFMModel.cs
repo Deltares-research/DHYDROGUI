@@ -67,6 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public WaterFlowFMModel() : this(null)
         {
+            // network
+            Network = new HydroNetwork { Name = "Network" };
+
             // Create empty model definition
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
@@ -2143,12 +2146,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
         }
-    }
-
-    public interface IWaterFlowFMModel
-    {
-        UnstructuredGrid Grid { get; set; }
-        bool UseNetCDFMapFormat { get; set; }
-        bool DisableFlowNodeRenumbering { get; set; }
     }
 }

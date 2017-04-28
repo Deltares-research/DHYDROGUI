@@ -193,6 +193,7 @@
     <Compile Include="IO\StructuresListType.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
+    <Compile Include="IWaterFlowFMModel.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="FeatureData\SourceAndSink.cs" />
@@ -287,6 +288,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
+    <Compile Include="WaterFlowFMModel.Network.cs" />
     <Compile Include="WaterFlowFMModel.Spatial.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
   </ItemGroup>

@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public static readonly Bitmap DryPointIcon = new Bitmap(Resources.dry_point, 16, 16);
         public static readonly Bitmap ObsIcon = new Bitmap(Common.Gui.Properties.Resources.Observation, 16, 16);
         public static readonly Bitmap ObsCSIcon = new Bitmap(Common.Gui.Properties.Resources.ObservationCS, 16, 16);
+        public static readonly Bitmap NetworkIcon = new Bitmap(NetworkEditor.Gui.Properties.Resources.Network, 16, 16);
         public static readonly Bitmap UnstrucIcon = new Bitmap(Resources.unstruc, 16, 16);
         private static readonly Bitmap ProcessesIcon = new Bitmap(Common.Gui.Properties.Resources.processes, 16, 16);
         private static readonly Bitmap TimeFrameIcon = new Bitmap(Common.Gui.Properties.Resources.timers, 16, 16);
@@ -79,6 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             yield return new FlowFMTreeShortcut("General", NumParamIcon, model);
             yield return model.GetDataItemByValue(model.Area);
+            yield return new FlowFMTreeShortcut(model.Network.Name, NetworkIcon, model, model.Network);
             yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
             yield return
                 new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>("Bed Level",
