@@ -45,5 +45,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.Network.Name = "new";
             Assert.That(propChangedCount, Is.EqualTo(2)); // old event handler should not be fired!
         }
+
+        [Test]
+        public void CreateNewModelCheckNetworkDiscretization()
+        {
+            var model = new WaterFlowFMModel(); // empty model
+            Assert.IsNotNull(model.NetworkDiscretization);
+            Assert.That(model.NetworkDiscretization.Network, Is.EqualTo(model.Network));
+            Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(0));
+            Assert.That(model.NetworkDiscretization.Name, Is.EqualTo("Computational 1D Grid"));
+        }
     }
 }
