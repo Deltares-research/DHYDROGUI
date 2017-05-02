@@ -18,13 +18,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 case SupportPointMode.NoPoints:
                     return;
                 case SupportPointMode.SelectedPoint:
-                    var boundaryConditionData = boundaryCondition.GetDataAtPoint(selectedIndex);
-                    if (boundaryConditionData == null)
+                    if (boundaryCondition.GetDataAtPoint(selectedIndex) == null)
                     {
                         boundaryCondition.AddPoint(selectedIndex);
                     }
-
-                    applyToFunction(newComponentValues, boundaryConditionData);
+                    applyToFunction(newComponentValues, boundaryCondition.GetDataAtPoint(selectedIndex));
                     break;
                 case SupportPointMode.ActivePoints:
                     foreach (var function in boundaryCondition.PointData)

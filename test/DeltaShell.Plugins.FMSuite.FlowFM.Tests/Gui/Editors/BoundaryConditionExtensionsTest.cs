@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             function3.Components.Add(new Variable<double>("TestComp2", new Unit("Comp2", "c2")));
             function3.Components[1].SetValues(new[] { 0.0 });
 
-            boundaryCondition.Expect(bc => bc.GetDataAtPoint(0)).Return(function1).Repeat.Times(3);
+            boundaryCondition.Expect(bc => bc.GetDataAtPoint(0)).Return(function1).Repeat.Times(4);
             boundaryCondition.Expect(bc => bc.GetDataAtPoint(1)).Return(function3).Repeat.Times(2);
             boundaryCondition.Expect(bc => bc.GetDataAtPoint(2)).Return(function3).Repeat.Times(2);
             boundaryCondition.Expect(bc => bc.PointData).Return(new EventedList<IFunction>() { function1, function3 }).Repeat.Once();
