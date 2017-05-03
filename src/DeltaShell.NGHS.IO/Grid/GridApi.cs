@@ -46,7 +46,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 catch (Exception ex_dsfw)
                 {
                     Log.Warn("Couldn't open nc grid file : " + filename +
-                             " to determine what the convention in the nc file was. " + ex_dsfw.Message +
+                             " to determine what the convention in the nc file was. " + ex_dsfw.Message + " " +
                              ex_ionc.Message);
                     return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
                 }
@@ -58,6 +58,7 @@ namespace DeltaShell.NGHS.IO.Grid
             catch (Exception e)
             {
                 Log.Warn(e.Message);
+                return iconvtype;
             }
 
             if (iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_NULL)
@@ -124,7 +125,7 @@ namespace DeltaShell.NGHS.IO.Grid
             get { return ioncid > 0; }
         }
 
-        public void Close()
+        public virtual void Close()
         {
             if (!Initialized) return;
             var ierr = GridWrapper.ionc_close(ref ioncid);

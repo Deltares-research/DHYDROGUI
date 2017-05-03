@@ -7,10 +7,18 @@ namespace DeltaShell.NGHS.IO.Grid
     public class UGridApi : GridApi, IUGridApi
     {
         private double fillValue;
+        private int nNodes;
+        private int nEdges;
+        private int nFaces;
+        private int nMaxFaceNodes;
 
         public UGridApi()
         {
             fillValue = 0.0d;
+            nNodes = -1;
+            nEdges = -1;
+            nFaces = -1;
+            nMaxFaceNodes = -1;
         }
 
 
@@ -23,15 +31,15 @@ namespace DeltaShell.NGHS.IO.Grid
         public void WriteXYCoordinateValues(int meshid, double[] xValues, double[] yValues)
         {
             if (!Initialized) return;
-            int nNode = GetNumberOfNodes(meshid);
-            IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
+            int numberOfNodes = GetNumberOfNodes(meshid);
+            IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
+            IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
 
             try
             {
-                Marshal.Copy(xValues, 0, xPtr, nNode);
-                Marshal.Copy(yValues, 0, yPtr, nNode);
-                var ierr = GridWrapper.ionc_put_node_coordinates(ref ioncid, ref meshid, ref xPtr, ref yPtr, ref nNode);
+                Marshal.Copy(xValues, 0, xPtr, numberOfNodes);
+                Marshal.Copy(yValues, 0, yPtr, numberOfNodes);
+                var ierr = GridWrapper.ionc_put_node_coordinates(ref ioncid, ref meshid, ref xPtr, ref yPtr, ref numberOfNodes);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     throw new Exception("Couldn't save x and y coordinates because of err nr: " + ierr);
@@ -63,7 +71,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 var ierr = GridWrapper.ionc_put_var(ref ioncid, ref meshid, ref locationId, varname, ref zPtr, ref nVal);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
-                    throw new Exception("Couldn't save x and y coordinates because of err nr: " + ierr);
+                    throw new Exception("Couldn't save z coordinates because of err nr: " + ierr);
                 }
             }
             finally
@@ -76,6 +84,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public string GetMeshName(int mesh)
         {
+            if (!Initialized) return string.Empty;
             var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
             var ierr = GridWrapper.ionc_get_mesh_name(ref ioncid, ref mesh, name);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -83,6 +92,8 @@ namespace DeltaShell.NGHS.IO.Grid
             return name.ToString();
         }
 
+
+        #region functions needed for testing
 
         public int ionc_write_geom_ugrid(string filename)
         {
@@ -93,46 +104,105 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return GridWrapper.ionc_write_map_ugrid(filename);
         }
+        #endregion
 
         #region Implementation of IUGridApi
 
 
-        public int GetNumberOfNodes(int meshid)
+        public virtual int GetNumberOfNodes(int meshid)
         {
-            var nodes = 0;
-            var ierr = GridWrapper.ionc_get_node_count(ref ioncid, ref meshid, ref nodes);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get nodes count because of err nr : " + ierr);
-            return nodes;
+            if (Initialized && meshid > 0 && nNodes > 0)
+            {
+                return nNodes;
+            }
+            int rnNodes = -1;
+            try
+            {
+                var ierr = GridWrapper.ionc_get_node_count(ref ioncid, ref meshid, ref rnNodes);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    Log.ErrorFormat("Couldn't get number of nodes because of io netcdf error nr : {0}", ierr);
+            }
+            catch
+            {
+                // on exception don't crash...
+                Log.ErrorFormat("Couldn't get number of nodes");
+            }
+            nNodes = rnNodes;
+            return nNodes;
         }
 
-        public int GetNumberOfEdges(int meshid)
+        public virtual int GetNumberOfEdges(int meshid)
         {
-            var edges = 0;
-            var ierr = GridWrapper.ionc_get_edge_count(ref ioncid, ref meshid, ref edges);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get edges count because of err nr : " + ierr);
-            return edges;
+            if (Initialized && meshid > 0 && nEdges > 0)
+            {
+                return nEdges;
+            }
+
+            int rnEdges = -1;
+
+            try
+            {
+                var ierr = GridWrapper.ionc_get_node_count(ref ioncid, ref meshid, ref rnEdges);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    Log.ErrorFormat("Couldn't get number of edges because of io netcdf error nr : {0}", ierr);
+            }
+            catch
+            {
+                // on exception don't crash...
+                Log.ErrorFormat("Couldn't get number of edges");
+            }
+            nEdges = rnEdges;
+            return nEdges;
         }
 
-        public int GetNumberOfFaces(int meshid)
+        public virtual int GetNumberOfFaces(int meshid)
         {
-            var faces = 0;
-            var ierr = GridWrapper.ionc_get_face_count(ref ioncid, ref meshid, ref faces);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get faces count because of err nr : " + ierr);
-            return faces;
+            if (Initialized && meshid > 0 && nFaces > 0)
+            {
+                return nFaces;
+            }
+
+            int rnFaces = -1;
+
+            try
+            {
+                var ierr = GridWrapper.ionc_get_node_count(ref ioncid, ref meshid, ref rnFaces);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    Log.ErrorFormat("Couldn't get number of edges because of io netcdf error nr : {0}", ierr);
+            }
+            catch
+            {
+                // on exception don't crash...
+                Log.ErrorFormat("Couldn't get number of edges");
+            }
+            nFaces = rnFaces;
+            return nFaces;
         }
 
-        public int GetMaxFaceNodes(int meshid)
+        public virtual int GetMaxFaceNodes(int meshid)
         {
-            var maxFaceNodes = 0;
-            var ierr = GridWrapper.ionc_get_max_face_nodes(ref ioncid, ref meshid, ref maxFaceNodes);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get max face nodes count because of err nr : " + ierr);
-            return maxFaceNodes;
-        }
+            if (Initialized && meshid > 0 && nMaxFaceNodes > 0)
+            {
+                return nMaxFaceNodes;
+            }
 
+            int rnMaxFaceNodes = -1;
+
+            try
+            {
+                var ierr = GridWrapper.ionc_get_max_face_nodes(ref ioncid, ref meshid, ref nMaxFaceNodes);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    Log.ErrorFormat("Couldn't get max face nodes count because of err nr : {0}", ierr);
+            }
+            catch
+            {
+                // on exception don't crash...
+                Log.ErrorFormat("Couldn't get max face nodes count");
+            }
+            nMaxFaceNodes = rnMaxFaceNodes;
+            return nMaxFaceNodes;
+        }
+        
         public double[] GetNodeXCoordinates(int meshId)
         {
             if (!Initialized) return new double[0];
@@ -156,25 +226,25 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public double[] GetNodeZCoordinates(int meshId)
         {
-            int nNode = GetNumberOfNodes(meshId);
+            int numberOfNodes = GetNumberOfNodes(meshId);
             int locationId = (int)GridApiDataSet.Locations.UG_LOC_NODE;
             string varname = "node_z";
-            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
+            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             try
             {
 
-                var ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref zPtr, ref nNode, ref fillValue);
+                var ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref zPtr, ref numberOfNodes, ref fillValue);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || zPtr == IntPtr.Zero)
                 {
                     varname = "NetNode_z";
-                    ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref zPtr, ref nNode, ref fillValue);
+                    ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref zPtr, ref numberOfNodes, ref fillValue);
                     if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || zPtr == IntPtr.Zero)
                     {
                         throw new Exception("Couldn't get z node coordinates because of err nr : " + ierr);
                     }
                 }
-                var zCoordinates = new double[nNode];
-                Marshal.Copy(zPtr, zCoordinates, 0, nNode);
+                var zCoordinates = new double[numberOfNodes];
+                Marshal.Copy(zPtr, zCoordinates, 0, numberOfNodes);
                 return zCoordinates;
             }
             finally
@@ -188,19 +258,19 @@ namespace DeltaShell.NGHS.IO.Grid
         public int[,] GetEdgeNodesForMesh(int meshId)
         {
             if (!Initialized) return new int[0, 0];
-            var nEdges = GetNumberOfEdges(meshId);
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+            var numberOfEdges = GetNumberOfEdges(meshId);
+            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
 
             try
             {
-                var ierr = GridWrapper.ionc_get_edge_nodes(ref ioncid, ref meshId, ref ptr, ref nEdges);
+                var ierr = GridWrapper.ionc_get_edge_nodes(ref ioncid, ref meshId, ref ptr, ref numberOfEdges);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
                 {
                     throw new Exception("Couldn't get edge nodes list");
                 }
 
                 // ptr now points to unmanaged 2D array.             
-                return MarshalDataTo2DArray(ptr, nEdges, GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+                return MarshalDataTo2DArray(ptr, numberOfEdges, GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
             }
             finally
             {
@@ -210,12 +280,12 @@ namespace DeltaShell.NGHS.IO.Grid
         }
         public int[,] GetFaceNodesForMesh(int meshId)
         {
-            int nFaces = GetNumberOfFaces(meshId);
-            int nMaxFaceNodes = GetMaxFaceNodes(meshId);
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * nMaxFaceNodes);
+            int numberOfFaces = GetNumberOfFaces(meshId);
+            int numberOfMaxFaceNodes = GetMaxFaceNodes(meshId);
+            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfFaces * numberOfMaxFaceNodes);
             try
             {
-                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref nFaces, ref nMaxFaceNodes);
+                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref numberOfFaces, ref numberOfMaxFaceNodes);
 
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
                 {
@@ -223,7 +293,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
 
                 // ptr now points to unmanaged 2D array.             
-                return MarshalDataTo2DArray(ptr, nFaces, nMaxFaceNodes);
+                return MarshalDataTo2DArray(ptr, numberOfFaces, numberOfMaxFaceNodes);
             }
             finally
             {
@@ -267,21 +337,21 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #endregion
 
-        private int GetNodeXYCoordinates(int meshId, int nNode, out double[] xCoordinates, out double[] yCoordinates)
+        private int GetNodeXYCoordinates(int meshId, int numberOfNodes, out double[] xCoordinates, out double[] yCoordinates)
         {
-            IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            xCoordinates = new double[nNode];
-            yCoordinates = new double[nNode];
+            IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
+            IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
+            xCoordinates = new double[numberOfNodes];
+            yCoordinates = new double[numberOfNodes];
             try
             {
-                var ierr = GridWrapper.ionc_get_node_coordinates(ref ioncid, ref meshId, ref xPtr, ref yPtr, ref nNode);
+                var ierr = GridWrapper.ionc_get_node_coordinates(ref ioncid, ref meshId, ref xPtr, ref yPtr, ref numberOfNodes);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || xPtr == IntPtr.Zero || yPtr == IntPtr.Zero)
                 {
                     return ierr;
                 }
-                Marshal.Copy(xPtr, xCoordinates, 0, nNode);
-                Marshal.Copy(yPtr, yCoordinates, 0, nNode);
+                Marshal.Copy(xPtr, xCoordinates, 0, numberOfNodes);
+                Marshal.Copy(yPtr, yCoordinates, 0, numberOfNodes);
             }
             finally
             {

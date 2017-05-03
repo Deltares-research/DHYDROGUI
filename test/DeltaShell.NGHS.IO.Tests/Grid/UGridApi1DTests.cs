@@ -2,6 +2,7 @@
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Mocks.Interfaces;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
@@ -309,22 +310,43 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR, uGrid1DApi.Write1DNetworkGeometry(new[] { 0.0 }, new[] { 0.0, 0.0 }));
         }
 
-        [Test()]
+        [Test]
         public void GetNumberOfNetworkNodesTest()
         {
+            uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
+            TypeUtils.SetField(uGrid1DApi, "ioncid", 1);
+            TypeUtils.SetField(uGrid1DApi, "networkId", 1);
+            TypeUtils.SetField(uGrid1DApi, "nNodes", 1);
+
+            Assert.AreEqual(1, uGrid1DApi.GetNumberOfNetworkNodes());
+            //Cannot create unit test because cannot mock the static method : GridWrapper.ionc_get_1d_network_nodes_count
         }
 
-        [Test()]
+        [Test]
         public void GetNumberOfNetworkBranchesTest()
         {
+            uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
+            TypeUtils.SetField(uGrid1DApi, "ioncid", 1);
+            TypeUtils.SetField(uGrid1DApi, "networkId", 1);
+            TypeUtils.SetField(uGrid1DApi, "nBranches", 1);
+
+            Assert.AreEqual(1, uGrid1DApi.GetNumberOfNetworkBranches());
+            //Cannot create unit test because cannot mock the static method : GridWrapper.ionc_get_1d_network_branches_count
         }
 
-        [Test()]
+        [Test]
         public void GetNumberOfNetworkGeometryPointsTest()
         {
+            uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
+            TypeUtils.SetField(uGrid1DApi, "ioncid", 1);
+            TypeUtils.SetField(uGrid1DApi, "networkId", 1);
+            TypeUtils.SetField(uGrid1DApi, "nGeometryPoints", 1);
+
+            Assert.AreEqual(1, uGrid1DApi.GetNumberOfNetworkGeometryPoints());
+            //Cannot create unit test because cannot mock the static method : GridWrapper.ionc_get_1d_network_branches_geometry_coordinate_count
         }
 
         [Test]

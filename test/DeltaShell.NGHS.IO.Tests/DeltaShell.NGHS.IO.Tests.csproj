@@ -127,6 +127,7 @@
     <Compile Include="Grid\Ugrid1DTests.cs" />
     <Compile Include="Grid\Ugrid1DWrapperTests.cs" />
     <Compile Include="Grid\UGridApi1DTests.cs" />
+    <Compile Include="Grid\UGridApiTests.cs" />
     <Compile Include="Grid\UGridStub.cs" />
     <Compile Include="Grid\UGridTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

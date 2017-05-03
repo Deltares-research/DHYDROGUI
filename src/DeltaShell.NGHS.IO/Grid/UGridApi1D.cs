@@ -73,7 +73,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     tmpstring = nodeslongNames[i] ?? string.Empty;
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     nodesinfo[i].longnames = tmpstring.ToCharArray();
-                }
+                }   
                 var ierr = GridWrapper.ionc_write_1d_network_nodes(ref ioncid, ref networkId, ref xPtr, ref yPtr,
                     nodesinfo, ref numberOfNodes);
                 return ierr;
@@ -210,7 +210,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var ierr = GridWrapper.ionc_get_1d_network_nodes_count(ref ioncid, ref networkId, ref rnNodes);
-                if (ierr < 0)
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                     Log.ErrorFormat("Couldn't get number of network nodes because of io netcdf error nr : {0}", ierr);
             }
             catch
@@ -232,7 +232,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var ierr = GridWrapper.ionc_get_1d_network_branches_count(ref ioncid, ref networkId, ref rnBranches);
-                if (ierr < 0)
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                     Log.ErrorFormat("Couldn't get number of branches because of io netcdf error nr : {0}", ierr);
             }
             catch
@@ -255,7 +255,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 var ierr = GridWrapper.ionc_get_1d_network_branches_geometry_coordinate_count(ref ioncid, ref networkId,
                     ref rnGeometryPoints);
-                if (ierr < 0)
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                     Log.ErrorFormat("Couldn't get number of geometry points because of io netcdf error nr : {0}", ierr);
             }
             catch
