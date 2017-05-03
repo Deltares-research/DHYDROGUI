@@ -193,7 +193,32 @@ namespace DeltaShell.NGHS.IO.Grid
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = longnamessize)]
             public char[] longnames;
         }
-        
+
+        public const int metadatasize = 100;
+        [StructLayout(LayoutKind.Sequential)]
+        public struct interop_metadata
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = metadatasize)]
+            public char[] institution;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = metadatasize)]
+            public char[] source;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = metadatasize)]
+            public char[] references;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = metadatasize)]
+            public char[] version;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = metadatasize)]
+            public char[] modelname;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ioncid"></param>
+        /// <param name="metadata"></param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_add_global_attributes", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_add_global_attributes( [In] ref int ioncid, interop_metadata metadata);
+
         /// <summary>
         /// This function creates a new netCDF file
         /// </summary>
