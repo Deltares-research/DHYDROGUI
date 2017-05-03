@@ -213,5 +213,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 NetworkDiscretization.EndEdit();
             }
         }
+
+        private void SaveNetwork()
+        {
+            
+        }
     }
 }

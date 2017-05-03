@@ -5,46 +5,56 @@ using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public abstract class AGrid : IGrid, IDisposable
+    public abstract class AGrid : IGrid
     {
-        protected IGridApi GridApi;
+        public virtual IGridApi GridApi { get; set; }
         private bool disposed;
+        
 
-        public abstract bool IsValid();
+        public virtual bool IsValid()
+        {
+            return GridApi != null && (GridApi.GetConvention() == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID &&
+                                       GridApi.GetVersion() >= GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
+        }
 
         public virtual void Initialize(string filename, GridApiDataSet.NetcdfOpenMode mode)
         {
+        
             if (IsInitialized())
             {
                 CleanUp();
             }
-            GridApi.Open(filename, mode);
-            
-            if (!GridApi.Initialized())
-                throw new Exception("Couldn't open grid nc file : " + filename);
-            
-            try
+            if (GridApi != null)
             {
-                int epsg_code = GridApi.GetCoordinateSystemCode();
-                CoordinateSystem = epsg_code > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsg_code) : null;
-            }
-            catch (Exception)
-            {
-                if (IsInitialized())
+                GridApi.Open(filename, mode);
+            
+                if (!GridApi.Initialized)
+                    throw new Exception("Couldn't open grid nc file : " + filename);
+            
+                try
                 {
-                    CleanUp();
+                    int epsg_code = GridApi.GetCoordinateSystemCode();
+                    CoordinateSystem = epsg_code > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsg_code) : null;
+                }
+                catch (Exception)
+                {
+                    if (IsInitialized())
+                    {
+                        CleanUp();
+                    }
                 }
             }
         }
 
         public virtual GridApiDataSet.DataSetConventions GetDataSetConvention()
         {
-            return GridApi.GetConvention();
+            if (GridApi != null) return GridApi.GetConvention();
+            return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
         }
 
         public virtual bool IsInitialized()
         {
-            return GridApi.Initialized();
+            return GridApi != null && GridApi.Initialized;
         }
 
         public virtual ICoordinateSystem CoordinateSystem { get; private set; }
@@ -68,14 +78,23 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             CleanUp();
         }
+        
 
         private void CleanUp()
         {
-            if (!IsInitialized()) return;
+            if (disposed) return;
+            if (!IsInitialized())
+            {
+                disposed = true;
+                return;
+            }
             try
             {
-                GridApi.Close();
-                GridApi.Dispose();
+                if (GridApi != null)
+                {
+                    GridApi.Close();
+                    GridApi = null;
+                }
             }
             catch
             {

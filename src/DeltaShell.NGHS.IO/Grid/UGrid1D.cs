@@ -1,0 +1,114 @@
+﻿using System;
+
+namespace DeltaShell.NGHS.IO.Grid
+{
+    public class UGrid1D : AGrid, IUGrid1D
+    {
+        public UGrid1D()
+        {
+        }
+
+        public UGrid1D(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        {
+            GridApi = GridApiFactory.CreateNew1D();
+            Initialize(file, mode);
+        }
+
+        public void Create1DGridInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints)
+        {
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
+            {
+                var ierr = uGridApi1D.Create1DNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new InvalidOperationException(
+                        string.Format(
+                            "Couldn't create new 1d network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3} because of error number {4}",
+                            name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, ierr));
+                }
+            }
+        }
+
+        public void Write1DNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
+        {
+            if(!IsInitialized()) return;
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
+            {
+                var ierr = uGridApi1D.Write1DNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't write 1d network nodes because of error number {0}", ierr));
+                }
+            }
+        }
+
+        public void Write1DNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
+        {
+            if (!IsInitialized()) return;
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
+            {
+                
+                var ierr = uGridApi1D.Write1DNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't write 1d network branches because of error number {0}", ierr));
+                }
+            }
+        }
+
+        public void Write1DNetworkGeometry(double[] geopointsX, double[] geopointsY)
+        {
+            if (!IsInitialized()) return;
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
+            {
+                var ierr = uGridApi1D.Write1DNetworkGeometry(geopointsX, geopointsY);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't write 1d network geometry because of error number {0}", ierr));
+                }
+            }
+        }
+
+        public int GetNumberOfNetworkNodes()
+        {
+            var UgridApi = GridApi as IUGridApi1D;
+            if (UgridApi != null)
+            {
+                return UgridApi.GetNumberOfNetworkNodes();
+            }
+            return -1;
+        }
+
+        public int GetNumberOfNetworkBranches()
+        {
+            var UgridApi = GridApi as IUGridApi1D;
+            if (UgridApi != null)
+            {
+                return UgridApi.GetNumberOfNetworkBranches();
+            }
+            return -1;
+        }
+
+        public int GetNumberOfNetworkGeometryPoints()
+        {
+            var UgridApi = GridApi as IUGridApi1D;
+            if (UgridApi != null)
+            {
+                return UgridApi.GetNumberOfNetworkGeometryPoints();
+            }
+            return -1;
+        }
+
+        
+        public override bool IsInitialized()
+        {
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D == null) return false;
+            return base.IsInitialized() && uGridApi1D.NetworkReady;
+        }
+    }
+}

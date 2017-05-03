@@ -4,7 +4,7 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public interface IUGrid :IGrid, IDisposable
+    public interface IUGrid :IGrid
     {
         int NumberOfMesh();
         int NumberOfNodes(int mesh);

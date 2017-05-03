@@ -1346,6 +1346,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             mduFile.Write(mduPath, ModelDefinition, Area, switchTo, writeExtForcings, writeFeatures, UseNetCDFMapFormat, DisableFlowNodeRenumbering);
 
+            if (Network != null)
+            {
+                SaveNetwork();
+            }
+
             if (switchTo)
             {
                 MduFilePath = mduPath;

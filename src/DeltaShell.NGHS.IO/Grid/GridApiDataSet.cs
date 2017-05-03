@@ -30,6 +30,8 @@ namespace DeltaShell.NGHS.IO.Grid
             public const int NUMBER_OF_NODES_ON_A_EDGE = 2;
            
             public const int IONC_NOERR = 0;
+            public const int IONC_GENERAL_FATAL_ERR = -1000;
+            public const int IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR = -1001;
 
             public const double UG_CONV_MIN_VERSION = 1.0d;
 
@@ -43,7 +45,8 @@ namespace DeltaShell.NGHS.IO.Grid
             IONC_CONV_CF = 1,
             IONC_CONV_UGRID = 2,//Dataset based on UGRID-conventions
             IONC_CONV_SGRID = 4,//Dataset based on SGRID-conventions
-            IONC_CONV_OTHER = -99//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
+            IONC_CONV_OTHER = -99,//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
+            IONC_CONV_TEST = -111111 //Dataset Id for testeing
         }
 
         public enum NetcdfOpenMode
@@ -75,7 +78,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             get
             {
-                return Path.Combine(Path.GetDirectoryName(typeof(GridApi).Assembly.Location), "Kernels");
+                return Path.Combine(Path.GetDirectoryName(typeof(UGridApi).Assembly.Location), "Kernels");
             }
         }
 
