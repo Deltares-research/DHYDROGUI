@@ -1,69 +1,172 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="DeltaShell.NGHS.IO.Grid.AGrid" Collapsed="true">
-    <Position X="9.75" Y="0.5" Width="1.5" />
+  <Comment CommentText="Static dll calls used by GridApi">
+    <Position X="26.25" Y="11.75" Height="0.291" Width="2.127" />
+  </Comment>
+  <Class Name="DeltaShell.NGHS.IO.Grid.AGrid">
+    <Position X="13.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAIAAAAAACAAAQCAIAgAAAgAAAAAAAAABCAABEBAAAA=</HashCode>
+      <HashCode>AAIAAAAAACAAAQAAAAgAAAgAAAAAAAAAACAABEAAAAA=</HashCode>
       <FileName>Grid\AGrid.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="GridApi" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.UGrid" Collapsed="true">
-    <Position X="9.75" Y="1.75" Width="1.5" />
+  <Class Name="DeltaShell.NGHS.IO.Grid.UGrid">
+    <Position X="13.5" Y="4.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>CCAAAAAgAAAAgQAQAAiAAAAACAAAAIIAABAgAAAgAAA=</HashCode>
+      <HashCode>CKAAQAAgAAAAAQAQAAiAAMAACAAgAQIAABAgAAAACAQ=</HashCode>
       <FileName>Grid\UGrid.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.GridApi" BaseTypeListCollapsed="true">
-    <Position X="9" Y="3.25" Width="2.5" />
+    <Position X="23.25" Y="11.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACQAgAEAAAEQABAAAFgQQIAAAQAAEAAIAAA=</HashCode>
+      <HashCode>ACIgUAAIAChCIQECsASQAEAAABgQAAAABUAAUBDCAQQ=</HashCode>
       <FileName>Grid\GridApi.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.RemoteGridApi" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="3.25" Width="2.25" />
+    <Position X="20" Y="11.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAIAAAAAACQAgAEAAAEQABAAEFAQQIAAASAAEAAIAAA=</HashCode>
+      <HashCode>ACIgUAAIAChCIQECMASAAEAAEBAQAAAAASAAUACCAQQ=</HashCode>
       <FileName>Grid\RemoteGridApi.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <ShowAsAssociation>
+      <Field Name="api" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.GridWrapper">
-    <Position X="11.75" Y="3.25" Width="2.25" />
+    <Position X="26.25" Y="12.25" Width="2.25" />
+    <NestedTypes>
+      <Delegate Name="DeltaShell.NGHS.IO.Grid.GridWrapper.IO_NetCDF_Message_Callback" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridWrapper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="DeltaShell.NGHS.IO.Grid.GridWrapper.IO_NetCDF_Progress_Callback" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridWrapper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAABBQAkAAAAAEAAhAAAEgQQAAAAQAAAAAIAAA=</HashCode>
+      <HashCode>AACgABAABBQAkAAAEAGQAhAAAEgQQAAAAQAAAAAIACA=</HashCode>
       <FileName>Grid\GridWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.GridApiFactory">
-    <Position X="2.25" Y="3.25" Width="1.5" />
+    <Position X="18.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Grid\GridApiFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IGrid" Collapsed="true">
-    <Position X="6.75" Y="0.5" Width="1.5" />
+  <Class Name="DeltaShell.NGHS.IO.Adaptors.UGridToUnstructuredGridAdaptor">
+    <Position X="4" Y="3" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAIAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Adaptors\UGridToUnstructuredGridAdaptor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="uGrid" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.UnstructuredGridFileHelper">
+    <Position X="5.25" Y="9.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAQAAAAAAMAAgGAI=</HashCode>
+      <FileName>Grid\UnstructuredGridFileHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet">
+    <Position X="12" Y="11.5" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.UGridAttributeConstants">
+        <Compartments>
+          <Compartment Name="Nested Types" Collapsed="false" />
+        </Compartments>
+        <NestedTypes>
+          <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.UGridAttributeConstants.LocationValues">
+            <TypeIdentifier>
+              <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+          <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.UGridAttributeConstants.Names">
+            <TypeIdentifier>
+              <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.GridConstants">
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Enum Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.DataSetConventions">
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.NetcdfOpenMode">
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.Locations">
+        <TypeIdentifier>
+          <NewMemberFileName>Grid\GridApiDataSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgABAAAAAAA=</HashCode>
+      <FileName>Grid\GridApiDataSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DeltaShell.NGHS.IO.Grid.IGrid">
+    <Position X="9.25" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAIAAAAAAAAAAQAAAAgAAAAAAAAAAAAAACAABAAAAAA=</HashCode>
       <FileName>Grid\IGrid.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGrid" Collapsed="true">
-    <Position X="6.75" Y="1.75" Width="1.5" />
+  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGrid">
+    <Position X="9.25" Y="3.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>CCAAAAAgAAAAgAAQAACAAAAACAAAAIIAABAgAAAAAAA=</HashCode>
+      <HashCode>CCAAQAAgAAAAAAAQAACAAEAACAAAAAIAABAgAAAAAAQ=</HashCode>
       <FileName>Grid\IUGrid.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="DeltaShell.NGHS.IO.Grid.IGridApi">
-    <Position X="4" Y="3.25" Width="2.25" />
+    <Position X="22" Y="3.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAQAgAEAAAEQABAAAFAQQIAAAQAAEAAIAAA=</HashCode>
+      <HashCode>ACAgUAAIAAhCIQECMASAAEAAABAQAAAAAQAAUACCAQQ=</HashCode>
       <FileName>Grid\IGridApi.cs</FileName>
     </TypeIdentifier>
   </Interface>
