@@ -63,7 +63,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 Marshal.Copy(nodesX, 0, xPtr, numberOfNodes);
                 Marshal.Copy(nodesY, 0, yPtr, numberOfNodes);
-                GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[4];
+                GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[numberOfNodes];
                 for (int i = 0; i < numberOfNodes; i++)
                 {
                     string tmpstring;
@@ -125,7 +125,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(branchLengths, 0, branchLengthsPtr, numberOfBranches);
                 Marshal.Copy(nbranchgeometrypoints, 0, nrOfGeometryPointsInBranchPtr, numberOfBranches);
 
-                GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[3];
+                GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[numberOfBranches];
                 for (int i = 0; i < numberOfBranches; i++)
                 {
                     string tmpstring;
