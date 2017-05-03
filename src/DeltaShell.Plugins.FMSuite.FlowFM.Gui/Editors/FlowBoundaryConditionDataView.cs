@@ -811,12 +811,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var variable = function.Arguments.FirstOrDefault();
             if (variable == null)
             {
-                throw new Exception("Function has no arguments");
+                throw new NotSupportedException("Function has no arguments");
             }
 
             if (!(function.Components.Count == 2 || function.Components.Count == 4))
             {
-                throw new Exception("Incorrect number of components");
+                throw new NotSupportedException("Incorrect number of components");
             }
 
             var isCorrected = function.Components.Count == 4;

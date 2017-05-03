@@ -1,4 +1,5 @@
 using System.Linq;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using GeoAPI.CoordinateSystems.Transformations;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             // PROJ4 contains both authority and name of the coordinate system. 
-            if (realTimeControlModel.CoordinateSystem == null || !realTimeControlModel.CoordinateSystem.PROJ4.Equals(((ICoordinateSystem)transformation.SourceCS).PROJ4))
+            if (realTimeControlModel.CoordinateSystem == null || !realTimeControlModel.CoordinateSystem.EqualsTo((ICoordinateSystem)transformation.SourceCS))
             {
                 Log.Error("The model's coordinate system is not equal to the source coordinate system of the given transformation.");
                 return false;
