@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DimrApi.cs" />
+    <Compile Include="DimrApiDataSet.cs" />
     <Compile Include="DimrApiFactory.cs" />
     <Compile Include="DimrApiWrapper.cs" />
     <Compile Include="DimrExe.cs" />
@@ -275,6 +276,7 @@
     <None Include="Scripts\run_dimr_win32.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="UML\DimrOverview.cd" />
     <None Include="xsd\dimr-1.0.xsd">
       <SubType>Designer</SubType>
     </None>
