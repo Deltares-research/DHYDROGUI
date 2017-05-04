@@ -23,6 +23,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (IsInitialized())
             {
                 CleanUp();
+                disposed = false;
             }
             if (GridApi != null)
             {

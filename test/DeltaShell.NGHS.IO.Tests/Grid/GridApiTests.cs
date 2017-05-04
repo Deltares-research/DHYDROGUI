@@ -157,7 +157,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .WhenCalled(invocation =>
                 {
                     TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_UGRID);
-                    TypeUtils.SetField(gridApi, "convversion", 1.0d);
+                    TypeUtils.SetField(gridApi, "convversion", GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
                 }).Repeat.Twice();
             gridApi.Expect(a => a.Close())
                 .WhenCalled(invocation => { }).Repeat.Twice();
@@ -270,7 +270,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     ref iconvtype,
                     ref l))
                 .IgnoreArguments()
-                .OutRef(0, 0, (int)GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, 1.0d)
+                .OutRef(0, 0, (int)GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
@@ -617,13 +617,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetVersionTest()
         {
             mocks.ReplayAll();
-            TypeUtils.SetField(gridApi, "convversion", 1.0d);
+            TypeUtils.SetField(gridApi, "convversion", GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
             Assert.AreEqual(double.NaN, gridApi.GetVersion(), 0.001d);
             Assert.AreEqual(double.NaN, remoteGridApi.GetVersion(), 0.001d);
             TypeUtils.SetField(gridApi, "ioncid", 1);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
-            Assert.AreEqual(1.0d, gridApi.GetVersion(), 0.001d);
-            Assert.AreEqual(1.0d, remoteGridApi.GetVersion(), 0.001d);
+            Assert.AreEqual(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION, gridApi.GetVersion(), 0.001d);
+            Assert.AreEqual(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION, remoteGridApi.GetVersion(), 0.001d);
         }
 
         [Test]

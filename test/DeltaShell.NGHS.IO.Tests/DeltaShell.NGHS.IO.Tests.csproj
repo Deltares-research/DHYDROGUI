@@ -121,6 +121,7 @@
     <Compile Include="FileWriters\StructureFileWriterTest.cs" />
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />
+    <Compile Include="Grid\AGridTests.cs" />
     <Compile Include="Grid\GridApiTests.cs" />
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
     <Compile Include="Grid\UGrid1DIntegrationTests.cs" />
