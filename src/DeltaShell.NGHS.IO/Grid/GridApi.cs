@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
@@ -113,6 +114,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
         {
+            if(Initialized)
+                Close();
             if (c_path == null)
                 c_path = string.Empty;
             var imode = (int)mode;
