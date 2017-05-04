@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37226, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37292\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37292\lib\net40\DeltaShell\DelftTools.Units.dll</HintPath>

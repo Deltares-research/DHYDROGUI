@@ -236,6 +236,7 @@
     </Reference>
     <Reference Include="DeltaShell.Plugins.NetCDF">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37292\lib\net40\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37292\lib\net40\DeltaShell\GeoAPI.dll</HintPath>
