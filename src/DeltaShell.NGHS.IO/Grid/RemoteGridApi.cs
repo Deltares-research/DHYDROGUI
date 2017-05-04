@@ -73,7 +73,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (disposed)
                 return;
-
+            Close();
             DisposeInternal();
             GC.SuppressFinalize(this);
         }

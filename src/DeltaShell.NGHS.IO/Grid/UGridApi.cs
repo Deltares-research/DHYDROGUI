@@ -190,7 +190,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.ionc_get_max_face_nodes(ref ioncid, ref meshid, ref nMaxFaceNodes);
+                var ierr = wrapper.ionc_get_max_face_nodes(ref ioncid, ref meshid, ref rnMaxFaceNodes);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                     Log.ErrorFormat("Couldn't get max face nodes count because of err nr : {0}", ierr);
             }
