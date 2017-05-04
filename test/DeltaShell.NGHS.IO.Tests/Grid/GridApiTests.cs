@@ -173,31 +173,269 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        public void OpenTest()
+        public void OpenWithoutErrorButToLowConvensionVersionTest()
         {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
+            int ioncid = 0 ;
+            int iconvtype = (int)GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            double l = 0.0d;
+            wrapper.Expect(w =>
+                    w.ionc_open("",
+                    ref mode,
+                    ref ioncid,
+                    ref iconvtype,
+                    ref l))
+                .IgnoreArguments()
+                .OutRef(0, 0, (int)GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, 0.9d)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
-            // cannot mock GridWrapper.ionc_open
+            gridApi.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, TypeUtils.GetField(gridApi, "iconvtype"));
+        }
+
+        [Test]
+        public void OpenWithoutErrorTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
+            int ioncid = 0 ;
+            int iconvtype = (int)GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            double l = 0.0d;
+            wrapper.Expect(w =>
+                    w.ionc_open("",
+                    ref mode,
+                    ref ioncid,
+                    ref iconvtype,
+                    ref l))
+                .IgnoreArguments()
+                .OutRef(0, 0, (int)GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, 1.0d)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            mocks.ReplayAll();
+            gridApi.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, TypeUtils.GetField(gridApi, "iconvtype"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file : test.nc because of err nr : -1000")]
+        public void OpenWithErrorTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0 ;
+            int k = 0;
+            double l = 0.0d;
+
+            wrapper.Expect(w =>
+                    w.ionc_open("",
+                            ref i,
+                            ref j,
+                            ref k,
+                            ref l))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            mocks.ReplayAll();
+            gridApi.Open("test.nc", Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+        }
+
+        [Test]
+        public void CloseUninitializedTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            wrapper.Expect(w =>
+                    w.ionc_close(ref i))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Repeat.Never();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.Expect(a => a.Close())
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+
+            mocks.ReplayAll();
+            gridApi.Close();
         }
 
         [Test]
         public void CloseTest()
         {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            wrapper.Expect(w =>
+                    w.ionc_close(ref i))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.Expect(a => a.Close())
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
-            // cannot mock GridWrapper.ionc_close
+            TypeUtils.SetField(gridApi, "ioncid", 1);
+            gridApi.Close();
+            Assert.AreEqual(0, TypeUtils.GetField(gridApi, "ioncid"));
+        }
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't close grid nc file because of err nr : -1000")]
+        public void CloseWithErrorTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            wrapper.Expect(w =>
+                    w.ionc_close(ref i))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.Expect(a => a.Close())
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            mocks.ReplayAll();
+            TypeUtils.SetField(gridApi, "ioncid", 1);
+            gridApi.Close();
+            Assert.AreEqual(1, TypeUtils.GetField(gridApi, "ioncid"));
+        }
+
+        [Test]
+        public void GetMeshCountUninitializedTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0;
+            
+            wrapper.Expect(w =>
+                    w.ionc_get_mesh_count(
+                            ref i,
+                            ref j
+                            ))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .OutRef(0, 10)
+                .Repeat.Never();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            mocks.ReplayAll();
+            Assert.AreEqual(0, gridApi.GetMeshCount());
         }
 
         [Test]
         public void GetMeshCountTest()
         {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0;
+            
+            wrapper.Expect(w =>
+                    w.ionc_get_mesh_count(
+                            ref i,
+                            ref j
+                            ))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .OutRef(0, 10)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            TypeUtils.SetField(gridApi, "ioncid", 1);
             mocks.ReplayAll();
-            // cannot mock GridWrapper.ionc_get_mesh_count
+            Assert.AreEqual(10, gridApi.GetMeshCount());
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get number of meshes because of err nr : -1000")]
+        public void GetMeshCountWithExceptionTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0;
+            
+            wrapper.Expect(w =>
+                    w.ionc_get_mesh_count(
+                            ref i,
+                            ref j
+                            ))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .OutRef(0, 10)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            TypeUtils.SetField(gridApi, "ioncid", 1);
+            mocks.ReplayAll();
+            Assert.AreEqual(10, gridApi.GetMeshCount());
+        }
+
+        [Test]
+        public void GetCoordinateSystemCodeUninitializedTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0;
+
+            wrapper.Expect(w =>
+                    w.ionc_get_coordinate_system(
+                            ref i,
+                            ref j
+                            ))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .OutRef(0, 2887)
+                .Repeat.Never();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            mocks.ReplayAll();
+            Assert.AreEqual(0, gridApi.GetCoordinateSystemCode());
         }
 
         [Test]
         public void GetCoordinateSystemCodeTest()
         {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0;
+
+            wrapper.Expect(w =>
+                    w.ionc_get_coordinate_system(
+                            ref i,
+                            ref j
+                            ))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .OutRef(0, 2887)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            TypeUtils.SetField(gridApi, "ioncid", 1);
             mocks.ReplayAll();
-            // cannot mock GridWrapper.ionc_get_coordinate_system
+            Assert.AreEqual(2887, gridApi.GetCoordinateSystemCode());
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get coordinate system code because of err nr : -1000")]
+        public void GetCoordinateSystemCodeWithExceptionTest()
+        {
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int i = 0;
+            int j = 0;
+
+            wrapper.Expect(w =>
+                    w.ionc_get_coordinate_system(
+                            ref i,
+                            ref j
+                            ))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .OutRef(0, 2887)
+                .Repeat.Once();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            TypeUtils.SetField(gridApi, "ioncid", 1);
+            mocks.ReplayAll();
+            Assert.AreEqual(2887, gridApi.GetCoordinateSystemCode());
         }
 
         [Test]

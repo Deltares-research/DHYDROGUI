@@ -12,10 +12,16 @@ namespace DeltaShell.NGHS.IO.Grid
         protected int ioncid;
         protected double convversion;
         protected GridApiDataSet.DataSetConventions iconvtype;
+        protected IGridWrapper wrapper;
         
         static GridApi()
         {
             NativeLibrary.LoadNativeDllForCurrentPlatform(GridApiDataSet.GRIDDLL_NAME, GridApiDataSet.DllDirectory);
+        }
+
+        public GridApi()
+        {
+            wrapper = new GridWrapper();
         }
 
         #region Backwards compatibility
@@ -102,7 +108,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (!Initialized) return convtype == GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
             var iconvtypeApi = (int)convtype;
-            return GridWrapper.ionc_adheresto_conventions(ref ioncid, ref iconvtypeApi);
+            return wrapper.ionc_adheresto_conventions(ref ioncid, ref iconvtypeApi);
         }
 
         public virtual void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
@@ -111,13 +117,16 @@ namespace DeltaShell.NGHS.IO.Grid
                 c_path = string.Empty;
             var imode = (int)mode;
             var iconvtypeApi = 0;
-            var ierr = GridWrapper.ionc_open(c_path, ref imode, ref ioncid, ref iconvtypeApi, ref convversion);
+            var ierr = wrapper.ionc_open(c_path, ref imode, ref ioncid, ref iconvtypeApi, ref convversion);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 throw new Exception("Couldn't open grid nc file : " + c_path + " because of err nr : " + ierr);
 
             iconvtype = typeof(GridApiDataSet.DataSetConventions).IsEnumDefined(iconvtypeApi)
                 ? (GridApiDataSet.DataSetConventions)iconvtypeApi
                 : GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+            iconvtype = iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID && convversion < 1.0d
+                ? GridApiDataSet.DataSetConventions.IONC_CONV_OTHER
+                : iconvtype;
         }
 
         public bool Initialized
@@ -128,7 +137,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public virtual void Close()
         {
             if (!Initialized) return;
-            var ierr = GridWrapper.ionc_close(ref ioncid);
+            var ierr = wrapper.ionc_close(ref ioncid);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
             ioncid = 0;
@@ -136,8 +145,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetMeshCount()
         {
+            if (!Initialized) return 0;
             var nmesh = 0;
-            var ierr = GridWrapper.ionc_get_mesh_count(ref ioncid, ref nmesh);
+            var ierr = wrapper.ionc_get_mesh_count(ref ioncid, ref nmesh);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 throw new Exception("Couldn't get number of meshes because of err nr : " + ierr);
             return nmesh;
@@ -145,10 +155,11 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetCoordinateSystemCode()
         {
+            if (!Initialized) return 0;
             var epsg_code = 0;
-            var ierr = GridWrapper.ionc_get_coordinate_system(ref ioncid, ref epsg_code);
+            var ierr = wrapper.ionc_get_coordinate_system(ref ioncid, ref epsg_code);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
+                throw new Exception("Couldn't get coordinate system code because of err nr : " + ierr);
             return epsg_code;
         }
 
@@ -172,7 +183,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Console.WriteLine("Progress: {0:P2}. message = {1}", progress, message);
             };
-            var ierr = GridWrapper.ionc_initialize(message_callback, progress_callback);
+            var ierr = wrapper.ionc_initialize(message_callback, progress_callback);
             return ierr;
         }
         #endregion

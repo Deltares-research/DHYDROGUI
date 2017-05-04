@@ -166,6 +166,7 @@
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
     <Compile Include="Grid\GridApi.cs" />
     <Compile Include="Grid\IGridApi.cs" />
+    <Compile Include="Grid\IGridWrapper.cs" />
     <Compile Include="Grid\IUGrid1D.cs" />
     <Compile Include="Grid\IUGridApi1D.cs" />
     <Compile Include="Grid\RemoteGridApi.cs" />
