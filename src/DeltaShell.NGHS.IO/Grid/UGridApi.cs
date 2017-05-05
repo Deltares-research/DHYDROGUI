@@ -166,7 +166,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.ionc_get_node_count(ref ioncid, ref meshid, ref rnFaces);
+                var ierr = wrapper.ionc_get_face_count(ref ioncid, ref meshid, ref rnFaces);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                     Log.ErrorFormat("Couldn't get number of edges because of io netcdf error nr : {0}", ierr);
             }
