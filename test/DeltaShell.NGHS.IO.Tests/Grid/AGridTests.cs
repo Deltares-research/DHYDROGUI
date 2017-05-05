@@ -155,7 +155,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
-            Assert.IsTrue((bool) TypeUtils.GetField(grid, "disposed"));
+            Assert.IsFalse((bool) TypeUtils.GetField(grid, "disposed"));
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
-            Assert.IsTrue((bool) TypeUtils.GetField(grid, "disposed"));
+            Assert.IsFalse((bool) TypeUtils.GetField(grid, "disposed"));
         }
 
         [Test]
@@ -182,12 +182,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var gridApi = mocks.DynamicMock<IGridApi>();
             gridApi.Expect(a => a.Close()).Repeat.Once();
 
-            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
+            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(2);
             mocks.ReplayAll();
 
             grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
             Assert.IsNull(grid.GridApi);
-            Assert.IsTrue((bool)TypeUtils.GetField(grid, "disposed"));
+            Assert.IsFalse((bool)TypeUtils.GetField(grid, "disposed"));
         }
 
         [Test]
