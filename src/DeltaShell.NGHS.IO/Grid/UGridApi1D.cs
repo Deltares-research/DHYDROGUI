@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -26,6 +27,13 @@ namespace DeltaShell.NGHS.IO.Grid
         public int Create1DNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints)
         {
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            // replace spaces in network name by underscores
+            if (name != null)
+            {
+                name = name.Replace(' ', '_');
+            }
+
             int ierr = GridApiDataSet.GridConstants.IONC_NOERR;
             try
             {
@@ -48,6 +56,10 @@ namespace DeltaShell.NGHS.IO.Grid
         public int Write1DNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
             if (!Initialized || !NetworkReady) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            // replace spaces by underscores in the branch names/ids
+            nodesids = nodesids.ReplaceSpacesInString();
+            nodeslongNames = nodeslongNames.ReplaceSpacesInString();
 
             var numberOfNodes = GetNumberOfNetworkNodes();
             if (numberOfNodes < 0
@@ -101,6 +113,10 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (!Initialized || !NetworkReady) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
 
+            // replace spaces by underscores in the branch names/ids
+            branchIds = branchIds.ReplaceSpacesInString();
+            branchLongnames = branchLongnames.ReplaceSpacesInString();
+
             var numberOfBranches = GetNumberOfNetworkBranches();
             if (numberOfBranches < 0
                 || numberOfBranches != sourceNodeId.Length
@@ -126,6 +142,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(nbranchgeometrypoints, 0, nrOfGeometryPointsInBranchPtr, numberOfBranches);
 
                 GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[numberOfBranches];
+                
                 for (int i = 0; i < numberOfBranches; i++)
                 {
                     string tmpstring;
@@ -162,7 +179,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 nrOfGeometryPointsInBranchPtr = IntPtr.Zero;
             }
         }
-
+        
         public int Write1DNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
             if (!Initialized || !NetworkReady) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;

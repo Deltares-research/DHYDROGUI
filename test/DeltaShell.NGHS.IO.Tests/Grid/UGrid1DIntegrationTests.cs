@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -20,14 +22,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Category(TestCategory.DataAccess)]
         public void Write1DSimpleNetworkTest()
         {
-            var network = new HydroNetwork() { Name = "myNetwork" };
-            var hydroNode1 = new HydroNode() { Name = "myNode1", Geometry = new Point(1, 4), Network = network };
+            var network = new HydroNetwork() { Name = "my Network" };
+            var hydroNode1 = new HydroNode() { Name = "my Node1", Geometry = new Point(1, 4), Network = network };
             network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode() { Name = "myNode2", Geometry = new Point(5, 1), Network = network };
             network.Nodes.Add(hydroNode2);
             var branch1 = new Branch()
             {
-                Name = "myBranch1",
+                Name = "my Branch 1",
                 Network = network,
                 Source = hydroNode1,
                 Target = hydroNode2,
@@ -47,20 +49,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Category(TestCategory.DataAccess)]
         public void Write1DNetworkTest()
         {
-            var network = new HydroNetwork() { Name = "myNetwork" };
-            var hydroNode1 = new HydroNode() { Name = "myNode1", Geometry = new Point(1, 2), Network = network };
+            var network = new HydroNetwork() { Name = "my Network" };
+            var hydroNode1 = new HydroNode() { Name = "my Node 1", Geometry = new Point(1, 2), Network = network };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode() { Name = "myNode2", Geometry = new Point(5, 3), Network = network };
+            var hydroNode2 = new HydroNode() { Name = "my Node 2", Geometry = new Point(5, 3), Network = network };
             network.Nodes.Add(hydroNode2);
             var hydroNode3 = new HydroNode() { Name = "myNode3", Geometry = new Point(9, 6), Network = network };
             network.Nodes.Add(hydroNode3);
-            var hydroNode4 = new HydroNode() { Name = "myNode4", Geometry = new Point(11, 2), Network = network };
+            var hydroNode4 = new HydroNode() { Name = "my Node  4", Geometry = new Point(11, 2), Network = network };
             network.Nodes.Add(hydroNode4);
-            var hydroNode5 = new HydroNode() { Name = "myNode5", Geometry = new Point(15, 1), Network = network };
+            var hydroNode5 = new HydroNode() { Name = "my Node 5", Geometry = new Point(15, 1), Network = network };
             network.Nodes.Add(hydroNode5);
             var branch1 = new Branch()
             {
-                Name = "myBranch1",
+                Name = "my Branch 1",
                 Network = network,
                 Source = hydroNode1,
                 Target = hydroNode2,
@@ -74,7 +76,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             network.Branches.Add(branch1);
             var branch2 = new Branch()
             {
-                Name = "myBranch2",
+                Name = "my Branch 2",
                 Network = network,
                 Source = hydroNode3,
                 Target = hydroNode2,
@@ -90,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             network.Branches.Add(branch2);
             var branch3 = new Branch()
             {
-                Name = "myBranch3",
+                Name = "my Branch 3",
                 Network = network,
                 Source = hydroNode2,
                 Target = hydroNode4,

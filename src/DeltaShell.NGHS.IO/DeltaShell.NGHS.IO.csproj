@@ -186,6 +186,7 @@
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
+    <Compile Include="Helpers\StringArrayExtensions.cs" />
     <Compile Include="NGHSFileBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
