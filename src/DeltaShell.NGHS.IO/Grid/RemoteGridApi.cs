@@ -66,27 +66,32 @@ namespace DeltaShell.NGHS.IO.Grid
         ~RemoteGridApi()
         {
             // in case someone forgets to dispose..
-            DisposeInternal();
+            Dispose(false);
         }
 
         public virtual void Dispose()
         {
-            if (disposed)
-                return;
-            Close();
-            DisposeInternal();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void DisposeInternal()
+        protected virtual void Dispose(bool disposing)
         {
-            if (api != null)
+            if (!disposed)
             {
-                RemoteInstanceContainer.RemoveInstance(api);
+                if (disposing)
+                {
+                    if (api != null)
+                    {
+                        Close();
+                        RemoteInstanceContainer.RemoveInstance(api);
+                        Thread.Sleep(100); // wait for process to truly exit
+                    }
+                    api = null;
+                }
+                disposed = true;
             }
-            api = null;
-            disposed = true;
-            Thread.Sleep(100); // wait for process to truly exit
         }
+       
     }
 }
