@@ -85,7 +85,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 yield return new FlowFMTreeShortcut(model.Network.Name, NetworkIcon, model, model.Network);
             }
-            yield return new FlowFMTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization);
+            if (model.NetworkDiscretization != null && model.NetworkDiscretization.Name != null)
+            {
+                yield return
+                    new FlowFMTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model,
+                        model.NetworkDiscretization);
+            }
             yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
             yield return
                 new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>("Bed Level",
