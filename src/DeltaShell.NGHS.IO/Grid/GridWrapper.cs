@@ -549,13 +549,13 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int ionc_create_1d_mesh(ref int ioncid, ref int networkid, string meshname, ref int nmeshpoints, ref int nmeshedges)
         {
-            return 0;
+            return ionc_create_1d_mesh_dll(ref ioncid, ref networkid, meshname, ref nmeshpoints, ref nmeshedges);
         }
 
         public int ionc_write_1d_mesh_discretisation_points(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
             ref IntPtr c_offset, ref int nmeshpoints)
         {
-            return 0;
+            return ionc_write_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref nmeshpoints);
         }
 
         public int ionc_get_1d_network_nodes_count(ref int ioncid, ref int networkid, ref int nNodes)
@@ -576,31 +576,36 @@ namespace DeltaShell.NGHS.IO.Grid
         public int ionc_read_1d_network_nodes(ref int ioncid, ref int networkid, ref IntPtr c_nodesX, ref IntPtr c_nodesY,
             interop_charinfo[] nodesinfo, ref int nNodes)
         {
-            return 0;
+            return ionc_read_1d_network_nodes_dll(ref ioncid, ref networkid, ref c_nodesX, ref c_nodesY,
+                nodesinfo, ref nNodes);
         }
 
         public int ionc_read_1d_network_branches(ref int ioncid, ref int networkid, ref IntPtr c_sourcenodeid,
             ref IntPtr c_targetnodeid, ref IntPtr c_branchlengths, interop_charinfo[] branchinfo,
             ref IntPtr c_nbranchgeometrypoints, ref int nBranches)
         {
-            return 0;
+            return ionc_read_1d_network_branches_dll(ref ioncid, ref  networkid, ref c_sourcenodeid,
+            ref c_targetnodeid, ref c_branchlengths, branchinfo,
+                ref c_nbranchgeometrypoints, ref nBranches);
         }
 
         public int ionc_read_1d_network_branches_geometry(ref int ioncid, ref int networkid, ref IntPtr c_geopointsX,
             ref IntPtr c_geopointsY, ref int nNodes)
         {
-            return 0;
+            return ionc_read_1d_network_branches_geometry_dll(ref ioncid, ref networkid, ref c_geopointsX,
+            ref c_geopointsY, ref nNodes);
         }
 
         public int ionc_get_1d_mesh_discretisation_points_count(ref int ioncid, ref int networkid, ref int nmeshpoints)
         {
-            return 0;
+            return ionc_get_1d_mesh_discretisation_points_count_dll(ref ioncid, ref networkid, ref nmeshpoints);
         }
 
         public int ionc_read_1d_mesh_discretisation_points(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
             ref IntPtr c_offset, ref int nmeshpoints)
         {
-            return 0;
+            return ionc_read_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx,
+            ref c_offset, ref nmeshpoints);
         }
 
         #endregion

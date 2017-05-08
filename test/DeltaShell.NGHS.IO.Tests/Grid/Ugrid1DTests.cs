@@ -188,20 +188,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
             finally
             {
-                Marshal.FreeHGlobal(c_nodesX);
-                Marshal.FreeHGlobal(c_nodesY);
-                Marshal.FreeHGlobal(c_sourcenodeid);
-                Marshal.FreeHGlobal(c_targetnodeid);
-                Marshal.FreeHGlobal(c_branchlengths);
-                Marshal.FreeHGlobal(c_nbranchgeometrypoints);
-                Marshal.FreeHGlobal(c_geopointsX);
-                Marshal.FreeHGlobal(c_geopointsY);
-                Marshal.FreeHGlobal(c_branchidx);
-                Marshal.FreeHGlobal(c_offset);
+                Marshal.FreeCoTaskMem(c_nodesX);
+                Marshal.FreeCoTaskMem(c_nodesY);
+                Marshal.FreeCoTaskMem(c_sourcenodeid);
+                Marshal.FreeCoTaskMem(c_targetnodeid);
+                Marshal.FreeCoTaskMem(c_branchlengths);
+                Marshal.FreeCoTaskMem(c_nbranchgeometrypoints);
+                Marshal.FreeCoTaskMem(c_geopointsX);
+                Marshal.FreeCoTaskMem(c_geopointsY);
+                Marshal.FreeCoTaskMem(c_branchidx);
+                Marshal.FreeCoTaskMem(c_offset);
             }
         }
 
-        // read the netcdf file created in the test above
+        //// read the netcdf file created in the test above
         [Test]
         [Category(TestCategory.DataAccess)]
         public void read1dUGRIDNetcdf()
@@ -212,8 +212,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_branchlengths = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_nbranchgeometrypoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
-            IntPtr c_geopointsX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nGeometry);
-            IntPtr c_geopointsY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nGeometry);
+            IntPtr c_geopointsX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
+            IntPtr c_geopointsY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
             IntPtr c_branchidx = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
             IntPtr c_offset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
             try
@@ -340,17 +340,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
             finally
             {
-                Marshal.FreeHGlobal(c_nodesX);
-                Marshal.FreeHGlobal(c_nodesY);
-                Marshal.FreeHGlobal(c_sourcenodeid);
-                Marshal.FreeHGlobal(c_targetnodeid);
-                Marshal.FreeHGlobal(c_branchlengths);
-                Marshal.FreeHGlobal(c_nbranchgeometrypoints);
-                Marshal.FreeHGlobal(c_geopointsX);
-                Marshal.FreeHGlobal(c_geopointsY);
-                Marshal.FreeHGlobal(c_branchidx);
-                Marshal.FreeHGlobal(c_offset);
-
+                Marshal.FreeCoTaskMem(c_nodesX);
+                Marshal.FreeCoTaskMem(c_nodesY);
+                Marshal.FreeCoTaskMem(c_sourcenodeid);
+                Marshal.FreeCoTaskMem(c_targetnodeid);
+                Marshal.FreeCoTaskMem(c_branchlengths);
+                Marshal.FreeCoTaskMem(c_nbranchgeometrypoints);
+                Marshal.FreeCoTaskMem(c_geopointsX);
+                Marshal.FreeCoTaskMem(c_geopointsY);
+                Marshal.FreeCoTaskMem(c_branchidx);
+                Marshal.FreeCoTaskMem(c_offset);
             }
         }
     }
