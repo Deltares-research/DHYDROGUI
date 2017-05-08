@@ -560,17 +560,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int ionc_get_1d_network_nodes_count(ref int ioncid, ref int networkid, ref int nNodes)
         {
-            return 0;
+            return ionc_get_1d_network_nodes_count_dll(ref ioncid, ref networkid, ref nNodes);
         }
 
         public int ionc_get_1d_network_branches_count(ref int ioncid, ref int networkid, ref int nBranches)
         {
-            return 0;
+            return ionc_get_1d_network_branches_count_dll(ref ioncid, ref networkid, ref nBranches);
         }
 
         public int ionc_get_1d_network_branches_geometry_coordinate_count(ref int ioncid, ref int networkid, ref int ngeometrypoints)
         {
-            return 0;
+            return ionc_get_1d_network_branches_geometry_coordinate_count_dll(ref ioncid, ref networkid, ref ngeometrypoints);
         }
 
         public int ionc_read_1d_network_nodes(ref int ioncid, ref int networkid, ref IntPtr c_nodesX, ref IntPtr c_nodesY,

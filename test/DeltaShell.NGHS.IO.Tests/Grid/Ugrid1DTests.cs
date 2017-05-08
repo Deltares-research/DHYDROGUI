@@ -93,6 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 var ierr = -1;
                 string tmpstring; //temporary string for several operations
                 string c_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
+                c_path = TestHelper.CreateLocalCopy(c_path);
                 FileUtils.DeleteIfExists(c_path);
                 Assert.IsFalse(File.Exists(c_path));
                 var wrapper = new GridWrapper();
@@ -219,6 +220,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 //1. create a netcdf file 
                 string c_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
+                c_path = TestHelper.CreateLocalCopy(c_path);
                 Assert.IsTrue(File.Exists(c_path));
                 int ioncid = 0; //file variable 
                 int mode = 0; //create in read mode
