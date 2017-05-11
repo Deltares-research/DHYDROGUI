@@ -106,6 +106,11 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37292\lib\net40\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMapTestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.TestProject.1.2.0.37292\lib\net40\SharpMapTestUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -126,6 +131,7 @@
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
     <Compile Include="Grid\UGrid1DIntegrationTests.cs" />
     <Compile Include="Grid\Ugrid1DTests.cs" />
+    <Compile Include="Grid\UGrid2DIntegrationTests.cs" />
     <Compile Include="Grid\UGridApi1DTests.cs" />
     <Compile Include="Grid\UGridApiTests.cs" />
     <Compile Include="Grid\UGridStub.cs" />
