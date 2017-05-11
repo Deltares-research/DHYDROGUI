@@ -180,9 +180,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
             remoteApi.initialize(path); 
         }
 
-        public int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections, double distanceToCrossSectionNr1, out int levelsCount, out double bottomLevelShift, ref double[] levels, ref double[] flowWidth, ref double[] totalWidth, ref double[] plains, ref double levelCrest, ref double levelBottom, ref double flowArea, ref double totalArea, ref bool groundlayerUsed, ref double groundlayer)
+        public int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections, double distanceToCrossSectionNr1, out int levelsCount, out double[] bottomLevelShift, out double[] levels, out double[] flowWidth, out double[] totalWidth, out double[] plains, out double[] levelCrest, out double[] levelBottom, out double[] flowArea, out double[] totalArea, out bool groundlayerUsed, out double[] groundlayer)
         {
-            return remoteApi.GetInterpolatedZWCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections, distanceToCrossSectionNr1, out levelsCount, out bottomLevelShift, ref levels, ref flowWidth, ref totalWidth, ref plains, ref levelCrest, ref levelBottom, ref flowArea, ref totalArea, ref groundlayerUsed, ref groundlayer);
+            return remoteApi.GetInterpolatedZWCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections, distanceToCrossSectionNr1, out levelsCount, out bottomLevelShift, out levels, out flowWidth, out totalWidth, out plains, out levelCrest, out levelBottom, out flowArea, out totalArea, out groundlayerUsed, out groundlayer);
         }
 
         public int NetworkSetBoundary(int nodeId, double[] discharge, double[] waterLevel)

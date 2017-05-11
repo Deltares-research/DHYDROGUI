@@ -267,10 +267,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         void GetConveyanceTable(int crossSectionNr, ref double[] levels, ref double[] flowArea, ref double[] flowWidth, ref double[] perimeter, ref double[] hydraulicRadius, ref double[] totalWidth, ref double[] conveyancePos, ref double[] conveyanceNeg);
 
         int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections,
-            double distanceToCrossSectionNr1, out int levelsCount, out double bottomLevelShift, ref double[] levels,
-            ref double[] flowWidth, ref double[] totalWidth, ref double[] plains, [In, Out] ref double levelCrest,
-            [In, Out] ref double levelBottom, [In, Out] ref double flowArea, [In, Out] ref double totalArea,
-            [In, Out] ref bool groundlayerUsed, [In, Out] ref double groundlayer);
+            double distanceToCrossSectionNr1, out int levelsCount, out double[] bottomLevelShift, out double[] levels,
+            out double[] flowWidth, out double[] totalWidth, out double[] plains, out double[] levelCrest,
+            out double[] levelBottom, out double[] flowArea, out double[] totalArea,
+            out bool groundlayerUsed, out double[] groundlayer);
 
         int GetInterpolatedYZCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections,
             double distanceToCrossSectionNr1, ref double[] y, ref double[] z);

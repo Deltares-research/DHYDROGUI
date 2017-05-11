@@ -257,21 +257,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             double[] flowWidth_r = new double[0];
             double[] totalWidth_r = new double[0];
             double[] plains_r = new double[0];
-            double levelCrest_r = 0.0;
-            double bedLevel_r = 0.0;
-            double flowArea_r = 0.0;
-            double totalArea_r = 0.0;
-            double groundlayer_r = 0.0;
+            double[] levelCrest_r = new double[0];
+            double[] bedLevel_r = new double[0];
+            double[] flowArea_r = new double[0];
+            double[] totalArea_r = new double[0];
+            double[] groundlayer_r = new double[0];
             bool groundlayerUsed_r = false;
 
             int levelCount;
-            double bedLevelShift;
+            double[] bedLevelShift = new double[0];
 
             ModelApi.GetInterpolatedZWCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections, distanceToCrossSectionNr1,
-                                                    out levelCount, out bedLevelShift, ref levels_r,
-                                                    ref flowWidth_r, ref totalWidth_r, ref plains_r, ref levelCrest_r,
-                                                    ref bedLevel_r, ref flowArea_r, ref totalArea_r,
-                                                    ref groundlayerUsed_r, ref groundlayer_r);
+                                                    out levelCount, out bedLevelShift, out levels_r,
+                                                    out flowWidth_r, out totalWidth_r, out plains_r, out levelCrest_r,
+                                                    out bedLevel_r, out flowArea_r, out totalArea_r,
+                                                    out groundlayerUsed_r, out groundlayer_r);
 
             var newcs = CrossSection.CreateDefault(CrossSectionType.ZW, c, chainage);
 
@@ -280,13 +280,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             newcsdef.ZWDataTable.Clear();
             for (int i = 0; i < levelCount; i++)
             {
-                newcsdef.ZWDataTable.AddCrossSectionZWRow(levels_r[i] + bedLevelShift, totalWidth_r[i],
+                newcsdef.ZWDataTable.AddCrossSectionZWRow(levels_r[i] + bedLevelShift[0], totalWidth_r[i],
                                                             totalWidth_r[i] - flowWidth_r[i]);
             }
-            newcsdef.SummerDike.Active = levelCrest_r > 0d;
-            newcsdef.SummerDike.CrestLevel = levelCrest_r;
-            newcsdef.SummerDike.FloodPlainLevel = bedLevel_r;
-            newcsdef.SummerDike.FloodSurface = flowArea_r;
+            newcsdef.SummerDike.Active = levelCrest_r[0] > 0d;
+            newcsdef.SummerDike.CrestLevel = levelCrest_r[0];
+            newcsdef.SummerDike.FloodPlainLevel = bedLevel_r[0];
+            newcsdef.SummerDike.FloodSurface = flowArea_r[0];
 
             ModelApi.Finalize();
 

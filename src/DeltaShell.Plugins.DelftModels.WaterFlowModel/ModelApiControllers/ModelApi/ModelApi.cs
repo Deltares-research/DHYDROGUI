@@ -1670,10 +1670,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 
         public int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2,
             double distanceBetweenCrossSections, double distanceToCrossSectionNr1, out int levelsCount,
-            out double bottomLevelShift, ref double[] levels, ref double[] flowWidth, ref double[] totalWidth,
-            ref double[] plains, [In, Out] ref double levelCrest, [In, Out] ref double levelBottom,
-            [In, Out] ref double flowArea, [In, Out] ref double totalArea, [In, Out] ref bool groundlayerUsed,
-            [In, Out] ref double groundlayer)
+            out double[] bottomLevelShift, out double[] levels, out double[] flowWidth, out double[] totalWidth,
+            out double[] plains, out double[] levelCrest, out double[] levelBottom,
+            out double[] flowArea, out double[] totalArea, out bool groundlayerUsed,
+            out double[] groundlayer)
         {
             int crossSectionNr1_ = crossSectionNr1;
             int crossSectionNr2_ = crossSectionNr2;
@@ -1688,10 +1688,41 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             flowWidth = new double[levelsCount];
             totalWidth = new double[levelsCount];
             plains = new double[3];
-            int result = GetInterpolatedZWCrossSection_(ref iref, ref levelsCount, out bottomLevelShift,
-                levels, flowWidth, totalWidth, plains, ref levelCrest, ref levelBottom,
-                ref flowArea, ref totalArea, ref groundlayerUsed, ref groundlayer);
 
+            var bottomLevelShiftref = 0.0d;
+            var levelCrestref = 0.0d;
+            var levelBottomref = 0.0d;
+            var flowArearef = 1.0d;
+            var totalArearef = 1.0d;
+            var groundlayerUsedref = false;
+            var groundlayerref = 1.0d;
+
+            int result = GetInterpolatedZWCrossSection_(ref iref, ref levelsCount, out bottomLevelShiftref,
+                levels, flowWidth, totalWidth, plains, ref levelCrestref, ref levelBottomref,
+                ref flowArearef, ref totalArearef, ref groundlayerUsedref, ref groundlayerref);
+
+            bottomLevelShift = new double[1];
+            bottomLevelShift[0] = bottomLevelShiftref;
+
+            levelCrest = new double[1];
+            levelCrest[0] = levelCrestref;
+
+            levelBottom = new double[1];
+            levelBottom[0] = levelBottomref;
+
+            flowArea = new double[1];
+            flowArea[0] = flowArearef;
+            
+            totalArea = new double[1];
+            totalArea[0] = totalArearef;
+
+            groundlayerUsed = groundlayerUsedref;
+
+            groundlayer = new double[1];
+            groundlayer[0] = groundlayerref;
+
+
+            
             return result;
         }
 
