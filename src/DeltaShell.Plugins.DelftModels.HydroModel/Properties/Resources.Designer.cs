@@ -106,5 +106,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
                 return ResourceManager.GetString("HydroModelApplicationPlugin_Description", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start time must be earlier than stop time.
+        /// </summary>
+        public static string HydroModelTimeSettingsViewModel_DetermineErrorText_Start_time_must_be_earlier_than_stop_time {
+            get {
+                return ResourceManager.GetString("HydroModelTimeSettingsViewModel_DetermineErrorText_Start_time_must_be_earlier_tha" +
+                        "n_stop_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time step must be positive.
+        /// </summary>
+        public static string HydroModelTimeSettingsViewModel_DetermineErrorText_Time_step_must_be_positive {
+            get {
+                return ResourceManager.GetString("HydroModelTimeSettingsViewModel_DetermineErrorText_Time_step_must_be_positive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} days {1} hours {2} minutes {3} seconds.
+        /// </summary>
+        public static string HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds {
+            get {
+                return ResourceManager.GetString("HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minute" +
+                        "s__3__seconds", resourceCulture);
+            }
+        }
     }
 }

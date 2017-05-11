@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -45,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void AddingRegionsCreatesChildDataItems()
         {
             var hydroModel = new HydroModel();
@@ -62,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void RemovingModelBreaksLinks()
         {
             var childModel = new SimpeHydroModel();
@@ -293,7 +295,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             public Type SupportedRegionType { get { return typeof (HydroNetwork); } }
         }
 
-        public class SimpleModel : ModelBase
+        public class SimpleModel : TimeDependentModelBase
         {
             public int Input { get; set; }
 

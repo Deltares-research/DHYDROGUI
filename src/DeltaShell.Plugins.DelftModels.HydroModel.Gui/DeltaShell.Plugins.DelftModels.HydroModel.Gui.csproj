@@ -138,6 +138,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Forms\ActivityShapes\ActivityShapeBase.cs" />
     <Compile Include="Forms\ActivityShapes\CompositeActivityShape.cs" />
     <Compile Include="Forms\ActivityShapes\ParallelActivityShape.cs" />
@@ -163,9 +164,10 @@
       <DependentUpon>MergeModelValidationView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProjectExplorer\HydroModelTreeViewNodePresenter.cs" />
+    <Compile Include="ViewModels\TimeDependentModelBaseViewModel.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="Views\HydroModelTimeSettingsUserControl.xaml.cs">
-      <DependentUpon>HydroModelTimeSettingsUserControl.xaml</DependentUpon>
+    <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
+      <DependentUpon>HydroModelTimeSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\WorkflowEditorControl.cs">
       <SubType>UserControl</SubType>
@@ -184,7 +186,7 @@
     </Compile>
     <Compile Include="PropertyClasses\Iterative1D2DCouplerProperties.cs" />
     <Compile Include="ValidateMergeModelObjects.cs" />
-    <Compile Include="ViewModels\HydroModelTimeSettingsUserControlViewModel.cs" />
+    <Compile Include="ViewModels\HydroModelTimeSettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\HydroModelSettings.resx">
@@ -244,7 +246,7 @@
     <None Include="Resources\validation.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\HydroModelTimeSettingsUserControl.xaml">
+    <Page Include="Views\HydroModelTimeSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

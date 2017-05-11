@@ -321,6 +321,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         OverrideTimeStep = false;
                     }
+                    TimeStep = timeDependentModels.Select(m => m.TimeStep).Min();
                     break;
             }
         }
@@ -380,9 +381,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                             }
                             else
                             {
+                                // Set the updating flag to true while updating the submodel,
+                                // such that these changes will not update the hydro model
+                                updating = true;
                                 timeDependentModel.StartTime = StartTime;
                                 timeDependentModel.StopTime = StopTime;
                                 timeDependentModel.TimeStep = TimeStep;
+                                updating = false;
                             }
                         }
 
