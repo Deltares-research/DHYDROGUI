@@ -221,11 +221,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetwork()
         {
-            // TODO: Save network (network)
+            if (!File.Exists(NetFilePath))
+            {
+                // create new netFile?
+                NetCdfFile netFile = NetCdfFile.CreateNew(MduFilePath);
+                netFile.Close();
+                return;
+            }
 
-            // check if netfile exists?
-            
-            // create new file? Is it a net file?
             try
             {
                 using (var uGrid1D = new UGrid1D(NetFilePath))
