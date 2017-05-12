@@ -50,13 +50,13 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridApi1D = GridApi as IUGridApi1D;
             if (uGridApi1D != null)
             {
-                
                 var ierr = uGridApi1D.Write1DNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     throw new InvalidOperationException(string.Format("Couldn't write 1d network branches because of error number {0}", ierr));
                 }
             }
+            // TODO: Thrown when uGridApi1D == null?
         }
 
         public void Write1DNetworkGeometry(double[] geopointsX, double[] geopointsY)
@@ -75,35 +75,93 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworkNodes()
         {
-            var UgridApi = GridApi as IUGridApi1D;
-            if (UgridApi != null)
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
             {
-                return UgridApi.GetNumberOfNetworkNodes();
+                var result = uGridApi1D.GetNumberOfNetworkNodes();
+                if (result < 0)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't get 1D number of network nodes because of error number {0}", result));
+                }
+                return result;
             }
             return -1;
         }
 
         public int GetNumberOfNetworkBranches()
         {
-            var UgridApi = GridApi as IUGridApi1D;
-            if (UgridApi != null)
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
             {
-                return UgridApi.GetNumberOfNetworkBranches();
+                var result = uGridApi1D.GetNumberOfNetworkBranches();
+                if (result < 0)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network branches because of error number {0}", result));
+                }
+                return result;
             }
             return -1;
         }
 
         public int GetNumberOfNetworkGeometryPoints()
         {
-            var UgridApi = GridApi as IUGridApi1D;
-            if (UgridApi != null)
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
             {
-                return UgridApi.GetNumberOfNetworkGeometryPoints();
+                var result = uGridApi1D.GetNumberOfNetworkGeometryPoints();
+                if (result < 0)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network geometry points because of error number {0}", result));
+                }
+                return result;
             }
             return -1;
         }
 
-        
+        public void Create1DMeshInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges)
+        {
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
+            {
+                var ierr = uGridApi1D.Create1DMesh(name, numberOfMeshPoints, numberOfMeshEdges);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new InvalidOperationException(string.Format(
+                            "Couldn't create new 1d mesh {0} with number of mesh points {1}, number of mesh edges {2} because of error number {3}",
+                            name, numberOfMeshPoints, numberOfMeshEdges, ierr));
+                }
+            }
+        }
+
+        public void Write1DMeshDiscretizationPoints(int[] branchIdx, double[] offset)
+        {
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D != null)
+            {
+                var ierr = uGridApi1D.Write1DMeshDiscretisationPoints(branchIdx, offset);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't write 1d mesh discretisation points because of error number {0}", ierr));
+                }
+            }
+        }
+
+        public int GetNumberOfMeshDiscretisationPoints()
+        {
+            var ugridApi = GridApi as IUGridApi1D;
+            if (ugridApi != null)
+            {
+                var numberOfMeshPoints = ugridApi.GetNumberOfMeshDiscretisationPoints();
+                if (numberOfMeshPoints < 0)
+                {
+                    throw new InvalidOperationException(string.Format("Couldn't get the number of 1D mesh discretisation points because of error number {0}", numberOfMeshPoints));
+                }
+                return numberOfMeshPoints;
+            }
+            return -1;
+        }
+
+
         public override bool IsInitialized()
         {
             var uGridApi1D = GridApi as IUGridApi1D;

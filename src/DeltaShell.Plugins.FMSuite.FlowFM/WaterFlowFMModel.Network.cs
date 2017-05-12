@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -216,7 +221,105 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetwork()
         {
+            // TODO: Save network (network)
+
+            // check if netfile exists?
             
+            // create new file? Is it a net file?
+            try
+            {
+                using (var uGrid1D = new UGrid1D(NetFilePath))
+                {
+                    var totalNumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
+
+                    uGrid1D.Create1DGridInFile(
+                        network.Name,
+                        network.Nodes.Count,
+                        network.Branches.Count,
+                        totalNumberOfGeometryPoints);
+
+                    uGrid1D.Write1DNetworkNodes(
+                        network.Nodes.Select(n => n.Geometry.Coordinates[0].X).ToArray(),
+                        network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray(),
+                        network.Nodes.Select(n => n.Name).ToArray(),
+                        network.Nodes.Select(n => n.Description).ToArray()
+                    );
+
+                    uGrid1D.Write1DNetworkBranches(
+                        network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
+                        network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
+                        network.Branches.Select(b => b.Length).ToArray(),
+                        network.Branches.Select(b =>
+                            {
+                                if (b.Geometry != null && b.Geometry.Coordinates != null)
+                                {
+                                    return b.Geometry.Coordinates.Length;
+                                }
+                                return 0;
+                            }
+                        ).ToArray(),
+                        network.Branches.Select(b => b.Name).ToArray(),
+                        network.Branches.Select(b => b.Description).ToArray()
+                    );
+                    uGrid1D.Write1DNetworkGeometry(
+                        network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray(),
+                        network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray()                       
+                        );
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex; // TODO: Rethrow the exception?
+            }
+            
+        }
+
+        private void SaveNetworkDiscretization()
+        {
+            if (!File.Exists(NetFilePath))
+            {
+                // create new netFile?
+                NetCdfFile netFile = NetCdfFile.CreateNew(MduFilePath);
+                netFile.Close();
+                return;
+            }
+
+            try
+            {
+                using (UGrid1D uGrid1D = new UGrid1D(NetFilePath))
+                {
+                    // get the discretisation points from the network discretisation
+                    var discretisationPoints = networkDiscretization.Locations.Values.ToArray();
+
+                    // calculate the number of mesh edges -> #meshEdges = #discretisationPoints - #connectionNodes + #branches
+                    var numberOfMeshEdges = discretisationPoints.Length - network.Nodes.Count + network.Branches.Count;
+
+                    // create mesh
+                    uGrid1D.Create1DMeshInFile(
+                        networkDiscretization.Name,
+                        discretisationPoints.Length,   
+                        numberOfMeshEdges               
+                        );
+
+                    // Write discretisation points
+                    int[] branchIdx = discretisationPoints.Select(l => l.Branch)
+                        .ToArray()
+                        .Select(b => networkDiscretization.Network.Branches.IndexOf(b))
+                        .ToArray(); 
+
+                    double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray(); 
+
+                    uGrid1D.Write1DMeshDiscretizationPoints(
+                        branchIdx,
+                        offset
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex; // TODO: Rethrow the exception?
+            }
+         
         }
     }
 }

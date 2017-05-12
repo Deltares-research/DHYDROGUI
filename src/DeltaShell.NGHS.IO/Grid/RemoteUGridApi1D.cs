@@ -81,5 +81,23 @@ namespace DeltaShell.NGHS.IO.Grid
             var ugridApi1D = api as IUGridApi1D;
             return ugridApi1D != null ? ugridApi1D.GetNumberOfNetworkGeometryPoints() : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
+
+        public int Create1DMesh(string name, int numberOfMeshPoints, int numberOfMeshEdges)
+        {
+            var ugridApi1D = api as IUGridApi1D;
+            return ugridApi1D != null ? ugridApi1D.Create1DMesh(name, numberOfMeshPoints, numberOfMeshEdges) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
+
+        public int Write1DMeshDiscretisationPoints(int[] branchIdx, double[] offset)
+        {
+            var ugridApi1D = api as IUGridApi1D;
+            return ugridApi1D != null ? ugridApi1D.Write1DMeshDiscretisationPoints(branchIdx, offset) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
+
+        public int GetNumberOfMeshDiscretisationPoints()
+        {
+            var ugridApi1D = api as IUGridApi1D;
+            return ugridApi1D != null ? ugridApi1D.GetNumberOfMeshDiscretisationPoints() : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
     }
 }

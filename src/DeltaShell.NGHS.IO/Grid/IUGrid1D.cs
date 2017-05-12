@@ -13,5 +13,11 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetNumberOfNetworkNodes();
         int GetNumberOfNetworkBranches();
         int GetNumberOfNetworkGeometryPoints();
+
+        void Create1DMeshInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges);
+        void Write1DMeshDiscretizationPoints(int[] branchIdx, double[] offset);
+        int GetNumberOfMeshDiscretisationPoints();
+
+
     }
 }
