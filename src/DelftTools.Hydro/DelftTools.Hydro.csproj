@@ -252,7 +252,6 @@
     <Compile Include="Structures\IGroundLayer.cs" />
     <Compile Include="Structures\IGully.cs" />
     <Compile Include="Structures\IManhole.cs" />
-    <Compile Include="Structures\IMonitoringStation.cs" />
     <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
     <Compile Include="Structures\IWeirFormula.cs" />
@@ -279,6 +278,7 @@
     <None Include="packages.config" />
     <None Include="Uml\CrossSectionDefinition.cd" />
     <None Include="Uml\DrainageBasin.cd" />
+    <None Include="Uml\HydroArea.cd" />
     <None Include="Uml\HydroNetwork.cd" />
     <None Include="Uml\HydroRegion.cd" />
   </ItemGroup>
