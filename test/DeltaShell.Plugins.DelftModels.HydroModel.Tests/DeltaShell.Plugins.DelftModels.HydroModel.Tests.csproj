@@ -238,7 +238,8 @@
     <Compile Include="HydroModelExtensionsTest.cs" />
     <Compile Include="ValueConverters\HydroLinksFeatureCoverageValueConverterTest.cs" />
     <Compile Include="ValueConverters\HydroRegionFeatureCoverageFromNetworkCoverageValueConverterTest.cs" />
-    <Compile Include="ViewModels\HydroModelTimeSettingsUserControlTest.cs" />
+    <Compile Include="ViewModels\HydroModelTimeSettingsViewModelTest.cs" />
+    <Compile Include="ViewModels\TimeDependentModelBaseViewModelUnitTest.cs" />
     <Compile Include="WaterFlowFMModelRtcTest.cs" />
     <Compile Include="WaterFlowFMModelWaveTest.cs" />
     <Compile Include="WaterFlowModel1DBuilder.cs" />

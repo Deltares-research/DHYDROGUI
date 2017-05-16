@@ -332,10 +332,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     TimeProvider.StartTime = value;
                 }
-                else
-                {
-                    base.StartTime = value;
-                }
+                // This base model setting is made to make the base logic right
+                base.StartTime = value;
             }
         }
 
@@ -352,10 +350,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     TimeProvider.StopTime = value;
                 }
-                else
-                {
-                    base.StopTime = value;
-                }
+                // This base model setting is made to make the base logic right
+                base.StopTime = value;
             }
         }
 
@@ -372,10 +368,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     TimeProvider.TimeStep = value;
                 }
-                else
-                {
-                    base.TimeStep = value;
-                }
+                // This base model setting is made to make the base logic right
+                base.TimeStep = value;
             }
         }
 

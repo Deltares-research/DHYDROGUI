@@ -153,4 +153,13 @@
   <data name="DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configuration_file_" xml:space="preserve">
     <value>Empty model cannot generate a configuration file.</value>
   </data>
+  <data name="HydroModelTimeSettingsViewModel_DetermineErrorText_Start_time_must_be_earlier_than_stop_time" xml:space="preserve">
+    <value>Start time must be earlier than stop time</value>
+  </data>
+  <data name="HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds" xml:space="preserve">
+    <value>{0} days {1} hours {2} minutes {3} seconds</value>
+  </data>
+  <data name="HydroModelTimeSettingsViewModel_DetermineErrorText_Time_step_must_be_positive" xml:space="preserve">
+    <value>Time step must be positive</value>
+  </data>
 </root>

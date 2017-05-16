@@ -809,6 +809,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             set
             {
                 ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value = value;
+                // This base model setting is made to make the base logic right
+                base.StartTime = value;
             }
         }
 
@@ -819,14 +821,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             set
             {
                 ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value = value;
+                // This base model setting is made to make the base logic right
+                base.StopTime = value;
             }
         }
 
         public override TimeSpan TimeStep
         {
             get { return (TimeSpan) ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value; }
-            set { ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value = value; }
+            set
+            {
+                ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value = value;
+                // This base model setting is made to make the base logic right
+                base.TimeStep = value;
+            }
         }
+
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
 
         public bool UseLocalApi { get; set; }
@@ -1299,6 +1309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (File.Exists(mduFilePath))
             {
                 model.mduFile.Read(mduFilePath, model.ModelDefinition, model.Area, (name, current, total) => FireImportProgressChanged(model, "Reading mdu - " + name, current, total));
+                model.SyncModelTimesWithBase();
             }
 
             var netFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.NetFile);
@@ -1312,6 +1323,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             // sync the heat flux model, because events are off during reading
             model.HeatFluxModelType = model.ModelDefinition.HeatFluxModel.Type;
+        }
+
+        internal void SyncModelTimesWithBase()
+        {
+            base.StartTime = StartTime;
+            base.StopTime = StopTime;
+            base.TimeStep = TimeStep;
         }
 
         private static void FireImportProgressChanged(WaterFlowFMModel model, string currentStepName, int currentStep, int totalSteps)

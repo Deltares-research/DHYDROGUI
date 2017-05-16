@@ -391,7 +391,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             model.MdwFile.MdwFilePath = mdwFilePath;
             model.Name = Path.GetFileNameWithoutExtension(mdwFilePath);
             model.ModelDefinition = model.mdwFile.Load(mdwFilePath);
- 
+
+            model.SyncModelTimesWithBase();
+
             var mdwDir = Path.GetDirectoryName(mdwFilePath);
             var allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
            
@@ -828,9 +830,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public override DateTime StartTime { get; set; }
-        public override DateTime StopTime { get; set; }
-        public override TimeSpan TimeStep { get; set; }
+        public override DateTime StartTime
+        {
+            get { return startTime; }
+            set
+            {
+                startTime = value;
+                // This base model setting is made to make the base logic right
+                base.StartTime = value;
+            }
+        }
+
+        public override DateTime StopTime
+        {
+            get { return stopTime; }
+            set
+            {
+                stopTime = value;
+                // This base model setting is made to make the base logic right
+                base.StopTime = value;
+            }
+        }
+
+        public override TimeSpan TimeStep
+        {
+            get { return timeStep; }
+            set
+            {
+                timeStep = value;
+                // This base model setting is made to make the base logic right
+                base.TimeStep = value;
+            }
+        }
 
         [PropertyGrid]
         [DisplayName("Validate before run")]
@@ -1158,6 +1189,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             throw new NotImplementedException();
         }
 
+        internal void SyncModelTimesWithBase()
+        {
+            base.StartTime = StartTime;
+            base.StopTime = StopTime;
+            base.TimeStep = TimeStep;
+        }
+
         private void OnAddedToProject(string mdwFilePath)
         {
             // implicit switch
@@ -1227,6 +1265,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string path;
         private WaveModelDefinition modelDefinition;
         private bool isCoupledToFlow;
+
+        private DateTime startTime;
+
+        private DateTime stopTime;
+
+        private TimeSpan timeStep;
         //private IHydroRegion region;
 
         string IFileBased.Path
