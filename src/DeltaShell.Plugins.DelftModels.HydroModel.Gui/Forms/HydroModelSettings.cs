@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
-using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 using Image = System.Drawing.Image;
@@ -23,7 +19,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
     public partial class HydroModelSettings : UserControl, ILayerEditorView
     {
         private HydroModel model;
-        private readonly IList<INameable> emptyDataSource = new List<INameable>();
         private bool updating;
         private Func<HydroModel, IActivity> addNewActivityCallback;
 
@@ -125,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             set
             {
                 addNewActivityCallback = value;
-                view.AddNewActivityCallback = (hm) =>
+                view.ViewModel.AddNewActivityCallback = (hm) =>
                 {
                     var activity = addNewActivityCallback(hm);
                     RefreshWorkflowsControls();

@@ -19,7 +19,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.PropertyClasses;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;

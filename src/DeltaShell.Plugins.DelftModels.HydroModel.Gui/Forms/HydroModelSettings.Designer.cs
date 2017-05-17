@@ -1,7 +1,4 @@
-﻿using System.Windows.Forms.Integration;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views;
-
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
+﻿namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {
     partial class HydroModelSettings
     {
@@ -38,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.workflowEditorControl = new DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.WorkflowEditorControl();
-            this.WpfElementHost = new System.Windows.Forms.Integration.ElementHost();
+            this.ModelsTimeSettingsView = new System.Windows.Forms.Integration.ElementHost();
             this.view = new DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views.HydroModelTimeSettingsView();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceHydroModel)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -114,15 +111,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             this.workflowEditorControl.CurrentWorkflowChanged += new System.EventHandler<System.EventArgs>(this.workflowEditorControl_CurrentWorkflowChanged);
             this.workflowEditorControl.SelectedActivityChanged += new System.EventHandler<DelftTools.Utils.EventArgs<DelftTools.Shell.Core.Workflow.IActivity>>(this.WorkflowEditorControlSelectedActivityChanged);
             // 
-            // WpfElementHost
+            // ModelsTimeSettingsView
             // 
-            this.WpfElementHost.Dock = System.Windows.Forms.DockStyle.Left;
-            this.WpfElementHost.Location = new System.Drawing.Point(0, 0);
-            this.WpfElementHost.Name = "WpfElementHost";
-            this.WpfElementHost.Size = new System.Drawing.Size(500, 230);
-            this.WpfElementHost.TabIndex = 12;
-            this.WpfElementHost.Text = "WpfElementHost";
-            this.WpfElementHost.Child = this.view;
+            this.ModelsTimeSettingsView.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ModelsTimeSettingsView.Location = new System.Drawing.Point(0, 0);
+            this.ModelsTimeSettingsView.Name = "ModelsTimeSettingsView";
+            this.ModelsTimeSettingsView.Size = new System.Drawing.Size(500, 230);
+            this.ModelsTimeSettingsView.TabIndex = 12;
+            this.ModelsTimeSettingsView.Text = "ModelsTimeSettingsView";
+            this.ModelsTimeSettingsView.Child = this.view;
             // 
             // HydroModelSettings
             // 
@@ -131,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(875, 230);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.WpfElementHost);
+            this.Controls.Add(this.ModelsTimeSettingsView);
             this.Name = "HydroModelSettings";
             this.Size = new System.Drawing.Size(666, 204);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceHydroModel)).EndInit();
@@ -150,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         private WorkflowEditorControl workflowEditorControl;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Integration.ElementHost WpfElementHost;
+        private System.Windows.Forms.Integration.ElementHost ModelsTimeSettingsView;
         private Views.HydroModelTimeSettingsView view;
     }
 }

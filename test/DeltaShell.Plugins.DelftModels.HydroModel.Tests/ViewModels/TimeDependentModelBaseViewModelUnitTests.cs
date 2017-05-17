@@ -10,7 +10,7 @@ using Rhino.Mocks;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 {
     [TestFixture]
-    public class TimeDependentModelBaseViewModelUnitTest
+    public class TimeDependentModelBaseViewModelUnitTests
     {
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
@@ -41,9 +41,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void TestStartTimeChange()
         {
-            var oldStartTime = DateTime.Now;
-            var newStartTime = oldStartTime.AddMonths(2);
-            var initialStopTime = oldStartTime.AddDays(1);
+            var initialStartTime = DateTime.Now;
+            var newStartTime = initialStartTime.AddMonths(2);
+            var initialStopTime = initialStartTime.AddDays(1);
             var initialTimeStep = new TimeSpan(1, 0, 0);
 
             // Initialize mock
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 
             timeDependentModel.Expect(m => m.Name).Return("").Repeat.Times(1);
 
-            timeDependentModel.Expect(m => m.StartTime).Return(oldStartTime).Repeat.Times(1);
+            timeDependentModel.Expect(m => m.StartTime).Return(initialStartTime).Repeat.Times(1);
             timeDependentModel.Expect(m => m.StartTime = newStartTime).Repeat.Times(1);
             timeDependentModel.Expect(m => m.StartTime).Return(newStartTime).Repeat.Times(1);
 
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             mocks.ReplayAll();
 
             var timeDependentModelBaseViewModel = new TimeDependentModelBaseViewModel(timeDependentModel);
-            Assert.AreEqual(oldStartTime, timeDependentModelBaseViewModel.StartTime);
+            Assert.AreEqual(initialStartTime, timeDependentModelBaseViewModel.StartTime);
 
             timeDependentModelBaseViewModel.StartTime = newStartTime;
             Assert.AreEqual(newStartTime, timeDependentModelBaseViewModel.StartTime);
