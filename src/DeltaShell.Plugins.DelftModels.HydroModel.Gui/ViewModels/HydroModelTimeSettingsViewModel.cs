@@ -31,7 +31,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private readonly string parameterValueName = TypeUtils.GetMemberName<Parameter>(p => p.Value);
 
         #region Properties
-        
+
+        public HydroModelTimeSettingsViewModel()
+        {
+            
+        }
+
+        public HydroModelTimeSettingsViewModel(HydroModel hydroModel)
+        {
+            HydroModel = hydroModel;
+        }
+
         public HydroModel HydroModel
         {
             get { return hydroModel; }
@@ -159,12 +169,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                 ErrorTexts.Add(Resources.HydroModelTimeSettingsViewModel_DetermineErrorText_Time_step_must_be_positive);
         }
 
-        private void UpdateDurationText()
+        public void UpdateDurationText()
         {
             var intervalLength = StopTime - StartTime;
             DurationText = string.Format(Resources.HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds, intervalLength.Days, intervalLength.Hours , intervalLength.Minutes, intervalLength.Seconds );
 
-            DurationIsValid = !string.IsNullOrEmpty(DurationText) && intervalLength > TimeSpan.Zero;
+            DurationIsValid = intervalLength > TimeSpan.Zero && !string.IsNullOrEmpty(DurationText);
             DetermineErrorTexts();
         }
 

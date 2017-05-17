@@ -4,6 +4,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 {
@@ -70,9 +71,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private void UpdateDurationText()
         {
             var intervalLength = StopTime - StartTime;
-            DurationText = intervalLength.Days + " days " + intervalLength.Hours + " hours " + intervalLength.Minutes + " minutes " +
-                       intervalLength.Seconds + " seconds";
-            DurationIsValid = ! string.IsNullOrEmpty(DurationText) && intervalLength > TimeSpan.Zero;
+            DurationText = string.Format(Resources.HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds, intervalLength.Days, intervalLength.Hours, intervalLength.Minutes, intervalLength.Seconds);
+            DurationIsValid = intervalLength > TimeSpan.Zero && !string.IsNullOrEmpty(DurationText);
         }
 
         private void OnTimeDependentModelPropertyChanged(object sender, PropertyChangedEventArgs e)

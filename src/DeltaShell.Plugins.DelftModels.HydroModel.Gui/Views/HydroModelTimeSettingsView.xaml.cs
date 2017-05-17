@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
     /// <summary>
     /// Interaction logic for HydroModelTimeSettingsView.xaml
     /// </summary>
-    public partial class HydroModelTimeSettingsView : UserControl
+    public partial class HydroModelTimeSettingsView
     {
         #region Members
 
@@ -21,12 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
         public HydroModelTimeSettingsView()
         {
             InitializeComponent();
-        }
-
-        public Func<HydroModel, IActivity> AddNewActivityCallback
-        {
-            get { return ViewModel.AddNewActivityCallback; }
-            set { ViewModel.AddNewActivityCallback = value; }
         }
     }
 }
