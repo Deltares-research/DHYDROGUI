@@ -1366,12 +1366,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (Network != null)
             {
-                SaveNetwork(); 
+                //SaveNetwork(); 
             }
 
             if (NetworkDiscretization != null)
             {
-                SaveNetworkDiscretization(); 
+                //SaveNetworkDiscretization(); 
             }
 
             if (switchTo)
