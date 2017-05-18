@@ -33,13 +33,6 @@ namespace SobekImport.Tests.Helpers
             if (waterFlowModel1D != null)
             {
                 waterFlowModel1D.ExplicitWorkingDirectory = Path.Combine(tempDirectory, "dflow1d");  // This is the place where the TBL files are copied to. 
-
-                // Explicitly set this since Default has changed from (1 to 2) since tests were written
-                var iadvec1D = waterFlowModel1D.ParameterSettings.FirstOrDefault(s => s.Name == "Iadvec1D");
-                if (iadvec1D != null)
-                {
-                    iadvec1D.Value = "1";
-                }
             }
             rainfallRunoffModel = modelToRun.Activities.OfType<RainfallRunoffModel>().FirstOrDefault();
 
