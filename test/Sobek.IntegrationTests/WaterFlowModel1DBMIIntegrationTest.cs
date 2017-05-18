@@ -2848,6 +2848,12 @@ namespace Sobek.IntegrationTests
         {
             try
             {
+                var iadvec1D = model.ParameterSettings.FirstOrDefault(s => s.Name == "Iadvec1D");
+                if (iadvec1D != null)
+                {
+                    iadvec1D.Value = "1";
+                }
+
                 model.Initialize();
                 Assert.AreEqual(ActivityStatus.Initialized, model.Status,
                     "Model should be in initialized state after it is created.");

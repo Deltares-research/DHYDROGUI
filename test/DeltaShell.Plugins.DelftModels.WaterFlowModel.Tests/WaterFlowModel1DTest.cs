@@ -3397,6 +3397,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var settingObervationPointsInterpolation = flowModel1D.ParameterSettings.First(p => p.Category == ParameterCategory.ObservationPoints && p.Name == "InterpolationType");
             settingObervationPointsInterpolation.Value = "Linear";
 
+            var iadvec1D = flowModel1D.ParameterSettings.FirstOrDefault(s => s.Name == "Iadvec1D");
+            if (iadvec1D != null)
+            {
+                iadvec1D.Value = "1";
+            }
+
             RunModel(flowModel1D);
 
             var waterLevelValues = flowModel1D.OutputWaterLevel.GetValues<double>();
