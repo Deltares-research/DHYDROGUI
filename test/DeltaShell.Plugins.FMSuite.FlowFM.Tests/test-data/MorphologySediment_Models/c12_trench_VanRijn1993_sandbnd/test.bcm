@@ -1,0 +1,13 @@
+table-name          'Boundary Section : 1'
+contents            'Uniform'
+location            't01_001'
+time-function       'non-equidistant'
+reference-time      20000218
+time-unit           'minutes'
+interpolation       'linear'
+parameter           'time' unit '[min]'
+parameter           'transport excl pores Sediment sand' unit '[m3/s/m]'
+parameter           'transport excl pores Tracer sand' unit '[m3/s/m]'
+records-in-table     2
+0.0000          0.0    2.7500000e-6
+6.7108864e+07   0.0    2.7500000e-6

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -991,6 +989,188 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 Assert.NotNull(loadedModel.NetFilePath);
                 Assert.AreEqual(0, loadedModel.Grid.Cells.Count);
+            }
+        }
+
+        [Test]
+        public void SaveAndLoadMorphologySedimentSimpleModel()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                const string path = "mdu.dsproj";
+                app.SaveProjectAs(path); // save to initialize file repository..
+
+                var model = new WaterFlowFMModel();
+                //Enable Morphology and Sediment
+                model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                app.Project.RootFolder.Add(model);
+                
+                app.SaveProjectAs(path);
+
+                //Check sed and mor files exist
+                var morFile = model.MorFilePath;
+                var sedFile = model.SedFilePath;
+
+                Assert.IsTrue(File.Exists(morFile));
+                Assert.IsTrue(File.Exists(sedFile));
+                app.CloseProject();
+
+                app.OpenProject(path);
+
+                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+
+                Assert.IsNotNull(loadedModel);
+                
+            }
+        }
+
+        [Test]
+        public void SaveAndLoadMorphologySedimentParametersSimpleModel()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                const string path = "mdu.dsproj";
+                app.SaveProjectAs(path); // save to initialize file repository..
+
+                var model = new WaterFlowFMModel();
+                //Enable Morphology and Sediment
+                model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                app.Project.RootFolder.Add(model);
+
+                model.SedimentOverallProperties.Add(new SedimentProperty<double>("MyOverall Property", 0,0, false, 1, false, string.Empty,string.Empty, false) {Value = 0.5});
+                var fraction = new SedimentFraction();
+                var sedType = fraction.AvailableSedimentTypes.ElementAtOrDefault(1);
+                Assert.IsNotNull(sedType);
+                /*var sedTypeFirstDoubleProperty = sedType.Properties.OfType<SedimentProperty<double>>().FirstOrDefault();
+                Assert.IsNotNull(sedTypeFirstDoubleProperty);*/
+                var sedTypeFirstDoubleProperty = new SedimentProperty<double>("MySediment Property", 2, 1.5, false, 2.5, false, string.Empty, String.Empty, false);
+                sedTypeFirstDoubleProperty.Value = new Random().NextDouble() * (sedTypeFirstDoubleProperty.MaxValue - sedTypeFirstDoubleProperty.MinValue) + sedTypeFirstDoubleProperty.MinValue;
+
+
+                app.SaveProjectAs(path);
+
+                //Check sed and mor files exist
+                var morFile = model.MorFilePath;
+                var sedFile = model.SedFilePath;
+
+                Assert.IsTrue(File.Exists(morFile));
+                Assert.IsTrue(File.Exists(sedFile));
+                app.CloseProject();
+
+                app.OpenProject(path);
+
+                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+
+                Assert.IsNotNull(loadedModel);
+                
+            }
+        }
+
+        [Test]
+        [TestCase(@"c01_trench_VanRijn1993\test.mdu")]
+        [TestCase(@"c02_trench_EH\test.mdu")]
+        [TestCase(@"c03_fractions\test.mdu")]
+        [TestCase(@"c04_concentration_bnds\test.mdu")]
+        [TestCase(@"c06_spatiald50\test.mdu")]
+        [TestCase(@"c07_sedimentavailability\test.mdu")]
+        [TestCase(@"c08_moroutput_NETCDF\test.mdu")]
+        [TestCase(@"c09_moroutput_UGRID\test.mdu")]
+        [TestCase(@"c10_fixed_layer\test.mdu")]
+        [TestCase(@"c12_trench_VanRijn1993_sandbnd\test.mdu")]
+        [TestCase(@"c13_bedload_bcm_depth_function_of_time\test.mdu")]
+        [TestCase(@"c14_morphology_with_weir\test.mdu")]
+        [TestCase(@"c15_morphology_with_weir_no_bedupd\test.mdu")]
+        [TestCase(@"c16_morphology_off_beyer004_contr10_bedlevtype1\test.mdu")]
+        [TestCase(@"c17_bedslope_effect_slope022\test.mdu")]
+        [TestCase(@"c18_bedslope_effect_slope044\test.mdu")]
+        [TestCase(@"c19_bedslope_effect_slope-044_invDir\test.mdu")]
+        [TestCase(@"c20_bedslope_effect_slope044_AShld0425\test.mdu")]
+        [TestCase(@"c21_boundary_condition_icond2\test.mdu")]
+        [TestCase(@"c22_boundary_condition_icond2_constant\test.mdu")]
+        [TestCase(@"c23_boundary_condition_icond3\test.mdu")]
+        [TestCase(@"c24_boundary_condition_icond3_constant\test.mdu")]
+        [TestCase(@"c25_boundary_condition_icond4\test.mdu")]
+        [TestCase(@"c26_boundary_condition_icond4_graded\test.mdu")]
+        [TestCase(@"c27_boundary_condition_icond4_none\test.mdu")]
+        [TestCase(@"c28_boundary_condition_icond2_graded\test.mdu")]
+        [TestCase(@"c29_curvebend_spiral\test.mdu")]
+        [TestCase(@"c30_curvebend_spiral_mor\test.mdu")]
+        [TestCase(@"c31_curvebend_spiral_mor_Bedup\test.mdu")]
+        [TestCase(@"c35_dad_inside_dumping\test.mdu")]
+        [TestCase(@"c36_dad_outside_dumping\test.mdu")]
+        [TestCase(@"c37_dad_2dredge1dump\test.mdu")]
+        [TestCase(@"c38_dad_dumpisdredge\test.mdu")]
+        [TestCase(@"c39_dad_sandmining\test.mdu")]
+        [TestCase(@"c40_dad_inside_dumping_layered_bed\test.mdu")]
+        [TestCase(@"c41_dad_outside_dumping_layered_bed\test.mdu")]
+        [TestCase(@"c42_dad_2dredge1dump_layered_bed\test.mdu")]
+        [TestCase(@"c43_daddumpisdredge_layered_bed\test.mdu")]
+        [TestCase(@"c44_dad_sandmining_layered_bed\test.mdu")]
+        [TestCase(@"c46_dad_Sediment_nourishment\test.mdu")]
+        public void OpenSaveAndLoadAllMorphologySedimentTestModels(string mduTestPath)
+        {
+            var testModelPath = Path.Combine(@"MorphologySediment_Models\", mduTestPath);
+            var mduPath =
+                TestHelper.GetTestFilePath(testModelPath);
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                var model = new WaterFlowFMModel(mduPath);
+                //Enable Morphology and Sediment
+                model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                app.Project.RootFolder.Add(model);
+
+                app.SaveProjectAs(mduPath);
+                app.CloseProject();
+
+                app.OpenProject(mduPath);
+
+                var loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+
+                Assert.IsNotNull(loadedModel);
+
+            }
+        }
+
+        [Test]
+        [TestCase(@"MorAndSedFile.mdu", true)]
+        [TestCase(@"MorFileAndNoSedFile.mdu", true)] 
+        [TestCase(@"NoMorFileAndSedFile.mdu", false)]
+        [TestCase(@"NoMorFileAndNoSedFile.mdu", false)]
+        public void LoadMduDeterminesIfUseMorSed(string mduTestPath, bool morSedEnabled)
+        {
+            /*
+             * We only set to True UseMorSed if the *.mor (morphology) file is present 
+             * In any other case we do not care.             
+             */
+            var testModelPath = Path.Combine(@"MorphologySediment_Models\SimpleModels\", mduTestPath);
+            var mduPath = TestHelper.GetTestFilePath(testModelPath);
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+
+            using (var model = new WaterFlowFMModel(mduPath))
+            {
+                Assert.AreEqual(morSedEnabled, model.UseMorSed);
             }
         }
     }

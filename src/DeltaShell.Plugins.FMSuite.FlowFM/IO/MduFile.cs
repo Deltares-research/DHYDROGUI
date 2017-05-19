@@ -6,13 +6,11 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -38,6 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string ObsCrossExtension = "crs.pli";
         public const string DryAreaExtension = "_dry.pol";
         public const string DryPointExtension = "_dry.xyz";
+        public const string MorphologyExtension = ".mor";
+        public const string SedimentExtension = ".sed";
 
         private readonly Dictionary<string, string> mduComments = new Dictionary<string, string>();
 
@@ -266,6 +266,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public void WriteProperties(string filePath, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures, bool writePartionFile = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
         {
+            WriteMorphologySediment(filePath, modelDefinition);
+
             OpenOutputFile(filePath);
             try
             {
@@ -273,13 +275,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 WriteLine("# Deltares, FM-Suite DFlowFM Model Version " + FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion);
                 modelDefinition.First(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Version, StringComparison.InvariantCultureIgnoreCase)).Value = FMDllVersion;
                 modelDefinition.First(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.GuiVersion, StringComparison.InvariantCultureIgnoreCase)).Value = FMSuiteFlowModelVersion;
+                var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
+                                                                    && p.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty /*Remove morphology unknown properties*/
+                                                                    && p.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty)/*Remove sediment unknown properties that should be located on the sediment file*/
+                                                        .GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
-                var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly").GroupBy(p => p.PropertyDefinition.FileCategoryName);
+                propertiesByGroup = RemoveMorAndSedPropertiesIfNeeded(propertiesByGroup, modelDefinition, writeExtForcings, writeFeatures);
+                
                 foreach (var propertyGroup in propertiesByGroup)
                 {
                     WriteLine("");
                     WriteLine("[" + propertyGroup.Key + "]");
-
                     foreach (var prop in propertyGroup)
                     {
                         if (!writePartionFile && prop.PropertyDefinition.MduPropertyName.Equals("PartitionFile"))
@@ -315,6 +321,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 CloseOutputFile();
             }
+        }
+
+        private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures)
+        {
+            /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
+
+            propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
+            var useMorSedProp = modelDefinition.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
+            if (useMorSedProp != null)
+            {
+                int useMorSed;
+                if ( int.TryParse(GetPropertyValue(useMorSedProp, writeExtForcings, writeFeatures), out useMorSed) && useMorSed != 1)
+                {
+                    propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
+                }
+            }
+            return propertiesByGroup;
+        }
+
+        
+
+        private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
+        {
+            var morFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
+            var sedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
+            
+            modelDefinition.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile)).Value = System.IO.Path.GetFileName(morFilePath);
+            modelDefinition.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile)).Value = System.IO.Path.GetFileName(sedFilePath);
         }
 
         private static string GetPropertyValue(WaterFlowFMProperty prop, bool writeExtForcings, bool writeFeatures)
@@ -477,15 +511,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, Action<string,int,int> reportProgress = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
-            var totalSteps = 4;
+            var totalSteps = 5;
 
             reportProgress("Reading properties", 1, totalSteps);
             ReadProperties(filePath, modelDefinition);
 
-            reportProgress("Reading area features", 2, totalSteps);
+            reportProgress("Reading morphology properties", 2, totalSteps);
+            ReadMorphologyFile(filePath, modelDefinition);
+
+            reportProgress("Reading area features", 3, totalSteps);
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
-            reportProgress("Reading external forcings file", 3, totalSteps);
+            reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
             if (extForceFileProperty != null)
             {
@@ -499,7 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            reportProgress("Reading boundary external forcings file", 4, totalSteps);
+            reportProgress("Reading boundary external forcings file", 5, totalSteps);
             var bndExtForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             if (bndExtForceFileProperty != null)
             {
@@ -513,6 +550,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
+        }
+
+        private void ReadMorphologyProperties(string mduFilePath, string propertyKey, WaterFlowFMModelDefinition definition)
+        {
+            var filePath = MduFileHelper.GetSubfilePath(mduFilePath, definition.GetModelProperty(propertyKey));
+            if (!File.Exists(filePath)) return;
+
+            var propertiesCategories = new SedMorDelftIniReader().ReadDelftIniFile(filePath);
+            foreach (var category in propertiesCategories)
+            {
+                var currentGroupName = category.Name;
+                if(currentGroupName == MorphologyFile.GeneralHeader) continue; // don't store MorphologyFileInformation in model definition
+                foreach (var readProp in category.Properties)
+                {
+                    if (!definition.ContainsProperty(readProp.Name))
+                    {
+                        // create definition for unknown property:
+                        var propDef = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(MorphologyFile.MorphologyUnknownProperty,
+                                readProp.Name, readProp.Comment);
+                        propDef.Category = currentGroupName;
+                        var newProp = new WaterFlowFMProperty(propDef, readProp.Value);
+                        /*  We set the value now to avoid catching a 'used custom value' in the SedimentFile, or elsewhere */
+                        if (!string.IsNullOrEmpty(readProp.Value))
+                            newProp.SetValueAsString(readProp.Value);
+                        definition.AddProperty(newProp);
+                        continue;
+                    }
+                    if (!string.IsNullOrEmpty(readProp.Value))
+                    {
+                        definition.GetModelProperty(readProp.Name).SetValueAsString(readProp.Value);
+                    }
+                }
+            }
+        }
+
+        private void ReadMorphologyFile(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
+        {
+            if ( ! modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty) )
+            {
+                ReadMorphologyProperties(mduFilePath, KnownProperties.MorFile, modelDefinition);
+                modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            }
         }
 
         private void ReadProperties(string filePath, WaterFlowFMModelDefinition definition)

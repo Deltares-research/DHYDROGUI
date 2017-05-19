@@ -1,0 +1,28 @@
+table-name          'Boundary Section : 1'
+contents            'Uniform'
+location            'upstream'
+time-function       'non-equidistant'
+reference-time      20151101
+time-unit           'minutes'
+interpolation       'linear'
+parameter           'time' unit '[min]'
+parameter           'depth'  unit  '[m]'
+parameter           'mass fraction Sediment sand'  unit  '[-]'
+parameter           'mass fraction Sediment tracer'  unit  '[-]'
+records-in-table     2
+0.00000000          0.5   1   0 
+20.0000000          1.0   0   1 
+table-name          'Boundary Section : 2'
+contents            'Uniform'
+location            'downstream'
+time-function       'non-equidistant'
+reference-time      20151101
+time-unit           'minutes'
+interpolation       'linear'
+parameter           'time' unit '[min]'
+parameter           'depth'  unit  '[m]'
+parameter           'mass fraction Sediment sand'  unit  '[-]'
+parameter           'mass fraction Sediment tracer'  unit  '[-]'
+records-in-table     2
+0.00000000          0.5   1   0 
+20.0000000          1.0   0   1 

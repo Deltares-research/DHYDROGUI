@@ -114,7 +114,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
@@ -141,12 +140,17 @@
     <Compile Include="FeatureData\FlowBoundaryConditionFactory.cs" />
     <Compile Include="FeatureData\SupportedVerticalProfileTypes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
+    <Compile Include="IO\BcmFile.cs" />
+    <Compile Include="IO\BcmFileFlowBoundaryDataBuilder.cs" />
+    <Compile Include="IO\DelftIniCategoryExtension.cs" />
+    <Compile Include="IO\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\Exporters\FMGridPartitionExporter.cs" />
     <Compile Include="IO\Exporters\FMModelPartitionExporter.cs" />
     <Compile Include="IO\Exporters\FMPartitionExporterBase.cs" />
     <Compile Include="IO\Exporters\GeometryZipExporter.cs" />
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporter.cs" />
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
+    <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />
     <Compile Include="IO\Importers\FMRstFileImporter.cs" />
     <Compile Include="IO\Importers\PolFileImporterExporter.cs" />
     <Compile Include="IO\LinkCoveragesDoneReadingEventArgs.cs" />
@@ -196,6 +200,15 @@
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="FeatureData\SourceAndSink.cs" />
+    <Compile Include="ModelDefinition\ISediment.cs" />
+    <Compile Include="ModelDefinition\ISedimentFormulaType.cs" />
+    <Compile Include="ModelDefinition\ISedimentFraction.cs" />
+    <Compile Include="ModelDefinition\ISedimentFractionExtensions.cs" />
+    <Compile Include="ModelDefinition\ISedimentProperty.cs" />
+    <Compile Include="ModelDefinition\ISedimentType.cs" />
+    <Compile Include="ModelDefinition\SedimentFraction.cs" />
+    <Compile Include="ModelDefinition\SedimentFractionHelper.cs" />
+    <Compile Include="ModelDefinition\SedimentProperty.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMFileBasedItemFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
@@ -204,21 +217,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SedMor\IO\MorFile.cs" />
-    <Compile Include="SedMor\IO\SedFile.cs" />
-    <Compile Include="SedMor\IO\SedMorDelftIniReader.cs" />
-    <Compile Include="SedMor\IO\SedMorDelftIniWriter.cs" />
-    <Compile Include="SedMor\IO\SedMorFileHelper.cs" />
-    <Compile Include="SedMor\IO\TraFile.cs" />
-    <Compile Include="SedMor\MorphologyBoundary.cs" />
-    <Compile Include="SedMor\ModelDefinition\MorphologyModelDefinition.cs" />
-    <Compile Include="SedMor\ModelDefinition\MorProperties.cs" />
-    <Compile Include="SedMor\ModelDefinition\SedimentModelDefinition.cs" />
-    <Compile Include="SedMor\ModelDefinition\SedMorProperty.cs" />
-    <Compile Include="SedMor\ModelDefinition\SedMorPropertyDefinition.cs" />
-    <Compile Include="SedMor\ModelDefinition\SedProperties.cs" />
-    <Compile Include="SedMor\ModelDefinition\TransportFormulation.cs" />
-    <Compile Include="SedMor\Sediment.cs" />
+    <Compile Include="IO\MorphologyFile.cs" />
+    <Compile Include="IO\SedimentFile.cs" />
+    <Compile Include="IO\SedMorDelftIniReader.cs" />
+    <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />
@@ -227,6 +229,7 @@
     <Compile Include="Validation\WaterFlowFMModelTimersValidator.cs" />
     <Compile Include="Validation\WaterFlowFmModelValidationExtensions.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidator.cs" />
+    <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidator.cs" />
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="WaterFlowFMFeatureValueConverter.cs" />
@@ -264,6 +267,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="dflowfm-mor-properties.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="dflowfm-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -452,6 +458,9 @@
     <Content Include="Resources\GateSmall.png" />
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SedMor\IO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

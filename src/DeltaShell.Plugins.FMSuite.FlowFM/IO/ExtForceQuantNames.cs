@@ -22,6 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string OpenFlowConditionAtBound = "outflowbnd";
         public const string SalinityAtBound = "salinitybnd";
         public const string TemperatureAtBound = "temperaturebnd";
+        public const string ConcentrationAtBound = "concentrationbnd";
+        public const string BedLevelAtBound = "bedlevelbnd";
+        public const string BedLevelChangeAtBound = "bedlevelchangebnd";
+        public const string BedLoadAtBound = "bedloadbnd";
         public const string TracerAtBound = "tracerbnd";
         public const string LowerGateLevel = "lowergatelevel";
         public const string DamLevel = "damlevel";
@@ -95,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {PointwiseOperationType.OverwriteWhereMissing, Operator.ApplyOnly},
                 {PointwiseOperationType.Add, Operator.Add},
                 {PointwiseOperationType.Multiply, Operator.Multiply}
-            }; 
+            };
 
         // operator strings
         public static readonly IDictionary<Operator, string> OperatorToStringMapping =
@@ -147,10 +151,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {OpenFlowConditionAtBound, FlowBoundaryQuantityType.Outflow},
                 {SalinityAtBound, FlowBoundaryQuantityType.Salinity},
                 {TemperatureAtBound,FlowBoundaryQuantityType.Temperature},
+                {ConcentrationAtBound,FlowBoundaryQuantityType.SedimentConcentration},
+                {BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+                {BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed},
+                {BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
                 {QhAtBound, FlowBoundaryQuantityType.WaterLevel}
             };
 
-        
+
 
         /// <summary>
         /// Try to parse the quantity name and see if it is a boundary.
@@ -162,7 +170,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 quantityType = FlowBoundaryQuantityType.Tracer;
                 return true;
             }
-            return BoundaryToQuantityMapping.TryGetValue(standardName, out quantityType);
+
+            var mapping = BoundaryToQuantityMapping.FirstOrDefault(m => standardName.StartsWith(m.Key));
+            quantityType = mapping.Value;
+
+            return (mapping.Key != null);
         }
 
         /// <summary>
@@ -179,6 +191,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return QhAtBound;
             }
+            if (quantity == FlowBoundaryQuantityType.SedimentConcentration)
+            {
+                return ConcentrationAtBound + boundaryCondition.SedimentFractionName;
+            }
             if (BoundaryToQuantityMapping.Values.Contains(quantity))
             {
                 return BoundaryToQuantityMapping.First(kvp => kvp.Value.Equals(quantity)).Key;
@@ -191,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         public static string GetPliQuantitySuffix(IFeatureData featureData)
         {
-            var boundaryCondition= featureData as IBoundaryCondition;
+            var boundaryCondition = featureData as IBoundaryCondition;
             if (boundaryCondition != null)
             {
                 var quantity = boundaryCondition.VariableName;
@@ -239,6 +255,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (quantity.Equals(FlowBoundaryQuantityType.Temperature.ToString()))
                 {
                     return "_tmp";
+                }
+                if (quantity.Equals(FlowBoundaryQuantityType.SedimentConcentration.ToString()))
+                {
+                    return "_con";
+                }
+                if (quantity.Equals(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed.ToString()))
+                {
+                    return "_blp";
+                }
+                if (quantity.Equals(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed.ToString()))
+                {
+                    return "_blcp";
+                }
+                if (quantity.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport.ToString()))
+                {
+                    return "_blt";
                 }
                 return "_" + boundaryCondition.VariableName.ToLower().Substring(0, 3);
             }

@@ -46,6 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string AreaKey = "AREA";
         public const string AveragingTypeKey = "AVERAGINGTYPE";
         public const string RelSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
+        private const string InitialTracerPrefix = "initialtracer";
+        private const string InitialSpatialVaryingSedimentPrefix = "initialspatialvaryingsediment";
         private static readonly string[] UnsupportedQuantityKeys = { "WUANTITY", "_UANTITY" };
 
         // items that existed in the file when the file was read
@@ -72,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         /// <summary>
         /// Writes the model definition external forcings to file.
-        /// </summary>
+        /// </sumzmary>
         /// <param name="extForceFilePath">File path</param>
         /// <param name="modelDefinition">External forcings data</param>
         /// <param name="writeBoundaryConditions">Whether we are writing boundary conditions.</param> 
@@ -212,8 +214,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var tracerName in modelDefinition.InitialTracerNames)
             {
                 extForceFileItems.AddRange(
-                    WriteSpatialData("initialtracer" + tracerName,
+                    WriteSpatialData(InitialTracerPrefix + tracerName,
                     modelDefinition.GetSpatialOperations(tracerName))
+                    .Distinct());
+            }
+
+            foreach (var spatiallyVaryingSedimentPropertyName in modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames)
+            {
+                extForceFileItems.AddRange(
+                    WriteSpatialData(InitialSpatialVaryingSedimentPrefix + spatiallyVaryingSedimentPropertyName,
+                    modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName))
                     .Distinct());
             }
 
@@ -833,11 +843,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 WaterFlowFMModelDefinition.DiffusivityDataItemName);
             foreach (var forceFileItem in extForceFileItems)
             {
-                if (forceFileItem.Quantity.StartsWith("initialtracer"))
+                if (forceFileItem.Quantity.StartsWith(InitialTracerPrefix))
                 {
-                    string tracerName = forceFileItem.Quantity.Substring(13);
+                    string tracerName = forceFileItem.Quantity.Substring(InitialTracerPrefix.Length);
                     ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity, tracerName);
                 }
+                else if (forceFileItem.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix))
+                {
+                    string spatialvaryingsedimentname = forceFileItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length); // remove prefix to get the name
+                    ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity, spatialvaryingsedimentname);
+                }
+
             }
         }
 

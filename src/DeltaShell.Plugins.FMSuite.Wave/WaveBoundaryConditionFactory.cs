@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             get { return false; }
         }
 
-        public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, string quantity, BoundaryConditionDataType dataType)
+        public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, string quantity, BoundaryConditionDataType dataType, string quantityType = null)
         {
             var bc = new WaveBoundaryCondition(dataType)
                 {

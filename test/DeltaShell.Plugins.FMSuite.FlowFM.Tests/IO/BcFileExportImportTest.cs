@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -298,6 +300,136 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(data.Components[1].GetValues<double>().ToList().SequenceEqual(phases));
             Assert.IsTrue(data.Components[2].GetValues<double>().ToList().SequenceEqual(ampcorrections));
             Assert.IsTrue(data.Components[3].GetValues<double>().ToList().SequenceEqual(phasecorrections));
+        }
+
+        [Test]
+        [Category(TestCategory.WorkInProgress)]
+        // this test should eventually be moved to BcmFileExportImportTest (bcmFile Importer doesn't currently exist) 
+        public void ExportImportSedimentConcentrationToSingleFile()
+        {
+            //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
+            model.Name = "newname";
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            model.SedimentFractions.Add(sedFrac);
+
+            var boundary = new Feature2D
+            {
+                Name = "bound",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var fbcFactory = new FlowBoundaryConditionFactory();
+            fbcFactory.Model = model;
+            var bCond = fbcFactory.CreateBoundaryCondition(boundary,
+                    sedFrac.Name,
+                    BoundaryConditionDataType.TimeSeries,
+                    EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
+
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(bCond);
+
+            bCond.AddPoint(0);
+            var dataAtZero = bCond.GetDataAtPoint(0);
+            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 0.0 };
+
+            var exporter = new BcFileExporter
+            {
+                WriteMode = BcFile.WriteMode.SingleFile
+            };
+            exporter.Export(model.BoundaryConditionSets, "sedimentConcentration.bc");
+
+            Assert.IsTrue(File.Exists("sedimentConcentration.bc"));
+
+            var fileText = File.ReadAllText("sedimentConcentration.bc");
+            var expectedText =
+                "[forcing]\r\nName                            = L1_0001\r\nFunction                        = harmonic\r\nQuantity                        = harmonic component\r\nUnit                            = minutes\r\nQuantity                        = waterlevelbnd amplitude\r\nUnit                            = m\r\nQuantity                        = waterlevelbnd phase\r\nUnit                            = deg\r\n0    1    0\r\n0.7  0.5  0\r\n\r\n[forcing]\r\nName                            = L1_0001\r\nFunction                        = timeseries\r\nTime-interpolation              = linear\r\nVertical position type          = single\r\nVertical interpolation          = linear\r\nQuantity                        = time\r\nQuantity                        = concentrationbndfrac1\r\nUnit                            = kg/m³\r\nVertical position               = 1\r\n20000101000000  0\r\n\r\n";
+            Assert.True(fileText.Equals(expectedText));
+            //Import
+            var importer = new BcFileImporter
+            {
+                DeleteDataBeforeImport = false,
+
+                FilePaths = new[] { "sedimentConcentration.bc" }
+            };
+            importer.ImportItem(null, model.BoundaryConditionSets);
+
+            var scBoundCond =
+                model.BoundaryConditions.FirstOrDefault(
+                    bc => bc.DataType == BoundaryConditionDataType.TimeSeries);
+
+            Assert.IsNotNull(scBoundCond);
+            Assert.IsTrue(scBoundCond.DataPointIndices.Contains(0));
+
+            var data = scBoundCond.GetDataAtPoint(0);}
+
+        [Test]
+        [Category(TestCategory.WorkInProgress)]
+        // this test should eventually be moved to BcmFileExportImportTest (bcmFile Importer doesn't currently exist) 
+        public void ExportImportSedimentBedLoadToSingleFile()
+        {
+            //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
+            model.Name = "newname";
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac1 = new SedimentFraction() { Name = "frac1" };
+            var sedFrac2 = new SedimentFraction() { Name = "frac2" };
+            model.SedimentFractions.Add(sedFrac1);
+            model.SedimentFractions.Add(sedFrac2);
+
+            var boundary = new Feature2D
+            {
+                Name = "bound",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var fbcFactory = new FlowBoundaryConditionFactory();
+            fbcFactory.Model = model;
+            var boundCond = fbcFactory.CreateBoundaryCondition(boundary,
+                    FlowBoundaryQuantityType.MorphologyBedLoadTransport.ToString(),
+                    BoundaryConditionDataType.TimeSeries,
+                    EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.MorphologyBedLoadTransport));
+
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(boundCond);
+
+            boundCond.AddPoint(0);
+            var dataAtZero = boundCond.GetDataAtPoint(0);
+            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 0.0, 1.2 };
+
+            var exporter = new BcFileExporter
+            {
+                WriteMode = BcFile.WriteMode.SingleFile
+            };
+            exporter.Export(model.BoundaryConditionSets, "sedimentBedLoadTransport.bc");
+
+            Assert.IsTrue(File.Exists("sedimentBedLoadTransport.bc"));
+
+            var fileText = File.ReadAllText("sedimentBedLoadTransport.bc");
+            var expectedText =
+                "[forcing]\r\nName                            = L1_0001\r\nFunction                        = harmonic\r\nQuantity                        = harmonic component\r\nUnit                            = minutes\r\nQuantity                        = waterlevelbnd amplitude\r\nUnit                            = m\r\nQuantity                        = waterlevelbnd phase\r\nUnit                            = deg\r\n0    1    0\r\n0.7  0.5  0\r\n\r\n[forcing]\r\nName                            = L1_0001\r\nFunction                        = timeseries\r\nTime-interpolation              = linear\r\nQuantity                        = time\r\nQuantity                        = bedloadbndfrac1\r\nUnit                            = -\r\nQuantity                        = bedloadbndfrac2\r\nUnit                            = -\r\n20000101000000  0  1.2\r\n\r\n";
+            Assert.True(fileText.Equals(expectedText));
+            
+            //Import
+            var importer = new BcFileImporter
+            {
+                DeleteDataBeforeImport = false,
+
+                FilePaths = new[] { "sedimentBedLoadTransport.bc" }
+            };
+            importer.ImportItem(null, model.BoundaryConditionSets);
+
+            var scBoundCond =
+                model.BoundaryConditions.FirstOrDefault(
+                    bc => bc.DataType == BoundaryConditionDataType.TimeSeries);
+
+            Assert.IsNotNull(scBoundCond);
+            Assert.IsTrue(scBoundCond.DataPointIndices.Contains(0));
+
+            var data = scBoundCond.GetDataAtPoint(0);
         }
     }
 }

@@ -31,6 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private readonly string tracerNamePropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.TracerName);
 
+        private readonly string sedimentFractionNamePropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.SedimentFractionName);
+
         private readonly string thatcherHarlemanPropertyName =
             TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ThatcherHarlemanTimeLag);
 
@@ -160,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (e.PropertyName == forcingTypePropertyName || e.PropertyName == verticalProfilePropertyName ||
                 e.PropertyName == conditionTypePropertyName || e.PropertyName == reflectionAlphaPropertyName ||
                 e.PropertyName == factorPropertyName || e.PropertyName == offsetPropertyName || e.PropertyName == tracerNamePropertyName ||
-                e.PropertyName == thatcherHarlemanPropertyName)
+                e.PropertyName == thatcherHarlemanPropertyName || e.PropertyName == sedimentFractionNamePropertyName )
             {
                 UpdateView();
             }

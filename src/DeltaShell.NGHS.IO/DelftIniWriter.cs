@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO
         ///   or volume label syntax.
         /// </exception>
         /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
-        public void WriteDelftIniFile(IEnumerable<IDelftIniCategory> categories, string iniFile, bool writeComment = true)
+        public virtual void WriteDelftIniFile(IEnumerable<IDelftIniCategory> categories, string iniFile, bool writeComment = true)
         {
             OpenOutputFile(iniFile);
             try

@@ -1,0 +1,5 @@
+* COLUMNN=3
+* COLUMN1=Period (min) or Astronomical Componentname
+* COLUMN2=Amplitude (m3/s)
+* COLUMN3=Phase (deg)
+0.0           0.3          0.0

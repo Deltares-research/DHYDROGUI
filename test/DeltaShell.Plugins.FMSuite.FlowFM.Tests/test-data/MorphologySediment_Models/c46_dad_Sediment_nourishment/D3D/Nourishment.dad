@@ -1,0 +1,27 @@
+*
+* Comments are allowed on several places in this input file
+* For example here
+*
+[DredgeFileInformation]
+   FileCreatedBy    = WL | Delft Hydraulics, Delft3D-QUICKIN Version 4.11.00; Feb 2004
+   FileCreationDate = 15:32:06, 05-03-2004
+   FileVersion      = 01.02 
+   DredgeWhileMorfac0 = true     
+   PolygonFile      = nourishment.pol
+  
+[Nourishment]
+ Name         = NOR
+ Volume       = 0.20
+ #MaxVolRate   = 3650.000
+ #Sediment     = Sediment sand
+ #SedPercentage = 100
+ DistrOverDump = 1
+ Dump  = Nor
+ Percentage = 100
+ 
+[Nourishment]
+ Name         = KUIL
+ Volume       = 0.50
+ DistrOverDump = 1
+ Dump  = KUIL
+ Percentage = 100

@@ -9,11 +9,13 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public class FlowBoundaryConditionEditorController : BoundaryConditionEditorController
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionEditorController));
         private WaterFlowFMModel model;
 
         public override BoundaryConditionEditor Editor
@@ -70,18 +72,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             // return if there is no editor.
             if (Editor == null || model == null) return;
 
-            if (Equals(sender, model.TracerDefinitions))
+            if (Equals(sender, model.TracerDefinitions)
+                || Equals(sender, model.SedimentFractions))
             {
                 Editor.RefreshQuantitiesComboBox();
             }
         }
-
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // return if there is no editor.
             if (Editor == null) return;
 
-            if (e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSalinity) ||
+            if (e.PropertyName == TypeUtils.GetMemberName(() => Model.UseMorSed) ||
+                e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSalinity) ||
                 e.PropertyName == TypeUtils.GetMemberName(() => Model.HeatFluxModelType))
             {
                 Editor.RefreshAvailableCategories();
@@ -151,7 +154,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 //                yield return FlowBoundaryQuantityType.Outflow;
                 yield return FlowBoundaryQuantityType.Salinity;
                 yield return FlowBoundaryQuantityType.Temperature;
+                yield return FlowBoundaryQuantityType.SedimentConcentration;
                 yield return FlowBoundaryQuantityType.Tracer;
+                yield return FlowBoundaryQuantityType.MorphologyBedLevelPrescribed;
+                yield return FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed;
+                yield return FlowBoundaryQuantityType.MorphologyBedLoadTransport;
             }
         }
 
@@ -167,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private bool IsActiveProcess(string process)
         {
-            // Filter out Salinity and temperature if not active:
+            // Filter out Sediment, SedimentConcentration, Salinity and temperature if not active:
             if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.Salinity))
             {
                 return (Model != null && Model.UseSalinity);
@@ -175,6 +182,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.Temperature))
             {
                 return (Model != null && Model.UseTemperature);
+            }
+            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.SedimentConcentration)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLoadTransport))
+            {
+                return (Model != null && Model.UseMorSed);
             }
             return true;
         }
@@ -239,6 +253,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     yield return tracerDefinition;
                 }
             }
+            else if (type == FlowBoundaryQuantityType.SedimentConcentration)
+            {
+                foreach (var fraction in model.SedimentFractions.Where(sf => sf.CurrentSedimentType.Key != "bedload"))
+                {
+                    yield return fraction.Name;
+                }
+            }
             else
             {
                 yield return FlowBoundaryCondition.GetVariableNameForQuantity(type);
@@ -261,14 +282,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (Enum.TryParse(variable, out flowBoundaryQuantityType))
             {
-                return FlowBoundaryCondition.GetSupportedDataTypesForQuantity(flowBoundaryQuantityType);
+                if(!flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport) 
+                    || flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport) && model.SedimentFractions.Count > 0)
+                    return FlowBoundaryCondition.GetSupportedDataTypesForQuantity(flowBoundaryQuantityType);
+                else
+                {
+                    if (flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport) &&
+                        model.SedimentFractions.Count == 0)
+                    {
+                        Log.Warn("First, at least a fraction must be created.");
+                    }
+                }
             }
             // tracers are a special case. They need to be checked with StartsWith.
             else if (model.TracerDefinitions.Contains(variable))
             {
                 return FlowBoundaryCondition.GetSupportedDataTypesForQuantity(FlowBoundaryQuantityType.Tracer);
             }
-            else return Enumerable.Empty<BoundaryConditionDataType>();
+            else if (model.SedimentFractions.Select(f => f.Name).Contains(variable))
+            {
+                return FlowBoundaryCondition.GetSupportedDataTypesForQuantity(FlowBoundaryQuantityType.SedimentConcentration);
+            }
+            return Enumerable.Empty<BoundaryConditionDataType>();
         }
 
         public override void InsertBoundaryCondition(BoundaryConditionSet boundaryConditionSet, IBoundaryCondition boundaryCondition)

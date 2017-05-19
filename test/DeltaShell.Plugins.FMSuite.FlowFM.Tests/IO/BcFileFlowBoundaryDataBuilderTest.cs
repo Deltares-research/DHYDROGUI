@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string filePath = "AstroWaterLevel.bc";
 
             var writer = new BcFile() {MultiFileMode = BcFile.WriteMode.SingleFile};
-            writer.Write(new[] {boundaryConditionSet}, filePath);
+            writer.Write(new[] {boundaryConditionSet}, filePath, new BcFileFlowBoundaryDataBuilder());
 
             boundaryConditionSet.BoundaryConditions.Clear();
 
@@ -258,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string filePath = "SalinityTimeSeries.bc";
 
             var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
-            writer.Write(new[] {boundaryConditionSet}, filePath);
+            writer.Write(new[] {boundaryConditionSet}, filePath, new BcFileFlowBoundaryDataBuilder());
 
             boundaryConditionSet.BoundaryConditions.Clear();
 
@@ -325,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string filePath = "VelocityVectorSeries.bc";
 
             var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
-            writer.Write(new[] {boundaryConditionSet}, filePath);
+            writer.Write(new[] {boundaryConditionSet}, filePath, new BcFileFlowBoundaryDataBuilder());
 
             var fileReader = new BcFile();
             var dataBlocks = fileReader.Read(filePath).ToList();
@@ -398,10 +398,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string filePath = "VelocityVectorHarmonicCorrection.bc";
             const string corrFilePath = "VelocityVectorHarmonicCorrectioncorr.bc";
 
+            var boundaryDataBuilder = new BcFileFlowBoundaryDataBuilder();
             var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile, CorrectionFile = false};
-            writer.Write(new[] {boundaryConditionSet}, filePath);
+            writer.Write(new[] {boundaryConditionSet}, filePath, boundaryDataBuilder);
             writer.CorrectionFile = true;
-            writer.Write(new[] {boundaryConditionSet}, corrFilePath);
+            writer.Write(new[] {boundaryConditionSet}, corrFilePath, boundaryDataBuilder);
 
             var fileReader = new BcFile();
             var dataBlocks = fileReader.Read(filePath).ToList();
@@ -474,7 +475,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             boundaryConditionSet.BoundaryConditions.Add(dischargeBc);
 
-            var blockData = BcFileFlowBoundaryDataBuilder.CreateBlockData(dischargeBc,
+            var blockData = new BcFileFlowBoundaryDataBuilder().CreateBlockData(dischargeBc,
                 boundaryConditionSet.SupportPointNames, startTime).ToList();
 
             Assert.AreEqual(1, blockData.Count);
@@ -509,7 +510,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string filePath = "Discharge.bc";
 
             var writer = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
-            writer.Write(new[] { boundaryConditionSet }, filePath);
+            writer.Write(new[] { boundaryConditionSet }, filePath, new BcFileFlowBoundaryDataBuilder());
 
             boundaryConditionSet.BoundaryConditions.Clear();
 
@@ -585,7 +586,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string filePath = "ThreeSuperposedWaterLevels.bc";
 
             var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
-            writer.Write(new[] {boundaryConditionSet}, filePath);
+            writer.Write(new[] {boundaryConditionSet}, filePath, new BcFileFlowBoundaryDataBuilder());
 
             var fileReader = new BcFile();
             var dataBlocks = fileReader.Read(filePath).ToList();

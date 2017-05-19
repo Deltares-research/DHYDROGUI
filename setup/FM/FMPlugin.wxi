@@ -8,6 +8,7 @@
       <File Id="DeltaShell.Plugins.FMSuite.FlowFM.Gui.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.dll" />
       <File Id="dflowfmprop.csv" Source="$(var.flowfm_plugin_bin)dflowfm-properties.csv" />
       <File Id="structureproperties.csv" Source="$(var.flowfm_plugin_bin)structure-properties.csv" />
+      <File Id="dflowfmmorprop.csv" Source="$(var.flowfm_plugin_bin)dflowfm-mor-properties.csv" />
     </Component>
 
     <Directory Id="fmtoolboxes" Name="toolboxes">

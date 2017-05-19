@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -68,6 +73,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.IsFalse(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Linear));
             Assert.IsFalse(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Step));
             Assert.IsFalse(data.SupportsReflection);
+            Assert.IsFalse(data.IsHorizontallyUniform);
+        }
+
+        [Test]
+        public void TestSedimentSupportedForcingAndInterpolationTypes()
+        {
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries);
+
+            Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Logarithmic));
+            Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Linear));
+            Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Step));
+            Assert.IsFalse(data.SupportsReflection); // not supported yet by kernel.
             Assert.IsFalse(data.IsHorizontallyUniform);
         }
 
@@ -240,6 +257,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             function3 = data.GetDataAtPoint(2);
             Assert.AreEqual(40.06, function3[new DateTime(2003, 1, 1)]);
+        }
+
+        [Test, Category(TestCategory.WindowsForms)]
+        public void MultipleFractionsInChart()
+        {
+            var feature2D = new Feature2D
+            {
+                Geometry =
+                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+            };
+
+
+
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport,
+                                                 BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature2D,
+                SedimentFractionNames = new List<string> { "abc", "def"}
+            };
+
+            var function = TypeUtils.CallPrivateMethod<IFunction>(data, "CreateFunction");
+            var view = new FunctionView {Data = function};
+
+            function[DateTime.Now] = new[] {1.0, 2.0};
+            function[DateTime.Now.AddHours(1)] = new[] { 2.0, 3.0 };
+
+            WindowsFormsTestHelper.ShowModal(view);
         }
     }
 }

@@ -1,0 +1,15 @@
+** INFO   : DtMax should be <= DtUser. It has been reset to:     0.500
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** WARNING: readMDUFile: sediment transportvelocity=0 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment numintverticaleinstein=10 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment jaceneqtr=2 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment morfac=1. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment tmorfspinup=0. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment alfabed=1. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment alfasus=1. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment crefcav=20. was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: time autotimestepdiff=0 was in file, but not used. Check possible typo.
+** WARNING: could not open str_net.nc
+** INFO   : Initializing flow model geometry...
+** INFO   : Done initializing flow model geometry.
+** WARNING: no network, please check MDU-file

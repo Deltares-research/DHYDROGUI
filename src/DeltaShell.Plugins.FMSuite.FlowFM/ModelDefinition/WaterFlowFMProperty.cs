@@ -12,23 +12,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public static WaterFlowFMPropertyDefinition CreatePropertyDefinitionForUnknownProperty(string mduGroupName, string mduPropertyName, string comment)
         {
-            var propertyDefinition = new WaterFlowFMPropertyDefinition
-                {
-                    Caption = mduPropertyName,
-                    MduPropertyName = mduPropertyName,
-                    FileCategoryName = mduGroupName,
-                    FilePropertyName = mduPropertyName,
-                    Category = ModelSchemaCsvFile.DefaultGUIGroupCaption,
-                    SubCategory = null,
-                    DataType = typeof (string),
-                    DefaultValueAsString = "",
-                    EnabledDependencies = "",
-                    VisibleDependencies = "",
-                    Description = comment,
-                    IsDefinedInSchema = false,
-                    IsFile = false
-                };
-            return propertyDefinition;
+            return new WaterFlowFMPropertyDefinition
+            {
+                Caption = mduPropertyName,
+                MduPropertyName = mduPropertyName,
+                FileCategoryName = mduGroupName,
+                FilePropertyName = mduPropertyName,
+                Category = ModelSchemaCsvFile.DefaultGUIGroupCaption,
+                SubCategory = null,
+                DataType = typeof (string),
+                DefaultValueAsString = "",
+                EnabledDependencies = "",
+                VisibleDependencies = "",
+                Description = comment,
+                IsDefinedInSchema = false,
+                IsFile = false
+            };
         }
 
         public new WaterFlowFMPropertyDefinition PropertyDefinition

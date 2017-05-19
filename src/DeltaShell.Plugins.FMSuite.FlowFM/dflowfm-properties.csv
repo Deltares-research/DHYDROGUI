@@ -13,6 +13,8 @@ output,Output Parameters,,,,,,,,,,,,,,
 #trachytopes,Trachytopes,,,,,,,,,,,,,,
 advanced,Advanced,,,,,,,,,,,,,,
 misc,Miscellaneous,,,,,,,,,,,,,,
+sediment,Sediment,,,,,,,,,,,,,,
+morphology,Morphology,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,
 MduGroups,(order determines order in written mdu file),,,,,,,,,,,,,,
 model,,,,,,,,,,,,,,,
@@ -170,6 +172,7 @@ trachytopes,TrtDt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time inte
 GUIOnly,StartTime,timeframe,,Start Time,DateTime,,,,FALSE,,,,,,Begin of simulation period
 GUIOnly,StopTime,timeframe,,Stop Time,DateTime,,,,FALSE,,,,,,End of simulation period
 GUIOnly,UseTemperature,processes,,Temperature,0|1,0,0,1,FALSE,,,,,,Include temperature
+GUIOnly,UseMorSed,processes,,Sediment/Morphology [Beta],0|1,0,0,1,FALSE,,,,,,Include Sediment/Morphology [Beta version]
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteHisFile,output,His,Write His File,0|1,0,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,His,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output

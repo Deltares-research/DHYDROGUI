@@ -27,6 +27,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
@@ -220,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return condition == null || condition.DataType == BoundaryConditionDataType.Constant ||
                    condition.DataType == BoundaryConditionDataType.Empty
                 ? null
-                : new FlowBoundaryConditionPointData(condition, SupportPointIndex, model != null && model.UseDepthLayers);
+                : new FlowBoundaryConditionPointData(condition, SupportPointIndex, model != null && model.UseDepthLayers || condition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
         }
 
         FlowBoundaryConditionPointData BoundaryConditionWrapper()
@@ -250,12 +251,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 if (boundaryConditionData != null)
                 {
                     boundaryConditionData.Components.CollectionChanged -= ComponentsCollectionChanged;
+                    if( model != null )
+                        model.SedimentFractions.CollectionChanged -= SedimentsCollectionChanged;
                     ((INotifyPropertyChange)boundaryConditionData).PropertyChanged -= OnPropertyChanged;
                 }
                 boundaryConditionData = value;
                 if (boundaryConditionData != null)
                 {
                     boundaryConditionData.Components.CollectionChanged += ComponentsCollectionChanged;
+                    if( model != null)
+                        model.SedimentFractions.CollectionChanged += SedimentsCollectionChanged;
                     ((INotifyPropertyChange)boundaryConditionData).PropertyChanged += OnPropertyChanged;
                 }
                 
@@ -277,6 +282,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 UpdateControl();
                 componentsChanged = false;
             }
+        }
+
+        private void SedimentsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+                UpdateControl();
+                componentsChanged = false;
         }
 
         private void ComponentsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
@@ -695,7 +706,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             wpsImportButton.Enabled = BoundaryCondition != null &&
                                       BoundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
                                       BoundaryCondition.VariableName == "WaterLevel";
-
+            
             fileImportButton.Enabled = BoundaryCondition != null;
             fileExportButton.Enabled = BoundaryCondition != null;
         }

@@ -576,7 +576,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 {
                     var newCondition = BoundaryConditionFactory.CreateBoundaryCondition(boundaryConditionSet.Feature,
                                                                                         quantity,
-                                                                                        dataTypes.First());
+                                                                                        dataTypes.First(),
+                                                                                        SelectedCategory);
                     newCondition.Name = GenerateUniqueName(newCondition);
                     Controller.InsertBoundaryCondition(boundaryConditionSet, newCondition);
                     conditionsListBox.SelectedItem = newCondition;

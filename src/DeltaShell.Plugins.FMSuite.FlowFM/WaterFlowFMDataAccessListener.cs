@@ -146,6 +146,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SynchronizeDataItemValue(waterFlowFMModel, tracer.Name, tracer);
             }
 
+            foreach (var fraction in waterFlowFMModel.InitialFractions)
+            {
+                SynchronizeDataItemValue(waterFlowFMModel, fraction.Name, fraction);
+            }
+
             waterFlowFMModel.ImportSpatialOperationsAfterLoading();
 
             // update intermediate results in operation stack after loading project:
@@ -163,6 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             foreach (var tracer in waterFlowFMModel.InitialTracers)
             {
                 ExecuteOperations(waterFlowFMModel, tracer);
+            }
+            foreach (var fraction in waterFlowFMModel.InitialFractions)
+            {
+                ExecuteOperations(waterFlowFMModel, fraction);
             }
         }
 

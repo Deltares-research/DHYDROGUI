@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -621,7 +622,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area);
 
-            var useSalinity = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+             var useSalinity = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             useSalinity.Value = true;
 
             var limtypsa = modelDefinition.GetModelProperty(KnownProperties.Limtypsa);
@@ -629,6 +630,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             useSalinity.Value = false;
             Assert.IsFalse(limtypsa.IsEnabled(modelDefinition.Properties));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void SettingUseMorSedShouldWriteSedimentSection()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+
+            try
+            {
+                var modelName = Path.GetFileName(mduFilePath);
+                var justModelName = Path.GetFileNameWithoutExtension(modelName);
+                var area = new HydroArea();
+                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var mduFile = new MduFile();
+                mduFile.Read(mduFilePath, modelDefinition, area);
+
+                var useMorSed = modelDefinition.GetModelProperty("UseMorSed");
+                Assert.IsFalse(bool.Parse(useMorSed.Value.ToString()));
+                var readAllText = File.ReadAllText(mduFilePath);
+                Assert.IsFalse(readAllText.Contains("[sediment]"));
+                Assert.IsFalse(readAllText.Contains(KnownProperties.SedFile));
+                Assert.IsFalse(readAllText.Contains(justModelName + ".sed"));
+                Assert.IsFalse(readAllText.Contains(KnownProperties.MorFile));
+                Assert.IsFalse(readAllText.Contains(justModelName + ".mor"));
+                Assert.IsFalse(readAllText.Contains("Sedimentmodelnr"));
+                useMorSed.Value = true;
+                mduFile.Write(mduFilePath, modelDefinition, area);
+                var otherArea = new HydroArea();
+                var otherModelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+                var otherMduFile = new MduFile();
+                otherMduFile.Read(mduFilePath, otherModelDefinition, otherArea);
+
+                useMorSed = otherModelDefinition.GetModelProperty("UseMorSed");
+                Assert.IsTrue(bool.Parse(useMorSed.Value.ToString()));
+                readAllText = File.ReadAllText(mduFilePath);
+                Assert.IsTrue(readAllText.Contains("[sediment]"));
+                Assert.IsTrue(readAllText.Contains(KnownProperties.SedFile));
+                Assert.IsTrue(readAllText.Contains(justModelName + ".sed"));
+                Assert.IsTrue(readAllText.Contains(KnownProperties.MorFile));
+                Assert.IsTrue(readAllText.Contains(justModelName + ".mor"));
+                Assert.IsTrue(readAllText.Contains("Sedimentmodelnr"));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduDir);
+            }
+
         }
 
         [Test]

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -9,11 +7,8 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Dimr;
-using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -26,7 +21,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
@@ -47,6 +41,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // DELFT3DFM-371: Disable Model Inspection
             // Assert.IsTrue(model.ModelInspection);
 
+        }
+
+        [Test]
+        public void CheckSedimentFormulaPropertyEventPropagatesToModel()
+        {
+            var model = new WaterFlowFMModel();
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac = new SedimentFraction
+            {
+                Name = "testFrac",
+                CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes()[1],
+                CurrentFormulaType = SedimentFractionHelper.GetSedimentationFormulas()[0]
+            };
+            model.SedimentFractions.Add(sedFrac);
+
+            var modelCount = 0;
+            ((INotifyPropertyChanged)model).PropertyChanged += (s, e) => modelCount++;
+            var sedFracCount = 0;
+            ((INotifyPropertyChanged)sedFrac).PropertyChanged += (s, e) => sedFracCount++;
+
+            var prop = sedFrac.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().First();
+            prop.IsSpatiallyVarying = true;
+
+            Assert.AreEqual(1, sedFracCount);
+            Assert.AreEqual(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+        }
+
+        [Test]
+        public void CheckSedimentPropertyEventPropagatesToModel()
+        {
+            var model = new WaterFlowFMModel();
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac = new SedimentFraction { Name = "testFrac" };
+            model.SedimentFractions.Add(sedFrac);
+
+            var modelCount = 0;
+            ((INotifyPropertyChanged)model).PropertyChanged += (s, e) => modelCount++;
+            var sedFracCount = 0;
+            ((INotifyPropertyChanged)sedFrac).PropertyChanged += (s, e) => sedFracCount++;
+            
+            var prop = sedFrac.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().First();
+            prop.IsSpatiallyVarying = true;
+
+            Assert.AreEqual(1, sedFracCount);
+
+            // TODO: Set the assertion value to 3 when initial condition is supported in ext-files (DELFT3DFM-996)
+            //Assert.AreEqual(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+            Assert.AreEqual(1, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
         }
 
         [Test]

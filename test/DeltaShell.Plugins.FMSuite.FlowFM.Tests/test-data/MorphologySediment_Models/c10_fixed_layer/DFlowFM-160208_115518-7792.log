@@ -1,0 +1,238 @@
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** WARNING: readMDUFile: numerics cflwavefrac=0.1 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: sediment initialsedimentconcentration=0.05 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: wind gapres=101325.0000000 was in file, but not used. Check possible typo.
+** INFO   : Opened file : t1_obs.xyn
+** INFO   : Closed file : t1_obs.xyn
+** INFO   : Initializing flow model geometry...
+** INFO   : Opened file : t1.ext
+** INFO   : Opened file : t1_001.pli
+** INFO   : Closed file : t1_001.pli
+** INFO   :  boundary: t1_001.pli opened 1 cells.
+** INFO   : dischargebnd t1_001.pli       1 nr of open bndcells
+** INFO   : Opened file : t1_002.pli
+** INFO   : Closed file : t1_002.pli
+** INFO   :  boundary: t1_002.pli opened 1 cells.
+** INFO   : waterlevelbnd t1_002.pli       1 nr of open bndcells
+** INFO   : Opened file : t1_bedlevel_at_cc3.xyz
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : merged 0 samples in .00 seconds.
+** INFO   : Delete kdtree...
+** INFO   : Closed file : t1_bedlevel_at_cc3.xyz
+** INFO   : Starting Delaunay triangulation...
+** INFO   : done
+** INFO   : Determining triangle connectivity and computing polygons and circumcenters...
+** INFO   : done
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Delete kdtree...
+** INFO   : Done initializing flow model geometry.
+** INFO   : Opened file : t2_sdb_at_cc2.xyz
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : merged 0 samples in .00 seconds.
+** INFO   : Delete kdtree...
+** INFO   : Closed file : t2_sdb_at_cc2.xyz
+** INFO   : Starting Delaunay triangulation...
+** INFO   : done
+** INFO   : Determining triangle connectivity and computing polygons and circumcenters...
+** INFO   : done
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Delete kdtree...
+** INFO   : Start initializing external forcings...
+** INFO   : External Forcing or Initialising dischargebnd from file t1_001.pli.
+** INFO   : External Forcing or Initialising waterlevelbnd from file t1_002.pli.
+** INFO   : Closed file : t1.ext
+** INFO   : No wind, so waves is switched off
+** INFO   : Done initializing external forcings.
+** INFO   : Opened file : t1_waterlevel_coldstart.xyz
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : merged 0 samples in .00 seconds.
+** INFO   : Delete kdtree...
+** INFO   : Closed file : t1_waterlevel_coldstart.xyz
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Finding flow nodes...
+** INFO   : find_flowcells_kdtree: sample/point 230 in cells 1 and 2
+** INFO   : find_flowcells_kdtree: sample/point 228 in cells 2 and 3
+** INFO   : find_flowcells_kdtree: sample/point 226 in cells 3 and 4
+** INFO   : find_flowcells_kdtree: sample/point 224 in cells 4 and 5
+** INFO   : find_flowcells_kdtree: sample/point 222 in cells 5 and 6
+** INFO   : find_flowcells_kdtree: sample/point 220 in cells 6 and 7
+** INFO   : find_flowcells_kdtree: sample/point 218 in cells 7 and 8
+** INFO   : find_flowcells_kdtree: sample/point 216 in cells 8 and 9
+** INFO   : find_flowcells_kdtree: sample/point 214 in cells 9 and 10
+** INFO   : find_flowcells_kdtree: sample/point 212 in cells 10 and 11
+** INFO   : find_flowcells_kdtree: sample/point 210 in cells 11 and 12
+** INFO   : find_flowcells_kdtree: sample/point 208 in cells 12 and 13
+** INFO   : find_flowcells_kdtree: sample/point 206 in cells 13 and 14
+** INFO   : find_flowcells_kdtree: sample/point 204 in cells 14 and 15
+** INFO   : find_flowcells_kdtree: sample/point 202 in cells 15 and 16
+** INFO   : find_flowcells_kdtree: sample/point 200 in cells 16 and 17
+** INFO   : find_flowcells_kdtree: sample/point 198 in cells 17 and 18
+** INFO   : find_flowcells_kdtree: sample/point 196 in cells 18 and 19
+** INFO   : find_flowcells_kdtree: sample/point 194 in cells 19 and 20
+** INFO   : find_flowcells_kdtree: sample/point 192 in cells 20 and 21
+** INFO   : find_flowcells_kdtree: sample/point 190 in cells 21 and 22
+** INFO   : find_flowcells_kdtree: sample/point 188 in cells 22 and 23
+** INFO   : find_flowcells_kdtree: sample/point 186 in cells 23 and 24
+** INFO   : find_flowcells_kdtree: sample/point 184 in cells 24 and 25
+** INFO   : find_flowcells_kdtree: sample/point 182 in cells 25 and 26
+** INFO   : find_flowcells_kdtree: sample/point 180 in cells 26 and 27
+** INFO   : find_flowcells_kdtree: sample/point 178 in cells 27 and 28
+** INFO   : find_flowcells_kdtree: sample/point 176 in cells 28 and 29
+** INFO   : find_flowcells_kdtree: sample/point 174 in cells 29 and 30
+** INFO   : find_flowcells_kdtree: sample/point 172 in cells 30 and 31
+** INFO   : find_flowcells_kdtree: sample/point 170 in cells 31 and 32
+** INFO   : find_flowcells_kdtree: sample/point 168 in cells 32 and 33
+** INFO   : find_flowcells_kdtree: sample/point 166 in cells 33 and 34
+** INFO   : find_flowcells_kdtree: sample/point 164 in cells 34 and 35
+** INFO   : find_flowcells_kdtree: sample/point 162 in cells 35 and 36
+** INFO   : find_flowcells_kdtree: sample/point 160 in cells 36 and 37
+** INFO   : find_flowcells_kdtree: sample/point 158 in cells 37 and 38
+** INFO   : find_flowcells_kdtree: sample/point 156 in cells 38 and 39
+** INFO   : find_flowcells_kdtree: sample/point 154 in cells 39 and 40
+** INFO   : find_flowcells_kdtree: sample/point 152 in cells 40 and 41
+** INFO   : find_flowcells_kdtree: sample/point 150 in cells 41 and 42
+** INFO   : find_flowcells_kdtree: sample/point 148 in cells 42 and 43
+** INFO   : find_flowcells_kdtree: sample/point 146 in cells 43 and 44
+** INFO   : find_flowcells_kdtree: sample/point 144 in cells 44 and 45
+** INFO   : find_flowcells_kdtree: sample/point 142 in cells 45 and 46
+** INFO   : find_flowcells_kdtree: sample/point 140 in cells 46 and 47
+** INFO   : find_flowcells_kdtree: sample/point 138 in cells 47 and 48
+** INFO   : find_flowcells_kdtree: sample/point 136 in cells 48 and 49
+** INFO   : find_flowcells_kdtree: sample/point 134 in cells 49 and 50
+** INFO   : find_flowcells_kdtree: sample/point 132 in cells 50 and 51
+** INFO   : find_flowcells_kdtree: sample/point 130 in cells 51 and 52
+** INFO   : find_flowcells_kdtree: sample/point 128 in cells 52 and 53
+** INFO   : find_flowcells_kdtree: sample/point 126 in cells 53 and 54
+** INFO   : find_flowcells_kdtree: sample/point 124 in cells 54 and 55
+** INFO   : find_flowcells_kdtree: sample/point 122 in cells 55 and 56
+** INFO   : find_flowcells_kdtree: sample/point 120 in cells 56 and 57
+** INFO   : find_flowcells_kdtree: sample/point 118 in cells 57 and 58
+** INFO   : find_flowcells_kdtree: sample/point 116 in cells 58 and 59
+** INFO   : find_flowcells_kdtree: sample/point 114 in cells 59 and 60
+** INFO   : find_flowcells_kdtree: sample/point 112 in cells 60 and 61
+** INFO   : find_flowcells_kdtree: sample/point 110 in cells 61 and 62
+** INFO   : find_flowcells_kdtree: sample/point 108 in cells 62 and 63
+** INFO   : find_flowcells_kdtree: sample/point 106 in cells 63 and 64
+** INFO   : find_flowcells_kdtree: sample/point 104 in cells 64 and 65
+** INFO   : find_flowcells_kdtree: sample/point 102 in cells 65 and 66
+** INFO   : find_flowcells_kdtree: sample/point 100 in cells 66 and 67
+** INFO   : find_flowcells_kdtree: sample/point 98 in cells 67 and 68
+** INFO   : find_flowcells_kdtree: sample/point 96 in cells 68 and 69
+** INFO   : find_flowcells_kdtree: sample/point 94 in cells 69 and 70
+** INFO   : find_flowcells_kdtree: sample/point 92 in cells 70 and 71
+** INFO   : find_flowcells_kdtree: sample/point 90 in cells 71 and 72
+** INFO   : find_flowcells_kdtree: sample/point 88 in cells 72 and 73
+** INFO   : find_flowcells_kdtree: sample/point 86 in cells 73 and 74
+** INFO   : find_flowcells_kdtree: sample/point 84 in cells 74 and 75
+** INFO   : find_flowcells_kdtree: sample/point 82 in cells 75 and 76
+** INFO   : find_flowcells_kdtree: sample/point 80 in cells 76 and 77
+** INFO   : find_flowcells_kdtree: sample/point 78 in cells 77 and 78
+** INFO   : find_flowcells_kdtree: sample/point 76 in cells 78 and 79
+** INFO   : find_flowcells_kdtree: sample/point 74 in cells 79 and 80
+** INFO   : find_flowcells_kdtree: sample/point 72 in cells 80 and 81
+** INFO   : find_flowcells_kdtree: sample/point 70 in cells 81 and 82
+** INFO   : find_flowcells_kdtree: sample/point 68 in cells 82 and 83
+** INFO   : find_flowcells_kdtree: sample/point 66 in cells 83 and 84
+** INFO   : find_flowcells_kdtree: sample/point 64 in cells 84 and 85
+** INFO   : find_flowcells_kdtree: sample/point 62 in cells 85 and 86
+** INFO   : find_flowcells_kdtree: sample/point 60 in cells 86 and 87
+** INFO   : find_flowcells_kdtree: sample/point 58 in cells 87 and 88
+** INFO   : find_flowcells_kdtree: sample/point 56 in cells 88 and 89
+** INFO   : find_flowcells_kdtree: sample/point 54 in cells 89 and 90
+** INFO   : find_flowcells_kdtree: sample/point 52 in cells 90 and 91
+** INFO   : find_flowcells_kdtree: sample/point 50 in cells 91 and 92
+** INFO   : find_flowcells_kdtree: sample/point 48 in cells 92 and 93
+** INFO   : find_flowcells_kdtree: sample/point 46 in cells 93 and 94
+** INFO   : find_flowcells_kdtree: sample/point 44 in cells 94 and 95
+** INFO   : find_flowcells_kdtree: sample/point 42 in cells 95 and 96
+** INFO   : find_flowcells_kdtree: sample/point 40 in cells 96 and 97
+** INFO   : find_flowcells_kdtree: sample/point 38 in cells 97 and 98
+** INFO   : find_flowcells_kdtree: sample/point 34 in cells 99 and 100
+** INFO   : find_flowcells_kdtree: sample/point 32 in cells 100 and 101
+** INFO   : find_flowcells_kdtree: sample/point 30 in cells 101 and 102
+** INFO   : find_flowcells_kdtree: sample/point 28 in cells 102 and 103
+** INFO   : find_flowcells_kdtree: sample/point 26 in cells 103 and 104
+** INFO   : find_flowcells_kdtree: sample/point 24 in cells 104 and 105
+** INFO   : find_flowcells_kdtree: sample/point 22 in cells 105 and 106
+** INFO   : find_flowcells_kdtree: sample/point 20 in cells 106 and 107
+** INFO   : find_flowcells_kdtree: sample/point 18 in cells 107 and 108
+** INFO   : find_flowcells_kdtree: sample/point 16 in cells 108 and 109
+** INFO   : find_flowcells_kdtree: sample/point 14 in cells 109 and 110
+** INFO   : find_flowcells_kdtree: sample/point 12 in cells 110 and 111
+** INFO   : find_flowcells_kdtree: sample/point 10 in cells 111 and 112
+** INFO   : find_flowcells_kdtree: sample/point 5 in cells 113 and 114
+** INFO   : find_flowcells_kdtree: sample/point 6 in cells 113 and 114
+** INFO   : find_flowcells_kdtree: sample/point 3 in cells 114 and 115
+** INFO   : find_flowcells_kdtree: sample/point 4 in cells 114 and 115
+** INFO   : find_flowcells_kdtree: sample/point 232 in cells 1 and 116
+** INFO   : find_flowcells_kdtree: sample/point 2 in cells 115 and 117
+** INFO   : find_flowcells_kdtree: sample/point 1 in cells 115 and 117
+** INFO   : done in      0.01400 sec.
+** INFO   : Delete kdtree...
+** INFO   : nogauss , nocg :            117             0
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Finding flow nodes...
+** INFO   : done in      0.00000 sec.
+** INFO   : Delete kdtree...
+** INFO   : Modelinit finished   at: 11:55:18, 08-02-2016
+** INFO   : ** Model initialization was successful **
+** INFO   : * Active Model definition:
+** INFO   : **
+** INFO   : Start of the computation time loop
+** INFO   : Writing initial output to file(s)...
+** INFO   : Done writing initial output to file(s).
+** INFO   :    Sim. time done   Sim. time left   Real time used   Real time left Steps left Complete% Interval-averaged time step
+** INFO   :       0d  0:00:01      0d 13:59:59      0d  0:00:00      0d  0:01:24     167998     0.0%     0.30000
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : nr of netnodes        ( )  :                      232
+** INFO   : nr of netlinks        ( )  :                      346
+** INFO   : nr of flownodes       ( )  :                      117
+** INFO   : nr of openbnd cells   ( )  :                        2
+** INFO   : nr of 1D-flownodes    ( )  :                        0
+** INFO   : model area            (m2) :             2.3400000000
+** INFO   : model volume          (m3) :             0.2371928096
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : simulation period     (s)  :         50400.0000000000
+** INFO   : nr of timesteps       ( )  :        479646.0000000000
+** INFO   : average timestep      (s)  :             0.1050774947
+** INFO   : time inistep          (s)  :            21.2159999993
+** INFO   : time setumod          (s)  :             7.1320000000
+** INFO   : time furu             (s)  :             2.5839999998
+** INFO   : time solve            (s)  :             8.3670000000
+** INFO   : time setexternalforc. (s)  :             0.4730000001
+** INFO   : time setexternalfbnd. (s)  :             2.4560000000
+** INFO   : time steps            (s)  :           143.9089999999
+** INFO   : time steps + plots    (s)  :           149.2310000000
+** INFO   : fraction solve/steps  ( )  :             0.0581409085
+** INFO   : total/(dnt*ndx)       (s)  :             0.0000026592
+** INFO   : av nr of cont. it s1it( )  :             0.0000000000
+** INFO   : time transport s         :             1.9630000000
+** INFO   : time debug     s         :             0.0000000000
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : Computation started  at: 11:55:18, 08-02-2016
+** INFO   : Computation finished at: 11:57:47, 08-02-2016
+** INFO   :
+** INFO   : MPI    : no.
+** INFO   : OpenMP : yes.         #threads max : 1
+** INFO   :
+** INFO   :
+** INFO   :
+** INFO   : Opened file : t1_20071119_140000
+** INFO   : Closed file : t1_20071119_140000
+** WARNING: Missing coordinate reference system. Now using default: projected_coordinate_system (EPGS:28992).
+** INFO   : Opened file : numlimdt.xyz
+** INFO   : Closed file : numlimdt.xyz
+** INFO   :

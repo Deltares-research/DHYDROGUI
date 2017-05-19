@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
             yield return model.GetDataItemByValue(model.RestartInput);
-            const string tabText = "Initial Conditions";
+            string tabText = "Initial Conditions";
             yield return
                 new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
                     WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model,
@@ -134,8 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                         ContextMenuDataGetter = o => ((WaterFlowFMModel) o).InitialTemperature
                     };
             }
-
-            var i = 0;
+            
             foreach (var tracer in model.InitialTracers)
             {
                 var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
@@ -146,6 +145,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                         o => ((WaterFlowFMModel) o).InitialTracers.First(tr => tr.Name == tracer.Name)
                 };
                 yield return treeShortCut;
+            }
+            if (model.UseMorSed)
+            {
+                tabText = "Sediment";
+                foreach (var fraction in model.InitialFractions)
+                {
+                    var treeShortCut = new SpatialOperationCoverageTreeShortcut<WaterFlowFMModel, WaterFlowFMModelView>(
+                        fraction.Name, Resources.pipette, model, fraction,
+                        tabText)
+                    {
+                        ContextMenuDataGetter =
+                            o => ((WaterFlowFMModel)o).InitialFractions.First(tr => tr.Name == fraction.Name)
+                    };
+                    yield return treeShortCut;
+                }
             }
         }
 
