@@ -65,12 +65,26 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         private double convversion = 0.0;
 
+        //mesh links
+        private string linkmeshname = "links";
+
+        private int nlinks = 3;
+        private int linkmesh1 = 1;
+        private int linkmesh2 = 2;
+        private int locationType1 = 1;
+        private int locationType2 = 1;
+        private int[] mesh1indexes = {1, 2, 3};
+        private int[] mesh2indexes = {1, 2, 3};
+        private string[] linksids = {"link1", "link2", "link3"};
+        private string[] linkslongnames = {"linklong1", "linklong2", "linklong3"};
+
+
         static Ugrid1DTests()
         {
             NativeLibrary.LoadNativeDllForCurrentPlatform(GridApiDataSet.GRIDDLL_NAME, GridApiDataSet.DllDirectory);
         }
 
-        ////create the netcdf files
+        //////create the netcdf files
         [Test]
         [Category(TestCategory.DataAccess)]
         public void create1dUGRIDNetcdf()
@@ -85,6 +99,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_geopointsY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
             IntPtr c_branchidx = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
             IntPtr c_offset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
+            // Links variables
+            IntPtr c_mesh1indexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nlinks);
+            IntPtr c_mesh2indexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nlinks);
             try
             {
                 //1. create a netcdf file 
@@ -183,7 +200,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     ref c_offset, ref nmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
 
-                //8. close the file
+                //8. write links attributes
+                Marshal.Copy(mesh1indexes, 0, c_mesh1indexes, nlinks);
+                Marshal.Copy(mesh2indexes, 0, c_mesh2indexes, nlinks);
+                int linkmesh = 1;
+                ierr = wrapper.ionc_def_mesh_contact(ref ioncid, ref linkmesh, linkmeshname, ref nlinks, ref linkmesh1,
+                    ref linkmesh2, ref locationType1, ref locationType2);
+                Assert.That(ierr, Is.EqualTo(0));
+                GridWrapper.interop_charinfo[] linksinfo = new GridWrapper.interop_charinfo[nlinks];
+
+                for (int i = 0; i < nlinks; i++)
+                {
+                    tmpstring = linksids[i];
+                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
+                    linksinfo[i].ids = tmpstring.ToCharArray();
+                    tmpstring = linkslongnames[i];
+                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
+                    linksinfo[i].longnames = tmpstring.ToCharArray();
+                }
+
+                //9. write the mesh links
+                ierr = wrapper.ionc_put_mesh_contact(ref ioncid, ref linkmesh, ref c_mesh1indexes, ref c_mesh2indexes,
+                    linksinfo, ref nlinks);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                //10. close the file
                 ierr = wrapper.ionc_close(ref ioncid);
             }
             finally
@@ -198,6 +239,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Marshal.FreeCoTaskMem(c_geopointsY);
                 Marshal.FreeCoTaskMem(c_branchidx);
                 Marshal.FreeCoTaskMem(c_offset);
+                Marshal.FreeCoTaskMem(c_mesh1indexes);
+                Marshal.FreeCoTaskMem(c_mesh2indexes);
             }
         }
 
@@ -216,6 +259,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_geopointsY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
             IntPtr c_branchidx = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
             IntPtr c_offset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
+            // Links variables
+            IntPtr c_mesh1indexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nlinks);
+            IntPtr c_mesh2indexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nlinks);
             try
             {
                 //1. create a netcdf file 
@@ -320,7 +366,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(rnmeshpoints, Is.EqualTo(nmeshpoints));
 
-
                 //9. read the coordinates of the mesh points
                 ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref networkid, ref c_branchidx,
                     ref c_offset, ref rnmeshpoints);
@@ -335,7 +380,33 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.That(rc_offset[i], Is.EqualTo(offset[i]));
                 }
 
-                //10. close the file
+                //10. read the number of links 
+                int linkmesh = 1;
+                int r_nlinks = -1;
+                ierr = wrapper.ionc_get_link_count(ref ioncid, ref linkmesh, ref r_nlinks);
+                Assert.That(ierr, Is.EqualTo(0));
+                Assert.That(r_nlinks, Is.EqualTo(nlinks));
+                GridWrapper.interop_charinfo[] linksinfo = new GridWrapper.interop_charinfo[nlinks];
+
+                //11. read the links back in
+                ierr = wrapper.ionc_get_mesh_contact(ref ioncid, ref linkmesh, ref c_mesh1indexes, ref c_mesh2indexes,
+                    linksinfo, ref nlinks);
+                Assert.That(ierr, Is.EqualTo(0));
+                int[] rc_mesh1indexes = new int[nlinks];
+                int[] rc_mesh2indexes = new int[nlinks];
+                Marshal.Copy(c_mesh1indexes, rc_mesh1indexes, 0, nlinks);
+                Marshal.Copy(c_mesh2indexes, rc_mesh2indexes, 0, nlinks);
+                for (int i = 0; i < nlinks; i++)
+                {
+                    string tmpstring = new string(linksinfo[i].ids);
+                    Assert.That(tmpstring.Trim(), Is.EqualTo(linksids[i]));
+                    tmpstring = new string(linksinfo[i].longnames);
+                    Assert.That(tmpstring.Trim(), Is.EqualTo(linkslongnames[i]));
+                    Assert.That(rc_mesh1indexes[i], Is.EqualTo(mesh1indexes[i]));
+                    Assert.That(rc_mesh2indexes[i], Is.EqualTo(mesh2indexes[i]));
+                }
+
+                //12. close the file
                 ierr = wrapper.ionc_close(ref ioncid);
             }
             finally
