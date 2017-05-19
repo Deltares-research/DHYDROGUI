@@ -1,0 +1,61 @@
+[MorphologyFileInformation]
+   FileCreatedBy    = Delft3D-FLOW-GUI, Version: 3.1804
+   FileCreationDate = 19-12-2003,  8:50:45
+   FileVersion      = 02.00
+[Morphology]
+   MorFac = 1.0       [ - ] Morphological scale factor
+   MorStt = 420       [ - ] First time step relative to ITDATE for updating
+   Thresh = 0.001     [ m ] Threshold sediment thickness for reducing sediment exchange
+   BedUpd = true      [T/F] Update bed level during flow run
+   CmpUpd = true      [T/F] Update bed composition during flow run
+   EqmBc  = true      [T/F] Equilibrium concentration at inflow boundaries
+   DensIn = false     [T/F] Include effect of sediment on density gradient
+   AksFac = 1.0       [ - ] Van Rijn's reference height = AKSFAC * KS
+   RWave  = 2.0       [ - ] Wave related roughness = RWAVE * estimated ripple height. Van Rijn Recommends range 1-3
+   Rouse  = false     [T/F] Set equilibrium sediment concentration values to standard Rouse profiles
+   AlfaBs = 1.0       [ - ] Longitudinal bed gradient factor for bed load transport
+   AlfaBn = 1.0       [ - ] Transverse   bed gradient factor for bed load transport
+   Sus    = 1.0       [ - ] Multiplication factor for suspended sediment reference concentration
+   Bed    = 0.94      [ - ] Multiplication factor for bed load transport vector magnitude
+   SusW   = 1.0       [ - ] Wave-related suspended sed. transport factor
+   BedW   = 1.0       [ - ] Wave-related bed-load sed. transport factor
+   SedThr = 0.005     [ m ] Minimum threshold depth for sediment computations
+   ThetSD = 0.0       [ - ] Fraction of erosion to assign to adjacent dry cells
+   HMaxTH = 1.5       [ m ] Max depth for variable THETSD. Set < SEDTHR to use global value only
+   FWFac  = 1.0       [ - ] Tuning parameter for wave streaming  
+   EpsPar = false     [T/F] Only for waves in combination with k-epsilon turbulence model
+                            TRUE : Van Rijn's parabolic-linear mixing distribution for current-related mixing 
+                            FALSE: Vertical sediment mixing values from K-epsilon turbulence model
+   IopKCW = 1         [ - ] Flag for determining Rc and Rw
+                            1 (default): Rc from flow, Rw=RWAVE*0.025
+                            2          : Rc=RDC and Rw=RDW as read from this file
+                            3          : Rc=Rw determined from mobility
+   RDC    = 0.01      [ - ] Rc in case IopKCW = 2
+   RDW    = 0.02      [ - ] Rw in case IopKCW = 2
+   Espir  = 0.3160    [ - ] Calibration factor spiral flow
+   ISlope = 3         [ - ] Flag for bed slope effect
+                            1          : None
+                            2 (default): Bagnold
+                            3          : Koch & Flokstra
+   AShld  = 0.85      [ - ] Bed slope parameter Koch & Flokstra
+   BShld  = 0.5       [ - ] Bed slope parameter Koch & Flokstra
+   IHidExp= 3         [ - ] Flag for hiding & exposure
+                            1 (default): none
+                            2          : Egiazaroff
+                            3          : Ashida & Michiue, modified Egiazaroff
+                            4          : Soehngen, Kellermann, Loy
+                            5          : Wu, Wang, Jia
+[Underlayer]
+  IUnderLyr = 2         [ - ] Flag for underlayer concept
+                            1 (default): one fully mixed layer
+                            2          : graded sediment underlayers
+  ExchLyr = false     [T/F] Switch for exchange layer
+  TTLForm = 2         [ - ] Transport layer thickness formulation
+                            1 (default): constant (user-specified) thickness
+  TTLAlpha= 0.1
+  TTLMin  = 0.01
+  MxNULyr = 10        [ - ] Number of underlayers (excluding final well mixed layer)
+  ThUnLyr = 0.005     [ m ] Thickness of each underlayer
+[Output]
+  TranspType = 0
+  FixFac = true

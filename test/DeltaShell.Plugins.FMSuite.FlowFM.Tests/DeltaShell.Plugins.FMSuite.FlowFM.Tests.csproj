@@ -213,6 +213,11 @@
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridOperationApiTest.cs" />
     <Compile Include="Editors\EditTracersControlHelperTest.cs" />
+    <Compile Include="Editors\SedimentFractionsEditorTest.cs" />
+    <Compile Include="Editors\SedimentFractionsEditorTestHelper.cs" />
+    <Compile Include="Editors\SedimentFractionsEditorViewModelTest.cs" />
+    <Compile Include="Editors\SedimentNamePropertyValidationRuleTests.cs" />
+    <Compile Include="Editors\SedimentPropertyValidationRuleTest.cs" />
     <Compile Include="EmbankmentGeneratorTest.cs" />
     <Compile Include="EmbankmentMergerTest.cs" />
     <Compile Include="CoverageDepthLayersListTest.cs" />
@@ -250,7 +255,10 @@
     <Compile Include="Gui\WindFieldListViewTest.cs" />
     <Compile Include="IO\BcFileFlowBoundaryDataBuilderTest.cs" />
     <Compile Include="IO\BcFileExportImportTest.cs" />
+    <Compile Include="IO\BcmFileFlowBoundaryDataBuilderTest.cs" />
     <Compile Include="IO\BcFileTest.cs" />
+    <Compile Include="IO\BcmFileExportImportTest.cs" />
+    <Compile Include="IO\BcmFileTest.cs" />
     <Compile Include="IO\BndExtForceFileTest.cs" />
     <Compile Include="IO\CmpFileTest.cs" />
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
@@ -273,10 +281,10 @@
     <Compile Include="Layers\UnstructuredGridLayerTest.cs" />
     <Compile Include="Layers\UnstructuredGridVertexFillCoverageLayerTest.cs" />
     <Compile Include="Gui\FlowFMMapLayerProviderTest.cs" />
+    <Compile Include="ModelDefinition\ISedimentFractionExtensionsTests.cs" />
     <Compile Include="ScriptingTest\FlowFlexibleMeshFunctionsScriptTest.cs" />
-    <Compile Include="SedMor\IO\MorFileTest.cs" />
-    <Compile Include="SedMor\IO\SedFileTest.cs" />
-    <Compile Include="SedMor\IO\TraFileTest.cs" />
+    <Compile Include="IO\MorphologyFileTest.cs" />
+    <Compile Include="IO\SedimentFileTest.cs" />
     <Compile Include="MapFileImporterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Layers\UnstructuredGridVertexCoverageLayerTest.cs" />
@@ -286,8 +294,9 @@
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
+   <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
-    <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
+    <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />    <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
     <Compile Include="WaterFlowFMImportExportTest.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
@@ -362,6 +371,10 @@
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
+      <Project>{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

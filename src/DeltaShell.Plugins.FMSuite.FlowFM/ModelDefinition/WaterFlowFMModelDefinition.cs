@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
@@ -53,8 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         };
 
         public List<string> InitialTracerNames { get; private set; }
+        public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
 
         private static StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
+        private static ModelSchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
         private static ModelSchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
         public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
         public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
             const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
-
+            const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
             var assembly = typeof (WaterFlowFMModelDefinition).Assembly;
             var assemblyLocation = assembly.Location;
             var directoryInfo = new FileInfo(assemblyLocation).Directory;
@@ -115,6 +116,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 var structurePropertiesDefinitionFile = Path.Combine(path, dflowfmStructurePropertiesCsvFileName);
                 StructureSchemaInstance =
                     new StructureFMPropertiesFile().ReadProperties(structurePropertiesDefinitionFile);
+
+                var morPropertiesDefinitionFile = Path.Combine(path, dflowfmMorPropertiesCsvFileName);
+                MorphologyModelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(
+                        morPropertiesDefinitionFile, "MduGroup");
             }
             else
             {
@@ -135,6 +140,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 SetModelProperty(propertyDefinition.MduPropertyName,
                                  new WaterFlowFMProperty(propertyDefinition, propertyDefinition.DefaultValueAsString));
             }
+            
+            foreach (var propertyDefinition in MorphologyModelPropertySchema.PropertyDefinitions.Values)
+            {
+                SetModelProperty(propertyDefinition.MduPropertyName,
+                                 new WaterFlowFMProperty(propertyDefinition, propertyDefinition.DefaultValueAsString));
+            }
 
             Dependencies.CompileEnabledDependencies(Properties);
             Dependencies.CompileVisibleDependencies(Properties);
@@ -148,10 +159,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             Pipes = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             InitialTracerNames = new List<string>();
+            InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             Embankments = new EventedList<Embankment>();
         }
 
-        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+       private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action == NotifyCollectionChangeAction.Add)
             {
@@ -258,6 +270,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             get { return (int) GetModelProperty(KnownProperties.Kmx).Value; }
             set { GetModelProperty(KnownProperties.Kmx).Value = value; }
+        }
+
+        public bool UseMorphologySediment
+        {
+            get { return (bool)GetModelProperty(GuiProperties.UseMorSed).Value; }
+            set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
         }
 
         public string RelativeMapFilePath
@@ -588,13 +606,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             handlingPropertyChanged = false;
         }
 
-        public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions)
+        public void SelectSpatialOperations(IEventedList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions, IEnumerable<string> spatiallyVaryingSedimentDefinitions = null)
         {
             InitialTracerNames.Clear();
             InitialTracerNames.AddRange(tracerDefinitions);
+            if (spatiallyVaryingSedimentDefinitions != null)
+            {
+                InitialSpatiallyVaryingSedimentPropertyNames.Clear();
+                InitialSpatiallyVaryingSedimentPropertyNames.AddRange(spatiallyVaryingSedimentDefinitions);
+            }
             SpatialOperations.Clear();
 
-            var dataItemsFound = SpatialDataItemNames.Concat(InitialTracerNames).SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
+            var dataItemsFound = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames).SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
 
             var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
             var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
@@ -704,7 +727,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private static bool SupportedByExtForceFile(ISpatialOperation operation)
+        public static bool SupportedByExtForceFile(ISpatialOperation operation)
         {
             var valueOperation = operation as SetValueOperation;
             if (valueOperation != null)
@@ -729,7 +752,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return false;
         }
 
-        private static ISpatialOperation ConvertSpatialOperation(ISpatialOperation operation)
+        public static ISpatialOperation ConvertSpatialOperation(ISpatialOperation operation)
         {
             var interpolateOperation = operation as InterpolateOperation;
             if (interpolateOperation != null)

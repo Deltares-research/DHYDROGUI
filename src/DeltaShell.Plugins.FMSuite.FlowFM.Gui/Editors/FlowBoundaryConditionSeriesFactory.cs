@@ -44,6 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             get
             {
+                if (BoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                    return BoundaryCondition.SedimentFractionNames.Count;
                 switch (ForcingType)
                 {
                     case BoundaryConditionDataType.Empty:
@@ -296,6 +298,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var function = new Function {Name = pointData.Count == 1 ? name : ("Total " + name)};
             function.Arguments.Add(new Variable<DateTime>("Time", new Unit("hours", "h")));
             function.Arguments[0].SetValues(times);
+
+            if (firstWrapper.BoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+            {
+                for (var i = 0; i < firstWrapper.VariableDimension; ++i)
+                {
+                    for(var comp= 0; comp < firstWrapper.Function.Components.Count; ++comp)
+                    {
+                        var values = Enumerable.Repeat((double)0, times.Count).ToList();
+                        foreach (var condition in pointData)
+                        {
+                            if (!CanCreateTimeSeries(condition)) continue;
+
+                            var summedComponents = condition.FilterLayersAndComponents(0, i).ToList();
+
+                            summedComponents = new List<IVariable>() { summedComponents[comp] };
+                            // only use zeroth layer for sum.
+                            FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
+                                  values, condition.BoundaryCondition.Factor, condition.BoundaryCondition.Offset);
+                        }
+                        function.Components.Add(new Variable<double>(firstWrapper.Function.Components[comp].Name, unit));
+                        function.Components.Last().SetValues(values);
+                        function.Components.Last().NoDataValue = Double.NaN;
+                    }
+                }
+                return function;
+            }
 
             if (pointData.Count > 1) //summation mode
             {

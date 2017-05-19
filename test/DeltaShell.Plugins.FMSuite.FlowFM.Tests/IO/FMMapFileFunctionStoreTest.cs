@@ -17,6 +17,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class FMMapFileFunctionStoreTest
     {
         [Test]
+        public void OpenMapFileCheckFunctions_Sedimentation() // Issue #: DELFT3DFM-775
+        {
+            var store = new FMMapFileFunctionStore(null)
+            {
+                Path = TestHelper.GetTestFilePath("output_mapfiles\\sedimentation_map.nc")
+            };
+            Assert.AreEqual(43, store.Functions.Count);
+
+            var groupings = store.GetFunctionGrouping().ToList();
+            Assert.AreEqual(31, groupings.Count);
+
+            var numberOfSingleGroupings = groupings.Count(g => g.Count() == 1);
+            Assert.AreEqual(20, numberOfSingleGroupings);
+
+            var numberOfMultipleGroupings = groupings.Count(g => g.Count() > 1);
+            Assert.AreEqual(11, numberOfMultipleGroupings);
+        }
+
+        [Test]
         public void OpenMapFileCheckFunctions()
         {
             var store = new FMMapFileFunctionStore(null)

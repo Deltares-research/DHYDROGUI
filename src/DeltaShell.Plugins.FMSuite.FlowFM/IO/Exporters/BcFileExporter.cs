@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var corrFilePath = Path.Combine(corrfileDir, corrfileName + "_corr" + BcFile.Extension);
 
             var fileWriter = new BcFile {MultiFileMode = WriteMode, CorrectionFile = false};
+            var boundaryDataBuilder = new BcFileFlowBoundaryDataBuilder();
 
             DateTime? refDate = null;
 
@@ -42,12 +43,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                             boundaryConditionSetList.First().BoundaryConditions.FirstOrDefault());
                 }
                 var boundaryConditionSets = boundaryConditionSetList.Select(FilterBoundaryConditionSet).ToList();
-                fileWriter.Write(boundaryConditionSets, filePath, refDate);
+                fileWriter.Write(boundaryConditionSets, filePath, boundaryDataBuilder, refDate);
                 if (boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions)
                         .Any(boundaryCondition1 => BcFile.IsCorrectionType(boundaryCondition1.DataType)))
                 {
                     fileWriter.CorrectionFile = true;
-                    fileWriter.Write(boundaryConditionSets, corrFilePath, refDate);
+                    fileWriter.Write(boundaryConditionSets, corrFilePath, boundaryDataBuilder, refDate);
                     fileWriter.CorrectionFile = false;
                 }
                 return true;
@@ -63,12 +64,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                             boundaryConditionSet.BoundaryConditions.FirstOrDefault());
                 }
                 var boundaryConditionSets = new[] {FilterBoundaryConditionSet(boundaryConditionSet)};
-                fileWriter.Write(boundaryConditionSets, filePath, refDate);
+                fileWriter.Write(boundaryConditionSets, filePath, boundaryDataBuilder, refDate);
                 if (boundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions)
                         .Any(boundaryCondition1 => BcFile.IsCorrectionType(boundaryCondition1.DataType)))
                 {
                     fileWriter.CorrectionFile = true;
-                    fileWriter.Write(boundaryConditionSets, corrFilePath, refDate);
+                    fileWriter.Write(boundaryConditionSets, corrFilePath, boundaryDataBuilder, refDate);
                     fileWriter.CorrectionFile = false;
                 }
                 return true;                
@@ -85,11 +86,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 {
                     var tempBcSet = new BoundaryConditionSet {Feature = boundaryCondition.Feature};
                     tempBcSet.BoundaryConditions.Add(boundaryCondition);
-                    fileWriter.Write(new[] {tempBcSet}, filePath, refDate);
+                    fileWriter.Write(new[] {tempBcSet}, filePath, boundaryDataBuilder, refDate);
                     if (BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType))
                     {
                         fileWriter.CorrectionFile = true;
-                        fileWriter.Write(new[] {tempBcSet}, corrFilePath, refDate);
+                        fileWriter.Write(new[] {tempBcSet}, corrFilePath, boundaryDataBuilder, refDate);
                         fileWriter.CorrectionFile = false;
                     }
                     return true;

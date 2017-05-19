@@ -54,6 +54,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {FlowBoundaryQuantityType.VelocityVector, "vxy"},
                 {FlowBoundaryQuantityType.Salinity, "s"},
                 {FlowBoundaryQuantityType.Temperature, "T"},
+                {FlowBoundaryQuantityType.SedimentConcentration, "con"},
+                {FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, "bLvP"},
+                {FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed, "bLvCP"},
+                {FlowBoundaryQuantityType.MorphologyBedLoadTransport, "bLT"},
                 {FlowBoundaryQuantityType.Tracer, "tr"},
             };
 

@@ -301,6 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static double ParseDoubleValue(string valuesAsString)
         {
             var actualString = valuesAsString.Replace("d-", "e-").Replace("d+", "e+");
+            actualString = actualString.Replace("d", "e+");
             return Double.Parse(actualString, CultureInfo.InvariantCulture);
         }
     }

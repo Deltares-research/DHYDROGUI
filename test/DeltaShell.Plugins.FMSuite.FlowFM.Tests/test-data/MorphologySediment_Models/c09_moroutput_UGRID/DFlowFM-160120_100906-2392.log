@@ -1,0 +1,39 @@
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** WARNING: readMDUFile: numerics cflwavefrac=0.1 was in file, but not used. Check possible typo.
+** WARNING: readMDUFile: wind gapres=101325.0000000 was in file, but not used. Check possible typo.
+** INFO   : Opened file : da3_obs.xyn
+** INFO   : Closed file : da3_obs.xyn
+** INFO   : Initializing flow model geometry...
+** INFO   : Opened file : sedfrac.ext
+** INFO   : Opened file : boundary_001.pli
+** INFO   : Closed file : boundary_001.pli
+** INFO   : boundary: boundary_001.pli opened 1 cells.
+** INFO   : velocitybnd boundary_001.pli       1 nr of open bndcells
+** INFO   : Opened file : boundary_002.pli
+** INFO   : Closed file : boundary_002.pli
+** INFO   : boundary: boundary_002.pli opened 1 cells.
+** INFO   : waterlevelbnd boundary_002.pli       1 nr of open bndcells
+** INFO   : Opened file : da3_bed.xyz
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : merged 0 samples in .00 seconds.
+** INFO   : Delete kdtree...
+** INFO   : Closed file : da3_bed.xyz
+** INFO   : Starting Delaunay triangulation...
+** INFO   : done
+** INFO   : Determining triangle connectivity and computing polygons and circumcenters...
+** INFO   : done
+** INFO   : Building kdtree...
+** INFO   : done
+** INFO   : Delete kdtree...
+** INFO   : Done initializing flow model geometry.
+** INFO   : Start initializing external forcings...
+** INFO   : External Forcing or Initialising velocitybnd from file boundary_001.pli.
+** INFO   : External Forcing or Initialising waterlevelbnd from file boundary_002.pli.
+** INFO   : External Forcing or Initialising sedfracbndSediment_sand from file sf1_east.pli.
+** WARNING: Reading *.ext forcings file sedfrac.ext, getting unknown QUANTITY sedfracbndSediment_sand
+** WARNING: Reading *.ext forcings file sedfrac.ext,  getting unknown QUANTITY sedfracbndSediment_sand
+** WARNING: flow_initexternalforcings: Error while initializing quantity: sedfracbndSediment_sand Check preceding log lines for details.
+** INFO   : Closed file : sedfrac.ext
+** INFO   : No wind, so waves is switched off
+** WARNING: Error occurred while running, please inspect your diagnostic output.

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.DataEditorGenerator;
@@ -144,6 +145,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     generatedEditor = DataEditorGeneratorSwf.GenerateView(objectDescription);
 
+                    tabPageSediment = new TabPage("Sediment");
+                    tabPageSediment.Controls.Add(
+                        new ElementHost
+                        {
+                            Child = new SedimentFractionsEditor(data.SedimentFractions, data.SedimentOverallProperties),
+                            Dock = DockStyle.Fill,
+                        });
+
+                    tabPageMorphology = generatedEditor.Controls.OfType<TabControl>()
+                        .First()
+                        .TabPages.OfType<TabPage>()
+                        .FirstOrDefault(p => p.Text == "Morphology");
+
+                    tabPanelContainer = generatedEditor.Controls.OfType<TabControl>().FirstOrDefault();
+                    if (tabPanelContainer != null)
+                    {
+                        if (tabPageMorphology != null && !data.UseMorSed)
+                        {
+                            tabPanelContainer.Controls.Remove(tabPageMorphology);
+                        }
+                        if (tabPageSediment != null && !data.UseMorSed)
+                        {
+                            tabPanelContainer.Controls.Remove(tabPageSediment);
+                        }
+                        else if(tabPageSediment != null && !tabPanelContainer.TabPages.OfType<TabPage>().Any(p => p.Text == "Sediment"))
+                        {
+
+                            var indexOfMorphologyTab = tabPageMorphology != null ? tabPanelContainer.TabPages.IndexOf(tabPageMorphology) : -1;
+                            if (indexOfMorphologyTab >= 0)
+                            {
+                                // need to do this because of bug in tabpages control : https://social.msdn.microsoft.com/Forums/windows/en-US/5d10fd0c-1aa6-4092-922e-1fd7af979663/tabpagesinsert-bug?forum=winforms 
+                                IntPtr h = tabPanelContainer.Handle;
+                                
+                                // insert Sediment Tab at current Morphology Tab position (so that its always directly before)
+                                tabPanelContainer.TabPages.Insert(indexOfMorphologyTab, tabPageSediment);
+                            }
+                            else
+                            {
+                                tabPanelContainer.Controls.Add(tabPageSediment);
+                            }
+                            
+                        }
+                    }
+
                     // for all time spans, include tenths of seconds:
                     foreach (var binding in generatedEditor.Bindings.Where(b => b.FieldDescription.ValueType == typeof (TimeSpan)))
                         ((TimeSpanEditor)binding.EditControl).IncludeTensOfSeconds = true;
@@ -168,12 +213,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         }
 
         private static readonly string CoordinateSystemPropertyName = TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);
+        private TabPage tabPageMorphology;
+        private TabControl tabPanelContainer;
+        private TabPage tabPageSediment;
 
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName == CoordinateSystemPropertyName && coordinateSystemButton != null)
             {
                 coordinateSystemButton.UpdateLabelText();
+            }
+            if ( data != null && args.PropertyName == TypeUtils.GetMemberName(() => data.UseMorSed))
+            {
+                if (data.UseMorSed)
+                {
+                    if (tabPanelContainer != null)
+                    {
+                        if (tabPageSediment != null) tabPanelContainer.Controls.Add(tabPageSediment);
+                        if (tabPageMorphology != null) tabPanelContainer.Controls.Add(tabPageMorphology);
+                    }
+                }
+                else
+                {
+                    if (tabPanelContainer != null)
+                    {
+                        if (tabPageMorphology != null) tabPanelContainer.Controls.Remove(tabPageMorphology);
+                        if (tabPageSediment != null) tabPanelContainer.Controls.Remove(tabPageSediment);
+                    }
+                }
             }
         }
 

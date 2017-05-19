@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly ILog Log = LogManager.GetLogger(typeof (BndExtForceFile));
 
         private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
+        private const BcmFile.WriteMode BcmFileWriteMode = BcmFile.WriteMode.FilePerQuantity;
 
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolylineFiles; 
@@ -152,7 +153,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             DateTime refDate)
         {
             WritePolyLines(boundaryConditionSets);
-            return WriteBoundaryConditions(boundaryConditionSets, refDate).Distinct().ToList();
+
+            var resultingItems =
+                boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
+                    .Select(boundaryConditionSet => existingPolylineFiles[boundaryConditionSet.Feature])
+                    .Select(pliFileName => CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero))
+                    .ToList();
+
+            var bcmFile = new BcmFile { MultiFileMode = BcmFileWriteMode };
+            var morphologyGroupings = bcmFile.GroupBoundaryConditions(boundaryConditionSets);
+            resultingItems.AddRange(WriteBoundaryConditions(refDate, bcmFile, morphologyGroupings, new BcmFileFlowBoundaryDataBuilder()).Distinct());
+
+            var bcFile = new BcFile { MultiFileMode = BcFileWriteMode };
+            var standardGroupings = bcFile.GroupBoundaryConditions(boundaryConditionSets);
+            resultingItems.AddRange(WriteBoundaryConditions(refDate, bcFile, standardGroupings, new BcFileFlowBoundaryDataBuilder()).Distinct());
+
+            return resultingItems;
         }
 
         private IList<DelftIniCategory> WriteEmbankmentFiles(IList<Embankment> embankments)
@@ -202,21 +218,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return string.Concat(cleanFileName, ".", cleanExtension);
         }
 
-        private IEnumerable<DelftIniCategory> WriteBoundaryConditions(
-            IList<BoundaryConditionSet> boundaryConditionSets, DateTime refDate)
+        private IEnumerable<DelftIniCategory> WriteBoundaryConditions(DateTime refDate, BcFile bcFile, 
+            IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping, BcFileFlowBoundaryDataBuilder boundaryDataBuilder)
         {
-            var resultingItems =
-                boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
-                    .Select(boundaryConditionSet => existingPolylineFiles[boundaryConditionSet.Feature])
-                    .Select(pliFileName => CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero))
-                    .ToList();
-
-            var bcFile = new BcFile { MultiFileMode = BcFileWriteMode };
-
+            var resultingItems = new List<DelftIniCategory>();
+            
             var fileNamesToBoundaryConditions =
                 new Dictionary<string, IList<Tuple<IBoundaryCondition, BoundaryConditionSet>>>();
-
-            var grouping = bcFile.GroupBoundaryConditions(boundaryConditionSets);
             
             foreach (var group in grouping)
             {
@@ -231,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     var path = existingPaths.Any()
                         ? existingPaths.First()
-                        : AddExtension(group.Key, BcFile.Extension);
+                        : AddExtension(group.Key, bcFile is BcmFile ? BcmFile.Extension : BcFile.Extension);
 
                     if (existingBlock != null && !existingPaths.Contains(path))
                     {
@@ -314,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     bcFile.CorrectionFile = fullPath.EndsWith("_corr.bc");
 
                     bcFile.Write(fileNamesToBoundaryCondition.Value.ToDictionary(t => t.Item1, t => t.Item2),
-                        fullPath, refDate);
+                        fullPath, boundaryDataBuilder, refDate);
 
                     bcFile.CorrectionFile = false;
                 }
@@ -391,27 +399,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
 
             var dataBlocks = new List<BcBlockData>();
+            var bcFilePaths = new List<string>();
 
+            // get file paths for each boundary
             foreach (var delftIniCategory in bndBlocks)
             {
                 var bcFiles = delftIniCategory.GetPropertyValues(ForcingFileKey);
+                bcFilePaths.AddRange(bcFiles.Select(GetFullPath));
+            }
 
-                var bcFilePaths = bcFiles.Select(GetFullPath);
-
-                var fileReader = new BcFile();
-
-                foreach (var bcFilePath in bcFilePaths.Distinct())
+            // read each file path (once)
+            foreach (var bcFilePath in bcFilePaths.Distinct())
+            {
+                if (!File.Exists(bcFilePath))
                 {
-                    if (!File.Exists(bcFilePath))
+                    if (Path.GetFileName(bcFilePath) != ExtForceQuantNames.EmbankmentForcingFile)
                     {
-                        if (Path.GetFileName(bcFilePath) != ExtForceQuantNames.EmbankmentForcingFile)
-                        {
-                            Log.WarnFormat("Boundary condition data file {0} not found", bcFilePath);
-                        }
-                        continue;
+                        Log.WarnFormat("Boundary condition data file {0} not found", bcFilePath);
                     }
-                    dataBlocks.AddRange(fileReader.Read(bcFilePath));
+                    continue;
                 }
+
+                dataBlocks.AddRange(bcFilePath.EndsWith(".bcm")
+                    ? new BcmFile().Read(bcFilePath)
+                    : new BcFile().Read(bcFilePath));
             }
 
             var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
@@ -439,18 +450,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var feature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
                 if (feature == null) continue;
 
-                var builder = new BcFileFlowBoundaryDataBuilder
+                BcFileFlowBoundaryDataBuilder builder;
+                if (IsMorphologyRelatedProperty(quantity))
                 {
-                    ExcludedQuantities = 
-                        Enum.GetValues(typeof (FlowBoundaryQuantityType))
-                            .Cast<FlowBoundaryQuantityType>()
-                            .Except(new[] {quantity})
-                            .ToList(),
-                    OverwriteExistingData = true,
-                    CanCreateNewBoundaryCondition = true,
-                    LocationFilter = feature,
-                };
-
+                    builder = new BcmFileFlowBoundaryDataBuilder
+                    {
+                        ExcludedQuantities =
+                            Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                                .Cast<FlowBoundaryQuantityType>()
+                                .Except(new[] { quantity })
+                                .ToList(),
+                        OverwriteExistingData = true,
+                        CanCreateNewBoundaryCondition = true,
+                        LocationFilter = feature,
+                    };
+                }
+                else
+                {
+                    builder = new BcFileFlowBoundaryDataBuilder
+                    {
+                        ExcludedQuantities =
+                            Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                                .Cast<FlowBoundaryQuantityType>()
+                                .Except(new[] {quantity})
+                                .ToList(),
+                        OverwriteExistingData = true,
+                        CanCreateNewBoundaryCondition = true,
+                        LocationFilter = feature,
+                    };
+                }
                 var bcSets =
                     modelDefinition.BoundaryConditionSets.Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
                         .ToList();
@@ -483,6 +511,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     modelDefinition.BoundaryConditionSets[i].BoundaryConditions.AddRange(bcSets[i].BoundaryConditions);
                 }
             }
+        }
+
+        private static bool IsMorphologyRelatedProperty(FlowBoundaryQuantityType quantity)
+        {
+            return quantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed
+                   || quantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
+                   || quantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
+                   || quantity == FlowBoundaryQuantityType.SedimentConcentration;
         }
 
         #endregion

@@ -39,14 +39,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 var constrainedQuantities =
                     quantities.Except(FlowBoundaryCondition.AlwaysAllowedQuantities).OrderBy(q => q).ToList();
 
-                if (FlowBoundaryCondition.ValidBoundaryConditionCombinations.Select(l => l.OrderBy(q => q))
-                                         .Any(l => l.SequenceEqual(constrainedQuantities)))
+                if (constrainedQuantities.Any())
                 {
-                    continue;
+                    if (FlowBoundaryCondition.ValidBoundaryConditionCombinations.Select(l => l.OrderBy(q => q))
+                        .Any(l => l.SequenceEqual(constrainedQuantities)))
+                    {
+                        continue;
+                    }
+                    issues.Add(new ValidationIssue(boundaryConditionSet.Name, ValidationSeverity.Error,
+                        "Invalid combination of boundary condition quantities detected.",
+                        boundaryConditionSet));
                 }
-                issues.Add(new ValidationIssue(boundaryConditionSet.Name, ValidationSeverity.Error,
-                                               "Invalid combination of boundary condition quantities detected.",
-                                               boundaryConditionSet));
             }
 
             foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>())

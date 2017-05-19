@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BcFile: FMSuiteFileBase
     {
-        private readonly ILog log = LogManager.GetLogger(typeof (BcFile));
+        protected readonly ILog log = LogManager.GetLogger(typeof (BcFile));
 
         public const string Extension = ".bc";
         
@@ -29,6 +29,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string VerticalPositionKey = "Vertical position";
         private const string OffsetKey = "Offset";
         private const string FactorKey = "Factor";
+
+        private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
+        {
+            FlowBoundaryQuantityType.WaterLevel,
+            FlowBoundaryQuantityType.Velocity,
+            FlowBoundaryQuantityType.Discharge,
+            FlowBoundaryQuantityType.Riemann,
+            FlowBoundaryQuantityType.RiemannVelocity,
+            FlowBoundaryQuantityType.Neumann,
+            FlowBoundaryQuantityType.Outflow,
+            FlowBoundaryQuantityType.NormalVelocity,
+            FlowBoundaryQuantityType.TangentVelocity,
+            FlowBoundaryQuantityType.VelocityVector,
+            FlowBoundaryQuantityType.Salinity,
+            FlowBoundaryQuantityType.Temperature,
+            FlowBoundaryQuantityType.Tracer,        
+        };
 
         private readonly int columnWidth = VerticalPositionSpecKey.Length;
 
@@ -77,27 +94,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return filePath.Substring(0, filePath.Length - extension.Length) + tag + extension;
         }
 
+        protected virtual List<string> SupportedProcesses
+        {
+            get
+            {
+                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct().ToList();
+            }
+        }
+
         public IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> GroupBoundaryConditions(
             IEnumerable<BoundaryConditionSet> boundaryConditionSets)
         {
             var discriminator = BcDiscriminator(MultiFileMode);
-
-            return boundaryConditionSets.SelectMany(
-                bcs =>
-                    bcs.BoundaryConditions.Select(
-                        bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
+            return boundaryConditionSets.SelectMany(bcs =>
+                bcs.BoundaryConditions.Where(bc => SupportedProcesses.Contains(bc.ProcessName))
+                .Select(bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
                 .GroupBy(t => discriminator(t.Item1));
         }
 
         public void Write(IEnumerable<BoundaryConditionSet> boundaryConditionSets, string filePath,
-            DateTime? refDate = null)
+            BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
         {
             var grouping = GroupBoundaryConditions(boundaryConditionSets.ToList());
 
             foreach (var group in grouping)
             {
                 var subFile = string.IsNullOrEmpty(group.Key) ? filePath : AppendToFile(filePath, "_" + group.Key);
-                Write(group.ToDictionary(t => t.Item1, t => t.Item2), subFile, refDate);
+                Write(group.ToDictionary(t => t.Item1, t => t.Item2), subFile, boundaryDataBuilder, refDate);
             }
         }
 
@@ -120,8 +143,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return dt1 == dt2;
         }
 
-        public void Write(IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
-            string filePath, DateTime? refDate = null)
+        public virtual void Write(IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
         {
             OpenOutputFile(filePath);
             try
@@ -143,8 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             .ToList()
                             .IndexOf(boundaryCondition);
 
-                    var blockData =
-                        BcFileFlowBoundaryDataBuilder.CreateBlockData(boundaryCondition as FlowBoundaryCondition,
+                    var blockData = boundaryDataBuilder.CreateBlockData(boundaryCondition as FlowBoundaryCondition,
                             supportPointNames, refDate, seriesIndex, CorrectionFile);
 
                     foreach (var block in blockData)
@@ -166,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteLine(keyString.PadRight(columnWidth) + " = " + valueString);
         }
 
-        private void WriteBlock(BcBlockData block)
+        protected virtual void WriteBlock(BcBlockData block)
         {
             WriteLine(BlockKey);
             
@@ -237,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public IEnumerable<BcBlockData> Read(string inputFile)
+        public virtual IEnumerable<BcBlockData> Read(string inputFile)
         {
             OpenInputFile(inputFile);
             try
@@ -255,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                     else
                     {
-                        log.WarnFormat("Omitting line {0} not strarting with {1}", LineNumber, BlockKey);
+                        log.WarnFormat("Omitting line {0} not starting with {1}", LineNumber, BlockKey);
                         line = GetNextLine();
                     }
                 }

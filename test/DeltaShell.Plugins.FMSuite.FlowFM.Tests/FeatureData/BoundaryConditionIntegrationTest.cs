@@ -2,6 +2,8 @@
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -10,6 +12,8 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
+using Rhino.Mocks;
+using Rhino.Mocks.Interfaces;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 {
@@ -238,5 +242,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreNotEqual(ActivityStatus.Failed, model.Status);
         }
 
+        [Test]
+        public void AddSedimentBoundary()
+        {
+            var model = CreateWaterFlowFMModel();
+            var sedFrac = new SedimentFraction() { Name = "Frac1" };
+            model.SedimentFractions.Add(sedFrac);
+
+            var boundary = model.Boundaries.Last();
+            var boundaryCondition = new FlowBoundaryCondition(
+                FlowBoundaryQuantityType.SedimentConcentration, 
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionName = sedFrac.Name,
+                SedimentFractionNames = model.SedimentFractions.Select(sf => sf.Name).ToList()
+            };
+
+            boundaryCondition.AddPoint(0);
+            boundaryCondition.PointData[0][model.StartTime] = 1.5;
+            boundaryCondition.PointData[0][model.StopTime] = 0.2;
+
+            boundaryCondition.AddPoint(1);
+            boundaryCondition.PointData[1][model.StartTime] = 1.55;
+            boundaryCondition.PointData[1][model.StopTime] = 0.25;
+
+            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+
+            Assert.IsNotNull(boundaryConditionSet);
+
+            boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
+
+            ActivityRunner.RunActivity(model);
+            Assert.AreNotEqual(ActivityStatus.Failed, model.Status);
+
+            Assert.AreEqual(1, model.SedimentFractions.Count);
+
+            model.SedimentFractions.RemoveAt(0);
+
+            Assert.AreEqual(0, model.SedimentFractions.Count);
+        }
+
+        [Test]
+        public void TestBedLoadTransportNotContainingMudFraction()
+        {
+            /* Expected mock behavior */
+            var mocks = new MockRepository();
+            var feature = mocks.StrictMock<Feature2D>();
+            var featureName = "MyFeature";
+            var featureGeometry = mocks.StrictMock<IGeometry>();
+
+            feature.Expect(f => f.Name).Return(featureName).Repeat.Times(2);
+            feature.Expect(f => f.Geometry).Return(featureGeometry).Repeat.Times(1);
+
+            mocks.ReplayAll();
+
+            /* Create a FlowBoundaryConditionFactory to test the CreateBoundaryCondition method */
+            var sandName = "SandFraction";
+            var mudName = "MudFraction";
+            var bedloadName = "BedLoadFraction";
+            var fmModel = new WaterFlowFMModel
+            {
+                SedimentFractions = new EventedList<ISedimentFraction>
+                {
+                    new SedimentFraction { Name = sandName, CurrentSedimentType = new SedimentType{Name = "Sand"} },
+                    new SedimentFraction { Name = mudName, CurrentSedimentType = new SedimentType{Name = "Mud"} },
+                    new SedimentFraction { Name = bedloadName, CurrentSedimentType = new SedimentType{Name = "Bed-load"} }
+                }
+            };
+            var boundaryConditionFactory = new FlowBoundaryConditionFactory { Model = fmModel };
+
+            /* Create a FlowBoundaryCondition and test that the SedimentFraction with SedimentType = "Mud" has been filtered out */
+            var variable = "MorphologyBedLoadTransport";
+            var dataType = BoundaryConditionDataType.TimeSeries;
+            var quantityType = "Morphology";
+            var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(feature, variable, dataType, quantityType);
+            var flowBoundaryCondition = boundaryCondition as FlowBoundaryCondition;
+
+            Assert.IsNotNull(flowBoundaryCondition);
+            Assert.AreEqual(2, flowBoundaryCondition.SedimentFractionNames.Count);
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, flowBoundaryCondition.DataType);
+            Assert.IsFalse(flowBoundaryCondition.SedimentFractionNames.Any(sf => sf == mudName));
+            Assert.AreEqual(1, flowBoundaryCondition.SedimentFractionNames.Count(sf => sf == sandName));
+            Assert.AreEqual(1, flowBoundaryCondition.SedimentFractionNames.Count(sf => sf == bedloadName));
+            
+            mocks.VerifyAll();
+        }
     }
 }

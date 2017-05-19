@@ -67,6 +67,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string SolverType = "Icgsolver";
         public const string SecondaryFlow = "SecondaryFlow";
         public const string Irov = "Irov";
+        public const string ISlope = "ISlope";
+        public const string IHidExp = "IHidExp";
+        public const string morphology = "morphology";
+        public const string sediment = "sediment";
+        public const string MorFile = "MorFile";
+        public const string SedFile = "SedFile";
     }
 
     public static class GuiProperties
@@ -104,5 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string WaqOutputStopTime = "WaqOutputStopTime";
 
         public const string UseTemperature = "UseTemperature";
+        public const string UseMorSed = "UseMorSed";
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
@@ -158,9 +160,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return groupLayer;
             }
 
+            var grouping = data as IGrouping<string, IFunction>;
+            if (grouping != null)
+            {
+                var functions = grouping.ToList();
+                if (functions.Any())
+                {
+                    var groupLayerName = GetCommonFunctionName(functions);
+                    return new GroupLayer(string.IsNullOrEmpty(groupLayerName) ? grouping.Key : groupLayerName);
+                }
+            }
+
             return null;
         }
-        
+
+        private static string GetCommonFunctionName(IList<IFunction> functions)
+        {
+            if (!functions.Any()) return string.Empty;
+            var commonFunctionName = functions[0].Name.ToCharArray();
+
+            for (var i = 1; i < functions.Count; i++)
+            {
+                var functionName = functions[i].Name.ToCharArray();
+                var commonCharacters = new List<char>();
+                for (int j = 0; j < Math.Min(commonFunctionName.Length, functionName.Length); j++)
+                {
+                    if (commonFunctionName[j] == functionName[j]) commonCharacters.Add(commonFunctionName[j]);
+                }
+
+                commonFunctionName = new string(commonCharacters.ToArray()).Replace("()", string.Empty).ToCharArray();
+            }
+            return new string(commonFunctionName).Trim();
+        }
+
         private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var layer = e.Item as UnstructuredGridLayer;
@@ -175,6 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return true;
 
             return data is WaterFlowFMModel
+                   || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
                    || data is ImportedFMNetFile
@@ -238,6 +271,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     yield return tracer;
                 }
+                if (model.UseMorSed)
+                {
+                    foreach (var fraction in model.InitialFractions)
+                    {
+                        yield return fraction;
+                    }
+                }
                 yield return model.Bathymetry;
 
                 if (model.OutputMapFileStore != null)
@@ -262,12 +302,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var mapStore = outputStore as FMMapFileFunctionStore;
                 if (mapStore != null)
                 {
-                    yield return mapStore.Grid;
+                    foreach (var output in GetMapOutputFunctions(mapStore))
+                        yield return output;
+                }
+                else
+                {
+                    foreach (var output in outputStore.Functions)
+                        yield return output;
+                }
+            }
+
+            // groupings currently used by FMMapFileFunctionStore (for sedimentation outputs)
+            var grouping = data as IGrouping<string, IFunction>;
+            if (grouping != null)
+            {
+                foreach (var function in grouping)
+                {
+                    yield return function;
+                }
+            }
+        }
+
+        private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
+        {
+            yield return mapStore.Grid;
+
+            var functionGrouping = mapStore.GetFunctionGrouping();
+            foreach (IGrouping<string, IFunction> group in functionGrouping)
+            {
+                if (@group.Count() == 1)
+                {
+                    yield return @group.ElementAt(0);
+                    continue;
                 }
 
-                foreach (var output in outputStore.Functions)
-                    yield return output;
+                yield return @group;
             }
+
+            // Needs to be handled separately since it would be grouped with EastwardSeaWaterVelocityStandardName
+            if (mapStore.CustomVelocityCoverage != null)
+                yield return mapStore.CustomVelocityCoverage;
         }
 
         private static CategorialTheme CreateBoundaryConditionsTheme()

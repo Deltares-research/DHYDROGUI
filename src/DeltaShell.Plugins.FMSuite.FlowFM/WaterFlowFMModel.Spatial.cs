@@ -35,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public UnstructuredGridFlowLinkCoverage Viscosity { get; private set; }
         public UnstructuredGridFlowLinkCoverage Diffusivity { get; private set; }
         public IEventedList<UnstructuredGridCellCoverage> InitialTracers { get; private set; }
+        public IEventedList<UnstructuredGridCellCoverage> InitialFractions { get; private set; }
 
         protected virtual IGridOperationApi gridOperationApi { get; set; }
         protected virtual UnstrucGridOperationApi runTimeGridOperationApi { get; set; } //lives on the worker thread...
@@ -247,6 +248,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         yield return tracer;
                     }
                 }
+                if (InitialFractions != null)
+                {
+                    foreach (var fraction in InitialFractions)
+                    {
+                        yield return fraction;
+                    }
+                }
                 yield return InitialTemperature;
                 yield return Roughness;
                 yield return Viscosity;
@@ -271,6 +279,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
             Diffusivity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName,Grid);
             Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
+            InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
+            InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
         }
 
         private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
@@ -375,6 +385,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 finally
                 {
                     InitialTracers = initialTracers;                    
+                }
+            }
+
+            if (InitialFractions != null)
+            {
+                var initialFracts = InitialFractions;
+                try
+                {
+                    foreach (var fraction in initialFracts)
+                    {
+                        UpdateQuantityAfterGridSet(fraction, newGrid, nodesChanged, cellsChanged, linksChanged);
+                    }
+                }
+                finally
+                {
+                    InitialFractions = initialFracts;
                 }
             }
         }

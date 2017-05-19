@@ -99,6 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UseNetCDFMapFormat = false;
             DisableFlowNodeRenumbering = false;
             TracerDefinitions = new EventedList<string>();
+            SedimentFractions = new EventedList<ISedimentFraction>();
+            SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             
             // DELFT3DFM-371: Disable Model Inspection
@@ -208,6 +210,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool UseTemperature
         {
             get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value; }
+            private set
+            {
+                // empty, but just used for event bubbling                
+            }
+        }
+
+        public bool UseMorSed
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value; }
             private set
             {
                 // empty, but just used for event bubbling                
@@ -324,6 +335,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             // find all names for tracer definitions
             AssembleTracerDefinitions();
+
+            AssembleSpatiallyVaryingSedimentProperties();
             
             FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
 
@@ -416,12 +429,216 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
             }
-            foreach (var quantity in ModelDefinition.SpatialOperations.Keys.Except(WaterFlowFMModelDefinition.SpatialDataItemNames))
+            var sp = SedimentFractions.SelectMany(sf => sf.GetAllActiveSpatiallyVaryingPropertyNames()).Distinct();
+            foreach (var quantity in ModelDefinition.SpatialOperations.Keys.Except(WaterFlowFMModelDefinition.SpatialDataItemNames).Except(sp))
             {
                 if (!TracerDefinitions.Contains(quantity))
                 {
                     TracerDefinitions.Add(quantity);
                 }
+            }
+        }
+
+        private void AssembleSpatiallyVaryingSedimentProperties()
+        {
+            var spatiallyVaryingSedimentProperties = SedimentFractions.SelectMany(f => f.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().Where(sp => sp.IsSpatiallyVarying)).ToList();
+            spatiallyVaryingSedimentProperties.AddRange(SedimentFractions.Where(f=> f.CurrentFormulaType != null ).SelectMany(f => f.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().Where(sp => sp.IsSpatiallyVarying)));
+            foreach (var spatiallyVaryingSedimentProperty in spatiallyVaryingSedimentProperties)
+            {
+                AddToIntialFractions(spatiallyVaryingSedimentProperty.SpatiallyVaryingName);
+            }
+        }
+
+        private void SedimentFractionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Name")
+            {
+                var sedimentFraction = sender as ISedimentFraction;
+
+                if (sedimentFraction != null)
+                {
+                    sedimentFraction.UpdateSpatiallyVaryingNames();
+                }
+            }
+
+            if (e.PropertyName == "CurrentFormulaType"
+                || e.PropertyName == "CurrentSedimentType")
+            {
+                var sedimentFraction = sender as ISedimentFraction;
+                if (sedimentFraction != null)
+                {
+                    var activeSpatiallyVarying = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
+                    var spatiallyVarying = sedimentFraction.GetAllSpatiallyVaryingPropertyNames();
+                    InitialFractions.RemoveAllWhere( 
+                        fr => spatiallyVarying.Contains(fr.Name) && !activeSpatiallyVarying.Contains(fr.Name));
+
+                    foreach (var layerName in activeSpatiallyVarying)
+                    {
+                        AddToIntialFractions(layerName);
+                    }
+                    
+                    sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
+
+                    if (e.PropertyName == "CurrentFormulaType")
+                    {
+                        sedimentFraction.SetTransportFormulaInCurrentSedimentType();
+                    }
+                }
+                return;
+            }
+
+            var prop = sender as ISpatiallyVaryingSedimentProperty;
+            if (prop == null) return;
+
+            if (e.PropertyName == "IsSpatiallyVarying")
+            {
+                if (prop.IsSpatiallyVarying)
+                {
+                    AddToIntialFractions(prop.SpatiallyVaryingName);
+                }
+                else
+                {
+                    InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
+                }
+            }
+        }
+
+        private void AddToIntialFractions(string spatiallyVaryingName)
+        {
+            if ( InitialFractions == null ) return;
+            var t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
+            if (t == null)
+            {
+                InitialFractions.Add(CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid));
+            }
+            else
+            {
+                var unstrGridCellCoverage = t.Value as UnstructuredGridCellCoverage;
+                if (unstrGridCellCoverage == null)
+                {
+                    t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+                    InitialFractions.Add((UnstructuredGridCellCoverage) t.Value);
+                }
+                else
+                {
+                    if (!InitialFractions.Contains(unstrGridCellCoverage))
+                    {
+                        InitialFractions.Add(unstrGridCellCoverage);
+                    }
+                }
+            }
+        }
+
+        private void SedimentFractionsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            var sedimentFraction = e.Item as ISedimentFraction;
+            if( sedimentFraction == null )
+                return;
+            var name = sedimentFraction.Name;
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    sedimentFraction.UpdateSpatiallyVaryingNames();
+
+                    sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
+
+                    sedimentFraction.SetTransportFormulaInCurrentSedimentType();
+                    
+                    if (InitialFractions == null || BoundaryConditionSets == null) break;
+                    // sync the initial fractions
+                    foreach (var layerName in sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames())
+                    {
+                        if (InitialFractions.FirstOrDefault(fr => fr.Name.Equals(layerName)) == null)
+                        {
+                            AddToIntialFractions(layerName);
+                        }
+                    }
+                    foreach (var set in BoundaryConditionSets)
+                    {
+                        foreach (var bc in set.BoundaryConditions)
+                        {
+                            var flowCondition = bc as FlowBoundaryCondition;
+                            if (flowCondition != null
+                                && flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                            {
+                                foreach (var point in bc.PointData)
+                                {
+                                    flowCondition.AddSedimentFractionToFunction(point, name);
+                                }
+                            }
+                        }
+                    }
+                        
+                    break;
+                case NotifyCollectionChangeAction.Remove:
+                    // sync the initial fractions
+                    var layersToRemove = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
+                    InitialFractions.RemoveAllWhere( ifs => layersToRemove.Contains(ifs.Name) );
+
+                    // Remove dataItems for coverages related to Removed Fraction
+                    DataItems.RemoveAllWhere(di => di.Value is UnstructuredGridCoverage && layersToRemove.Contains(di.Name));
+                    
+                    // remove all boundary conditions with that fraction name
+                    foreach (var set in BoundaryConditionSets)
+                    {
+                        set.BoundaryConditions.RemoveAllWhere(bc =>
+                        {
+                            var flowCondition = bc as FlowBoundaryCondition;
+
+                            if (flowCondition != null &&
+                                flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration && Equals(flowCondition.SedimentFractionName, name))
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        foreach (var bc in set.BoundaryConditions)
+                        {
+                            var flowCondition = bc as FlowBoundaryCondition;
+                            if (flowCondition != null
+                                && flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                            {
+                                foreach (var point in bc.PointData)
+                                {
+                                    flowCondition.RemoveSedimentFractionFromFunction(point, name);
+                                }
+                            }
+                        }
+                        set.BoundaryConditions.RemoveAllWhere(bc =>
+                        {
+                            var flowCondition = bc as FlowBoundaryCondition;
+
+                            if (flowCondition != null &&
+                                flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
+                                && (flowCondition.SedimentFractionNames == null || flowCondition.SedimentFractionNames.Count == 0))
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+                    }
+                    break;
+                case NotifyCollectionChangeAction.Replace:
+                    // can't rename yet
+                    throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
+                    break;
+                case NotifyCollectionChangeAction.Reset:
+                    // sync the initial fractions
+                    InitialFractions.Clear();
+                    // remove all fraction  boundary conditions
+                    foreach (var set in BoundaryConditionSets)
+                    {
+                        set.BoundaryConditions.RemoveAllWhere(bc =>
+                        {
+                            var flowCondition = bc as FlowBoundaryCondition;
+                            return flowCondition != null && (flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
+                                || flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+                        });
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -508,6 +725,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddOrRenameDataItem(InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
             AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
             AddOrRenameTracerDataItems();
+            AddOrRenameFractionDataItems();
         }
 
         private void AddOrRenameTracerDataItems()
@@ -515,6 +733,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             foreach (var initialTracer in InitialTracers)
             {
                 AddOrRenameDataItem(initialTracer, initialTracer.Name);
+            }
+        }
+        private void AddOrRenameFractionDataItems()
+        {
+            foreach (var initialFraction in InitialFractions)
+            {
+                AddOrRenameDataItem(initialFraction, initialFraction.Name);
             }
         }
 
@@ -549,6 +774,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     BeginEdit(new DefaultEditAction("Switching salinity process"));
                     UseSalinity = UseSalinity;
+                    EndEdit();
+                }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching morphology process"));
+                    UseMorSed = UseMorSed;
+                    EndEdit();
+                }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching Bed slope formulation"));
+                    EndEdit();
+                }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.IHidExp,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching Hiding and exposure formulation"));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Kmx,
@@ -758,6 +1002,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return InitialWaterLevel;
             yield return InitialTemperature;
             yield return InitialTracers;
+            yield return InitialFractions;
 
             // for QueryTimeSeries tool:
             if (OutputHisFileStore != null)
@@ -1036,6 +1281,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        private void SpatialDataFractionsChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (Equals(sender, InitialFractions))
+            {
+                AddOrRenameFractionDataItems();
+            }
+            else
+            {
+                throw new ArgumentException("Unexpected layered spatial data: " + e.Item);
+            }
+        }
+
         #endregion
 
         #region Mdu file
@@ -1157,7 +1414,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     : null;
             }
         }
-        
+
+        public string MorFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.MorFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.MorFile));
+                return null;
+            }
+        }
+
+        public string SedFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.SedFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.SedFile));
+                return null;
+            }
+        }
+
         //Do not remove, is used by python code
         public string ComFilePath
         {
@@ -1312,6 +1591,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 model.SyncModelTimesWithBase();
             }
 
+            if (model.UseMorSed)
+            {
+                SedimentFile.LoadSediments(model.SedFilePath, model);
+            }
+
             var netFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.NetFile);
             if (String.IsNullOrEmpty(netFileProperty.GetValueAsString()))
             {
@@ -1324,7 +1608,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // sync the heat flux model, because events are off during reading
             model.HeatFluxModelType = model.ModelDefinition.HeatFluxModel.Type;
         }
-
+        
         internal void SyncModelTimesWithBase()
         {
             base.StartTime = StartTime;
@@ -1358,9 +1642,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             if (writeExtForcings)
             {
-                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions);
+                var spatVarSedPropNames =
+                    SedimentFractions.Where(sf => sf.CurrentSedimentType != null).SelectMany(
+                        sf =>
+                            sf.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
+                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList();
+                spatVarSedPropNames.AddRange(SedimentFractions.Where(sf => sf.CurrentFormulaType != null).SelectMany(
+                        sf =>
+                            sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
+                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
+                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames) ;
                 ModelDefinition.Bathymetry = Bathymetry;
             }
+
+            WriteMorSedFilesIfNeeded(mduPath);
 
             mduFile.Write(mduPath, ModelDefinition, Area, switchTo, writeExtForcings, writeFeatures, UseNetCDFMapFormat, DisableFlowNodeRenumbering);
 
@@ -1382,7 +1677,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return true;
         }
 
-        
+        private void WriteMorSedFilesIfNeeded(string mduPath)
+        {
+            if (!UseMorSed) return;
+
+            var morPath = Path.ChangeExtension(mduPath, "mor");
+            MorphologyFile.Save(morPath, ModelDefinition);
+
+            var sedPath = Path.ChangeExtension(mduPath, "sed");
+            SedimentFile.Save(sedPath, this);
+        }
 
         private void OnSwitchTo(string mduPath)
         {
@@ -1961,6 +2265,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+
+        public IEventedList<ISedimentProperty> SedimentOverallProperties { get; set; }
+
+        private IEventedList<ISedimentFraction> sedimentFractions;
+        public IEventedList<ISedimentFraction> SedimentFractions
+        {
+            get { return sedimentFractions; }
+            set
+            {
+                if (sedimentFractions != null)
+                {
+                    ((INotifyPropertyChanged) SedimentFractions).PropertyChanged -= SedimentFractionPropertyChanged;
+                    SedimentFractions.CollectionChanged -= SedimentFractionsCollectionChanged;
+                }
+                sedimentFractions = value;
+                if (sedimentFractions != null)
+                {
+                    ((INotifyPropertyChanged)SedimentFractions).PropertyChanged += SedimentFractionPropertyChanged;
+                    SedimentFractions.CollectionChanged += SedimentFractionsCollectionChanged;
+                }
+            }
+        }
         #endregion
 
         #region Control computational timestep loop
@@ -1987,7 +2313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         */
 
-        
+
         #endregion
 
         #region IDimrModel

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -10,21 +12,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
     {
         public static ValidationReport Validate(this WaterFlowFMModel model, WaterFlowFMModel target = null)
         {
-            return new ValidationReport(model.Name + " (Water Flow FM Model)",
-                                        new[]
-                                            {
-                                                ValidateCoordinateSystem(model),
-                                                WaterFlowFMGridValidator.Validate(model),
-                                                ValidateBathymetry(model),
-                                                ValidateInitialConditions(model),
-                                                ValidatePhysicalProcesses(model),
-                                                WaterFlowFMWindValidator.Validate(model),
-                                                WaterFlowFMModelDefinitionValidator.Validate(model),
-                                                WaterFlowFMBoundaryConditionValidator.Validate(model),
-                                                WaterFlowFMArea2DValidator.Validate(model),
-                                                ValidateRestartInput(model),
-                                                WaterFlowFMEmbankmentValidator.Validate(model)
-                                            });
+            var validationReports = new[]
+            {
+                ValidateCoordinateSystem(model),
+                WaterFlowFMGridValidator.Validate(model),
+                ValidateBathymetry(model),
+                ValidateInitialConditions(model),
+                ValidatePhysicalProcesses(model),
+                WaterFlowFMWindValidator.Validate(model),
+                WaterFlowFMModelDefinitionValidator.Validate(model),
+                WaterFlowFMBoundaryConditionValidator.Validate(model),
+                WaterFlowFMArea2DValidator.Validate(model),
+                ValidateRestartInput(model),
+                WaterFlowFMEmbankmentValidator.Validate(model),
+            };
+
+            var subReports = model.UseMorSed
+                ? validationReports.Plus(WaterFlowFMSedimentMorphologyValidator.ValidateMorphologyBetaWarning(model))
+                : validationReports;
+
+            var validationReport = new ValidationReport(model.Name + " (Water Flow FM Model)",
+                subReports);
+            
+            return validationReport;
         }
 
         private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model)
