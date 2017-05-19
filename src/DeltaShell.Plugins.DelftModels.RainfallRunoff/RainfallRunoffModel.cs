@@ -545,11 +545,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 var entryAssembly = GetType().Assembly;
                 if (entryAssembly == null) return "";
-
+                var file = Path.Combine(RRModelEngineDll.RR_DLL_NAME, RRModelEngineDll.DllPath);
                 if (!File.Exists(RRModelEngineDll.DllPath))
                     return "";
 
-                return "Kernel: " + Path.GetFileName(RRModelEngineDll.DllPath) + "  " + FileVersionInfo.GetVersionInfo(RRModelEngineDll.DllPath).FileVersion;
+                return "Kernel: " + Path.GetFileName(RRModelEngineDll.RR_DLL_NAME) + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
             }
         }
         
@@ -1031,7 +1031,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             return directoryName;
         }
-        public virtual string KernelDirectoryLocation { get { return Path.GetDirectoryName(RRModelEngineDll.DllPath); } }
+        public virtual string KernelDirectoryLocation { get { return RRModelEngineDll.DllPath; } }
         public virtual void DisconnectOutput()
         {
             ClearOutput();

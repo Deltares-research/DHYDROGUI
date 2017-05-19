@@ -3,24 +3,25 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
 {
     public static class Flow1DApiDll
     {
-        private const string CF_DLL_NAME = "cf_dll.dll";
+        private const string CF_FOLDER_NAME = "dflow1d";
+        private const string CF_BINFOLDER_NAME = "bin";
+        public const string CF_DLL_NAME = "cf_dll.dll";
 
-        public static string DllDirectory
+        public static string DllPath
         {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(typeof (WaterFlowModel1D).Assembly.Location), "flow1d_kernel");
-            }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", CF_FOLDER_NAME, CF_BINFOLDER_NAME); }
         }
 
         static Flow1DApiDll()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(CF_DLL_NAME, DllDirectory);
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(CF_DLL_NAME, DllPath);
         }
 
         [DllImport(CF_DLL_NAME, EntryPoint = "getMessage", CallingConvention = CallingConvention.Cdecl)]

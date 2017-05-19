@@ -39,7 +39,10 @@
   <?define languages ="1033"?>
   
   <?define plugin_wixUIDeltares="Sobek_WixUI_Deltares"?>
-  
+
+  <!--<?define dimr_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\"?>
+  <?define dimr_kernels_lib_dir="$(var.dimr_plugin_bin)kernels\"?>
+-->
   <!-- surpressed ICE57 in property window, which is related to per user and per machine installation, using e.g. HKMU instead of HKLM-->
   <?include ..\Framework\DeltaShell\Templates\PluginTemplate.wxi?>
   

@@ -4,27 +4,25 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.Utils.Interop;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel
 {
     public static class RealTimeControlModelDll
     {
-        private static string _dllPath;
-        public const string RTCTOOLSDLL_NAME = "RTCTools_BMI.dll";
-
-        public static string DllDirectory
-        {
-            get { return Path.Combine(Path.GetDirectoryName(typeof(RealTimeControlModelDll).Assembly.Location), "rtc_kernel"); }
-        }
+        public const string RTCTOOLS_FOLDER_NAME = "dfbc";
+        public const string RTCTOOLS_BINFOLDER_NAME = "bin";
+        public const string RTCTOOLS_DLL_NAME = "RTCTools_BMI.dll";
 
         public static string DllPath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", RTCTOOLSDLL_NAME); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", RTCTOOLS_FOLDER_NAME, RTCTOOLS_BINFOLDER_NAME); }
         }
 
         static RealTimeControlModelDll()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(RTCTOOLSDLL_NAME, DllDirectory);
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(RTCTOOLS_DLL_NAME, DllPath);
         }
 
     }

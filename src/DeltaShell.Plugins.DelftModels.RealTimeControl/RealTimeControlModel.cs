@@ -458,7 +458,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return Path.GetDirectoryName(RealTimeControlModelDll.DllPath);
+                return RealTimeControlModelDll.DllPath;
             }
         }
 
@@ -626,7 +626,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (!File.Exists(RealTimeControlModelDll.DllPath))
                     return "";
 
-                return "Kernel: " + RealTimeControlModelDll.RTCTOOLSDLL_NAME + "  " + FileVersionInfo.GetVersionInfo(RealTimeControlModelDll.DllPath).FileVersion;
+                return "Kernel: " + RealTimeControlModelDll.RTCTOOLS_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(RealTimeControlModelDll.DllPath).FileVersion;
             }
         }
 

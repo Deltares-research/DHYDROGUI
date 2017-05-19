@@ -2364,7 +2364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                return Path.GetDirectoryName(FlexibleMeshModelDll.DllPath);
+                return FlexibleMeshModelDll.DllPath;
             }
         }
 

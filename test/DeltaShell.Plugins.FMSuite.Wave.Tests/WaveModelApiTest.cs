@@ -40,7 +40,7 @@ public class WaveModelApiTest
             
             Directory.SetCurrentDirectory(Path.GetDirectoryName(localPath));
 
-            using (var api = new RemoteWaveModelApi(true) {ReferenceDateTime = refDate})
+            using (var api = new RemoteWaveModelApi(false) {ReferenceDateTime = refDate})
             {
                 api.SetVar("mode", "stand-alone");
                 api.Initialize(Path.GetFileName(localPath));

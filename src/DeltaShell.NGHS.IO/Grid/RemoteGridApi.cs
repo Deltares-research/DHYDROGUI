@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using DelftTools.Utils.Remoting;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -8,13 +9,13 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         private bool disposed; 
         private IGridApi api;
-        
+
         public RemoteGridApi()
         {
             // DeltaShell is 32bit, however we still want to take advantage of the 64bit dflowfm.dll if the system can use it, 
             // so we need to start the 64bit worker. This works as long as the data send over the IFlexibleMeshModelApi border 
             // is not bit dependent, eg IntPtr and the like.
-            api = RemoteInstanceContainer.CreateInstance<IGridApi, GridApi>(Environment.Is64BitOperatingSystem);
+            api = RemoteInstanceContainer.CreateInstance<IGridApi, GridApi>(Environment.Is64BitOperatingSystem, null, false, typeof(DimrApi).Assembly);
         }
         
         public GridApiDataSet.DataSetConventions GetConvention(string file)

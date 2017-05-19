@@ -21,8 +21,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;</DefineConstants>
+    <DefineConstants>Debug</DefineConstants>
     <SuppressIces>ICE57</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName);</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -30,10 +33,10 @@
     <SuppressIces>ICE57</SuppressIces>
   </PropertyGroup>
   <Import Project="$(WixTargetsPath)" />
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName)</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Dimr\DimrLibs.wxs">
+      <Link>DimrLibs.wxs</Link>
+    </Compile>
     <Compile Include="Product.wxs" />
     <Compile Include="WixUI\Sobek_WixUI_Deltares.wxs" />
   </ItemGroup>
@@ -44,14 +47,17 @@
     <Content Include="..\Dimr\CLI_FeatureContent.wxi">
       <Link>CLI_FeatureContent.wxi</Link>
     </Content>
-	<Content Include="..\Dimr\CLI_SOBEK.wxi" >
-	  <Link>CLI_SOBEK.wxi</Link>
-	</Content>
-    <Content Include="..\Dimr\CLI_SOBEK_FeatureContent.wxi" >
-	  <Link>CLI_SOBEK_FeatureContent.wxi</Link>
-	</Content>
+    <Content Include="..\Dimr\CLI_SOBEK.wxi">
+      <Link>CLI_SOBEK.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\CLI_SOBEK_FeatureContent.wxi">
+      <Link>CLI_SOBEK_FeatureContent.wxi</Link>
+    </Content>
     <Content Include="..\Dimr\Dimr.wxi">
       <Link>Dimr.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\DimrDefines.wxi">
+      <Link>DimrDefines.wxi</Link>
     </Content>
     <Content Include="..\FM\FMPlugin.wxi">
       <Link>FMPlugin.wxi</Link>
@@ -116,6 +122,7 @@
     <Content Include="..\Wave\WavePlugin.wxi">
       <Link>WavePlugin.wxi</Link>
     </Content>
+    <Content Include="SobekDimrKernels.xsl" />
     <Content Include="SobekPlugin.wxi" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
@@ -203,4 +210,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
+  <Import Project="SobekProperties.targets" />  
+  <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+  </PropertyGroup>
 </Project>

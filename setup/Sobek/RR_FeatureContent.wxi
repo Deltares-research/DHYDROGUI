@@ -4,10 +4,8 @@
   <ComponentRef Id="RainfallRunoff_scripts_examples_files"/>
   <ComponentRef Id="RainfallRunoff_scripts_libraries_files"/>
 
-  <ComponentRef Id="x86_RainfallRunoffKernel_dll"/>
   
   <Feature Id="RR_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
-    <ComponentRef Id="x64_RainfallRunoffKernel_dll"/>
   </Feature>
 </Include>

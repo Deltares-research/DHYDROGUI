@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
+using DeltaShell.Dimr;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
@@ -264,25 +265,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         private bool loggingEnabled = true;
 
         
-
-        public const string CF_DLL_NAME = "CF_dll.dll";
-
-        public static string DllDirectory
-        {
-            get { return Path.Combine(Path.GetDirectoryName(typeof(WaterFlowModel1D).Assembly.Location), "flow1d_kernel"); }
-        }
-
-        public static string DllPath
-        {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", CF_DLL_NAME); }
-        }
-
         private const int MAXSTRLEN = 1024;
         private const int MAXDIMS = 6;
 
         static ModelApi()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(CF_DLL_NAME, DllDirectory);
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(Flow1DApiDll.CF_DLL_NAME, Flow1DApiDll.DllPath);
         }
 
         public ModelApi()
@@ -385,7 +374,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             ResetMessageCount();
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "resetMessageCount", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "resetMessageCount", CallingConvention = CallingConvention.Cdecl)]
         private static extern int resetMessageCount_();
 
         public int ResetMessageCount()
@@ -397,7 +386,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 
         #region Other from interface
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "SetMissingValue", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "SetMissingValue", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool SetMissingValue([In] ref double missingValue);
 
         public bool SetMissingValue(double missingValue)
@@ -408,7 +397,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return SetMissingValue(ref missingValue);
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "WriteWaqOutput", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "WriteWaqOutput", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool WriteWaqOutput([In] ref int waqVolType);
 
         public void WriteWaqOutput(WaqVolType volType)
@@ -420,7 +409,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             WriteWaqOutput(ref volTypeInt);
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "ReadFiles", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "ReadFiles", CallingConvention = CallingConvention.Cdecl)]
         private static extern void ReadFiles_([In] String filename);
 
         public void ReadFiles(string filename)
@@ -429,7 +418,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             LogMessages();
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "SE_GETVALUESBYINTID", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "SE_GETVALUESBYINTID", CallingConvention = CallingConvention.Cdecl)]
         private static extern int SE_GetValuesByIntId(
             [In] string componentId,
             [In] string schemId,
@@ -470,7 +459,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return values;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetSizeBranch", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetSizeBranch", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetSizeBranch([In] ref int ElementSetId, [In] ref int location);
 
         public int GetSizeBranch(ElementSet elmSet, int location)
@@ -505,7 +494,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return values;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "SetValuesOnGridPoint", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "SetValuesOnGridPoint", CallingConvention = CallingConvention.Cdecl)]
         private static extern int SetValues_([In] ref int quantityId, [In] ref int ElementSetId, [In] ref int location,
             [In] double[] values, [In] ref int valuesCount);
 
@@ -533,7 +522,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return values;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetModelApiValue", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetModelApiValue", CallingConvention = CallingConvention.Cdecl)]
         private static extern double GetValue([In] ref int quantityId, [In] ref int ElementSetId, [In] ref int location);
 
         // TODO to be replaced by BMI get_Var
@@ -546,7 +535,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return val;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetSize", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetSize", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetSize([In] ref int ielmSet);
 
         // TODO to be replaced by BMI get_Var
@@ -557,7 +546,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return GetSize(ref elmSet);
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "SetValues", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "SetValues", CallingConvention = CallingConvention.Cdecl)]
         private static extern void SetValues_([In] ref int type, [In] double[] values, int a);
 
         public void SetValues(QuantityType type, double[] values)
@@ -686,7 +675,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 
         #region Network
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkSetTabCrossSection", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetTabCrossSection", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkSetTabCrossSection([In] ref int levelCount, [In] double[] levels,
             [In] double[] flowWidth, [In] double[] totalWidth, [In] double[] plains, [In] ref double levelCrest,
             [In] ref double levelBottom, [In] ref double flowArea, [In] ref double totalArea, [In] ref bool closed,
@@ -726,7 +715,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return res;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkSetYZCrossSection", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetYZCrossSection", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkSetYZCrossSection([In] ref int count, [In] double[] y, [In] double[] z,
             [In] ref int frictionCount, [In] double[] frictionSectionFrom, [In] double[] frictionSectionTo,
             [In] int[] frictionTypePos, [In] double[] frictionValuePos, [In] int[] frictionTypeNeg,
@@ -749,7 +738,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return res;
         }
         
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkSetCS", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetCS", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkSetCS([In] ref int branch, [In] ref double location,
             [In] ref int iref, [In] ref double bottomLevel);
 
@@ -764,7 +753,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return res;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkAddStorage", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkAddStorage", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkAddStorage([In] string id, int len);
 
         public int NetworkAddStorage(string id)
@@ -773,7 +762,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkSetBoundary", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetBoundary", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkSetBoundary([In] ref int nodeId, [In] ref int interpolationType,
             [In] ref int type, [In] ref double value, [In] ref double returnTime);
 
@@ -796,7 +785,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return iret;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkSetBoundaryQH", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetBoundaryQH", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkSetBoundaryQH([In] ref int nodeId, [In] double[] discharge,
             [In] double[] waterLevel, [In] ref int length);
 
@@ -810,7 +799,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return iret;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkSetBoundaryValue", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetBoundaryValue", CallingConvention = CallingConvention.Cdecl)]
         private static extern void NetworkSetBoundaryValue([In] ref int iref, [In] ref double time,
             [In] ref double value);
 
@@ -825,7 +814,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             LogMessages();
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "NetworkAddObservationPoint", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkAddObservationPoint", CallingConvention = CallingConvention.Cdecl)]
         private static extern int NetworkAddObservationPoint_([In] String id, [In] ref int branchId,
             [In] ref double offset, int a);
 
@@ -841,10 +830,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         #endregion
         #region coupling on computational timestep
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetIstep", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetIstep", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetIstep();
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetTimeStep", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetTimeStep", CallingConvention = CallingConvention.Cdecl)]
         private static extern double GetTimeStep();
 
         public bool ModelPerformTimeStep()
@@ -956,7 +945,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucWeir", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucWeir", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucWeir(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double crestlevel,
@@ -999,7 +988,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucRiverWeir", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucRiverWeir", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucRiverWeir(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double crestlevel,
@@ -1047,7 +1036,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucAdvWeir", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucAdvWeir", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucAdvWeir(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double crestlevel,
@@ -1092,7 +1081,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucOrifice", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucOrifice", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucOrifice(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double crestlevel,
@@ -1148,7 +1137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucCulvert", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucCulvert", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucCulvert(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double leftlevel,
@@ -1217,7 +1206,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucSiphon", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucSiphon", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucSiphon(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double leftlevel,
@@ -1283,7 +1272,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucInvSiphon", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucInvSiphon", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucInvSiphon(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double leftlevel,
@@ -1306,7 +1295,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             [In] string id,
             int len);
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucUniWeir", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucUniWeir", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucUniWeir(
             [In] ref int ibranch2,
             [In] ref double dist,
@@ -1350,7 +1339,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucBridgePillars", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucBridgePillars", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucBridge(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double pillarwidth,
@@ -1374,7 +1363,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucBridge", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucBridge", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucBridge(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double bottomlevel,
@@ -1473,7 +1462,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucGeneralst", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucGeneralst", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucGeneralst(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref double widthleftW1,
@@ -1558,7 +1547,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return retval;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "setStrucPump", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "setStrucPump", CallingConvention = CallingConvention.Cdecl)]
         private static extern int setStrucPump(
             [In] ref int ibranch2, [In] ref double dist, [In] ref int icompound,
             [In] ref int direction,
@@ -1598,7 +1587,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             }
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "InitialiseStrucMappingArray", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "InitialiseStrucMappingArray", CallingConvention = CallingConvention.Cdecl)]
         private static extern void InitialiseStrucMappingArray([In] ref int count);
 
         public void InitialiseStrucMappingArray(int count)
@@ -1611,7 +1600,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 
         #region Conveyance tables and interpolation
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetConveyanceTable", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetConveyanceTable", CallingConvention = CallingConvention.Cdecl)]
         private static extern void GetConveyanceTable([In] ref int csInterpolated,
             [In, Out] double[] Levels,
             [In, Out] double[] FlowArea,
@@ -1623,11 +1612,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             [In, Out] double[] ConveyanceNeg,
             [In] ref int length);
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "InterpolateCrossSections", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "InterpolateCrossSections", CallingConvention = CallingConvention.Cdecl)]
         private static extern int InterpolateCrossSections([In] ref int crossSectionNr1, [In] ref int crossSectionNr2,
             [In] ref double distanceBetweenCrossSections, [In] ref double distanceToCrossSectionNr1);
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetNumberOfConveyanceLevels", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetNumberOfConveyanceLevels", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetNumberOfConveyanceLevels([In] ref int csInterpolated);
 
         public void GetConveyanceTable(int crossSectionNr, ref double[] levels, ref double[] flowArea,
@@ -1659,7 +1648,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 
         #region Conveyance tables and interpolation
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetInterpolatedZWCrossSection", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetInterpolatedZWCrossSection", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetInterpolatedZWCrossSection_(
             [In] ref int crossSectionNr,
             [In, Out] ref int levelCount, [Out] out double bottomLevelShift, [In, Out] double[] levels,
@@ -1726,10 +1715,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
             return result;
         }
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetNumberOfLevelsInCrossSection", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetNumberOfLevelsInCrossSection", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetNumberOfLevelsInCrossSection([In] ref int csInterpolated);
 
-        [DllImport(CF_DLL_NAME, EntryPoint = "GetInterpolatedYZCrossSection", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetInterpolatedYZCrossSection", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetInterpolatedYZCrossSection_([In] ref int crossSectionNr, [In, Out] double[] y,
             [In, Out] double[] z, [In] ref int length);
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.Dimr;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid
@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         static GridApi()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(GridApiDataSet.GRIDDLL_NAME, GridApiDataSet.DllDirectory);
+            NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
         }
 
         public GridApi()

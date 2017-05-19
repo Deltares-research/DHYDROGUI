@@ -31,7 +31,7 @@
   </PropertyGroup>
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName)</DefineConstants>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName);</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\CLI.wxi">
@@ -48,6 +48,9 @@
     </Content>
     <Content Include="..\Dimr\Dimr.wxi">
       <Link>Dimr.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\DimrDefines.wxi">
+      <Link>DimrDefines.wxi</Link>
     </Content>
     <Content Include="..\HydroModel\HydroModelPlugin.wxi">
       <Link>HydroModelPlugin.wxi</Link>
@@ -124,6 +127,9 @@
     <Content Include="UtilityShortcuts.wxi" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Dimr\DimrLibs.wxs">
+      <Link>DimrLibs.wxs</Link>
+    </Compile>
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
     <Compile Include="Product.wxs" />
   </ItemGroup>
@@ -180,4 +186,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
+  <Import Project="FMProperties.targets" />
+  <Import Project="..\Dimr\HarvestDimrLibs.targets" />
 </Project>
