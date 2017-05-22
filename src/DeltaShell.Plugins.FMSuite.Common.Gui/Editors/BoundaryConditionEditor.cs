@@ -394,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
             quantitiesComboBox.Items.AddRange(
                 controller.GetAllowedVariablesFor(SelectedCategory, BoundaryConditionSet)
-                          .Select(v => controller.GetVariableDescription(v))
+                          .Select(v => controller.GetVariableDescription(v, SelectedCategory))
                           .Cast<object>()
                           .ToArray());
 

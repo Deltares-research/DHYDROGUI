@@ -266,15 +266,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override string GetVariableDescription(string variable)
+        public override string GetVariableDescription(string variable, string category = null)
         {
             FlowBoundaryQuantityType flowBoundaryQuantityType;
 
-            return Enum.TryParse(variable, out flowBoundaryQuantityType)
-                       ? FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType)
-                       : base.GetVariableDescription(variable);
-        }
+            if (category != "Tracer" &&                  // Do not try to match Tracers to enum descriptions
+                category != "Sediment concentration" &&  // Do not try to match Fraction names to enum descriptions
+                Enum.TryParse(variable, out flowBoundaryQuantityType))
+            {
+                return FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType);
+            }
 
+            return base.GetVariableDescription(variable, category);
+        }
 
         public override IEnumerable<BoundaryConditionDataType> GetSupportedDataTypesForVariable(string variable)
         {
