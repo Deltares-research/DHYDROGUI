@@ -150,6 +150,7 @@
     <Compile Include="PartialSobekImporter\SobekRRSacramentoImporter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="SobekImportGuiPlugin.cs" />
+    <Compile Include="SobekLocationType.cs" />
     <Compile Include="SobekNetworkToNetworkImporter.cs" />
     <Compile Include="SobekHydroModelImporter.cs" />
     <Compile Include="PartialSobekImporter\PartialSobekImporterBuilder.cs" />
