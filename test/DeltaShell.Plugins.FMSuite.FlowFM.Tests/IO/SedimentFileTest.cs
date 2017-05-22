@@ -403,7 +403,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.StringContaining("SedConc"));
-                Assert.That(sedWritten, Is.StringContaining("mysedimentName_SedConc"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_SedConc#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 
                 Assert.That(sedWritten, Is.StringContaining("IniSedThick"));

@@ -261,6 +261,7 @@
     <Compile Include="IO\BcmFileTest.cs" />
     <Compile Include="IO\BndExtForceFileTest.cs" />
     <Compile Include="IO\CmpFileTest.cs" />
+    <Compile Include="IO\DelftIniCategoryExtensionTests.cs" />
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
     <Compile Include="IO\Exporters\GeometryZipExporterTest.cs" />
     <Compile Include="IO\ExtForceFileHelperTest.cs" />

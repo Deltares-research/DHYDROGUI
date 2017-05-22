@@ -32,9 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "Name", description: "Name of sediment fraction");
         public static readonly ConfigurationSetting SedimentType = new ConfigurationSetting(key: "SedTyp", description: "Must be \"sand\", \"mud\" or \"bedload\"");
 
-        public static readonly string SedConc = "SedConc";
-        public static readonly string SedThick = "IniSedThick";
-
         public static readonly string FileCreatedBy = "FileCreatedBy";
         public static readonly string FileCreationDate = "FileCreationDate";
         public static readonly string FileVersion = "FileVersion";
@@ -60,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 foreach (var sedimentFraction in model.SedimentFractions)
                 {
                     var sedimentCategory = new DelftIniCategory(Header);
-                    sedimentCategory.AddSedimentProperty(Name.Key, sedimentFraction.Name, string.Empty, Name.Description);
+                    sedimentCategory.AddSedimentProperty(Name.Key, string.Format("#{0}#", sedimentFraction.Name), string.Empty, Name.Description);
                     sedimentCategory.AddSedimentProperty(SedimentType.Key, sedimentFraction.CurrentSedimentType.Key, string.Empty, SedimentType.Description);
 
                     AddSedimentTypeProperties(sedimentFraction, sedimentCategory);
