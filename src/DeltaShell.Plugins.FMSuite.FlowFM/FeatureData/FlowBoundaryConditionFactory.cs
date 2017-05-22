@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public class FlowBoundaryConditionFactory: BoundaryConditionFactory
     {
+        private const string MorphologyBedloadTransport = "MorphologyBedLoadTransport";
+
         public override bool SupportsMultipleConditionsPerSet
         {
             get { return true; }
@@ -22,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             var fractionList = new List<string>();
             if (Model != null)
             {
-                fractionList = Model.SedimentFractions.Where(sf => sf.CurrentSedimentType.Name != "Mud").Select(sf => sf.Name).ToList();
+                fractionList = FilterSedimentFractions(variable, Model.SedimentFractions).Select(sf => sf.Name).ToList();
             }
             if (variable != FlowBoundaryQuantityType.Tracer.ToString()
                 && variable != FlowBoundaryQuantityType.SedimentConcentration.ToString()
@@ -33,10 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
             if (quantityType != null && EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration).Equals(quantityType))
             {
-                string fractionName = null;
                 if (fractionList.Count > 0 && fractionList.Contains(variable))
                 {
-                    fractionName = variable;
+                    var fractionName = variable;
                     return CreateBoundaryCondition(feature, FlowBoundaryQuantityType.SedimentConcentration, dataType, fractionName, fractionList);
                 }
             }
@@ -81,6 +85,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         {
             return CreateBoundaryCondition(feature2D, FlowBoundaryQuantityType.WaterLevel,
                                            BoundaryConditionDataType.TimeSeries, null, null);
+        }
+
+        private static IList<ISedimentFraction> FilterSedimentFractions(string variable, IEventedList<ISedimentFraction> modelSedimentFractions)
+        {
+            IList<ISedimentFraction> filteredSedimentFractions = null;
+            if (variable == MorphologyBedloadTransport) filteredSedimentFractions = modelSedimentFractions.Where(sf => sf.CurrentSedimentType.Key != "mud").AsList();
+            return filteredSedimentFractions ?? modelSedimentFractions;
         }
     }
 }
