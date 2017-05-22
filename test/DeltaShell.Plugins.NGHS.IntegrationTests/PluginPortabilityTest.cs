@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
@@ -1126,17 +1127,16 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             
 
             model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = new DateTime(2000, 1, 1);
-            
-            SetValueOnCoverage(model, model.Bathymetry, myPolygon, 100.0d);
+
+            ICoverage coverage = model.Bathymetry;
+            SetValueOnCoverage(((IModel) model).GetDataItemByValue(coverage), myPolygon, 100.0d);
             
             return model;
             
         }
 
-        private static void SetValueOnCoverage(IModel model, ICoverage coverage, Polygon polygon, double value)
+        private static void SetValueOnCoverage(IDataItem coverageDataItem, Polygon polygon, double value)
         {
-            var coverageDataItem = model.GetDataItemByValue(coverage);
-
             if (coverageDataItem.ValueConverter == null)
             {
                 coverageDataItem.ValueConverter = SpatialOperationValueConverterFactory.Create(coverageDataItem.Value, coverageDataItem.ValueType); 
