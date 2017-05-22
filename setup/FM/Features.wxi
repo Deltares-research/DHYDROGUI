@@ -5,7 +5,14 @@
   <Feature Id="FMExtrasFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <ComponentRef Id="FMExtras"/>
   </Feature>
-  
+
+  <?ifndef var.NOKERNELS?>
+  <Feature Id="DimrLibsFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <ComponentGroupRef Id="DimrLibs"/>
+  </Feature>
+  <?endif?>
+
+
   <Feature Id="FM" Title="!(loc.FMFeatureName)" Description ="!(loc.FMFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
     <?include FMPlugin_FeatureContent.wxi?>
   </Feature>

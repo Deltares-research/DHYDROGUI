@@ -5,8 +5,11 @@ namespace DeltaShell.Dimr
 {
     public static class DimrApiDataSet
     {
-        public const string DIMRDLL_NAME = "dimr_dll.dll";
-        public const string DIMREXE_NAME = "dimr.exe";
+        public const string DIMR_FOLDER_NAME = "dimr";
+        public const string SHARED_FOLDER_NAME = "shared";
+        public const string DIMR_BINFOLDER_NAME = "bin";
+        public const string DIMR_DLL_NAME = "dimr_dll.dll";
+        public const string DIMR_EXE_NAME = "dimr.exe";
 
         public static string DllDirectory
         {
@@ -16,14 +19,28 @@ namespace DeltaShell.Dimr
             }
         }
 
+        public static string SharedDllPath
+        {
+            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", SHARED_FOLDER_NAME); }
+        }
+
         public static string DllPath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DIMRDLL_NAME); }
+            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DIMR_FOLDER_NAME, DIMR_BINFOLDER_NAME); }
         }
 
         public static string ExePath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DIMREXE_NAME); }
+            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DIMR_FOLDER_NAME, DIMR_BINFOLDER_NAME); }
+        }
+
+        public static void SetSharedPath()
+        {
+            var path = Environment.GetEnvironmentVariable("PATH");
+            if (path != null && path.Contains(SharedDllPath)) return;
+
+            path = SharedDllPath + ";" + path;
+            Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
         }
 
         [Flags]

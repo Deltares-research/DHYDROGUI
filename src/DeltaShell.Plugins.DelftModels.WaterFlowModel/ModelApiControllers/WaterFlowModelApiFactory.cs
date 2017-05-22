@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
             if (!remote) 
                 return new ModelApi.ModelApi();
 
-            var remoteModelApiWrapper = RemoteInstanceContainer.CreateInstance<IRemoteModelApiWrapper, RemoteModelApiWrapper>(workingDirectory, false, typeof (ModelApi.ModelApi).Assembly);               
+            var remoteModelApiWrapper = RemoteInstanceContainer.CreateInstance<IRemoteModelApiWrapper, RemoteModelApiWrapper>(workingDirectory, false, typeof(ModelApi.ModelApi).Assembly, typeof(DimrApi).Assembly);               
             return new LocalModelApiWrapper(remoteModelApiWrapper);
         }
 

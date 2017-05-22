@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Api
 {
@@ -74,9 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             public WaveDllHelper(string workDir)
             {
                 var arch = WaveModelDll.Arch;
-
-                var waveDir = Path.GetDirectoryName(GetType().Assembly.Location);
-                var d3DhomeDir = Path.Combine(waveDir, "Delft3D");
+                
+                var d3DhomeDir = DimrApiDataSet.DllDirectory;
 
                 waveExeDir = Path.Combine(d3DhomeDir, arch, "wave", "bin");
                 swanExeDir = Path.Combine(d3DhomeDir, arch, "swan","bin");

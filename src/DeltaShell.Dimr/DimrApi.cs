@@ -30,7 +30,8 @@ namespace DeltaShell.Dimr
 
         static DimrApi()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(DimrApiDataSet.DIMRDLL_NAME, DimrApiDataSet.DllDirectory);
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.DIMR_DLL_NAME, DimrApiDataSet.DllPath);
         }
         public DimrApi():this(true){}
 
@@ -99,19 +100,16 @@ namespace DeltaShell.Dimr
 
             try
             {
-                //Debugger.Launch(); 
-                //Debugger.Break(); 
                 Environment.CurrentDirectory = Path.GetDirectoryName(xmlFile);
                 LogMsg(string.Format("Running dimr in : {0}", Environment.CurrentDirectory));
-
-
+                
                 var path = Environment.GetEnvironmentVariable("PATH");
 
                 path = KernelDirs + ";" +
-                       Path.GetDirectoryName(DimrApiDataSet.DllPath) + ";" +
+                       DimrApiDataSet.DllPath + ";" +
                        path;
                 Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
-
+                
                 LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable("PATH")));
 
                 SetLoggingLevel((int) DebugLevel);

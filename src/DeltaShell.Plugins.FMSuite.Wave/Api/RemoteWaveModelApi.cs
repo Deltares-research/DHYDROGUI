@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using DelftTools.Utils.Remoting;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Api
 {
@@ -12,9 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         public RemoteWaveModelApi(bool showConsole)
         {
             remoteInstanceApi =
-                RemoteInstanceContainer.CreateInstance<IWaveModelApi, WaveModelApi>(Environment.Is64BitOperatingSystem,
-                    showConsole: showConsole);
-        }
+                RemoteInstanceContainer.CreateInstance<IWaveModelApi, WaveModelApi>(Environment.Is64BitOperatingSystem, null, showConsole,  typeof(DimrApi).Assembly);}
 
         public void Initialize(string mdwFilePath)
         {

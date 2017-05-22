@@ -3,40 +3,39 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel
 {
     public class RRModelEngineDll : IRRModelEngineDll
     {
-        private const string RRDllName = "rr_dll.dll";
-
-        public static string DllDirectory
-        {
-            get { return Path.Combine(Path.GetDirectoryName(typeof(RRModelEngineDll).Assembly.Location), "rr_kernel"); }
-        }
+        private const string RR_FOLDER_NAME = "drr";
+        private const string RR_BINFOLDER_NAME = "bin";
+        public const string RR_DLL_NAME = "rr_dll.dll";
 
         public static string DllPath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", RRDllName); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", RR_FOLDER_NAME, RR_BINFOLDER_NAME); }
         }
 
         static RRModelEngineDll()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(RRDllName, DllDirectory);
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(RR_DLL_NAME, DllPath);
         }
 
         #region PInvoke
 
-        [DllImport(RRDllName, EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]
         public static extern int initialize([In] string file);
 
-        [DllImport(RRDllName, EntryPoint = "finalize", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "finalize", CallingConvention = CallingConvention.Cdecl)]
         public static extern int finalize();
 
-        [DllImport(RRDllName, EntryPoint = "update", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "update", CallingConvention = CallingConvention.Cdecl)]
         public static extern int update([In] double dt);
 
-        [DllImport(RRDllName, EntryPoint = "SE_GETVALUESBYINTID", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "SE_GETVALUESBYINTID", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int SE_GetValuesByIntId(
             [In] string componentId,
             [In] string schemId,
@@ -46,14 +45,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel
             [In, Out] double[] values,
             int a, int b);
 
-        [DllImport(RRDllName, EntryPoint = "GETELEMENTINSETCOUNT", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "GETELEMENTINSETCOUNT", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetElementInSetCount(
             [In] string componentId,
             [In] string schemId,
             [In] string elementSetName,
             int a, int b, int c);
 
-        [DllImport(RRDllName, EntryPoint = "OES_SETVALUES", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "OES_SETVALUES", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int OES_SetValues(
             [In] string componentID,
             [In] string schemID,
@@ -63,24 +62,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel
             [In] double[] values,
             int a, int b, int c, int d);
 
-        [DllImport(RRDllName, EntryPoint = "GETERROR", CharSet= CharSet.Ansi)]
+        [DllImport(RR_DLL_NAME, EntryPoint = "GETERROR", CharSet= CharSet.Ansi)]
         public static extern int GetError_(
             [In] ref int errorId,
             [In, Out] StringBuilder errorDescription,
             [In] int errorDescriptionLength);
 
-        [DllImport(RRDllName, EntryPoint = "CREATE_OES_WITH_LOGGING", CharSet = CharSet.Ansi,
+        [DllImport(RR_DLL_NAME, EntryPoint = "CREATE_OES_WITH_LOGGING", CharSet = CharSet.Ansi,
             CallingConvention = CallingConvention.Cdecl)]
         public static extern int CreateOesWithLogging([In] string logfile, int a);
 
-        [DllImport(RRDllName, EntryPoint = "MODELFINDORCREATE_OES", CharSet = CharSet.Ansi,
+        [DllImport(RR_DLL_NAME, EntryPoint = "MODELFINDORCREATE_OES", CharSet = CharSet.Ansi,
             CallingConvention = CallingConvention.Cdecl)]
         public static extern int ModelFindOrCreate_OES(
             [In] string componentId,
             [In] string schemId,
             int a, int b);
 
-        [DllImport(RRDllName, EntryPoint = "DEFINEWRAPPERELMSET_OES", CharSet = CharSet.Ansi,
+        [DllImport(RR_DLL_NAME, EntryPoint = "DEFINEWRAPPERELMSET_OES", CharSet = CharSet.Ansi,
             CallingConvention = CallingConvention.Cdecl)]
         public static extern int DefineWrapperElmset_OES(
             [In] string componentId,
@@ -90,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel
             [In] string elementsetID,
             int a, int b, int c, int d);
 
-        [DllImport(RRDllName, EntryPoint = "ANALYZERELATIONS_OES", CharSet = CharSet.Ansi,
+        [DllImport(RR_DLL_NAME, EntryPoint = "ANALYZERELATIONS_OES", CharSet = CharSet.Ansi,
             CallingConvention = CallingConvention.Cdecl)]
         public static extern int AnalyzeRelations_OES();
         #endregion

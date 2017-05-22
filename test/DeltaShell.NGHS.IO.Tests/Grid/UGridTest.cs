@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
@@ -34,8 +35,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 var dllVersion in
                 new[]
                 {
-                    @"plugins\DeltaShell.NGHS.IO\Kernels\x86\io_netcdf.dll",
-                    @"plugins\DeltaShell.NGHS.IO\Kernels\x64\io_netcdf.dll"
+                    Path.Combine(DimrApiDataSet.SharedDllPath, "io_netcdf.dll"),
+                    Path.Combine(DimrApiDataSet.SharedDllPath.Contains("x86") ? DimrApiDataSet.SharedDllPath.Replace("x86","x64"): DimrApiDataSet.SharedDllPath, "io_netcdf.dll")
                 })
             {
                 foreach (var line in File.ReadLines(dllVersion))

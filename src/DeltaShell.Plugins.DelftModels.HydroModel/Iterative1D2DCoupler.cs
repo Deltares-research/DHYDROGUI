@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual string KernelDirectoryLocation {
             get
             {
-                return Path.GetDirectoryName(Iterative1d2dApi.DllPath);
+                return Iterative1d2dApi.DllPath;
             }
         }
 

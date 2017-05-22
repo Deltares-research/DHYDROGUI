@@ -1,5 +1,6 @@
 using System.IO;
 using DelftTools.Utils.Interop;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using ProtoBufRemote;
 
@@ -24,7 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
     {
         static RemoteModelApiWrapper()
         {
-            NativeLibrary.LoadNativeDllForCurrentPlatform(CF_DLL_NAME, DllDirectory);
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(Flow1DApiDll.CF_DLL_NAME, Flow1DApiDll.DllPath);
         }
 
         public void NetworkSetBoundaryValues(int[] irefs, double time, double[] values)

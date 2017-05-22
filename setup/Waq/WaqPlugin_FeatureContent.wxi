@@ -21,7 +21,6 @@
 
   <!-- ugrid api dlls -->
   <ComponentRef Id="NGHS.IO"/>
-  <ComponentRef Id="nghsx86_ugriddll"/>
 
   <!-- TODO: agrhyd is not yet finished, so dido is not required in the installations
   <ComponentRef Id="dido_cmd"/>
@@ -36,9 +35,6 @@
     <?ifndef var.NOKERNELS?>
     <ComponentRef Id="delwaq_x64"/>
     <?endif?>
-    
-    <!-- ugrid api dlls -->
-    <ComponentRef Id="nghsx64_ugriddll"/>
   </Feature>
 
   <?ifndef var.NOKERNELS?>

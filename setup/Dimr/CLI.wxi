@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?define fm_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM\dflowfm_kernel\"?>
+  
+  <!--<?define fm_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM\dflowfm_kernel\"?>
   <?define dimr_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\kernels\"?>
   <?define dimr_scripts_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\Scripts\"?>
   <?define rtcTools_kernel_dir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl\rtc_kernel\"?>
@@ -253,6 +254,6 @@
   <?undef dimr_kernel_dir ?>
   <?undef dimr_scripts_dir ?>
   <?undef rtcTools_kernel_dir ?>
-  <?undef rtcTools_xsd_dir ?>
+  <?undef rtcTools_xsd_dir ?>-->
 
 </Include>

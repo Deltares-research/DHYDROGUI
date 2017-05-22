@@ -2014,10 +2014,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             get
             {
-                if (!File.Exists(ModelApi.DllPath))
+                var file = Path.Combine(Flow1DApiDll.DllPath, Flow1DApiDll.CF_DLL_NAME);
+                if (!File.Exists(file))
                     return "";
 
-                return "Kernel: " + ModelApi.CF_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(ModelApi.DllPath).FileVersion;
+                return "Kernel: " + Flow1DApiDll.CF_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
             }
         }
        
@@ -3401,7 +3402,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public virtual string KernelDirectoryLocation
         {
-            get { return Path.GetDirectoryName(ModelApi.DllPath); }
+            get { return Flow1DApiDll.DllPath; }
         }
 
         public new virtual ActivityStatus Status

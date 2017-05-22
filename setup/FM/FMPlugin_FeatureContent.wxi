@@ -7,8 +7,6 @@
   <ComponentRef Id="network_editor_scripts_libraries_files"/>
   
   <ComponentRef Id="NGHS.IO"/>
-  <!-- currently only fm is using ugrid api dlls -->
-  <ComponentRef Id="nghsx86_ugriddll"/>
 
   <ComponentRef Id="Dimr"/>
 
@@ -21,9 +19,6 @@
   <ComponentRef Id="HydroModelPlugin"/>
 
   <?ifndef var.NOKERNELS?>
-  <ComponentRef Id="x86_hydromodel_kernels"/>
-  <ComponentRef Id="x86_dimr_kernels"/>
-  <ComponentRef Id="fmx86_dflowfmdll"/>
   <?endif?>
   
   <ComponentRef Id="FM_toolboxes"/>
@@ -43,13 +38,7 @@
     <ComponentRef Id="FM_rgfgrid_bin_x64"/>
     
     <?ifndef var.NOKERNELS?>
-    <ComponentRef Id="fmx64_dflowfmdll"/>
-    <ComponentRef Id="x64_dimr_kernels"/>
-    <ComponentRef Id="x64_hydromodel_kernels"/>
     <?endif?>
-    
-    <!-- currently only fm is using ugrid api dlls -->
-    <ComponentRef Id="nghsx64_ugriddll"/>
   </Feature>
   
 </Include>

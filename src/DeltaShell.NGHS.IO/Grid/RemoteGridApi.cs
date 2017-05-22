@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using DelftTools.Utils.Remoting;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.NGHS.IO.Grid
 {

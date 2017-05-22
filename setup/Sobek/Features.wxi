@@ -6,6 +6,10 @@
     <ComponentRef Id="SobekExtras"/>
   </Feature>
   
+  <Feature Id="DimrLibsFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <ComponentGroupRef Id="DimrLibs"/>
+  </Feature>
+  
   <Feature Id="WaterFlowModel1D" Title="!(loc.Flow1DFeatureName)" Description="!(loc.Flow1DFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
     <?include Flow1D_FeatureContent.wxi?>
   </Feature>
