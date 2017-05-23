@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         public abstract IEnumerable<string> GetAllowedVariablesFor(string category,
                                                                    BoundaryConditionSet boundaryConditions); 
 
-        public virtual string GetVariableDescription(string variable, string category = null)
+        public virtual string GetVariableDescription(string variable, string category)
         {
             return variable ?? "";
         }

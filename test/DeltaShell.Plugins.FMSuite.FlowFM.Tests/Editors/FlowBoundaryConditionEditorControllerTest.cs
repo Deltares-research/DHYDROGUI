@@ -31,6 +31,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             Assert.AreEqual(expectedDescription, returnedDescription);
         }
 
+        [TestCase("WaterLevel", "Water level")]
+        [TestCase("Riemann", "Riemann invariant")]
+        [TestCase("Tracer1", "Tracer1")]
+        [TestCase("3", "3")]
+        public void TestGetVariableDescription_CorrectlyHandlesNullCategory(string variable, string expectedDescription)
+        {
+            var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, null);
+
+            Assert.AreEqual(expectedDescription, returnedDescription);
+        }
+
         [Test]
         public void ChangeInSalinityUpdatesCategories()
         {

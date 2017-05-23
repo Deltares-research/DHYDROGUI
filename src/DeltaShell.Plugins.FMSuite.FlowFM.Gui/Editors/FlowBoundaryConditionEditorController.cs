@@ -8,6 +8,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using log4net;
 
@@ -266,15 +267,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override string GetVariableDescription(string variable, string category = null)
+        public override string GetVariableDescription(string variable, string category)
         {
-            FlowBoundaryQuantityType flowBoundaryQuantityType;
+            FlowBoundaryQuantityType variableFlowBoundaryQuantityType;
+            FlowBoundaryQuantityType categoryFlowBoundaryQuantityType;
 
-            if (category != "Tracer" &&                  // Do not try to match Tracers to enum descriptions
-                category != "Sediment concentration" &&  // Do not try to match Fraction names to enum descriptions
-                Enum.TryParse(variable, out flowBoundaryQuantityType))
+            double isANr = 0.0d;
+            if (
+                    ((string.IsNullOrEmpty(category) && !double.TryParse(variable, out isANr))
+                    || 
+                    (EnumHelper.TryParseEnumValueFromDescription(category, out categoryFlowBoundaryQuantityType) &&
+                    categoryFlowBoundaryQuantityType != FlowBoundaryQuantityType.Tracer &&                 
+                    categoryFlowBoundaryQuantityType != FlowBoundaryQuantityType.SedimentConcentration)) 
+                &&  
+                    Enum.TryParse(variable, out variableFlowBoundaryQuantityType))
             {
-                return FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType);
+                return FlowBoundaryCondition.GetDescription(variableFlowBoundaryQuantityType);
             }
 
             return base.GetVariableDescription(variable, category);
