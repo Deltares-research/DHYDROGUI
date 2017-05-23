@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public virtual void WriteEngineXmlFiles(RealTimeControlModel model, string path)
         {
             // write xml with reference to xsd
-            var xsdPath = RealTimeControlModelHelper.XsdPath;
+            var xsdPath = RealTimeControlModelDll.DllPath;
             RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, model.LimitMemory, model.LogLevel)
                 .Save(path + RealTimeControlXMLFiles.XmlRuntime);
             RealTimeControlXmlWriter.GetToolsConfigXml(xsdPath, model.ControlGroups, model.WriteRestart || model.UseRestart)

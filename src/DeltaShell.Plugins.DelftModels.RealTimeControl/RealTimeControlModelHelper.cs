@@ -57,19 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
             return null;
         }
-
-        public static string XsdPath
-        {
-            get
-            {
-                var assemblyLocation = typeof(RealTimeControlModelHelper).Assembly.Location;
-                var directoryInfo = new FileInfo(assemblyLocation).Directory;
-                if (directoryInfo == null) return string.Empty;
-                var path = directoryInfo.FullName;
-                return path + Path.DirectorySeparatorChar + @"xsd";
-            }
-        }
-
+        
         public static ControlGroup CreateGroupHydraulicRule(bool addCondition)
         {
             return addCondition

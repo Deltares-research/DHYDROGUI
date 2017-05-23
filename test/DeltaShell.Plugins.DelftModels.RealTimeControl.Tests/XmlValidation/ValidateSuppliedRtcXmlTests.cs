@@ -4,6 +4,7 @@ using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
         {
             get
             {
-                return RealTimeControlModelHelper.XsdPath;
+                return RealTimeControlModelDll.DllPath;
             }
         }
 

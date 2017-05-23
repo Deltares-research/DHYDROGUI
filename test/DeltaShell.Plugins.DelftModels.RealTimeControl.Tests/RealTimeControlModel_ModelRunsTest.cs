@@ -11,6 +11,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using log4net.Core;
@@ -1585,7 +1586,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             condition2.TrueOutputs.Add(timeRule);
 
             // Check the XML
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(RealTimeControlModelHelper.XsdPath, realTimeControlModel.ControlGroups);
+            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(RealTimeControlModelDll.DllPath, realTimeControlModel.ControlGroups);
             Assert.IsNotNull(xDocument);
 
             const string fewsXmlheader = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
@@ -1594,7 +1595,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                                          " xsi:schemaLocation=\"" +
                                          @"http://www.wldelft.nl/fews ";
 
-            var rtcToolsConfigxsd = RealTimeControlModelHelper.XsdPath + Path.DirectorySeparatorChar + "rtcToolsConfig.xsd\"";
+            var rtcToolsConfigxsd = RealTimeControlModelDll.DllPath + Path.DirectorySeparatorChar + "rtcToolsConfig.xsd\"";
 
             var expectedXml =
                 @"<rtcToolsConfig" + fewsXmlheader + rtcToolsConfigxsd + ">" +

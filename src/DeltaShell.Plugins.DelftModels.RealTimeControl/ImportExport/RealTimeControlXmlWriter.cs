@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static void CopyXsds(string copyToDirectory)
         {
-            foreach (var xsdFile in Directory.GetFiles(RealTimeControlModelHelper.XsdPath))
+            foreach (var xsdFile in Directory.GetFiles(RealTimeControlModelDll.DllPath).ToList().Where(f => f.EndsWith("xsd")))
             {
                 File.Copy(xsdFile, copyToDirectory + Path.DirectorySeparatorChar + Path.GetFileName(xsdFile), true);
             }
@@ -144,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             if (xsdPath == string.Empty)
             {
-                xsdPath = RealTimeControlModelHelper.XsdPath;
+                xsdPath = RealTimeControlModelDll.DllPath;
             }
             var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcToolsConfigXsd });
             var xDocument = GetToolsConfigXDocument(xsdPath);
@@ -166,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             if (xsdPath == string.Empty)
             {
-                xsdPath = RealTimeControlModelHelper.XsdPath;
+                xsdPath = RealTimeControlModelDll.DllPath;
             }
             var schemas = new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcDataConfigXsd };
 

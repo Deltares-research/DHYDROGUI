@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -13,6 +15,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     class RealTimeControlXmlWriterTest
     {
+        [Test]
+        public void CheckIfXsdFileAreAtCorrectLocation()
+        {
+            Assert.AreEqual(15, Directory.GetFiles(RealTimeControlModelDll.DllPath.Replace("x86", "x64")).Count(f => f.EndsWith("xsd"))); // check x64
+            Assert.AreEqual(15, Directory.GetFiles(RealTimeControlModelDll.DllPath.Replace("x64", "x86")).Count(f => f.EndsWith("xsd"))); // check x86
+        }
+
+
         [Test]
         public void GetDataConfigXmlForRelativeTimeRule()
         {
@@ -40,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             mocks.ReplayAll();
 
-            var result = RealTimeControlXmlWriter.GetDataConfigXml(RealTimeControlModelHelper.XsdPath, stubTimeDependentModel, new List<ControlGroup> {controlGroup}, null);
+            var result = RealTimeControlXmlWriter.GetDataConfigXml(RealTimeControlModelDll.DllPath, stubTimeDependentModel, new List<ControlGroup> {controlGroup}, null);
 
             mocks.VerifyAll();
 
