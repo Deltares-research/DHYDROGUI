@@ -9,7 +9,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
-    public class DataTableHelper
+    public static class DataTableHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DataTableHelper));
 

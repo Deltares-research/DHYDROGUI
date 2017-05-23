@@ -227,6 +227,7 @@
     <Compile Include="WeirBuilder.cs" />
     <Compile Include="WeirNamer.cs" />
     <None Include="GenerateParserFiles.cmd" />
+    <None Include="Uml\SobekImportExportOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
