@@ -189,6 +189,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\wave.png" />
+    <None Include="Uml\WaveOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WaveModel.hbm.xml" />
