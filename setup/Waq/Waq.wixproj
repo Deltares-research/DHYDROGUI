@@ -34,8 +34,17 @@
     <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Dimr\DimrLibs.wxs">
+      <Link>DimrLibs.wxs</Link>
+    </Compile>    
     <Compile Include="Product.wxs" />
     <Compile Include="WixUI\Waq_WixUI_Deltares.wxs" />
+	<Content Include="..\Dimr\Dimr.wxi">
+      <Link>Dimr.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\DimrDefines.wxi">
+      <Link>DimrDefines.wxi</Link>
+    </Content>    
     <Content Include="..\Scripts\WaterQualityScripts.wxi">
       <Link>Scripts\WaterQualityScripts.wxi</Link>
     </Content>
@@ -109,6 +118,8 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="WaqProperties.targets" />  
+  <Import Project="..\Dimr\HarvestDimrLibs.targets" />  
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
