@@ -345,6 +345,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     var boundaryCondition = (FlowBoundaryCondition)new FlowBoundaryConditionFactory().CreateBoundaryCondition(feature2D, quantityName, dataType);
+                    if (boundaryCondition == null)
+                    {
+                        log.ErrorFormat("Could not create boundary condition of quantity type {0}", quantityName);
+                        return null;
+                    }
 
                     if (!double.IsNaN(extForceFileItem.Offset))
                     {
