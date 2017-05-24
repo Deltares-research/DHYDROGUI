@@ -8,7 +8,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
-using DeltaShell.Plugins.FMSuite.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using log4net;
 
@@ -270,17 +269,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         public override string GetVariableDescription(string variable, string category)
         {
             FlowBoundaryQuantityType variableFlowBoundaryQuantityType;
-            FlowBoundaryQuantityType categoryFlowBoundaryQuantityType;
 
-            double isANr = 0.0d;
-            if (
-                    ((string.IsNullOrEmpty(category) && !double.TryParse(variable, out isANr))
-                    || 
-                    (EnumHelper.TryParseEnumValueFromDescription(category, out categoryFlowBoundaryQuantityType) &&
-                    categoryFlowBoundaryQuantityType != FlowBoundaryQuantityType.Tracer &&                 
-                    categoryFlowBoundaryQuantityType != FlowBoundaryQuantityType.SedimentConcentration)) 
-                &&  
-                    Enum.TryParse(variable, out variableFlowBoundaryQuantityType))
+            if (FlowBoundaryConditionFactory.TryParseRegularFlowBoundaryQuantityType(variable, category, out variableFlowBoundaryQuantityType))
             {
                 return FlowBoundaryCondition.GetDescription(variableFlowBoundaryQuantityType);
             }

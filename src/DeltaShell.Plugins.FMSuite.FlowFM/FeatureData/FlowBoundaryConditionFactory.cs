@@ -5,6 +5,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Features;
 
@@ -20,6 +21,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         }
 
         public WaterFlowFMModel Model { set; private get; }
+        
+        public static bool TryParseRegularFlowBoundaryQuantityType(string boundaryConditionName, string quantityType, out FlowBoundaryQuantityType flowBoundaryQuantityType)
+        {
+            // Needed to filter out Tracer and Sediment concentration names that would otherwise be incorrectly mapped to a FlowBoundaryQuantityType
+            flowBoundaryQuantityType = default(FlowBoundaryQuantityType);
+            
+            FlowBoundaryQuantityType parsedQuantityType;
+            double isANr;
+            return
+                ((string.IsNullOrEmpty(quantityType) && !double.TryParse(boundaryConditionName, out isANr))
+                 ||
+                 (EnumHelper.TryParseEnumValueFromDescription(quantityType, out parsedQuantityType) &&
+                  parsedQuantityType != FlowBoundaryQuantityType.Tracer &&
+                  parsedQuantityType != FlowBoundaryQuantityType.SedimentConcentration))
+                &&
+                Enum.TryParse(boundaryConditionName, out flowBoundaryQuantityType);
+        }
 
         public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature, string variable, BoundaryConditionDataType dataType, string quantityType = null)
         {
@@ -29,9 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 fractionList = FilterSedimentFractions(variable, Model.SedimentFractions).Select(sf => sf.Name).ToList();
             }
-            if (variable != FlowBoundaryQuantityType.Tracer.ToString()
-                && variable != FlowBoundaryQuantityType.SedimentConcentration.ToString()
-                && Enum.TryParse(variable, out flowBoundaryQuantityType))
+
+            if (TryParseRegularFlowBoundaryQuantityType(variable, quantityType, out flowBoundaryQuantityType))
             {
                 return CreateBoundaryCondition(feature, flowBoundaryQuantityType, dataType, null, fractionList);
             }

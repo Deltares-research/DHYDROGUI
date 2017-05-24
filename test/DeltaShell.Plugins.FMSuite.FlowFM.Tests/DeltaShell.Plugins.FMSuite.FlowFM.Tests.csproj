@@ -225,6 +225,7 @@
     <Compile Include="Editors\FlowBoundaryConditionEditorControllerTest.cs" />
     <Compile Include="Editors\FlowBoundaryConditionsListViewTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
+    <Compile Include="FeatureData\FlowBoundaryConditionFactoryTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
