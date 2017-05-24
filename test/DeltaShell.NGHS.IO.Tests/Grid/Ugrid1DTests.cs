@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         //node info
         private double[] nodesX = {1.0, 5.0, 5.0, 8.0};
 
-        private double[] nodesY = {4.0, 1.0, 4.0, 4.0};
+        private double[] nodesY = {4.0, 4.0, 1.0, 4.0};
         private string[] nodesids = {"node1", "node2", "node3", "node4"};
         private string[] nodeslongNames = {"nodelong1", "nodelong2", "nodelong3", "nodelong4"};
         private int[] sourcenodeid = {1, 3, 2};
@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         //mesh geometry
         private int[] branchidx = {1, 1, 1, 1, 2, 2, 2, 3, 3, 3};
 
-        private double[] offset = {0.5, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 1.0};
+        private double[] offset = {0.0, 2.0, 3.0, 4.0, 0.0, 1.5, 3.0, 0.0, 1.5, 3.0};
 
         //netcdf file specifications 
         private int iconvtype = 2;
