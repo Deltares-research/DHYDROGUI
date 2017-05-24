@@ -13,6 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.WorkInProgress)]
+        [Category("DIMR_Introduction")]
         public void ImportHarlingenRunAndCompareTest()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
