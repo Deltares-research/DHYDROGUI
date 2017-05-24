@@ -18,11 +18,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static readonly XNamespace Xsi = "http://www.w3.org/2001/XMLSchema-instance";
         private static readonly XNamespace OpenDa = "http://www.openda.org";
 
-        private const string RtcToolsConfigXsd = "rtcToolsConfig.xsd";
-        private const string RtcRuntimeConfigxsd = "rtcRuntimeConfig.xsd";
-        private const string PiTimeseriesxsd = "pi_timeseries.xsd";
-        private const string RtcDataConfigXsd = "rtcDataConfig.xsd";
-        private const string TreeVectorxsd = "treeVector.xsd";
+        public const string RtcToolsConfigXsd = "rtcToolsConfig.xsd";
+        public const string RtcRuntimeConfigxsd = "rtcRuntimeConfig.xsd";
+        public const string PiTimeseriesxsd = "pi_timeseries.xsd";
+        public const string RtcDataConfigXsd = "rtcDataConfig.xsd";
+        public const string TreeVectorxsd = "treeVector.xsd";
 
         public static void CopyXsds(string copyToDirectory)
         {

@@ -83,9 +83,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             // write xml with reference to xsd
             var xsdPath = RealTimeControlModelDll.DllPath;
-            RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, model.LimitMemory, model.LogLevel)
+            RealTimeControlXmlWriter.GetRuntimeXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcRuntimeConfigxsd)) ?  path : xsdPath, model, model.LimitMemory, model.LogLevel)
                 .Save(path + RealTimeControlXMLFiles.XmlRuntime);
-            RealTimeControlXmlWriter.GetToolsConfigXml(xsdPath, model.ControlGroups, model.WriteRestart || model.UseRestart)
+            RealTimeControlXmlWriter.GetToolsConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcToolsConfigXsd)) ? path : xsdPath, model.ControlGroups, model.WriteRestart || model.UseRestart)
                 .Save(path + RealTimeControlXMLFiles.XmlTools);
 
             if (model.UseRestart)
@@ -112,15 +112,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
             else
             {
-                RealTimeControlXmlWriter.GetStateVectorXml(xsdPath, model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
+                RealTimeControlXmlWriter.GetStateVectorXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.TreeVectorxsd)) ? path : xsdPath, model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
             }
-            var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(xsdPath, model, model.ControlGroups);
+            var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.PiTimeseriesxsd)) ? path : xsdPath, model, model.ControlGroups);
             if (timeSeriesDoc != null)
             {
                 timeSeriesDoc.Save(path + RealTimeControlXMLFiles.XmlTimeSeries);
             }
 
-            RealTimeControlXmlWriter.GetDataConfigXml(xsdPath, model, model.ControlGroups, timeSeriesDoc == null ? null : "timeseries_import.xml")
+            RealTimeControlXmlWriter.GetDataConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcDataConfigXsd)) ? path : xsdPath, model, model.ControlGroups, timeSeriesDoc == null ? null : "timeseries_import.xml")
                 .Save(path + RealTimeControlXMLFiles.XmlData);
         }
 
