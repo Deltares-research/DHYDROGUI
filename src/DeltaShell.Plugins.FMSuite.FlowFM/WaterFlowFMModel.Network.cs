@@ -8,9 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -221,14 +219,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetwork()
         {
-            if (!File.Exists(NetFilePath))
-            {
-                // create new netFile?
-                NetCdfFile netFile = NetCdfFile.CreateNew(MduFilePath);
-                netFile.Close();
-                return;
-            }
-
             try
             {
                 using (var uGrid1D = new UGrid1D(NetFilePath))
@@ -279,14 +269,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetworkDiscretization()
         {
-            if (!File.Exists(NetFilePath))
-            {
-                // create new netFile?
-                NetCdfFile netFile = NetCdfFile.CreateNew(MduFilePath);
-                netFile.Close();
-                return;
-            }
-
             try
             {
                 using (UGrid1D uGrid1D = new UGrid1D(NetFilePath))

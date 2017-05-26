@@ -25,6 +25,12 @@ namespace DeltaShell.NGHS.IO.Grid
         GridApiDataSet.DataSetConventions GetConvention();
 
         /// <summary>
+        /// Tries to create a NetCDF file.
+        /// </summary>
+        /// <param name="c_path">File name for netCDF dataset to be opened.</param>
+        void CreateFile(string c_path, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite);
+
+        /// <summary>
         /// Tries to open a NetCDF file and initialize based on its specified conventions.
         /// </summary>
         /// <param name="c_path">File name for netCDF dataset to be opened.</param>

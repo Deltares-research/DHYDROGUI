@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using DelftTools.Utils.Remoting;
-using DeltaShell.Dimr;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -18,6 +17,12 @@ namespace DeltaShell.NGHS.IO.Grid
         public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
         {
             return api != null && api.adherestoConventions(convtype);
+        }
+
+        public void CreateFile(string c_path, GridApiDataSet.NetcdfOpenMode mode)
+        {
+            if(api != null)
+                api.CreateFile(c_path, mode);
         }
 
         public void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)

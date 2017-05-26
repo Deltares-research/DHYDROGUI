@@ -1669,6 +1669,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //SaveNetworkDiscretization(); 
             }
 
+            if (Grid != null)
+            {
+                if (MduFilePath == null) MduFilePath = mduPath;
+                SaveGrid();
+            }
+
             if (switchTo)
             {
                 MduFilePath = mduPath;

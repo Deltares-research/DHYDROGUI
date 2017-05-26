@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Extensions.CoordinateSystems;
@@ -27,6 +28,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             if (GridApi != null)
             {
+                if(filename != null && !File.Exists(filename)) GridApi.CreateFile(filename);
                 GridApi.Open(filename, mode);
             
                 if (!GridApi.Initialized)

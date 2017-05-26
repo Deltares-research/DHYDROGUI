@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -636,6 +637,54 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             Assert.AreEqual(expectation, gridApi.Initialized);
             Assert.AreEqual(expectation, remoteGridApi.Initialized);
+        }
+
+        //[Test]
+        //public void CreateFileTest()
+        //{
+        //    var wrapper = new GridWrapper();
+        //    var filePath = "D://aap.xml";
+        //    mocks.ReplayAll();
+
+        //    TypeUtils.SetField(gridApi, "wrapper", wrapper);
+        //    gridApi.CreateFile(filePath);
+        //    Assert.IsTrue(File.Exists(filePath));
+        //    gridApi.Close();
+        //    File.Delete(filePath);
+        //    Assert.IsFalse(File.Exists(filePath));
+        //}
+
+        [Test]
+        [ExpectedException(typeof(AccessViolationException))]
+        public void CreateFileNullExceptionTest()
+        {
+            var wrapper = new GridWrapper();
+            mocks.ReplayAll();
+
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+            gridApi.CreateFile(null);
+        }
+
+        [Test]
+        [TestCase(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)]
+        [TestCase(GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR)]
+        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Couldn't create new netCDF file at location", MatchType = MessageMatch.Contains)]
+        public void CreateFileFailedTest(int apiCallReturnValue)
+        {
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+            int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
+            int ioncid = 0;
+            int iconvtype = 0;
+
+            wrapper.Expect(a => a.ionc_create("", ref mode, ref ioncid, ref iconvtype))
+                .IgnoreArguments()
+                .OutRef(0, 0)
+                .Return(apiCallReturnValue).Repeat.Once();
+            mocks.ReplayAll();
+
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
+
+            gridApi.CreateFile(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
         }
     }
 }

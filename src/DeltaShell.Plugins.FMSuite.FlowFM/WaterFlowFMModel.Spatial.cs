@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
@@ -80,6 +81,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     UpdateSpatialDataAfterGridSet(grid, false, false, false);
                 }
+            }
+        }
+
+        public void SaveGrid()
+        {
+            try
+            {
+                using (var uGrid2D = new UGrid(NetFilePath))
+                {
+                    // Calls for writing grid data (cloning)
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex; // TODO: Rethrow the exception?
             }
         }
 

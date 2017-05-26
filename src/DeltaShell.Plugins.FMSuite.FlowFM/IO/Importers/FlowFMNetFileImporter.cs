@@ -88,11 +88,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (flowModel != null && flowModel.NetFilePath != null)
             {
                 var netfile = new ImportedFMNetFile(path);
-                var coordinates = netfile.Grid.Vertices;
-                if (flowModel.CoordinateSystem != null && 
-                    !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, flowModel.CoordinateSystem))
+                if (netfile.Grid != null)
                 {
-                    throw new Exception("Grid coordinates are incompatible with current model coordinate system: {0}, canceling import.");
+                    var coordinates = netfile.Grid.Vertices;
+                    if (flowModel.CoordinateSystem == null ||
+                        CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, flowModel.CoordinateSystem))
+                    {
+                    }
+                    else
+                    {
+                        throw new Exception(
+                            "Grid coordinates are incompatible with current model coordinate system: {0}, canceling import.");
+                    }
                 }
 
                 var destFileName = Path.Combine(Path.GetDirectoryName(flowModel.NetFilePath), Path.GetFileName(path));

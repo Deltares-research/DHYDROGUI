@@ -178,6 +178,17 @@ namespace DeltaShell.NGHS.IO.Grid
             return !Initialized ? double.NaN : convversion;
         }
 
+        public void CreateFile(string filePath, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite)
+        {
+            var imode = (int) mode;
+            var convtype = (int) iconvtype;
+            var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid, ref convtype);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't create new netCDF file at location {0} because of error number {1}", filePath, ierr));
+            }
+        }
+
         public int Initialize()
         {
             GridWrapper.IO_NetCDF_Message_Callback message_callback = (int level, string message) =>
