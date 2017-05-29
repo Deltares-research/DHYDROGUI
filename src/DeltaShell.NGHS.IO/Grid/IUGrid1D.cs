@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DeltaShell.NGHS.IO.Grid
+﻿namespace DeltaShell.NGHS.IO.Grid
 {
     public interface IUGrid1D : IGrid
     {
@@ -17,7 +15,8 @@ namespace DeltaShell.NGHS.IO.Grid
         void Create1DMeshInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges);
         void Write1DMeshDiscretizationPoints(int[] branchIdx, double[] offset);
         int GetNumberOfMeshDiscretisationPoints();
-
-
+        int Read1DNetworkGeometry(out double[] geopointsX, out double[] geopointsY);
+        int Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames);
+        int Read1DNetworkBranches(out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames);
     }
 }

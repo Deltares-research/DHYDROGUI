@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -51,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             };
 
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1,0));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0));
             // add calculation points
             var location1 = new NetworkLocation(branch1, 1);
             networkDiscretisation.Locations.Values.Add(location1);
@@ -67,8 +65,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var expectedNumberOfNetworkGeometryPoints = 3;
             var expectedNumberOfDiscretisationPoints = 5;
             var expectedNumberOfMeshEdges = 4;
-            Write1DNetworkAndTest(
-                network, expectedNumberOfNetworkNodes, expectedNumberOfNetworkBranches, expectedNumberOfNetworkGeometryPoints, 
+
+            WriteRead1DNetworkAndTest(
+                network, expectedNumberOfNetworkNodes, expectedNumberOfNetworkBranches, expectedNumberOfNetworkGeometryPoints,
                 networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges);
         }
 
@@ -77,24 +76,25 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Write1DNetworkTest()
         {
             var network = new HydroNetwork() { Name = "my Network" };
-            var hydroNode1 = new HydroNode() { Name = "my Node 1", Geometry = new Point(-187.96667, 720.81667), Network = network };
+            var hydroNode1 = new HydroNode() { Name = "my Node 1", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode() { Name = "my Node 2", Geometry = new Point(2195.7333, 708.71667), Network = network };
+            var hydroNode2 = new HydroNode() { Name = "my Node 2", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
             network.Nodes.Add(hydroNode2);
-            var hydroNode3 = new HydroNode() { Name = "my Node 3", Geometry = new Point(4071.4928, 690.94861), Network = network };
+            var hydroNode3 = new HydroNode() { Name = "my Node 3", Description = "node 3 description", Geometry = new Point(4071.4928, 690.94861), Network = network };
             network.Nodes.Add(hydroNode3);
-            var hydroNode4 = new HydroNode() { Name = "my Node  4", Geometry = new Point(3445.4246, 1540.1838), Network = network };
+            var hydroNode4 = new HydroNode() { Name = "my Node  4", Description = "node 4 description", Geometry = new Point(3445.4246, 1540.1838), Network = network };
             network.Nodes.Add(hydroNode4);
 
             var branch1 = new Branch()
             {
                 Name = "my Branch 1",
+                Description = "branch 1 description",
                 Network = network,
                 Source = hydroNode1,
                 Target = hydroNode2,
                 Geometry = new LineString(new[]
                     {
-                    new Coordinate(-187.96667, 20.81667),
+                    new Coordinate(-187.96667, 720.81667),
                     new Coordinate(187.13333, 1039.45),
                     new Coordinate(828.43333, 861.98333),
                     new Coordinate(1219.6667, 406.21667),
@@ -108,6 +108,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var branch2 = new Branch()
             {
                 Name = "my Branch 2",
+                Description = "branch 2 description",
                 Network = network,
                 Source = hydroNode2,
                 Target = hydroNode3,
@@ -116,8 +117,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     new Coordinate(2195.7333, 708.71667),
                     new Coordinate(2577.8276, 567.00618),
                     new Coordinate(3235.6759, 576.54021),
-                    new Coordinate(4071.4928, 690.94861),
-                    
+                    new Coordinate(4071.4928, 690.94861)
                 })
             };
             network.Branches.Add(branch2);
@@ -125,6 +125,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var branch3 = new Branch()
             {
                 Name = "my Branch 3",
+                Description = "branch 3 description",
                 Network = network,
                 Source = hydroNode2,
                 Target = hydroNode4,
@@ -137,7 +138,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 })
             };
             network.Branches.Add(branch3);
-            
+
             var networkDiscretisation = new Discretization
             {
                 Name = "my Discretisation",
@@ -146,7 +147,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // Branch 1
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0)); // TODO: Can i add a node directly?
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0));
             // add calculation points
             var location1 = new NetworkLocation(branch1, 500);
             networkDiscretisation.Locations.Values.Add(location1);
@@ -184,13 +185,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var expectedNumberOfNetworkGeometryPoints = 15;
             var expectedNumberOfDiscretisationPoints = 13;
             var expectedNumberOfMeshEdges = 12;
-            Write1DNetworkAndTest(
+
+            WriteRead1DNetworkAndTest(
                 network, expectedNumberOfNetworkNodes, expectedNumberOfNetworkBranches, expectedNumberOfNetworkGeometryPoints,
                 networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges);
-
         }
 
-        private static void Write1DNetworkAndTest(HydroNetwork network, int expNrNwNodes, int expNrNwBranches, int expNrNwGeoPoints, IDiscretization networkDiscretization, int expNrDiscrPoints, int expNrMeshEdges)
+        private static void WriteRead1DNetworkAndTest(HydroNetwork network, int expNrNwNodes, int expNrNwBranches, int expNrNwGeoPoints, IDiscretization networkDiscretization, int expNrDiscrPoints, int expNrMeshEdges)
         {
             var testFilePath =
                 TestHelper.GetTestFilePath(UGRID_TEST_FILE);
@@ -202,6 +203,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     var totalNumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
                     Assert.AreEqual(expNrNwGeoPoints, totalNumberOfGeometryPoints);
+
+                    #region Write 1D network
 
                     // create 1D grid
                     ugrid1D.Create1DGridInFile(
@@ -245,37 +248,163 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     var numberOfNetworkGeometryPoints = ugrid1D.GetNumberOfNetworkGeometryPoints();
                     Assert.AreEqual(expNrNwGeoPoints, numberOfNetworkGeometryPoints);
 
+                    #endregion
+
+                    #region Write 1D network discretisation
+
                     // get the discretisation points from the network discretisation
                     var discretisationPoints = networkDiscretization.Locations.Values.ToArray();
-                    Assert.AreEqual(expNrDiscrPoints,discretisationPoints.Length);
+                    Assert.AreEqual(expNrDiscrPoints, discretisationPoints.Length);
 
                     // calculate the number of mesh edges -> #meshEdges = #discretisationPoints - #connectionNodes + #branches
                     var numberOfMeshEdges = 0;
                     numberOfMeshEdges = discretisationPoints.Length - numberOfNetworkNodes + numberOfNetworkBranches;
                     Assert.AreEqual(expNrMeshEdges, numberOfMeshEdges);
-                    
+
                     // create 1D mesh
                     ugrid1D.Create1DMeshInFile(
                         networkDiscretization.Name,
-                        discretisationPoints.Length,    
-                        numberOfMeshEdges               
+                        discretisationPoints.Length,
+                        numberOfMeshEdges
                     );
                     Assert.AreEqual(expNrDiscrPoints, ugrid1D.GetNumberOfMeshDiscretisationPoints());
 
                     // write 1D discretisation points
-                    int[] branchIdx = discretisationPoints.Select(l => l.Branch) // TODO: Test this function
+                    int[] branchIdx = discretisationPoints.Select(l => l.Branch) 
                         .ToArray()
                         .Select(b => networkDiscretization.Network.Branches.IndexOf(b))
-                        .ToArray(); 
+                        .ToArray();
                     Assert.AreEqual(expNrDiscrPoints, branchIdx.Length);
 
-                    double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray(); // TODO: Test + is the order correct?
+                    double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray(); 
 
                     ugrid1D.Write1DMeshDiscretizationPoints(
                         branchIdx,
                         offset
                     );
+                    #endregion
 
+                    #region Read 1D network
+
+                    // read 1D network nodes
+                    double[] nodesX;
+                    double[] nodesY;
+                    string[] nodesIds;
+                    string[] nodesLongnames;
+
+                    var ierrNodes = ugrid1D.Read1DNetworkNodes(out nodesX, out nodesY, out nodesIds, out nodesLongnames);
+                    Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrNodes);
+                    Assert.AreEqual(network.Nodes.Count, nodesX.Length);
+                    Assert.AreEqual(network.Nodes.Count, nodesY.Length);
+                    Assert.AreEqual(network.Nodes.Count, nodesIds.Length);
+
+                    // loop over the items and assert each item
+                    for (int i = 0; i < network.Nodes.Count; ++i)
+                    {
+                        // test node names
+                        string inNodeName = network.Nodes[i].Name.Trim().Replace(" ", "_");
+                        string outNodeName = nodesIds[i].Trim();
+                        Assert.AreEqual(inNodeName, outNodeName);
+
+                        // test x coordinate
+                        double inCoordinateX = network.Nodes[i].Geometry.Coordinates[0].X;
+                        double outCoordinateX = nodesX[i];
+                        Assert.AreEqual(inCoordinateX, outCoordinateX);
+
+                        // test y coordinate
+                        double inCoordinateY = network.Nodes[i].Geometry.Coordinates[0].Y;
+                        double outCoordinateY = nodesY[i];
+                        Assert.AreEqual(inCoordinateY, outCoordinateY);
+
+                        // test node description
+                        var description = network.Nodes[i].Description;
+                        string inNodeDescription = description != null ? description.Trim().Replace(" ", "_") : "";
+                        string outNodeDescription = nodesLongnames[i].Trim();
+                        Assert.AreEqual(inNodeDescription, outNodeDescription);
+                    }
+
+                    // read 1D branches
+                    int[] sourceNodes;
+                    int[] targetNodes;
+                    double[] branchLengths;
+                    int[] branchGeoPoints;
+                    string[] branchIds;
+                    string[] branchLongnames;
+                    
+                    var ierrBranches = ugrid1D.Read1DNetworkBranches(out sourceNodes, out targetNodes,
+                        out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
+
+                    Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrBranches);
+                    Assert.AreEqual(network.Branches.Count, sourceNodes.Length);
+                    Assert.AreEqual(network.Branches.Count, targetNodes.Length);
+                    Assert.AreEqual(network.Branches.Count, branchLengths.Length);
+                    Assert.AreEqual(network.Branches.Count, branchGeoPoints.Length);
+                    Assert.AreEqual(network.Branches.Count, branchIds.Length);
+                    Assert.AreEqual(network.Branches.Count, branchLongnames.Length);
+
+                    // loop over the items and assert each item
+                    for (int i = 0; i < network.Branches.Count; ++i)
+                    {
+                        var branch = network.Branches[i];
+                        // test source nodes
+                        INode inBranchSourceNode = branch.Source;
+                        INode outBranchSourceNode = network.Nodes[sourceNodes[i]];
+                        Assert.AreEqual(inBranchSourceNode, outBranchSourceNode);
+
+                        // test target nodes
+                        INode inBranchTargetNode = branch.Target;
+                        INode outBranchTargetNode = network.Nodes[targetNodes[i]];
+                        Assert.AreEqual(inBranchTargetNode, outBranchTargetNode);
+
+                        // test branch lengths
+                        var inBranchLength = branch.Length;
+                        var outBranchLength = branchLengths[i];
+                        Assert.AreEqual(inBranchLength, outBranchLength);
+
+                        // test number of geometry points per branch
+                        var inBranchGeoPointsCount = branch.Geometry.Coordinates.Length;
+                        var outBranchGeoPointsCount = branchGeoPoints[i];
+                        Assert.AreEqual(inBranchGeoPointsCount, outBranchGeoPointsCount);
+
+                        // test branch names
+                        var inBranchName = branch.Name.Trim().Replace(" ", "_");
+                        var outBranchName = branchIds[i].Trim();
+                        Assert.AreEqual(inBranchName, outBranchName);
+
+                        // test branch descriptions
+                        var description = branch.Description;
+                        var inBranchDescription = description != null ? description.Trim().Replace(" ", "_") : "";
+                        var outBranchDescription = branchLongnames[i].Trim();
+                        Assert.AreEqual(inBranchDescription, outBranchDescription);
+
+                    }
+
+                    // read 1D network geometry points
+                    double[] geopointsX;
+                    double[] geopointsY;
+
+                    var ierrGeometry = ugrid1D.Read1DNetworkGeometry(out geopointsX, out geopointsY);
+
+                    Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrGeometry);
+                    Assert.AreEqual(network.Branches.Sum(b => b.Geometry.Coordinates.Length), geopointsX.Length);
+                    Assert.AreEqual(network.Branches.Sum(b => b.Geometry.Coordinates.Length), geopointsY.Length);
+
+                    // test the x and y coordinates for each item
+                    int index = 0;
+                    foreach (var geoCoordinate in network.Branches.SelectMany(b => b.Geometry.Coordinates).ToList())
+                    {
+                        Assert.AreEqual(geoCoordinate.X, geopointsX[index]);
+                        Assert.AreEqual(geoCoordinate.Y, geopointsY[index]);
+                        index++;
+                    }
+
+                    #endregion
+
+                    #region Read 1D network discretisation
+
+                    
+
+                    #endregion
 
                 }
             }

@@ -37,6 +37,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public const string UG_CONV_CF = "CF-1.6";
             public const string UG_CONV_UGRID = "UGRID-1.0";
+
+            public const int TESTING_ERROR = -9999;
         }
 
         public enum DataSetConventions
