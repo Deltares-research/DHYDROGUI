@@ -11,10 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class WaterFlowFMRunCompareTest
     {
         [Test]
-        //[Category(TestCategory.DataAccess)]
-        //[Category(TestCategory.Slow)]
-        [Category(TestCategory.WorkInProgress)]
         [Category("DIMR_Introduction")]
+        [Category(TestCategory.WorkInProgress)]
         public void ImportHarlingenRunAndCompareTest()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

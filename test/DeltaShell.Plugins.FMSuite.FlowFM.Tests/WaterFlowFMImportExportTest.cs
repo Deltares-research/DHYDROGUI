@@ -14,6 +14,8 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
+    [Category("DIMR_Introduction")]
+    [Category(TestCategory.WorkInProgress)]
     public class WaterFlowFMImportExportTest
     {
 
