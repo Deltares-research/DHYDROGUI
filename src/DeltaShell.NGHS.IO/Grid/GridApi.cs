@@ -178,14 +178,48 @@ namespace DeltaShell.NGHS.IO.Grid
             return !Initialized ? double.NaN : convversion;
         }
 
-        public void CreateFile(string filePath, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite)
+        public void CreateFile(string filePath, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int) mode;
-            var convtype = (int) iconvtype;
+            var convtype = (int)iconvtype;
             var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid, ref convtype);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new InvalidOperationException(string.Format("Couldn't create new netCDF file at location {0} because of error number {1}", filePath, ierr));
+                throw new InvalidOperationException(
+                    string.Format("Couldn't create new netCDF file at location {0} because of error number {1}"
+                    , filePath, ierr));
+            }
+
+            CreateAndWriteDefaultNetCdfMetaData(filePath);
+        }
+
+        private void CreateAndWriteDefaultNetCdfMetaData(string filePath)
+        {
+            GridWrapper.interop_metadata metadata;
+            string tmpstring;
+
+            tmpstring = "Deltares";
+            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
+            metadata.institution = tmpstring.ToCharArray();
+            tmpstring = "Unknown";
+            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
+            metadata.source = tmpstring.ToCharArray();
+            tmpstring = "Unknown";
+            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
+            metadata.references = tmpstring.ToCharArray();
+            tmpstring = "Unknown";
+            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
+            metadata.version = tmpstring.ToCharArray();
+            tmpstring = "Unknown";
+            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
+            metadata.modelname = tmpstring.ToCharArray();
+
+            var ierr = wrapper.ionc_add_global_attributes(ref ioncid, metadata);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(
+                    string.Format("Couldn't write metadata to netCDF file at location {0} because of error number {1}"
+                    , filePath, ierr));
             }
         }
 

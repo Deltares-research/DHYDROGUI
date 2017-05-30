@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using log4net.Core;
@@ -639,20 +640,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(expectation, remoteGridApi.Initialized);
         }
 
-        //[Test]
-        //public void CreateFileTest()
-        //{
-        //    var wrapper = new GridWrapper();
-        //    var filePath = "D://aap.xml";
-        //    mocks.ReplayAll();
+        [Test]
+        public void CreateEmptyNetCdfFileTest()
+        {
+            // Create GridWrapper and set it as field for gridApi
+            var wrapper = new GridWrapper();
+            TypeUtils.SetField(gridApi, "wrapper", wrapper);
 
-        //    TypeUtils.SetField(gridApi, "wrapper", wrapper);
-        //    gridApi.CreateFile(filePath);
-        //    Assert.IsTrue(File.Exists(filePath));
-        //    gridApi.Close();
-        //    File.Delete(filePath);
-        //    Assert.IsFalse(File.Exists(filePath));
-        //}
+            // Construct a filePath and make sure it does not exist anymore
+            string c_path = TestHelper.GetTestFilePath(@"ugrid\emptyWrite1d.nc");
+            c_path = TestHelper.CreateLocalCopy(c_path);
+            FileUtils.DeleteIfExists(c_path);
+            Assert.IsFalse(File.Exists(c_path));
+
+            gridApi.Expect(api => api.Close()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            mocks.ReplayAll();
+            
+            // Create the nc-file and close the connection to it
+            gridApi.CreateFile(c_path);
+            Assert.IsTrue(File.Exists(c_path));
+            gridApi.Close();
+        }
 
         [Test]
         [ExpectedException(typeof(AccessViolationException))]
