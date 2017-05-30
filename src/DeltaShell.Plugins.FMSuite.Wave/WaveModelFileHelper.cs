@@ -4,7 +4,7 @@ using DelftTools.Utils.RegularExpressions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
-    public class WaveModelFileHelper
+    public static class WaveModelFileHelper
     {
         public static string ImportIntoModelDirectory(string modelDir, string absolutePath)
         {

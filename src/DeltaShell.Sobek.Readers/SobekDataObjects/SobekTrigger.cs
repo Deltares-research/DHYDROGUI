@@ -65,17 +65,9 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         PressureDifferenceStructure = 7 // structure
     }
 
-    public enum SobekLocationType
-    {
-        ObservationPointLocation,
-        StructureLocation, 
-        RetentionAreaLocation,
-    }
-
     public enum SobekTriggerCheckOn
     {
         Value = 0,
         Direction = 1
     }
-
 }

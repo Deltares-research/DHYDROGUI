@@ -190,7 +190,6 @@
     <Compile Include="MapLayers\Editors\WasteWaterTreatmentPlantFeatureEditor.cs" />
     <Compile Include="MapLayers\CustomRenderers\CatchmentAnchorPointRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRenderer.cs" />
-    <Compile Include="FrictionTypeEditHelper.cs" />
     <Compile Include="MapLayers\CustomRenderers\BranchFeatureRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\CrossSectionRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
@@ -277,7 +276,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Uml\ChartEditors.cd" />
+    <None Include="Uml\NetworkEditor.cd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetworkEditor.cd" />
@@ -308,10 +307,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Uml\CrossSectionView.cd" />
-    <None Include="Uml\HydroNetworkEditor.cd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\basin.png" />

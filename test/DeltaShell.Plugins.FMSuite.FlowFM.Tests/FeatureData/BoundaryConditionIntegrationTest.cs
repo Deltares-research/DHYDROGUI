@@ -2,9 +2,7 @@
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -13,7 +11,6 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Rhino.Mocks.Interfaces;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 {
@@ -305,17 +302,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             {
                 SedimentFractions = new EventedList<ISedimentFraction>
                 {
-                    new SedimentFraction { Name = sandName, CurrentSedimentType = new SedimentType{Name = "Sand"} },
-                    new SedimentFraction { Name = mudName, CurrentSedimentType = new SedimentType{Name = "Mud"} },
-                    new SedimentFraction { Name = bedloadName, CurrentSedimentType = new SedimentType{Name = "Bed-load"} }
+                    new SedimentFraction { Name = sandName, CurrentSedimentType = new SedimentType{Name = "Sand", Key = "sand"} },
+                    new SedimentFraction { Name = mudName, CurrentSedimentType = new SedimentType{Name = "Mud", Key = "mud"} },
+                    new SedimentFraction { Name = bedloadName, CurrentSedimentType = new SedimentType{Name = "Bed-load", Key = "bedload"} }
                 }
             };
             var boundaryConditionFactory = new FlowBoundaryConditionFactory { Model = fmModel };
 
-            /* Create a FlowBoundaryCondition and test that the SedimentFraction with SedimentType = "Mud" has been filtered out */
+            /* Create a FlowBoundaryCondition and test that the SedimentFraction with CurrentSedimentType.Key = "mud" has been filtered out */
             var variable = "MorphologyBedLoadTransport";
             var dataType = BoundaryConditionDataType.TimeSeries;
-            var quantityType = "Morphology";
+            var quantityType = "Bed load transport";
             var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(feature, variable, dataType, quantityType);
             var flowBoundaryCondition = boundaryCondition as FlowBoundaryCondition;
 

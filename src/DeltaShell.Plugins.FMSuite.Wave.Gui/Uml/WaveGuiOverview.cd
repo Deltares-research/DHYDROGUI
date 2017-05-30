@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Boundary condition view">
+    <Position X="17.851" Y="8.415" Height="0.301" Width="17.261" />
+  </Comment>
+  <Comment CommentText="Wave Gui plugin helpers">
+    <Position X="7" Y="3.788" Height="0.31" Width="2.489" />
+  </Comment>
+  <Comment CommentText="Node presenters">
+    <Position X="10.529" Y="0.648" Height="0.308" Width="3.959" />
+  </Comment>
+  <Comment CommentText="Dialogs">
+    <Position X="16.441" Y="0.767" Height="0.291" Width="5.355" />
+  </Comment>
+  <Comment CommentText="Layer editors">
+    <Position X="1.288" Y="8.358" Height="0.291" Width="15.612" />
+  </Comment>
+  <Comment CommentText="Plugin">
+    <Position X="0.66" Y="0.665" Height="0.355" Width="8.731" />
+  </Comment>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveBoundaryConditionDataView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="25.25" Y="20" Width="2.5" />
+    <AssociationLine Name="spectralFileSelection" Type="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveSpectrumFileSelection" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="26.438" Y="20.691" />
+        <Point X="26.438" Y="22.346" />
+        <Point X="28.5" Y="22.346" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="spectralParametersEditor" Type="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveSpectralParametersEditor" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="26" Y="20.691" />
+        <Point X="26" Y="23.346" />
+        <Point X="28.5" Y="23.346" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="boundaryCondition" Type="DeltaShell.Plugins.FMSuite.Wave.WaveBoundaryCondition" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="27.75" Y="20.375" />
+        <Point X="33.875" Y="20.375" />
+        <Point X="33.875" Y="13.941" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAYAAABCAgBBCgAgSEAAETAQAAAxIAAAoEAAIoAAA=</HashCode>
+      <FileName>Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="spectralFileSelection" />
+      <Field Name="constantParametersEditor" />
+      <Field Name="spectralParametersEditor" />
+      <Field Name="boundaryCondition" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveBoundaryConditionEditor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18" Y="13" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAgACAAABCgAACAAAASAAAAEBIAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BoundaryConditionEditor" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveBoundaryConditionPropertiesControl" Collapsed="true">
+    <Position X="27.5" Y="12.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAACAAABAAAACAAAAKAAAAEACAAAAAAAAIAAA=</HashCode>
+      <FileName>Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveConstantParametersEditor" Collapsed="true">
+    <Position X="28.5" Y="21" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAKAAABAAAACAAAAiAAAAABAAIABQAAAAAAA=</HashCode>
+      <FileName>Editors\BoundaryConditionEditor\WaveConstantParametersEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveSpectrumFileSelection" Collapsed="true">
+    <Position X="28.5" Y="22" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACCBRBBAAAACAQACCQAAAABAAAAAQAAAgAEA=</HashCode>
+      <FileName>Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor.WaveSpectralParametersEditor" Collapsed="true">
+    <Position X="28.5" Y="23" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AgABABIAASAAABABAACAAoACAAAAABIAAAAQAAAEIAA=</HashCode>
+      <FileName>Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.MeteoFileSelectionControl">
+    <Position X="7.75" Y="17" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BAAAAgAAACAUABAAAACAQAACAAAAAAAAAEAEAIBAAAA=</HashCode>
+      <FileName>Editors\MeteoFileSelectionControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveBoundaryConditionEditorController" Collapsed="true">
+    <Position X="27.5" Y="17.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAgCAEAAAIAAAAAAAAAAAgEAAAAAAA=</HashCode>
+      <FileName>Editors\WaveBoundaryConditionEditorController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveBoundaryConditionListView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="10.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EQSkARIIACASBBAAKSCAAgBXAEAEABAkAoQAAAAIAAA=</HashCode>
+      <FileName>Editors\WaveBoundaryConditionListView.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="specFileSelectionControl" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveDomainEditor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="1.25" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>MABoAABAACAQAZIhgBiROoAWIACmAFAEhKARAAAAIKg=</HashCode>
+      <FileName>Editors\WaveDomainEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="waveMeteoPanel" />
+      <Field Name="data" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveGridEditor" Collapsed="true">
+    <Position X="7" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Editors\WaveGridEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveMeteoDataEditor">
+    <Position X="3.75" Y="13.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAgAgAACARgBAAAACAAAICAAABABEAECAEAAAMAgA=</HashCode>
+      <FileName>Editors\WaveMeteoDataEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="xComponentFileControl" />
+      <Field Name="xyVectorFileControl" />
+      <Field Name="spiderWebFileControl" />
+      <Field Name="yComponentFileControl" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveObstacleListView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAIIACARAAAAAACEAgAfAAAEABCkAIAQAAAABAE=</HashCode>
+      <FileName>Editors\WaveObstacleListView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveOverallSpectrumFileSelection" Collapsed="true">
+    <Position X="12" Y="12" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAACBBABAAAACAQAACQAAAABAAAAAQAAAAAEA=</HashCode>
+      <FileName>Editors\WaveOverallSpectrumFileSelection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveTimePointEditor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAEBACgBCCAQEhAEAACAQgEWJPAEARAEIIBRAQAgCCg=</HashCode>
+      <FileName>Editors\WaveTimePointEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="waveMeteoDataEditor1" />
+      <Field Name="data" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Forms.BoundaryConditionImportDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEACAAAEAAAACAQAAQAAAAABAIAAAACAAAAAA=</HashCode>
+      <FileName>Forms\BoundaryConditionImportDialog.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Forms.WaveBoundaryTimeSelectionDialog" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="2.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>gAACBAAEACQAAFAAAjCAAAASAAAAEBCAAAAYgQgABCA=</HashCode>
+      <FileName>Forms\WaveBoundaryTimeSelectionDialog.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.WaveBoundaryNodePresenter" Collapsed="true">
+    <Position X="10.5" Y="1.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAQAIAAAAAAEAAACAAECAAAAAABA=</HashCode>
+      <FileName>NodePresenters\WaveBoundaryNodePresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.WaveDomainNodePresenter" Collapsed="true">
+    <Position X="10.5" Y="2.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>jAiAIAAAGAAEAAAAIAAAAAEICAABgAAAEGCQAAAAABE=</HashCode>
+      <FileName>NodePresenters\WaveDomainNodePresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.WaveModelNodePresenter" Collapsed="true">
+    <Position X="10.5" Y="3.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>BAAsmAAAABAAAAACAAIAAAEgCJAACAAQABCSlCAAAQU=</HashCode>
+      <FileName>NodePresenters\WaveModelNodePresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.WaveTreeShortcutNodePresenter" Collapsed="true">
+    <Position X="10.5" Y="4.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAABE=</HashCode>
+      <FileName>NodePresenters\WaveTreeShortcutNodePresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.WavmFileFunctionStoreNodePresenter" Collapsed="true">
+    <Position X="10.5" Y="5.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAEAAAAAAAAAIAAAAAEAAAE=</HashCode>
+      <FileName>NodePresenters\WavmFileFunctionStoreNodePresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon.Ribbon" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAEAAAAAAAAAABAAACACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ribbon\Ribbon.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveGridBasedDataSource" Collapsed="true">
+    <Position X="6.5" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACIAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>WaveGridBasedDataSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveGuiPlugin" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YMAAEAAAAAQkEAAAgSAIAAQCgAIBAAAQkAIEAQEACAA=</HashCode>
+      <FileName>WaveGuiPlugin.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MapLayerProvider" />
+      <Property Name="RibbonCommandHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveMapViewDecorator" Collapsed="true">
+    <Position X="7" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAgIAAAAIAAAAAAAAAAAAAAAAAgAAACJAUgAAAA=</HashCode>
+      <FileName>WaveMapViewDecorator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveModelMapLayerProvider" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAcAAAAAAAAEAAIAAAAAAAAQBAAAQAhAAAE=</HashCode>
+      <FileName>WaveModelMapLayerProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveModelUIDescription" Collapsed="true">
+    <Position X="9" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WaveModelUIDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveModelView" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAADAACAQAQAAAACAAgASAAAEABAkAoAQAABAAAA=</HashCode>
+      <FileName>WaveModelView.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Gui.WaveTreeShortcut" Collapsed="true">
+    <Position X="10.5" Y="6.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WaveTreeShortcut.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Common.Gui.Editors.BoundaryConditionEditor">
+    <Position X="22.75" Y="11.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="BoundaryConditionDataView" Type="System.Windows.Forms.Control" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="23.375" Y="15.694" />
+        <Point X="23.375" Y="19.096" />
+        <Point X="25.25" Y="19.096" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="BoundaryConditionPropertiesControl" />
+      <Property Name="Controller" />
+      <Property Name="BoundaryConditionFactory" />
+      <Property Name="BoundaryConditionSet" />
+      <Property Name="BoundaryConditionDataView" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Common.Gui.Editors.BoundaryConditionPropertiesControl" Collapsed="true">
+    <Position X="27.5" Y="11.25" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Common.Gui.Editors.BoundaryConditionEditorController" Collapsed="true">
+    <Position X="27.5" Y="16.75" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Common.FeatureData.BoundaryConditionFactory" Collapsed="true">
+    <Position X="27.5" Y="14" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.WaveBoundaryConditionFactory" Collapsed="true">
+    <Position X="27.5" Y="15" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Common.FeatureData.BoundaryConditionSet" Collapsed="true">
+    <Position X="27.5" Y="9.5" Width="3.5" />
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="BoundaryConditions" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.WaveBoundaryCondition" Collapsed="true">
+    <Position X="33" Y="13.25" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Common.FeatureData.BoundaryCondition" Collapsed="true">
+    <Position X="33" Y="12" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Windows.Forms.Control" Collapsed="true">
+    <Position X="25.25" Y="18.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.WaveInputFieldData" Collapsed="true">
+    <Position X="7" Y="11.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.WaveDomainData" Collapsed="true">
+    <Position X="3.25" Y="12" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="DelftTools.Shell.Gui.IMapLayerProvider" Collapsed="true">
+    <Position X="3.75" Y="1.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Shell.Gui.Forms.IRibbonCommandHandler" Collapsed="true">
+    <Position X="3.75" Y="4" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Common.FeatureData.IBoundaryCondition" Collapsed="true">
+    <Position X="33" Y="9.5" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Shell.Gui.ILayerEditorView" Collapsed="true">
+    <Position X="9.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Controls.IDialog" Collapsed="true">
+    <Position X="18" Y="1.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

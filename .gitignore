@@ -794,11 +794,6 @@ src/DeltaShell.Plugins.DelftModels.RealTimeControl/rtc_kernel/*.user
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/rtc_kernel/bin
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/rtc_kernel/obj
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/rtc_kernel/packages
-src/DeltaShell.Plugins.DelftModels.RealTimeControl/xsd/*.suo
-src/DeltaShell.Plugins.DelftModels.RealTimeControl/xsd/*.user
-src/DeltaShell.Plugins.DelftModels.RealTimeControl/xsd/bin
-src/DeltaShell.Plugins.DelftModels.RealTimeControl/xsd/obj
-src/DeltaShell.Plugins.DelftModels.RealTimeControl/xsd/packages
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui/*.suo
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui/*.user
 src/DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui/Forms/*.suo

@@ -221,9 +221,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var spatiallyVaryingSedimentPropertyName in modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames)
             {
+                var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
+                if(spatialOperations == null || !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension || s is AddSamplesOperation)) continue;
                 extForceFileItems.AddRange(
                     WriteSpatialData(InitialSpatialVaryingSedimentPrefix + spatiallyVaryingSedimentPropertyName,
-                    modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName))
+                    spatialOperations)
                     .Distinct());
             }
 

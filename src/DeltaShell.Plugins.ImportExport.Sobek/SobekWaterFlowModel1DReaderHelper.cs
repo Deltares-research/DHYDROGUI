@@ -2,7 +2,7 @@
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
-    public class SobekWaterFlowModel1DReaderHelper
+    public static class SobekWaterFlowModel1DReaderHelper
     {
         /// <summary>
         /// Method to improve performance?

@@ -5,11 +5,6 @@ using log4net;
 
 namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {
-    enum SobekLateralFlowType
-    {
-        DischargeOnBranch = 0
-    }
-
     /// <summary>
     /// For storage of the data found in LATERAL.DAT
     /// </summary>

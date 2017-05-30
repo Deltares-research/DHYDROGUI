@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
@@ -12,6 +14,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
     [TestFixture]
     public class FlowBoundaryConditionEditorControllerTest
     {
+        [TestCase("WaterLevel", FlowBoundaryQuantityType.WaterLevel, "Water level")]
+        [TestCase("Riemann", FlowBoundaryQuantityType.Riemann, "Riemann invariant")]
+        [TestCase("MorphologyBedLevelPrescribed", FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, "Bed level prescribed")]
+        [TestCase("Tracer1", FlowBoundaryQuantityType.Tracer, "Tracer1")]
+        [TestCase("WaterLevel", FlowBoundaryQuantityType.Tracer, "WaterLevel")]
+        [TestCase("Riemann", FlowBoundaryQuantityType.Tracer, "Riemann")]
+        [TestCase("Fraction1", FlowBoundaryQuantityType.SedimentConcentration, "Fraction1")]
+        [TestCase("WaterLevel", FlowBoundaryQuantityType.SedimentConcentration, "WaterLevel")]
+        [TestCase("3", FlowBoundaryQuantityType.SedimentConcentration, "3")]
+        [TestCase("999", FlowBoundaryQuantityType.SedimentConcentration, "999")]
+        public void TestGetVariableDescription_CorrectlyHandlesTracersAndFractionNames(string variable, FlowBoundaryQuantityType quantityType, string expectedDescription)
+        {
+            var category = EnumDescriptionAttributeTypeConverter.GetEnumDescription(quantityType);
+            var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, category);
+
+            Assert.AreEqual(expectedDescription, returnedDescription);
+        }
+
+        [TestCase("WaterLevel", "Water level")]
+        [TestCase("Riemann", "Riemann invariant")]
+        [TestCase("MorphologyBedLevelPrescribed", "Bed level prescribed")]
+        [TestCase("Tracer1", "Tracer1")]
+        [TestCase("3", "3")]
+        public void TestGetVariableDescription_CorrectlyHandlesNullCategory(string variable, string expectedDescription)
+        {
+            var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, null);
+
+            Assert.AreEqual(expectedDescription, returnedDescription);
+        }
+
         [Test]
         public void ChangeInSalinityUpdatesCategories()
         {

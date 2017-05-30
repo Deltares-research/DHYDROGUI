@@ -10,10 +10,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static ValidationIssue ValidateSedimentName(string name)
         {
             Regex regex = new Regex("^[a-zA-Z0-9_-]*$");
-            if (!regex.IsMatch(name))
+            if (!regex.IsMatch(name) || string.IsNullOrEmpty(name))
             {
                 return new ValidationIssue(name, ValidationSeverity.Error,
-                    "Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-)");
+                    "Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-) and it cannot start only with a '#', it NEEDS a closing '#' ");
             }
             return null;
         }

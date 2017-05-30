@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
             else
             {
-                category.AddSedimentProperty(Name, SpatiallyVaryingName, Unit, Description);
+                category.AddSedimentProperty(Name, string.Format("#{0}#", SpatiallyVaryingName), Unit, Description);
             }
         }
 

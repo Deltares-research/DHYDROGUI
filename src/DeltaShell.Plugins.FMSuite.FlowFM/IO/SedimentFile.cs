@@ -32,9 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "Name", description: "Name of sediment fraction");
         public static readonly ConfigurationSetting SedimentType = new ConfigurationSetting(key: "SedTyp", description: "Must be \"sand\", \"mud\" or \"bedload\"");
 
-        public static readonly string SedConc = "SedConc";
-        public static readonly string SedThick = "IniSedThick";
-
         public static readonly string FileCreatedBy = "FileCreatedBy";
         public static readonly string FileCreationDate = "FileCreationDate";
         public static readonly string FileVersion = "FileVersion";
@@ -60,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 foreach (var sedimentFraction in model.SedimentFractions)
                 {
                     var sedimentCategory = new DelftIniCategory(Header);
-                    sedimentCategory.AddSedimentProperty(Name.Key, sedimentFraction.Name, string.Empty, Name.Description);
+                    sedimentCategory.AddSedimentProperty(Name.Key, string.Format("#{0}#", sedimentFraction.Name), string.Empty, Name.Description);
                     sedimentCategory.AddSedimentProperty(SedimentType.Key, sedimentFraction.CurrentSedimentType.Key, string.Empty, SedimentType.Description);
 
                     AddSedimentTypeProperties(sedimentFraction, sedimentCategory);
@@ -98,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteSpatiallyVaryingSedimentPropertySubFiles(IWaterFlowFMModel model)
         {
             var spaceVarNames = model.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).ToList();
-            
+
 
             var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.StartsWith(spaceVarName))).ToArray();
             var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
@@ -109,6 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     .OfType<UnstructuredGridCoverage>()
                     .GroupBy(c => c.GetType())
                     .ToList();
+            var dataItemNameLookup = dataItemsWithOutConverter.ToDictionary(di => di.Value, di => di.Name);
 
             foreach (var coverageGrouping in coverageByType)
             {
@@ -128,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     var values = component.Values;
-                    double? noDataValue = (double?) component.NoDataValue;
+                    double? noDataValue = (double?)component.NoDataValue;
 
                     var pointCloud = new PointCloud();
                     var i = 0;
@@ -150,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
 
                         var coord = coordinates[i];
-                        pointCloud.PointValues.Add(new PointValue {X = coord.X, Y = coord.Y, Value = v});
+                        pointCloud.PointValues.Add(new PointValue { X = coord.X, Y = coord.Y, Value = v });
                         i++;
                     }
 
@@ -164,47 +162,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         PointCloud = pointCloud
                     };
 
-                    var newOperation = new AddSamplesOperation(false) {Name = coverage.Name};
+                    var newOperation = new AddSamplesOperation(false) { Name = coverage.Name };
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
 
-                    spatialOperations.Add(newOperation);
+                    spatialOperations.Add(dataItemNameLookup[coverage], new[] { newOperation });
                 }
             }
 
-            foreach (var spatialOperation in spatialOperations)
+            foreach (var operations in spatialOperations)
             {
-                var samplesOperation = spatialOperation as SampleSpatialOperation;
-                if (samplesOperation != null)
+                foreach (var spatialOperation in operations.Value)
                 {
-                    var directoryName = Path.GetDirectoryName(model.MduFilePath);
-                    if (directoryName != null)
+                    var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+                    if (samplesOperation != null)
                     {
-                        var xyzFilePath = Path.Combine(directoryName, spatialOperation.Name + "." + XyzFile.Extension);
+                        var directoryName = Path.GetDirectoryName(model.MduFilePath);
+                        if (directoryName != null)
+                        {
+                            var xyzFilePath = Path.Combine(directoryName,
+                                spatialOperation.Name + "." + XyzFile.Extension);
 
-                        var newFile = new XyzFile();
-                        newFile.Write(xyzFilePath, samplesOperation.GetPoints());
+                            var newFile = new XyzFile();
+                            newFile.Write(xyzFilePath, samplesOperation.GetPoints());
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Could not get directory name from file path" +
+                                                        model.MduFilePath);
+                        }
+                        continue;
                     }
-                    else
+
+                    var addSamplesOperation = spatialOperation as AddSamplesOperation;
+                    if (addSamplesOperation != null)
                     {
-                        throw new ArgumentException("Could not get directory name from file path" + model.MduFilePath);
+                        var directoryName = Path.GetDirectoryName(model.MduFilePath);
+                        if (directoryName != null)
+                        {
+                            var xyzFilePath = Path.Combine(directoryName,
+                                spatialOperation.Name + "." + XyzFile.Extension);
+
+                            var newFile = new XyzFile();
+                            newFile.Write(xyzFilePath, addSamplesOperation.GetPoints());
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Could not get directory name from file path" +
+                                                        model.MduFilePath);
+                        }
+                        continue;
                     }
-                    continue;
+                    /*var valueOperation = spatialOperation as ValueOperationBase;
+                    if (valueOperation != null)
+                    {
+                        Log.ErrorFormat("Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file.", spatialOperation.Name);
+    
+                        continue;
+                    }*/
+                    Log.ErrorFormat("Cannot serialize spatial operation with name {0} of type {1} to xyz file, please fix the operation so it can be serialized",
+                        spatialOperation.Name, spatialOperation.GetType());
                 }
-                var valueOperation = spatialOperation as ValueOperationBase;
-                if (valueOperation != null)
-                {
-                    Log.ErrorFormat("Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file.", spatialOperation.Name);
-                    continue;
-                }
-               
-                throw new NotImplementedException( string.Format("Cannot serialize operation of type {0} to xyz file", spatialOperation.GetType()));
+
+                //throw new NotImplementedException( string.Format("Cannot serialize operation of type {0} to xyz file", spatialOperation.GetType()));
             }
 
         }
 
-        private static List<ISpatialOperation> SpatialOperations(List<IDataItem> dataItemsWithConverter)
+        private static Dictionary<string, IList<ISpatialOperation>> SpatialOperations(List<IDataItem> dataItemsWithConverter)
         {
-            var spatialOperations = new List<ISpatialOperation>();
+            var spatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             foreach (var dataItem in dataItemsWithConverter)
             {
                 var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
@@ -214,12 +240,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    var spatialOperation = spatialOperationValueConverter.SpatialOperationSet.Operations
+                    var spatialOperation = spatialOperationValueConverter.SpatialOperationSet.GetOperationsRecursive()
                         .Where(s => !(s is ISpatialOperationSet))
                         .Select(WaterFlowFMModelDefinition.ConvertSpatialOperation)
                         .ToList();
 
-                    spatialOperations.AddRange(spatialOperation);
+                    //spatialOperations.AddRange(spatialOperation);
+                    spatialOperations.Add(dataItem.Name, spatialOperation);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
                 else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
@@ -249,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             PointCloud = coverage.ToPointCloud(0, true),
                         });
 
-                    spatialOperations.Add(newOperation);
+                    spatialOperations.Add(dataItem.Name, new[] { newOperation } );
                 }
             }
             return spatialOperations;

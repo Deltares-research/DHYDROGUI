@@ -209,6 +209,7 @@
   <ItemGroup>
     <None Include="Grid\Grid.cd" />
     <None Include="packages.config" />
+    <None Include="UML\OverView.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.hbm.xml" />

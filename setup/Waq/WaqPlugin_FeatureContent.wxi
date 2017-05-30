@@ -3,6 +3,8 @@
 
   <ComponentRef Id="WaterQualityModelPlugin"/>
   <ComponentRef Id="WaterQualityModelGuiPlugin"/>
+  <ComponentRef Id="Dimr"/>
+  
 
   <?ifndef var.NOKERNELS?>
   <ComponentRef Id="WaterQualityDefaultLibrary"/>

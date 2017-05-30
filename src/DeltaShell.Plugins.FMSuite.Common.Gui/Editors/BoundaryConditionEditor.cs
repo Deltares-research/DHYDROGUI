@@ -14,12 +14,15 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
     public partial class BoundaryConditionEditor : UserControl, ICompositeView, IReusableView, ISuspendibleView
     {
         public event EventHandler<EventArgs<int>> SelectedSupportPointChanged;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BoundaryConditionEditor));
 
         private BoundaryConditionFactory boundaryConditionFactory;        
         private BoundaryConditionSet boundaryConditionSet;
@@ -394,7 +397,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
             quantitiesComboBox.Items.AddRange(
                 controller.GetAllowedVariablesFor(SelectedCategory, BoundaryConditionSet)
-                          .Select(v => controller.GetVariableDescription(v))
+                          .Select(v => controller.GetVariableDescription(v, SelectedCategory))
                           .Cast<object>()
                           .ToArray());
 
@@ -578,6 +581,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                                                                                         quantity,
                                                                                         dataTypes.First(),
                                                                                         SelectedCategory);
+                    if (newCondition == null)
+                    {
+                        Log.ErrorFormat("Could not create boundary condition of quantity type {0}", quantity);
+                        return;
+                    }
+
                     newCondition.Name = GenerateUniqueName(newCondition);
                     Controller.InsertBoundaryCondition(boundaryConditionSet, newCondition);
                     conditionsListBox.SelectedItem = newCondition;

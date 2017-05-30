@@ -351,6 +351,7 @@
     <Resource Include="Resources\compass.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Uml\WaveGuiOverview.cd" />
     <Resource Include="Resources\wave.png" />
     <None Include="packages.config" />
     <None Include="Resources\hurricane2.png" />

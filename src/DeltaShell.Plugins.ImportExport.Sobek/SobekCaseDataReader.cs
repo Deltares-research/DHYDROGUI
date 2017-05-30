@@ -5,7 +5,7 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
-    public class SobekCaseDataReader
+    public static class SobekCaseDataReader
     {
         public static SobekCaseData ReadCaseData(string caseDataPath)
         {

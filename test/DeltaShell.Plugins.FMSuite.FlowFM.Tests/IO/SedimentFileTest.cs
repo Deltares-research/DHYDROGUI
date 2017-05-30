@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -7,10 +8,14 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap;
+using SharpMap.Data.Providers;
+using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -403,7 +408,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.StringContaining("SedConc"));
-                Assert.That(sedWritten, Is.StringContaining("mysedimentName_SedConc"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_SedConc#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 
                 Assert.That(sedWritten, Is.StringContaining("IniSedThick"));
@@ -427,6 +433,163 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(xyzFileValues.ElementAt(3).X, Is.EqualTo(coverage.Coordinates.ElementAt(3).X));
                 Assert.That(xyzFileValues.ElementAt(3).Y, Is.EqualTo(coverage.Coordinates.ElementAt(3).Y));
                 Assert.That(xyzFileValues.ElementAt(3).Value, Is.EqualTo(coverage.GetValues<double>().ElementAt(3)));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(sedFile);
+                FileUtils.DeleteIfExists(generatedXyzFile);
+            }
+
+        }
+
+        [Test]
+        public void SaveSedFileWithSpatiallyVaryingPropertiesAndImportOperation()
+        {
+            var sedFile = Path.GetTempFileName();
+            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+
+            try
+            {
+                /* Define new model */
+                var fmModel = new WaterFlowFMModel(sedFile);
+                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+
+                /* Define test properties */
+                var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false);
+                doubleSpatProp.SpatiallyVaryingName = "mysedimentName_SedConc";
+                doubleSpatProp.Value = 12.3;
+                
+                /* Set sediment and formula properties */
+                var testSedimentType = new SedimentType();
+                testSedimentType.Key = "sand";
+                testSedimentType.Properties = new EventedList<ISedimentProperty>() { doubleSpatProp };
+                
+                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false);
+                overallProp.Value = 80.1;
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+
+                /*Add the fraction to the model*/
+                var fraction = new SedimentFraction();
+                fraction.Name = "mysedimentName";
+                fraction.CurrentSedimentType = testSedimentType;
+               
+                var fileName = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
+                fileName = TestHelper.CreateLocalCopy(fileName);
+
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>();
+                fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
+                fmModel.SedimentFractions.Add(fraction);
+
+                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
+                
+                // retrieve / create value converter for mysedimentName_SedConc dataitem
+                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
+
+                valueConverter.SpatialOperationSet.AddOperation(new ImportSamplesSpatialOperationExtension()
+                {
+                    Name = "mysedimentName_SedConc",
+                    FilePath = Path.GetFullPath(fileName)
+                });
+                valueConverter.SpatialOperationSet.Execute();
+                SedimentFile.Save(sedFile, fmModel);
+                var sedWritten = File.ReadAllText(sedFile);
+                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
+                Assert.That(sedWritten, Is.StringContaining("SedConc"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
+                
+                Assert.IsTrue(File.Exists(generatedXyzFile));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(sedFile);
+                FileUtils.DeleteIfExists(generatedXyzFile);
+            }
+
+        }
+
+        [Test]
+        public void SaveSedFileWithSpatiallyVaryingPropertiesAndAddValuesOperation()
+        {
+            var sedFile = Path.GetTempFileName();
+            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+
+            try
+            {
+                /* Define new model */
+                var fmModel = new WaterFlowFMModel(sedFile);
+                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                fmModel.Grid = grid;
+
+                /* Define test properties */
+                var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false);
+                doubleSpatProp.SpatiallyVaryingName = "mysedimentName_SedConc";
+                doubleSpatProp.Value = 12.3;
+                
+                /* Set sediment and formula properties */
+                var testSedimentType = new SedimentType();
+                testSedimentType.Key = "sand";
+                testSedimentType.Properties = new EventedList<ISedimentProperty>() { doubleSpatProp };
+                
+                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false);
+                overallProp.Value = 80.1;
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+
+                /*Add the fraction to the model*/
+                var fraction = new SedimentFraction();
+                fraction.Name = "mysedimentName";
+                fraction.CurrentSedimentType = testSedimentType;
+               
+                var fileName = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
+                fileName = TestHelper.CreateLocalCopy(fileName);
+
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>();
+                fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
+                fmModel.SedimentFractions.Add(fraction);
+
+                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
+                
+                // retrieve / create value converter for mysedimentName_SedConc dataitem
+                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
+                var samples = new AddSamplesOperation(false);
+                samples.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
+                {
+                    PointCloud = new PointCloud
+                    {
+                        PointValues = new List<IPointValue>
+                            {
+                                    new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12},
+                                    new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30},
+                                    new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31},
+                                },
+                    },
+                    
+                });
+                valueConverter.SpatialOperationSet.AddOperation(samples);
+                valueConverter.SpatialOperationSet.Execute();
+                // update model definition (called during export)
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions);
+                // create an interpolate operation using the samples added earlier
+                var interpolateOperation = new InterpolateOperation();
+                interpolateOperation.SetInputData(InterpolateOperation.InputSamplesName, samples.Output.Provider);
+                Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(interpolateOperation));
+
+                // update model definition (called during export)
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions);
+
+
+                SedimentFile.Save(sedFile, fmModel);
+                
+                var sedWritten = File.ReadAllText(sedFile);
+                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
+                Assert.That(sedWritten, Is.StringContaining("SedConc"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
+                
+                Assert.IsTrue(File.Exists(generatedXyzFile));
             }
             finally
             {

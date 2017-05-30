@@ -3,8 +3,13 @@
   <Feature Id="WaqExtrasFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <ComponentRef Id="WaqExtras"/>
   </Feature>
-  
+
+  <Feature Id="DimrLibsFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <ComponentGroupRef Id="DimrLibs"/>
+  </Feature>
+
   <Feature Id="Waq" Title="!(loc.WaqFeatureName)" Description ="!(loc.WaqFeatureDescription)" Level="1" AllowAdvertise="no" Absent="disallow">
     <?include WaqPlugin_FeatureContent.wxi?>
   </Feature>
+  
 </Include>

@@ -6,7 +6,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
-    public abstract class TimeSeriesHelper
+    public static class TimeSeriesHelper
     {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimeSeriesHelper));

@@ -1591,7 +1591,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 model.SyncModelTimesWithBase();
             }
 
-            if (model.UseMorSed)
+            var sedimentFileProperty = model.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
+            if (mduFileDir != null && sedimentFileProperty != null && model.UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
             {
                 SedimentFile.LoadSediments(model.SedFilePath, model);
             }
