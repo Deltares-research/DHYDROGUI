@@ -80,10 +80,11 @@ namespace DeltaShell.NGHS.IO.Grid
             return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfMeshDiscretisationPoints(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
-        public List<Tuple<int, double>> GetMeshDiscretisationPoints()
-        {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetMeshDiscretisationPoints(), new List<Tuple<int, double>>());
-        }
+        // TODO: uncomment this with new functionality
+        //public List<Tuple<int, double>> GetMeshDiscretisationPoints()
+        //{
+        //    return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetMeshDiscretisationPoints(), new List<Tuple<int, double>>());
+        //}
 
         public virtual int Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIs, out string[] nodesLongnames)
         {
