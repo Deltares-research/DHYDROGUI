@@ -27,6 +27,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         /// <summary>
         /// 04/03/2014 (SSD, i7-4900MQ): 
         /// original = 72669ms, optimized = 30083ms / 41% = 2.4x faster ( 36500ms / 50% = 2x faster, when not at Deltares - license :( )
+        /// 
+        /// == Update ==
+        /// 31/05/2017 (i7-3630QM):
+        /// Time to run locally: 72801
+        /// Build server factor: x3.4 (approx)
+        /// 
+        /// Note: This test takes over twice as long to run since switching to the DIMR runner
+        ///       Given the intention of this test is to test the efficiency of DeltaShell rather than DIMR:
+        ///       I've increased the threshold to this new base-line
+        /// 
+        ///       *run away... run away...*
+        /// 
+        /// == /Update ==
+        /// 
         /// </summary>
         [Test]
         [Category(TestCategory.Slow)]
@@ -54,7 +68,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 }
             };
 
-            TestHelper.AssertIsFasterThan(100000, initializeAndRunModel);
+            TestHelper.AssertIsFasterThan(250000, initializeAndRunModel);
 
             LogHelper.ResetLogging();
         }
