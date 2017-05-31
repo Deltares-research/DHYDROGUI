@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -180,10 +181,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var di = model.GetDataItemByValue(coverage);
             if (di == null) return;
             var sosvc = di.ValueConverter as CoverageSpatialOperationValueConverter;
-            if (sosvc != null)
+            if (sosvc == null || !sosvc.SpatialOperationSet.Dirty) return;
+
+            // Enable event bubbling to trigger the copying of last values to ConvertedValue (SpatialOperationSetValueConverter.CopyValuesToConvertedValue)
+            //(this will not be triggered during loading if EventSettings.BubblingEnabled is false)
+            var eventBubblingEnabled = EventSettings.BubblingEnabled;
+            try
             {
-                if (sosvc.SpatialOperationSet.Dirty)
-                    sosvc.SpatialOperationSet.Execute();
+                EventSettings.BubblingEnabled = true;
+                sosvc.SpatialOperationSet.Execute();
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = eventBubblingEnabled;
             }
         }
     }
