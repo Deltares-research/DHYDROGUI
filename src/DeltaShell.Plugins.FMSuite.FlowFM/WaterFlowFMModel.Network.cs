@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -22,7 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IHydroNetwork network;
         private IDiscretization networkDiscretization;
 
-        [NoNotifyPropertyChange]
         public IHydroNetwork Network
         {
             get { return network; }
@@ -44,7 +42,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        [NoNotifyPropertyChange]
         public IDiscretization NetworkDiscretization
         {
             get { return networkDiscretization; }
