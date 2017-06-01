@@ -181,8 +181,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public void CreateFile(string filePath, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int) mode;
-            var convtype = (int)iconvtype;
-            var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid, ref convtype);
+            var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(

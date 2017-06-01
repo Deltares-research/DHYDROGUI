@@ -684,7 +684,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int ioncid = 0;
             int iconvtype = 0;
 
-            wrapper.Expect(a => a.ionc_create("", ref mode, ref ioncid, ref iconvtype))
+            wrapper.Expect(a => a.ionc_create("", ref mode, ref ioncid))
                 .IgnoreArguments()
                 .OutRef(0, 0)
                 .Return(apiCallReturnValue).Repeat.Once();
