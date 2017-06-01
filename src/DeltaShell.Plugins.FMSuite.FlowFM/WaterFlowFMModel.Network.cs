@@ -92,17 +92,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                 // remove all child data items
                                 var dataItemsToRemove = new List<IDataItem>();
                                 var networkDataItem = GetDataItemByValue(Network);
-                                foreach (var dataItem in networkDataItem.Children)
-                                {
 
-                                    dataItemsToRemove.Add(dataItem);
-                                }
-
-                                foreach (var dataItem in dataItemsToRemove)
+                                if (networkDataItem != null) // TODO: temporary fix while we do not have a DataItem for Network in FM Model
                                 {
-                                    dataItem.Unlink();
-                                    dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
-                                    networkDataItem.Children.Remove(dataItem);
+                                    foreach (var dataItem in networkDataItem.Children)
+                                    {
+                                        dataItemsToRemove.Add(dataItem);
+                                    }
+
+                                    foreach (var dataItem in dataItemsToRemove)
+                                    {
+                                        dataItem.Unlink();
+                                        dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
+                                        networkDataItem.Children.Remove(dataItem);
+                                    }
                                 }
                             }
                             break;
