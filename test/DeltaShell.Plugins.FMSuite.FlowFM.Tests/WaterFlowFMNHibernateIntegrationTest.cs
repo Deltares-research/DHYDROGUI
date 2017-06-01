@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
@@ -108,7 +110,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 //Assert.AreEqual(2, loadedOperations.Count);
             }
         }
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportSaveLoadSpatialOperationsTest()
+        {
+            var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterFlowFMNHibernateIntegrationTest)).Location);
+            if (dir == null) return;
+            string dsprojName = Path.Combine(dir, "FM_Only_Save_Load_Spatial_Operation.dsproj");
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.IsProjectCreatedInTemporaryDirectory = true;
+                app.Run();
 
+                var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));               
+                app.Project.RootFolder.Add(model);
+                app.SaveProjectAs(dsprojName); // save to initialize file repository..
+
+                app.CloseProject();
+
+                app.OpenProject(dsprojName);
+
+                model = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().First();
+
+                var valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
+                var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
+
+                Assert.IsNotNull(spatialOperationValueConverter);
+
+                Assert.AreEqual(2, spatialOperationValueConverter.SpatialOperationSet.Operations.Count);
+                Assert.IsTrue(spatialOperationValueConverter.SpatialOperationSet.Operations[1] is InterpolateOperation);
+
+                var values = model.Roughness.GetValues<double>();
+                Assert.IsFalse(values.All(v => Math.Abs(v - (double) model.Roughness.Components[0].NoDataValue) < 1e-15), "Roughness spatial data is loaded but only contains no data values, it should contain real values!!");
+            }
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]
