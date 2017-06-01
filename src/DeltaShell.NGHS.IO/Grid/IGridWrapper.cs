@@ -153,9 +153,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_path">The path where the file will be created (in)</param>
         /// <param name="mode"> The netCDF opening mode (in)</param>
         /// <param name="ioncid">The netCDF file id (out)</param>
-        /// <param name="iconvtype">The netCDF convention (in, e.g. 2 is UGRID)</param>
         /// <returns></returns>
-        int ionc_create([In] string c_path, [In] ref int mode, [In, Out] ref int ioncid, [In] ref int iconvtype);
+        int ionc_create([In] string c_path, [In] ref int mode, [In, Out] ref int ioncid);
 
         /// <summary>
         /// Create a 1d network in an opened netCDF file  

@@ -50,6 +50,34 @@ namespace DeltaShell.NGHS.IO.Grid
         #region UGRID specifics
 
         /// <summary>
+        /// Get the id of the 1d computational mesh and associated geometry network.
+        /// </summary>
+        /// <param name="ioncid">The IONC data set id (in)</param>
+        /// <param name="meshid">The 1d computational mesh id (out)</param>
+        /// <param name="networkid">The geometry mesh (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_mesh_network_ids", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_1d_mesh_network_ids_dll([In] ref int ioncid, [In, Out] ref int meshid, [In, Out] ref int networkid);
+
+		/// <summary>
+        /// Get the id of the 2d computational mesh
+		/// </summary>
+        /// <param name="ioncid">The IONC data set id.</param>
+        /// <param name="meshid">The 2d computational mesh id (out)</param>
+		/// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_2d_mesh_id", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_2d_mesh_id_dll([In] ref int ioncid, [In, Out] ref int meshid);
+		
+		/// <summary>
+        /// Get the id of the 3d computational mesh
+		/// </summary>
+        /// <param name="ioncid">The IONC data set id.</param>
+        /// <param name="meshid">The 3d computational mesh id (out)</param>
+		/// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_3d_mesh_id", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_3d_mesh_id_dll([In] ref int ioncid, [In, Out] ref int meshid);
+		
+        /// <summary>
         /// Gets the number of mesh from a data set.
         /// </summary>
         /// <param name="ioncid">The IONC data set id.</param>
@@ -225,10 +253,9 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_path">The path where the file will be created (in)</param>
         /// <param name="mode"> The netCDF opening mode (in)</param>
         /// <param name="ioncid">The netCDF file id (out)</param>
-        /// <param name="iconvtype">The netCDF convention (in, e.g. 2 is UGRID)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_create_dll([In] string c_path, [In] ref int mode, [In, Out] ref int ioncid, [In] ref int iconvtype);
+        private static extern int ionc_create_dll([In] string c_path, [In] ref int mode, [In, Out] ref int ioncid);
 
         /// <summary>
         /// Create a 1d network in an opened netCDF file  
@@ -400,31 +427,78 @@ namespace DeltaShell.NGHS.IO.Grid
         private static extern int ionc_read_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
 
         /// <summary>
-        /// Defines the link structure.
+        /// Defines the contacts structure.
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="linkmesh">The id of the linkmesh (out)</param>
-        /// <param name="linkmeshname">The name of the link structure (in)</param>
-        /// <param name="nlinks">The number of links (in)</param>
+        /// <param name="contactsmesh">The id of the contactsmesh (out)</param>
+        /// <param name="contactsmeshname">The name of the contacts structure (in)</param>
+        /// <param name="ncontacts">The number of contactss (in)</param>
         /// <param name="mesh1">The id of the first connecting mesh (in)</param>
         /// <param name="mesh2">The id of the second connecting mesh (in)</param>
-        /// <param name="locationType1Id">The location type for the first mesh (an enum for 0, 1, 2 for node, edge, face respectively) (in)</param>
+        /// <param name="locationType1Id">The location type for the first mesh: 0, 1, 2 for node, edge, face respectively (in)</param>
         /// <param name="locationType2Id">The location type for the second mesh (in)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_def_mesh_contact_dll([In] ref int ioncid, [In, Out] ref int linkmesh, string linkmeshname, [In] ref int nlinks, [In] ref int mesh1, [In] ref int mesh2, [In] ref int locationType1Id, [In] ref int locationType2Id);
+        private static extern int ionc_def_mesh_contact_dll([In] ref int ioncid, [In, Out] ref int contactsmesh, string contactsmeshname, [In] ref int ncontacts, [In] ref int mesh1, [In] ref int mesh2, [In] ref int locationType1Id, [In] ref int locationType2Id);
 
+        /// <summary>
+        /// Puts the contacts structure.
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="contactsmesh">The id of the contactsmesh (in)</param>
+        /// <param name="c_mesh1indexes">The mesh1 indexes (in)</param>
+        /// <param name="c_mesh2indexes">The mesh2 indexes (in)</param>
+        /// <param name="contactsinfo">The contacts info containing the ids and longnames (in)</param>
+        /// <param name="ncontacts">The number of contactss (in)</param>
+        /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_put_mesh_contact_dll([In] ref int ioncid, [In] ref int linkmesh, [In] ref IntPtr c_mesh1indexes, [In] ref IntPtr c_mesh2indexes, [In, Out]  interop_charinfo[] linksinfo, [In] ref int nlinks);
+        private static extern int ionc_put_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] ref IntPtr c_mesh1indexes, [In] ref IntPtr c_mesh2indexes, [In, Out]  interop_charinfo[] contactsinfo, [In] ref int ncontacts);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_link_count", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_link_count_dll([In] ref int ioncid, [In] ref int linkmesh, [In, Out] ref int nlinks);
+        /// <summary>
+        /// Get the number of contacts from a specific contactsmesh
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="contactsmesh">The id of the contactsmesh (in)</param>
+        /// <param name="ncontacts">The number of contactss (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_contacts_count", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_contacts_count_dll([In] ref int ioncid, [In] ref int contactsmesh, [In, Out] ref int ncontacts);
 
+        /// <summary>
+        /// Get the the mesh contacts ids from a specific contactsmesh 
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="contactsmesh">The id of the contactsmesh (in)</param>
+        /// <param name="c_mesh1indexes">The mesh1 indexes (out)</param>
+        /// <param name="c_mesh2indexes">The mesh2 indexes (out)</param>
+        /// <param name="contactsinfo">The contacts info containing the ids and longnames (out)</param>
+        /// <param name="ncontacts">The number of contactss (in)</param>
+        /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_mesh_contact_dll([In] ref int ioncid, [In] ref int linkmesh, [In, Out] ref IntPtr c_mesh1indexes, [In, Out] ref IntPtr c_mesh2indexes, [In, Out]  interop_charinfo[] linksinfo, [In] ref int nlinks);
+        private static extern int ionc_get_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In, Out] ref IntPtr c_mesh1indexes, [In, Out] ref IntPtr c_mesh2indexes, [In, Out]  interop_charinfo[] contactsinfo, [In] ref int ncontacts);
 
+        /// <summary>
+        /// Clone the definitions specific mesh from one netCDF file to another netCDF. 
+        /// Clones all related attributes of the mesh, but it can not clone mesh contacts yet!
+        /// </summary>
+        /// <param name="ncidin">The input netCDF file id containing the mesh to clone (in)</param>
+        /// <param name="ncidout">The output netCDF file id, can be empty/not empty (in)</param>
+        /// <param name="meshidin">The mesh id to copy (in)</param>
+        /// <param name="meshidout">The id of the cloned mesh in the output file (out)</param>
+        /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_clone_mesh_definition", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_clone_mesh_definition_dll([In] ref int ncidin, [In] ref int ncidout, [In] ref int meshidin, [In, Out] ref int meshidout);
+
+        /// <summary>
+        /// Clone the data of a specific mesh from one netCDF file to another netCDF
+        /// </summary>
+        /// <param name="ncidin">The input netCDF file id containing the mesh to clone (in)</param>
+        /// <param name="ncidout">The output netCDF file id, can be empty/not empty (in)</param>
+        /// <param name="meshidin">The mesh id to copy (in)</param>
+        /// <param name="meshidout">The id of the cloned mesh in the output file (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_clone_mesh_data", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_clone_mesh_data_dll([In] ref int ncidin, [In] ref int ncidout, [In] ref int meshidin, [In] ref int meshidout);
         
         #endregion
 
@@ -448,6 +522,21 @@ namespace DeltaShell.NGHS.IO.Grid
         public int ionc_close(ref int ioncid)
         {
             return ionc_close_dll(ref ioncid);
+        }
+
+		public int ionc_get_1d_mesh_network_ids(ref int ioncid, ref int meshid, ref int networkid)
+        {
+            return ionc_get_1d_mesh_network_ids_dll(ref ioncid, ref meshid, ref networkid);
+        }
+		
+		public int ionc_get_2d_mesh_id(ref int ioncid, ref int meshid)
+        {
+            return ionc_get_2d_mesh_id_dll(ref ioncid, ref meshid);
+        }
+		
+		public int ionc_get_3d_mesh_id(ref int ioncid, ref int meshid)
+        {
+            return ionc_get_3d_mesh_id_dll(ref ioncid, ref meshid);
         }
 
         public int ionc_get_mesh_count(ref int ioncid, ref int nmesh)
@@ -546,9 +635,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_add_global_attributes_dll(ref ioncid, metadata);
         }
 
-        public int ionc_create(string c_path, ref int mode, ref int ioncid, ref int iconvtype)
+        public int ionc_create(string c_path, ref int mode, ref int ioncid)
         {
-            return ionc_create_dll(c_path, ref mode, ref ioncid, ref iconvtype);
+            return ionc_create_dll(c_path, ref mode, ref ioncid);
         }
 
         public int ionc_create_1d_network(ref int ioncid, ref int networkid, string networkName, ref int nNodes, ref int nBranches, ref int nGeometry)
@@ -635,29 +724,34 @@ namespace DeltaShell.NGHS.IO.Grid
             ref c_offset, ref nmeshpoints);
         }
 
-        public int ionc_def_mesh_contact(ref int ioncid, ref int linkmesh, string linkmeshname, ref int nlinks, ref int mesh1, ref int mesh2, ref int locationType1Id, ref int locationType2Id)
+        public int ionc_def_mesh_contact(ref int ioncid, ref int contactsmesh, string contactsmeshname, ref int ncontacts, ref int mesh1, ref int mesh2, ref int locationType1Id, ref int locationType2Id)
         {
-            return ionc_def_mesh_contact_dll(ref ioncid, ref linkmesh, linkmeshname, ref nlinks, ref mesh1, ref mesh2, ref locationType1Id, ref locationType2Id);
+            return ionc_def_mesh_contact_dll(ref ioncid, ref contactsmesh, contactsmeshname, ref ncontacts, ref mesh1, ref mesh2, ref locationType1Id, ref locationType2Id);
         }
 
-        public int ionc_put_mesh_contact(ref int ioncid, ref int linkmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] linksinfo, ref int nlinks)
+        public int ionc_put_mesh_contact(ref int ioncid, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
         {
-            return ionc_put_mesh_contact_dll(ref ioncid, ref linkmesh, ref c_mesh1indexes, ref c_mesh2indexes, linksinfo, ref nlinks);
+            return ionc_put_mesh_contact_dll(ref ioncid, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, contactsinfo, ref ncontacts);
         }
 
-        public int ionc_get_link_count(ref int ioncid, ref int linkmesh, ref int nlinks)
+        public int ionc_get_contacts_count(ref int ioncid, ref int contactsmesh, ref int ncontacts)
         {
-            return ionc_get_link_count_dll(ref ioncid, ref linkmesh, ref nlinks);
+            return ionc_get_contacts_count_dll(ref ioncid, ref contactsmesh, ref ncontacts);
         }
 
-        public int ionc_get_mesh_contact(ref int ioncid, ref int linkmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] linksinfo, ref int nlinks)
+        public int ionc_get_mesh_contact(ref int ioncid, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
         {
-            return ionc_get_mesh_contact_dll(ref ioncid, ref linkmesh, ref c_mesh1indexes, ref c_mesh2indexes, linksinfo, ref nlinks);
+            return ionc_get_mesh_contact_dll(ref ioncid, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, contactsinfo, ref ncontacts);
         }
 
         public int ionc_clone_mesh_definition(ref int ncidin, ref int ncidout, ref int meshidin, ref int meshidout)
         {
             return ionc_clone_mesh_definition_dll(ref ncidin, ref ncidout, ref meshidin, ref meshidout);
+        }
+
+        public int ionc_clone_mesh_data(ref int ncidin, ref int ncidout, ref int meshidin, ref int meshidout)
+        {
+            return ionc_clone_mesh_data_dll(ref ncidin, ref ncidout, ref meshidin, ref meshidout);
         }
         #endregion
     }
