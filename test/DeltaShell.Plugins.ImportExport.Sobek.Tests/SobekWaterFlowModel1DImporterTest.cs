@@ -41,6 +41,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         /// 
         /// == /Update ==
         /// 
+        /// for analysis reports see issue SOBEK3-1020
+        /// 
         /// </summary>
         [Test]
         [Category(TestCategory.Slow)]
