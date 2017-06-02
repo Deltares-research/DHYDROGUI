@@ -55,5 +55,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(0));
             Assert.That(model.NetworkDiscretization.Name, Is.EqualTo("Computational 1D Grid"));
         }
+
+        [Test]
+        public void NetworkIsContainedInDirectChildren()
+        {
+            var model = new WaterFlowFMModel();
+            var directChildren = model.GetDirectChildren();
+            Assert.NotNull(directChildren.FirstOrDefault(c => c == model.Network));
+        }
     }
 }

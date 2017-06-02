@@ -1003,6 +1003,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return InitialTemperature;
             yield return InitialTracers;
             yield return InitialFractions;
+            yield return Network;
 
             // for QueryTimeSeries tool:
             if (OutputHisFileStore != null)
