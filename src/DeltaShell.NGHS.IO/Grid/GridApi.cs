@@ -397,9 +397,10 @@ namespace DeltaShell.NGHS.IO.Grid
             int nFaces = GetNumberOfFaces(meshId);
             int nMaxFaceNodes = GetMaxFaceNodes(meshId);
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * nMaxFaceNodes);
+            int nfillValue = 0;
             try
             {
-                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref nFaces, ref nMaxFaceNodes);
+                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref nFaces, ref nMaxFaceNodes, ref nfillValue);
 
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
                 {
