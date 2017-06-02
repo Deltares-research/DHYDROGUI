@@ -3,10 +3,6 @@
   <Directory Id='Dimr' Name='DeltaShell.Dimr'>    
     <Component Id='Dimr' Guid="F2B0CD16-E595-4E95-9AA8-681A6AD72DD2">
      <File Id="DeltaShell.Dimr.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\DeltaShell.Dimr.dll' />
-      <?ifndef var.NOKERNELS?>
-     <File Id="run_dimr.bat" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\run_dimr.bat' />
-     <File Id="run_dimr_x86.bat" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Dimr\run_dimr_x86.bat' />
-      <?endif?>
     </Component>
     <Directory Id="DimrLibDir" Name="kernels"/>
   </Directory>
