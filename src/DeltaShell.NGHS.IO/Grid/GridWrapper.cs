@@ -50,14 +50,23 @@ namespace DeltaShell.NGHS.IO.Grid
         #region UGRID specifics
 
         /// <summary>
-        /// Get the id of the 1d computational mesh and associated geometry network.
+        /// Get the id of the geometry network.
         /// </summary>
         /// <param name="ioncid">The IONC data set id (in)</param>
-        /// <param name="meshid">The 1d computational mesh id (out)</param>
         /// <param name="networkid">The geometry mesh (out)</param>
         /// <returns></returns>
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_mesh_network_ids", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_1d_mesh_network_ids_dll([In] ref int ioncid, [In, Out] ref int meshid, [In, Out] ref int networkid);
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_network_id", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_1d_network_id_dll([In] ref int ioncid, [In, Out] ref int networkid);
+
+
+        /// <summary>
+        /// Get the id of the 1d computational mesh
+        /// </summary>
+        /// <param name="ioncid">The IONC data set id.</param>
+        /// <param name="meshid">The 1d computational mesh id (out)</param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_mesh_id", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_1d_mesh_id_dll([In] ref int ioncid, [In, Out] ref int meshid);
 
 		/// <summary>
         /// Get the id of the 2d computational mesh
@@ -524,9 +533,14 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_close_dll(ref ioncid);
         }
 
-		public int ionc_get_1d_mesh_network_ids(ref int ioncid, ref int meshid, ref int networkid)
+		public int ionc_get_1d_network_id(ref int ioncid, ref int networkid)
         {
-            return ionc_get_1d_mesh_network_ids_dll(ref ioncid, ref meshid, ref networkid);
+            return ionc_get_1d_network_id_dll(ref ioncid, ref networkid);
+        }
+
+        public int ionc_get_1d_mesh_id(ref int ioncid, ref int meshid)
+        {
+            return ionc_get_1d_mesh_id_dll(ref ioncid, ref meshid);
         }
 		
 		public int ionc_get_2d_mesh_id(ref int ioncid, ref int meshid)

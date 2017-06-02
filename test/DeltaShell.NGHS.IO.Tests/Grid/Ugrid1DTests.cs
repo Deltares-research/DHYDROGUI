@@ -277,12 +277,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //2. get the 1D network and mesh ids
-                int meshid = -1;
                 int networkid = -1;
-                ierr = wrapper.ionc_get_1d_mesh_network_ids(ref ioncid, ref networkid, ref meshid);
+                ierr = wrapper.ionc_get_1d_network_id(ref ioncid, ref networkid);
+                Assert.That(ierr, Is.EqualTo(0));
+                Assert.That(networkid, Is.EqualTo(1));
+                int meshid = -1;
+                ierr = wrapper.ionc_get_1d_mesh_id(ref ioncid, ref meshid);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(meshid, Is.EqualTo(1));
-                Assert.That(networkid, Is.EqualTo(1));
+                
 
                 //3. get the node count
                 int rnNodes = -1;
@@ -441,70 +444,132 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         //// clone a specific mesh from one file to another
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void cloneUGRIDNetcdf()
+        public void DeltaShellToRGFGrid()
         {
             var wrapper = new GridWrapper();
-            //1. Open an existing netcdf file
-            string source_twod_c_path = TestHelper.GetTestFilePath(@"ugrid\FlowFM_net.nc");
-            source_twod_c_path = TestHelper.CreateLocalCopy(source_twod_c_path);
-            Assert.IsTrue(File.Exists(source_twod_c_path));
-            int source_twod = 0;   //file id 
-            int sourcemode = 0;     //create in read mode
-            var ierr = wrapper.ionc_open(source_twod_c_path, ref sourcemode, ref source_twod, ref iconvtype, ref convversion);
+
+            //1. Delta shell creates a 1d file with mesh1d and links. RGF grid opens it and store the info in memory
+            string sourceoned_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
+            sourceoned_path = TestHelper.CreateLocalCopy(sourceoned_path);
+            Assert.IsTrue(File.Exists(sourceoned_path));
+            int source1dioncid = -1;  //file id  
+            int source1dmode = 0;  //read mode
+            int ierr = wrapper.ionc_open(sourceoned_path, ref source1dmode, ref source1dioncid, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
-            //2. Delete clone.nc if exist
-            int targetioncid = 0;  //file id  
-            int targetmode = 1;    //create in write mode
-            string target_c_path = TestHelper.GetTestFilePath(@"ugrid\clone.nc");
-            target_c_path = TestHelper.CreateLocalCopy(target_c_path);
-            FileUtils.DeleteIfExists(target_c_path);
-            Assert.IsFalse(File.Exists(target_c_path));
-
-            //3. create the file, will not add any dataset
-            ierr = wrapper.ionc_create(target_c_path, ref targetmode, ref targetioncid);
-            Assert.That(ierr, Is.EqualTo(0));
-            Assert.IsTrue(File.Exists(target_c_path));
-
-            //4. get the id of the 2d mesh
-            int meshidin = -1;
-            ierr = wrapper.ionc_get_2d_mesh_id(ref source_twod, ref  meshidin);
-            Assert.That(ierr, Is.EqualTo(0));
-            Assert.That(meshidin, Is.EqualTo(1));
-
-            //5. Read and clone the definitions of source_twod 
-            int meshidout = -1;
-            ierr = wrapper.ionc_clone_mesh_definition(ref source_twod, ref targetioncid, ref meshidin, ref meshidout);
+            //2. RGF grid creates a 2d mesh. The info is in memory, here simulated by opening a second file with a mesh2d
+            string sourcetwod_path = TestHelper.GetTestFilePath(@"ugrid\FlowFM_net.nc");
+            sourcetwod_path = TestHelper.CreateLocalCopy(sourcetwod_path);
+            Assert.IsTrue(File.Exists(sourcetwod_path));
+            int sourcetwodioncid = -1;   //file id 
+            int sourcetwomode = 0;   //read mode
+            ierr = wrapper.ionc_open(sourcetwod_path, ref sourcetwomode, ref sourcetwodioncid, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
-            //6. Clone the data
-            ierr = wrapper.ionc_clone_mesh_data(ref source_twod, ref targetioncid, ref meshidin, ref meshidout);
+            //3. Now we create a new empty file where to save 1d part from deltashell, links and mesh2d
+            int targetioncid = -1;  //file id  
+            int targetmode = 1;  //create in write mode
+            string target_path = TestHelper.GetTestFilePath(@"ugrid\target.nc");
+            target_path = TestHelper.CreateLocalCopy(target_path);
+            FileUtils.DeleteIfExists(target_path);
+            Assert.IsFalse(File.Exists(target_path));
+            ierr = wrapper.ionc_create(target_path, ref targetmode, ref targetioncid);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.IsTrue(File.Exists(target_path));
+
+            //4. Get the ids of the 1d mesh 2d mesh from the loaded meshes 
+            int source1dgeom = -1;
+            ierr = wrapper.ionc_get_1d_network_id(ref source1dioncid, ref source1dgeom);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(source1dgeom, Is.EqualTo(1));
+            int source1dmesh = -1;
+            ierr = wrapper.ionc_get_1d_mesh_id(ref source1dioncid, ref source1dmesh);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(source1dmesh, Is.EqualTo(1));
+
+
+            int sourcemesh2d = -1;
+            ierr = wrapper.ionc_get_2d_mesh_id(ref sourcetwodioncid, ref  sourcemesh2d);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(sourcemesh2d, Is.EqualTo(1));
+
+            //5. Start cloning the data in the new file, first 1d, then the 2d
+            int target1dmesh = -1;
+            ierr = wrapper.ionc_clone_mesh_definition(ref source1dioncid, ref targetioncid, ref source1dmesh, ref target1dmesh);
+            Assert.That(ierr, Is.EqualTo(0));
+            int target2dmesh = -1;
+            ierr = wrapper.ionc_clone_mesh_definition(ref sourcetwodioncid, ref targetioncid, ref sourcemesh2d, ref target2dmesh);
             Assert.That(ierr, Is.EqualTo(0));
 
-            //7. Clone 1D data
-            string source_oned_c_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
-            source_oned_c_path = TestHelper.CreateLocalCopy(source_oned_c_path);
-            Assert.IsTrue(File.Exists(source_oned_c_path));
-            int source1dioncid = 0;  //file id for 1d 
-            ierr = wrapper.ionc_open(source_oned_c_path, ref sourcemode, ref source1dioncid, ref iconvtype, ref convversion);
+            //6. Clone the mesh data
+            ierr = wrapper.ionc_clone_mesh_data(ref source1dioncid, ref targetioncid, ref source1dmesh, ref target1dmesh);
+            Assert.That(ierr, Is.EqualTo(0));
+            ierr = wrapper.ionc_clone_mesh_data(ref sourcetwodioncid, ref targetioncid, ref sourcemesh2d, ref target2dmesh);
             Assert.That(ierr, Is.EqualTo(0));
 
-            //8. Read and clone the definitions of meshidin NOT WORKING
-            //int meshid1din = 1;
-            //ierr = wrapper.ionc_clone_mesh_definition(ref source1dioncid, ref targetioncid, ref meshid1din, ref meshidout);
-            //Assert.That(ierr, Is.EqualTo(0));
-
-            ////9. Read and clone the definitions of meshidin NOT WORKING
-            //ierr = wrapper.ionc_clone_mesh_data(ref source1dioncid, ref targetioncid, ref meshid1din, ref meshidout);
-            //Assert.That(ierr, Is.EqualTo(0));
-
-            //10. Close the file
-            //ierr = wrapper.ionc_close(ref source1dioncid);
-            //Assert.That(ierr, Is.EqualTo(0));
-            ierr = wrapper.ionc_close(ref source_twod);
+            //7. Close all files 
+            ierr = wrapper.ionc_close(ref source1dioncid);
+            Assert.That(ierr, Is.EqualTo(0));
+            ierr = wrapper.ionc_close(ref sourcetwodioncid);
             Assert.That(ierr, Is.EqualTo(0));
             ierr = wrapper.ionc_close(ref targetioncid);
             Assert.That(ierr, Is.EqualTo(0));
+
+            //8. Now open the file with cloned meshes and check if the data written there are correct
+            targetioncid = -1;  //file id  
+            targetmode = 0;     //open in write mode
+            ierr = wrapper.ionc_open(target_path, ref targetmode, ref targetioncid, ref iconvtype, ref convversion);
+            Assert.That(ierr, Is.EqualTo(0));
+
+            //start checking
+
+            //xx. Now DeltaShell edits the 1d file, we need to re-write the target file in a temporary file.
+            // We can not delete the target after openenig it, because is needed for retriving the data to be stored in the new file. 
+            int newtargetioncid = -1;  //file id  
+            int newtargetmode = 1;  //create in write mode
+            string newtarget_path = TestHelper.GetTestFilePath(@"ugrid\newtarget.nc");
+            newtarget_path = TestHelper.CreateLocalCopy(newtarget_path);
+            FileUtils.DeleteIfExists(newtarget_path);
+            Assert.IsFalse(File.Exists(newtarget_path));
+            ierr = wrapper.ionc_create(newtarget_path, ref targetmode, ref newtargetioncid);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.IsTrue(File.Exists(newtarget_path));
+
+
+            ////xx. Get the ids from the old target file 
+            //source1dgeom = -1;
+            //ierr = wrapper.ionc_get_1d_network_id(ref targetioncid, ref source1dgeom);
+            //Assert.That(ierr, Is.EqualTo(0));
+            //Assert.That(source1dgeom, Is.EqualTo(1));
+            //source1dmesh = -1;
+            //ierr = wrapper.ionc_get_1d_mesh_id(ref targetioncid, ref source1dmesh);
+            //Assert.That(ierr, Is.EqualTo(0));
+            //Assert.That(source1dmesh, Is.EqualTo(1));
+
+            //sourcemesh2d = -1;
+            //ierr = wrapper.ionc_get_2d_mesh_id(ref targetioncid, ref  sourcemesh2d);
+            //Assert.That(ierr, Is.EqualTo(0));
+            //Assert.That(sourcemesh2d, Is.EqualTo(2));
+
+            ////xx. Start cloning the data in the new file, first 1d, then the 2d
+            //int newtarget1dmesh = -1;
+            //ierr = wrapper.ionc_clone_mesh_definition(ref targetioncid, ref newtargetioncid, ref target1dmesh, ref newtarget1dmesh);
+            //Assert.That(ierr, Is.EqualTo(0));
+            //int newtarget2dmesh = -1;
+            //ierr = wrapper.ionc_clone_mesh_definition(ref targetioncid, ref newtargetioncid, ref target2dmesh, ref newtarget2dmesh);
+            //Assert.That(ierr, Is.EqualTo(0));
+
+            ////xx. Clone the mesh data in the new target
+            //ierr = wrapper.ionc_clone_mesh_data(ref targetioncid, ref newtargetioncid, ref target1dmesh, ref newtarget1dmesh);
+            //Assert.That(ierr, Is.EqualTo(0));
+            //ierr = wrapper.ionc_clone_mesh_data(ref targetioncid, ref newtargetioncid, ref target2dmesh, ref newtarget2dmesh);
+            //Assert.That(ierr, Is.EqualTo(0));
+
+            ////xx. Close the old
+            //ierr = wrapper.ionc_close(ref targetioncid);
+            //Assert.That(ierr, Is.EqualTo(0));
+
+            ////xx. Check if the new target are correct
 
         }
     }
