@@ -126,8 +126,9 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="c_face_nodes_ptr">Pointer to array for the face-node connectivity table.</param>
         /// <param name="nface">The number of faces in the mesh.</param>
         /// <param name="nmaxfacenodes">The maximum number of nodes per face in the mesh.</param>
+        /// <param name="fillvalue"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_face_nodes(ref int ioncid, ref int meshid, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes);
+        int ionc_get_face_nodes(ref int ioncid, ref int meshid, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue);
 
         int ionc_write_geom_ugrid(string filename);
         int ionc_write_map_ugrid(string filename);
