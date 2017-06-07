@@ -1281,12 +1281,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Equals(sender, InitialFractions))
             {
                 AddOrRenameFractionDataItems();
+                InitialCoverageSetChanged = true;
             }
             else
             {
                 throw new ArgumentException("Unexpected layered spatial data: " + e.Item);
             }
         }
+
+        public bool InitialCoverageSetChanged { get; set; }
 
         #endregion
 
