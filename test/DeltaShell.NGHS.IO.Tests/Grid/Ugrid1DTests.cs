@@ -3,14 +3,11 @@ using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
@@ -302,8 +299,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
        
             //Check face nodes
+            int fillvalue = -1;
             ierr = wrapper.ionc_get_face_nodes(ref ioncid, ref meshid, ref c_face_nodes, ref nface,
-                    ref maxfacenodes);
+                    ref maxfacenodes, ref fillvalue);
             Assert.That(ierr, Is.EqualTo(0));
             int[] rc_face_nodes = new int[nface * maxfacenodes];
             Marshal.Copy(c_face_nodes, rc_face_nodes, 0, nface * maxfacenodes);
