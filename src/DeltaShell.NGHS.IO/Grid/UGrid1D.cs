@@ -4,20 +4,21 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGrid1D : AGrid, IUGrid1D
     {
-        public UGrid1D()
-        {
-        }
-
-        public UGrid1D(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        public UGrid1D(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
         {
             GridApi = GridApiFactory.CreateNew1D();
-            Initialize(file, mode);
+        }
+
+        public UGrid1D(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, globalMetaData, mode)
+        {
+            GridApi = GridApiFactory.CreateNew1D();
         }
 
         #region Write 1D network
-        
+
         public void Create1DGridInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints)
         {
+            if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
             if (uGridApi1D != null)
             {
@@ -34,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void Write1DNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
-            if (!IsInitialized()) return;
+            if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
             if (uGridApi1D != null)
             {
@@ -48,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void Write1DNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
         {
-            if (!IsInitialized()) return;
+            if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
             if (uGridApi1D != null)
             {
@@ -63,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void Write1DNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
-            if (!IsInitialized()) return;
+            if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
             if (uGridApi1D != null)
             {

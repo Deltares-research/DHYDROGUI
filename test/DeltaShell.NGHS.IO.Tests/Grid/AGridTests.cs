@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
@@ -12,6 +15,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     {
         private IGrid grid;
         private MockRepository mocks;
+
+        private const string DUMMY_TEST_FILE = @"ugrid\Dummy.nc";
 
         [SetUp]
         public void SetUp()
@@ -66,29 +71,48 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        public void CreateFileTest()
+        {
+            // Construct a filePath and make sure it does not exist anymore
+            string filePath = TestHelper.GetTestFilePath(DUMMY_TEST_FILE);
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            FileUtils.DeleteIfExists(filePath);
+            Assert.IsFalse(File.Exists(filePath));
+
+            // gridApi
+            var gridApi = mocks.DynamicMock<IGridApi>();
+            gridApi.Expect(a => a.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Repeat.Once();
+
+            // grid
+            grid.Expect(g => g.CreateFile()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Once();
+            TypeUtils.SetField(grid, "filename", filePath);
+
+            mocks.ReplayAll();
+
+            grid.CreateFile();
+        }
+
+        [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file : ")]
         public void InitializeCouldNotOpenExceptionTest()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(false).Repeat.Once();
-
+            
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .Repeat.Once();
-            gridApi.Expect(a => a.Initialized).Return(false)
-                .Repeat.Once();
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Repeat.Once();
+            gridApi.Expect(a => a.Initialized).Return(false).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
         }
 
         [Test]
         public void InitializeAndGetCoordinateSystemTest()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
 
             var gridApi = mocks.DynamicMock<IGridApi>();
@@ -104,14 +128,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(grid, "disposed", true);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
             Assert.AreEqual(3819, ((AGrid) grid).CoordinateSystem.AuthorityCode);
             Assert.IsFalse((bool)TypeUtils.GetField(grid, "disposed"));
         }
         [Test]
         public void InitializeAndGetCoordinateSystemWithExceptionTest()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
 
@@ -128,7 +152,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(grid, "disposed", true);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
             Assert.IsNull(((AGrid) grid).CoordinateSystem);
             Assert.IsTrue((bool)TypeUtils.GetField(grid, "disposed"));
         }
@@ -136,46 +160,46 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void InitializeAndCleanUpWhileDisposedTest()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
             TypeUtils.SetField(grid, "disposed", true);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
         }
 
         [Test]
         public void InitializeAndCleanUpWhileNotDisposedTest()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
             TypeUtils.SetField(grid, "disposed", false);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
             Assert.IsFalse((bool) TypeUtils.GetField(grid, "disposed"));
         }
 
         [Test]
         public void InitializeAndCleanUpWhileNotDisposedAndNotInitializedTest()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
             grid.Expect(g => g.IsInitialized()).Return(false).Repeat.Once();
             TypeUtils.SetField(grid, "disposed", false);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
             Assert.IsFalse((bool) TypeUtils.GetField(grid, "disposed"));
         }
 
         [Test]
         public void InitializeAndCleanUp()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
             TypeUtils.SetField(grid, "disposed", false);
@@ -185,7 +209,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(2);
             mocks.ReplayAll();
 
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
             Assert.IsNull(grid.GridApi);
             Assert.IsFalse((bool)TypeUtils.GetField(grid, "disposed"));
         }
@@ -193,7 +217,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void InitializeAndCleanUpWithException()
         {
-            grid.Expect(g => g.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
             TypeUtils.SetField(grid, "disposed", false);
             var gridApi = mocks.DynamicMock<IGridApi>();
@@ -202,7 +226,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(2);
             mocks.ReplayAll();
             
-            grid.Initialize(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            grid.Initialize();
             Assert.IsNull(grid.GridApi);
             Assert.IsFalse((bool)TypeUtils.GetField(grid, "disposed"));
         }

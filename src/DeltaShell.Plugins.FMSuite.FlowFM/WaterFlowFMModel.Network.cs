@@ -221,7 +221,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             try
             {
-                using (var uGrid1D = new UGrid1D(NetFilePath))
+                var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+                using (var uGrid1D = new UGrid1D(NetFilePath, metaData))
                 {
                     var totalNumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
 
@@ -271,6 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             try
             {
+                var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
                 using (UGrid1D uGrid1D = new UGrid1D(NetFilePath))
                 {
                     // get the discretisation points from the network discretisation

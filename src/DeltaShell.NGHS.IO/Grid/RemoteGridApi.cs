@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using DelftTools.Utils.Remoting;
+using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -8,6 +9,11 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         protected bool disposed;
         protected IGridApi api;
+
+        static RemoteGridApi()
+        {
+            RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
+        }
 
         public GridApiDataSet.DataSetConventions GetConvention(string file)
         {
@@ -19,10 +25,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return api != null && api.adherestoConventions(convtype);
         }
 
-        public void CreateFile(string c_path, GridApiDataSet.NetcdfOpenMode mode)
+        public void CreateFile(string c_path, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             if(api != null)
-                api.CreateFile(c_path, mode);
+                api.CreateFile(c_path, uGridGlobalMetaData, mode);
         }
 
         public void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)

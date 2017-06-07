@@ -24,17 +24,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             get { return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.NetworkReady, false); }
         }
-
-        public virtual bool IsInitialized()
-        {
-            return Initialized;
-        }
-
-        public virtual bool IsNetworkReady()
-        {
-            return NetworkReady;
-        }
-
+        
         public virtual int Write1DNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
             return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.Write1DNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames),GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);

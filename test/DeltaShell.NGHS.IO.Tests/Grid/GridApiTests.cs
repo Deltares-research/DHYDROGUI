@@ -24,6 +24,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks = new MockRepository();
             gridApi = mocks.DynamicMock<GridApi>();
             remoteGridApi = mocks.DynamicMock<RemoteGridApi>();
+            gridApi.Expect(a => a.Initialized)
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
         }
 
         [TearDown]
@@ -216,6 +218,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .OutRef(1, 0)
                 .Return(true)
                 .Repeat.Twice();
+            gridApi.Expect(a => a.Initialized)
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
             TypeUtils.SetField(gridApi, "ioncid", 1);
             mocks.ReplayAll();
@@ -657,7 +661,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
             
             // Create the nc-file and close the connection to it
-            gridApi.CreateFile(c_path);
+            var metaData = new UGridGlobalMetaData("My Model", "My Source", "1.0");
+            gridApi.CreateFile(c_path, metaData);
             Assert.IsTrue(File.Exists(c_path));
             gridApi.Close();
         }
@@ -670,7 +675,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
-            gridApi.CreateFile(null);
+            var metaData = new UGridGlobalMetaData("My Model", "My Source", "1.0");
+            gridApi.CreateFile(null, metaData);
         }
 
         [Test]
@@ -692,7 +698,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
 
-            gridApi.CreateFile(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            gridApi.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
         }
     }
 }

@@ -6,6 +6,7 @@ using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Dimr;
 using log4net;
+using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -19,6 +20,7 @@ namespace DeltaShell.NGHS.IO.Grid
         
         static GridApi()
         {
+            RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
             NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
         }
 
@@ -134,7 +136,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 : iconvtype;
         }
 
-        public bool Initialized
+        public virtual bool Initialized
         {
             get { return ioncid > 0; }
         }
@@ -178,48 +180,41 @@ namespace DeltaShell.NGHS.IO.Grid
             return !Initialized ? double.NaN : convversion;
         }
 
-        public void CreateFile(string filePath, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        public void CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int) mode;
             var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
-                    string.Format("Couldn't create new netCDF file at location {0} because of error number {1}"
+                    string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}"
                     , filePath, ierr));
             }
 
-            CreateAndWriteDefaultNetCdfMetaData(filePath);
+            CreateAndWriteDefaultNetCdfMetaData(filePath, globalMetaData);
         }
 
-        private void CreateAndWriteDefaultNetCdfMetaData(string filePath)
+        private void CreateAndWriteDefaultNetCdfMetaData(string filePath, UGridGlobalMetaData globalMetaData)
         {
             GridWrapper.interop_metadata metadata;
-            string tmpstring;
-
-            tmpstring = "Deltares";
-            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
-            metadata.institution = tmpstring.ToCharArray();
-            tmpstring = "Unknown";
-            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
-            metadata.source = tmpstring.ToCharArray();
-            tmpstring = "Unknown";
-            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
-            metadata.references = tmpstring.ToCharArray();
-            tmpstring = "Unknown";
-            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
-            metadata.version = tmpstring.ToCharArray();
-            tmpstring = "Unknown";
-            tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
-            metadata.modelname = tmpstring.ToCharArray();
+            metadata.institution = ToDataSizeCharArray("Deltares");
+            metadata.source = ToDataSizeCharArray(globalMetaData.Source);
+            metadata.references = ToDataSizeCharArray("https://github.com/ugrid-conventions/ugrid-conventions");
+            metadata.version = ToDataSizeCharArray(globalMetaData.Version);
+            metadata.modelname = ToDataSizeCharArray(globalMetaData.Modelname);
 
             var ierr = wrapper.ionc_add_global_attributes(ref ioncid, metadata);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
-                    string.Format("Couldn't write metadata to netCDF file at location {0} because of error number {1}"
+                    string.Format("Couldn't write global metadata to NetCDF file at location {0} because of error number {1}"
                     , filePath, ierr));
             }
+        }
+
+        private static char[] ToDataSizeCharArray(string value)
+        {
+            return value.PadRight(GridWrapper.metadatasize, ' ').ToCharArray(0,GridWrapper.metadatasize);
         }
 
         public int Initialize()

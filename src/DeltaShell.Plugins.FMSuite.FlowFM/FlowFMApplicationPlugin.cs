@@ -27,6 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     [Extension(typeof(IPlugin))]
     public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
+        public static string PluginVersion; // 1.2
+        public static string PluginName; // D-Flow Flexible Mesh Plugin
+        
         public override string Name
         {
             get { return "Delft3D FM"; }
@@ -50,6 +53,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override string FileFormatVersion
         {
             get { return "1.1.0.0"; }
+        }
+
+        public override void Activate()
+        {
+            base.Activate();
+            PluginVersion = Version;
+            PluginName = DisplayName;
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()

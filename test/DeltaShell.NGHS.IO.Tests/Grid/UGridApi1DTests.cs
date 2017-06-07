@@ -60,11 +60,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Create1DNetworkInvalidInitializationTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Create1DNetwork("", 0, 0, 0)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uRemoteGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             
             mocks.ReplayAll();
 
@@ -85,7 +84,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nGeoPoints = 0;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 0;
@@ -105,9 +104,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Create1DNetwork(name, nNodes, nBranches, nGeoPoints))
-                .CallOriginalMethod(OriginalCallOptions.NoExpectation)
-                .Repeat.Once();
-            uRemoteGrid1DApi.Expect(a => a.IsInitialized())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation)
                 .Repeat.Once();
             
@@ -146,7 +142,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nGeoPoints = 0;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 0;
@@ -165,7 +161,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Create1DNetwork(name, nNodes, nBranches, nGeoPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uRemoteGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
@@ -204,7 +199,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nGeoPoints = 0;
             
             //uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 0;
@@ -224,7 +219,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Create1DNetwork(name, nNodes, nBranches, nGeoPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uRemoteGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
@@ -257,8 +251,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Write1DNetworkNodesInvalidInitializationTest(bool isInitialized, bool isReady)
         {
             // uGrid1DApi
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Write1DNetworkNodes(new double[0], new double[0], new string[0], new string[0])).CallOriginalMethod(OriginalCallOptions.NoExpectation);
@@ -286,8 +280,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).Return(nNodes).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -332,8 +326,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).Return(nNodes).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -379,8 +373,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).Return(nNodes).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -430,8 +424,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // Length desrcArray; 
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).Return(numberOfNetworkNodes).Repeat.Twice();
 
             // uRemoteGridApi1D
@@ -452,8 +446,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Write1DNetworkBranchesInvalidInitializationTest(bool isInitialized, bool isReady)
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Write1DNetworkBranches(new int[0], new int[0], new double[0], new int[0],
@@ -487,8 +481,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).Return(2).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -541,8 +535,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).Return(2).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -592,8 +586,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).Return(2).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -648,8 +642,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // Length desrcArray; 
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).Return(nBranches).Repeat.Twice();
 
             // uRemoteGridApi1D
@@ -674,8 +668,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).Return(nGeoPoints).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -717,8 +711,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).Return(nGeoPoints).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -760,8 +754,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).Return(nGeoPoints).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -800,8 +794,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Write1DNetworkGeometryInvalidInitializationTest(bool isInitialized, bool isReady)
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
 
             // uRemoteGridApi1D
             uRemoteGrid1DApi.Expect(a => a.Write1DNetworkGeometry(new double[0], new double[0])).CallOriginalMethod(OriginalCallOptions.NoExpectation);
@@ -829,8 +823,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // Length yArray; 
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).Return(nGeopoints).Repeat.Twice();
 
             // uRemoteGridApi1D
@@ -856,8 +850,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nNodes", nNodes);
 
             // uRemoteGridApi1D
@@ -880,8 +874,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             TypeUtils.SetField(uGrid1DApi, "nNodes", nNodes);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -918,8 +912,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 1;
@@ -954,8 +948,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkNodes()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 1;
@@ -991,8 +985,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nBranches = 1;
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nBranches", nBranches);
 
             // uRemoteGridApi1D
@@ -1015,8 +1009,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             TypeUtils.SetField(uGrid1DApi, "nBranches", nBranches);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -1052,7 +1046,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGrid
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
@@ -1090,7 +1084,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGrid
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkBranches()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
@@ -1131,8 +1125,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nGeometryPoints", nGeometryPoints);
 
             // uRemoteGridAp1D
@@ -1155,8 +1149,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             TypeUtils.SetField(uGrid1DApi, "nGeometryPoints", nGeoPoints);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -1194,7 +1188,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
             
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
@@ -1230,7 +1224,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi1D
             uGrid1DApi.Expect(a => a.GetNumberOfNetworkGeometryPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
@@ -1275,8 +1269,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] nodesLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             TypeUtils.SetField(uGrid1DApi, "nNodes", nNodes);
             
             // uRemoteGridApi1D
@@ -1301,8 +1295,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] nodesLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nNodes", 4);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -1348,8 +1342,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] nodesLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nNodes", 1);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -1395,8 +1389,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] nodesLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nNodes", 1);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -1448,8 +1442,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] branchLongnames;
             
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             TypeUtils.SetField(uGrid1DApi, "nBranches", nBranches);
 
             // uRemoteGridApi1D
@@ -1479,8 +1473,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] branchLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Any();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 1;
@@ -1534,8 +1528,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] branchLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Once();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Once();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Once();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 1;
@@ -1589,8 +1583,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] branchLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Any();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 1;
@@ -1654,8 +1648,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string[] branchLongnames;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Any();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 1;
@@ -1712,8 +1706,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] geopointsY;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
 
             TypeUtils.SetField(uGrid1DApi, "nNodes", nNodes);
 
@@ -1740,8 +1734,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] geopointsY;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nGeometryPoints", 1);
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -1785,8 +1779,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] geopointsY;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nGeometryPoints", 1);
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -1830,8 +1824,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] geopointsY;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nGeometryPoints", 1);
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -1876,80 +1870,80 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void NetworkReadyTrueTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGrid1DApi.Expect(a => a.NetworkReady).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             // uRemoteApi1D
-            uRemoteGrid1DApi.Expect(a => a.IsNetworkReady()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uRemoteGrid1DApi.Expect(a => a.NetworkReady).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             TypeUtils.SetField(uGrid1DApi, "networkId", 1);
 
             // uGridApi1D
-            Assert.AreEqual(true, uGrid1DApi.IsNetworkReady());
+            Assert.AreEqual(true, uGrid1DApi.NetworkReady);
 
             // uRemoteApi1D
-            Assert.AreEqual(true, uRemoteGrid1DApi.IsNetworkReady());
+            Assert.AreEqual(true, uRemoteGrid1DApi.NetworkReady);
         }
 
         [Test]
         public void NetworkReadyFalseBecauseNetworkIdNotSetTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGrid1DApi.Expect(a => a.NetworkReady).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             // uRemoteApi1D
-            uRemoteGrid1DApi.Expect(a => a.IsNetworkReady()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uRemoteGrid1DApi.Expect(a => a.NetworkReady).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             TypeUtils.SetField(uGrid1DApi, "networkId", -1);
 
             // uGridApi1D
-            Assert.AreEqual(false, uGrid1DApi.IsNetworkReady());
+            Assert.AreEqual(false, uGrid1DApi.NetworkReady);
 
             // uRemoteApi1D
-            Assert.AreEqual(false, uRemoteGrid1DApi.IsNetworkReady());
+            Assert.AreEqual(false, uRemoteGrid1DApi.NetworkReady);
         }
 
         [Test]
         public void NetworkInitializedTrueTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGrid1DApi.Expect(a => a.Initialized).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             // uRemoteApi1D
-            uRemoteGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uRemoteGrid1DApi.Expect(a => a.Initialized).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             TypeUtils.SetField(uGrid1DApi, "ioncid", 1);
 
             // uGridApi1D
-            Assert.AreEqual(true, uGrid1DApi.IsInitialized());
+            Assert.AreEqual(true, uGrid1DApi.Initialized);
 
             // uRemoteApi1D
-            Assert.AreEqual(true, uRemoteGrid1DApi.IsInitialized());
+            Assert.AreEqual(true, uRemoteGrid1DApi.Initialized);
         }
 
         [Test]
         public void NetworkInitializedFalseBecauseIoncidNotSetTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGrid1DApi.Expect(a => a.Initialized).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             // uRemoteApi1D
-            uRemoteGrid1DApi.Expect(a => a.IsInitialized()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uRemoteGrid1DApi.Expect(a => a.Initialized).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             TypeUtils.SetField(uGrid1DApi, "ioncid", -1);
 
             // uGridApi1D
-            Assert.AreEqual(false, uGrid1DApi.IsInitialized());
+            Assert.AreEqual(false, uGrid1DApi.Initialized);
 
             // uRemoteApi1D
-            Assert.AreEqual(false, uRemoteGrid1DApi.IsInitialized());
+            Assert.AreEqual(false, uRemoteGrid1DApi.Initialized);
         }
 
         #endregion
@@ -1975,7 +1969,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Create1DMeshTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int nmeshedges = 12;
@@ -2011,7 +2005,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Create1DMeshApiCallFailedTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int nmeshedges = 12;
@@ -2045,7 +2039,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void Create1DMeshExceptionTest()
         {
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int nmeshedges = 12;
@@ -2086,8 +2080,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] offset = new double[1];
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
 
             // uRemoteGridAp1D
             uRemoteGrid1DApi.Expect(a => a.Write1DMeshDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
@@ -2116,8 +2110,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     
             // uGridApi1D
             //uGrid1DApi.Expect(a => a.GetNumberOfMeshDiscretisationPoints()).Return(nDiscPoints).Repeat.Any();
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Any();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 0;
@@ -2154,8 +2148,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nMeshPoints = 2;
             
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Times(3);
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Times(3);
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             var wrapper = mocks.StrictMock<IGridWrapper>();
 
             int id = 1;
@@ -2203,8 +2197,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nMeshPoints = 2;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Times(3);
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Times(3);
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             var wrapper = mocks.StrictMock<IGridWrapper>();
 
             int id = 1;
@@ -2253,8 +2247,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nMeshPoints = 2;
 
             // uGridApi1D
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Times(3);
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Times(3);
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             var wrapper = mocks.StrictMock<IGridWrapper>();
 
             int id = 1;
@@ -2306,8 +2300,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nMeshPoints = 5;
 
             // uGrdi1DApi
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(true).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGrid1DApi, "nMeshPoints", nMeshPoints);
             
             //uRemoteGrid1DApi
@@ -2333,8 +2327,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNumberOfMeshDiscretisationPointsApiCallTest(bool isInitialized, bool isReady, int nMeshPoints)
         {
             //uGrid1DApi
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(isInitialized).Repeat.Twice();
-            uGrid1DApi.Expect(a => a.IsNetworkReady()).Return(isReady).Repeat.Any();
+            uGrid1DApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             TypeUtils.SetField(uGrid1DApi, "nMeshPoints", nMeshPoints);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -2371,7 +2365,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNumberOfMeshDiscretisationPointsApiCallFailedTest()
         {
             //uGrid1DApi
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -2404,7 +2398,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNumberOfMeshDiscretisationPointsExceptionTest()
         {
             //uGrid1DApi
-            uGrid1DApi.Expect(a => a.IsInitialized()).Return(false).Repeat.Twice();
+            uGrid1DApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 

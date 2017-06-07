@@ -19,6 +19,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     {
         private const string UGRID_TEST_FILE = @"ugrid\Custom_Ugrid.nc"; //@"ugrid\c090_wetbed_map.nc";
         private const string UGRID_MAP_TEST_FILE = @"ugrid\Custom_Ugrid_map.nc";
+        private const string DUMMY_TEST_FILE = @"ugrid\Dummy.nc";
 
         [Test]
         public void AssertIONetCDFDllIsXpCompatible()
@@ -56,6 +57,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
+                uGrid.Initialize();
                 Assert.That(uGrid.IsValid(), Is.True);
             }
         }
@@ -67,6 +69,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             using (var uGrid = new UGrid(null))
             {
+                uGrid.Initialize();
             }
 
         }
@@ -78,6 +81,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             using (var uGrid = new UGrid(""))
             {
+                uGrid.Initialize();
             }
 
         }
@@ -89,6 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             using (var uGrid = new UGrid("thisFileDoesntExist.nc"))
             {
+                uGrid.Initialize();
             }
         }
 
@@ -102,7 +107,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGridStub(localCopyOfTestFile))
             {
-                Assert.That(uGrid.IsValidViaApi(), Is.True);
+                Assert.IsTrue(uGrid.IsValidViaApi());
             }
         }
 
@@ -115,7 +120,49 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.GetDataSetConvention(), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
+                uGrid.Initialize();
+                Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, uGrid.GetDataSetConvention());
+            }
+        }
+
+        [Test]
+        public void TestDefaultGlobalMetaData()
+        {
+            var testFilePath =
+                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            var metadata = new UGridGlobalMetaData();
+            using (var uGrid = new UGrid(localCopyOfTestFile))
+            {
+                Assert.AreEqual(metadata, uGrid.GlobalMetaData);
+            }
+        }
+
+        [Test]
+        public void TestValidGlobalMetaData()
+        {
+            var testFilePath =
+                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            var metadata = new UGridGlobalMetaData("MyModel", "MySource", "MyVersion");
+            using (var uGrid = new UGrid(localCopyOfTestFile, metadata))
+            {
+                Assert.AreEqual(metadata, uGrid.GlobalMetaData);
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(NullReferenceException), ExpectedMessage = "Object reference not set to an instance of an object.")]
+        public void TestNullGlobalMetaData()
+        {
+            var testFilePath =
+                TestHelper.GetTestFilePath(DUMMY_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            FileUtils.DeleteIfExists(localCopyOfTestFile);
+            //var metadata = new UGridGlobalMetaData();
+            using (var uGrid = new UGrid(localCopyOfTestFile, null))
+            {
+                uGrid.CreateFile();
             }
         }
 
@@ -129,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGridStub(localCopyOfTestFile))
             {
-                Assert.That(uGrid.GetDataSetConvention(), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
+                Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, uGrid.GetDataSetConvention());
             }
         }
 
@@ -322,7 +369,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.AreEqual(1, uGrid.NumberOfMesh());
                 uGrid.GetFaceNodesForMesh(1);
                 Assert.That(uGrid.FaceNodes[0], Is.Not.Null);
             }
@@ -398,6 +445,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             using (var uGrid = new UGrid(testFilePath))
             {
+                uGrid.Initialize();
                 Assert.AreEqual(expectedAuthorityCode, uGrid.CoordinateSystem.AuthorityCode);
             }
         }
@@ -451,6 +499,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 using (var uGrid = new UGridStub(testFilePath))
                 {
+                    uGrid.Initialize();
                     Assert.That(uGrid.CoordinateSystem, Is.EqualTo(new OgrCoordinateSystemFactory().CreateFromEPSG(4326))); // mag dit?
                     Assert.That(uGrid.IsValid(), Is.True);
                     //Assert.That(uGrid.IsValidViaApi(), Is.True);

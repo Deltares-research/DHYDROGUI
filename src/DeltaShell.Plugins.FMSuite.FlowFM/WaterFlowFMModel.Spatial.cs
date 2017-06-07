@@ -88,7 +88,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             try
             {
-                using (var uGrid2D = new UGrid(NetFilePath))
+                var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
+                using (var uGrid2D = new UGrid(NetFilePath, metaData))
                 {
                     // Calls for writing grid data (cloning)
                 }

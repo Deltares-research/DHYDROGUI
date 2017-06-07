@@ -6,6 +6,7 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         public static IUGridApi CreateNew()
         {
+            return new UGridApi();
             return (Environment.Is64BitProcess != Environment.Is64BitOperatingSystem)
                     ? (IUGridApi)new RemoteUGridApi()
                     : new UGridApi();
