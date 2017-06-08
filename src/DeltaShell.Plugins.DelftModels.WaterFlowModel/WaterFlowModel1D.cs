@@ -3462,6 +3462,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                         var matchingCoverage = matchingDataItem.Value as IFunction;
                         if (matchingCoverage == null) continue;
 
+                        var featureCoverage = matchingCoverage as FeatureCoverage;
+                        if (featureCoverage != null)
+                        {
+                            SetFeaturesOnCoverage(netFile.Name, featureCoverage);
+                        }
+
                         var existingStore = matchingCoverage.Store as IFileBased;
                         if (existingStore == null) continue;
 
@@ -3501,6 +3507,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     Log.WarnFormat("Unable to read output file '{0}': {1}", netFile.Name, ex.Message);
                 }
 
+            }
+        }
+
+        private void SetFeaturesOnCoverage(string netFile, FeatureCoverage coverage)
+        {
+            switch (netFile)
+            {
+                case WaterFlowModel1DOutputFileConstants.FileNames.ObservationsFile:
+                    coverage.Features = new EventedList<IFeature>(Network.ObservationPoints);
+                    break;
+                case WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile:
+                    coverage.Features = new EventedList<IFeature>(Network.LateralSources);
+                    break;
+                case WaterFlowModel1DOutputFileConstants.FileNames.StructuresFile:
+                    coverage.Features = new EventedList<IFeature>(Network.Structures.Except(Network.CompositeBranchStructures));
+                    break;
             }
         }
 
