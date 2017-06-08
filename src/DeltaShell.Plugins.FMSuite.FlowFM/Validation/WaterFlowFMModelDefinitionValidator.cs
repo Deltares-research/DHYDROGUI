@@ -12,8 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             var modelDefinition = model.ModelDefinition;
             var groupReports = new List<ValidationReport>();
-            var timerCategory = model.ModelDefinition.GetModelProperty(GuiProperties.StartTime).PropertyDefinition.Category;
+            var timerCategory = modelDefinition.GetModelProperty(GuiProperties.StartTime).PropertyDefinition.Category;
             var solverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
+            var bedLevelTypeProperty = modelDefinition.GetModelProperty(KnownProperties.BedlevType);
             foreach (var propertyGroup in modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.Category))
             {
                 var issues = new List<ValidationIssue>();
@@ -35,6 +36,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         {
                             issues.Add(new ValidationIssue(propertyGroup.Key, ValidationSeverity.Error,
                                 "Solver type selected for parallel run; this is currently not possible in GUI."));
+                        }
+                    }
+
+                    // Whenever morphology is active, give an error in the validation report in case the bed level locations is not set to 'cells' (BedlevType.val0)
+                    //if (waterFlowFmProperty.PropertyDefinition.MduPropertyName.Equals(KnownPropertyMduNames.BedlevType))
+                    if (waterFlowFmProperty == bedLevelTypeProperty)
+                    {
+                        int bedLevelTypeNumber;
+                        bool result = Int32.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber);
+                        var morphologyActive = (bool) modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
+                        if (morphologyActive && result && !bedLevelTypeNumber.Equals((int)BedLevelType.Cells))
+                        {
+                            issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
+                                "Bed level locations should be set to 'cells' when morphology is active."));
                         }
                     }
                 }

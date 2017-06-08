@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
@@ -72,6 +74,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             //yield return new TreeFolder(parentNodeData, , "Input", FolderImageType.Input);
             yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
+        }
+
+        protected override void OnPropertyChanged(WaterFlowFMModel model, ITreeNode node, PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(model, node, e);
+            
+            if (e.PropertyName == TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.InitialCoverageSetChanged))
+            {
+                TreeView.RefreshChildNodes(node);
+            }
         }
 
         private IEnumerable GetInputItems(WaterFlowFMModel model)

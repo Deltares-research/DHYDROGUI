@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         new SedimentProperty<double>("RhoSol", 2650, 0, true, 10000, true, "kg/m³", "Specific density", false),
                         new SedimentProperty<int>("TraFrm", -1, -2, false, 18, false, string.Empty, "Integer selecting the transport formula", true),
                         new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m³", "Dry bed density", false),
-                        new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, 0.002, false, "m", "Median sediment diameter (D50)", true),
+                        new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, 0.002, false, "m", "Median sediment diameter (D50)", false),
                     }
                 },
                 new SedimentType()
