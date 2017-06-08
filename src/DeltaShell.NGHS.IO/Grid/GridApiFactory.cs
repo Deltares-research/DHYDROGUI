@@ -2,7 +2,7 @@ using System;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class GridApiFactory
+    public static class GridApiFactory
     {
         public static IUGridApi CreateNew()
         {
@@ -18,6 +18,11 @@ namespace DeltaShell.NGHS.IO.Grid
                     ? (IUGridApi1D)new RemoteUGridApi1D()
                     : new UGridApi1D();*/
             return new UGridApi1D();
+        }
+
+        public static IUGridApi1DMesh CreateNew1DMesh()
+        {
+            return new UGridApi1DMesh();
         }
     }
 }

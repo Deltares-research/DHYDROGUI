@@ -176,10 +176,14 @@
     <Compile Include="Grid\IGridApi.cs" />
     <Compile Include="Grid\IGridWrapper.cs" />
     <Compile Include="Grid\IUGrid1D.cs" />
+    <Compile Include="Grid\IUGrid1DMesh.cs" />
     <Compile Include="Grid\IUGridApi1D.cs" />
+    <Compile Include="Grid\IUGridApi1DMesh.cs" />
     <Compile Include="Grid\RemoteGridApi.cs" />
     <Compile Include="Grid\RemoteUGridApi1D.cs" />
+    <Compile Include="Grid\RemoteUGridApi1DMesh.cs" />
     <Compile Include="Grid\UGrid1D.cs" />
+    <Compile Include="Grid\UGrid1DMesh.cs" />
     <Compile Include="Grid\UGridApi.cs" />
     <Compile Include="Grid\AGrid.cs" />
     <Compile Include="Grid\GridApiDataSet.cs" />
@@ -191,6 +195,7 @@
     <Compile Include="Grid\RemoteUGridApi.cs" />
     <Compile Include="Grid\UGrid.cs" />
     <Compile Include="Grid\UGridApi1D.cs" />
+    <Compile Include="Grid\UGridApi1DMesh.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
@@ -215,6 +220,7 @@
     <None Include="Grid\Grid.cd" />
     <None Include="packages.config" />
     <None Include="UML\OverView.cd" />
+    <None Include="UML\UGridApi.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.hbm.xml" />

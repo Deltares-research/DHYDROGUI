@@ -357,6 +357,7 @@
     <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MapLayers\Tools\MapToolTest.cs" />
+    <Compile Include="UGridToNetworkAdapterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -372,6 +373,10 @@
       <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>

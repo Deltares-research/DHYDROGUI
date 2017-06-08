@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class GridApiDataSet
+    public static class GridApiDataSet
     {
         public class UGridAttributeConstants
         {
