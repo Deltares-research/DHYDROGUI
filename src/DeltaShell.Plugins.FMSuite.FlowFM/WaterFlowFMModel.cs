@@ -1281,6 +1281,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Equals(sender, InitialFractions))
             {
                 AddOrRenameFractionDataItems();
+
+                // Invoke property changed, so Gui can update
                 InitialCoverageSetChanged = true;
             }
             else
