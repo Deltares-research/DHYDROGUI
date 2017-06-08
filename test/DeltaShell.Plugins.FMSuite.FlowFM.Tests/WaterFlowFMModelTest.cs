@@ -57,7 +57,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.SedimentFractions.Add(sedFrac);
 
             var modelCount = 0;
-            ((INotifyPropertyChanged)model).PropertyChanged += (s, e) => modelCount++;
+            ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName != "IsSpatiallyVarying") return;
+                modelCount++;
+            };
+
             var sedFracCount = 0;
             ((INotifyPropertyChanged)sedFrac).PropertyChanged += (s, e) => sedFracCount++;
 
@@ -65,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             prop.IsSpatiallyVarying = true;
 
             Assert.AreEqual(1, sedFracCount);
-            Assert.AreEqual(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+            Assert.AreEqual(1, modelCount); // IsSpatiallyVarying
         }
 
         [Test]
