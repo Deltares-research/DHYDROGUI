@@ -682,7 +682,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [TestCase(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)]
         [TestCase(GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR)]
-        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Couldn't create new netCDF file at location", MatchType = MessageMatch.Contains)]
+        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Couldn't create new NetCDF file at location", MatchType = MessageMatch.Contains)]
         public void CreateFileFailedTest(int apiCallReturnValue)
         {
             var wrapper = mocks.StrictMock<IGridWrapper>();
