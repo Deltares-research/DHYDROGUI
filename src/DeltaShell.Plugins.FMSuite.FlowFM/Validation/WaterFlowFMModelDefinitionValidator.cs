@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var groupReports = new List<ValidationReport>();
             var timerCategory = modelDefinition.GetModelProperty(GuiProperties.StartTime).PropertyDefinition.Category;
             var solverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
+            var bedLevelTypeProperty = modelDefinition.GetModelProperty(KnownProperties.BedlevType);
             foreach (var propertyGroup in modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.Category))
             {
                 var issues = new List<ValidationIssue>();
@@ -39,11 +40,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     }
 
                     // Whenever morphology is active, give an error in the validation report in case the bed level locations is not set to 'cells' (BedlevType.val0)
-                    if (waterFlowFmProperty.PropertyDefinition.MduPropertyName.Equals(KnownPropertyMduNames.BedlevType))
+                    //if (waterFlowFmProperty.PropertyDefinition.MduPropertyName.Equals(KnownPropertyMduNames.BedlevType))
+                    if (waterFlowFmProperty == bedLevelTypeProperty)
                     {
-                        var bedLevelType = waterFlowFmProperty.Value.ToString();
+                        int bedLevelTypeNumber;
+                        bool result = Int32.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber);
                         var morphologyActive = (bool) modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
-                        if (morphologyActive && !bedLevelType.Equals("val0"))
+                        if (morphologyActive && result && !bedLevelTypeNumber.Equals((int)BedLevelType.Cells))
                         {
                             issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
                                 "Bed level locations should be set to 'cells' when morphology is active."));

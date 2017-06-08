@@ -73,12 +73,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string sediment = "sediment";
         public const string MorFile = "MorFile";
         public const string SedFile = "SedFile";
+        public const string BedlevType = "bedlevtype";
     }
 
-    public static class KnownPropertyMduNames
-    {
-        public const string BedlevType = "BedlevType";
-    }
 
     public static class GuiProperties
     {
@@ -116,5 +113,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public const string UseTemperature = "UseTemperature";
         public const string UseMorSed = "UseMorSed";
+    }
+
+    public enum BedLevelType
+    {
+        Cells = 1,
+        Faces = 2,
+        NodesMeanLev = 3,
+        NodesMinLev = 4,
+        NodesMaxLev = 5,
+        NodesMaxLevAtFaces = 6
     }
 }
