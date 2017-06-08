@@ -75,6 +75,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string SedFile = "SedFile";
     }
 
+    public static class KnownPropertyMduNames
+    {
+        public const string BedlevType = "BedlevType";
+    }
+
     public static class GuiProperties
     {
         public const string GUIonly = "GUIOnly"; // recognize GUI group name when writing writing MDU
