@@ -2,7 +2,6 @@
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils;
 using DelftTools.Utils.Globalization;
 
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;

@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 
@@ -24,7 +24,139 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     [TestFixture]
     public class IncludeFileFactoryTest
     {
+        #region Block 1
+
+        [Test]
+        public void TestCreateT0Include()
+        {
+            const string expectedString = "'T0: 2010.01.01 13:12:11  (scu=       1s)'";
+
+            var dispersionInclude = IncludeFileFactory.CreateT0Include(new DateTime(2010, 1, 1, 13, 12, 11));
+            Assert.AreEqual(expectedString, dispersionInclude);
+        }
+
+        [Test]
+        public void TestCreateSubstanceListInclude()
+        {
+            var substanceProcessLib = new SubstanceProcessLibrary();
+            substanceProcessLib.Substances.Add(new WaterQualitySubstance
+            {
+                Name = "ActiveSubstance",
+                Active = true,
+                Description = "An active substance"
+            });
+            substanceProcessLib.Substances.Add(new WaterQualitySubstance
+            {
+                Name = "InActiveSubstance",
+                Active = false,
+                Description = "An inactive substance"
+            });
+
+            string expectedString = "; number of active and inactive substances" + Environment.NewLine +
+                                    "1             1" + Environment.NewLine +
+                                    "        ; active substances" + Environment.NewLine +
+                                    "1            'ActiveSubstance' ;An active substance" + Environment.NewLine +
+                                    "        ; passive substances" + Environment.NewLine +
+                                    "2            'InActiveSubstance' ;An inactive substance" + Environment.NewLine;
+
+            var dispersionInclude = IncludeFileFactory.CreateSubstanceListInclude(substanceProcessLib);
+            Assert.AreEqual(expectedString, dispersionInclude);
+        }
+
+        #endregion Block 1
+
         #region Block 2
+
+        [Test]
+        public void TestCreateNumSettingsInclude()
+        {
+            var expectedString = "22.63 ; integration option" + Environment.NewLine +
+                                 "; detailed balance options" + Environment.NewLine +
+                                 "BAL_LUMPPROCESSES BAL_NOLUMPTRANSPORT BAL_LUMPLOADS" + Environment.NewLine +
+                                 "BAL_NOSUPPRESSSPACE BAL_SUPPRESSTIME" + Environment.NewLine;
+
+            var waqSettings = new WaterQualityModelSettings
+            {
+                Balance = true,
+                BalanceUnit = BalanceUnit.Gram,
+                LumpLoads = true,
+                LumpTransport = false,
+                LumpProcesses = true,
+                SuppressSpace = false,
+                SuppressTime = true,
+                NumericalScheme = NumericalScheme.Scheme22,
+                UseFirstOrder = false,
+                NoDispersionOverOpenBoundaries = true,
+                NoDispersionIfFlowIsZero = false
+            };
+
+            var dispersionInclude = IncludeFileFactory.CreateNumSettingsInclude(waqSettings);
+            Assert.AreEqual(expectedString, dispersionInclude);
+
+            waqSettings.BalanceUnit = BalanceUnit.GramPerSquareMeter;
+            expectedString = "22.63 ; integration option" + Environment.NewLine +
+                             "; detailed balance options" + Environment.NewLine +
+                             "BAL_UNITAREA" + Environment.NewLine +
+                             "BAL_LUMPPROCESSES BAL_NOLUMPTRANSPORT BAL_LUMPLOADS" + Environment.NewLine +
+                             "BAL_NOSUPPRESSSPACE BAL_SUPPRESSTIME" + Environment.NewLine;
+            dispersionInclude = IncludeFileFactory.CreateNumSettingsInclude(waqSettings);
+            Assert.AreEqual(expectedString, dispersionInclude);
+
+            waqSettings.BalanceUnit = BalanceUnit.GramPerCubicMeter;
+            expectedString = "22.63 ; integration option" + Environment.NewLine +
+                             "; detailed balance options" + Environment.NewLine +
+                             "BAL_UNITVOLUME" + Environment.NewLine +
+                             "BAL_LUMPPROCESSES BAL_NOLUMPTRANSPORT BAL_LUMPLOADS" + Environment.NewLine +
+                             "BAL_NOSUPPRESSSPACE BAL_SUPPRESSTIME" + Environment.NewLine;
+            dispersionInclude = IncludeFileFactory.CreateNumSettingsInclude(waqSettings);
+            Assert.AreEqual(expectedString, dispersionInclude);
+        }
+
+        [Test]
+        public void TestCreateOutputTimersInclude()
+        {
+            string expectedString = "; output control (see DELWAQ-manual)" + Environment.NewLine +
+                                    "; yyyy/mm/dd-hh:mm:ss  yyyy/mm/dd-hh:mm:ss  dddhhmmss" + Environment.NewLine +
+                                    "  2010/01/01-00:00:00  2010/01/10-00:00:00  001000000 ;  start, stop and step for balance output" + Environment.NewLine +
+                                    "  2010/02/01-00:00:00  2010/02/10-00:00:00  000010000 ;  start, stop and step for map output" + Environment.NewLine +
+                                    "  2010/03/01-00:00:00  2010/03/10-00:00:00  000000100 ;  start, stop and step for his output" + Environment.NewLine;
+
+            var waqSettings = new WaterQualityModelSettings
+            {
+                HisStartTime = new DateTime(2010, 3, 1),
+                HisStopTime = new DateTime(2010, 3, 10),
+                HisTimeStep = new TimeSpan(0, 0, 1, 0),
+                MapStartTime = new DateTime(2010, 2, 1),
+                MapStopTime = new DateTime(2010, 2, 10),
+                MapTimeStep = new TimeSpan(0, 1, 0, 0),
+                BalanceStartTime = new DateTime(2010, 1, 1),
+                BalanceStopTime = new DateTime(2010, 1, 10),
+                BalanceTimeStep = new TimeSpan(1, 0, 0, 0),
+            };
+
+            var outputTimersInclude = IncludeFileFactory.CreateOutputTimersInclude(waqSettings);
+            Assert.AreEqual(expectedString, outputTimersInclude);
+        }
+
+        [Test]
+        public void TestCreateSimTimersInclude()
+        {
+            string expectedString = "  2010/01/01-00:00:00 ; start time" + Environment.NewLine +
+                                    "  2010/01/05-00:00:00 ; stop time" + Environment.NewLine +
+                                    "  0 ; timestep constant" + Environment.NewLine +
+                                    "  001000000 ; timestep";
+
+            var initializationSettings = new WaqInitializationSettings
+            {
+                SimulationStartTime = new DateTime(2010, 1, 1),
+                SimulationStopTime = new DateTime(2010, 1, 5),
+                SimulationTimeStep = new TimeSpan(1, 0, 0, 0)
+            };
+
+            var simTimersInclude = IncludeFileFactory.CreateSimTimersInclude(initializationSettings);
+            Assert.AreEqual(expectedString, simTimersInclude);
+        }
+
 
         [Test]
         public void TestCreateOutputLocations()
@@ -35,9 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {"obs2", new[] {4, 5, 6}},
             };
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-
-            var text = factory.CreateOutputLocationsInclude(obsPoints);
+            var text = IncludeFileFactory.CreateOutputLocationsInclude(obsPoints);
 
             string expectedString = "2 ; nr of monitor locations" + Environment.NewLine +
                                     "'obs1' 3" + Environment.NewLine + 
@@ -57,8 +187,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             var obsPoints = new Dictionary<string, IList<int>>(0);
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-            var text = factory.CreateOutputLocationsInclude(obsPoints);
+            var text = IncludeFileFactory.CreateOutputLocationsInclude(obsPoints);
 
             string expectedString = "0 ; nr of monitor locations" + Environment.NewLine;
 
@@ -72,20 +201,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateNumberOfSegmentsInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             const string expectedString = "446698 ; number of segments";
 
-            Assert.AreEqual(expectedString, factory.CreateNumberOfSegmentsInclude(63814, 7));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateNumberOfSegmentsInclude(63814, 7));
         }
 
         [Test]
         public void TestCreateVolumesFileInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             string expectedString = "-2 ; volumes will be interpolated from a binary file" + Environment.NewLine +
                                     "'uni3d.vol' ; volumes file from hyd file" + Environment.NewLine;
 
-            Assert.AreEqual(expectedString, factory.CreateVolumesFileInclude("uni3d.vol"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateVolumesFileInclude("uni3d.vol"));
         }
 
         #endregion Block 3
@@ -95,81 +222,73 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void TestCreateNumberOfExchangesInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             const string expectedString = "788900 0 382884 ; number of exchanges in three directions";
 
-            Assert.AreEqual(expectedString, factory.CreateNumberOfExchangesInclude(788900, 382884));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateNumberOfExchangesInclude(788900, 382884));
         }
 
         [Test]
         public void TestCreatePointersFileInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             string expectedString = "0 ; pointers from binary file." + Environment.NewLine +
                                     "'uni3d.poi' ; pointers file" + Environment.NewLine;
 
-            Assert.AreEqual(expectedString, factory.CreatePointersFileInclude("uni3d.poi"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreatePointersFileInclude("uni3d.poi"));
         }
 
         [Test]
         public void TestCreateAreasFileInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             string expectedString = "-2 ; areas will be interpolated from a binary file" + Environment.NewLine +
                                     "'uni3d.are' ; areas file" + Environment.NewLine;
 
-            Assert.AreEqual(expectedString, factory.CreateAreasFileInclude("uni3d.are"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateAreasFileInclude("uni3d.are"));
         }
 
         [Test]
         public void TestCreateAttributesFileInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             const string expectedString = "INCLUDE 'uni3d.atr' ; attributes file";
 
-            Assert.AreEqual(expectedString, factory.CreateAttributesFileInclude("uni3d.atr"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateAttributesFileInclude("uni3d.atr"));
         }
 
         [Test]
         public void TestCreateFlowsFileInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             string expectedString = "-2 ; flows from binary file" + Environment.NewLine +
                                     "'uni3d.flo' ; flows file" + Environment.NewLine;
 
-            Assert.AreEqual(expectedString, factory.CreateFlowsFileInclude("uni3d.flo"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateFlowsFileInclude("uni3d.flo"));
         }
 
         [Test]
         public void TestCreateLengthsFileInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             string expectedString = "0 ; Lengths from binary file" + Environment.NewLine +
                                     "'uni3d.len' ; lengths file" + Environment.NewLine;
 
-            Assert.AreEqual(expectedString, factory.CreateLengthsFileInclude("uni3d.len"));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateLengthsFileInclude("uni3d.len"));
         }
 
         [Test]
         public void TestCreateConstantDispersionInclude()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             const string expectedString = "0.2 0.0 0.3 ; constant dispersion";
 
             var dispersion = WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null);
 
-            Assert.AreEqual(expectedString, factory.CreateConstantDispersionInclude(0.3d, dispersion));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
         }
 
         [Test]
         public void TestCreateConstantDispersionInclude_HasSpatialData()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
             const string expectedString = "0.0 0.0 0.3 ; constant dispersion";
 
             var dispersion = WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("Dispersion", 0.2d, "Dispersion", "m2/s", null);
 
-            Assert.AreEqual(expectedString, factory.CreateConstantDispersionInclude(0.3d, dispersion));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateConstantDispersionInclude(0.3d, dispersion));
         }
 
         #endregion Block 4
@@ -187,9 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             new HydFileImporter().ImportItem(hydPath, model);
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-            string result =
-                factory.CreateBoundaryListInclude(model.BoundaryNodeIds, model.NumberOfWaqSegmentLayers);
+            string result = IncludeFileFactory.CreateBoundaryListInclude(model.BoundaryNodeIds, model.NumberOfWaqSegmentLayers);
 
             string[] resultLines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -215,9 +332,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {new WaterQualityBoundary() {Name = boundaryNameOne}, new[] {1, 5, 3, 4}},
             };
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-
-            string result = factory.CreateBoundaryListInclude(boundaryNodes, 3);
+            string result = IncludeFileFactory.CreateBoundaryListInclude(boundaryNodes, 3);
 
             string[] lines = result.Split(new []{ Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -269,10 +384,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 manager.CreateNewDataTable("F", "G", "H.i", "J");
                 manager.CreateNewDataTable("K", "L", "M.n", "O");
 
-                var factory = new IncludeFileFactory();
-
                 // call
-                var boundaryDataIncludeFileContents = factory.CreateBoundaryDataInclude(manager, workDirectory);
+                var boundaryDataIncludeFileContents = IncludeFileFactory.CreateBoundaryDataInclude(manager, workDirectory);
 
                 // assert
                 var expectedContents =
@@ -311,10 +424,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 var dataTables = manager.DataTables.ToArray();
                 dataTables[1].IsEnabled = false;
 
-                var factory = new IncludeFileFactory();
-
                 // call
-                var boundaryDataIncludeFileContents = factory.CreateBoundaryDataInclude(manager, workDirectory);
+                var boundaryDataIncludeFileContents = IncludeFileFactory.CreateBoundaryDataInclude(manager, workDirectory);
 
                 // assert
                 var expectedContents =
@@ -339,9 +450,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {"measure point 3", new List<string>() {"boundary 3", "boundary 1",}},
             };
 
-            var factory = new IncludeFileFactory();
-
-            var boundaryAliasesIncludeFileContents = factory.CreateBoundaryAliasesInclude(input);
+            var boundaryAliasesIncludeFileContents = IncludeFileFactory.CreateBoundaryAliasesInclude(input);
 
             var expectedContents = "USEDATA_ITEM 'measure point 1' FORITEM" + Environment.NewLine +
                                    "'boundary 1'" + Environment.NewLine +
@@ -388,7 +497,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             loadsAndIds[load2] = 67;
             loadsAndIds[load3] = 0;
 
-            IncludeFileFactory factory = new IncludeFileFactory();
             string expectedString =
                 "; Number of loads" + Environment.NewLine +
                 "3; Number of loads" + Environment.NewLine +
@@ -398,7 +506,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "0 'Load 3' '' 'haha'" + Environment.NewLine;
 
             // call
-            var text = factory.CreateDryWasteLoadInclude(loadsAndIds);
+            var text = IncludeFileFactory.CreateDryWasteLoadInclude(loadsAndIds);
 
             // assert
             Assert.AreEqual(expectedString, text);
@@ -423,10 +531,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 manager.CreateNewDataTable("F", "G", "H.i", "J");
                 manager.CreateNewDataTable("K", "L", "M.n", "O");
 
-                var factory = new IncludeFileFactory();
-
                 // call
-                var dryWasteLoadDataIncludeContent = factory.CreateDryWasteLoadDataInclude(manager, workDirectory);
+                var dryWasteLoadDataIncludeContent = IncludeFileFactory.CreateDryWasteLoadDataInclude(manager, workDirectory);
 
                 // assert
                 var expectedContents =
@@ -452,9 +558,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {"measure point 3", new List<string>() {"load 3", "load 1",}},
             };
 
-            var factory = new IncludeFileFactory();
-
-            var boundaryAliasesIncludeFileContents = factory.CreateDryWasteLoadAliasesInclude(input);
+            var boundaryAliasesIncludeFileContents = IncludeFileFactory.CreateDryWasteLoadAliasesInclude(input);
 
             var expectedContents = "USEDATA_ITEM 'measure point 1' FORITEM" + Environment.NewLine +
                                    "'load 1'" + Environment.NewLine +
@@ -475,6 +579,79 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         #endregion Block 6
 
         #region Block 7
+
+        [Test]
+        public void TestCreateProcessesInclude()
+        {
+            var substanceProcessLib = new SubstanceProcessLibrary();
+            substanceProcessLib.Processes.Add(new WaterQualityProcess { Name = "Process A" });
+            substanceProcessLib.Processes.Add(new WaterQualityProcess { Name = "Process B" });
+
+            string expectedString = "CONSTANTS 'ACTIVE_Process A' DATA 0" + Environment.NewLine +
+                                    "CONSTANTS 'ACTIVE_Process B' DATA 0" + Environment.NewLine;
+
+            var dispersionInclude = IncludeFileFactory.CreateProcessesInclude(substanceProcessLib);
+            Assert.AreEqual(expectedString, dispersionInclude);
+        }
+
+        [Test]
+        public void TestCreateConstantsInclude()
+        {
+            var processCoefficients = new[]
+            {
+                WaterQualityFunctionFactory.CreateConst("A", 2, "A", "mg/L", "A"),
+                WaterQualityFunctionFactory.CreateTimeSeries("B", 5.5, "B", "g/L", "B"),
+                WaterQualityFunctionFactory.CreateNetworkCoverage("C", 10.5, "C", "mg/mL", "C"),
+                WaterQualityFunctionFactory.CreateConst("D", 3.5, "D", "g/mL", "D")
+            };
+
+            string expectedString = "CONSTANTS 'A' DATA 2" + Environment.NewLine +
+                                    "CONSTANTS 'D' DATA 3.5" + Environment.NewLine;
+
+            var createConstantsInclude = IncludeFileFactory.CreateConstantsInclude(processCoefficients);
+            Assert.AreEqual(expectedString, createConstantsInclude);
+        }
+
+        [Test]
+        public void TestCreateFunctionsInclude()
+        {
+            var timeSeries1 = WaterQualityFunctionFactory.CreateTimeSeries("A", 2, "A", "mg/L", "A");
+            timeSeries1.Arguments[0].InterpolationType = InterpolationType.Linear;
+            timeSeries1[new DateTime(2010, 1, 1, 0, 0, 0)] = 0.12;
+            timeSeries1[new DateTime(2010, 1, 1, 0, 10, 0)] = 0.16;
+
+            var timeSeries2 = WaterQualityFunctionFactory.CreateTimeSeries("D", 3.5, "D", "g/mL", "D");
+            timeSeries2.Arguments[0].InterpolationType = InterpolationType.Constant;
+            timeSeries2[new DateTime(2010, 1, 1, 0, 0, 0)] = 0.12;
+            timeSeries2[new DateTime(2010, 1, 1, 0, 10, 0)] = 0.18;
+            timeSeries2[new DateTime(2010, 1, 1, 0, 20, 0)] = 0.14;
+
+            var processCoefficients = new[]
+            {
+                timeSeries1,
+                WaterQualityFunctionFactory.CreateConst("B", 5.5, "B", "g/L", "B"),
+                WaterQualityFunctionFactory.CreateNetworkCoverage("C", 10.5, "C", "mg/mL", "C"),
+                timeSeries2
+            };
+
+            string expectedString = "FUNCTIONS" + Environment.NewLine +
+                                    "A" + Environment.NewLine +
+                                    "LINEAR DATA" + Environment.NewLine +
+                                    "2010/01/01-00:00:00 0.12" + Environment.NewLine +
+                                    "2010/01/01-00:10:00 0.16" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    "FUNCTIONS" + Environment.NewLine +
+                                    "D" + Environment.NewLine +
+                                    "DATA" + Environment.NewLine +
+                                    "2010/01/01-00:00:00 0.12" + Environment.NewLine +
+                                    "2010/01/01-00:10:00 0.18" + Environment.NewLine +
+                                    "2010/01/01-00:20:00 0.14" + Environment.NewLine +
+                                    Environment.NewLine;
+
+            var functionsInclude = IncludeFileFactory.CreateFunctionsInclude(processCoefficients);
+            Assert.AreEqual(expectedString, functionsInclude);
+        }
+
 
         [Test]
         public void CreateParametersInclude2DTest()
@@ -517,10 +694,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                                     "5.5" + Environment.NewLine +
                                     Environment.NewLine;
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-
             // call
-            var parametersInclude = factory.CreateParametersInclude(waqInitializationSettings);
+            var parametersInclude = IncludeFileFactory.CreateParametersInclude(waqInitializationSettings);
 
             // assert
             Assert.AreEqual(expectedString, parametersInclude);
@@ -540,8 +715,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                                     "ALL" + Environment.NewLine +
                                     "BINARY_FILE 'uni3d.srf' ; from horizontal-surfaces-file key in hyd file" + Environment.NewLine;
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-            Assert.AreEqual(expectedString, factory.CreateParametersInclude(waqInitializationSettings));
+            Assert.AreEqual(expectedString, IncludeFileFactory.CreateParametersInclude(waqInitializationSettings));
         }
 
         // TODO: For CreateParametersInclude3DTest
@@ -561,10 +735,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     ProcessCoefficients = new[] { aFunc, bFunc },
                 };
 
-            var factory = new IncludeFileFactory();
-
             // call
-            var segfunctionInclude = factory.CreateSegfunctionsInclude(initSettings);
+            var segfunctionInclude = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
 
             // assert
             var expectedText =
@@ -597,10 +769,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 ProcessCoefficients = new[] { aFunc, bFunc },
             };
 
-            var factory = new IncludeFileFactory();
-
             // call
-            var segfunctionInclude = factory.CreateSegfunctionsInclude(initSettings);
+            var segfunctionInclude = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
 
             // assert
             var expectedText =
@@ -636,10 +806,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 }
             };
 
-            var factory = new IncludeFileFactory();
-
             // call
-            var numericalOptionsInclude = factory.CreateNumericalOptionsInclude(initSettings);
+            var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
 
             // assert
             var expectedText =
@@ -670,10 +838,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 }
             };
 
-            var factory = new IncludeFileFactory();
-
             // call
-            var numericalOptionsInclude = factory.CreateNumericalOptionsInclude(initSettings);
+            var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
 
             // assert
             var expectedText =
@@ -700,11 +866,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     DryCellThreshold = 1.23
                 }
             };
-
-            var factory = new IncludeFileFactory();
-
+            
             // call
-            var numericalOptionsInclude = factory.CreateNumericalOptionsInclude(initSettings);
+            var numericalOptionsInclude = IncludeFileFactory.CreateNumericalOptionsInclude(initSettings);
 
             // assert
             var expectedText =
@@ -725,8 +889,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
              coverageA[0] = 2.0;
              coverageA[1] = 4.0;
  
-             var factory = new IncludeFileFactory();
-             var result = factory.CreateSpatialDispersionInclude(coverageA, 2);
+             var result = IncludeFileFactory.CreateSpatialDispersionInclude(coverageA, 2);
 
              var expectedString = "CONSTANTS 'ACTIVE_HDisperAdd' DATA 1.0" + Environment.NewLine +
                                   "PARAMETERS" + Environment.NewLine +
@@ -745,8 +908,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void CreateVerticalDiffusionTest()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
-            string result = factory.CreateVerticalDiffusionInclude("someFile.vdf", true);
+            string result = IncludeFileFactory.CreateVerticalDiffusionInclude("someFile.vdf", true);
 
             string expected = "CONSTANTS 'ACTIVE_VertDisp' DATA 1.0" + Environment.NewLine +
                               "SEG_FUNCTIONS" + Environment.NewLine +
@@ -760,8 +922,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void CreateVerticalDiffusionOffTest()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
-            string result = factory.CreateVerticalDiffusionInclude("someFile.vdf", false);
+            string result = IncludeFileFactory.CreateVerticalDiffusionInclude("someFile.vdf", false);
 
             Assert.AreEqual(string.Empty, result);
         }
@@ -769,8 +930,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void CreateVerticalDiffusionNoFileTest()
         {
-            IncludeFileFactory factory = new IncludeFileFactory();
-            string result = factory.CreateVerticalDiffusionInclude(null, true);
+            string result = IncludeFileFactory.CreateVerticalDiffusionInclude(null, true);
 
             Assert.AreEqual(string.Empty, result);
         }
@@ -822,18 +982,129 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                                     "5.5" + Environment.NewLine +
                                     Environment.NewLine;
 
-            IncludeFileFactory factory = new IncludeFileFactory();
-
             // call
-            var parametersInclude = factory.CreateInitialConditionsInclude(waqInitializationSettings);
+            var parametersInclude = IncludeFileFactory.CreateInitialConditionsInclude(waqInitializationSettings);
 
             // assert
             Assert.AreEqual(expectedString, parametersInclude);
         }
-        
-        
+
+        [Test]
+        public void TestCreateInitialConditionsIncludeWithoutInitialConditionsAvailable()
+        {
+            // setup
+            var settings = new WaqInitializationSettings { InitialConditions = new List<IFunction>() };
+
+            // call
+            var fileContents = IncludeFileFactory.CreateInitialConditionsInclude(settings);
+
+            // assert
+            Assert.AreEqual(string.Empty, fileContents);
+        }
+
+        [Test]
+        public void TestCreateInitialConditionsWithConstantInitialConditions()
+        {
+            // setup
+            var settings = new WaqInitializationSettings
+            {
+                InitialConditions = new List<IFunction>
+                {
+                    WaterQualityFunctionFactory.CreateConst("A", 1.5, "A", "mg/L", "A"),
+                    WaterQualityFunctionFactory.CreateConst("B", 2.9, "B", "g/L", "B"),
+                    WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("C", 99.33, "C", "test", "C")
+                }
+            };
+
+            string expectedString2 = "MASS/M2" + Environment.NewLine +
+                                     "INITIALS" + Environment.NewLine +
+                                     "'A' 'B'" + Environment.NewLine +
+                                     "DEFAULTS" + Environment.NewLine +
+                                     "1.5 2.9" + Environment.NewLine +
+                                     "INITIALS" + Environment.NewLine +
+                                     "'C'" + Environment.NewLine +
+                                     "ALL" + Environment.NewLine +
+                                     "DATA" + Environment.NewLine + Environment.NewLine;
+
+            // call
+            var fileContents = IncludeFileFactory.CreateInitialConditionsInclude(settings);
+
+            // assert
+            Assert.AreEqual(expectedString2, fileContents);
+        }
+
 
         #endregion Block 8
+
+        #region Block 9
+
+        [Test]
+        public void TestCreateMapVarInclude()
+        {
+            var substanceProcessLib = new SubstanceProcessLibrary();
+
+            substanceProcessLib.OutputParameters.AddRange(
+                new[]
+                {
+                    new WaterQualityOutputParameter { Name = "Winddir", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "Vwind", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "Temp", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "Rad", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "Volume", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "Surf", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "Theta", ShowInMap = true },
+                    new WaterQualityOutputParameter { Name = "NotSelected1" },
+                    new WaterQualityOutputParameter { Name = "NotSelected2" }
+                });
+
+            string expectedString = "2 ; perform default output and extra parameters listed below" + Environment.NewLine +
+                                    "7 ; number of parameters listed" + Environment.NewLine +
+                                    " 'Winddir'" + Environment.NewLine +
+                                    " 'Vwind'" + Environment.NewLine +
+                                    " 'Temp'" + Environment.NewLine +
+                                    " 'Rad'" + Environment.NewLine +
+                                    " 'Volume'" + Environment.NewLine +
+                                    " 'Surf'" + Environment.NewLine +
+                                    " 'Theta'" + Environment.NewLine;
+
+            var mapVarInclude = IncludeFileFactory.CreateMapVarInclude(substanceProcessLib);
+            Assert.AreEqual(expectedString, mapVarInclude);
+        }
+
+        [Test]
+        public void TestCreateHisVarInclude()
+        {
+            var substanceProcessLib = new SubstanceProcessLibrary();
+
+            substanceProcessLib.OutputParameters.AddRange(
+                new[]
+                {
+                    new WaterQualityOutputParameter { Name = "Winddir", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "Vwind", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "Temp", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "Rad", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "Volume", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "Surf", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "Theta", ShowInHis = true },
+                    new WaterQualityOutputParameter { Name = "NotSelected1" },
+                    new WaterQualityOutputParameter { Name = "NotSelected2" }
+                });
+
+            string expectedString = "2 ; perform default output and extra parameters listed below" + Environment.NewLine +
+                                    "7 ; number of parameters listed" + Environment.NewLine +
+                                    " 'Winddir' 'volume'" + Environment.NewLine +
+                                    " 'Vwind' 'volume'" + Environment.NewLine +
+                                    " 'Temp' 'volume'" + Environment.NewLine +
+                                    " 'Rad' 'volume'" + Environment.NewLine +
+                                    " 'Volume' ' '" + Environment.NewLine +
+                                    " 'Surf' ' '" + Environment.NewLine +
+                                    " 'Theta' 'volume'" + Environment.NewLine;
+
+            var hisVarInclude = IncludeFileFactory.CreateHisVarInclude(substanceProcessLib);
+            Assert.AreEqual(expectedString, hisVarInclude);
+        }
+
+        #endregion Block 9
 
         private static UnstructuredGrid CreateTwoCellStaggeredGrid()
         {

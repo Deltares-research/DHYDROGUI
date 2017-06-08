@@ -105,7 +105,7 @@ namespace SobekCompare.Tests
                         }
                 };
 
-            var data = new HydFileReader(new FileInfo(flowModel.HydFilePath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(flowModel.HydFilePath));
 
             // import data (hyd file, sub file)
             waqModel.ImportHydroData(data);

@@ -28,10 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo("nonexistentfile.bnd");
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
@@ -45,10 +44,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "uni3d.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            IDictionary<WaterQualityBoundary, int[]> boundaries = reader.ReadAll();
+            IDictionary<WaterQualityBoundary, int[]> boundaries = BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var expectedBoundaries = new[] { "sea_002.pli", "sacra_001.pli", "sanjoa_001.pli", "yolo_001.pli", "CC.pli", "tracy.pli" };
@@ -116,10 +114,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "square", "square.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            IDictionary<WaterQualityBoundary, int[]> boundaries = reader.ReadAll();
+            IDictionary<WaterQualityBoundary, int[]> boundaries = BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             Assert.AreEqual(0, boundaries.Count);
@@ -131,10 +128,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "faultyFiles", "completelyEmpty.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
@@ -147,10 +143,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "faultyFiles", "NumberOfBoundariesNotInteger.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
@@ -163,10 +158,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "faultyFiles", "MissingBoundaries.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
@@ -179,10 +173,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "faultyFiles", "MissingNumberForNrOfBoundariesNodeIds.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
@@ -195,10 +188,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "faultyFiles", "EarlyEndOfBoundary.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
@@ -211,10 +203,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var boundariesFile = new FileInfo(Path.Combine(commonFilePath, "faultyFiles", "MalformattedBoundaryNodeDataLine.bnd"));
-            var reader = new BoundaryFileReader(boundariesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => BoundaryFileReader.ReadAll(boundariesFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);

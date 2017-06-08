@@ -1015,10 +1015,9 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var dataDir = TestHelper.GetTestDataPath(typeof(WaterQualityModelApplicationPluginTest).Assembly);
             var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
 
-            var hydFile = squareHydFile;            
+            var hydFile = squareHydFile;
 
-            var reader = new HydFileReader(new FileInfo(hydFile));
-            var data = reader.ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(hydFile));
 
             var model = new WaterQualityModel();
             model.ImportHydroData(data);

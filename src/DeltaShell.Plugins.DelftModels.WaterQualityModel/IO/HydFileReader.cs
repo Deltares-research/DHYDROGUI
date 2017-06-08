@@ -5,33 +5,17 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
     /// Reader for hydrodynamic (extension: .hyd) files.
     /// </summary>
-    public class HydFileReader
+    public static class HydFileReader
     {
-        private readonly FileInfo hydFile;
-        private readonly Dictionary<string, IHydFileElement> elementsOfInterest;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HydFileReader"/> class.
-        /// </summary>
-        /// <param name="hydFile">The .hyd file to be read.</param>
-        public HydFileReader(FileInfo hydFile)
-        {
-            this.hydFile = hydFile;
-
-            elementsOfInterest = GetAllHydFileElementsOfInterest();
-        }
-
         /// <summary>
         /// Reads the hydrodynamics file.
         /// </summary>
@@ -39,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <exception cref="System.InvalidOperationException">When the hydro dynamics file
         /// to be read is missing.</exception>
         /// <exception cref="FormatException">When a parsing error occurs.</exception>
-        public HydFileData ReadAll()
+        public static HydFileData ReadAll(FileInfo hydFile)
         {
             if (hydFile == null || !hydFile.Exists)
             {
@@ -53,10 +37,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     Checksum = FileUtils.GetChecksum(hydFile.FullName)
                 };
 
+            var elementsOfInterest = GetAllHydFileElementsOfInterest();
             using (var streamReader = hydFile.OpenText())
             {
                 IHydFileElement fileElement;
-                while ((fileElement = ReadNextElement(streamReader)) != null)
+                while ((fileElement = ReadNextElement(streamReader, elementsOfInterest)) != null)
                 {
                     fileElement.SetDataTo(hydFileData);
                 }
@@ -81,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             hydFileData.Grid = UnstructuredGridFileHelper.LoadFromFile(schematizationFilePath, true);
         }
 
-        private void ReadBoundaries(HydFileData hydFileData)
+        private static void ReadBoundaries(HydFileData hydFileData)
         {
             if (string.IsNullOrEmpty(hydFileData.BoundariesRelativePath))
             {
@@ -90,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             var boundariesFile = new FileInfo(Path.Combine(hydFileData.Path.DirectoryName, hydFileData.BoundariesRelativePath));
 
-            hydFileData.BoundaryNodeIds = new BoundaryFileReader(boundariesFile).ReadAll();
+            hydFileData.BoundaryNodeIds = BoundaryFileReader.ReadAll(boundariesFile);
             hydFileData.Boundaries = new EventedList<WaterQualityBoundary>(hydFileData.BoundaryNodeIds.Keys);
         }
 
@@ -133,14 +118,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {"attributes-file",new KeyValueElement<string>((hydFileData, value) => hydFileData.AttributesRelativePath = value)},
                 };
         }
-        
+
         /// <summary>
         /// Reads the next key-value element in the file.
         /// </summary>
         /// <param name="streamReader">The stream reader.</param>
+        /// <param name="elementsOfInterest"></param>
         /// <returns>The next key-value element, or null when at the end of the file.</returns>
         /// <exception cref="FormatException">When a parsing error occurs.</exception>
-        private IHydFileElement ReadNextElement(TextReader streamReader)
+        private static IHydFileElement ReadNextElement(TextReader streamReader, Dictionary<string, IHydFileElement> elementsOfInterest)
         {
             KeyValuePair<string, string>? keyValuePair;
             while ((keyValuePair = ReadKeyValuePair(streamReader)) != null)

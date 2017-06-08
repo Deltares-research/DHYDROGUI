@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 throw new FileNotFoundException("Couldn't find file: " + path);
 
             SetProgress("Reading hydrodynamics file", 0, 0);
-            var data = new HydFileReader(new FileInfo(path)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(path));
 
             var model = target as WaterQualityModel ?? new WaterQualityModel();
             

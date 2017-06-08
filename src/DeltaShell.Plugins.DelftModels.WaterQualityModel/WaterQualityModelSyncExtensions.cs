@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -25,7 +24,7 @@ using PointwiseOperationType = SharpMap.SpatialOperations.PointwiseOperationType
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
-    public static class WaterQualityModelSync
+    public static class WaterQualityModelSyncExtensions
     {
         public const string InitialValueOperationName = "Initial Value";
         private static bool syncing;
@@ -36,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <param name="waterQualityModel">The water quality model to sync</param>
         /// <param name="sender">The item that has changed</param>
         /// <param name="e">The related event arguments</param>
-        public static void InputPropertyChanged(WaterQualityModel waterQualityModel, object sender, PropertyChangedEventArgs e)
+        public static void InputPropertyChanged(this WaterQualityModel waterQualityModel, object sender, PropertyChangedEventArgs e)
         {
             if (syncing) return;
 
@@ -84,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        public static void InputCollectionChanged(WaterQualityModel waterQualityModel, object sender, NotifyCollectionChangingEventArgs e)
+        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel, object sender, NotifyCollectionChangingEventArgs e)
         {
             if (syncing) return;
 

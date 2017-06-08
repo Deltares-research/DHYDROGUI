@@ -101,7 +101,6 @@
     <Compile Include="IO\HydroDynamicModelType.cs" />
     <Compile Include="IO\HydFileReader.cs" />
     <Compile Include="IO\IncludeFileFactory.cs" />
-    <Compile Include="IO\IncludeFileFactoryBase.cs" />
     <Compile Include="IO\LayerType.cs" />
     <Compile Include="IO\LoadsImporter.cs" />
     <Compile Include="IO\NameablePointFeatureImporter.cs" />
@@ -149,7 +148,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="WaterQualityModelSync.cs" />
+    <Compile Include="WaterQualityModelSyncExtensions.cs" />
     <Compile Include="WaterQualityModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +275,7 @@
     <None Include="plct\plct_eco.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="UML\WaterQualityOverview.cd" />
     <None Include="waq_kernel\Data\Default\bloom.spe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -517,10 +517,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="UML\WaterQualityModelExecution.cd" />
-    <None Include="UML\WaterQualityModelSettings.cd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx">

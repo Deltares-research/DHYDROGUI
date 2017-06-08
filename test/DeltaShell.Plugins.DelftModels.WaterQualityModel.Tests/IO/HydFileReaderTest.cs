@@ -12,24 +12,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class HydFileReaderTest
     {
-        private FileInfo hydFile;
-        private string commonFilePath;
-
-        [TestFixtureSetUp]
-        public void FixtureSetup()
-        {
-            commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
-        }
-
         [Test]
         public void ReadNonExistentFileThrowsInvalidOperationException()
         {
             // setup
-            hydFile = new FileInfo("nonexistentfile.hyd");
-            var reader = new HydFileReader(hydFile);
-
+            var hydFile = new FileInfo("nonexistentfile.hyd");
+            
             // call
-            TestDelegate call = () => reader.ReadAll();
+            TestDelegate call = () => HydFileReader.ReadAll(hydFile);
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
@@ -42,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
-            var data = new HydFileReader(new FileInfo(squareHydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(squareHydPath));
 
             UnstructuredGrid grid = data.Grid;
             Assert.IsNotNull(grid);
@@ -76,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string hydFilePath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
-            var data = new HydFileReader(new FileInfo(hydFilePath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(hydFilePath));
 
             UnstructuredGrid grid = data.Grid;
             Assert.IsNotNull(grid);
@@ -110,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string hydFilePath = TestHelper.GetTestFilePath(@"IO\real_Zlayer\z20_par.hyd");
 
-            var data = new HydFileReader(new FileInfo(hydFilePath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(hydFilePath));
 
             UnstructuredGrid grid = data.Grid;
             Assert.IsNotNull(grid);
@@ -144,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string hydPath = TestHelper.GetTestFilePath(@"IO\f34\com-f34_unstructured.hyd");
 
-            var data = new HydFileReader(new FileInfo(hydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(hydPath));
 
             UnstructuredGrid grid = data.Grid;
             Assert.IsNotNull(grid);
@@ -191,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string hydPath = TestHelper.GetTestFilePath(@"IO\f34_aggr\com-f34_unstructured.hyd");
 
-            var data = new HydFileReader(new FileInfo(hydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(hydPath));
 
             UnstructuredGrid grid = data.Grid;
             Assert.IsNotNull(grid);
@@ -237,13 +227,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadValidHydFileReturnsAllDataRead()
         {
             // setup
-            hydFile = new FileInfo(Path.Combine(commonFilePath, "uni3d.hyd"));
+            var commonFilePath = Path.Combine(TestHelper.GetDataDir(), "IO");
+            var hydFile = new FileInfo(Path.Combine(commonFilePath, "uni3d.hyd"));
             Assert.IsTrue(hydFile.Exists,
                 "Expected .hyd file to exist, but is missing.");
-            var reader = new HydFileReader(hydFile);
 
             // call
-            var data = reader.ReadAll();
+            var data = HydFileReader.ReadAll(hydFile);
 
             // assert
             Assert.AreEqual(hydFile, data.Path);
@@ -287,7 +277,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
-            var data = new HydFileReader(new FileInfo(squareHydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(squareHydPath));
 
             Assert.AreEqual(new DateTime(2001, 1, 1, 0, 0, 0), data.ConversionStartTime);
             Assert.AreEqual(new DateTime(2001, 1, 1, 0, 10, 0), data.ConversionStopTime);
@@ -300,7 +290,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
-            var data = new HydFileReader(new FileInfo(squareHydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(squareHydPath));
 
             Assert.AreEqual("square.are", data.AreasRelativePath);
             Assert.AreEqual("square.vol", data.VolumesRelativePath);
@@ -319,7 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
-            var data = new HydFileReader(new FileInfo(squareHydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(squareHydPath));
 
             Assert.AreEqual(4900, data.NumberOfHorizontalExchanges);
             Assert.AreEqual(0, data.NumberOfVerticalExchanges);
@@ -339,7 +329,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             string squareHydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             // call
-            var data = new HydFileReader(new FileInfo(squareHydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(squareHydPath));
 
             // assert
             var thicknesses = data.HydrodynamicLayerThicknesses;
@@ -356,7 +346,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             string squareHydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
-            var data = new HydFileReader(new FileInfo(squareHydPath)).ReadAll();
+            var data = HydFileReader.ReadAll(new FileInfo(squareHydPath));
 
             var boundaries = data.GetBoundaries();
             Assert.AreEqual(6, boundaries.Count);

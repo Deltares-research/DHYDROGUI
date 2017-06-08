@@ -814,8 +814,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 BoundaryNodeIds = HydroData.GetBoundaryNodeIds();
 
                 SetImportProgress("Importing attributes");
-                var attributesFileReader = new AttributesFileReader(new FileInfo(Path.Combine(Path.GetDirectoryName(HydroData.FilePath), AttributesRelativeFilePath)));
-                attributeData = attributesFileReader.ReadAll(NumberOfDelwaqSegmentsPerHydrodynamicLayer, NumberOfWaqSegmentLayers);
+                var fileInfo = new FileInfo(Path.Combine(Path.GetDirectoryName(HydroData.FilePath), AttributesRelativeFilePath));
+
+                attributeData = AttributesFileReader.ReadAll(NumberOfDelwaqSegmentsPerHydrodynamicLayer, NumberOfWaqSegmentLayers, fileInfo);
                 pointToGridCellMapper = SetUpPointToGridCellMapper();
 
                 HasHydroDataImported = true;
@@ -1204,7 +1205,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (!enableMarkOutputOutOfSync) return;
 
-            WaterQualityModelSync.InputCollectionChanged(this, sender, e);
+            this.InputCollectionChanged(sender, e);
 
             MarkOutputOutOfSync();
         }
@@ -1214,7 +1215,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (!enableMarkOutputOutOfSync) return;
 
-            WaterQualityModelSync.InputPropertyChanged(this, sender, e);
+            this.InputPropertyChanged(sender, e);
 
             MarkOutputOutOfSync();
         }
@@ -1486,7 +1487,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void SetGridAndExecuteSpatialOperation(IDataItem dataItem)
         {
-            // Existing input grid cell coverages often have a 'initial value' Spatial Operation, created due to WaterQualityModelSync.
+            // Existing input grid cell coverages often have a 'initial value' Spatial Operation, created due to WaterQualityModelSyncExtensions.
             // We need to update the original coverage in order to have the Spatial Operations working with the new grid.
             var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
             if (valueConverter == null)
@@ -1499,11 +1500,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             // set the grid extents as mask for the first operation, because it depends on the grid.
             var operation = valueConverter.SpatialOperationSet.Operations.FirstOrDefault(
-                o => o.Name == WaterQualityModelSync.InitialValueOperationName);
+                o => o.Name == WaterQualityModelSyncExtensions.InitialValueOperationName);
 
             if (operation != null)
             {
-                WaterQualityModelSync.SetGridExtentsAsInputMask(operation, original);
+                WaterQualityModelSyncExtensions.SetGridExtentsAsInputMask(operation, original);
             }
 
             // execute the spatial operation set

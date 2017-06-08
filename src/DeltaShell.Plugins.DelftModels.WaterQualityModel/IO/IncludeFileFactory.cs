@@ -1,23 +1,70 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    public class IncludeFileFactory : IncludeFileFactoryBase
+    public static class IncludeFileFactory
     {
+        #region Block 1
+        public static string CreateT0Include(DateTime referenceTime)
+        {
+            return String.Format("'T0: {0}  (scu=       1s)'", referenceTime.ToString("yyyy.MM.dd HH:mm:ss",
+                CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Create the list of substances with active and passive substances.
+        /// </summary>
+        public static string CreateSubstanceListInclude(SubstanceProcessLibrary substanceProcessLibrary)
+        {
+            var activeSubstances = substanceProcessLibrary.ActiveSubstances.ToList();
+            var inActiveSubstances = substanceProcessLibrary.InActiveSubstances.ToList();
+
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                writer.WriteLine("; number of active and inactive substances");
+                writer.WriteLine("{0}             {1}",
+                    activeSubstances.Count, inActiveSubstances.Count);
+
+                WriteSubstanceList(writer, activeSubstances, 1, "active substances");
+                WriteSubstanceList(writer, inActiveSubstances, activeSubstances.Count + 1, "passive substances");
+
+                return writer.ToString();
+            }
+        }
+
+        private static void WriteSubstanceList(StringWriter writer, IList<WaterQualitySubstance> substances, int startingSubstanceCount, string comment)
+        {
+            writer.WriteLine("        ; {0}", comment);
+
+            for (int index = 0; index < substances.Count; index++)
+            {
+                var substance = substances[index];
+
+                writer.WriteLine("{0}            '{1}' ;{2}",
+                    index + startingSubstanceCount,
+                    substance.Name,
+                    substance.Description);
+            }
+        }
+
+        #endregion Block 1
+
         #region Block 2
 
         /// <summary>
@@ -25,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Monitoring locations are determined in
         /// <see cref="WaqInitializationSettingsBuilder.CreateOutputLocationInformation"/>.
         /// </summary>
-        public string CreateOutputLocationsInclude(IDictionary<string, IList<int>> outputLocations)
+        public static string CreateOutputLocationsInclude(IDictionary<string, IList<int>> outputLocations)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -45,31 +92,134 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
+        /// <summary>
+        /// Write the general waq model settings for the run.
+        /// </summary>
+        public static string CreateNumSettingsInclude(WaterQualityModelSettings waqSettings)
+        {
+            var integrationOptions = waqSettings.NoDispersionIfFlowIsZero ? 1 : 0;
+            integrationOptions += waqSettings.NoDispersionOverOpenBoundaries ? 2 : 0;
+            integrationOptions += waqSettings.UseFirstOrder ? 0 : 4;
+
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                writer.WriteLine("{0}.{1}{2} ; integration option",
+                    (int)waqSettings.NumericalScheme,
+                    integrationOptions, waqSettings.Balance ? 3 : 0);
+
+                writer.WriteLine("; detailed balance options");
+                if (waqSettings.Balance)
+                {
+                    if (waqSettings.BalanceUnit != BalanceUnit.Gram)
+                    {
+                        writer.WriteLine(waqSettings.BalanceUnit == BalanceUnit.GramPerSquareMeter
+                            ? "BAL_UNITAREA"
+                            : "BAL_UNITVOLUME");
+                    }
+                    writer.WriteLine("{0} {1} {2}",
+                        waqSettings.LumpProcesses ? "BAL_LUMPPROCESSES" : "BAL_NOLUMPPROCESSES",
+                        waqSettings.LumpTransport ? "BAL_LUMPTRANSPORT" : "BAL_NOLUMPTRANSPORT",
+                        waqSettings.LumpLoads ? "BAL_LUMPLOADS" : "BAL_NOLUMPLOADS");
+
+                    writer.WriteLine("{0} {1}",
+                        waqSettings.SuppressSpace ? "BAL_SUPPRESSSPACE" : "BAL_NOSUPPRESSSPACE",
+                        waqSettings.SuppressTime ? "BAL_SUPPRESSTIME" : "BAL_NOSUPPRESSTIME");
+                }
+
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Create the include file with output timers.
+        /// </summary>
+        public static string CreateOutputTimersInclude(WaterQualityModelSettings waqSettings)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                writer.WriteLine("; output control (see DELWAQ-manual)");
+                writer.WriteLine("; yyyy/mm/dd-hh:mm:ss  yyyy/mm/dd-hh:mm:ss  dddhhmmss");
+                writer.WriteLine((string) "{0} for balance output", (object) CreateDelwaqTimeSettingsInputString(waqSettings.BalanceStartTime, waqSettings.BalanceStopTime, waqSettings.BalanceTimeStep));
+                writer.WriteLine((string) "{0} for map output", (object) CreateDelwaqTimeSettingsInputString(waqSettings.MapStartTime, waqSettings.MapStopTime, waqSettings.MapTimeStep));
+                writer.WriteLine((string) "{0} for his output", (object) CreateDelwaqTimeSettingsInputString(waqSettings.HisStartTime, waqSettings.HisStopTime, waqSettings.HisTimeStep));
+
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Create the include file with the simulation time from the model.
+        /// Start time, stop time, time step.
+        /// </summary>
+        public static string CreateSimTimersInclude(WaqInitializationSettings initializationSettings)
+        {
+            return CreateDelwaqTimeSettingsInputString(initializationSettings.SimulationStartTime, initializationSettings.SimulationStopTime, initializationSettings.SimulationTimeStep, true);
+        }
+
+        /// <summary>
+        /// Creates a formatted string based on a <see cref="startTime"/>, a <see cref="stopTime"/> and a <see cref="timeStep"/>
+        /// </summary>
+        /// <param name="startTime">The start time</param>
+        /// <param name="stopTime">The stop time</param>
+        /// <param name="timeStep">The time step</param>
+        /// <param name="addEndLineCharacters">Whether or not to add end line characters (\n) after the parameters (also whether or not to add a timestep constant)</param>
+        private static string CreateDelwaqTimeSettingsInputString(DateTime startTime, DateTime stopTime, TimeSpan timeStep, bool addEndLineCharacters = false)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                if (addEndLineCharacters)
+                {
+                    writer.WriteLine((string) "  {0} ; start time", (object) DateTimeToString(startTime));
+                    writer.WriteLine((string) "  {0} ; stop time", (object) DateTimeToString(stopTime));
+                    writer.WriteLine("  0 ; timestep constant");
+                    writer.Write((string) "  {0} ; timestep", (object) FormatTimeStep(timeStep));
+                }
+                else
+                {
+                    writer.Write("  {0}  {1}  {2} ;  start, stop and step", DateTimeToString(startTime), DateTimeToString(stopTime), FormatTimeStep(timeStep));
+                }
+
+                return writer.ToString();
+            }
+        }
+
+        private static string DateTimeToString(DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy/MM/dd-HH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        private static string FormatTimeStep(TimeSpan timeStep)
+        {
+            return timeStep.Days.ToString("000") + timeStep.Hours.ToString("00") +
+                   timeStep.Minutes.ToString("00") + timeStep.Seconds.ToString("00");
+        }
+
         #endregion Block 2
+
         #region Block 3
 
         /// <summary>
         /// Create the include file contents that multiplies the segments per layer with the number of layers.
         /// </summary>
-        public string CreateNumberOfSegmentsInclude(int segmentsPerLayer, int numberOfLayers)
+        public static string CreateNumberOfSegmentsInclude(int segmentsPerLayer, int numberOfLayers)
         {
-            return string.Format("{0} ; number of segments", segmentsPerLayer * numberOfLayers);
+            return String.Format("{0} ; number of segments", segmentsPerLayer * numberOfLayers);
         }
 
         /// <summary>
         /// Creates the include file contents that write the filepath to the binary file with attribute.
         /// This construction is used to insert dynamic names from the hyd file.
         /// </summary>
-        public string CreateAttributesFileInclude(string attributesFile)
+        public static string CreateAttributesFileInclude(string attributesFile)
         {
-            return string.Format("INCLUDE '{0}' ; attributes file", attributesFile);
+            return String.Format("INCLUDE '{0}' ; attributes file", attributesFile);
         }
 
         /// <summary>
         /// Creates the include file contents that write the filepath to the binary file with volumes.
         /// This construction is used to insert dynamic names from the hyd file.
         /// </summary>
-        public string CreateVolumesFileInclude(string volumesFile)
+        public static string CreateVolumesFileInclude(string volumesFile)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -81,22 +231,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion Block 3
+
         #region Block 4
 
         /// <summary>
         /// Creates the include file contents that writes the number of horizontal exchanges and vertical exchanges.
         /// </summary>
         /// <returns>horizontal 0 vertical</returns>
-        public string CreateNumberOfExchangesInclude(int horizontalExchanges, int verticalExchanges)
+        public static string CreateNumberOfExchangesInclude(int horizontalExchanges, int verticalExchanges)
         {
-            return string.Format("{0} 0 {1} ; number of exchanges in three directions", horizontalExchanges, verticalExchanges);
+            return String.Format("{0} 0 {1} ; number of exchanges in three directions", horizontalExchanges, verticalExchanges);
         }
 
         /// <summary>
         /// Creates the include file contents that writes the filepath to the binary file with pointers.
         /// This construction is used to insert dynamic names from the hyd file.
         /// </summary>
-        public string CreatePointersFileInclude(string pointersFile)
+        public static string CreatePointersFileInclude(string pointersFile)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -111,19 +262,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Creates the include file contents that writes the horizontal and vertical dispersion.
         /// </summary>
         /// <returns>horizontal 0 vertical</returns>
-        public string CreateConstantDispersionInclude(double verticalDispersion, IFunction spatialHorizontalDispersion)
+        public static string CreateConstantDispersionInclude(double verticalDispersion, IFunction spatialHorizontalDispersion)
         {
             string horizontal = spatialHorizontalDispersion.IsUnstructuredGridCellCoverage()
                 ? "0.0" : WaterQualityFunctionFactory.GetDefaultValue(spatialHorizontalDispersion).ToString(CultureInfo.InvariantCulture);
 
-            return string.Format("{0} 0.0 {1} ; constant dispersion", horizontal, verticalDispersion.ToString(CultureInfo.InvariantCulture));
+            return String.Format("{0} 0.0 {1} ; constant dispersion", horizontal, verticalDispersion.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
         /// Creates the include file contents that writes the filepath to the binary file with areas.
         /// This construction is used to insert dynamic names from the hyd file.
         /// </summary>
-        public string CreateAreasFileInclude(string areasFile)
+        public static string CreateAreasFileInclude(string areasFile)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -138,7 +289,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Creates the include file contents that writes the filepath to the binary file with flows.
         /// This construction is used to insert dynamic names from the hyd file.
         /// </summary>
-        public string CreateFlowsFileInclude(string flowsFile)
+        public static string CreateFlowsFileInclude(string flowsFile)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -153,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Creates the include file contents that writes the filepath to the binary file with lengths.
         /// This construction is used to insert dynamic names from the hyd file.
         /// </summary>
-        public string CreateLengthsFileInclude(string lengthsFile)
+        public static string CreateLengthsFileInclude(string lengthsFile)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -165,6 +316,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion Block 4
+
         #region Block 5
 
         private struct BoundaryList3DInfo
@@ -188,7 +340,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="boundaryNodeIds">A boundary with the segments on the top level that it touches.</param>
         /// <param name="numberOfLayers">The number of layers, because the list of segments is expanded by the number of layers.</param>
         /// <returns>A list of all boundary segments times the number of layers.</returns>
-        public string CreateBoundaryListInclude(IDictionary<WaterQualityBoundary, int[]> boundaryNodeIds, int numberOfLayers)
+        public static string CreateBoundaryListInclude(IDictionary<WaterQualityBoundary, int[]> boundaryNodeIds, int numberOfLayers)
         {
             // construct a list of boundary names with indices that will be used while writing
             IDictionary<string, int> layerIndices = new Dictionary<string, int>(boundaryNodeIds.Count);
@@ -265,25 +417,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return infosToWrite;
         }
 
-        public string CreateBoundaryDataInclude(DataTableManager manager, string workDirectory)
+        public static string CreateBoundaryDataInclude(DataTableManager manager, string workDirectory)
         {
             return WriteDataTableManager(manager, workDirectory);
         }
 
         
-        public string CreateBoundaryAliasesInclude(IDictionary<string, IList<string>> boundaryAliases)
+        public static string CreateBoundaryAliasesInclude(IDictionary<string, IList<string>> boundaryAliases)
         {
             return CreateLocationAliases(boundaryAliases);
         }
 
         #endregion Block 5
+
         #region Block 6
 
         /// <summary>
         /// Creates the include file contents for the dry waste load block.
         /// </summary>
         /// <param name="loadAndIds"></param>
-        public string CreateDryWasteLoadInclude(IDictionary<WaterQualityLoad, int> loadAndIds)
+        public static string CreateDryWasteLoadInclude(IDictionary<WaterQualityLoad, int> loadAndIds)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -299,12 +452,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public string CreateDryWasteLoadDataInclude(DataTableManager manager, string workDirectory)
+        public static string CreateDryWasteLoadDataInclude(DataTableManager manager, string workDirectory)
         {
             return WriteDataTableManager(manager, workDirectory);
         }
 
-        public string CreateDryWasteLoadAliasesInclude(IDictionary<string, IList<string>> aliases)
+        public static string CreateDryWasteLoadAliasesInclude(IDictionary<string, IList<string>> aliases)
         {
             return CreateLocationAliases(aliases);
         }
@@ -327,9 +480,90 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion Block 6
+
         #region Block 7
 
-        public override string CreateParametersInclude(WaqInitializationSettings initializationSettings)
+        /// <summary>
+        /// Creates the processes include file contents, stating which processes should be enabled.
+        /// </summary>
+        public static string CreateProcessesInclude(SubstanceProcessLibrary substanceProcessLibrary)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                foreach (var waterQualityProcess in substanceProcessLibrary.Processes)
+                {
+                    writer.WriteLine("CONSTANTS 'ACTIVE_{0}' DATA 0", waterQualityProcess.Name);
+                }
+                return writer.ToString();
+            }
+        }
+
+        private static void WriteConstant(StringWriter writer, IFunction meteoParameter)
+        {
+            var defaultValue = WaterQualityFunctionFactory.GetDefaultValue(meteoParameter);
+
+            writer.WriteLine("CONSTANTS '{0}' DATA {1}",
+                meteoParameter.Name,
+                defaultValue.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static void WriteTimeSeries(StringWriter writer, IFunction timeDependentFunction)
+        {
+            var timeVariable = timeDependentFunction.Arguments[0];
+            var valueVariable = timeDependentFunction.Components[0];
+
+            writer.WriteLine("FUNCTIONS");
+            writer.WriteLine(timeDependentFunction.Name);
+            writer.WriteLine(timeVariable.InterpolationType == InterpolationType.Linear
+                ? "LINEAR DATA"
+                : "DATA");
+
+            for (var i = 0; i < timeVariable.Values.Count; i++)
+            {
+                writer.WriteLine("{0} {1}",
+                    ((DateTime)timeVariable.Values[i]).ToString("yyyy/MM/dd-HH:mm:ss", CultureInfo.InvariantCulture),
+                    ((double)valueVariable.Values[i]).ToString(CultureInfo.InvariantCulture));
+            }
+            writer.WriteLine();
+        }
+
+        /// <summary>
+        /// Creates the constants include file contents, stating all constant parameter values.
+        /// </summary>
+        public static string CreateConstantsInclude(IEnumerable<IFunction> processCoefficients)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                foreach (var constantProcessCoefficient in processCoefficients.Where(pc => pc.IsConst()))
+                {
+                    WriteConstant(writer, constantProcessCoefficient);
+                }
+
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Creates the functions include file contents, stating all time-dependent parameter values.
+        /// </summary>
+        public static string CreateFunctionsInclude(IEnumerable<IFunction> processCoefficients)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                foreach (var timeDependentProcessCoefficient in processCoefficients.Where(pc => pc.IsTimeSeries()))
+                {
+                    WriteTimeSeries(writer, timeDependentProcessCoefficient);
+                }
+
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Creates the spatial process parameters include file contents.
+        /// </summary>
+        
+        public static string CreateParametersInclude(WaqInitializationSettings initializationSettings)
         {
             using (StringWriter writer = new StringWriter(new StringBuilder()))
             {
@@ -357,7 +591,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="dispersion">The horizontal spatial dispersion.</param>
         /// <param name="numberOfLayers">The number of water quality layers.</param>
         /// <returns>File contents.</returns>
-        public string CreateSpatialDispersionInclude(IFunction dispersion, int numberOfLayers)
+        public static string CreateSpatialDispersionInclude(IFunction dispersion, int numberOfLayers)
         {
             if (dispersion.IsUnstructuredGridCellCoverage())
             {
@@ -370,12 +604,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
             }
 
-            return string.Empty;
+            return String.Empty;
         }
 
-        public string CreateVerticalDiffusionInclude(string verticalDiffusionFile, bool useAdditionalVerticalDiffusion)
+        public static string CreateVerticalDiffusionInclude(string verticalDiffusionFile, bool useAdditionalVerticalDiffusion)
         {
-            if (useAdditionalVerticalDiffusion && !string.IsNullOrEmpty(verticalDiffusionFile))
+            if (useAdditionalVerticalDiffusion && !String.IsNullOrEmpty(verticalDiffusionFile))
             {
                 using (StringWriter writer = new StringWriter(new StringBuilder()))
                 {
@@ -389,14 +623,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
             }
 
-            return string.Empty;
+            return String.Empty;
         }
 
         /// <summary>
         /// Creates the SEG_FUNCTION include file contents, stating data on segments for
         /// items in the process library.
         /// </summary>
-        public string CreateSegfunctionsInclude(WaqInitializationSettings initializationSettings)
+        public static string CreateSegfunctionsInclude(WaqInitializationSettings initializationSettings)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -412,7 +646,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        private IDictionary<string, string> GetSegfunctions(WaqInitializationSettings initializationSettings)
+        private static IDictionary<string, string> GetSegfunctions(WaqInitializationSettings initializationSettings)
         {
             // TODO SOBEK: Check for data available on 'Chezy', 'Velocity' and 'Width'
             var origDict = initializationSettings.ProcessCoefficients.OfType<FunctionFromHydroDynamics>().ToDictionary(f => f.Name, f => f.FilePath);
@@ -424,7 +658,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Creates the include file containing various numerical options for delwaq.
         /// </summary>
-        public string CreateNumericalOptionsInclude(WaqInitializationSettings set)
+        public static string CreateNumericalOptionsInclude(WaqInitializationSettings set)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
@@ -451,16 +685,118 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion Block 7
+
         #region Block 8
 
-        protected override string CreateSpatialInitialConditionsFileContents(WaqInitializationSettings initializationSettings)
+        /// <summary>
+        /// Creates the include file contents for initial conditions (constant and spatial).
+        /// </summary>
+        public static string CreateInitialConditionsInclude(WaqInitializationSettings initializationSettings)
+        {
+            if (!HasInitialConditions(initializationSettings))
+            {
+                return "";
+            }
+
+            return CreateConstantInitialConditionsFileContents(initializationSettings) +
+                   CreateSpatialInitialConditionsFileContents(initializationSettings);
+        }
+
+        private static string CreateConstantInitialConditionsFileContents(WaqInitializationSettings initializationSettings)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                writer.WriteLine("MASS/M2");
+
+                var constantInitialConditions = initializationSettings.InitialConditions.Where(ic => ic.IsConst()).ToArray();
+                if (constantInitialConditions.Length > 0)
+                {
+                    writer.WriteLine("INITIALS");
+                    writer.WriteLine(String.Join(" ",
+                        constantInitialConditions.Select(ic => String.Format("'{0}'", ic.Name)))); // "'NH4' 'CBOD5' 'CBOD5_2' 'OXY'"
+                    writer.WriteLine("DEFAULTS");
+                    writer.WriteLine(String.Join(" ",
+                        constantInitialConditions.Select(
+                            ic => WaterQualityFunctionFactory.GetDefaultValue(ic).ToString(CultureInfo.InvariantCulture)))); // "1.2 2.3 3.4 4.5"
+                }
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Determines whether there are initial conditions available or not.
+        /// </summary>
+        private static bool HasInitialConditions(WaqInitializationSettings initializationSettings)
+        {
+            return initializationSettings.InitialConditions != null &&
+                   initializationSettings.InitialConditions.Count > 0;
+        }
+
+        /// <summary>
+        /// Creates the initial conditions file contents with spatial components.
+        /// </summary>
+        private static string CreateSpatialInitialConditionsFileContents(WaqInitializationSettings initializationSettings)
         {
             return CreateSpatialIncludeContents(initializationSettings.InitialConditions, "INITIALS", initializationSettings.NumberOfLayers);
         }
 
         #endregion Block 8
 
-        private string CreateSpatialIncludeContents(ICollection<IFunction> functionCollection, string spatialDataGroupName, int numberOfLayers)
+        #region Block 9
+
+        /// <summary>
+        /// Creates the list of his variables to include in the output parameters.
+        /// </summary>
+        public static string CreateHisVarInclude(SubstanceProcessLibrary substanceProcessLibrary)
+        {
+            var hisOutputParameters = substanceProcessLibrary.OutputParameters.Where(op => op.ShowInHis).ToList();
+            return WriteOutputIncludeParameters(hisOutputParameters, true);
+        }
+
+        /// <summary>
+        /// Creates the list of map variables to include in the output parameters.
+        /// </summary>
+        public static string CreateMapVarInclude(SubstanceProcessLibrary substanceProcessLibrary)
+        {
+            var mapOutputParameters = substanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList();
+            return WriteOutputIncludeParameters(mapOutputParameters, false);
+        }
+
+        /// <summary>
+        /// Write an output parameter include.
+        /// Starts with a 2, because this are additional parameters to the default parameter.
+        /// The second nummer is the number of items listed.
+        /// Then a list of parameters is defined between quotes. If <paramref name="addParameterType"/> is true, a second column is written with 'volume'.
+        /// </summary>
+        /// <param name="outputParameters">The output parameters.</param>
+        /// <param name="addParameterType">If the parameter type should be included as a second column. 'volume' or ' '</param>
+        private static string WriteOutputIncludeParameters(ICollection<WaterQualityOutputParameter> outputParameters, bool addParameterType)
+        {
+            using (StringWriter writer = new StringWriter(new StringBuilder()))
+            {
+                writer.WriteLine("2 ; perform default output and extra parameters listed below");
+                writer.WriteLine("{0} ; number of parameters listed", outputParameters.Count);
+
+                foreach (var parameter in outputParameters)
+                {
+                    if (addParameterType)
+                    {
+                        string parameterType = parameter.Name == "Volume" || parameter.Name == "Surf" ? " " : "volume";
+                        writer.WriteLine(" '{0}' '{1}'", parameter.Name, parameterType);
+                    }
+                    else
+                    {
+                        writer.WriteLine(" '{0}'", parameter.Name);
+                    }
+                }
+
+                return writer.ToString();
+            }
+        }
+
+        #endregion Block 9
+
+        private static string CreateSpatialIncludeContents(ICollection<IFunction> functionCollection, string spatialDataGroupName, int numberOfLayers)
         {
             using (StringWriter writer = new StringWriter(new StringBuilder()))
             {
@@ -481,7 +817,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="writer">The writer to add text to.</param>
         /// <param name="spatialData">The spatial data.</param>
         /// <param name="spatialDataName">The name to identify the data with.</param>
-        private void CreateSpatialIncludeData(string spatialDataGroupName, int numberOfLayers, StringWriter writer,
+        private static void CreateSpatialIncludeData(string spatialDataGroupName, int numberOfLayers, StringWriter writer,
             IFunction spatialData, string spatialDataName)
         {
             writer.WriteLine(spatialDataGroupName);
@@ -534,5 +870,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return writer.ToString();
             }
         }
+
+        /// <summary>
+        /// Create the T0 include content.
+        /// The startTime could be the start time of the model,
+        /// or the conversion-ref-time from the hyd-file.
+        /// </summary>
     }
 }
