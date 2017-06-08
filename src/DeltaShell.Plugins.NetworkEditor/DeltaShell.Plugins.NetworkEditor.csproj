@@ -229,6 +229,7 @@
     <Compile Include="ImportExportCsv\CrossSectionImportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionYZFromCsvFileImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionYZToCsvFileExporter.cs" />
+    <Compile Include="UGridToNetworkAdapter.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />

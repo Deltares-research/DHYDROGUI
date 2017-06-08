@@ -1666,7 +1666,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (Network != null)
             {
-                SaveNetwork(); 
+                if (Network.Nodes != null && Network.Nodes.Count > 0)
+                {
+                    SaveNetwork();
+
+                }
             }
 
             if (NetworkDiscretization != null)

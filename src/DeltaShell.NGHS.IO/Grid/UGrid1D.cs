@@ -16,21 +16,20 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write 1D network
 
-        public void Create1DGridInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints)
+        public void Create1DGridInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)
         {
+            networkId = -1;
             if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
-            {
-                var ierr = uGridApi1D.Create1DNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new InvalidOperationException(
-                        string.Format(
-                            "Couldn't create new 1d network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3} because of error number {4}",
-                            name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, ierr));
-                }
-            }
+            if (uGridApi1D == null) return;
+
+            var ierr = uGridApi1D.Create1DNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out networkId);
+            if (ierr == GridApiDataSet.GridConstants.IONC_NOERR) return;
+
+            throw new InvalidOperationException(
+                string.Format(
+                    "Couldn't create new 1d network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3} because of error number {4}",
+                    name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, ierr));
         }
 
         public void Write1DNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
@@ -59,7 +58,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     throw new InvalidOperationException(string.Format("Couldn't write 1d network branches because of error number {0}", ierr));
                 }
             }
-            // TODO: Thrown when uGridApi1D == null ?
+            // TODO: Throw when uGridApi1D == null ?
         }
 
         public void Write1DNetworkGeometry(double[] geopointsX, double[] geopointsY)
@@ -79,54 +78,74 @@ namespace DeltaShell.NGHS.IO.Grid
         #endregion
 
         #region Read 1D network
-        
-        public int GetNumberOfNetworkNodes()
+
+        public string GetNetworkName()
         {
+            // TODO: Not working yet.
             var uGridApi1D = GridApi as IUGridApi1D;
             if (uGridApi1D != null)
             {
-                var result = uGridApi1D.GetNumberOfNetworkNodes();
-                if (result < 0)
-                {
-                    throw new InvalidOperationException(string.Format("Couldn't get 1D number of network nodes because of error number {0}", result));
-                }
-                return result;
+                var name = uGridApi1D.GetNetworkName();
             }
-            return -1;
+
+
+            return string.Empty;
+        }
+
+        public int GetNumberOfNetworkNodes()
+        {
+            if (!IsInitialized()) Initialize();
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if (uGridApi1D == null)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network nodes because the Api is null"));
+            }
+            var numberOfNetworkNodes = -1;
+            var ierr = uGridApi1D.GetNumberOfNetworkNodes(out numberOfNetworkNodes);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't get 1D number of network nodes because of error number {0}", ierr));
+            }
+            return numberOfNetworkNodes;
         }
 
         public int GetNumberOfNetworkBranches()
         {
+            if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
+            if (uGridApi1D == null)
             {
-                var result = uGridApi1D.GetNumberOfNetworkBranches();
-                if (result < 0)
-                {
-                    throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network branches because of error number {0}", result));
-                }
-                return result;
+                throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network branches because the Api is null"));
             }
-            return -1;
+            var numberOfNetworkBranches = -1;
+            var ierr = uGridApi1D.GetNumberOfNetworkBranches(out numberOfNetworkBranches);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network branches because of error number {0}", ierr));
+            }
+            return numberOfNetworkBranches;
         }
 
         public int GetNumberOfNetworkGeometryPoints()
         {
+            if (!IsInitialized()) Initialize();
             var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
+            if (uGridApi1D == null)
             {
-                var result = uGridApi1D.GetNumberOfNetworkGeometryPoints();
-                if (result < 0)
-                {
-                    throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network geometry points because of error number {0}", result));
-                }
-                return result;
+                throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network geometry points because the Api is null"));
             }
-            return -1;
+            var numberOfNetworkGeometryPoints = -1;
+            var ierr = uGridApi1D.GetNumberOfNetworkGeometryPoints(out numberOfNetworkGeometryPoints);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network geometry points because of error number {0}", ierr));
+            }
+            return numberOfNetworkGeometryPoints;
         }
 
-        public int Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames)
+        public void Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames)
         {
+            if (!IsInitialized()) Initialize();
             nodesY = new double[0];
             nodesX = new double[0];
             nodesIds = new string[0];
@@ -134,24 +153,23 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (!IsInitialized())
             {
-                throw new InvalidOperationException(); // TODO: Useful message
+                throw new InvalidOperationException(string.Format("Couldn't read the 1D network nodes because the Api is not initialized")); 
             }
             var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
+            if (uGridApi1D == null)
             {
-                var ierr = uGridApi1D.Read1DNetworkNodes(out nodesX, out nodesY, out nodesIds, out nodesLongnames);
-
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new InvalidOperationException(
-                        string.Format("Couldn't read 1d network nodes because of error number {0}", ierr));
-                }
-                return ierr;
+                throw new InvalidOperationException(string.Format("Couldn't read the 1D network nodes because the Api is null")); ;
             }
-            return -1;
+            var ierr = uGridApi1D.Read1DNetworkNodes(out nodesX, out nodesY, out nodesIds, out nodesLongnames);
+
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(
+                    string.Format("Couldn't read 1D network nodes because of error number {0}", ierr));
+            }
         }
 
-        public int Read1DNetworkBranches(out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames)
+        public void Read1DNetworkBranches(out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames)
         {
             sourceNodes = new int[0];
             targetNodes = new int[0];
@@ -162,99 +180,49 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (!IsInitialized())
             {
-                throw new InvalidOperationException(); // TODO: Useful message
+                throw new InvalidOperationException(string.Format("Couldn't read the 1D network branches because the Api is not initialized"));
             }
             IUGridApi1D uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
+            if (uGridApi1D == null)
             {
-
-                var ierr = uGridApi1D.Read1DNetworkBranches(out sourceNodes, out targetNodes, out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
-
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new InvalidOperationException(string.Format("Couldn't read 1d network branches because of error number {0}", ierr));
-                }
-                return ierr;
+                throw new InvalidOperationException(string.Format("Couldn't read the 1D network branches because the Api is null")); ;
             }
-            return -1;
+            var ierr = uGridApi1D.Read1DNetworkBranches(out sourceNodes, out targetNodes, out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
+
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't read 1D network branches because of error number {0}", ierr));
+            }
+
         }
 
-        public int Read1DNetworkGeometry(out double[] geopointsX, out double[] geopointsY)
+        public void Read1DNetworkGeometry(out double[] geopointsX, out double[] geopointsY)
         {
             geopointsX = new double[0];
             geopointsY = new double[0];
 
             if (!IsInitialized())
             {
-                throw new InvalidOperationException(); // TODO: Useful message
+                throw new InvalidOperationException(string.Format("Couldn't read the 1D network geometry points because the Api is not initialized"));
             }
 
             var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
+            if (uGridApi1D == null)
             {
-                var ierr = uGridApi1D.Read1DNetworkGeometry(out geopointsX, out geopointsY);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new InvalidOperationException(
-                        string.Format("Couldn't read 1d network geometry because of error number {0}", ierr));
-                }
-                return ierr;
+                throw new InvalidOperationException(string.Format("Couldn't read the 1D network branches because the Api is null")); ;
             }
-            return -1;
+            var ierr = uGridApi1D.Read1DNetworkGeometry(out geopointsX, out geopointsY);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(
+                    string.Format("Couldn't read 1d network geometry because of error number {0}", ierr));
+            }
+
         }
 
         #endregion
 
-        #region Write 1D network discretisation
-
-        public void Create1DMeshInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges)
-        {
-            var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
-            {
-                var ierr = uGridApi1D.Create1DMesh(name, numberOfMeshPoints, numberOfMeshEdges);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new InvalidOperationException(string.Format(
-                            "Couldn't create new 1d mesh {0} with number of mesh points {1}, number of mesh edges {2} because of error number {3}",
-                            name, numberOfMeshPoints, numberOfMeshEdges, ierr));
-                }
-            }
-        }
-
-        public void Write1DMeshDiscretizationPoints(int[] branchIdx, double[] offset)
-        {
-            var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
-            {
-                var ierr = uGridApi1D.Write1DMeshDiscretisationPoints(branchIdx, offset);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new InvalidOperationException(string.Format("Couldn't write 1d mesh discretisation points because of error number {0}", ierr));
-                }
-            }
-        }
-
-        #endregion
-
-        #region Read 1D network discretisation
-
-        public int GetNumberOfMeshDiscretisationPoints()
-        {
-            var ugridApi = GridApi as IUGridApi1D;
-            if (ugridApi != null)
-            {
-                var numberOfMeshPoints = ugridApi.GetNumberOfMeshDiscretisationPoints();
-                if (numberOfMeshPoints < 0)
-                {
-                    throw new InvalidOperationException(string.Format("Couldn't get the number of 1D mesh discretisation points because of error number {0}", numberOfMeshPoints));
-                }
-                return numberOfMeshPoints;
-            }
-            return -1;
-        }
-
-        #endregion
+        
 
         public override bool IsInitialized()
         {

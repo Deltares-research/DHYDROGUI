@@ -311,5 +311,21 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <returns></returns>
         int ionc_read_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
+
+        /// <summary>
+        /// Reads the network id for the 1D network
+        /// </summary>
+        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="networkid">The network id (out)</param>
+        /// <returns></returns>
+        int ionc_get_1d_network_id([In]ref int ioncid, [In, Out] ref int networkid);
+
+        /// <summary>
+        /// Reads the mesh id for the 1D mesh
+        /// </summary>
+        /// <param name="ioncid"></param>
+        /// <param name="meshid"></param>
+        /// <returns></returns>
+        int ionc_get_1d_mesh_id([In] ref int ioncid, [In, Out] ref int meshid);
     }
 }

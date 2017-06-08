@@ -15,12 +15,17 @@ namespace DeltaShell.NGHS.IO.Grid
             api = RemoteInstanceContainer.CreateInstance<IUGridApi1D, UGridApi1D>(Environment.Is64BitOperatingSystem);
         }
 
-        public virtual int Create1DNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints)
+        public virtual int Create1DNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int nwId)
         {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.Create1DNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            nwId = -1;
+            var uGridApi1D = api as IUGridApi1D;
+            return uGridApi1D != null
+                ? uGridApi1D.Create1DNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints,out nwId)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            //return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.Create1DNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out nwId), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
-        public bool NetworkReady
+        public virtual bool NetworkReady
         {
             get { return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.NetworkReady, false); }
         }
@@ -40,34 +45,40 @@ namespace DeltaShell.NGHS.IO.Grid
             return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.Write1DNetworkGeometry(geopointsX, geopointsY), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
-        public virtual int GetNumberOfNetworkNodes()
+        public string GetNetworkName()
         {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfNetworkNodes(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            throw new NotImplementedException();
         }
 
-        public virtual int GetNumberOfNetworkBranches()
+        public virtual int GetNumberOfNetworkNodes(out int numberOfNetworkNodes)
         {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfNetworkBranches(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            numberOfNetworkNodes = - 1;
+            var ugridApi1D = api as IUGridApi1D;
+            return ugridApi1D != null
+                ? ugridApi1D.GetNumberOfNetworkNodes(out numberOfNetworkNodes)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            //return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfNetworkNodes(out numberOfNetworkNodes), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
-        public virtual int GetNumberOfNetworkGeometryPoints()
+        public virtual int GetNumberOfNetworkBranches(out int numberOfNetworkBranches)
         {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfNetworkGeometryPoints(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            numberOfNetworkBranches = -1;
+            var uGridApi1D = api as IUGridApi1D;
+            return uGridApi1D != null
+                ? uGridApi1D.GetNumberOfNetworkBranches(out numberOfNetworkBranches)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            //return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfNetworkBranches(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
-        public virtual int Create1DMesh(string name, int numberOfMeshPoints, int numberOfMeshEdges)
+        public virtual int GetNumberOfNetworkGeometryPoints(out int numberOfNetworkGeometryPoints)
         {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.Create1DMesh(name, numberOfMeshPoints, numberOfMeshEdges), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
-        }
-
-        public virtual int Write1DMeshDiscretisationPoints(int[] branchIdx, double[] offset)
-        {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.Write1DMeshDiscretisationPoints(branchIdx, offset), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
-        }
-
-        public virtual int GetNumberOfMeshDiscretisationPoints()
-        {
-            return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetNumberOfMeshDiscretisationPoints(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            numberOfNetworkGeometryPoints = -1;
+            var uGridApi1D = api as IUGridApi1D;
+            return uGridApi1D != null
+                ? uGridApi1D.GetNumberOfNetworkGeometryPoints(out numberOfNetworkGeometryPoints)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         // TODO: uncomment this with new functionality
@@ -75,7 +86,7 @@ namespace DeltaShell.NGHS.IO.Grid
         //{
         //    return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.GetMeshDiscretisationPoints(), new List<Tuple<int, double>>());
         //}
-
+        
         public virtual int Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIs, out string[] nodesLongnames)
         {
             nodesX = new double[0];
