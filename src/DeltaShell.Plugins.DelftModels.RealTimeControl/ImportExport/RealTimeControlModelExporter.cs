@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     modelWorkingDirectory = null;
                 }
                 model.ModelStateHandler.ModelWorkingDirectory = path;
-                model.ModelStateHandler.FeedStateToModel(model.ModelStateHandler.CreateStateFromFile(Name, model.RestartInput.Path));
+                model.ModelStateHandler.FeedStateToModel(model.ModelStateHandler.CreateStateFromFile(model.Name, model.RestartInput.Path));
 
                 if (modelWorkingDirectory != null)
                 {
