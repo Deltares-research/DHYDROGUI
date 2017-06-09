@@ -75,18 +75,24 @@ namespace DeltaShell.Dimr
 
         public void set_logger()
         {
-            cMessageCallback = message =>
+            cMessageCallback = (time, message, level) =>
             {
                 var msg = message != null ? string.Copy(message) : string.Empty;
-
+                var dateTime =
+                    new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)
+                        .AddSeconds((long) (double.Parse(time.Split('.')[0], System.Globalization.CultureInfo.InvariantCulture)))
+                        .AddMilliseconds((long) (double.Parse(time.Split('.')[1], System.Globalization.CultureInfo.InvariantCulture)))
+                        .AddDays(-1)
+                        .ToLocalTime();
+                msg = string.Format("Dimr [{0}] {1} >> {2}", dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(DimrApiDataSet.DebugLevel), level), msg);
                 if (useMessagesBuffering)
                 {
                     messages.Add(msg);
                 }
                 else
                 {
-                    Console.WriteLine("message = {0}", msg);
-                    Log.Debug(msg);
+                    Console.WriteLine(msg);
+                    Log.DebugFormat(msg);
                 }
             };
             DimrApiWrapper.set_logger_callback(cMessageCallback);
@@ -188,7 +194,7 @@ namespace DeltaShell.Dimr
 
             // sending intPointer to unmanaged code here
 
-            DimrApiWrapper.set_var("debugLevel", intPointer);
+            DimrApiWrapper.set_var("feedbackLevel", intPointer);
             // Free memory
             Marshal.FreeHGlobal(intPointer);
         }

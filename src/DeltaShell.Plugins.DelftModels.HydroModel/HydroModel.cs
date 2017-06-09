@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
         
         private const string HydroRegionTag = "RootHydroRegion";
-
+        
         #region Fields and properties
 
         private IEventedList<IActivity> activities;
@@ -790,6 +790,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.IsRunByDimr = false;
                 }
+                DimrRunner.ConnectDimrRunLogFile(this);
             }
             else
             {
