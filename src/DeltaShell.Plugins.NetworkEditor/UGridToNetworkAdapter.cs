@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     var totalNumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
                     int networkId;
-                    uGrid1D.Create1DGridInFile(
+                    uGrid1D.Create1DNetworkInFile(
                         network.Name,
                         network.Nodes.Count,
                         network.Branches.Count,

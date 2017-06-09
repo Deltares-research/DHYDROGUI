@@ -217,7 +217,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int networkId;
                     // create 1D grid
-                    ugrid1D.Create1DGridInFile(
+                    ugrid1D.Create1DNetworkInFile(
                         network.Name,
                         network.Nodes.Count,
                         network.Branches.Count,
