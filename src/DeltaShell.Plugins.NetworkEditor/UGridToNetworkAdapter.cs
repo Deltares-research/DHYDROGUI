@@ -6,6 +6,7 @@ using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -16,16 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor
     public static class UGridToNetworkAdapter
     {
         private const string IO_NETCDF_NETWORK_ID = "IoNetCdfNetworkId";
-        public static void SaveNetworkDiscretisation()
-        {
-            
-        }
-
-        public static void LoadNetworkDiscretisation()
-        {
-            
-        }
-
+        
         public static void SaveNetwork(IHydroNetwork network, string netFilePath, UGridGlobalMetaData metaData)
         {
             try
@@ -75,6 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                         network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray(),
                         network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray()
                     );
+
                 }
             }
             catch (Exception ex)
@@ -98,8 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                         throw new InvalidOperationException("Couldn't retrieve network Id, can't save the network discretisation");
                     };
                     int networkId = (int)networkDiscretization.Network.Attributes[IO_NETCDF_NETWORK_ID];
-
-
+                    
                     int[] branchIdx = discretisationPoints.Select(l => l.Branch)
                         .ToArray()
                         .Select(b => networkDiscretization.Network.Branches.IndexOf(b))
@@ -191,7 +183,36 @@ namespace DeltaShell.Plugins.NetworkEditor
                 return null; // TODO: Do something useful with the exceptions.
             }
         }
-        
+
+        public static IDiscretization LoadNetworkDiscretisation(string netFilePath, IHydroNetwork network)
+        {
+            try
+            {
+                using (var uGrid1DMesh = new UGrid1DMesh(netFilePath))
+                {
+                    var discretisation = new Discretization
+                    {
+                        Name = "DummyDiscretisationName", // TODO: Obtain the discretisation name from the netCdf file?
+                        Network = network,
+                    };
+
+                    var numberOfDiscretisationPoints = uGrid1DMesh.GetNumberOf1DMeshDiscretisationPoints();
+
+                    int[] branchIdx;
+                    double[] offset;
+                    uGrid1DMesh.Read1DMeshDiscretisationPoints(out branchIdx, out offset);
+
+                    return discretisation;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return null; // TODO: Do Something useful with the exceptions.?
+            }
+
+        }
+
         public static List<IHydroNode> ConstructHydroNodes(IHydroNetwork network, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions)
         {
             var nodes = new List<IHydroNode>();

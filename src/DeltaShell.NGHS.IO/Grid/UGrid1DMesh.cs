@@ -8,7 +8,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
         }
 
-        public UGrid1DMesh(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        public UGrid1DMesh(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
         {
             GridApi = GridApiFactory.CreateNew1DMesh();
             //Initialize(file, mode);

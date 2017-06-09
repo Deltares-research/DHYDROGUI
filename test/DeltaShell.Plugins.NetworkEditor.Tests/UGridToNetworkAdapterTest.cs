@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -206,18 +207,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var testFilePath =
                 TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             
             try
             {
                 var networkDiscretization = CreateNetworkDiscretisation();
                 var storedNetwork = networkDiscretization.Network;
-
+                
                 UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
 
-                UGridToNetworkAdapter.SaveNetwork((HydroNetwork)storedNetwork, testFilePath, metaData);
-                //UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretization, testFilePath);
+                UGridToNetworkAdapter.SaveNetwork((HydroNetwork)storedNetwork, localCopyOfTestFile, metaData);
+                UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretization, localCopyOfTestFile);
 
-                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
+                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(localCopyOfTestFile);
 
                 Assert.AreEqual(loadedNetwork.Name, "DummyNetworkName"); // TODO: Implement the read/get network name functionality
 
@@ -225,7 +227,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(testFilePath);
+                FileUtils.DeleteIfExists(localCopyOfTestFile);
             }
         }
 

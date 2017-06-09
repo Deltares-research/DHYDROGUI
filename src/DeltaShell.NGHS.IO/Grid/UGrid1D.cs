@@ -219,10 +219,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
         }
-
         #endregion
-
-        
 
         public override bool IsInitialized()
         {
