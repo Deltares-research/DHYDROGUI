@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -266,13 +267,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override string GetVariableDescription(string variable, string category)
+        public override string GetVariableDescription(string variable, string category = null)
         {
-            FlowBoundaryQuantityType variableFlowBoundaryQuantityType;
+            FlowBoundaryQuantityType flowBoundaryQuantityType;
 
-            if (FlowBoundaryConditionFactory.TryParseRegularFlowBoundaryQuantityType(variable, category, out variableFlowBoundaryQuantityType))
+            if (category != EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.Tracer) && // Do not try to match Tracers to enum descriptions
+                category != EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration) && // Do not try to match Fraction names to enum descriptions
+                Enum.TryParse(variable, out flowBoundaryQuantityType))
             {
-                return FlowBoundaryCondition.GetDescription(variableFlowBoundaryQuantityType);
+                return FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType);
             }
 
             return base.GetVariableDescription(variable, category);
