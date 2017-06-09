@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.Grid
             IONC_CONV_UGRID = 2,//Dataset based on UGRID-conventions
             IONC_CONV_SGRID = 4,//Dataset based on SGRID-conventions
             IONC_CONV_OTHER = -99,//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
-            IONC_CONV_TEST = -111111 //Dataset Id for testeing
+            IONC_CONV_TEST = -111111 //Dataset Id for testing
         }
 
         public enum NetcdfOpenMode

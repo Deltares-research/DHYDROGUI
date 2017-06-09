@@ -55,7 +55,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Gets the name of mesh from a data set.
         /// </summary>
         /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="nmesh">Mesh id.</param>
+        /// <param name="meshid">Mesh id.</param>
+        /// <param name="meshName">The mesh name.</param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
         int ionc_get_mesh_name([In, Out] ref int ioncid, [In, Out] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder meshName);
 
