@@ -52,6 +52,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
             }
 
+            ValidateFlowBoundaryConditions(model, issues);
+            return new ValidationReport("Water flow FM model boundary conditions", issues);
+        }
+
+        private static void ValidateFlowBoundaryConditions(WaterFlowFMModel model, List<ValidationIssue> issues)
+        {
             foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>())
             {
                 var boundaryConditionName = boundaryCondition.VariableDescription;
@@ -62,83 +68,102 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!boundaryCondition.DataPointIndices.Any())
                 {
                     issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Warning,
-                                                   "No point data defined for boundary condition.", boundaryCondition));
+                        "No point data defined for boundary condition.", boundaryCondition));
                 }
                 else
                 {
-                    foreach (var pointIndex in boundaryCondition.DataPointIndices)
+                    if (FlowBoundaryCondition.IsMorphologyBoundary(boundaryCondition))
                     {
-                        var function = boundaryCondition.GetDataAtPoint(pointIndex);
-
-                        var supportPointName = boundaryConditionSet.SupportPointNames[pointIndex];
-
-                        if (boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
+                        if (boundaryConditionSet.BoundaryConditions.Count > 1)
                         {
-                            var timeValues =
-                                function.Arguments.First(a => a.ValueType == typeof (DateTime)).GetValues<DateTime>();
-                            if (timeValues.Any())
-                            {
-                                var lowerBound = timeValues.First();
-                                var upperBound = timeValues.Last();
-
-                                if (lowerBound > model.StartTime || upperBound < model.StopTime)
-                                {
-
-                                    issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                                        string.Format("Time series does not span model run interval for {0} at point {1}.",
-                                            boundaryConditionName, supportPointName), boundaryCondition));
-                                }
-                                if (boundaryCondition.StrictlyPositive)
-                                {
-                                    foreach (var component in function.Components)
-                                    {
-                                        if ((double) component.MinValue < 0.0)
-                                        {
-                                            issues.Add(new ValidationIssue(boundaryConditionName,
-                                                ValidationSeverity.Error,
-                                                string.Format(
-                                                    "Time series contains forbidden negative values for {0} at point {1}",
-                                                    boundaryConditionName, supportPointName), boundaryCondition));
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-
-                                issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                                    string.Format("No data defined for {0} at point {1}.", boundaryConditionName,
-                                        supportPointName), boundaryCondition));
-                            }
+                            issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
+                                "A morphology boundary condition cannot have more than one timeseries per boundary.", boundaryCondition));
                         }
-
-                        if (boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
-                            boundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection)
+                        if (boundaryCondition.DataPointIndices.Count > 1)
                         {
-                            foreach (var astroComponent in function.Arguments[0].Values.Cast<string>())
-                            {
-                                if (HarmonicComponent.DefaultAstroComponentsRadPerHour.Keys.Contains(astroComponent))
-                                {
-                                    continue;
-                                }
-
-                                issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Warning,
-                                    string.Format("Unknown astronomical component {0} detected for {1} at point {2}",
-                                        astroComponent, boundaryConditionName, supportPointName)));
-                            }
+                            issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
+                                "A morphology boundary condition cannot have more than one point with generated data.", boundaryCondition));
                         }
-
-                        var depthProfile = boundaryCondition.GetDepthLayerDefinitionAtPoint(pointIndex);
-
-                        if (depthProfile == null) continue;
-
-                        issues.AddRange(VerticalProfileValidator.ValidateVerticalProfile(boundaryConditionName,
-                            depthProfile, boundaryCondition,
-                            supportPointName));
+                    }
+                    else
+                    {
+                        ValidateBoundaryConditionPointIndex(model, issues, boundaryCondition, boundaryConditionSet, boundaryConditionName);
                     }
                 }
             }
-            return new ValidationReport("Water flow FM model boundary conditions", issues);
+        }
+
+        private static void ValidateBoundaryConditionPointIndex(WaterFlowFMModel model, List<ValidationIssue> issues,
+            FlowBoundaryCondition boundaryCondition, BoundaryConditionSet boundaryConditionSet, string boundaryConditionName)
+        {
+            foreach (var pointIndex in boundaryCondition.DataPointIndices)
+            {
+                var function = boundaryCondition.GetDataAtPoint(pointIndex);
+
+                var supportPointName = boundaryConditionSet.SupportPointNames[pointIndex];
+
+                if (boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
+                {
+                    var timeValues =
+                        function.Arguments.First(a => a.ValueType == typeof(DateTime)).GetValues<DateTime>();
+                    if (timeValues.Any())
+                    {
+                        var lowerBound = timeValues.First();
+                        var upperBound = timeValues.Last();
+
+                        if (lowerBound > model.StartTime || upperBound < model.StopTime)
+                        {
+                            issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
+                                string.Format("Time series does not span model run interval for {0} at point {1}.",
+                                    boundaryConditionName, supportPointName), boundaryCondition));
+                        }
+                        if (boundaryCondition.StrictlyPositive)
+                        {
+                            foreach (var component in function.Components)
+                            {
+                                if ((double) component.MinValue < 0.0)
+                                {
+                                    issues.Add(new ValidationIssue(boundaryConditionName,
+                                        ValidationSeverity.Error,
+                                        string.Format(
+                                            "Time series contains forbidden negative values for {0} at point {1}",
+                                            boundaryConditionName, supportPointName), boundaryCondition));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
+                            string.Format("No data defined for {0} at point {1}.", boundaryConditionName,
+                                supportPointName), boundaryCondition));
+                    }
+                }
+
+                if (boundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
+                    boundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection)
+                {
+                    foreach (var astroComponent in function.Arguments[0].Values.Cast<string>())
+                    {
+                        if (HarmonicComponent.DefaultAstroComponentsRadPerHour.Keys.Contains(astroComponent))
+                        {
+                            continue;
+                        }
+
+                        issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Warning,
+                            string.Format("Unknown astronomical component {0} detected for {1} at point {2}",
+                                astroComponent, boundaryConditionName, supportPointName)));
+                    }
+                }
+
+                var depthProfile = boundaryCondition.GetDepthLayerDefinitionAtPoint(pointIndex);
+
+                if (depthProfile == null) continue;
+
+                issues.AddRange(VerticalProfileValidator.ValidateVerticalProfile(boundaryConditionName,
+                    depthProfile, boundaryCondition,
+                    supportPointName));
+            }
         }
 
         // Remove whenever the ec-module supports custom boundary point names

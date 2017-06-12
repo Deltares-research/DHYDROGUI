@@ -494,6 +494,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
+        public static bool MorphologyBoundaryConditionHasGeneratedData(IBoundaryCondition boundaryCondition)
+        {
+            return boundaryCondition.DataPointIndices.Count >= 1 && IsMorphologyBoundary(boundaryCondition);
+        }
+
+        public static bool IsMorphologyBoundary(IBoundaryCondition boundaryCondition)
+        {
+            var flowBC = boundaryCondition as FlowBoundaryCondition;
+            if (flowBC == null) return false;
+
+            return (flowBC.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed ||
+                    flowBC.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
+                    flowBC.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+        }
+
         protected override IFunction CreateFunction()
         {
             if (DataType == BoundaryConditionDataType.Qh)
@@ -511,7 +526,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             if (FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport &&
                 DataType == BoundaryConditionDataType.TimeSeries)
             {
-                if (SedimentFractionNames.Count == 0)
+                if ( SedimentFractionNames == null || SedimentFractionNames.Count == 0)
                     return null;
                 IFunction loadTransport = new Function(VariableName);
 
