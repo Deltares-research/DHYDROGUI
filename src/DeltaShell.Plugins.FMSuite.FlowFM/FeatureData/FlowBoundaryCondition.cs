@@ -504,9 +504,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             var flowBC = boundaryCondition as FlowBoundaryCondition;
             if (flowBC == null) return false;
 
-            return (flowBC.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed ||
-                    flowBC.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
-                    flowBC.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+            return IsMorphologyFlowQuantityType(flowBC.FlowQuantity);
+        }
+
+        public static bool IsMorphologyFlowQuantityType(FlowBoundaryQuantityType flowQuantity)
+        {
+            return (flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed ||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
         }
 
         protected override IFunction CreateFunction()

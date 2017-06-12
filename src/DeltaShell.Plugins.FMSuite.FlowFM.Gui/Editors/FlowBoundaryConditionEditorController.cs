@@ -231,11 +231,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     l => l.Count == count && l.Except(existingQuantities).Count() == 1)
                     .SelectMany(l => l).Distinct();
 
-            return
-                validCombinationResults.Concat(existingQuantities)
-                    .Concat(FlowBoundaryCondition.AlwaysAllowedQuantities)
-                    .Distinct()
-                    .Where(q => FlowBoundaryCondition.GetProcessNameForQuantity(q) == process);
+            var allowedQuantities = validCombinationResults.Concat(existingQuantities)
+                                        .Concat(FlowBoundaryCondition.AlwaysAllowedQuantities)
+                                        .Distinct()
+                                        .Where(q => FlowBoundaryCondition.GetProcessNameForQuantity(q) == process).ToList();
+
+            if (boundaryConditions.BoundaryConditions
+                    .Where(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc))
+                    .ToList()
+                    .Count >= 1)
+            {
+                allowedQuantities.RemoveAllWhere(q => FlowBoundaryCondition.IsMorphologyFlowQuantityType(q));
+            }
+
+            return allowedQuantities;
         }
 
         public override IEnumerable<string> GetAllowedVariablesFor(string category, BoundaryConditionSet boundaryConditions)
