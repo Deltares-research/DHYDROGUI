@@ -58,6 +58,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
         private static void ValidateFlowBoundaryConditions(WaterFlowFMModel model, List<ValidationIssue> issues)
         {
+            foreach (var bcSet in model.BoundaryConditionSets)
+            {
+                if ( bcSet != null && 
+                    bcSet.BoundaryConditions.Where( bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)).ToList().Count > 1)
+                {
+                    issues.Add(new ValidationIssue(bcSet, ValidationSeverity.Error,
+                        "A morphology boundary condition cannot have more than one timeseries per boundary.", bcSet));
+                }
+            }
+
             foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>())
             {
                 var boundaryConditionName = boundaryCondition.VariableDescription;
@@ -74,11 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     if (FlowBoundaryCondition.IsMorphologyBoundary(boundaryCondition))
                     {
-                        if (boundaryConditionSet.BoundaryConditions.Count > 1)
-                        {
-                            issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                                "A morphology boundary condition cannot have more than one timeseries per boundary.", boundaryCondition));
-                        }
                         if (boundaryCondition.DataPointIndices.Count > 1)
                         {
                             issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,

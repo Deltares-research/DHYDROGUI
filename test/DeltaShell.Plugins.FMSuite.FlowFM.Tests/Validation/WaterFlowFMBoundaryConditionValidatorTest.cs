@@ -156,6 +156,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)]
+        public void TestMorphologyBoundaryConditionOnlyAllowsOneCondition(FlowBoundaryQuantityType quantityType)
+        {
+            var model = CreateValidModel();
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.SedimentFractions = new EventedList<ISedimentFraction>();
+            model.SedimentFractions.Add(new SedimentFraction() { Name = "testFrac" });
+
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+
+            model.Boundaries.Add(boundary);
+            var bcSet = model.BoundaryConditionSets[0].BoundaryConditions;
+
+            var flowBoundary1 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionNames = new List<string>() { "testFrac" }
+            };
+            
+            bcSet.Add(flowBoundary1);
+
+            Assert.AreEqual(1, bcSet.Count);
+            var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(0, report.ErrorCount);
+
+            /* Add a second condition */
+            var flowBoundary2 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionNames = new List<string>() { "testFrac" }
+            };
+            bcSet.Add(flowBoundary2);
+
+            Assert.AreEqual(2, bcSet.Count);
+            report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(1, report.ErrorCount);
+        }
+
+        [Test]
         public void TestValidBoundaryConditionTimeSeries()
         {
             var model = CreateValidModel();
