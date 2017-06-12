@@ -13,47 +13,74 @@ namespace DeltaShell.NGHS.IO.Grid
             api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>(Environment.Is64BitOperatingSystem);
         }
        
-
-        public int GetNumberOfNodes(int meshid)
+        public int GetNumberOfNodes(int meshid, out int numberOfNodes)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetNumberOfNodes(meshid) : 0;
-        }
-        
-        public int GetNumberOfEdges(int meshid)
-        {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetNumberOfEdges(meshid) : 0;
+            numberOfNodes = -1;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetNumberOfNodes(meshid, out numberOfNodes)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int GetNumberOfFaces(int meshid)
+        public int GetNumberOfEdges(int meshid, out int numberOfEdges)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetNumberOfFaces(meshid) : 0;
+            numberOfEdges = -1;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetNumberOfEdges(meshid, out numberOfEdges)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int GetMaxFaceNodes(int meshid)
+        public int GetNumberOfFaces(int meshid, out int numberOfFaces)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetMaxFaceNodes(meshid) : 0;
+            numberOfFaces = -1;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetNumberOfFaces(meshid, out numberOfFaces)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public double[] GetNodeXCoordinates(int meshId)
+        public int GetMaxFaceNodes(int meshid, out int maxFaceNodes)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetNodeXCoordinates(meshId) : new double[0];
+            maxFaceNodes = -1;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetMaxFaceNodes(meshid, out maxFaceNodes)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public double[] GetNodeYCoordinates(int meshId)
+        public int GetNodeXCoordinates(int meshId, out double[] xCoordinates)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetNodeYCoordinates(meshId) : new double[0];
+            xCoordinates = new double[0];
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetNodeXCoordinates(meshId, out xCoordinates)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
-        
-        public double[] GetNodeZCoordinates(int meshId)
+
+        public int GetNodeYCoordinates(int meshId, out double[] yCoordinates)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetNodeZCoordinates(meshId) : new double[0];
+            yCoordinates = new double[0];
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetNodeYCoordinates(meshId, out yCoordinates)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
+
+        public int GetNodeZCoordinates(int meshId, out double[] zCoordinates)
+        {
+            zCoordinates = new double[0];
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetNodeZCoordinates(meshId, out zCoordinates)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public double zCoordinateFillValue
@@ -71,60 +98,97 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public int[,] GetEdgeNodesForMesh(int meshId)
+        public int GetEdgeNodesForMesh(int meshId, out int[,] edgeNodes)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetEdgeNodesForMesh(meshId) : new int[0,0];
+            edgeNodes = new int[0,0];
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetEdgeNodesForMesh(meshId, out edgeNodes)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int[,] GetFaceNodesForMesh(int meshId)
+        public int GetFaceNodesForMesh(int meshId, out int[,] faceNodes)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetFaceNodesForMesh(meshId) : new int[0, 0];
+            faceNodes = new int[0,0];
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetFaceNodesForMesh(meshId, out faceNodes)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int GetVarCount(int meshId, int locationId)
+        public int GetVarCount(int meshId, int locationId, out int nCount)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetVarCount(meshId, locationId) : 0;
+            nCount = -1;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetVarCount(meshId, locationId, out nCount)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int[] GetVarNames(int meshId, int locationId)
+        public int GetVarNames(int meshId, int locationId, out int[] varIds)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetVarNames(meshId, locationId) : new int[0];
+            varIds = new int[0];
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.GetVarNames(meshId, locationId, out varIds)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public void WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues)
+        public int WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues)
         {
-            var ugridApi = api as IUGridApi;
-            if (ugridApi != null)
-                ugridApi.WriteXYCoordinateValues(meshId, xValues, yValues);
-        }
-        
-        public void WriteZCoordinateValues(int meshId, double[] zValues)
-        {
-            var ugridApi = api as IUGridApi;
-            if (ugridApi != null)
-                ugridApi.WriteZCoordinateValues(meshId, zValues);
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.WriteXYCoordinateValues(meshId, xValues, yValues)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public string GetMeshName(int meshId)
+        public int WriteZCoordinateValues(int meshId, double[] zValues)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.GetMeshName(meshId) : string.Empty;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.WriteZCoordinateValues(meshId, zValues)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
-        
+
+        public int GetMeshName(int meshId, out string meshName)
+        {
+            meshName = string.Empty;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                    ? uGridApi.GetMeshName(meshId, out meshName)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
+
         public int ionc_write_geom_ugrid(string filename)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.ionc_write_geom_ugrid(filename) : 0;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.ionc_write_geom_ugrid(filename)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public int ionc_write_map_ugrid(string filename)
         {
-            var ugridApi = api as IUGridApi;
-            return ugridApi != null ? ugridApi.ionc_write_map_ugrid(filename) : 0;
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid
+                ? uGridApi.ionc_write_map_ugrid(filename)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
+
+        private IUGridApi GetValidUGridApi(out bool isValid)
+        {
+            var uGridApi = api as IUGridApi;
+            isValid = uGridApi != null;
+           return uGridApi;
         }
     }
 }
