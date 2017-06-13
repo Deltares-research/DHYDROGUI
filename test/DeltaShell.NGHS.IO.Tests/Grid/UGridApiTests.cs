@@ -1059,86 +1059,157 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetVarCountInitializationFailedTest()
         {
-            // uGridApi
-            
+            int meshId = 1;
+            int locationId = 1;
+            int nCount;
 
-            // uRemoteGridApi
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
         [Test]
         public void GetVarCountTest()
         {
-            // uGridApi
+            var ioncid = 1;
+            var meshId = 1;
+            var locationId = 1;
+            var nCount = 0;
 
-            // uRemoteGridApi
+            // wrapper
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
+                .OutRef(ioncid, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
         }
 
         [Test]
         public void GetVarCountApiCallFailedTest()
         {
-            // uGridApi
+            var ioncid = 1;
+            var meshId = 1;
+            var locationId = 1;
+            var nCount = 0;
 
-            // uRemoteGridApi
+            // wrapper
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
+                .OutRef(ioncid, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
         [Test]
         public void GetVarCountExceptionTest()
         {
-            // uGridApi
+            var ioncid = 1;
+            var meshId = 1;
+            var locationId = 1;
+            var nCount = 0;
 
-            // uRemoteGridApi
+            // wrapper
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
+                .OutRef(ioncid, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Throw(new Exception("TestException")).Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
         [Test]
         public void GetVarNamesInitializationFailedTest()
         {
+            int meshId = 1;
+            int locationId = 1;
+            int[] varIds;
             // uGridApi
-            
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Once();
+
             // uRemoteGridApi
+            uRemoteGridApi.Expect(a => a.Initialized).Return(false).Repeat.Once();
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetVarNames(meshId, locationId, out varIds);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetVarNames(meshId, locationId, out varIds);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
-
+        
         [Test]
         public void GetVarNamesTest()
         {
-            // uGridApi
+            //int meshId = 1;
+            //int locationId = 1;
+            //int[] varIds;
+            //int varCount = 0;
 
-            // uRemoteGridApi
+            //// uGridApi
+            //uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
+            //uGridApi.Expect(a => a.GetVarCount(meshId, locationId, out varCount)).OutRef(varCount).IgnoreArguments().Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
 
-            mocks.ReplayAll();
+            //// uRemoteGridApi
 
-            // uGridApi
+            //mocks.ReplayAll();
 
-            // uRemoteGridApi
+            //// uGridApi
+            //var ierr = uGridApi.GetVarNames(meshId, locationId, out varIds);
+
+            //// uRemoteGridApi
         }
 
         [Test]

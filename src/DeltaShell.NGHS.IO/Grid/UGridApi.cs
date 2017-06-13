@@ -401,10 +401,15 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             nCount = 0;
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
-
-            var ierr = wrapper.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount);
-
-            return ierr == GridApiDataSet.GridConstants.IONC_NOERR ? GridApiDataSet.GridConstants.IONC_NOERR : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            try
+            {
+                var ierr = wrapper.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount);
+                return ierr == GridApiDataSet.GridConstants.IONC_NOERR ? ierr : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
         }
 
         public int GetVarNames(int meshId, int locationId, out int[] varIds)
