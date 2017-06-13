@@ -64,10 +64,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
-           
+
             mocks.ReplayAll();
             // uGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteXYCoordinateValues(1, new []{0.0}, new[]{0.0}));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 }));
 
             // uRemoteGridApi
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 }));
@@ -78,9 +78,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WriteXYCoordinateValuesGetNodesErrorTest()
         {
             // uGridApi
+            int nodes;
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            uGridApi.Expect(a => a.GetNumberOfNodes(1, out int nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
-            
+            uGridApi.Expect(a => a.GetNumberOfNodes(1, out nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
+
             mocks.ReplayAll();
 
             // uGridApi
@@ -116,13 +117,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uRemoteGridApi
 
             mocks.ReplayAll();
-            
+
             // uGridApi
-            var ierr = uGridApi.WriteXYCoordinateValues(1, new[] {0.0}, new[] {0.0});
+            var ierr = uGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteXYCoordinateValues(1, new[] {0.0}, new[] {0.0});
+            ierr = uRemoteGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
         }
@@ -214,8 +215,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WriteZCoordinateValuesGetNodesFailedTest()
         {
             // uGridApi
+            int nodes;
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            uGridApi.Expect(a => a.GetNumberOfNodes(1, out int nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
+            uGridApi.Expect(a => a.GetNumberOfNodes(1, out nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
 
             mocks.ReplayAll();
             // uGridApi
@@ -337,7 +339,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.GetMeshName(1,out string name));
+            string name;
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.GetMeshName(1, out name));
 
             // uRemoteGridApi
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.GetMeshName(1, out name));
@@ -348,7 +351,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            
+
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 0;
@@ -366,7 +369,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var ierr = uGridApi.GetMeshName(1, out name);
             Assert.AreEqual(meshName.ToString(), name);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
-            
+
             // uRemoteGridApi
             ierr = uRemoteGridApi.GetMeshName(1, out name);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
@@ -491,7 +494,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var ierr = uGridApi.GetNumberOfNodes(1, out nNodes);
             Assert.AreEqual(8, nNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
-            
+
             // uRemoteGridApi
             int rnNodes;
             ierr = uRemoteGridApi.GetNumberOfNodes(1, out rnNodes);
@@ -579,74 +582,147 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        public void GetNumberOfEdgesInitializationFailedTest()
+        [TestCase(false, 1, 1)]
+        [TestCase(true, -1, 1)]
+        [TestCase(true, 1, -1)]
+        public void GetNumberOfEdgesInitializationFailedTest(bool initialized, int meshId, int nEdges)
         {
+            int edges;
             // uGridApi
-            
+            uGridApi.Expect(a => a.GetNumberOfEdges(meshId, out edges))
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
+            TypeUtils.SetField(uGridApi, "nEdges", nEdges);
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+
+            int id = 0;
+            int meshid = 0;
+            int numberOfEdges = 8;
+            wrapper.Expect(w => w.ionc_get_edge_count(ref id, ref meshid, ref numberOfEdges)).IgnoreArguments()
+                .OutRef(id, meshid, numberOfEdges)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
 
             // uRemoteGridApi
 
             mocks.ReplayAll();
 
             // uGridApi
-
+            var ierr = uGridApi.GetNumberOfEdges(meshId, out edges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+            Assert.AreEqual(numberOfEdges, edges);
             // uRemoteGridApi
+
+            TypeUtils.SetField(uGridApi, "nEdges", nEdges);
+            ierr = uRemoteGridApi.GetNumberOfEdges(meshid, out edges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+            Assert.AreEqual(numberOfEdges, edges);
         }
 
         [Test]
         public void GetNumberOfEdgesTest()
         {
             // uGridApi
-
-            // uRemoteGridApi
+            int nEdges;
+            uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            TypeUtils.SetField(uGridApi, "nEdges", 8);
 
             mocks.ReplayAll();
 
             // uGridApi
-            //    uGridApi.Expect(a => a.GetNumberOfEdges(1)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            //    mocks.ReplayAll();
-            //    TypeUtils.SetField(uGridApi, "ioncid", 1);
-            //    TypeUtils.SetField(uGridApi, "nEdges", 2);
+            var ierr = uGridApi.GetNumberOfEdges(1, out nEdges);
+            Assert.AreEqual(8, nEdges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
-            //    Assert.AreEqual(2, uGridApi.GetNumberOfEdges(1));
-            //    //Cannot create unit test because cannot mock the static method : GridWrapper.ionc_get_edge_count
-            
             // uRemoteGridApi
+            int rnNodes;
+            ierr = uRemoteGridApi.GetNumberOfEdges(1, out rnNodes);
+            Assert.AreEqual(8, rnNodes);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
         }
 
         [Test]
         public void GetNumberOfEdgesApiCallFailedTest()
         {
             // uGridApi
+            int nEdges;
+            uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+
+            int id = 0;
+            int meshid = 0;
+            int numberOfEdges = 8;
+            wrapper.Expect(w => w.ionc_get_edge_count(ref id, ref meshid, ref numberOfEdges)).IgnoreArguments()
+                .OutRef(id, meshid, numberOfEdges)
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
 
             // uRemoteGridApi
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetNumberOfEdges(meshid, out nEdges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
+            Assert.AreEqual(-1, nEdges);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetNumberOfEdges(meshid, out nEdges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
+            Assert.AreEqual(-1, nEdges);
+
         }
 
         [Test]
         public void GetNumberOfEdgesExceptionTest()
         {
             // uGridApi
+            int nEdges;
+            uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+
+            int id = 0;
+            int meshid = 0;
+            int numberOfEdges = 8;
+            wrapper.Expect(w => w.ionc_get_edge_count(ref id, ref meshid, ref numberOfEdges)).IgnoreArguments()
+                .OutRef(id, meshid, numberOfEdges)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Throw(new Exception("testException"))
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
 
             // uRemoteGridApi
 
             mocks.ReplayAll();
 
             // uGridApi
+            var ierr = uGridApi.GetNumberOfEdges(meshid, out nEdges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(-1, nEdges);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.GetNumberOfEdges(meshid, out nEdges);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(-1, nEdges);
+
         }
 
         [Test]
         public void GetNumberOfFacesInitializationFailedTest()
         {
             // uGridApi
-            
+
 
             // uRemoteGridApi
 
@@ -710,7 +786,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetMaxFaceNodesInitializationFailedTest()
         {
             // uGridApi
-            
+
 
             // uRemoteGridApi
 
@@ -775,7 +851,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNodeXCoordinatesInitializationFailedTest()
         {
             // uGridApi
-            
+
 
             // uRemoteGridApi
 
@@ -832,7 +908,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNodeYCoordinatesInitializationFailedTest()
         {
             // uGridApi
-           
+
             // uRemoteGridApi
 
             mocks.ReplayAll();
@@ -888,7 +964,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNodeZCoordinatesInitializationFailedTest()
         {
             // uGridApi
-            
+
 
             // uRemoteGridApi
 
@@ -945,7 +1021,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetEdgeNodesForMeshInitializationFailedTest()
         {
             // uGridApi
-            
+
 
             // uRemoteGridApi
 
@@ -1002,7 +1078,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetFaceNodesForMeshInitializationFailedTest()
         {
             // uGridApi
-            
+
 
             // uRemoteGridApi
 
