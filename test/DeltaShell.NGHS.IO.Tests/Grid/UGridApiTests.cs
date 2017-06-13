@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Text;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
@@ -73,17 +75,55 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         // ReSharper disable once InconsistentNaming
+        public void WriteXYCoordinateValuesGetNodesErrorTest()
+        {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi.Expect(a => a.GetNumberOfNodes(1, out int nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
+            
+            mocks.ReplayAll();
+
+            // uGridApi
+            var ierr = uGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+        }
+
+        [Test]
+        // ReSharper disable once InconsistentNaming
         public void WriteXYCoordinateValuesTest()
         {
             // uGridApi
-            //uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int id = 0;
+            int meshid = 0;
+            IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            IntPtr yPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            int nNodes = 0;
+            wrapper.Expect(w => w.ionc_put_node_coordinates(ref id, ref meshid, ref xPtr, ref yPtr, ref nNodes))
+                .IgnoreArguments()
+                .OutRef(id, meshid, xPtr, yPtr, nNodes)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
             // uRemoteGridApi
 
             mocks.ReplayAll();
             
             // uGridApi
+            var ierr = uGridApi.WriteXYCoordinateValues(1, new[] {0.0}, new[] {0.0});
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
             // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteXYCoordinateValues(1, new[] {0.0}, new[] {0.0});
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
         }
 
@@ -91,70 +131,306 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // ReSharper disable once InconsistentNaming
         public void WriteXYCoordinateValuesApiCallFailedTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int id = 0;
+            int meshid = 0;
+            IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            IntPtr yPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            int nNodes = 0;
+            wrapper.Expect(w => w.ionc_put_node_coordinates(ref id, ref meshid, ref xPtr, ref yPtr, ref nNodes))
+                .IgnoreArguments()
+                .OutRef(id, meshid, xPtr, yPtr, nNodes)
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uRemoteGridApi
+
             mocks.ReplayAll();
+
+            // uGridApi
+            var ierr = uGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
         }
 
         [Test]
         // ReSharper disable once InconsistentNaming
         public void WriteXYCoordinateValuesExceptionTest()
         {
-            mocks.ReplayAll();
-        }
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int id = 0;
+            int meshid = 0;
+            IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            IntPtr yPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            int nNodes = 0;
+            wrapper.Expect(w => w.ionc_put_node_coordinates(ref id, ref meshid, ref xPtr, ref yPtr, ref nNodes))
+                .IgnoreArguments()
+                .OutRef(id, meshid, xPtr, yPtr, nNodes)
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Throw(new Exception("testException"))
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uRemoteGridApi
+
+            mocks.ReplayAll();
+
+            // uGridApi
+            var ierr = uGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteXYCoordinateValues(1, new[] { 0.0 }, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+        }
 
         [Test]
         public void WriteZCoordinateValuesInvalidInitializationTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+
             mocks.ReplayAll();
+            // uGridApi
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
+
+            // uRemoteGridApi
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
+        }
+
+        [Test]
+        public void WriteZCoordinateValuesGetNodesFailedTest()
+        {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi.Expect(a => a.GetNumberOfNodes(1, out int nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
+
+            mocks.ReplayAll();
+            // uGridApi
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
+
+            // uRemoteGridApi
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
         }
 
         [Test]
         public void WriteZCoordinateValuesTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int id = 0;
+            int meshid = 0;
+            IntPtr zPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            int nVal = 0;
+            int locationId = 0;
+            string varName = "";
+            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, ref locationId, varName, ref zPtr, ref nVal))
+                .IgnoreArguments()
+                .OutRef(id, meshid, locationId, zPtr, nVal)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uRemoteGridApi
+
             mocks.ReplayAll();
+
+            // uGridApi
+            var ierr = uGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+
         }
 
         [Test]
         public void WriteZCoordinateValuesApiCallFailedTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int id = 0;
+            int meshid = 0;
+            IntPtr zPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            int nVal = 0;
+            int locationId = 0;
+            string varName = "";
+            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, ref locationId, varName, ref zPtr, ref nVal))
+                .IgnoreArguments()
+                .OutRef(id, meshid, locationId, zPtr, nVal)
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uRemoteGridApi
+
             mocks.ReplayAll();
+
+            // uGridApi
+            var ierr = uGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
         }
 
         [Test]
         public void WriteZCoordinateValuesExceptionTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int id = 0;
+            int meshid = 0;
+            IntPtr zPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
+            int nVal = 0;
+            int locationId = 0;
+            string varName = "";
+            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, ref locationId, varName, ref zPtr, ref nVal))
+                .IgnoreArguments()
+                .OutRef(id, meshid, locationId, zPtr, nVal)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Throw(new Exception("testException"))
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
+            // uRemoteGridApi
+
             mocks.ReplayAll();
+
+            // uGridApi
+            var ierr = uGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
         [Test]
         public void GetMeshNameInvalidInitializationTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
             mocks.ReplayAll();
+
+            // uGridApi
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.GetMeshName(1,out string name));
+
+            // uRemoteGridApi
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.GetMeshName(1, out name));
         }
 
         [Test]
         public void GetMeshNameTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+
+            int id = 0;
+            int meshId = 0;
+            StringBuilder meshName = new StringBuilder("");
+            wrapper.Expect(w => w.ionc_get_mesh_name(ref id, ref meshId, meshName)).OutRef(id, meshId)
+                .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
             mocks.ReplayAll();
-            TypeUtils.SetField(uGridApi, "ioncid", 0);
+
+            // uGridApi
             string name;
             var ierr = uGridApi.GetMeshName(1, out name);
-            Assert.AreEqual(string.Empty, name);
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
-            //TypeUtils.SetField(uGridApi, "ioncid", 1);
-            //Cannot create unit test because cannot mock the static method : GridWrapper.ionc_get_mesh_name
+            Assert.AreEqual(meshName.ToString(), name);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+            
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.GetMeshName(1, out name);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+            Assert.AreEqual(meshName.ToString(), name);
         }
 
         [Test]
         public void GetMeshNameApiCallFailedTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+
+            int id = 0;
+            int meshId = 0;
+            StringBuilder meshName = new StringBuilder("");
+            wrapper.Expect(w => w.ionc_get_mesh_name(ref id, ref meshId, meshName)).OutRef(id, meshId)
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
             mocks.ReplayAll();
+
+            // uGridApi
+            string name;
+            var ierr = uGridApi.GetMeshName(1, out name);
+            Assert.AreEqual(meshName.ToString(), name);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.GetMeshName(1, out name);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
+            Assert.AreEqual(meshName.ToString(), name);
         }
 
         [Test]
         public void GetMeshNameExceptionTest()
         {
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+
+            int id = 0;
+            int meshId = 0;
+            StringBuilder meshName = new StringBuilder("");
+            wrapper.Expect(w => w.ionc_get_mesh_name(ref id, ref meshId, meshName)).OutRef(id, meshId)
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Throw(new Exception("testException")).Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+
             mocks.ReplayAll();
+
+            // uGridApi
+            string name;
+            var ierr = uGridApi.GetMeshName(1, out name);
+            Assert.AreEqual(meshName.ToString(), name);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+
+            // uRemoteGridApi
+            ierr = uRemoteGridApi.GetMeshName(1, out name);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(meshName.ToString(), name);
         }
 
 
@@ -182,9 +458,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
 
             // uRemoteGridApi
-            int rNodes;
-            //uRemoteGridApi.Expect(a => a.GetNumberOfNodes(meshId, out rNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            
+
             mocks.ReplayAll();
 
             // uGridApi
@@ -194,6 +468,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(nNetworkNodes, TypeUtils.GetField(uGridApi, "nNodes"));
 
             // uRemoteGridApi
+            int rNodes;
             TypeUtils.SetField(uGridApi, "nNodes", nNodes);
             ierr = uRemoteGridApi.GetNumberOfNodes(meshId, out rNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);

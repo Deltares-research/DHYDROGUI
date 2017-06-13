@@ -43,10 +43,15 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Marshal.Copy(xValues, 0, xPtr, numberOfNodes);
                 Marshal.Copy(yValues, 0, yPtr, numberOfNodes);
-                var ierr = wrapper.ionc_put_node_coordinates(ref ioncid, ref meshid, ref xPtr, ref yPtr, ref numberOfNodes);
+                var ierr = wrapper.ionc_put_node_coordinates(ref ioncid, ref meshid, ref xPtr, ref yPtr,
+                    ref numberOfNodes);
 
                 return ierr;
 
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -79,6 +84,10 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 return ierr;
             }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
             finally
             {
                 if (zPtr != IntPtr.Zero)
@@ -92,14 +101,18 @@ namespace DeltaShell.NGHS.IO.Grid
             name = string.Empty;
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             var meshName = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-            var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref mesh, meshName);
-            if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
+            try
             {
+                var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref mesh, meshName);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
+
                 name = meshName.ToString();
                 return ierr;
             }
-            return ierr;
-
+            catch 
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
         }
 
 
