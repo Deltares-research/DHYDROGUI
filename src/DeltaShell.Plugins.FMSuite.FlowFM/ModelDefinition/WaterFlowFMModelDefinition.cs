@@ -190,12 +190,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             try
             {
                 var prop = (WaterFlowFMProperty) sender;
+                var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
+                var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
+                var startTimeProp = GetModelProperty(GuiProperties.StartTime);
+                var refDateProp = GetModelProperty(KnownProperties.RefDate);
+                var temperatureProp = GetModelProperty(KnownProperties.Temperature);
+                var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
+                var useMorphologySedimentProp = GetModelProperty(GuiProperties.UseMorSed);
 
+                if (prop == icdtypProp)
                 {
-                    IcdTypePropertyChanged(prop);
-                    TimePropertyChanged(prop);
-                    TemperaturePropertyChanged(prop);
-                    MorphologySedimentPropertyChanged(prop);
+                    OnIcdTypePropertyChanged(prop);
+                }
+                else if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
+                {
+                    OnTimePropertyChanged();
+                }
+                else if (prop == temperatureProp)
+                {
+                    OnTemperaturePropertyChanged(prop);
+                }
+                else if (prop == useTemperatureProp)
+                {
+                    OnUseTemperaturePropertyChanged(prop);
+                }
+                else if (prop == useMorphologySedimentProp)
+                {
+                    OnMorphologySedimentPropertyChanged();
                 }
             }
             finally
@@ -204,65 +225,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void IcdTypePropertyChanged(WaterFlowFMProperty prop)
+        private void OnIcdTypePropertyChanged(WaterFlowFMProperty icdtypProp)
         {
-            var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
-            if (prop == icdtypProp)
+            var icdtyp = (int) icdtypProp.Value;
+            if (icdtyp == 2 || icdtyp == 3)
             {
-                var icdtyp = (int) icdtypProp.Value;
-                if (icdtyp == 2 || icdtyp == 3)
-                {
-                    var cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
-                    CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
+                var cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
+                CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
 
-                    var windspeedbreakpointsProperty = GetModelProperty(KnownProperties.Windspeedbreakpoints);
-                    CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
-                }
+                var windspeedbreakpointsProperty = GetModelProperty(KnownProperties.Windspeedbreakpoints);
+                CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
             }
         }
 
-        private void TimePropertyChanged(WaterFlowFMProperty prop)
+        private void OnTimePropertyChanged()
         {
-            var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
-            var startTimeProp = GetModelProperty(GuiProperties.StartTime);
-            var refDateProp = GetModelProperty(KnownProperties.RefDate);
-            if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
-            {
-                UpdateOutputTimes();
-            }
+            UpdateOutputTimes();
         }
 
-        private void TemperaturePropertyChanged(WaterFlowFMProperty prop)
+        private void OnTemperaturePropertyChanged(WaterFlowFMProperty temperatureProp)
+        {
+            var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
+            HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
+            useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
+        }
+
+        private void OnUseTemperaturePropertyChanged(WaterFlowFMProperty useTemperatureProp)
         {
             var temperatureProp = GetModelProperty(KnownProperties.Temperature);
-            var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
-
-            if (temperatureProp == prop)
+            var useTemperature = (bool)useTemperatureProp.Value;
+            if (useTemperature)
             {
-                HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
-                useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
+                temperatureProp.SetValueAsString("1");
+                HeatFluxModel.Type = HeatFluxModelType.TransportOnly;
             }
-            else if (useTemperatureProp == prop)
+            else
             {
-                var useTemperature = (bool) useTemperatureProp.Value;
-                if (useTemperature)
-                {
-                    temperatureProp.SetValueAsString("1");
-                    HeatFluxModel.Type = HeatFluxModelType.TransportOnly;
-                }
-                else
-                {
-                    temperatureProp.SetValueAsString("0");
-                    HeatFluxModel.Type = HeatFluxModelType.None;
-                }
+                temperatureProp.SetValueAsString("0");
+                HeatFluxModel.Type = HeatFluxModelType.None;
             }
         }
 
-        private void MorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
+        private void OnMorphologySedimentPropertyChanged()
         {
-            var useMorphologySedimentProp = GetModelProperty(GuiProperties.UseMorSed);
-            if (useMorphologySedimentProp == prop)
-                SetMapFormatPropertyValue();
+            SetMapFormatPropertyValue();
         }
         
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
