@@ -21,6 +21,7 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
@@ -32,6 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     // TODO: Make this an [Entity]. Needs refactoring.
     public class WaterFlowFMModelDefinition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
+
         public const string BathymetryDataItemName = "Bed Level";
         public const string InitialWaterLevelDataItemName = "Initial Water Level";
         public const string InitialSalinityDataItemName = "Initial Salinity";
@@ -187,49 +190,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             try
             {
                 var prop = (WaterFlowFMProperty) sender;
-                var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
-                if (prop == icdtypProp)
-                {
-                    var icdtyp = (int) icdtypProp.Value;
-                    if (icdtyp == 2 || icdtyp == 3)
-                    {
-                        var cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
-                        CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
 
-                        var windspeedbreakpointsProperty = GetModelProperty(KnownProperties.Windspeedbreakpoints);
-                        CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
-                    }
-                }
-
-                var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
-                var startTimeProp = GetModelProperty(GuiProperties.StartTime);
-                var refDateProp = GetModelProperty(KnownProperties.RefDate);
-                if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
                 {
-                    UpdateOutputTimes();
-                }
-
-                var temperatureProp = GetModelProperty(KnownProperties.Temperature);
-                var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
-                
-                if (temperatureProp == sender)
-                {
-                    HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
-                    useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
-                }
-                else if (useTemperatureProp == sender)
-                {
-                    var useTemperature = (bool) useTemperatureProp.Value;
-                    if (useTemperature)
-                    {
-                        temperatureProp.SetValueAsString("1");
-                        HeatFluxModel.Type = HeatFluxModelType.TransportOnly;
-                    }
-                    else
-                    {
-                        temperatureProp.SetValueAsString("0");
-                        HeatFluxModel.Type = HeatFluxModelType.None;
-                    }
+                    IcdTypePropertyChanged(prop);
+                    TimePropertyChanged(prop);
+                    TemperaturePropertyChanged(prop);
+                    MorphologySedimentPropertyChanged(prop);
                 }
             }
             finally
@@ -238,6 +204,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
+        private void IcdTypePropertyChanged(WaterFlowFMProperty prop)
+        {
+            var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
+            if (prop == icdtypProp)
+            {
+                var icdtyp = (int) icdtypProp.Value;
+                if (icdtyp == 2 || icdtyp == 3)
+                {
+                    var cdbreakpointsProperty = GetModelProperty(KnownProperties.Cdbreakpoints);
+                    CorrectWindDragCoefficientBreakpointsCollection(cdbreakpointsProperty, icdtyp);
+
+                    var windspeedbreakpointsProperty = GetModelProperty(KnownProperties.Windspeedbreakpoints);
+                    CorrectWindDragCoefficientBreakpointsCollection(windspeedbreakpointsProperty, icdtyp);
+                }
+            }
+        }
+
+        private void TimePropertyChanged(WaterFlowFMProperty prop)
+        {
+            var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
+            var startTimeProp = GetModelProperty(GuiProperties.StartTime);
+            var refDateProp = GetModelProperty(KnownProperties.RefDate);
+            if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
+            {
+                UpdateOutputTimes();
+            }
+        }
+
+        private void TemperaturePropertyChanged(WaterFlowFMProperty prop)
+        {
+            var temperatureProp = GetModelProperty(KnownProperties.Temperature);
+            var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
+
+            if (temperatureProp == prop)
+            {
+                HeatFluxModel.Type = (HeatFluxModelType) ((int) temperatureProp.Value);
+                useTemperatureProp.Value = HeatFluxModel.Type != HeatFluxModelType.None;
+            }
+            else if (useTemperatureProp == prop)
+            {
+                var useTemperature = (bool) useTemperatureProp.Value;
+                if (useTemperature)
+                {
+                    temperatureProp.SetValueAsString("1");
+                    HeatFluxModel.Type = HeatFluxModelType.TransportOnly;
+                }
+                else
+                {
+                    temperatureProp.SetValueAsString("0");
+                    HeatFluxModel.Type = HeatFluxModelType.None;
+                }
+            }
+        }
+
+        private void MorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
+        {
+            var useMorphologySedimentProp = GetModelProperty(GuiProperties.UseMorSed);
+            if (useMorphologySedimentProp == prop)
+                SetMapFormatPropertyValue();
+        }
+        
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
         {
             var prop = GetModelProperty(mduPropertyName);
@@ -272,10 +299,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             set { GetModelProperty(KnownProperties.Kmx).Value = value; }
         }
 
+        public string MapFormat
+        {
+            get { return GetModelProperty(KnownProperties.MapFormat).GetValueAsString(); }
+            set { GetModelProperty(KnownProperties.MapFormat).SetValueAsString(value); }
+        }
+
+        public void SetMapFormatPropertyValue()
+        {
+            var newMapFormatValue = UseMorphologySediment ? "4" : "1";
+            if (MapFormat != newMapFormatValue) // Change the MapFormat value in case the new value is different
+            {
+                MapFormat = newMapFormatValue;
+                Log.Info(string.Format("MapFormat value is changed to {0} due to {1}activation of Morphology",
+                    newMapFormatValue, UseMorphologySediment ? "" : "de"));
+            }
+        }
+
         public bool UseMorphologySediment
         {
             get { return (bool)GetModelProperty(GuiProperties.UseMorSed).Value; }
-            set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
+            set
+            {
+                GetModelProperty(GuiProperties.UseMorSed).Value = value;
+                SetMapFormatPropertyValue();
+            }
         }
 
         public string RelativeMapFilePath

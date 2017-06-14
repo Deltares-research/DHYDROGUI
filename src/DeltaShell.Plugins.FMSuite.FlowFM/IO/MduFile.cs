@@ -291,7 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         if (!writePartionFile && prop.PropertyDefinition.MduPropertyName.Equals("PartitionFile"))
                             continue;
 
-                        if (useNetCDFMapFormat && prop.PropertyDefinition.MduPropertyName.Equals("MapFormat"))
+                        if (useNetCDFMapFormat && prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFormat))
                         {
                             var line = String.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName, 1,
                                 "# For 1d2d coupling we should always write mapformat output in NetCDF format");
@@ -587,10 +587,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadMorphologyFile(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
-            if ( ! modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty) )
+            if (modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty))
+            {
+                modelDefinition.UseMorphologySediment = false;
+            }
+            else
             {
                 ReadMorphologyProperties(mduFilePath, KnownProperties.MorFile, modelDefinition);
-                modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                modelDefinition.UseMorphologySediment = true;
             }
         }
 
