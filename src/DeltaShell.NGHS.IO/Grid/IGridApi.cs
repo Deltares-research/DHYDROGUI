@@ -129,7 +129,7 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetVarCount(int meshId, int locationId);
         int[] GetVarNames(int meshId, int locationId);
         void WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues);
-        void WriteZCoordinateValues(int meshId, double[] zValues);
+        void WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues);
         string GetMeshName(int meshId);
         
         int ionc_write_geom_ugrid(string filename);

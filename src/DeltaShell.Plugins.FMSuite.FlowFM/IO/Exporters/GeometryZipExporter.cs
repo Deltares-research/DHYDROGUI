@@ -89,7 +89,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 }
                 File.Copy(model.NetFilePath, targetNetFilePath, true);
 
-                UnstructuredGridFileHelper.WriteZValues(targetGeomFilePath, model.Bathymetry.GetValues<double>().ToArray());
+                if(model.MduFile != null)
+                    model.MduFile.WriteBathymetry(model.ModelDefinition, targetGeomFilePath);
                 
                 Directory.SetCurrentDirectory(targetDirectory);
                 ZipFileUtils.Create(filePath,

@@ -49,6 +49,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region UGRID specifics
 
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_def_var(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref double fillValue);
+
         /// <summary>
         /// Gets the number of mesh from a data set.
         /// </summary>
@@ -157,6 +160,12 @@ namespace DeltaShell.NGHS.IO.Grid
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_var_count", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ionc_get_var_count([In] ref int ioncid,[In] ref int mesh,[In] ref int location,[In,Out] ref int nCount);
 
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_inq_varid(ref int ioncid, ref int meshId, string varName, ref int varId);
+        
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid_by_standard_name", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_inq_varid_by_standard_name(ref int ioncid, ref int meshId, ref int location, string standardName, ref int varId);
+        
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varids", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ionc_inq_varids(ref int ioncid, ref int meshId, ref int location, ref IntPtr ptr, ref int nVar);
 

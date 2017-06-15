@@ -117,13 +117,4 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string UseMorSed = "UseMorSed";
     }
 
-    public enum BedLevelType
-    {
-        Cells = 1,
-        Faces = 2,
-        NodesMeanLev = 3,
-        NodesMinLev = 4,
-        NodesMaxLev = 5,
-        NodesMaxLevAtFaces = 6
-    }
 }

@@ -144,11 +144,32 @@ namespace DeltaShell.NGHS.IO.Grid
             GridApi.WriteXYCoordinateValues(mesh, xValues, yValues);
         }
 
-        public void WriteZValues(int mesh, double[] zValues)
+        public void WriteZValuesAtFaces(int meshId, double[] zValues)
         {
-            if (GridApi == null) return;
-            GridApi.WriteZCoordinateValues(mesh, zValues);
+            const string faceBedLevelVariableName = "face_z";
+            const string faceBedLevelVariableLongName = "z-coordinate of mesh faces";
+
+            GridApi.WriteZCoordinateValues(
+                meshId, 
+                (int)GridApiDataSet.Locations.UG_LOC_FACE, 
+                faceBedLevelVariableName, 
+                faceBedLevelVariableLongName,
+                zValues);
         }
+
+        public void WriteZValuesAtNodes(int meshId, double[] zValues)
+        {
+            const string nodeBedLevelVariableName = "node_z";
+            const string nodeBedLevelVariableLongName = "z-coordinate of mesh nodes";
+
+            GridApi.WriteZCoordinateValues(
+                meshId, 
+                (int)GridApiDataSet.Locations.UG_LOC_NODE, 
+                nodeBedLevelVariableName, 
+                nodeBedLevelVariableLongName, 
+                zValues);
+        }
+
 
         public string NameOfMesh(int mesh)
         {

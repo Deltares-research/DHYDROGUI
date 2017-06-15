@@ -96,9 +96,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 }
             }
 
-            if (!grid.IsEmpty)
+            if (!grid.IsEmpty && model.MduFile != null)
             {
-                UnstructuredGridFileHelper.WriteZValues(path, model.Bathymetry.Components[0].GetValues<double>().ToArray());
+                model.MduFile.WriteBathymetry(model.ModelDefinition, path);
             }
 
             return true;

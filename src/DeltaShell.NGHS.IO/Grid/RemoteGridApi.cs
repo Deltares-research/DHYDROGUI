@@ -139,10 +139,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 api.WriteXYCoordinateValues(meshId, xValues, yValues);
         }
         
-        public void WriteZCoordinateValues(int meshId, double[] zValues)
+        public void WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues)
         {
             if(api != null)
-                api.WriteZCoordinateValues(meshId, zValues);
+                api.WriteZCoordinateValues(meshId, locationId, varName, longName, zValues);
         }
 
         public string GetMeshName(int meshId)

@@ -764,6 +764,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var prop = (WaterFlowFMProperty) sender;
             if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
             {
+                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation)prop.Value;
+                    BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
+                    UpdateBathymetryCoverage(bedLevelType);
+                    EndEdit();
+                }
+
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.UseSalinity,
                     StringComparison.InvariantCultureIgnoreCase))
                 {

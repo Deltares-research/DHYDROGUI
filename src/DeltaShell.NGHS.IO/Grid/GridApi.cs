@@ -133,19 +133,37 @@ namespace DeltaShell.NGHS.IO.Grid
                 yPtr = IntPtr.Zero;
             }
         }
-        public void WriteZCoordinateValues(int meshid, double[] zValues)
-        {
+        
+        public void WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues)
+        {           
             if(!Initialized()) return;
-            int nVal = GetNumberOfNodes(meshid);
-            const string varname = "node_z";
-            int locationId = (int)GridApiDataSet.Locations.UG_LOC_NODE;
-
+            
+            var nVal = zValues.Length;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nVal);
 
             try
             {
+                const string StandardName = "altitude";
+                int varId = 0;
+
+                GridWrapper.ionc_inq_varid_by_standard_name(ref ioncid, ref meshId, ref locationId, StandardName, ref varId);
+
+                // Testing...
+                GridWrapper.ionc_inq_varid(ref ioncid, ref meshId, varName, ref varId);
+
+                if (varId == -1) // does not exist
+                {
+                    const string Unit = "m";
+                    int NF90_DOUBLE = 6;
+                    double fillValue = -999.9;
+
+                    GridWrapper.ionc_def_var(ref ioncid, ref meshId, ref varId, ref NF90_DOUBLE, ref locationId, varName, StandardName, longName, Unit, ref fillValue);
+                }
+
                 Marshal.Copy(zValues, 0, zPtr, nVal);
-                var ierr = GridWrapper.ionc_put_var(ref ioncid, ref meshid, ref locationId, varname, ref zPtr, ref nVal);
+
+                // Eventually then idea is to change put_var to use varId rather than varName
+                var ierr = GridWrapper.ionc_put_var(ref ioncid, ref meshId, ref locationId, varName, ref zPtr, ref nVal);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     throw new Exception("Couldn't save x and y coordinates because of err nr: " + ierr);

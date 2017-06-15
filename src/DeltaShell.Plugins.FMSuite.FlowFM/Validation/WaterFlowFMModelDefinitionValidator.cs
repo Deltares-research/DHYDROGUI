@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         int bedLevelTypeNumber;
                         bool result = Int32.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber);
                         var morphologyActive = (bool) modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
-                        if (morphologyActive && result && !bedLevelTypeNumber.Equals((int)BedLevelType.Cells))
+                        if (morphologyActive && result && !bedLevelTypeNumber.Equals((int)UnstructuredGridFileHelper.BedLevelLocation.Faces))
                         {
                             issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
                                 "Bed level locations should be set to 'cells' when morphology is active."));

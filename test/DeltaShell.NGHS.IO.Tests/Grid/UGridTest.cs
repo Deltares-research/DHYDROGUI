@@ -191,7 +191,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void TestCallSetZValues()
+        public void TestCallSetZValues_Nodes()
         {
             var testFilePath =
                 TestHelper.GetTestFilePath(UGRID_TEST_FILE);
@@ -206,7 +206,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             using (var uGrid = new UGrid(localCopyOfTestFile,GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.WriteZValues(1, newZValues);
+                uGrid.WriteZValuesAtNodes(1, newZValues);
             }
             IList<double> zValues;
             using (NetCdfFileWrapper ncFile = new NetCdfFileWrapper(localCopyOfTestFile))
@@ -215,7 +215,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
             Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
         }
-       
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void TestCallSetZValues_Faces()
+        {
+            var testFilePath =
+                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            
+            var newZValues = new[] {123.456, 123.456}; // Test file has 2 faces
+            using (var uGrid = new UGrid(localCopyOfTestFile, GridApiDataSet.NetcdfOpenMode.nf90_write))
+            {
+                uGrid.WriteZValuesAtFaces(1, newZValues);
+            }
+
+            IList<double> zValues;
+            using (NetCdfFileWrapper ncFile = new NetCdfFileWrapper(localCopyOfTestFile))
+            {
+                zValues = ncFile.GetValues1D<double>("mesh2d_face_z");
+            }
+
+            Assert.NotNull(zValues); // variable should have been created by ionc_def_var
+            Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void TestCallNumberOfMesh()
