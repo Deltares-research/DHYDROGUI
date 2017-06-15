@@ -39,11 +39,15 @@ namespace DeltaShell.Plugins.Fews
 
         public void ExportAll(string filePath, ITimeDependentModel timeDependentModel)
         {
-            var model = timeDependentModel as ModelBase;
+            var model = timeDependentModel as ModelBase; /*By casting to HydroModel instead of ModelBase we also include the integrated model*/
             if (model == null || model.OutputIsEmpty)
             {
-                log.Error("Cannot export, please run model before exporting.");
-                return;
+                var hydroModel = timeDependentModel as HydroModel;
+                if (hydroModel == null || hydroModel.OutputIsEmpty)
+                {
+                    log.Error("Cannot export, please run model before exporting.");
+                    return;
+                }
             }
             exportingAll = true;
             ExportCsvFile(filePath, timeDependentModel);
