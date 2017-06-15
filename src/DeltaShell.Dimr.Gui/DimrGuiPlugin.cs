@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DelftTools.Controls;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
@@ -85,14 +83,6 @@ namespace DeltaShell.Dimr.Gui
 
             Instance = null;
         }
-
-        public override IMenuItem GetContextMenu(object sender, object data)
-        {
-           
-
-            return null;
-        }
-
 
         
 
