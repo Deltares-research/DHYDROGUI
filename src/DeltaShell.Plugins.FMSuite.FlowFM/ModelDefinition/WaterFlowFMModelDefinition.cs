@@ -305,20 +305,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             set { GetModelProperty(KnownProperties.Kmx).Value = value; }
         }
 
-        public string MapFormat
+        public int MapFormat
         {
-            get { return GetModelProperty(KnownProperties.MapFormat).GetValueAsString(); }
-            set { GetModelProperty(KnownProperties.MapFormat).SetValueAsString(value); }
+            get { return Int32.Parse(GetModelProperty(KnownProperties.MapFormat).GetValueAsString()); }
+            set { GetModelProperty(KnownProperties.MapFormat).SetValueAsString(value.ToString()); }
         }
 
         public void SetMapFormatPropertyValue()
         {
-            var newMapFormatValue = UseMorphologySediment ? "4" : "1";
-            if (MapFormat != newMapFormatValue) // Change the MapFormat value in case the new value is different
+            if (UseMorphologySediment && MapFormat != 4)
             {
-                MapFormat = newMapFormatValue;
-                Log.Info(string.Format("MapFormat value is changed to {0} due to {1}activation of Morphology",
-                    newMapFormatValue, UseMorphologySediment ? "" : "de"));
+                MapFormat = 4;
+                Log.Info("MapFormat property value is changed to 4 due to activation of Morphology");
             }
         }
 

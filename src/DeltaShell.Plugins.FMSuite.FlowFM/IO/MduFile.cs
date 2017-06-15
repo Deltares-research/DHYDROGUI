@@ -587,11 +587,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadMorphologyFile(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
-            if (modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty))
-            {
-                modelDefinition.UseMorphologySediment = false;
-            }
-            else
+            if (!modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty))
             {
                 ReadMorphologyProperties(mduFilePath, KnownProperties.MorFile, modelDefinition);
                 modelDefinition.UseMorphologySediment = true;
