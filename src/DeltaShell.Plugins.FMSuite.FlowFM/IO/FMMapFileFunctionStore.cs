@@ -114,7 +114,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var isNotUgridConvention = GetNcFileConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
 
             var functions = GetFunctions(dataVariables, isNotUgridConvention);
-            LogWarningsForExcludedTimeDependentVariables(dataVariables, isNotUgridConvention);
+            if (isNotUgridConvention)
+            {
+                LogWarningsForExcludedTimeDependentVariables(dataVariables);
+            }
 
             return functions;
         }
@@ -136,21 +139,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return functions;
         }
         
-        private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables, bool isNotUgridConvention)
+        private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
-            if (isNotUgridConvention)
+            var filteredTimeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
+            var timeDepVariablesNames = 
+                filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
+            foreach (var timeDepVarName in timeDepVariablesNames)
             {
-                var filteredTimeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
-                var timeDepVariablesNames =
-                    filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
-                foreach (var timeDepVarName in timeDepVariablesNames)
-                {
-                    log.WarnFormat(
-                        Resources.FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
-                        timeDepVarName);
-                }
+                log.WarnFormat(
+                    Resources.FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
+                    timeDepVarName);
             }
+            
         }
 
         protected override void GetShapeAndOrigin(IVariable function, IVariableFilter[] filters, out int[] shape,
