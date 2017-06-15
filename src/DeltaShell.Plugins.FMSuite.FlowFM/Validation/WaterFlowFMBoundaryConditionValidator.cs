@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -82,9 +83,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
                 else
                 {
-                    if (FlowBoundaryCondition.IsMorphologyBoundary(boundaryCondition))
+                    if (FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(boundaryCondition))
                     {
-                        if (boundaryCondition.DataPointIndices.Count > 1)
+                        if (boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 1)
                         {
                             issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
                                 "A morphology boundary condition cannot have more than one point with generated data.", boundaryCondition));

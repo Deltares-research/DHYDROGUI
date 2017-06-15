@@ -684,11 +684,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     genDataButton.Text = "Generate series...";
                     genDataButton.Enabled = true;
-                   
-                    if (FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(BoundaryCondition))
-                    {
-                        genDataButton.Enabled = false;
-                    }
                 }
                 else if (BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
                          BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection)
@@ -721,14 +716,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             if (BoundaryCondition != null)
             {
-                if (FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(BoundaryCondition))
-                {
-                    RefreshBoundaryData();
-                    FillFunctionView();
-                    Log.Error("It is not allowed to add more than one series per Boundary Condition for Morphology quantities.");
-                    return;
-                }
-
                 switch (BoundaryCondition.DataType)
                 {
                     case BoundaryConditionDataType.TimeSeries:

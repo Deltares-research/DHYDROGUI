@@ -12,6 +12,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
@@ -75,6 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     [Entity]
     public class FlowBoundaryCondition : BoundaryCondition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryCondition));
         /// <summary>
         /// Constrained BC combinations within a set. Quantities not appearing anywhere in these lists are considered to be unconstrained, 
         /// i.e. the user can combine these with any quantity. (e.g. SedimentConcentration)
@@ -496,7 +498,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public static bool MorphologyBoundaryConditionHasGeneratedData(IBoundaryCondition boundaryCondition)
         {
-            return boundaryCondition.DataPointIndices.Count >= 1 && IsMorphologyBoundary(boundaryCondition);
+            var generatedData = boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 0;
+            return generatedData && IsMorphologyBoundary(boundaryCondition);
         }
 
         public static bool IsMorphologyBoundary(IBoundaryCondition boundaryCondition)
@@ -512,6 +515,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             return (flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed ||
                     flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
                     flowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+        }
+
+        public override void AddPoint(int i)
+        {
+            if (DataPointIndices.Any())
+            {
+                Log.Warn("The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.");
+            }
+            base.AddPoint(i);
         }
 
         protected override IFunction CreateFunction()

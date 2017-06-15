@@ -159,6 +159,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)]
+        public void TestMorphologyBoundaryConditionWithEmptyTimeSeriesIsValid(FlowBoundaryQuantityType quantityType)
+        {
+            var model = CreateValidModel();
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.SedimentFractions = new EventedList<ISedimentFraction>();
+            model.SedimentFractions.Add(new SedimentFraction() { Name = "testFrac" });
+
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+
+            var flowBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionNames = new List<string>() { "testFrac" }
+            };
+
+            model.Boundaries.Add(boundary);
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(flowBoundary);
+
+            flowBoundary.AddPoint(1);
+            var timeSeriesP1 = flowBoundary.GetDataAtPoint(1);
+
+            timeSeriesP1[model.StartTime] = 0.5;
+            timeSeriesP1[model.StopTime] = 0.5;
+
+            /* Check everything went alright just with one data point */
+            Assert.AreEqual(1, flowBoundary.PointData.Count);
+            Assert.IsNull(flowBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
+
+            var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(0, report.ErrorCount);
+
+            /* Now add a second data point and expect the validation to fail.*/
+            flowBoundary.AddPoint(0);
+
+            Assert.AreEqual(2, flowBoundary.PointData.Count);
+            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
+
+            report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(0, report.ErrorCount);
+        }
+
+        [Test]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)]
         public void TestMorphologyBoundaryConditionOnlyAllowsOneCondition(FlowBoundaryQuantityType quantityType)
         {
             var model = CreateValidModel();
