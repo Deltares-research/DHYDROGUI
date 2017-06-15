@@ -35,6 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             remoteInstanceApi.SetVar(variable, value);
         }
 
+        public DateTime StartTime { get { return remoteInstanceApi.StartTime; } }
+
         public DateTime CurrentTime
         {
             get { return remoteInstanceApi.CurrentTime; }

@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         void SetVar(string variable, string value);
 
+        DateTime StartTime { get; }
         DateTime CurrentTime { get; }
         DateTime ReferenceDateTime { get; set; }
     }
