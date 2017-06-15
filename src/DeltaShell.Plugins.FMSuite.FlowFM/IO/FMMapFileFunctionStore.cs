@@ -113,8 +113,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             UpdateGrid();
 
             // Construct UnstructuredGridCoverages from file
-            var timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1).ToList();
-            var functions = timeDepVariables.SelectMany(ProcessTimeDependantVariable).Where(c => c != null).ToList();
+            var isNotUgridConvention = GetNcFileConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
+            var timeDepVarSelectionCriteria = isNotUgridConvention
+                ? (Func<NetCdfVariableInfo, bool>) (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2) : (v => v.IsTimeDependent && v.NumDimensions > 1);
+            var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+
+            // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
+            if (isNotUgridConvention)
+            {
+                var filteredTimeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
+                var timeDepVariablesNames = filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
+                foreach (var timeDepVarName in timeDepVariablesNames)
+                {
+                    log.WarnFormat(Resources.FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out, timeDepVarName);
+                }
+            }
+
+            var functions = timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
 
             // Construct custom Velocity Coverage
             if (velocityCoverages.ContainsKey(EastwardSeaWaterVelocityStandardName) &&
@@ -371,7 +386,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return list.ToArray();
         }
 
-        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependantVariable(NetCdfVariableInfo timeDependentVariable)
+        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
         {
             UnstructuredGridCoverage coverage = null;
             var netcdfVariable = timeDependentVariable.NetCdfDataVariable;

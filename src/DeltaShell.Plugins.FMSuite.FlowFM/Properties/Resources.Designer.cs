@@ -109,6 +109,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unsupported three-dimensional time dependent variable found. Will not import variable ({0}), because the map file version does not support it..
+        /// </summary>
+        public static string FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out {
+            get {
+                return ResourceManager.GetString("FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_" +
+                        "filtered_out", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not set coordinate system in output map because grid is not set.
         /// </summary>
         public static string FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set {
