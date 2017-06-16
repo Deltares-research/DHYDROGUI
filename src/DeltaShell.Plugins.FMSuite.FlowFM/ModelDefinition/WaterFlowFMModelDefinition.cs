@@ -310,15 +310,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get
             {
                 var mapFormatStringValue = GetModelProperty(KnownProperties.MapFormat).GetValueAsString();
-                try
-                {
-                    return (MapFormatType) Enum.Parse(typeof(MapFormatType), mapFormatStringValue);
-                }
-                catch
-                {
-                    Log.ErrorFormat("Unknown MapFormat value of {0} found.", mapFormatStringValue);
-                    return MapFormatType.Unknown;
-                }
+                MapFormatType mapFormatValue;
+                return Enum.TryParse(mapFormatStringValue, out mapFormatValue) ? mapFormatValue : MapFormatType.Unknown;
             }
             set { GetModelProperty(KnownProperties.MapFormat).SetValueAsString(((int)value).ToString()); }
         }
