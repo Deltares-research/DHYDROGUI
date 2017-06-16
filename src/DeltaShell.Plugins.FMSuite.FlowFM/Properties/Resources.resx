@@ -188,6 +188,6 @@
     <value>Cannot export in this format if the grid is not correct.</value>
   </data>
   <data name="FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out" xml:space="preserve">
-    <value>Unsupported three-dimensional time dependent variable found. Will not import variable ({0}), because the map file version does not support it.</value>
+    <value>Will not import three dimensional time dependent variable ({0}), because the map file version does not support it.</value>
   </data>
 </root>
