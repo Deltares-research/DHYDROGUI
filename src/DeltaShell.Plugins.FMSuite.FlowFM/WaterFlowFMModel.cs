@@ -713,6 +713,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void AddSpatialDataItems()
         {
             AddOrRenameDataItem(Bathymetry, WaterFlowFMModelDefinition.BathymetryDataItemName);
+
+            // Backwards compatibility
+            // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
+            var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
+            if (bedLevelDataItem != null) bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
+
             AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
             AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
             AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);

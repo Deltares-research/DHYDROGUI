@@ -288,29 +288,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         internal void UpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
         {
             if (Bathymetry == null) return;
-            var bedLevelDataItem = GetDataItemByValue(Bathymetry);
-            if (bedLevelDataItem == null) return;
-
+            
             switch (bedLevelType)
             {
                 case UnstructuredGridFileHelper.BedLevelLocation.Faces:
                 case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
-                    bedLevelDataItem.Value = Bathymetry;    
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat("Unstructured grid edge coverages are not currently supported");
+                    // Not supported yet, so create a VertexCoverage for now
+                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
-                    bedLevelDataItem.Value = Bathymetry;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("bedLevelType", bedLevelType, null);
             }
-            
+
+            var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
+            if (bedLevelDataItem == null) return;
+
+            bedLevelDataItem.Value = Bathymetry;
+
+            // For now we just remove the spatial operations
+            // Later we will re-apply them - DELFT3DFM-1031
+            if (bedLevelDataItem.ValueConverter != null)
+            {
+                var spatialOperationsValueConverter = bedLevelDataItem.ValueConverter as SpatialOperationSetValueConverter;
+
+                if (spatialOperationsValueConverter != null &&
+                    spatialOperationsValueConverter.SpatialOperationSet != null)
+                {
+                    spatialOperationsValueConverter.SpatialOperationSet.Operations.Clear();
+                }
+                    
+            }
         }
 
         private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
