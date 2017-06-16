@@ -480,14 +480,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 int ioncid = 0; //file variable 
                 int mode = 1; //create in write mode
                 var ierr = -1;
-                string tmpstring; //temporary string for several operations
                 string c_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
                 c_path = TestHelper.CreateLocalCopy(c_path);
                 FileUtils.DeleteIfExists(c_path);
                 Assert.IsFalse(File.Exists(c_path));
                 var wrapper = new GridWrapper();
 
-                //2. Create the file, will not add any dataset 
+                //2. Create the file, will not add any dataset
                 ierr = wrapper.ionc_create(c_path, ref mode, ref ioncid);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.IsTrue(File.Exists(c_path));
@@ -506,7 +505,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 write1dnetworkandmesh(ioncid, networkid, ref wrapper);
 
                 //6. Close the file
-                ierr = wrapper.ionc_close(ref ioncid);
+                wrapper.ionc_close(ref ioncid);
         }
 
         ////// read the netcdf file created in the test above

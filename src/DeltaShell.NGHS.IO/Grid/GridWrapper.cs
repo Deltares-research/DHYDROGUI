@@ -255,7 +255,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="metadata"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_add_global_attributes", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_add_global_attributes_dll([In] ref int ioncid, interop_metadata metadata);
+        private static extern int ionc_add_global_attributes_dll([In] ref int ioncid, ref interop_metadata metadata);
 
         /// <summary>
         /// This function creates a new netCDF file
@@ -689,7 +689,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int ionc_add_global_attributes(ref int ioncid, interop_metadata metadata)
         {
-            return ionc_add_global_attributes_dll(ref ioncid, metadata);
+            return ionc_add_global_attributes_dll(ref ioncid, ref metadata);
         }
 
         public int ionc_create(string c_path, ref int mode, ref int ioncid)
