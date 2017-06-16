@@ -926,53 +926,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(1, true, 4)]
-        [TestCase(1, false, 1)]
-        [TestCase(2, false, 2)]
-        [TestCase(3, true, 4)]
-        [TestCase(4, false, 4)]
-        [TestCase(4, true, 4)]
-        public void SetMapFormatPropertyValueTest(int mapFormatStringValue, bool useMorSed, int expectedMapFormatStringValue)
+        [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Tecplot, false, MapFormatType.Tecplot)]
+        [TestCase(MapFormatType.Both, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
+        public void SetMapFormatPropertyValueTest(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
         {
-            Assert.NotNull(mapFormatStringValue);
-            Assert.NotNull(expectedMapFormatStringValue);
+            Assert.NotNull(mapFormatType);
+            Assert.NotNull(expectedMapFormatType);
 
             var modelDefinition = new WaterFlowFMModelDefinition
             {
-                MapFormat = mapFormatStringValue,
+                MapFormat = mapFormatType,
                 UseMorphologySediment = useMorSed
             };
             modelDefinition.SetMapFormatPropertyValue();
 
             // Check that MapFormat property value has been changed accordingly
-            Assert.AreEqual(expectedMapFormatStringValue, modelDefinition.MapFormat);
+            Assert.AreEqual(expectedMapFormatType, modelDefinition.MapFormat);
         }
 
         [Test]
-        [TestCase(1, true, 4)]
-        [TestCase(1, false, 1)]
-        [TestCase(4, true, 4)]
-        [TestCase(4, false, 4)]
-        public void UseMorSedPropertyChangeTest(int mapFormatStringValue, bool useMorSed, int expectedMapFormatStringValue)
+        [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
+        public void UseMorSedPropertyChangeTest(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
         {
             var modelDefinition = new WaterFlowFMModelDefinition
             {
-                MapFormat = mapFormatStringValue
+                MapFormat = mapFormatType
             };
             modelDefinition.UseMorphologySediment = useMorSed;
 
             // Check that MapFormat property value has been changed accordingly
             Assert.AreEqual(useMorSed, modelDefinition.UseMorphologySediment);
-            Assert.AreEqual(expectedMapFormatStringValue, modelDefinition.MapFormat);
+            Assert.AreEqual(expectedMapFormatType, modelDefinition.MapFormat);
         }
 
         [Test]
-        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", 4, true)]
-        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", 4, true)]
-        [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", 1, false)]
-        [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", 4, false)]
+        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.Ugrid, true)]
+        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.Ugrid, true)]
+        [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.NetCdf, false)]
+        [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.Ugrid, false)]
         [Category(TestCategory.Integration)]
-        public void ChangeMapFormatAfterMduImportTest(string relativeMduFilepath, int expectedMapFormatStringValue, bool expectedUseMorSedValue)
+        public void ChangeMapFormatAfterMduImportTest(string relativeMduFilepath, MapFormatType expectedMapFormatType, bool expectedUseMorSedValue)
         {
             // setup
             var mduFilePath = TestHelper.GetTestFilePath(relativeMduFilepath);
@@ -987,7 +987,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Check that MapFormat property value has been changed accordingly in modelDefinition
             Assert.AreEqual(expectedUseMorSedValue, modelDefinition.UseMorphologySediment);
-            Assert.AreEqual(expectedMapFormatStringValue, modelDefinition.MapFormat);
+            Assert.AreEqual(expectedMapFormatType, modelDefinition.MapFormat);
         }
     }
 }
