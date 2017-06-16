@@ -69,7 +69,7 @@ namespace DeltaShell.NGHS.IO.Grid
         
         public int GetNumberOfNetworkNodes()
         {
-            var numberOfNetworkNodes = -1;
+            int numberOfNetworkNodes;
             IUGridApi1D uGridApi1D = GetValidIUGridApi1D();
             var ierr = uGridApi1D.GetNumberOfNetworkNodes(out numberOfNetworkNodes);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -81,7 +81,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworkBranches()
         {
-            var numberOfNetworkBranches = -1;
+            int numberOfNetworkBranches;
             IUGridApi1D uGridApi1D = GetValidIUGridApi1D();
             var ierr = uGridApi1D.GetNumberOfNetworkBranches(out numberOfNetworkBranches);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -93,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworkGeometryPoints()
         {
-            var numberOfNetworkGeometryPoints = -1;
+            int numberOfNetworkGeometryPoints;
             IUGridApi1D uGridApi1D = GetValidIUGridApi1D();
             var ierr = uGridApi1D.GetNumberOfNetworkGeometryPoints(out numberOfNetworkGeometryPoints);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)

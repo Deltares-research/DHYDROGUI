@@ -65,5 +65,9 @@ namespace DeltaShell.NGHS.IO.Grid
         double GetVersion();
         
         int Initialize();
+
+        int GetNumberOfNetworks(out int numberOfNetworks);
+
+        int GetNetworkIds(out int[] networkIds);
     }
 }

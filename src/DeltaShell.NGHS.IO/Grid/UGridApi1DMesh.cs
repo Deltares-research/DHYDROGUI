@@ -12,6 +12,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public UGridApi1DMesh()
         {
             // Get the 1D network id in the constructor? While opening the file?
+            // Obtain meshIds, networkIds?
             meshId = -1;
             nMeshPoints = -1;
             nMeshEdges = -1;
@@ -19,9 +20,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write 1D mesh discretisation
 
-        public int Create1DMesh(string name, int numberOfMeshPoints, int numberOfMeshEdges, int identifier)
+        public int Create1DMesh(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
         {
-            meshId = identifier;
+            //meshId = identifier;
             if (!Initialized)
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
@@ -38,7 +39,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref identifier, name, ref numberOfMeshPoints, ref numberOfMeshEdges);
+                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref networkId, ref meshId, name, ref numberOfMeshPoints, ref numberOfMeshEdges);
 
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
@@ -142,8 +143,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierrId = wrapper.ionc_get_1d_mesh_id(ref ioncid, ref meshId);
-
                 var ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref meshId, ref branchIdxPtr, ref offsetPtr, ref numberOfMeshPoints);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
@@ -156,7 +155,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(branchIdxPtr, branchIdx, 0, numberOfMeshPoints);
                 Marshal.Copy(offsetPtr, offset, 0, numberOfMeshPoints);
 
-                return ierr;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
             }
             catch
             {

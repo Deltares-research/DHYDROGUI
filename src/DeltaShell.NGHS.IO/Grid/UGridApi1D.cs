@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public UGridApi1D()
         {
-            networkId = -1;
+            //networkId = -1;
             nNodes = -1;
             nBranches = -1;
             nGeometryPoints = -1;
@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 nBranches = numberOfBranches;
                 nGeometryPoints = totalNumberOfGeometryPoints;
 
-                return ierr;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
             }
             catch
             {

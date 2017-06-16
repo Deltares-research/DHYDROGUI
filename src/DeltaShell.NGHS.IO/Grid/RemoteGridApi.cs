@@ -74,6 +74,16 @@ namespace DeltaShell.NGHS.IO.Grid
             return api != null ? api.Initialize() : 0;
         }
 
+        public int GetNumberOfNetworks(out int numberOfNetworks)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetNetworkIds(out int[] networkIds)
+        {
+            throw new NotImplementedException();
+        }
+
 
         ~RemoteGridApi()
         {

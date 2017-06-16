@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
@@ -10,12 +11,20 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public abstract class GridApi : IGridApi
     {
+        public enum UGridMeshType
+        {
+            Combined = 0,
+            Mesh1D = 1,
+            Mesh2D = 2,
+            Mesh3D = 3
+        }
+
         protected static readonly ILog Log = LogManager.GetLogger(typeof(GridApi));
         protected int ioncid;
         protected double convversion;
         protected GridApiDataSet.DataSetConventions iconvtype;
         protected IGridWrapper wrapper;
-        
+
         static GridApi()
         {
             RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
@@ -104,7 +113,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #endregion
 
-        
+
         #region Implementation of IGridApi
 
         public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
@@ -116,7 +125,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
         {
-            if(Initialized)
+            if (Initialized)
                 Close();
             if (c_path == null)
                 c_path = string.Empty;
@@ -154,9 +163,164 @@ namespace DeltaShell.NGHS.IO.Grid
             var nmesh = 0;
             var ierr = wrapper.ionc_get_mesh_count(ref ioncid, ref nmesh);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get number of meshes because of err nr : " + ierr);
+                throw new Exception("Couldn't get number of meshes because of err nr : " + ierr); // TODO: Kunnen excepties hier wel gegooid worden?
             return nmesh;
         }
+
+        public int GetNumberOfNetworks(out int numberOfNetworks)
+        {
+            numberOfNetworks = 0;
+
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            try
+            {
+                int nNetworks = 0;
+                var ierr = wrapper.ionc_get_number_of_networks(ref ioncid, ref nNetworks);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+                numberOfNetworks = nNetworks;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+        }
+
+        public Dictionary<UGridMeshType, int> GetNumberOfMeshes()
+        {
+            Dictionary<UGridMeshType, int> meshTypeCountDict = new Dictionary<UGridMeshType, int>();
+
+            var meshTypes = Enum.GetValues(typeof(UGridMeshType));
+
+            foreach (UGridMeshType meshType in meshTypes)
+            {
+                int nMesh;
+                var ierr = GetNumberOfMeshByType(meshType, out nMesh);
+
+                nMesh = ierr == GridApiDataSet.GridConstants.IONC_NOERR ? nMesh : 0;
+
+                meshTypeCountDict.Add(meshType, nMesh);
+            }
+
+            return meshTypeCountDict;
+        }
+
+        private int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
+        {
+            numberOfMesh = 0;
+
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            try
+            {
+                var type = (int)meshType;
+                int nMesh = 0;
+                var ierr = wrapper.ionc_get_number_of_meshes(ref ioncid, ref type, ref nMesh);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+                numberOfMesh = nMesh;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+        }
+
+        public int GetNetworkIds(out int[] networkIds)
+        {
+            networkIds = new int[0];
+            int numberOfNetworks;
+
+            var ierr = GetNumberOfNetworks(out numberOfNetworks);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
+
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            IntPtr networkIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNetworks);
+            try
+            {
+                ierr = wrapper.ionc_get_network_ids(ref ioncid, ref networkIdsPtr, ref numberOfNetworks);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+
+                networkIds = new int[numberOfNetworks];
+                Marshal.Copy(networkIdsPtr, networkIds, 0, numberOfNetworks);
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                if (networkIdsPtr != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(networkIdsPtr);
+                networkIdsPtr = IntPtr.Zero;
+            }
+        }
+
+        public Dictionary<UGridMeshType, int[]> GetMeshIds()
+        {
+            Dictionary<UGridMeshType, int[]> meshTypeIdsDict = new Dictionary<UGridMeshType, int[]>();
+
+            int[] meshIds = new int[0];
+            var meshTypes = Enum.GetValues(typeof(UGridMeshType));
+
+            foreach (UGridMeshType meshType in meshTypes)
+            {
+                int nMesh;
+                var ierr = GetNumberOfMeshByType(meshType, out nMesh);
+
+                if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    ierr = GetMeshIdsByType(meshType, nMesh, out meshIds);
+                }
+                
+                meshIds = ierr == GridApiDataSet.GridConstants.IONC_NOERR ? meshIds : new int[0];
+
+                meshTypeIdsDict.Add(meshType, meshIds);
+            }
+            return meshTypeIdsDict;
+        }
+
+        public int GetMeshIdsByType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
+        {
+            meshIds = new int[0];
+            IntPtr meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
+            try
+            {
+                var type = (int) meshType;
+                var ierr = wrapper.ionc_get_mesh_ids(ref ioncid, ref type, ref meshIdsPtr, ref numberOfMeshes);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+
+                meshIds = new int[numberOfMeshes];
+                Marshal.Copy(meshIdsPtr, meshIds, 0, numberOfMeshes);
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                if (meshIdsPtr != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(meshIdsPtr);
+                meshIdsPtr = IntPtr.Zero;
+            }
+        }
+
 
         public int GetCoordinateSystemCode()
         {
@@ -180,7 +344,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
-            var imode = (int) mode;
+            var imode = (int)mode;
             var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
@@ -212,7 +376,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static char[] ToDataSizeCharArray(string value)
         {
-            return value.PadRight(GridWrapper.metadatasize, ' ').ToCharArray(0,GridWrapper.metadatasize);
+            return value.PadRight(GridWrapper.metadatasize, ' ').ToCharArray(0, GridWrapper.metadatasize);
         }
 
         public int Initialize()

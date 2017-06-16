@@ -2062,8 +2062,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nmeshpts = 31;
             int nwid = 1;
             int id = 1;
-            wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, "myMesh", ref nmeshpts, ref nmeshedges))
-                .OutRef(id, nwid, nmeshpts, nmeshedges).IgnoreArguments()
+            int meshId = 0;
+            wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, ref meshId, "myMesh", ref nmeshpts, ref nmeshedges))
+                .OutRef(id, nwid, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
             TypeUtils.SetField(uGridApi1DMesh, "wrapper", wrapper);
 
@@ -2098,8 +2099,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nmeshpts = 31;
             int nwid = 1;
             int id = 1;
-            wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, "myMesh", ref nmeshpts, ref nmeshedges))
-                .OutRef(id, nwid, nmeshpts, nmeshedges).IgnoreArguments()
+            int meshId = 0;
+            wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, ref meshId, "myMesh", ref nmeshpts, ref nmeshedges))
+                .OutRef(id, nwid, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
             TypeUtils.SetField(uGridApi1DMesh, "wrapper", wrapper);
 
@@ -2132,8 +2134,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nmeshpts = 31;
             int nwid = 1;
             int id = 1;
-            wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, "myMesh", ref nmeshpts, ref nmeshedges))
-                .OutRef(id, nwid, nmeshpts, nmeshedges).IgnoreArguments()
+            int meshId = 0;
+            wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, ref meshId, "myMesh", ref nmeshpts, ref nmeshedges))
+                .OutRef(id, nwid, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();

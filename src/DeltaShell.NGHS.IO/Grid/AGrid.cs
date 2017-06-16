@@ -117,6 +117,32 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApi != null && GridApi.Initialized;
         }
 
+        public int GetNumberOfNetworks()
+        {
+            if (GridApi == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set"); ; 
+            int numberOfNetworks;
+            var ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't get the number of networks because of error: {0}", ierr));
+            }
+            return numberOfNetworks;
+        }
+
+        public int[] GetNetworkIds()
+        {
+            if (GridApi == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set");
+
+            int[] networkIds;
+            var ierr = GridApi.GetNetworkIds(out networkIds);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new Exception(string.Format("Couldn't get the network ids because of error: {0}", ierr));
+            }
+            return networkIds;
+        }
+
+
         public virtual void Dispose()
         {
             if (disposed) return;

@@ -212,11 +212,12 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
         /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshId">The mesh id (out)</param>
         /// <param name="meshname">The mesh name (in)</param>
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <param name="nmeshedges">The number of mesh edges (in)</param>
         /// <returns></returns>
-        int ionc_create_1d_mesh([In] ref int ioncid, [In] ref int networkid, string meshname, [In] ref int nmeshpoints, [In] ref int nmeshedges);
+        int ionc_create_1d_mesh([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int meshId, string meshname, [In] ref int nmeshpoints, [In] ref int nmeshedges);
 
         /// <summary>
         /// Writes the mesh coordinates points 
@@ -328,5 +329,42 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshid"></param>
         /// <returns></returns>
         int ionc_get_1d_mesh_id([In] ref int ioncid, [In, Out] ref int meshid);
+
+        /// <summary>
+        /// Gets the network ids
+        /// </summary>
+        /// <param name="ioncid">The IONC data set id</param>
+        /// <param name="c_networkIds">Pointer to array of network ids (out)</param>
+        /// <param name="numberOfNetworks"></param>
+        /// <returns></returns>
+        int ionc_get_network_ids([In] ref int ioncid, [In, Out] ref IntPtr c_networkIds, [In] ref int numberOfNetworks);
+
+        /// <summary>
+        /// Gets the mesh ids for a specified mesh type
+        /// </summary>
+        /// <param name="ioncid">The IONC data set id</param>
+        /// <param name="meshType">Mesh type: 0 = any type, 1 = 1D mesh, 2 = 2D mesh, 3 = 3D mesh</param>
+        /// <param name="c_meshIds">Pointer to array of mesh ids</param>
+        /// <param name="numberOfMeshes">Number of meshes</param>
+        /// <returns></returns>
+        int ionc_get_mesh_ids([In] ref int ioncid, [In] ref int meshType, [In, Out] ref IntPtr c_meshIds, [In] ref int numberOfMeshes);
+
+        /// <summary>
+        /// Gets the number of network in a NetCDF file
+        /// </summary>  
+        /// <param name="ioncid">The IONC data set id.</param>
+        /// <param name="numberOfNetworks">The number of networks in the file (out)</param>
+        /// <returns></returns>
+        int ionc_get_number_of_networks([In] ref int ioncid, [In, Out] ref int numberOfNetworks);
+
+        /// <summary>
+        /// Gets the number of meshes by type in a NetCDF file
+        /// </summary>
+        /// <param name="ioncid">The IONC data set id</param>
+        /// <param name="meshType">Mesh type: 0 = any type, 1 = 1D mesh, 2 = 2D mesh, 3 = 3D mesh</param>
+        /// <param name="numberOfMeshes">The number of meshes for the specified type (out)</param>
+        /// <returns></returns>
+        int ionc_get_number_of_meshes([In] ref int ioncid, [In] ref int meshType, [In, Out] ref int numberOfMeshes);
+
     }
 }

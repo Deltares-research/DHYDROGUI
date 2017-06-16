@@ -390,7 +390,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 //4. Write the 1d mesh topology.
                 //Assume mesh and network are saved in the same table 
                 int meshid = networkid;
-                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref meshid, meshname, ref nmeshpoints,
+                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref networkid, ref meshid, meshname, ref nmeshpoints,
                     ref nmeshedges);
                 Assert.That(ierr, Is.EqualTo(0));
 
