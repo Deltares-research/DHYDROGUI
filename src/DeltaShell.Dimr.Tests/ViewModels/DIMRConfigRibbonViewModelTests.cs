@@ -7,7 +7,7 @@ namespace DeltaShell.Dimr.Tests.ViewModels
     [TestFixture]
     public class DIMRConfigRibbonViewModelTests
     {
-        /*
+        
         [Test]
         public void DIMRConfigRibbonViewModelSetDebuggerLevelsTest()
         {
@@ -19,6 +19,6 @@ namespace DeltaShell.Dimr.Tests.ViewModels
             viewModel.CurrentLogfileLevel = DimrApiDataSet.DebugLevel.MAJOR;
             Assert.AreEqual(DimrApiDataSet.FeedbackLevel, DimrApiDataSet.DebugLevel.MINOR);
             Assert.AreEqual(DimrApiDataSet.LogFileLevel, DimrApiDataSet.DebugLevel.MAJOR);
-        }*/
+        }
     }
 }
