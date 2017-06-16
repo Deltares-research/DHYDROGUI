@@ -134,7 +134,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SobekImport.Tests", "test\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Gui", "src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj", "{52847CB2-6A62-4B5A-8302-67198745D073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Tests", "src\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj", "{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Dimr.Tests", "test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj", "{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

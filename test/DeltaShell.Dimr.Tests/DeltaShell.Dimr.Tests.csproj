@@ -56,12 +56,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj">
+    <ProjectReference Include="..\..\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj">
       <Project>{52847CB2-6A62-4B5A-8302-67198745D073}</Project>
       <Name>DeltaShell.Dimr.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
