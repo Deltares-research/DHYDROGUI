@@ -178,13 +178,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var testFilePath =
                 TestHelper.GetTestFilePath(UGRID_TEST_FILE);
-
+            FileUtils.DeleteIfExists(testFilePath);
             try
             {
                 var storedNetwork = CreateSimpleNetwork();
 
                 UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
-
+                
                 UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
                 //UGridToNetworkAdapter.SaveNetworkDiscretisation(, testFilePath, metaData);
 
@@ -275,11 +275,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var loadedBranch = loadedBranches[i];
                 // test source nodes
                 INode storedBranchSourceNode = storedBranch.Source;
+                storedBranchSourceNode.Name = storedBranchSourceNode.Name.Replace(" ", "_");
                 INode loadedBranchSourceNode = loadedBranch.Source;
                 Assert.AreEqual(storedBranchSourceNode, loadedBranchSourceNode);
 
                 // test target nodes
                 INode storedBranchTargetNode = storedBranch.Target;
+                storedBranchTargetNode.Name = storedBranchTargetNode.Name.Replace(" ", "_");
                 INode loadedBranchTargetNode = loadedBranch.Target;
                 Assert.AreEqual(storedBranchTargetNode, loadedBranchTargetNode);
 

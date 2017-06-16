@@ -223,8 +223,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void LoadNetwork()
         {
-            network = UGridToNetworkAdapter.LoadNetwork(NetFilePath);
+            var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(NetFilePath);
+            if (loadedNetwork == null) return;
+            network = loadedNetwork;
         }
+
+
 
         private void SaveNetwork()
         {

@@ -3,71 +3,155 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
     public static class UGridToNetworkAdapter
     {
         private const string IO_NETCDF_NETWORK_ID = "IoNetCdfNetworkId";
-        
+
+        public class IntermediateObject
+        {
+            public string Name { get; set; }
+            public IFeatureAttributeCollection Attributes { get; set; }
+
+            public int NumberOfNodes;
+            public int NumberOfBranches;
+            public int NumberOfGeometryPoints;
+
+            public double[] NodesX;
+            public double[] NodesY;
+            public string[] NodesNames;
+            public string[] NodesDescriptions;
+            public int[] SourceNodeIds;
+            public int[] TargedNodesIds;
+            public double[] BranchLengths;
+            public int[] NumberOfBranchGeometryPoints;
+            public string[] BranchNames;
+            public string[] BranchDescriptions;
+            public double[] GeopointsX;
+            public double[] GeopointsY;
+            public ICoordinateSystem CoordinateSystem;
+
+
+            public IntermediateObject()
+            {
+                
+            }
+
+            public IntermediateObject(IHydroNetwork network)
+            {
+                Name = network.Name;
+                NumberOfNodes = network.Nodes.Count;
+                NumberOfBranches = network.Branches.Count;
+                NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
+
+                NodesX = network.Nodes.Select(n => n.Geometry.Coordinates[0].X).ToArray();
+                NodesY = network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray();
+                NodesNames = network.Nodes.Select(n => n.Name).ToArray();
+                NodesDescriptions = network.Nodes.Select(n => n.Description).ToArray();
+
+                SourceNodeIds = network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray();
+                TargedNodesIds = network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray();
+                BranchLengths = network.Branches.Select(b => b.Length).ToArray();
+                NumberOfBranchGeometryPoints = network.Branches.Select(b =>
+                    {
+                        if (b.Geometry != null && b.Geometry.Coordinates != null)
+                        {
+                            return b.Geometry.Coordinates.Length;
+                        }
+                        return 0;
+                    }
+                ).ToArray();
+                BranchNames = network.Branches.Select(b => b.Name).ToArray();
+                BranchDescriptions = network.Branches.Select(b => b.Description).ToArray();
+
+                GeopointsX = network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray();
+                GeopointsY = network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray();
+            }
+        }
+
         public static void SaveNetwork(IHydroNetwork network, string netFilePath, UGridGlobalMetaData metaData)
         {
+            var intermediateNetworkObject = new IntermediateObject(network);
             try
             {
                 using (var uGrid1D = new UGrid1D(netFilePath, metaData))
                 {
                     uGrid1D.CreateFile();
 
-                    var totalNumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
+                    uGrid1D.Initialize();
+
                     int networkId;
-                    uGrid1D.Create1DNetworkInFile(
-                        network.Name,
-                        network.Nodes.Count,
-                        network.Branches.Count,
-                        totalNumberOfGeometryPoints,
+                    
+                    uGrid1D.Create1DNetworkInFile(intermediateNetworkObject.Name,
+                        intermediateNetworkObject.NumberOfNodes,
+                        intermediateNetworkObject.NumberOfBranches,
+                        intermediateNetworkObject.NumberOfGeometryPoints,
                         out networkId);
 
-                    network.Attributes = new DictionaryFeatureAttributeCollection
+                    intermediateNetworkObject.Attributes = new DictionaryFeatureAttributeCollection
                     {
                         {IO_NETCDF_NETWORK_ID, networkId}
                     };
 
-                    uGrid1D.Write1DNetworkNodes(
-                        network.Nodes.Select(n => n.Geometry.Coordinates[0].X).ToArray(),
-                        network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray(),
-                        network.Nodes.Select(n => n.Name).ToArray(),
-                        network.Nodes.Select(n => n.Description).ToArray()
-                    );
+                    uGrid1D.Write1DNetworkNodes(intermediateNetworkObject.NodesX, intermediateNetworkObject.NodesY,
+                        intermediateNetworkObject.NodesNames, intermediateNetworkObject.NodesDescriptions);
 
-                    uGrid1D.Write1DNetworkBranches(
-                        network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
-                        network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
-                        network.Branches.Select(b => b.Length).ToArray(),
-                        network.Branches.Select(b =>
-                            {
-                                if (b.Geometry != null && b.Geometry.Coordinates != null)
-                                {
-                                    return b.Geometry.Coordinates.Length;
-                                }
-                                return 0;
-                            }
-                        ).ToArray(),
-                        network.Branches.Select(b => b.Name).ToArray(),
-                        network.Branches.Select(b => b.Description).ToArray()
-                    );
-                    uGrid1D.Write1DNetworkGeometry(
-                        network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray(),
-                        network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray()
-                    );
+                    uGrid1D.Write1DNetworkBranches(intermediateNetworkObject.SourceNodeIds,
+                        intermediateNetworkObject.TargedNodesIds,
+                        intermediateNetworkObject.BranchLengths,
+                        intermediateNetworkObject.NumberOfBranchGeometryPoints,
+                        intermediateNetworkObject.BranchNames,
+                        intermediateNetworkObject.BranchDescriptions);
 
+                    uGrid1D.Write1DNetworkGeometry(intermediateNetworkObject.GeopointsX, intermediateNetworkObject.GeopointsY);
+                    
+                    //var totalNumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
+                    //uGrid1D.Create1DNetworkInFile(
+                    //    network.Name,
+                    //    network.Nodes.Count,
+                    //    network.Branches.Count,
+                    //    totalNumberOfGeometryPoints,
+                    //    out networkId);
+
+                    //uGrid1D.Write1DNetworkNodes(
+                    //    network.Nodes.Select(n => n.Geometry.Coordinates[0].X).ToArray(),
+                    //    network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray(),
+                    //    network.Nodes.Select(n => n.Name).ToArray(),
+                    //    network.Nodes.Select(n => n.Description).ToArray()
+                    //);
+
+                    //uGrid1D.Write1DNetworkBranches(
+                    //    network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
+                    //    network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
+                    //    network.Branches.Select(b => b.Length).ToArray(),
+                    //    network.Branches.Select(b =>
+                    //        {
+                    //            if (b.Geometry != null && b.Geometry.Coordinates != null)
+                    //            {
+                    //                return b.Geometry.Coordinates.Length;
+                    //            }
+                    //            return 0;
+                    //        }
+                    //    ).ToArray(),
+                    //    network.Branches.Select(b => b.Name).ToArray(),
+                    //    network.Branches.Select(b => b.Description).ToArray()
+                    //);
+                    
+                    //uGrid1D.Write1DNetworkGeometry(
+                    //    network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray(),
+                    //    network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray()
+                    //);
                 }
             }
             catch (Exception ex)
@@ -116,11 +200,23 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 using (var uGrid1D = new UGrid1D(netFilePath))
                 {
-                    var numberOfNodes = uGrid1D.GetNumberOfNetworkNodes();
+                    // Open the file to load the network. There can be multiple networks stored in the NetCDF file
 
-                    var numberOfBranches = uGrid1D.GetNumberOfNetworkBranches();
+                    uGrid1D.Initialize();
 
-                    var numberOfGeometryPoints = uGrid1D.GetNumberOfNetworkGeometryPoints();
+                    int numberOfNetworks = uGrid1D.GetNumberOfNetworks();
+
+                    if (numberOfNetworks < 1)
+                    {
+                        return null; // throw new Exception(string.Format("No network is stored in netCFD file located at: {0}", netFilePath)); // TODO: Should this throw?
+                    }
+
+                    var networkIds = uGrid1D.GetNetworkIds();
+
+                    // For now only use the first network id in the array
+                    int networkId = networkIds[0];
+
+                    uGrid1D.InitializeForLoading(networkId);
 
                     double[] nodesX;
                     double[] nodesY;
@@ -140,41 +236,28 @@ namespace DeltaShell.Plugins.NetworkEditor
                     double[] geometryPointsY;
                     uGrid1D.Read1DNetworkGeometry(out geometryPointsX, out geometryPointsY);
 
-                    //uGrid1D.CoordinateSystem.AuthorityCode
-                    int epsgCode = uGrid1D.GridApi.GetCoordinateSystemCode(); // TODO: Does the GridApi have to be exposed here?
-                    var coordinateSystem = epsgCode > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsgCode) : null;
+                    //var networkName = uGrid1D.GetNetworkName(networkId);
+                    var coordinateSystem = uGrid1D.CoordinateSystem;
 
-                    var network = new HydroNetwork()
+                    var interObj = new IntermediateObject
                     {
-                        Name = "DummyNetworkName", // TODO: Network name should be extracted from the netcdf file
-                        CoordinateSystem = coordinateSystem,
+                        NodesX = nodesX,
+                        NodesY = nodesY,
+                        NodesNames = nodesNames,
+                        NodesDescriptions = nodesDescriptions,
+                        SourceNodeIds = sourceNodes,
+                        TargedNodesIds = targetNodes,
+                        BranchLengths = branchLengths,
+                        NumberOfBranchGeometryPoints = branchGeometryPoints,
+                        BranchNames = branchNames,
+                        BranchDescriptions = branchDescriptions,
+                        GeopointsX = geometryPointsX,
+                        GeopointsY = geometryPointsY,
+                        Name = "DummyNetworkName",
+                        CoordinateSystem = coordinateSystem 
                     };
 
-                    // Reconstruct list of hydronodes (x, y coordinates; name; description)
-                    var nodes = ConstructHydroNodes(network, nodesX, nodesY, nodesNames, nodesDescriptions);
-
-                    // Reconstruct list of branches from the given data.
-                    var branches = ConstructNetworkBranches(network, nodes, sourceNodes, targetNodes, branchLengths, branchGeometryPoints, branchNames, branchDescriptions, geometryPointsX, geometryPointsY);
-
-                    // validate number of constructed nodes and branches
-                    if (numberOfNodes != nodes.Count)
-                    {
-                        throw new InvalidOperationException(string.Format("Loading the network nodes from the netcfd file failed. Expected {0} nodes, actually {1} nodes", numberOfNodes, nodes.Count));
-                    }
-                    if (numberOfBranches != branches.Count)
-                    {
-                        throw new InvalidOperationException(string.Format("Loading the network branches from the netcfd file failed. Expected {0} branches, actually {1} branches", numberOfBranches, branches.Count));
-                    }
-
-                    var totalConstructedNumberOfGeometryPoints = branches.Sum(b => b.Geometry.Coordinates.Length);
-                    if (numberOfGeometryPoints!= totalConstructedNumberOfGeometryPoints)
-                    {
-                        throw new InvalidOperationException(string.Format("Loading the network branch geometry points from the netcfd file failed. Expected {0} geometry points, actually {1} geometry points", numberOfGeometryPoints, totalConstructedNumberOfGeometryPoints));
-                    }
-
-                    network.Nodes.AddRange(nodes);
-                    network.Branches.AddRange(branches);
-
+                    var network = ReconstructHydroNetwork(interObj);
                     return network;
                 }
             }
@@ -211,6 +294,27 @@ namespace DeltaShell.Plugins.NetworkEditor
                 return null; // TODO: Do Something useful with the exceptions.?
             }
 
+        }
+
+        public static IHydroNetwork ReconstructHydroNetwork(IntermediateObject toNetwork)
+        {
+            var network = new HydroNetwork
+            {
+                Name = toNetwork.Name,
+                CoordinateSystem = toNetwork.CoordinateSystem
+            };
+
+            var nodes = ConstructHydroNodes(network, toNetwork.NodesX, toNetwork.NodesY, toNetwork.NodesNames, toNetwork.NodesDescriptions);
+
+            var branches = ConstructNetworkBranches(network, nodes, toNetwork.SourceNodeIds, toNetwork.TargedNodesIds,
+                toNetwork.BranchLengths,
+                toNetwork.NumberOfBranchGeometryPoints, toNetwork.BranchNames, toNetwork.BranchDescriptions,
+                toNetwork.GeopointsX, toNetwork.GeopointsY);
+
+            network.Nodes.AddRange(nodes);
+            network.Branches.AddRange(branches);
+
+            return network;
         }
 
         public static List<IHydroNode> ConstructHydroNodes(IHydroNetwork network, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions)

@@ -54,24 +54,39 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Read 1D network
 
-        public string GetNetworkName()
+        public string GetNetworkName(int networkId)
         {
-            // TODO: Not working yet.
             var uGridApi1D = GridApi as IUGridApi1D;
-            if (uGridApi1D != null)
+            if (uGridApi1D == null) return string.Empty;
+
+            string networkName;
+            var ierr = uGridApi1D.GetNetworkName(networkId, out networkName);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                var name = uGridApi1D.GetNetworkName();
+                throw new InvalidOperationException(string.Format("Couldn't obtain the network name because of error: {0}", ierr));
             }
 
-
-            return string.Empty;
+            return networkName;
         }
-        
-        public int GetNumberOfNetworkNodes()
+
+        public void InitializeForLoading(int nwid)
+        {
+            var uGridApi1D = GridApi as IUGridApi1D;
+            if(uGridApi1D == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set");
+
+            uGridApi1D.SetNetworkId(nwid);
+
+            GetNumberOfNetworkNodes(nwid);
+            GetNumberOfNetworkBranches(nwid);
+            GetNumberOfNetworkGeometryPoints(nwid);
+
+        }
+
+        public int GetNumberOfNetworkNodes(int networkId)
         {
             int numberOfNetworkNodes;
             IUGridApi1D uGridApi1D = GetValidIUGridApi1D();
-            var ierr = uGridApi1D.GetNumberOfNetworkNodes(out numberOfNetworkNodes);
+            var ierr = uGridApi1D.GetNumberOfNetworkNodes(networkId, out numberOfNetworkNodes);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(string.Format("Couldn't get 1D number of network nodes because of error number {0}", ierr));
@@ -79,11 +94,11 @@ namespace DeltaShell.NGHS.IO.Grid
             return numberOfNetworkNodes;
         }
 
-        public int GetNumberOfNetworkBranches()
+        public int GetNumberOfNetworkBranches(int networkId)
         {
             int numberOfNetworkBranches;
             IUGridApi1D uGridApi1D = GetValidIUGridApi1D();
-            var ierr = uGridApi1D.GetNumberOfNetworkBranches(out numberOfNetworkBranches);
+            var ierr = uGridApi1D.GetNumberOfNetworkBranches(networkId, out numberOfNetworkBranches);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network branches because of error number {0}", ierr));
@@ -91,11 +106,11 @@ namespace DeltaShell.NGHS.IO.Grid
             return numberOfNetworkBranches;
         }
 
-        public int GetNumberOfNetworkGeometryPoints()
+        public int GetNumberOfNetworkGeometryPoints(int networkId)
         {
             int numberOfNetworkGeometryPoints;
             IUGridApi1D uGridApi1D = GetValidIUGridApi1D();
-            var ierr = uGridApi1D.GetNumberOfNetworkGeometryPoints(out numberOfNetworkGeometryPoints);
+            var ierr = uGridApi1D.GetNumberOfNetworkGeometryPoints(networkId, out numberOfNetworkGeometryPoints);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(string.Format("Couldn't get the 1D number of network geometry points because of error number {0}", ierr));
@@ -138,6 +153,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
         }
+
         #endregion
 
         public override bool IsInitialized()

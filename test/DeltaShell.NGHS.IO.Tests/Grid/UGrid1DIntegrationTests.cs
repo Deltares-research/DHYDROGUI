@@ -235,7 +235,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                         network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray(),
                         network.Nodes.Select(n => n.Name).ToArray(), network.Nodes.Select(n => n.Description).ToArray());
 
-                    var numberOfNetworkNodes = ugrid1D.GetNumberOfNetworkNodes();
+                    var numberOfNetworkNodes = ugrid1D.GetNumberOfNetworkNodes(networkId);
                     Assert.AreEqual(expNrNwNodes, numberOfNetworkNodes);
 
                     // write 1D network branches
@@ -254,14 +254,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                         network.Branches.Select(b => b.Description).ToArray()
                     );
 
-                    var numberOfNetworkBranches = ugrid1D.GetNumberOfNetworkBranches();
+                    var numberOfNetworkBranches = ugrid1D.GetNumberOfNetworkBranches(networkId);
                     Assert.AreEqual(expNrNwBranches, numberOfNetworkBranches);
 
                     // write 1D network geometry
                     ugrid1D.Write1DNetworkGeometry(
                         network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray(),
                         network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray());
-                    var numberOfNetworkGeometryPoints = ugrid1D.GetNumberOfNetworkGeometryPoints();
+                    var numberOfNetworkGeometryPoints = ugrid1D.GetNumberOfNetworkGeometryPoints(networkId);
                     Assert.AreEqual(expNrNwGeoPoints, numberOfNetworkGeometryPoints);
 
                     #endregion

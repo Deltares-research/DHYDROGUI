@@ -821,14 +821,14 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_number_of_meshes_dll(ref ioncid, ref meshType, ref numMeshes);
         }
 
-        public int ionc_get_network_ids(ref int ioncid, ref IntPtr c_networkids, ref int numberOfNetworks)
+        public int ionc_get_network_ids(ref int ioncid, ref IntPtr pointerToNetworkIds, ref int numberOfNetworks)
         {
-            return ionc_get_network_ids_dll(ref ioncid, ref c_networkids, ref numberOfNetworks);
+            return ionc_get_network_ids_dll(ref ioncid, ref pointerToNetworkIds, ref numberOfNetworks);
         }
 
-        public int ionc_get_mesh_ids(ref int ioncid, ref int meshType, ref IntPtr c_meshids, ref int numberOfMeshes)
+        public int ionc_get_mesh_ids(ref int ioncid, ref int meshType, ref IntPtr pointerToMeshIds, ref int numberOfMeshes)
         {
-            return ionc_ug_get_mesh_ids_dll(ref ioncid, ref meshType, ref c_meshids, ref numberOfMeshes);
+            return ionc_ug_get_mesh_ids_dll(ref ioncid, ref meshType, ref pointerToMeshIds, ref numberOfMeshes);
         }
 
         #endregion

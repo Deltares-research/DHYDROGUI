@@ -8,9 +8,9 @@
         void Write1DNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames);
         void Write1DNetworkGeometry(double[] geopointsX, double[] geopointsY);
 
-        int GetNumberOfNetworkNodes();
-        int GetNumberOfNetworkBranches();
-        int GetNumberOfNetworkGeometryPoints();
+        int GetNumberOfNetworkNodes(int networkId);
+        int GetNumberOfNetworkBranches(int networkId);
+        int GetNumberOfNetworkGeometryPoints(int networkId);
 
       
         void Read1DNetworkGeometry(out double[] geopointsX, out double[] geopointsY);
