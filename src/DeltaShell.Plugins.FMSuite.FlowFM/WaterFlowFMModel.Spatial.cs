@@ -287,8 +287,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         internal void UpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
         {
+            if (Bathymetry == null) return;
             var bedLevelDataItem = GetDataItemByValue(Bathymetry);
-            if (Bathymetry == null || bedLevelDataItem == null) return;
+            if (bedLevelDataItem == null) return;
 
             switch (bedLevelType)
             {
