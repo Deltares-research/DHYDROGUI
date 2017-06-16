@@ -4,11 +4,13 @@ using System.Linq;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using log4net;
+using NetTopologySuite.Extensions.Coverages;
 using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -41,6 +43,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     model.ClearOutput();
                 }
+
+                // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
+                var bedLevelDataItem = model.DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
+                if (bedLevelDataItem != null) bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
+
+                // Update bathymetry coverage based on specified value in .mdu file
+                var bedLevelTypeProperty = model.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+                if(bedLevelTypeProperty != null)
+                    model.UpdateBathymetryCoverage((UnstructuredGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value);
             }
         }
 
