@@ -120,6 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
     public enum MapFormatType
     {
+        Unknown = 0,
         NetCdf = 1,
         Tecplot = 2,
         Both = 3,
