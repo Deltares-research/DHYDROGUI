@@ -44,6 +44,7 @@ public class WaveModelApiTest
     [Category(TestCategory.Slow)]
     public void WaveModelApiInitAndRunTest()
     {
+        if (!Environment.Is64BitProcess) return; // wave only runs in 64 bits!
         string oldDir = Directory.GetCurrentDirectory();
         try
         {
