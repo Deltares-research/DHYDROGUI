@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
                         {
-                            UnstructuredGridFileHelper.WriteZValues(targetFile, modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray());
+                            WriteBathymetry(modelDefinition, targetFile);
                         }
                     }
 
@@ -340,7 +340,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return propertiesByGroup;
         }
 
-        
+        public void WriteBathymetry(WaterFlowFMModelDefinition modelDefinition, string path)
+        {
+            var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p =>
+                    p.PropertyDefinition != null &&
+                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+            if (bedLevelTypeProperty == null)
+            {
+                Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
+                return;
+            }
+
+            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
+            UnstructuredGridFileHelper.WriteZValues(path, location, values);
+        }
 
         private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
         {

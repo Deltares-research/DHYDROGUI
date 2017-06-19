@@ -183,12 +183,12 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, "Couldn't save x and y coordinates");
         }
 
-        public void WriteZValues(int mesh, double[] zValues)
-        {
-            var uGridApi = GetValidUGridApi();
-            var ierr = uGridApi.WriteZCoordinateValues(mesh, zValues);
-            ThrowIfError(ierr, "Couldn't save z coordinates");
-        }
+        //public void WriteZValuesAtFaces(int meshId, double[] zValues)
+        //{
+        //    var uGridApi = GetValidUGridApi();
+        //    var ierr = uGridApi.WriteZCoordinateValues(mesh, zValues);
+        //    ThrowIfError(ierr, "Couldn't save z coordinates");
+        //}
 
         public void WriteZValuesAtFaces(int meshId, double[] zValues)
         {

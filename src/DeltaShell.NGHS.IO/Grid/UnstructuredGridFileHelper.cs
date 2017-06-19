@@ -5,12 +5,25 @@ using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
+using log4net;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public static class UnstructuredGridFileHelper
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridFileHelper));
+
+        public enum BedLevelLocation
+        {
+            Faces = 1,
+            CellEdges = 2,
+            NodesMeanLev = 3,
+            NodesMinLev = 4,
+            NodesMaxLev = 5,
+            FacesMeanLevFromNodes = 6
+        }
+
         public static UnstructuredGrid LoadFromFile(string path, bool loadFlowLinksAndCells = false)
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)
@@ -32,14 +45,30 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public static void WriteZValues(string path, double[] values)
+        public static void WriteZValues(string path, BedLevelLocation location, double[] values)
         {
             switch (GetConvention(path))
             {
                 case GridApiDataSet.DataSetConventions.IONC_CONV_UGRID:
                     using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
                     {
-                        uGrid.WriteZValues(1, values);
+                        switch (location)
+                        {
+                            case BedLevelLocation.Faces:
+                            case BedLevelLocation.FacesMeanLevFromNodes:
+                                uGrid.WriteZValuesAtFaces(1, values);
+                                break;
+                            case BedLevelLocation.CellEdges:
+                                Log.WarnFormat("Unable to Write z-values at this location, CellEdges are not currently supported");
+                                break;
+                            case BedLevelLocation.NodesMeanLev:
+                            case BedLevelLocation.NodesMinLev:
+                            case BedLevelLocation.NodesMaxLev:
+                                uGrid.WriteZValuesAtNodes(1, values);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException("location", location, null);
+                        }
                     }
                     break;
                 case GridApiDataSet.DataSetConventions.IONC_CONV_OTHER:

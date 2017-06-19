@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private UnstructuredGrid grid;
         private double bathymetryNoDataValue;
 
-        public UnstructuredGridVertexCoverage Bathymetry { get; private set; }
+        public UnstructuredGridCoverage Bathymetry { get; private set; }
         public UnstructuredGridCellCoverage InitialWaterLevel { get; private set; }
         public CoverageDepthLayersList InitialSalinity { get; private set; }
         public UnstructuredGridCellCoverage InitialTemperature { get; private set; }
@@ -281,8 +282,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void InitializeUnstructuredGridCoverages()
         {
-            var bathymetryValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z) : null;
-            Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, bathymetryValues);
+            var bedLevelTypeProperty = modelDefinition.Properties.FirstOrDefault(p => 
+                p.PropertyDefinition != null && 
+                p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+            if (bedLevelTypeProperty != null)
+            {
+                var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value;
+
+                if (bedLevelType == UnstructuredGridFileHelper.BedLevelLocation.CellEdges)
+                {
+                    Log.WarnFormat("Unable to initialise Unstructured grid coverage for location {0}, this location is not currently supported." +
+                                   "{1}Initialising Unstructured grid coverage for location {2} instead",
+                                   bedLevelType, Environment.NewLine, UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev);
+                   /*
+                    * Coverages at CellEdges are not currently supported, we use Vertex coverage instead
+                    */
+                    bedLevelType = UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev;
+                }
+
+                switch (bedLevelType)
+                {
+                    case UnstructuredGridFileHelper.BedLevelLocation.Faces:
+                    case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                        Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                        break;
+                   /*
+                    * Coverages at CellEdges are not currently supported, we use Vertex coverage instead
+                    * When we want to add support for this the override above needs to be removed!
+                    */
+                    case UnstructuredGridFileHelper.BedLevelLocation.CellEdges: 
+
+                    case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
+                    case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
+                    case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
+                        var bathymetryValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z) : null;
+                        Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, bathymetryValues);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+            }
+
             InitialWaterLevel = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
             InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
             {
@@ -298,6 +340,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
             InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
             InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
+        }
+
+        private void UpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
+        {
+            if (Bathymetry == null) return;
+            var bedLevelDataItem = GetDataItemByValue(Bathymetry);
+
+            switch (bedLevelType)
+            {
+                case UnstructuredGridFileHelper.BedLevelLocation.Faces:
+                    if (bedLevelDataItem.ValueType != typeof(UnstructuredGridCellCoverage))
+                    {
+                        DataItems.Remove(bedLevelDataItem);
+                        Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                        bedLevelDataItem = new DataItem(Bathymetry, DataItemRole.Input);
+                        DataItems.Add(bedLevelDataItem);
+                    }
+                    break;
+                case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
+                    Log.WarnFormat("Unstructured grid edge coverages are not currently supported");
+                    break;
+                case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
+                case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
+                case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
+                case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                    if (bedLevelDataItem.ValueType != typeof(UnstructuredGridVertexCoverage))
+                    {
+                        DataItems.Remove(bedLevelDataItem);
+                        Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                        bedLevelDataItem = new DataItem(Bathymetry, DataItemRole.Input);
+                        DataItems.Add(bedLevelDataItem);
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("bedLevelType", bedLevelType, null);
+            }
+            
+            
         }
 
         private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
