@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
 
                 UGridToNetworkAdapter.SaveNetwork((HydroNetwork)storedNetwork, localCopyOfTestFile, metaData);
-                UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretization, localCopyOfTestFile);
+                //UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretization, localCopyOfTestFile);
 
                 var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(localCopyOfTestFile);
 
@@ -260,7 +260,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.AreEqual(storedNodeCoordinateY, loadedNodeCoordinateY);
 
                 // test node description
-                //var description = network.Nodes[i].Description;
                 string storedNodeDescription = storedNodes[i].Description != null
                     ? storedNodes[i].Description.Trim().Replace(" ", "_")
                     : "";

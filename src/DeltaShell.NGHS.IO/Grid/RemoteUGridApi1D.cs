@@ -46,7 +46,11 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNetworkName(int networkId, out string networkName)
         {
-            throw new NotImplementedException(); // TODO: Implement. 
+            networkName = string.Empty;
+            var uGridApi1D = api as IUGridApi1D;
+            return uGridApi1D != null
+                ? uGridApi1D.GetNetworkName(networkId, out networkName)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public virtual int GetNumberOfNetworkNodes(int networkId, out int numberOfNetworkNodes)
@@ -123,7 +127,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void SetNetworkId(int nwid)
         {
-            throw new NotImplementedException();
+            var uGridApi1D = api as IUGridApi1D;
+            if (uGridApi1D == null) return;
+            uGridApi1D.SetNetworkId(nwid);
         }
 
         private T GetFromValidUGridApi1D<T>(Func<IUGridApi1D, T> function, T defaultValue)

@@ -76,12 +76,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworks(out int numberOfNetworks)
         {
-            throw new NotImplementedException();
+            numberOfNetworks = 0;
+            return api != null ? api.GetNumberOfNetworks(out numberOfNetworks) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public int GetNetworkIds(out int[] networkIds)
         {
-            throw new NotImplementedException();
+            networkIds = new int[0];
+            return api != null ? api.GetNetworkIds(out networkIds) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
 

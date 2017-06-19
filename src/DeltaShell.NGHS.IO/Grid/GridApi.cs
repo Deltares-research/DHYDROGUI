@@ -357,8 +357,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
-                    string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}"
-                    , filePath, ierr));
+                    string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}", filePath, ierr));
             }
 
             CreateAndWriteDefaultNetCdfMetaData(filePath, globalMetaData);
