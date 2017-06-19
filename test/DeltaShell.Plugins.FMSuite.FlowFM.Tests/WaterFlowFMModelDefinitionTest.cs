@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -679,7 +680,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 FileUtils.DeleteIfExists(mduDir);
             }
-
         }
 
         [Test]
@@ -923,6 +923,71 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.UseTemperature).Value = false;
 
             Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
+        }
+
+        [Test]
+        [TestCase(1, true, 4)]
+        [TestCase(1, false, 1)]
+        [TestCase(2, false, 2)]
+        [TestCase(3, true, 4)]
+        [TestCase(4, false, 4)]
+        [TestCase(4, true, 4)]
+        public void SetMapFormatPropertyValueTest(int mapFormatStringValue, bool useMorSed, int expectedMapFormatStringValue)
+        {
+            Assert.NotNull(mapFormatStringValue);
+            Assert.NotNull(expectedMapFormatStringValue);
+
+            var modelDefinition = new WaterFlowFMModelDefinition
+            {
+                MapFormat = mapFormatStringValue,
+                UseMorphologySediment = useMorSed
+            };
+            modelDefinition.SetMapFormatPropertyValue();
+
+            // Check that MapFormat property value has been changed accordingly
+            Assert.AreEqual(expectedMapFormatStringValue, modelDefinition.MapFormat);
+        }
+
+        [Test]
+        [TestCase(1, true, 4)]
+        [TestCase(1, false, 1)]
+        [TestCase(4, true, 4)]
+        [TestCase(4, false, 4)]
+        public void UseMorSedPropertyChangeTest(int mapFormatStringValue, bool useMorSed, int expectedMapFormatStringValue)
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition
+            {
+                MapFormat = mapFormatStringValue
+            };
+            modelDefinition.UseMorphologySediment = useMorSed;
+
+            // Check that MapFormat property value has been changed accordingly
+            Assert.AreEqual(useMorSed, modelDefinition.UseMorphologySediment);
+            Assert.AreEqual(expectedMapFormatStringValue, modelDefinition.MapFormat);
+        }
+
+        [Test]
+        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", 4, true)]
+        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", 4, true)]
+        [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", 1, false)]
+        [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", 4, false)]
+        [Category(TestCategory.Integration)]
+        public void ChangeMapFormatAfterMduImportTest(string relativeMduFilepath, int expectedMapFormatStringValue, bool expectedUseMorSedValue)
+        {
+            // setup
+            var mduFilePath = TestHelper.GetTestFilePath(relativeMduFilepath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            // Read the mdu file for modelDefinition properties
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            var mduFile = new MduFile();
+            mduFile.Read(mduFilePath, modelDefinition, area);
+
+            // Check that MapFormat property value has been changed accordingly in modelDefinition
+            Assert.AreEqual(expectedUseMorSedValue, modelDefinition.UseMorphologySediment);
+            Assert.AreEqual(expectedMapFormatStringValue, modelDefinition.MapFormat);
         }
     }
 }

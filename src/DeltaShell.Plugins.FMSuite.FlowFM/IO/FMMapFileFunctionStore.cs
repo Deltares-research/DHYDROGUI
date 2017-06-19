@@ -111,10 +111,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             boundaryCellValues.Clear();
             UpdateGrid();
+            var isNotUgridConvention = GetNcFileConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
 
+            var functions = GetFunctions(dataVariables, isNotUgridConvention);
+            if (isNotUgridConvention)
+            {
+                LogWarningsForExcludedTimeDependentVariables(dataVariables);
+            }
+
+            return functions;
+        }
+
+        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isNotUgridConvention)
+        {
             // Construct UnstructuredGridCoverages from file
-            var timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1).ToList();
-            var functions = timeDepVariables.SelectMany(ProcessTimeDependantVariable).Where(c => c != null).ToList();
+            var timeDepVarSelectionCriteria = isNotUgridConvention
+                ? (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2) : (v => v.IsTimeDependent && v.NumDimensions > 1);
+            var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+            var functions = timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
 
             // Construct custom Velocity Coverage
             if (velocityCoverages.ContainsKey(EastwardSeaWaterVelocityStandardName) &&
@@ -122,8 +136,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 functions.Add(AddCustomVelocityCoverage(velocityCoverages[EastwardSeaWaterVelocityStandardName], velocityCoverages[NorthwardSeaWaterVelocityStandardName]));
             }
-
             return functions;
+        }
+        
+        private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables)
+        {
+            // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
+            var filteredTimeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
+            var timeDepVariablesNames = 
+                filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
+            foreach (var timeDepVarName in timeDepVariablesNames)
+            {
+                log.WarnFormat(
+                    Resources.FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
+                    timeDepVarName);
+            }
+            
         }
 
         protected override void GetShapeAndOrigin(IVariable function, IVariableFilter[] filters, out int[] shape,
@@ -371,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return list.ToArray();
         }
 
-        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependantVariable(NetCdfVariableInfo timeDependentVariable)
+        private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
         {
             UnstructuredGridCoverage coverage = null;
             var netcdfVariable = timeDependentVariable.NetCdfDataVariable;

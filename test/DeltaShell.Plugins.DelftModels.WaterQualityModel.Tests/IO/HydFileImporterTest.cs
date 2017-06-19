@@ -484,7 +484,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             model.InitialConditions[0].Components[0].DefaultValue = defaultValueForCoverage;
 
-            // This call triggers WaterQualityModelSync to create a spatial operation.
+            // This call triggers WaterQualityModelSyncExtensions to create a spatial operation.
             FunctionTypeCreator.ReplaceFunctionUsingCreator(model.InitialConditions,
                 model.InitialConditions[0],
                 FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(),

@@ -116,55 +116,53 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 Directory.CreateDirectory(includeDirectory);
             }
 
-            var filesDictionary = new Dictionary<string, Func<IncludeFileFactory, WaqInitializationSettings, string>>
+            var filesDictionary = new Dictionary<string, Func<WaqInitializationSettings, string>>
                                       {
-                                          {"B1_t0.inc", (f, set) => f.CreateT0Include(set.ReferenceTime)},
-                                          {"B1_sublist.inc", (f, set) => f.CreateSubstanceListInclude(set.SubstanceProcessLibrary)},
+                                          {"B1_t0.inc", set => IncludeFileFactory.CreateT0Include(set.ReferenceTime)},
+                                          {"B1_sublist.inc", set => IncludeFileFactory.CreateSubstanceListInclude(set.SubstanceProcessLibrary)},
 
-                                          {"B2_numsettings.inc", (f, set) => f.CreateNumSettingsInclude(set.Settings)},
-                                          {"B2_simtimers.inc", (f, set) => f.CreateSimTimersInclude(set)},
-                                          {"B2_outlocs.inc", (f, set) => f.CreateOutputLocationsInclude(set.OutputLocations)},
-                                          {"B2_outputtimers.inc", (f, set) => f.CreateOutputTimersInclude(set.Settings)},
+                                          {"B2_numsettings.inc", set => IncludeFileFactory.CreateNumSettingsInclude(set.Settings)},
+                                          {"B2_simtimers.inc", set => IncludeFileFactory.CreateSimTimersInclude(set)},
+                                          {"B2_outlocs.inc", set => IncludeFileFactory.CreateOutputLocationsInclude(set.OutputLocations)},
+                                          {"B2_outputtimers.inc", set => IncludeFileFactory.CreateOutputTimersInclude(set.Settings)},
                                           
-                                          {"B3_nrofseg.inc", (f, set) => f.CreateNumberOfSegmentsInclude(set.SegmentsPerLayer, set.NumberOfLayers)},
-                                          {"B3_attributes.inc", (f, set) => f.CreateAttributesFileInclude(set.AttributesFile)},
-                                          {"B3_volumes.inc", (f, set) => f.CreateVolumesFileInclude(set.VolumesFile)},
+                                          {"B3_nrofseg.inc", set => IncludeFileFactory.CreateNumberOfSegmentsInclude(set.SegmentsPerLayer, set.NumberOfLayers)},
+                                          {"B3_attributes.inc", set => IncludeFileFactory.CreateAttributesFileInclude(set.AttributesFile)},
+                                          {"B3_volumes.inc", set => IncludeFileFactory.CreateVolumesFileInclude(set.VolumesFile)},
 
-                                          {"B4_nrofexch.inc", (f, set) => f.CreateNumberOfExchangesInclude(set.HorizontalExchanges, set.VerticalExchanges)},
-                                          {"B4_pointers.inc", (f, set) => f.CreatePointersFileInclude(set.PointersFile)},
-                                          {"B4_cdispersion.inc", (f, set) => f.CreateConstantDispersionInclude(set.VerticalDispersion, set.Dispersion.First())},
-                                          {"B4_area.inc", (f, set) => f.CreateAreasFileInclude(set.AreasFile)},
-                                          {"B4_flows.inc", (f, set) => f.CreateFlowsFileInclude(set.FlowsFile)},
-                                          {"B4_length.inc", (f, set) => f.CreateLengthsFileInclude(set.LengthsFile)},
+                                          {"B4_nrofexch.inc", set => IncludeFileFactory.CreateNumberOfExchangesInclude(set.HorizontalExchanges, set.VerticalExchanges)},
+                                          {"B4_pointers.inc", set => IncludeFileFactory.CreatePointersFileInclude(set.PointersFile)},
+                                          {"B4_cdispersion.inc", set => IncludeFileFactory.CreateConstantDispersionInclude(set.VerticalDispersion, set.Dispersion.First())},
+                                          {"B4_area.inc", set => IncludeFileFactory.CreateAreasFileInclude(set.AreasFile)},
+                                          {"B4_flows.inc", set => IncludeFileFactory.CreateFlowsFileInclude(set.FlowsFile)},
+                                          {"B4_length.inc", set => IncludeFileFactory.CreateLengthsFileInclude(set.LengthsFile)},
                                           
-                                          {"B5_boundlist.inc", (f, set) => f.CreateBoundaryListInclude(set.BoundaryNodeIds, set.NumberOfLayers)},
-                                          {"B5_boundaliases.inc", (f, set) => f.CreateBoundaryAliasesInclude(set.BoundaryAliases)},
-                                          {"B5_bounddata.inc", (f, set) => f.CreateBoundaryDataInclude(set.BoundaryDataManager, set.Settings.WorkDirectory)},
+                                          {"B5_boundlist.inc", set => IncludeFileFactory.CreateBoundaryListInclude(set.BoundaryNodeIds, set.NumberOfLayers)},
+                                          {"B5_boundaliases.inc", set => IncludeFileFactory.CreateBoundaryAliasesInclude(set.BoundaryAliases)},
+                                          {"B5_bounddata.inc", set => IncludeFileFactory.CreateBoundaryDataInclude(set.BoundaryDataManager, set.Settings.WorkDirectory)},
                                           
-                                          {"B6_loads.inc", (f, set) => f.CreateDryWasteLoadInclude(set.LoadAndIds)},
-                                          {"B6_loads_aliases.inc", (f, set) => f.CreateDryWasteLoadAliasesInclude(set.LoadsAliases)},
-                                          {"B6_loads_data.inc", (f, set) => f.CreateDryWasteLoadDataInclude(set.LoadsDataManager, set.Settings.WorkDirectory)},
+                                          {"B6_loads.inc", set => IncludeFileFactory.CreateDryWasteLoadInclude(set.LoadAndIds)},
+                                          {"B6_loads_aliases.inc", set => IncludeFileFactory.CreateDryWasteLoadAliasesInclude(set.LoadsAliases)},
+                                          {"B6_loads_data.inc", set => IncludeFileFactory.CreateDryWasteLoadDataInclude(set.LoadsDataManager, set.Settings.WorkDirectory)},
                                           
-                                          {"B7_processes.inc", (f, set) => f.CreateProcessesInclude(set.SubstanceProcessLibrary)},
-                                          {"B7_constants.inc", (f, set) => f.CreateConstantsInclude(set.ProcessCoefficients)},
-                                          {"B7_functions.inc", (f, set) => f.CreateFunctionsInclude(set.ProcessCoefficients)},
-                                          {"B7_parameters.inc", (f, set) => f.CreateParametersInclude(set)},
-                                          {"B7_dispersion.inc", (f, set) => f.CreateSpatialDispersionInclude(set.Dispersion.First(), set.NumberOfLayers)},
-                                          {"B7_vdiffusion.inc", (f,set) => f.CreateVerticalDiffusionInclude(set.VerticalDiffusionFile, set.UseAdditionalVerticalDiffusion)},
-                                          {"B7_segfunctions.inc", (f, set) => f.CreateSegfunctionsInclude(set)},
-                                          {"B7_numerical_options.inc", (f,set) => f.CreateNumericalOptionsInclude(set)},
+                                          {"B7_processes.inc", set => IncludeFileFactory.CreateProcessesInclude(set.SubstanceProcessLibrary)},
+                                          {"B7_constants.inc", set => IncludeFileFactory.CreateConstantsInclude(set.ProcessCoefficients)},
+                                          {"B7_functions.inc", set => IncludeFileFactory.CreateFunctionsInclude(set.ProcessCoefficients)},
+                                          {"B7_parameters.inc", set => IncludeFileFactory.CreateParametersInclude(set)},
+                                          {"B7_dispersion.inc", set => IncludeFileFactory.CreateSpatialDispersionInclude(set.Dispersion.First(), set.NumberOfLayers)},
+                                          {"B7_vdiffusion.inc", set => IncludeFileFactory.CreateVerticalDiffusionInclude(set.VerticalDiffusionFile, set.UseAdditionalVerticalDiffusion)},
+                                          {"B7_segfunctions.inc", set => IncludeFileFactory.CreateSegfunctionsInclude(set)},
+                                          {"B7_numerical_options.inc", set => IncludeFileFactory.CreateNumericalOptionsInclude(set)},
                                           
-                                          {"B8_initials.inc", (f, set) => initSettings.UseRestart ? RestartString :  f.CreateInitialConditionsInclude(set)},
+                                          {"B8_initials.inc", set => initSettings.UseRestart ? RestartString :  IncludeFileFactory.CreateInitialConditionsInclude(set)},
                                           
-                                          {"B9_Mapvar.inc", (f, set) => f.CreateMapVarInclude(set.SubstanceProcessLibrary)},
-                                          {"B9_Hisvar.inc", (f, set) => f.CreateHisVarInclude(set.SubstanceProcessLibrary)}
+                                          {"B9_Mapvar.inc", set => IncludeFileFactory.CreateMapVarInclude(set.SubstanceProcessLibrary)},
+                                          {"B9_Hisvar.inc", set => IncludeFileFactory.CreateHisVarInclude(set.SubstanceProcessLibrary)}
                                       };
-
-            var factory = new IncludeFileFactory();
 
             foreach (var fileKvp in filesDictionary)
             {
-                File.WriteAllText(Path.Combine(includeDirectory, fileKvp.Key), fileKvp.Value(factory, initSettings));
+                File.WriteAllText(Path.Combine(includeDirectory, fileKvp.Key), fileKvp.Value(initSettings));
             }
 
             CopyDataTableUserfors(includeDirectory, initSettings.BoundaryDataManager);

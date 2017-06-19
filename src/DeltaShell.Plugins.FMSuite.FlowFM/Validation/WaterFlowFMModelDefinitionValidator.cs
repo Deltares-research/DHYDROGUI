@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                             RangeToString(waterFlowFmProperty.MinValue,
                                 waterFlowFmProperty.MaxValue) + ".", model));
                     }
-                    if (waterFlowFmProperty == solverProperty)
+                    if (solverProperty != null && waterFlowFmProperty == solverProperty)
                     {
                         var solver = int.Parse(waterFlowFmProperty.GetValueAsString());
                         if (solver > 4)
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                     // Whenever morphology is active, give an error in the validation report in case the bed level locations is not set to 'cells' (BedlevType.val0)
                     //if (waterFlowFmProperty.PropertyDefinition.MduPropertyName.Equals(KnownPropertyMduNames.BedlevType))
-                    if (waterFlowFmProperty == bedLevelTypeProperty)
+                    if (bedLevelTypeProperty != null && waterFlowFmProperty == bedLevelTypeProperty)
                     {
                         int bedLevelTypeNumber;
                         bool result = Int32.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber);

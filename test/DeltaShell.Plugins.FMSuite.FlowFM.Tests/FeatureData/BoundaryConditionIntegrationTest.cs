@@ -312,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             /* Create a FlowBoundaryCondition and test that the SedimentFraction with CurrentSedimentType.Key = "mud" has been filtered out */
             var variable = "MorphologyBedLoadTransport";
             var dataType = BoundaryConditionDataType.TimeSeries;
-            var quantityType = "Bed load transport";
+            var quantityType = "Morphology";
             var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(feature, variable, dataType, quantityType);
             var flowBoundaryCondition = boundaryCondition as FlowBoundaryCondition;
 

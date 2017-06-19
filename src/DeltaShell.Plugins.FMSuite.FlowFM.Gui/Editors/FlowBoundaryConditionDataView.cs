@@ -27,13 +27,14 @@ using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.CoordinateSystems;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public partial class FlowBoundaryConditionDataView : UserControl, ICompositeView
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
         private class AddSeriesTool: IChartViewContextMenuTool
         {
             public readonly IList<IBoundaryCondition> AddedBoundaryConditions = new List<IBoundaryCondition>();
@@ -808,10 +809,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void ApplyBoundaryConditionsForSupportPointMode<T>(T[] newComponentValues, Func<T[] ,IFunction,bool> applyToFunction, string actionName)
         {
             var supportPointsDialog = new SupportPointSelectionForm();
-            supportPointsDialog.ShowDialog(this);
-            ClearFunctionView();
-
-            BoundaryCondition.ApplyForSupportPointMode(supportPointsDialog.SupportPointOperationMode, newComponentValues, applyToFunction, actionName, SupportPointIndex);
+            var defaultPointMode = SupportPointMode.SelectedPoint;
+            if (!FlowBoundaryCondition.IsMorphologyBoundary(BoundaryCondition))
+            {
+                supportPointsDialog.ShowDialog(this);
+                defaultPointMode = supportPointsDialog.SupportPointOperationMode;
+            }
+            BoundaryCondition.ApplyForSupportPointMode(defaultPointMode, newComponentValues, applyToFunction, actionName, SupportPointIndex);
 
             RefreshBoundaryData();
             FillFunctionView();

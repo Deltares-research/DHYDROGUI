@@ -66,8 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
             tempModel.ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value = true;
             tempModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString("");
             tempModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString("");
-            tempModel.ModelDefinition.GetModelProperty("MapFormat").SetValueAsString("1");
-            tempModel.ModelDefinition.GetModelProperty("RenumberFlowNodes").SetValueAsString("0");
+            tempModel.ModelDefinition.GetModelProperty(KnownProperties.MapFormat).SetValueAsString("1");
+            tempModel.ModelDefinition.GetModelProperty(KnownProperties.RenumberFlowNodes).SetValueAsString("0");
 
             File.Copy(netFilePath, Path.Combine(tempPath, Path.GetFileName(netFilePath)));
 

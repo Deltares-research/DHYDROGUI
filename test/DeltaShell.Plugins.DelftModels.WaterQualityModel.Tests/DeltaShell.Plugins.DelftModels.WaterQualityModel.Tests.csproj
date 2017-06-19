@@ -109,7 +109,6 @@
     <Compile Include="IO\HydFileElement\HydFileStringValueParserTest.cs" />
     <Compile Include="IO\HydFileImporterTest.cs" />
     <Compile Include="IO\HydFileReaderTest.cs" />
-    <Compile Include="IO\IncludeFileFactoryBaseTest.cs" />
     <Compile Include="IO\IncludeFileFactoryTest.cs" />
     <Compile Include="IO\LoadsImporterTest.cs" />
     <Compile Include="IO\ObservationPointImporterTest.cs" />

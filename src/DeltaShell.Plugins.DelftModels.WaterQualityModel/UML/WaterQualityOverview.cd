@@ -1,0 +1,797 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Readers">
+    <Position X="29.25" Y="4.5" Height="0.291" Width="5.965" />
+  </Comment>
+  <Comment CommentText="Extension mehtods and helpers">
+    <Position X="37.5" Y="4.5" Height="0.291" Width="5.217" />
+  </Comment>
+  <Comment CommentText="Spatial operations">
+    <Position X="29.25" Y="1" Height="0.316" Width="8.519" />
+  </Comment>
+  <Comment CommentText="Factories and builders">
+    <Position X="29.226" Y="13.487" Height="0.291" Width="6.791" />
+  </Comment>
+  <Comment CommentText="Remove ?">
+    <Position X="29.233" Y="20.057" Height="0.291" Width="2.228" />
+  </Comment>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BloomInfo" Collapsed="true">
+    <Position X="31.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIABAAAAgQggAIAIAAAAACAAAAAAAAACAgAAAAAE=</HashCode>
+      <FileName>DataObjects\BloomInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.FunctionFromHydroDynamics" Collapsed="true">
+    <Position X="32" Y="14.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>DataObjects\FunctionFromHydroDynamics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.NameablePointFeature" Collapsed="true">
+    <Position X="20.25" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAAAA4AE=</HashCode>
+      <FileName>DataObjects\NameablePointFeature.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SegmentFileFunction" Collapsed="true">
+    <Position X="34.25" Y="17.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\SegmentFileFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityBoundary" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="13.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\WaterQualityBoundary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityLoad" Collapsed="true">
+    <Position X="18.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAABAAAAAAAQAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\WaterQualityLoad.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData.DataTable" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="21" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAIEAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\BoundaryData\DataTable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData.DataTableManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.75" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAJAAAAGAAAIAAAIAAACQAACAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>DataObjects\BoundaryData\DataTableManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DataTables" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.NumericalScheme1DExtensions" Collapsed="true">
+    <Position X="37.5" Y="6" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\Model\NumericalScheme.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.WaterQualityModelSettings" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.25" Y="8.25" Width="2.5" />
+    <AssociationLine Name="MonitoringOutputLevel" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.MonitoringOutputLevel" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.812" Y="8.941" />
+        <Point X="4.812" Y="11.465" />
+        <Point X="2.5" Y="11.465" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAgAATUGAIAQAAjFAAioAAmIECEAAAAAUIQCARQ=</HashCode>
+      <FileName>DataObjects\Model\WaterQualityModelSettings.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="NumericalScheme" />
+      <Property Name="BalanceUnit" />
+      <Property Name="MonitoringOutputLevel" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.WaterQualityObservationVariableOutput" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.75" Y="13" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAEAAgAQAAAAEEAAAABAAQAAAAJA=</HashCode>
+      <FileName>DataObjects\Model\WaterQualityObservationVariableOutput.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="15.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQAAAAAFAQEAAAAEAAAAAAQAAAAAACABAIAAAiBAgBA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\SubstanceProcessLibrary.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Substances" />
+      <Property Name="ActiveSubstances" />
+      <Property Name="InActiveSubstances" />
+      <Property Name="Parameters" />
+      <Property Name="Processes" />
+      <Property Name="OutputParameters" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityOutputParameter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="19.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAAAAAQEAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualityOutputParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityParameter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="18.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAIAAAAAQAAABAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualityProcess" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="17.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualityProcess.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.WaterQualitySubstance" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="14.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAgAAQECAAAAAQAAAAAAAAgAAAgAAAAABA=</HashCode>
+      <FileName>DataObjects\SubstanceProcessLibrary\WaterQualitySubstance.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions.LocationAliasesExtensions" Collapsed="true">
+    <Position X="37.5" Y="5.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\LocationAliasesExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions.ModelExtensions" Collapsed="true">
+    <Position X="37.5" Y="6.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAADAAAAAEIAAAAAAAAAAAAgAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\ModelExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions.WaterQualityFunctionExtensions" Collapsed="true">
+    <Position X="17.25" Y="1" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAACAAAAAACAAAAAICAAAAAAAAAAACAAAAAAAACAACA=</HashCode>
+      <FileName>Extensions\WaterQualityFunctionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.AttributesFileData" Collapsed="true">
+    <Position X="17" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAQAAAAAQAAAAAAAAQAA=</HashCode>
+      <FileName>IO\AttributesFileData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.AttributesFileReader" Collapsed="true">
+    <Position X="29.25" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAEAAAAAAAAABgAAAACADAAQBAAAA=</HashCode>
+      <FileName>IO\AttributesFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.BloomSpeFileReader" Collapsed="true">
+    <Position X="29.25" Y="10.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAgAAAgAgAAADEAAAAAAABASQAAA=</HashCode>
+      <FileName>IO\BloomSpeFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.BoundaryFileReader" Collapsed="true">
+    <Position X="29.25" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>cAAAAAAAAAAAAAgAEACAAQAAAAAAAAAAAAACAAAIACM=</HashCode>
+      <FileName>IO\BoundaryFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DataTableCsvContents" Collapsed="true">
+    <Position X="31.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAEQABAAABICAAAAA=</HashCode>
+      <FileName>IO\DataTableCsvContents.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Interpolation" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DataRows" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.LocationData" Collapsed="true">
+    <Position X="34.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAgQAAAAAAA=</HashCode>
+      <FileName>IO\DataTableCsvContents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DataTableCsvFileReader" Collapsed="true">
+    <Position X="29.25" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAIgAQgAAAAAABAAAQAQAAQ=</HashCode>
+      <FileName>IO\DataTableCsvFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DataTableImporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17" Y="30" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAEAgAAAAAAAAAQAABECABAAAAAEAAAACAA=</HashCode>
+      <FileName>IO\DataTableImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DelwaqHisFileData" Collapsed="true">
+    <Position X="31.25" Y="11.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAIAAAAAAgAAAAAECAQAAAAAAAAAAABA=</HashCode>
+      <FileName>IO\DelwaqHisFileData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DelwaqHisFileReader" Collapsed="true">
+    <Position X="29.25" Y="11.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DelwaqHisFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DelwaqMapFileReader" Collapsed="true">
+    <Position X="29.25" Y="12.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAgAAEEIAAAAAQAAAAAEAAAAAAAABAAAABAAAA=</HashCode>
+      <FileName>IO\DelwaqMapFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileData" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="19.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAqJABTBBCA4EkBkCAhSoEQAEIoAiBRJBIAAAAAA=</HashCode>
+      <FileName>IO\HydFileData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileImporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="30" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAEAgEAAAAACAAQAABECABAAAAAEAAAASAA=</HashCode>
+      <FileName>IO\HydFileImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileReader" Collapsed="true">
+    <Position X="29.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAIAAAAEAAAAAAAgAAAAgIAAAAAAAgCAAA=</HashCode>
+      <FileName>IO\HydFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.IncludeFileFactory" Collapsed="true">
+    <Position X="29.25" Y="14" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>kCOBAAACAUQhBAITAkQFkYARHEAACEAUABIQZBQAgAI=</HashCode>
+      <FileName>IO\IncludeFileFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.InputFileExporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20" Y="28.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAADAQAAAAAgAAAAAAEEAEACAA=</HashCode>
+      <FileName>IO\InputFileExporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.LazyMapFileFunctionStore" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAACQAAAAAAAIBMACuAKgoMQQAEFAGAEAhgcMgGAoDo=</HashCode>
+      <FileName>IO\LazyMapFileFunctionStore.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetaData" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.LoadsImporter" Collapsed="true">
+    <Position X="3" Y="30" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAACAAAAQQAAAAAABAAAAIAAAAAAAA=</HashCode>
+      <FileName>IO\LoadsImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.MapFileMetaData" Collapsed="true">
+    <Position X="4.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAIAABAACAAAAAIAAAAAACAAAAA=</HashCode>
+      <FileName>IO\MapFileMetaData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.MultiDimentionalArrayAdapter&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="7" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AEInEEAIAMCCCBiAAOCIlCAgQAFABTEECAAgQAk0pBA=</HashCode>
+      <FileName>IO\MultiDimentionalArrayAdapter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.NameablePointFeatureImporter&lt;T&gt;" Collapsed="true">
+    <Position X="5" Y="28.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAgEAgAAACAAAAAQAIBMCABAAAAIEAAAACAA=</HashCode>
+      <FileName>IO\NameablePointFeatureImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.ObservationPointImporter" Collapsed="true">
+    <Position X="6.25" Y="30" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAACAAAAQQAAAAAABAAAAIAAAAAAAA=</HashCode>
+      <FileName>IO\ObservationPointImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="30" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAWAADAAAEggIAAoAQAIAQAUBkCAFAAAAAEAAAIKAA=</HashCode>
+      <FileName>IO\SubFileImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.WaterQualityObservationAreaImporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="30" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AIQEAAABCAEAgABAAAAAAAQAABECBBAAAAAEAAAACAA=</HashCode>
+      <FileName>IO\WaterQualityObservationAreaImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement.HydFileStringValueParser" Collapsed="true">
+    <Position X="40.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAEgAAQgAAAAkAgIBAAAAAAAABAAAAAAAQAAAAAAAAQ=</HashCode>
+      <FileName>IO\HydFileElement\HydFileStringValueParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement.KeyValueElement&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="33.5" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAgAAAAAgABAAAAA=</HashCode>
+      <FileName>IO\HydFileElement\KeyValueElement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement.SchematizationElement" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="31.25" Y="8.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAgAAAAAIAAAAAAAABAAAAA=</HashCode>
+      <FileName>IO\HydFileElement\SchematizationElement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.ConsoleRedirector" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="29.25" Y="20.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>QhQCAAAAAOBQAgAAUAAAAgQAAIRAAAAAAABAAAAIGgA=</HashCode>
+      <FileName>Model\ConsoleRedirector.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.WaqFileBasedPreProcessor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.75" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AoAABAgAECAAAAAAAAIAAAAAAAgAAACACBAAAAAgAAA=</HashCode>
+      <FileName>Model\WaqFileBasedPreProcessor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.WaqFileBasedProcessor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.75" Y="23.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAABAQAAAgAAAAAAAAgAACAAABAAAAAAAAA=</HashCode>
+      <FileName>Model\WaqFileBasedProcessor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.WaqInitializationSettings" Collapsed="true">
+    <Position X="17" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gAAEABQgAAACACAIAFEAAAAEARgACkBIgACAMUTQAgo=</HashCode>
+      <FileName>Model\WaqInitializationSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.WaqInitializationSettingsBuilder" Collapsed="true">
+    <Position X="29.25" Y="15.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EAgABAAAAAAAAAAIAAAAAAAAAAAAAAAAAQQAAAAAAAA=</HashCode>
+      <FileName>Model\WaqInitializationSettingsBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.WaqModelApi" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="29.25" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBACoQCEgGoCAoBkIzCAiQAFACRMAgAREgSNAgRBiAA=</HashCode>
+      <FileName>Model\WaqModelApi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.WaqProcessorHelper" Collapsed="true">
+    <Position X="40.5" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\WaqProcessorHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate.WaterQualityModel350LegacyLoader" Collapsed="true">
+    <Position X="40.5" Y="15.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>NHibernate\WaterQualityModel350LegacyLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate.WaterQualityModelDataAccessListener" Collapsed="true">
+    <Position X="40.5" Y="14.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>iAABIAIYIAAAIgIABAQgBIAAACEJAAAgAAAAQAAQAxA=</HashCode>
+      <FileName>NHibernate\WaterQualityModelDataAccessListener.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.OverwriteLabelOperation" Collapsed="true">
+    <Position X="35.75" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAEAAAAAAEAAAAAAAAAAgAAAAABABgAAAAYAA=</HashCode>
+      <FileName>ObservationAreas\OverwriteLabelOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.SetLabelOperation" Collapsed="true">
+    <Position X="32.75" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAUAAAAAAEAAAAAgAAAAAAAAAABABAAAAAAAA=</HashCode>
+      <FileName>ObservationAreas\SetLabelOperation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OperationType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.WaterQualityObservationAreaCoverage" Collapsed="true">
+    <Position X="7" Y="11.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAEEAAAAAAAAAQAQgAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ObservationAreas\WaterQualityObservationAreaCoverage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.WaterQualityObservationPoint" Collapsed="true">
+    <Position X="21" Y="13.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAAAAE=</HashCode>
+      <FileName>ObservationAreas\WaterQualityObservationPoint.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ObservationPointType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.DelwaqFileStructureHelper" Collapsed="true">
+    <Position X="40.5" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEIAABAAAAgAAAAAgBAAACAAAABAIAAAAAIAAQ=</HashCode>
+      <FileName>Utils\DelwaqFileStructureHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.FunctionTypeCreator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="32" Y="17.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAACDIBACAABECAAAAGAAAAEQgAAAAAIEEACBAA=</HashCode>
+      <FileName>Utils\FunctionTypeCreator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.FunctionTypeCreatorFactory" Collapsed="true">
+    <Position X="29.25" Y="16.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAgQEAAAAAAAAGAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\FunctionTypeCreatorFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.PointToGridCellMapper" Collapsed="true">
+    <Position X="7.75" Y="9.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IABBAgAACAAAAAAQAAAACAAAAAAAAAAAEEAACAAAYAI=</HashCode>
+      <FileName>Utils\PointToGridCellMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.WaterQualityFunctionDataWrapper" Collapsed="true">
+    <Position X="14.25" Y="1" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\WaterQualityFunctionDataWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.WaterQualityUtils" Collapsed="true">
+    <Position X="40.5" Y="7.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAgAAEAAQAAAAAAAAAA=</HashCode>
+      <FileName>Utils\WaterQualityUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityFunctionFactory" Collapsed="true">
+    <Position X="29.25" Y="14.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIUABAAAiAABAAAJABAQAAAAAAAgAACAABAAAEAAAA=</HashCode>
+      <FileName>WaterQualityFunctionFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityModel" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="5.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="attributeData" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.AttributesFileData" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15" Y="5.75" />
+        <Point X="15" Y="5.031" />
+        <Point X="17" Y="5.031" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Loads" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.WaterQualityLoad" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.25" Y="15.688" />
+        <Point X="19.906" Y="15.688" />
+        <Point X="19.906" Y="14.191" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ObservationPoints" Type="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.WaterQualityObservationPoint" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.25" Y="16.5" />
+        <Point X="22.406" Y="16.5" />
+        <Point X="22.406" Y="14.191" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QxYKDmyZBztHD6Ipwds+yMaz2+iPZlm2GinDMEMRE2s=</HashCode>
+      <FileName>WaterQualityModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="waqInitializationSettings" />
+      <Field Name="attributeData" />
+      <Field Name="waqPreProcessor" />
+      <Field Name="waqProcessor" />
+      <Property Name="ModelSettings" />
+      <Property Name="PointToGridCellMapper" />
+      <Property Name="SubstanceProcessLibrary" />
+      <Property Name="ObservationAreas" />
+      <Property Name="Grid" />
+      <Property Name="Bathymetry" />
+      <Property Name="HydroData" />
+      <Property Name="ModelType" />
+      <Property Name="LayerType" />
+      <Property Name="BoundaryDataManager" />
+      <Property Name="LoadsDataManager" />
+      <Property Name="MapFileFunctionStore" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Loads" />
+      <Property Name="ObservationPoints" />
+      <Property Name="ObservationVariableOutputs" />
+      <Property Name="Boundaries" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityModelApplicationPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="37.25" Y="14.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IAQAFAAAQDBgIAAAgAkAAARAAQgIgBEAAFAUIgAAABA=</HashCode>
+      <FileName>WaterQualityModelApplicationPlugin.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityModelSyncExtensions" Collapsed="true">
+    <Position X="37.5" Y="7.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AkAAADABAAANBBAB4AABIAAAgiAgCgAAAgABIAKAEgA=</HashCode>
+      <FileName>WaterQualityModelSyncExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.WaterQualityModelValidator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17.25" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQACAAAASQAAAAAAAAEAGAAEQABgAAAAAIEAAAhQA=</HashCode>
+      <FileName>WaterQualityModelValidator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SharpMap.SpatialOperations.SpatialOperation" Collapsed="true">
+    <Position X="34.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NetTopologySuite.Extensions.Coverages.UnstructuredGridVertexCoverage" Collapsed="true">
+    <Position X="17" Y="7" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="NetTopologySuite.Extensions.Grids.UnstructuredGrid" Collapsed="true">
+    <Position X="17" Y="6" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DelftTools.Shell.Core.ApplicationPlugin" Collapsed="true">
+    <Position X="37.25" Y="13" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DelftTools.Shell.Core.Dao.DataAccessListenerBase" Collapsed="true">
+    <Position X="40.5" Y="13" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.IHasLocationAliases" Collapsed="true">
+    <Position X="17.25" Y="12.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataObjects\IHasLocationAliases.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.IHydroData" Collapsed="true">
+    <Position X="10.5" Y="17.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAqJABRBBCAwAABEAABSoEAAAAgAiARJBIAAAAAA=</HashCode>
+      <FileName>IO\IHydroData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement.IHydFileElement" Collapsed="true">
+    <Position X="32.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>IO\HydFileElement\HydFileElement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.IWaqModelApi" Collapsed="true">
+    <Position X="29.25" Y="21.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBAAoACAgEoAAoAgAjCAgAABACAIAgAQAACIAABBAAA=</HashCode>
+      <FileName>Model\IWaqModelApi.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.IWaqPreProcessor" Collapsed="true">
+    <Position X="17.75" Y="19.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IWaqPreProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.IWaqProcessor" Collapsed="true">
+    <Position X="17.75" Y="22" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAQAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\IWaqProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils.IFunctionTypeCreator" Collapsed="true">
+    <Position X="32" Y="16.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAACAABACAAAAAAAAAEAAAAAQAAAAAAAEEACBAA=</HashCode>
+      <FileName>Utils\IFunctionTypeCreator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DelftTools.Shell.Core.IFileImporter" Collapsed="true">
+    <Position X="10.5" Y="27.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Shell.Core.IFileExporter" Collapsed="true">
+    <Position X="20" Y="27.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.BalanceUnit">
+    <Position X="0.5" Y="12.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>DataObjects\Model\BalanceUnit.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.MonitoringOutputLevel">
+    <Position X="0.5" Y="10.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAgAAAAAAAAAAAAACAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>DataObjects\Model\MonitoringOutputLevel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.NumericalScheme">
+    <Position X="0.5" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAACAABAIADjAAAAMAAAAAA=</HashCode>
+      <FileName>DataObjects\Model\NumericalScheme.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.DataTableInterpolationType">
+    <Position X="34.75" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DataTableInterpolationType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydroDynamicModelType">
+    <Position X="18.25" Y="17.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGA=</HashCode>
+      <FileName>IO\HydroDynamicModelType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.LayerType">
+    <Position X="17" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAABAAAAAAAAAACA=</HashCode>
+      <FileName>IO\LayerType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.LocationTypes" Collapsed="true">
+    <Position X="29.25" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Model\WaqModelApi.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.OperationType" Collapsed="true">
+    <Position X="29.25" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAQAAABAAAAA=</HashCode>
+      <FileName>Model\WaqModelApi.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.DelwaqItem" Collapsed="true">
+    <Position X="29.25" Y="24" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIBAAAAAAAAAAAAAAAAAAAAAAAMgAAAAEAAAACAAAAI=</HashCode>
+      <FileName>Model\WaqModelApi.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.Model.errorLevels" Collapsed="true">
+    <Position X="29.25" Y="24.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAGAAAAAAAAQAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Model\WaqModelApi.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.ObservationPointType">
+    <Position X="25.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ObservationAreas\ObservationPointType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas.PointwiseOperationType">
+    <Position X="29.5" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>ObservationAreas\SetLabelOperation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

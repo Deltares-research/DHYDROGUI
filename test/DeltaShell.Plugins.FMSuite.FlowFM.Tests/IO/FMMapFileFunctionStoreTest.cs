@@ -46,6 +46,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void OpenMapFileCheckFunctions_NcFileContaining3DimensionalDataWithLowerUgridVersion()
+        {
+            var store = new FMMapFileFunctionStore(null)
+            {
+                Path = TestHelper.GetTestFilePath(@"output_mapfiles\zm_dfm_map.nc")
+            };
+            Assert.AreEqual(19, store.Functions.Count);
+        }
+
+        [Test]
         [Category(TestCategory.Slow)]
         public void OpenMapFileCheckMinMax()
         {

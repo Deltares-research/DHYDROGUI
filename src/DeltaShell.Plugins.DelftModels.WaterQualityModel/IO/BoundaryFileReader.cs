@@ -15,19 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// Reads a boundary data file (.bdn) referred to by a hydrodynamics file (.hyd).
     /// </summary>
-    public class BoundaryFileReader
+    public static class BoundaryFileReader
     {
-        private readonly FileInfo boundariesFile;
-
-        #region Tempory used fields used during import for error messaging
-
-        private int expectedNumberOfBoundaries, readNumberOfBoundaries;
-        /// <summary>
-        /// Name of the boundary currently being read.
-        /// </summary>
-        private string currectReadingBoundary;
-
-        #endregion
+        //private int expectedNumberOfBoundaries, readNumberOfBoundaries;
+        //private string currectReadingBoundary;
 
         #region Regex capture group name constants
 
@@ -39,20 +30,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         #endregion
 
-        public BoundaryFileReader(FileInfo boundariesFile)
-        {
-            this.boundariesFile = boundariesFile;
-        }
-
         /// <summary>
         /// Reads all boundary data.
         /// </summary>
         /// <returns>All boundaries with the boundary node ID's associated with each.</returns>
         /// <exception cref="System.InvalidOperationException">When the boundaries file cannot be found.</exception>
         /// <exception cref="FormatException">When the file is in invalid format.</exception>
-        public IDictionary<WaterQualityBoundary, int[]> ReadAll()
+        public static IDictionary<WaterQualityBoundary, int[]> ReadAll(FileInfo boundariesFile)
         {
-            readNumberOfBoundaries = 0;
+            int readNumberOfBoundaries = 0;
             if (!boundariesFile.Exists)
             {
                 throw new InvalidOperationException("Cannot find boundaries file (" + boundariesFile.FullName + ").");
@@ -61,12 +47,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             IDictionary<WaterQualityBoundary, int[]> boundaries;
             using (var streamReader = boundariesFile.OpenText())
             {
-                expectedNumberOfBoundaries = GetNumberOfBoundaries(streamReader);
+                int expectedNumberOfBoundaries = GetNumberOfBoundaries(streamReader);
 
                 boundaries = new Dictionary<WaterQualityBoundary, int[]>(expectedNumberOfBoundaries);
                 for (int i = 0; i < expectedNumberOfBoundaries; i++)
                 {
-                    var kvp = GetNextBoundary(streamReader);
+                    var kvp = GetNextBoundary(streamReader, expectedNumberOfBoundaries, readNumberOfBoundaries);
                     boundaries[kvp.Key] = kvp.Value;
                     readNumberOfBoundaries++;
                 }
@@ -74,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return boundaries;
         }
 
-        private int GetNumberOfBoundaries(TextReader streamReader)
+        private static int GetNumberOfBoundaries(TextReader streamReader)
         {
             var line = streamReader.ReadLine();
             if (line == null)
@@ -92,13 +78,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        private KeyValuePair<WaterQualityBoundary, int[]> GetNextBoundary(TextReader streamReader)
+        private static KeyValuePair<WaterQualityBoundary, int[]> GetNextBoundary(TextReader streamReader, int expectedNumberOfBoundaries, int readNumberOfBoundaries)
         {
-            currectReadingBoundary = ReadBoundaryName(streamReader);
-            var boundaryNodeCount = ReadBoundaryNodeCount(streamReader);
+            var currectReadingBoundary = ReadBoundaryName(streamReader, expectedNumberOfBoundaries, readNumberOfBoundaries);
+            var boundaryNodeCount = ReadBoundaryNodeCount(streamReader, currectReadingBoundary);
 
             int[] boundaryNodeIds;
-            var geometry = ReadBoundaryNodeData(streamReader, boundaryNodeCount, out boundaryNodeIds);
+            var geometry = ReadBoundaryNodeData(streamReader, boundaryNodeCount, out boundaryNodeIds, currectReadingBoundary);
 
             var boundary = new WaterQualityBoundary()
             {
@@ -108,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return new KeyValuePair<WaterQualityBoundary, int[]>(boundary, boundaryNodeIds);
         }
 
-        private string ReadBoundaryName(TextReader streamReader)
+        private static string ReadBoundaryName(TextReader streamReader, int expectedNumberOfBoundaries, int readNumberOfBoundaries)
         {
             var line = streamReader.ReadLine();
             if (line == null)
@@ -119,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return line.Trim();
         }
 
-        private int ReadBoundaryNodeCount(TextReader streamReader)
+        private static int ReadBoundaryNodeCount(TextReader streamReader, string currectReadingBoundary)
         {
             var line = streamReader.ReadLine();
             if (line == null)
@@ -136,14 +122,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        private IGeometry ReadBoundaryNodeData(TextReader streamReader, int boundaryNodeCount, 
-            out int[] boundaryNodeIds)
+        private static IGeometry ReadBoundaryNodeData(TextReader streamReader, int boundaryNodeCount, out int[] boundaryNodeIds, string currectReadingBoundary)
         {
             var lineStrings = new ILineString[boundaryNodeCount];
             boundaryNodeIds = new int[boundaryNodeCount];
             for (int i = 0; i < boundaryNodeCount; i++)
             {
-                var match = GetBoundaryNodeLine(streamReader);
+                var match = GetBoundaryNodeLine(streamReader, currectReadingBoundary);
                 boundaryNodeIds[i] = int.Parse(match.Groups[GroupBoundaryNodeId].Value);
                 var point1 = new Coordinate(ParseDoubleFromGroup(match, GroupX1), ParseDoubleFromGroup(match, GroupY1));
                 var point2 = new Coordinate(ParseDoubleFromGroup(match, GroupX2), ParseDoubleFromGroup(match, GroupY2));
@@ -168,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <para>The boundary node ID is required data for the delwaq input file.</para>
         /// <para>x1 and y1, and x2 with y2 respectively, form a coordinate on that line.</para>
         /// </summary>
-        private Match GetBoundaryNodeLine(TextReader streamReader)
+        private static Match GetBoundaryNodeLine(TextReader streamReader, string currectReadingBoundary)
         {
             var line = streamReader.ReadLine();
             if (line == null)

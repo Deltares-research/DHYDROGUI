@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
                 var newFilePath = Path.Combine(targetDirectory, hydFileName);
                 
-                var data = new HydFileReader(new FileInfo(newFilePath)).ReadAll();
+                var data = HydFileReader.ReadAll(new FileInfo(newFilePath));
                 var count = 0;
                 data.DataChanged += (s, e) => count++;
 

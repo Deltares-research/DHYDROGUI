@@ -18,10 +18,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var nonexistentAttributesFile = new FileInfo("I do not exist");
-            var reader = new AttributesFileReader(nonexistentAttributesFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll(1, 2);
+            TestDelegate call = () => AttributesFileReader.ReadAll(1, 2, nonexistentAttributesFile);
 
             // assert
             var exception = Assert.Throws<InvalidOperationException>(call);
@@ -35,10 +34,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // setup
             var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "square", "square.atr");
             var atrFile = new FileInfo(filePath);
-            var reader = new AttributesFileReader(atrFile);
-
+            
             // call
-            var attributesFileData = reader.ReadAll(2500, 1);
+            var attributesFileData = AttributesFileReader.ReadAll(2500, 1, atrFile);
 
             // assert
             Assert.AreEqual(2500, attributesFileData.IndexCount);
@@ -56,14 +54,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // setup
             var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "real", "uni3d.atr");
             var atrFile = new FileInfo(filePath);
-            var reader = new AttributesFileReader(atrFile);
-
+            
             AttributesFileData data = null;
 
             // call & assert
             TestHelper.AssertIsFasterThan(200, () =>
             {
-                data = reader.ReadAll(63814, 7);
+                data = AttributesFileReader.ReadAll(63814, 7, atrFile);
             });
             Assert.AreEqual(63814 * 7, data.IndexCount);
         }
@@ -74,10 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // setup
             var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "attribute files", "random_3x5.atr");
             var atrFile = new FileInfo(filePath);
-            var reader = new AttributesFileReader(atrFile);
-
+            
             // call
-            var attributesFileData = reader.ReadAll(5, 3);
+            var attributesFileData = AttributesFileReader.ReadAll(5, 3, atrFile);
 
             // assert
             Assert.AreEqual(15, attributesFileData.IndexCount);
@@ -100,10 +96,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // setup
             var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "attribute files", "random_2x2_WithBottomTopFirst.atr");
             var atrFile = new FileInfo(filePath);
-            var reader = new AttributesFileReader(atrFile);
-
+            
             // call
-            var attributesFileData = reader.ReadAll(2, 2);
+            var attributesFileData = AttributesFileReader.ReadAll(2, 2,atrFile);
 
             // assert
             Assert.AreEqual(4, attributesFileData.IndexCount);
@@ -126,10 +121,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // setup
             var filePath = Path.Combine(TestHelper.GetDataDir(), "IO", "attribute files", "random_2x2_OnlyBottomTopFirst.atr");
             var atrFile = new FileInfo(filePath);
-            var reader = new AttributesFileReader(atrFile);
-
+            
             // call
-            TestDelegate call = () => reader.ReadAll(2, 2);
+            TestDelegate call = () => AttributesFileReader.ReadAll(2, 2, atrFile);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -230,11 +231,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     l => l.Count == count && l.Except(existingQuantities).Count() == 1)
                     .SelectMany(l => l).Distinct();
 
-            return
-                validCombinationResults.Concat(existingQuantities)
-                    .Concat(FlowBoundaryCondition.AlwaysAllowedQuantities)
-                    .Distinct()
-                    .Where(q => FlowBoundaryCondition.GetProcessNameForQuantity(q) == process);
+            var allowedQuantities = validCombinationResults.Concat(existingQuantities)
+                                        .Concat(FlowBoundaryCondition.AlwaysAllowedQuantities)
+                                        .Distinct()
+                                        .Where(q => FlowBoundaryCondition.GetProcessNameForQuantity(q) == process).ToList();
+
+            if (boundaryConditions.BoundaryConditions
+                    .Where(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc))
+                    .ToList()
+                    .Count >= 1)
+            {
+                allowedQuantities.RemoveAllWhere(q => FlowBoundaryCondition.IsMorphologyFlowQuantityType(q));
+            }
+
+            return allowedQuantities;
         }
 
         public override IEnumerable<string> GetAllowedVariablesFor(string category, BoundaryConditionSet boundaryConditions)
@@ -266,13 +276,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override string GetVariableDescription(string variable, string category)
+        public override string GetVariableDescription(string variable, string category = null)
         {
-            FlowBoundaryQuantityType variableFlowBoundaryQuantityType;
+            FlowBoundaryQuantityType flowBoundaryQuantityType;
 
-            if (FlowBoundaryConditionFactory.TryParseRegularFlowBoundaryQuantityType(variable, category, out variableFlowBoundaryQuantityType))
+            if (category != EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.Tracer) && // Do not try to match Tracers to enum descriptions
+                category != EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration) && // Do not try to match Fraction names to enum descriptions
+                Enum.TryParse(variable, out flowBoundaryQuantityType))
             {
-                return FlowBoundaryCondition.GetDescription(variableFlowBoundaryQuantityType);
+                return FlowBoundaryCondition.GetDescription(flowBoundaryQuantityType);
             }
 
             return base.GetVariableDescription(variable, category);

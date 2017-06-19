@@ -7,29 +7,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// Reader for attribute files.
     /// </summary>
     /// <remarks>Only reads 'segment enabled' state data.</remarks>
-    public class AttributesFileReader
+    public static class AttributesFileReader
     {
         private const string CommentToken = ";";
-        private readonly FileInfo attributesFile;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AttributesFileReader"/> class.
-        /// </summary>
-        /// <param name="attributesFile">The attributes file (*.atr extension).</param>
-        public AttributesFileReader(FileInfo attributesFile)
-        {
-            this.attributesFile = attributesFile;
-        }
 
         /// <summary>
         /// Reads all attribute data for a given size.
         /// </summary>
         /// <param name="nrOfSegmentsPerLayer">The number of segments per layer.</param>
         /// <param name="nrOfLayers">The number of layers.</param>
+        /// <param name="attributesFile">The attributes file (*.atr extension).</param>
         /// <returns>All data read from the attributes file reader.</returns>
         /// <exception cref="System.InvalidOperationException">When attributes file cannot be found.</exception>
         /// <exception cref="System.FormatException">When the data is malformatted or missing enabled state data block.</exception>
-        public AttributesFileData ReadAll(int nrOfSegmentsPerLayer, int nrOfLayers)
+        public static AttributesFileData ReadAll(int nrOfSegmentsPerLayer, int nrOfLayers, FileInfo attributesFile)
         {
             var fullName = attributesFile == null ? "" : attributesFile.FullName;
             if (attributesFile == null || !attributesFile.Exists)
@@ -38,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             var data = new AttributesFileData(nrOfSegmentsPerLayer, nrOfLayers);
-            if (!ReadFileForSegmentEnabledState(data))
+            if (!ReadFileForSegmentEnabledState(data, attributesFile))
             {
                 var message = string.Format("Attributes file ({0}) does not contain data block for enabled state of segments.", fullName);
                 throw new FormatException(message);
@@ -47,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return data;
         }
 
-        private bool ReadFileForSegmentEnabledState(AttributesFileData data)
+        private static bool ReadFileForSegmentEnabledState(AttributesFileData data, FileInfo attributesFile)
         {
             var segmentEnabledDataRead = false;
             using (var streamReader = attributesFile.OpenText())

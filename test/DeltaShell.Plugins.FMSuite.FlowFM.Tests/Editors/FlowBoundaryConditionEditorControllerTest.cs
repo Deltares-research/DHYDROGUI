@@ -16,7 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
     {
         [TestCase("WaterLevel", FlowBoundaryQuantityType.WaterLevel, "Water level")]
         [TestCase("Riemann", FlowBoundaryQuantityType.Riemann, "Riemann invariant")]
-        [TestCase("MorphologyBedLevelPrescribed", FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, "Bed level prescribed")]
         [TestCase("Tracer1", FlowBoundaryQuantityType.Tracer, "Tracer1")]
         [TestCase("WaterLevel", FlowBoundaryQuantityType.Tracer, "WaterLevel")]
         [TestCase("Riemann", FlowBoundaryQuantityType.Tracer, "Riemann")]
@@ -28,18 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         {
             var category = EnumDescriptionAttributeTypeConverter.GetEnumDescription(quantityType);
             var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, category);
-
-            Assert.AreEqual(expectedDescription, returnedDescription);
-        }
-
-        [TestCase("WaterLevel", "Water level")]
-        [TestCase("Riemann", "Riemann invariant")]
-        [TestCase("MorphologyBedLevelPrescribed", "Bed level prescribed")]
-        [TestCase("Tracer1", "Tracer1")]
-        [TestCase("3", "3")]
-        public void TestGetVariableDescription_CorrectlyHandlesNullCategory(string variable, string expectedDescription)
-        {
-            var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, null);
 
             Assert.AreEqual(expectedDescription, returnedDescription);
         }

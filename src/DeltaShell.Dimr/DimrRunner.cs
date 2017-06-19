@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.xsd;
@@ -19,6 +23,7 @@ namespace DeltaShell.Dimr
         private readonly IDimrModel model;
         private IDimrApi dimrApi;
         protected bool runLocal;
+        private const string DimrRunLogfileDataItemTag = "DimrRunLog";
 
         public DimrRunner(IDimrModel model)
         {
@@ -27,6 +32,7 @@ namespace DeltaShell.Dimr
 
         public void OnInitialize()
         {
+            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunLogfileDataItemTag);
             if (model.IsRunByDimr) return;
             try
             {
@@ -132,11 +138,13 @@ namespace DeltaShell.Dimr
             var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
             model.ConnectOutput(validPath);
+            ConnectDimrRunLogFile(model);
         }
 
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
+        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected_stdout_stderr.log";
 
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
         {
@@ -267,10 +275,10 @@ namespace DeltaShell.Dimr
             var validationReport = model.Validate();
             if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
             {
-                var errorMessage = string.Format("Validation errors: {0}",
-                    string.Join("\n", validationReport.GetAllIssuesRecursive()
+                var errorMessage = String.Format("Validation errors: {0}",
+                    String.Join("\n", validationReport.GetAllIssuesRecursive()
                         .Where(i => i.Severity == ValidationSeverity.Error)
-                        .Select(i => string.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
+                        .Select(i => String.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
 
                 model.Status = ActivityStatus.Failed;
                 log.Error(model.Name + " model validation failed; please review the validation report.\n\r" + errorMessage);
@@ -280,7 +288,7 @@ namespace DeltaShell.Dimr
 
         public Array GetVar(string key)
         {
-            double[] value = new[] { double.NaN };
+            double[] value = new[] { Double.NaN };
             if (CanCommunicateWithDimrApi)
             {
                 value = (double[]) dimrApi.GetValues(key);
@@ -294,6 +302,52 @@ namespace DeltaShell.Dimr
             if (CanCommunicateWithDimrApi)
             {
                 dimrApi.SetValues(key, values);
+            }
+        }
+
+        public static void ConnectDimrRunLogFile(IModel model)
+        {
+            var completeDimrLogFilename = Path.Combine(model.ExplicitWorkingDirectory, DIMR_RUN_LOGFILE_NAME);
+            if (!File.Exists(completeDimrLogFilename)) return;
+            
+            //add an dimr run log output dataitem with the log...
+            var logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunLogfileDataItemTag);
+            if (logDataItem == null)
+            {
+                var textDocument = new TextDocument(true) {Name = "Dimr Run Log"};
+
+                logDataItem = new DataItem(textDocument, DataItemRole.Output, DimrRunLogfileDataItemTag);
+                model.DataItems.Add(logDataItem);
+            }
+
+            using (Stream objStream = File.OpenRead(completeDimrLogFilename))
+            {
+                // Read data from file
+                byte[] arrData = {};
+                var stringBuilder = new StringBuilder();
+                // Read data from file until read position is not equals to length of file
+                while (objStream.Position != objStream.Length)
+                {
+                    // Read number of remaining bytes to read
+                    long lRemainingBytes = objStream.Length - objStream.Position;
+
+                    // If bytes to read greater than 2 mega bytes size create array of 2 mega bytes
+                    // Else create array of remaining bytes
+                    if (lRemainingBytes > 262144)
+                    {
+                        arrData = new byte[262144];
+                    }
+                    else
+                    {
+                        arrData = new byte[lRemainingBytes];
+                    }
+
+                    // Read data from file
+                    objStream.Read(arrData, 0, arrData.Length);
+
+                    stringBuilder.Append(Encoding.UTF8.GetString(arrData, 0, arrData.Length));
+                }
+                ((TextDocument) logDataItem.Value).Content = stringBuilder.ToString();
             }
         }
     }

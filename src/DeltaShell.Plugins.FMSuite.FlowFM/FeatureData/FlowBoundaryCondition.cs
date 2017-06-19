@@ -12,6 +12,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
@@ -75,6 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     [Entity]
     public class FlowBoundaryCondition : BoundaryCondition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryCondition));
         /// <summary>
         /// Constrained BC combinations within a set. Quantities not appearing anywhere in these lists are considered to be unconstrained, 
         /// i.e. the user can combine these with any quantity. (e.g. SedimentConcentration)
@@ -494,6 +496,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
+        public static bool MorphologyBoundaryConditionHasGeneratedData(IBoundaryCondition boundaryCondition)
+        {
+            var generatedData = boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 0;
+            return generatedData && IsMorphologyBoundary(boundaryCondition);
+        }
+
+        public static bool IsMorphologyBoundary(IBoundaryCondition boundaryCondition)
+        {
+            var flowBC = boundaryCondition as FlowBoundaryCondition;
+            if (flowBC == null) return false;
+
+            return IsMorphologyFlowQuantityType(flowBC.FlowQuantity);
+        }
+
+        public static bool IsMorphologyFlowQuantityType(FlowBoundaryQuantityType flowQuantity)
+        {
+            return (flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed ||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed ||
+                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
+        }
+
+        public override void AddPoint(int i)
+        {
+            if (DataPointIndices.Any())
+            {
+                Log.Warn("The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.");
+            }
+            base.AddPoint(i);
+        }
+
         protected override IFunction CreateFunction()
         {
             if (DataType == BoundaryConditionDataType.Qh)
@@ -511,7 +543,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             if (FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport &&
                 DataType == BoundaryConditionDataType.TimeSeries)
             {
-                if (SedimentFractionNames.Count == 0)
+                if ( SedimentFractionNames == null || SedimentFractionNames.Count == 0)
                     return null;
                 IFunction loadTransport = new Function(VariableName);
 

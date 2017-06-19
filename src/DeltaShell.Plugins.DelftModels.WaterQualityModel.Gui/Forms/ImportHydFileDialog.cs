@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            var hydroData = new HydFileReader(new FileInfo(path)).ReadAll();
+            var hydroData = HydFileReader.ReadAll(new FileInfo(path));
             waterQualityModel.ImportHydroData(hydroData, !checkBoxTimers.Checked, !checkBoxCoordinateSystem.Checked);
         }
     }

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 {
-    public class DelwaqFileStructureHelper
+    public static class DelwaqFileStructureHelper
     {
         private const string delwaq_kernel = "waq_kernel";
         public const string DELWAQ1_EXE = "delwaq1.exe";

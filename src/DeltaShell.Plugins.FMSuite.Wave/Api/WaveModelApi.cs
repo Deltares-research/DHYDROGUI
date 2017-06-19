@@ -42,7 +42,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         {
             WaveModelDll.set_var(variable, value);
         }
-        
+
+        public DateTime StartTime
+        {
+            get
+            {
+                var t = 0.0;
+                WaveModelDll.get_start_time(ref t);
+                return ReferenceDateTime.AddSeconds(t);
+            }
+        }
+
         public DateTime ReferenceDateTime { get; set; }
 
         public DateTime CurrentTime
@@ -78,12 +88,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                 
                 var d3DhomeDir = DimrApiDataSet.DllDirectory;
 
-                waveExeDir = Path.Combine(d3DhomeDir, arch, "wave", "bin");
-                swanExeDir = Path.Combine(d3DhomeDir, arch, "swan","bin");
-                swanScriptDir = Path.Combine(d3DhomeDir, arch, "swan", "scripts");
+                waveExeDir = Path.Combine(d3DhomeDir, arch, WaveModelDll.WAVE_FOLDER_NAME, WaveModelDll.WAVE_BINFOLDER_NAME);
+                swanExeDir = Path.Combine(d3DhomeDir, arch, WaveModelDll.SWAN_FOLDER_NAME, WaveModelDll.SWAN_BINFOLDER_NAME);
+                swanScriptDir = Path.Combine(d3DhomeDir, arch, WaveModelDll.SWAN_FOLDER_NAME, WaveModelDll.SWAN_SCRIPTFOLDER_NAME);
 
-                esmfPath = Path.Combine(d3DhomeDir, arch, "esmf", "bin");
-                esmfScriptPath = Path.Combine(d3DhomeDir, arch, "esmf", "scripts");
+                esmfPath = Path.Combine(d3DhomeDir, arch, WaveModelDll.ESMF_FOLDER_NAME, WaveModelDll.ESMF_BINFOLDER_NAME);
+                esmfScriptPath = Path.Combine(d3DhomeDir, arch, WaveModelDll.ESMF_FOLDER_NAME, WaveModelDll.ESMF_SCRIPTFOLDER_NAME);
 
                 oldPath = Environment.GetEnvironmentVariable("PATH");
                 oldDelft3DDirectory = Environment.GetEnvironmentVariable("D3D_HOME");
