@@ -5,7 +5,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class UGridApi1D : GridApi, IUGridApi1D
+    public class UGridApi1DNetwork : GridApi, IUGridApi1DNetwork
     {
         private int networkId;
         private int nNodes;
@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Grid
         private int nGeometryPoints;
 
 
-        public UGridApi1D()
+        public UGridApi1DNetwork()
         {
             networkId = -1;
             nNodes = -1;

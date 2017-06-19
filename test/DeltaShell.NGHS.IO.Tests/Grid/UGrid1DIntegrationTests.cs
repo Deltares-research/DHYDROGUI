@@ -396,7 +396,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             try
             {
-                using (var uGrid1DMesh = new UGrid1DMesh(localCopyOfTestFile))
+                using (var uGrid1DMesh = new UGrid1DDiscretisation(localCopyOfTestFile))
                 {
                     #region Write 1D network discretisation
 

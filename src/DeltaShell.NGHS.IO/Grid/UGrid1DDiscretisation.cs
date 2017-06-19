@@ -2,27 +2,27 @@
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class UGrid1DMesh : AGrid, IUGrid1DMesh
+    public class UGrid1DDiscretisation : AGrid, IUGrid1DMesh
     {
-        public UGrid1DMesh()
+        public UGrid1DDiscretisation()
         {
         }
 
-        public UGrid1DMesh(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
+        public UGrid1DDiscretisation(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
         {
             GridApi = GridApiFactory.CreateNew1DMesh();
             //Initialize(file, mode);
         }
 
-        #region Write 1D mesh
+        #region Write 1D Discretisation
 
         public void Create1DMeshInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
         {
             if (!IsInitialized()) Initialize();
-            var uGridApi1DMesh = GridApi as IUGridApi1DDiscretisation;
-            if (uGridApi1DMesh != null) // TODO: What to do when api == null?
+            var uGridApi = GridApi as IUGridApi1DDiscretisation;
+            if (uGridApi != null) // TODO: What to do when api == null?
             {
-                var ierr = uGridApi1DMesh.Create1dDiscretisation(name, numberOfMeshPoints, numberOfMeshEdges, networkId);
+                var ierr = uGridApi.Create1dDiscretisation(name, numberOfMeshPoints, numberOfMeshEdges, networkId);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     throw new InvalidOperationException(string.Format(
@@ -35,10 +35,10 @@ namespace DeltaShell.NGHS.IO.Grid
         public void Write1DMeshDiscretizationPoints(int[] branchIdx, double[] offset)
         {
             if (!IsInitialized()) Initialize();
-            var uGridApi1DMesh = GridApi as IUGridApi1DDiscretisation;
-            if (uGridApi1DMesh != null)
+            var uGridApi = GridApi as IUGridApi1DDiscretisation;
+            if (uGridApi != null)
             {
-                var ierr = uGridApi1DMesh.Write1dDiscretisationPoints(branchIdx, offset);
+                var ierr = uGridApi.Write1dDiscretisationPoints(branchIdx, offset);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     throw new InvalidOperationException(string.Format("Couldn't write 1d mesh discretisation points because of error number {0}", ierr));
@@ -48,14 +48,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #endregion
 
-        #region Read 1D mesh
+        #region Read 1D Discretisation
 
         public int GetNumberOf1DMeshDiscretisationPoints()
         {
-            var uGridApi1DMesh = GridApi as IUGridApi1DDiscretisation;
-            if (uGridApi1DMesh != null)
+            var uGridApi = GridApi as IUGridApi1DDiscretisation;
+            if (uGridApi != null)
             {
-                var numberOfMeshPoints = uGridApi1DMesh.GetNumberOf1dDiscretisationPoints();
+                var numberOfMeshPoints = uGridApi.GetNumberOf1dDiscretisationPoints();
                 if (numberOfMeshPoints < 0)
                 {
                     throw new InvalidOperationException(string.Format("Couldn't get the number of 1D mesh discretisation points because of error number {0}", numberOfMeshPoints));
@@ -70,12 +70,12 @@ namespace DeltaShell.NGHS.IO.Grid
             branchIdx = new int[0];
             offset = new double[0];
 
-            var uGridApi1DMesh = GridApi as IUGridApi1DDiscretisation;
-            if (uGridApi1DMesh == null)
+            var uGridApi = GridApi as IUGridApi1DDiscretisation;
+            if (uGridApi == null)
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR; 
             }
-            var ierr = uGridApi1DMesh.Read1dDiscretisationPoints(out branchIdx, out offset);
+            var ierr = uGridApi.Read1dDiscretisationPoints(out branchIdx, out offset);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(string.Format("Couldn't read the 1D mesh discretisation points because of error number {0}", ierr));

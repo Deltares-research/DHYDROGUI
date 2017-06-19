@@ -2,7 +2,7 @@ using System;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public interface IUGridApi1D : IGridApi, IDisposable
+    public interface IUGridApi1DNetwork : IGridApi, IDisposable
     {
         int Create1DNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId);
         bool NetworkReady { get; }

@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             try
             {
-                using (var uGrid1DMesh = new UGrid1DMesh(netFilePath))
+                using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath))
                 {
                     var discretisationPoints = networkDiscretization.Locations.Values.ToArray();
 
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             try
             {
-                using (var uGrid1DMesh = new UGrid1DMesh(netFilePath))
+                using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath))
                 {
                     var discretisation = new Discretization
                     {
