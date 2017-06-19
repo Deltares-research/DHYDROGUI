@@ -8,8 +8,6 @@ using DelftTools.ModelExchange.Queries;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
-using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.Fews.Assemblers;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
