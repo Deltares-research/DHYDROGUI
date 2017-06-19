@@ -12,5 +12,6 @@ namespace DeltaShell.Dimr
         void ProcessMessages();
         void SetValuesDouble(string variable, double[] values);
         void SetValuesInt(string variable, int[] values);
+        void SetLoggingLevel(string logType, long level);
     }
 }

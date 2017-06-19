@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="DeltaShell.Dimr.Gui.Ribbon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
+             xmlns:viewModels="clr-namespace:DeltaShell.Dimr.Gui.ViewModels"
+             mc:Ignorable="d" Width="1004.574" Height="168" Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml"/>
+    </UserControl.Resources>
+    <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
+        <fluent:Ribbon.ContextualGroups>
+            <fluent:RibbonContextualTabGroup Header="GIS" Visibility="Visible" Name="geospatialContextualGroup" Background="Green" BorderBrush="Green" />
+        </fluent:Ribbon.ContextualGroups>
+
+        <fluent:RibbonTabItem Header="DIMR" Name="tabDimr" fluent:KeyTip.Keys="D" Group="{Binding ElementName=geospatialContextualGroup}">
+            <fluent:RibbonGroupBox Header="DIMR">
+                <fluent:RibbonGroupBox.DataContext>
+                    <viewModels:DIMRConfigRibbonViewModel/>
+                </fluent:RibbonGroupBox.DataContext>
+                <Label Content="Configure DIMR Logfile loglevel"/>
+                <ComboBox SelectedItem="{Binding CurrentLogfileLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
+                <Label Content="Configure DIMR userfeedback loglevel"/>
+                <ComboBox SelectedItem="{Binding CurrentFeedbackLevel}" ItemsSource="{Binding Levels}" Width="150" IsEditable="True" IsReadOnly="True"/>
+            </fluent:RibbonGroupBox>
+        </fluent:RibbonTabItem>
+    </fluent:Ribbon>
+</UserControl>

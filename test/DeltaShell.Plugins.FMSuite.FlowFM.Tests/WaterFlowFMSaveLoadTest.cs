@@ -622,22 +622,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.IsProjectCreatedInTemporaryDirectory = true;
                 app.Run();
 
                 // import
                 const string path = "har.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduFilePath);
                 app.Project.RootFolder.Add(model);
-
                 // run
-                model.Initialize();
-                model.Execute();
-                model.Finish();
-                model.Cleanup();
-
+                ActivityRunner.RunActivity(model);
                 // save
                 app.SaveProjectAs(path);
                 
@@ -663,27 +658,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.IsProjectCreatedInTemporaryDirectory = true;
                 app.Run();
 
                 // import
                 const string path = "har.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
                 var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
                 var model = new WaterFlowFMModel(mduFilePath);
                 app.Project.RootFolder.Add(model);
 
-                // save
-                app.SaveProjectAs(path);
-
-                // run
-                model.Initialize();
-                model.Execute();
-                model.Finish();
-                model.Cleanup();
-
+                ActivityRunner.RunActivity(model);
+                
                 // close
-                app.SaveProject();
+                app.SaveProjectAs(path);
                 app.CloseProject();
 
                 //reopen
@@ -704,12 +692,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.IsProjectCreatedInTemporaryDirectory = true;
 
                 app.Run();
                 
                 const string path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-
+                
                 var model = new WaterFlowFMModel();
 
                 app.Project.RootFolder.Add(model);
@@ -732,7 +720,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var waterLevelBoundaryCondition = model.BoundaryConditions.First();
                 waterLevelBoundaryCondition.AddPoint(0);
                 waterLevelBoundaryCondition.AddPoint(1);
-                app.SaveProject();
+                app.SaveProjectAs(path);
                 app.CloseProject();
 
                 app.OpenProject(path);

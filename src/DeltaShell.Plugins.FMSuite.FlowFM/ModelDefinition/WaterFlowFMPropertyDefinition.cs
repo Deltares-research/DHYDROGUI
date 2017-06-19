@@ -117,4 +117,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string UseMorSed = "UseMorSed";
     }
 
+
+    public enum MapFormatType
+    {
+        Unknown = 0,
+        NetCdf = 1,
+        Tecplot = 2,
+        Both = 3,
+        Ugrid = 4
+    }
 }

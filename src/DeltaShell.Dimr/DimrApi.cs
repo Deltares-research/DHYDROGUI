@@ -12,11 +12,6 @@ namespace DeltaShell.Dimr
 {
     public class DimrApi : IDimrApi
     {
-        private const DimrApiDataSet.DebugLevel DebugLevel = DimrApiDataSet.DebugLevel.ALWAYS | DimrApiDataSet.DebugLevel.WARN |
-                                              DimrApiDataSet.DebugLevel.MAJOR | DimrApiDataSet.DebugLevel.MINOR | DimrApiDataSet.DebugLevel.DETAIL;
-
-        private const DimrApiDataSet.DebugLevel ExecuteLevel = DimrApiDataSet.DebugLevel.ALWAYS | DimrApiDataSet.DebugLevel.WARN;
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(DimrApi));
         private readonly bool useMessagesBuffering; 
         private double tStart;
@@ -40,6 +35,8 @@ namespace DeltaShell.Dimr
             tStart = tEnd = tStep = tCurrent = 0;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
+            SetLoggingLevel("feedbackLevel", (long)DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel("debugLevel", (long)DimrApiDataSet.LogFileLevel);
             set_logger();
         }
 
@@ -118,8 +115,7 @@ namespace DeltaShell.Dimr
                 
                 LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable("PATH")));
 
-                SetLoggingLevel((int) DebugLevel);
-
+                
                 byte useMpi = 0;
                 
                 
@@ -185,16 +181,16 @@ namespace DeltaShell.Dimr
             return 0;
         }
 
-        private static void SetLoggingLevel(int debugLevel)
+        public void SetLoggingLevel(string debugLevelType, long level)
         {
-            // Allocating memory for int
-            IntPtr intPointer = Marshal.AllocHGlobal(sizeof(int));
+            // Allocating memory for long
+            IntPtr intPointer = Marshal.AllocHGlobal(sizeof(long));
 
-            Marshal.WriteInt32(intPointer, debugLevel);
+            Marshal.WriteInt64(intPointer, level);
 
             // sending intPointer to unmanaged code here
 
-            DimrApiWrapper.set_var("feedbackLevel", intPointer);
+            DimrApiWrapper.set_var(debugLevelType, intPointer);
             // Free memory
             Marshal.FreeHGlobal(intPointer);
         }
@@ -214,18 +210,11 @@ namespace DeltaShell.Dimr
         {
             DimrApiWrapper.update(step);
             DimrApiWrapper.get_current_time(ref tCurrent);
-            if (!reduceLogging)
-            {
-                LogMsg("Will reduce logging from Dimr during updates to speed up process");
-                reduceLogging = true;
-                SetLoggingLevel((int)ExecuteLevel);
-            }
             return 0;
         }
 
         public int Finish()
         {
-            SetLoggingLevel((int)DebugLevel);
             DimrApiWrapper.finalize();
             return 0;
         }

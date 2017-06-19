@@ -208,5 +208,9 @@ namespace DeltaShell.Dimr
         public void SetValuesInt(string variable, int[] values)
         {
         }
+
+        public void SetLoggingLevel(string logType, long level)
+        {
+        }
     }
 }
