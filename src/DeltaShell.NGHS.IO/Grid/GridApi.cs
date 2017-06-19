@@ -11,14 +11,6 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public abstract class GridApi : IGridApi
     {
-        public enum UGridMeshType
-        {
-            Combined = 0,
-            Mesh1D = 1,
-            Mesh2D = 2,
-            Mesh3D = 3
-        }
-
         protected static readonly ILog Log = LogManager.GetLogger(typeof(GridApi));
         protected int ioncid;
         protected double convversion;
@@ -267,6 +259,22 @@ namespace DeltaShell.NGHS.IO.Grid
                 networkIdsPtr = IntPtr.Zero;
             }
         }
+
+        //public int Get1dDiscretisationPoints(UGridMeshType meshType, ref int numberOfMeshes)
+        //{
+        //    // Get networkId from "ionc_get_mesh_ids_dll"
+        //    int networkId = -1;
+
+        //    var numOfMeshPoints = -1;
+        //    var ierr = wrapper.ionc_get_1d_mesh_discretisation_points_count(ref ioncid, ref networkId, ref numOfMeshPoints);
+
+        //    IntPtr branchIds = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
+        //    IntPtr offsets = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
+
+        //    ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref networkId, ref branchIds, ref offsets,
+        //        ref numberOfMeshes);
+
+        //}
 
         public Dictionary<UGridMeshType, int[]> GetMeshIds()
         {

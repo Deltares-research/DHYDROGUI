@@ -196,6 +196,7 @@
     <Compile Include="Grid\UGrid.cs" />
     <Compile Include="Grid\UGridApi1D.cs" />
     <Compile Include="Grid\UGridApi1DMesh.cs" />
+    <Compile Include="Grid\UGridMeshType.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
