@@ -182,14 +182,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var ierr = uGridApi.WriteXYCoordinateValues(mesh, xValues, yValues);
             ThrowIfError(ierr, "Couldn't save x and y coordinates");
         }
-
-        //public void WriteZValuesAtFaces(int meshId, double[] zValues)
-        //{
-        //    var uGridApi = GetValidUGridApi();
-        //    var ierr = uGridApi.WriteZCoordinateValues(mesh, zValues);
-        //    ThrowIfError(ierr, "Couldn't save z coordinates");
-        //}
-
+        
         public void WriteZValuesAtFaces(int meshId, double[] zValues)
         {
             const string faceBedLevelVariableName = "face_z";
@@ -234,7 +227,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new Exception(string.Format(exceptionText + " because of number: {0}", ierr));
+                throw new Exception(string.Format(exceptionText + " because of error number: {0}", ierr));
             }
         }
 

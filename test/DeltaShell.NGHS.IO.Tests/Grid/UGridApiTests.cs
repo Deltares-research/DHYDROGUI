@@ -205,28 +205,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
             // uGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 }));
 
             // uRemoteGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 }));
         }
-
-        [Test]
-        public void WriteZCoordinateValuesGetNodesFailedTest()
-        {
-            // uGridApi
-            int nodes;
-            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            uGridApi.Expect(a => a.GetNumberOfNodes(1, out nodes)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
-
-            mocks.ReplayAll();
-            // uGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
-
-            // uRemoteGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 }));
-        }
-
+        
         [Test]
         public void WriteZCoordinateValuesTest()
         {
@@ -253,11 +237,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            var ierr = uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
         }
@@ -288,11 +272,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            var ierr = uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
         }
 
@@ -323,11 +307,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            var ierr = uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteZCoordinateValues(1, new[] { 0.0 });
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
