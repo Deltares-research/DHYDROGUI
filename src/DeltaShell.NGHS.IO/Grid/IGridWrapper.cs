@@ -298,21 +298,21 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Get the number of mesh discretization points 
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshId">The mesh id (in)</param>
         /// <param name="nmeshpoints">The number of mesh points (out)</param>
         /// <returns></returns>
-        int ionc_get_1d_mesh_discretisation_points_count([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int nmeshpoints);
+        int ionc_get_1d_mesh_discretisation_points_count([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int nmeshpoints);
 
         /// <summary>
         /// Read the coordinates of the mesh points  
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshId">The mesh id (in)</param>
         /// <param name="c_branchidx">The branch id for each mesh point (out)</param>
         /// <param name="c_offset">The offset along the branch from the starting point (out)</param>
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <returns></returns>
-        int ionc_read_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
+        int ionc_read_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int meshId, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
 
         /// <summary>
         /// Reads the network id for the 1D network

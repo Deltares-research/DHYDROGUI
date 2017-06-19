@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // network
             Network = new HydroNetwork { Name = "Network" };
             // Computational Grid For network
-            NetworkDiscretization = new Discretization { Network = network, Name = "Computational 1D Grid" };
+            NetworkDiscretisation = new Discretization { Network = network, Name = "Computational 1D Grid" };
 
             // Create empty model definition
             ModelDefinition = new WaterFlowFMModelDefinition();
@@ -1673,9 +1673,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            if (NetworkDiscretization != null)
+            if (NetworkDiscretisation != null)
             {
-                //SaveNetworkDiscretization(); 
+                //SaveNetworkDiscretisation(); 
             }
 
             if (Grid != null)
@@ -1731,6 +1731,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void OnLoad(string mduPath)
         {
             LoadStateFromMdu(mduPath);
+            // TODO: uncomment and test loading a project into DeltaShell (DELFT3DFM-906)
+            //LoadNetwork();
+            //LoadNetworkDiscretisation();
             ImportSpatialOperationsAfterLoading();
         }
 

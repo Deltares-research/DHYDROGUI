@@ -419,23 +419,23 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Get the number of mesh discretization points 
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshId">The mesh id (in)</param>
         /// <param name="nmeshpoints">The number of mesh points (out)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_mesh_discretisation_points_count", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_1d_mesh_discretisation_points_count_dll([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int nmeshpoints);
+        private static extern int ionc_get_1d_mesh_discretisation_points_count_dll([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int nmeshpoints);
 
         /// <summary>
         /// Read the coordinates of the mesh points  
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshId">The mesh id (in)</param>
         /// <param name="c_branchidx">The branch id for each mesh point (out)</param>
         /// <param name="c_offset">The offset along the branch from the starting point (out)</param>
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_read_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_read_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
+        private static extern int ionc_read_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshId, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
 
         /// <summary>
         /// Defines the contacts structure.
@@ -769,16 +769,14 @@ namespace DeltaShell.NGHS.IO.Grid
             ref c_geopointsY, ref nNodes);
         }
 
-        public int ionc_get_1d_mesh_discretisation_points_count(ref int ioncid, ref int networkid, ref int nmeshpoints)
+        public int ionc_get_1d_mesh_discretisation_points_count(ref int ioncid, ref int meshId, ref int nmeshpoints)
         {
-            return ionc_get_1d_mesh_discretisation_points_count_dll(ref ioncid, ref networkid, ref nmeshpoints);
+            return ionc_get_1d_mesh_discretisation_points_count_dll(ref ioncid, ref meshId, ref nmeshpoints);
         }
 
-        public int ionc_read_1d_mesh_discretisation_points(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
-            ref IntPtr c_offset, ref int nmeshpoints)
+        public int ionc_read_1d_mesh_discretisation_points(ref int ioncid, ref int meshId, ref IntPtr c_branchidx, ref IntPtr c_offset, ref int nmeshpoints)
         {
-            return ionc_read_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx,
-            ref c_offset, ref nmeshpoints);
+            return ionc_read_1d_mesh_discretisation_points_dll(ref ioncid, ref meshId, ref c_branchidx, ref c_offset, ref nmeshpoints);
         }
 
         public int ionc_def_mesh_contact(ref int ioncid, ref int contactsmesh, string contactsmeshname, ref int ncontacts, ref int mesh1, ref int mesh2, ref int locationType1Id, ref int locationType2Id)

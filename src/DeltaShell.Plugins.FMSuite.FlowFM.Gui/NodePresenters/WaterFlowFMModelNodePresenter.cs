@@ -97,11 +97,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 yield return new FlowFMTreeShortcut(model.Network.Name, NetworkIcon, model, model.Network);
             }
-            if (model.NetworkDiscretization != null && model.NetworkDiscretization.Name != null)
+            if (model.NetworkDiscretisation != null && model.NetworkDiscretisation.Name != null)
             {
                 yield return
-                    new FlowFMTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model,
-                        model.NetworkDiscretization);
+                    new FlowFMTreeShortcut(model.NetworkDiscretisation.Name, NetworkDiscretizationIcon, model,
+                        model.NetworkDiscretisation);
             }
             yield return new FlowFMTreeShortcut("Grid", UnstrucIcon, model, model.Grid);
             yield return

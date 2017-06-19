@@ -733,7 +733,7 @@ namespace Sobek.IntegrationTests
             var network = CreateSimplerNetwork();
 
             // add discretization
-            var networkDiscretization = new Discretization
+            var networkDiscretisation = new Discretization
             {
                 Network = network,
                 SegmentGenerationMethod =
@@ -742,21 +742,21 @@ namespace Sobek.IntegrationTests
 
             foreach (IChannel channel in network.Channels)
             {
-                HydroNetworkHelper.GenerateDiscretization(networkDiscretization, channel, 0, false, 0.5, false, false, true,
+                HydroNetworkHelper.GenerateDiscretization(networkDiscretisation, channel, 0, false, 0.5, false, false, true,
                                                             channel.Length / 2.0);
             }
 
             using (var flowModel1D = new WaterFlowModel1D
                                             {
                                                 Network = network
-                                                //NetworkDiscretization = networkDiscretization
+                                                //NetworkDiscretisation = networkDiscretisation
                                             })
             {
 
                 project.RootFolder.Items.Add(flowModel1D);
                 projectRepository.SaveOrUpdate(project);
 
-                IDataItem dataItemDiscretz = new DataItem(networkDiscretization);
+                IDataItem dataItemDiscretz = new DataItem(networkDiscretisation);
                 IDataItem networkCoverage = null;
                 //link model network coverage to network discretization
                 foreach (var dataItem in flowModel1D.DataItems)

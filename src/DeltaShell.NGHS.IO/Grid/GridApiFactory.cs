@@ -20,9 +20,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return new UGridApi1D();
         }
 
-        public static IUGridApi1DMesh CreateNew1DMesh()
+        public static IUGridApi1DDiscretisation CreateNew1DMesh()
         {
-            return new UGridApi1DMesh();
+            return new UGridApi1DDiscretisation();
         }
     }
 }

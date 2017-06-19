@@ -260,22 +260,6 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        //public int Get1dDiscretisationPoints(UGridMeshType meshType, ref int numberOfMeshes)
-        //{
-        //    // Get networkId from "ionc_get_mesh_ids_dll"
-        //    int networkId = -1;
-
-        //    var numOfMeshPoints = -1;
-        //    var ierr = wrapper.ionc_get_1d_mesh_discretisation_points_count(ref ioncid, ref networkId, ref numOfMeshPoints);
-
-        //    IntPtr branchIds = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
-        //    IntPtr offsets = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
-
-        //    ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref networkId, ref branchIds, ref offsets,
-        //        ref numberOfMeshes);
-
-        //}
-
         public Dictionary<UGridMeshType, int[]> GetMeshIds()
         {
             Dictionary<UGridMeshType, int[]> meshTypeIdsDict = new Dictionary<UGridMeshType, int[]>();

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         UnstructuredGrid Grid { get; set; }
         IHydroNetwork Network { get; set; }
-        IDiscretization NetworkDiscretization { get; set; }
+        IDiscretization NetworkDiscretisation { get; set; }
         bool UseNetCDFMapFormat { get; set; }
         bool DisableFlowNodeRenumbering { get; set; }
         IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
