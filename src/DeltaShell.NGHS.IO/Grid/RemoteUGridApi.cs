@@ -156,6 +156,15 @@ namespace DeltaShell.NGHS.IO.Grid
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
+        public int WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues)
+        {
+            bool isValid;
+            var uGridApi = GetValidUGridApi(out isValid);
+            return isValid 
+                ? uGridApi.WriteZCoordinateValues(meshId, locationId, varName, longName, zValues)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+        }
+
         public int GetMeshName(int meshId, out string meshName)
         {
             meshName = string.Empty;

@@ -48,7 +48,10 @@ namespace DeltaShell.NGHS.IO.Grid
         private static extern int ionc_close_dll([In] ref int ioncid);
 
         #region UGRID specifics
-        
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_def_var_dll(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref double fillValue);
+
         /// <summary>
         /// Get the id of the geometry network.
         /// </summary>
@@ -193,6 +196,12 @@ namespace DeltaShell.NGHS.IO.Grid
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_var_count", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_var_count_dll([In] ref int ioncid, [In] ref int mesh, [In] ref int location, [In, Out] ref int nCount);
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_inq_varid_dll(ref int ioncid, ref int meshId, string varName, ref int varId);
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid_by_standard_name", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_inq_varid_by_standard_name_dll(ref int ioncid, ref int meshId, ref int location, string standardName, ref int varId);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varids", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_inq_varids_dll(ref int ioncid, ref int meshId, ref int location, ref IntPtr ptr, ref int nVar);
@@ -576,7 +585,14 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return ionc_close_dll(ref ioncid);
         }
-        
+
+        public int ionc_def_var(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName,
+            string standardName, string longName, string unit, ref double fillValue)
+        {
+            return ionc_def_var_dll(ref ioncid, ref meshId, ref varId, ref type, ref locType, varName, standardName,
+                longName, unit, ref fillValue);
+        }
+
         public int ionc_get_1d_network_id(ref int ioncid, ref int networkid)
         {
             return ionc_get_1d_network_id_dll(ref ioncid, ref networkid);
@@ -660,6 +676,17 @@ namespace DeltaShell.NGHS.IO.Grid
         public int ionc_get_var_count(ref int ioncid, ref int mesh, ref int location, ref int nCount)
         {
             return ionc_get_var_count_dll(ref ioncid, ref mesh, ref location, ref nCount);
+        }
+
+        public int ionc_inq_varid(ref int ioncid, ref int meshId, string varName, ref int varId)
+        {
+            return ionc_inq_varid_dll(ref ioncid, ref meshId, varName, ref varId);
+        }
+
+        public int ionc_inq_varid_by_standard_name(ref int ioncid, ref int meshId, ref int location, string standardName,
+            ref int varId)
+        {
+            return ionc_inq_varid_by_standard_name_dll(ref ioncid, ref meshId, ref location, standardName, ref varId);
         }
 
         public int ionc_inq_varids(ref int ioncid, ref int meshId, ref int location, ref IntPtr ptr, ref int nVar)

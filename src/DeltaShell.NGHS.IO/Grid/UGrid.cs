@@ -190,6 +190,36 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, "Couldn't save z coordinates");
         }
 
+        public void WriteZValuesAtFaces(int meshId, double[] zValues)
+        {
+            const string faceBedLevelVariableName = "face_z";
+            const string faceBedLevelVariableLongName = "z-coordinate of mesh faces";
+
+            var uGridApi = GetValidUGridApi();
+            var ierr = uGridApi.WriteZCoordinateValues(
+                meshId,
+                (int)GridApiDataSet.Locations.UG_LOC_FACE,
+                faceBedLevelVariableName,
+                faceBedLevelVariableLongName,
+                zValues);
+            ThrowIfError(ierr, "Couldn't save x and y coordinates");
+        }
+
+        public void WriteZValuesAtNodes(int meshId, double[] zValues)
+        {
+            const string nodeBedLevelVariableName = "node_z";
+            const string nodeBedLevelVariableLongName = "z-coordinate of mesh nodes";
+
+            var uGridApi = GetValidUGridApi();
+            var ierr = uGridApi.WriteZCoordinateValues(
+                meshId,
+                (int)GridApiDataSet.Locations.UG_LOC_NODE,
+                nodeBedLevelVariableName,
+                nodeBedLevelVariableLongName,
+                zValues);
+            ThrowIfError(ierr, "Couldn't save x and y coordinates");
+        }
+
         public string NameOfMesh(int mesh)
         {
             var uGridApi = GetValidUGridApi();
