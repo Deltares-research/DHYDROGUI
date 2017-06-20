@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     [TestFixture]
     public class UGridToNetworkAdapterTest
     {
+        private const string UGRID_TEST_FOLDER = @"ugrid\";
         private const string UGRID_TEST_FILE = @"ugrid\Empty_UGrid.nc";
 
         private IHydroNetwork CreateSimpleNetwork()
@@ -177,7 +178,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void SaveAndLoadSimpleNetworkTest()
         {
             var testFilePath =
-                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            TestHelper.GetTestFilePath(UGRID_TEST_FOLDER + "simple_network_testFile.nc");
+            var testFolderPath = Path.GetDirectoryName(testFilePath);
+            FileUtils.CreateDirectoryIfNotExists(testFolderPath);
             FileUtils.DeleteIfExists(testFilePath);
             try
             {
@@ -206,9 +209,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
 
             var testFilePath =
-                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
-            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
-            
+                TestHelper.GetTestFilePath(UGRID_TEST_FOLDER + "save_load_network_testFile.nc");
+            var testFolderPath = Path.GetDirectoryName(testFilePath);
+            FileUtils.CreateDirectoryIfNotExists(testFolderPath);
+            FileUtils.DeleteIfExists(testFilePath);
+
             try
             {
                 var networkDiscretization = CreateNetworkDiscretisation();
@@ -216,10 +221,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 
                 UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
 
-                UGridToNetworkAdapter.SaveNetwork((HydroNetwork)storedNetwork, localCopyOfTestFile, metaData);
+                UGridToNetworkAdapter.SaveNetwork((HydroNetwork)storedNetwork, testFilePath, metaData);
                 //UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretization, localCopyOfTestFile);
 
-                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(localCopyOfTestFile);
+                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
 
                 Assert.AreEqual(loadedNetwork.Name, "DummyNetworkName"); // TODO: Implement the read/get network name functionality
 
@@ -227,7 +232,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(localCopyOfTestFile);
+                FileUtils.DeleteIfExists(testFilePath);
             }
         }
 
