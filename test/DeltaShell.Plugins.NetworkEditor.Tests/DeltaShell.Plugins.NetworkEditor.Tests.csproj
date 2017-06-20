@@ -241,6 +241,8 @@
     <Compile Include="Export\HydroRegionToShapeFileExporterTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
+    <Compile Include="Helpers\HydroNetworkTestHelper.cs" />
+    <Compile Include="Helpers\TestNetworkAndDiscretisationProvider.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
@@ -325,6 +327,7 @@
     <Compile Include="NetworkEditorMapLayerProviderTest.cs" />
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="NetworkEditorTestHelper.cs" />
+    <Compile Include="NetworkUGridDataModelTest.cs" />
     <Compile Include="TestNetwork\FeatureDataTreeView\FeatureDataTreeViewTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionPropertiesTest.cs" />
     <Compile Include="Forms\NetworkSideView\BedLevelNetworkCoverageBuilderTest.cs" />

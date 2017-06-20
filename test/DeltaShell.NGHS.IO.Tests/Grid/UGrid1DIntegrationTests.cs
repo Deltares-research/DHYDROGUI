@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -18,12 +19,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     public class UGrid1DIntegrationTests
     {
         private const string UGRID_TEST_FILE = @"ugrid\Custom_Ugrid.nc";
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void Write1DSimpleNetworkTest()
+        
+        public static IDiscretization CreateSimpleNetworkDiscretization()
         {
-            var network = new HydroNetwork() { Name = "my Network" };
+            var network = new HydroNetwork() { Name = "my Simple Network" };
             var hydroNode1 = new HydroNode() { Name = "my Node1", Geometry = new Point(1, 4), Network = network };
             network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode() { Name = "myNode2", Geometry = new Point(5, 1), Network = network };
@@ -67,18 +66,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             const int expectedNumberOfDiscretisationPoints = 5;
             const int expectedNumberOfMeshEdges = 4;
 
-            WriteRead1DNetworkAndTest(
-                network, expectedNumberOfNetworkNodes, expectedNumberOfNetworkBranches, expectedNumberOfNetworkGeometryPoints,
-                networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges);
+            return networkDiscretisation;
+
+            //WriteRead1DNetworkAndTest(
+            //    network, expectedNumberOfNetworkNodes, expectedNumberOfNetworkBranches, expectedNumberOfNetworkGeometryPoints,
+            //    networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges);
 
             //WriteRead1DMesh(networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges, network.Nodes.Count, network.Branches.Count);
         }
 
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void Write1DNetworkTest()
+        public static IDiscretization CreateNetworkDiscretization()
         {
-            var network = new HydroNetwork() { Name = "Sil Network" };
+            var network = new HydroNetwork() { Name = "My Network" };
             var hydroNode1 = new HydroNode() { Name = "my Node 1", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
             network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode() { Name = "my Node 2", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
@@ -183,28 +182,32 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // add target node
             networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch2, 1600));
 
-            const int expectedNumberOfNetworkNodes = 4;
-            const int expectedNumberOfNetworkBranches = 3;
-            const int expectedNumberOfNetworkGeometryPoints = 15;
-            const int expectedNumberOfDiscretisationPoints = 13;
-            const int expectedNumberOfMeshEdges = 12;
-
-            WriteRead1DNetworkAndTest(
-                network, expectedNumberOfNetworkNodes, expectedNumberOfNetworkBranches, expectedNumberOfNetworkGeometryPoints,
-                networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges);
-
-            //WriteRead1DMesh(networkDiscretisation, expectedNumberOfDiscretisationPoints, expectedNumberOfMeshEdges, network.Nodes.Count, network.Branches.Count);
+            return networkDiscretisation;
         }
 
-        private static void WriteRead1DNetworkAndTest(IHydroNetwork network, int expNrNwNodes, int expNrNwBranches, int expNrNwGeoPoints, IDiscretization networkDiscretization, int expNrDiscrPoints, int expNrMeshEdges)
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        private static void WriteRead1DNetworkAndTest()
         {
-            var testFilePath =
-                TestHelper.GetTestFilePath(UGRID_TEST_FILE);
 
-            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            var testFilePath =
+                TestHelper.GetTestFilePath(@"ugrid\WriteRead1DNetworkAndTest.nc");
+            var testFolderPath = Path.GetDirectoryName(testFilePath);
+            FileUtils.CreateDirectoryIfNotExists(testFolderPath);
+            FileUtils.DeleteIfExists(testFilePath);
+
+            var networkDiscretization = CreateNetworkDiscretization();
+            var network = networkDiscretization.Network;
+
+            const int expNrNwNodes = 4;
+            const int expNrNwBranches = 3;
+            const int expNrNwGeoPoints = 15;
+            //const int expNrDiscrPoints = 13;
+            //const int expNrMeshEdges = 12;
+
             try
             {
-                using (var ugrid1D = new UGrid1D(localCopyOfTestFile))
+                using (var ugrid1D = new UGrid1D(testFilePath))
                 {
                     ugrid1D.CreateFile();
 
@@ -382,7 +385,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
             finally
             {
-                FileUtils.DeleteIfExists(localCopyOfTestFile);
+                FileUtils.DeleteIfExists(testFilePath);
             }
         }
 
