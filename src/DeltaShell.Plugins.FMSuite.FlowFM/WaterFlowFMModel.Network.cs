@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SubscribeToNetwork()
         {
-            if (Network != null)
+            if (network != null)
             {
                 ((INotifyCollectionChange)network).CollectionChanged += NetworkCollectionChanged;
                 ((INotifyPropertyChanged)network).PropertyChanged += NetworkPropertyChanged;
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void UnSubscribeFromNetwork()
         {
-            if (Network != null)
+            if (network != null)
             {
                 ((INotifyCollectionChange)network).CollectionChanged -= NetworkCollectionChanged;
                 ((INotifyPropertyChanged)network).PropertyChanged -= NetworkPropertyChanged;
@@ -222,19 +222,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void LoadNetworkDiscretisation()
         {
-            //NetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(NetFilePath, Network);
+            NetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(NetFilePath, Network);
         }
 
         private void SaveNetwork()
         {
             UGridGlobalMetaData metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion);
 
-            UGridToNetworkAdapter.SaveNetwork(Network, NetFilePath, metaData);
+            UGridToNetworkAdapter.SaveNetwork(network, NetFilePath, metaData);
         }
 
         private void SaveNetworkDiscretisation()
         {
-
             var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName,
                     FlowFMApplicationPlugin.PluginVersion);
 

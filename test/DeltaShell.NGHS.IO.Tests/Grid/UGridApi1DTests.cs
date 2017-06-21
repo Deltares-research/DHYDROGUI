@@ -6,32 +6,27 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
-//        private UGridApi1DDiscretisation UGridApi1DDiscretisation;
-//        private RemoteUGridApi1DDiscretisation uRemoteUGridApi1DDiscretisation;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
     public class UGridApi1DTests
     {
         private UGridApi1DNetwork uGridApi1DNetwork;
-        private UGridApi1DDiscretisation UGridApi1dDiscretisation;
+        private UGridApi1DDiscretisation uGridApi1DDiscretisation;
         private RemoteUGridApi1DNetwork uRemoteUGridApi1DNetwork;
         private RemoteUGridApi1DDiscretisation uRemoteUGridApi1DDiscretisation;
         private MockRepository mocks;
-
-//            UGridApi1dDiscretisation = mocks.DynamicMock<UGridApi1dDiscretisation>();
-//            uRemoteUGridApi1DDiscretisation = mocks.DynamicMock<RemoteUGridApi1DDiscretisation>();
-//            TypeUtils.SetField(uRemoteUGridApi1DDiscretisation, "api", UGridApi1dDiscretisation);
+        
         [SetUp]
         public void SetUp()
         {
             mocks = new MockRepository();
             uGridApi1DNetwork = mocks.DynamicMock<UGridApi1DNetwork>();
-            UGridApi1dDiscretisation = mocks.DynamicMock<UGridApi1DDiscretisation>();
+            uGridApi1DDiscretisation = mocks.DynamicMock<UGridApi1DDiscretisation>();
             uRemoteUGridApi1DNetwork = mocks.DynamicMock<RemoteUGridApi1DNetwork>();
             uRemoteUGridApi1DDiscretisation = mocks.DynamicMock<RemoteUGridApi1DDiscretisation>();
             TypeUtils.SetField(uRemoteUGridApi1DNetwork, "api", uGridApi1DNetwork);
-            TypeUtils.SetField(uRemoteUGridApi1DDiscretisation, "api", UGridApi1dDiscretisation);
+            TypeUtils.SetField(uRemoteUGridApi1DDiscretisation, "api", uGridApi1DDiscretisation);
         }
 
         [TearDown]
@@ -49,18 +44,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DNetwork, "nBranches"));
             Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DNetwork, "nGeometryPoints"));
         }
-
-//        public void UGridApi1DDiscretisationTest()
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "meshId"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+        
         [Test]
         public void UGridApi1DDiscretisationTest()
         {
             mocks.ReplayAll();
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "meshId"));
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "meshId"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
         }
 
         [Test]
@@ -77,11 +68,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DNetwork, "nBranches"));
             Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DNetwork, "nGeometryPoints"));
         }
-
-//        public void RemoteUGridApi1DDiscretisationTest()
-//            var api = TypeUtils.GetField(uRemoteUGridApi1DDiscretisation, "api");
-//            var UGridApi1dDiscretisation = api as IUGridApi1DDiscretisation;
-//            Assert.That(UGridApi1dDiscretisation != null);
+        
         [Test]
         public void RemoteUGridApi1DDiscretisationTest()
         {
@@ -90,10 +77,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var UGridApi1DDiscretisation = api as IUGridApi1DDiscretisation;
             Assert.That(api != null);
             Assert.That(UGridApi1DDiscretisation != null);
-
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "meshId"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            
             Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1DDiscretisation, "meshId"));
             Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1DDiscretisation, "nMeshPoints"));
             Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1DDiscretisation, "nMeshEdges"));
@@ -2051,8 +2035,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         #endregion
 
         #region Write 1D network discretisation
-
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("", 0, 0, 0)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+        
         [Test]
         public void Create1DMeshUninitialized()
         {
@@ -2060,25 +2043,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("", 0, 0, 0)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
-
-//            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, UGridApi1dDiscretisation.Create1dDiscretisation("", 0, 0, 0));
+            
             // uGridApi1D
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, UGridApi1dDiscretisation.Create1dDiscretisation("", 0, 0, 0));
-
-//            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("", 0, 0, 0));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi1DDiscretisation.Create1dDiscretisation("", 0, 0, 0));
+            
             // uRemoteGridApi1D
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("", 0, 0, 0));
         }
-
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+        
         [Test]
         public void Create1DMeshTest()
         {
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            
             int nmeshedges = 12;
             int nmeshpts = 31;
             int nwid = 1;
@@ -2087,46 +2066,35 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, ref meshId, "myMesh", ref nmeshpts, ref nmeshedges))
                 .OutRef(id, nwid, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
+            
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
-
-//            var result = UGridApi1dDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
-//            Assert.AreEqual(nmeshpts, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(nmeshedges, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            
             // uGridApi1D
-            var result = UGridApi1dDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
+            var result = uGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, result);
-            Assert.AreEqual(nmeshpts, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(nmeshedges, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
-
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshEdges", -1);
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
-//            Assert.AreEqual(nmeshpts, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(nmeshedges, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(nmeshpts, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(nmeshedges, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
+            
             // uRemoteGridApi1D
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshEdges", -1);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshEdges", -1);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", -1);
             var remoteResult = uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, remoteResult);
-            Assert.AreEqual(nmeshpts, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(nmeshedges, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(nmeshpts, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(nmeshedges, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
         }
-
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+        
         [Test]
         public void Create1DMeshApiCallFailedTest()
         {
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            
             int nmeshedges = 12;
             int nmeshpts = 31;
             int nwid = 1;
@@ -2135,42 +2103,33 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_create_1d_mesh(ref id, ref nwid, ref meshId, "myMesh", ref nmeshpts, ref nmeshedges))
                 .OutRef(id, nwid, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
+            
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
-
-//            var result = UGridApi1dDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            
             // uGridApi1D
-            var result = UGridApi1dDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
+            var result = uGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, result);
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
             // uRemoteGridApi1D
             var remoteResult = uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
         }
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
         [Test]
         public void Create1DMeshExceptionTest()
         {
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
             int nmeshedges = 12;
             int nmeshpts = 31;
             int nwid = 1;
@@ -2181,34 +2140,26 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
             // uGridApi1D
-            var result = UGridApi1dDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
+            var result = uGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, result);
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
             // uRemoteGridApi1D
             var remoteResult = uRemoteUGridApi1DDiscretisation.Create1dDiscretisation("myMesh", nmeshpts, nmeshedges, nwid);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteResult);
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshEdges"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshEdges"));
         }
 
-//        public void Write1dDiscretisationPointsInvalidInitializationTest(bool isInitialized, bool isReady)
         [Test]
         [TestCase(false, true)]
         [TestCase(true, false)]
@@ -2217,24 +2168,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int[] branchIdx = new int[1];
             double[] offset = new double[1];
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridAp1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uGridApi1D
-            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
+            var result = uGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, result);
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uRemoteApi1D
             var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteResult);
@@ -2251,12 +2197,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // Length branchIds; 
             // Length offsets; 
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Any();
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
             // uGridApi1D
-            //uGrid1DApi.Expect(a => a.GetNumberOfMeshDiscretisationPoints()).Return(nDiscPoints).Repeat.Any();
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Any();
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Any();
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
             int id = 0;
@@ -2269,21 +2212,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(nMeshPoints)
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uGridApi1D
-            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
+            var result = uGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR, result);
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uRemoteGridApi1D
             var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR, remoteResult);
@@ -2296,11 +2235,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] offset = new double[] { 0.5, 1.2, };
             int nMeshPoints = 2;
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             var wrapper = mocks.StrictMock<IGridWrapper>();
 
             int id = 1;
@@ -2322,26 +2259,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(nMeshPoints)
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uGridApi1D
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            var result = uGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, result);
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uRemoteGridApi1D
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", -1);
             var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, remoteResult);
         }
@@ -2353,11 +2284,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] offset = new double[] { 0.5, 1.2, };
             int nMeshPoints = 2;
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             var wrapper = mocks.StrictMock<IGridWrapper>();
 
             int id = 1;
@@ -2379,28 +2308,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(nMeshPoints)
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uGridApi1D
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            var result = uGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, result);
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uRemoteGridApi1D
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", -1);
             var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
         }
@@ -2412,11 +2334,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double[] offset = new double[] { 0.5, 1.2, };
             int nMeshPoints = 2;
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             // uGridApi1D
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Times(3);
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Times(3);
             var wrapper = mocks.StrictMock<IGridWrapper>();
 
             int id = 1;
@@ -2439,28 +2359,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(nMeshPoints)
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.Write1dDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-//            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uGridApi1D
-            Assert.AreEqual(-1, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
-            var result = UGridApi1dDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
+            var result = uGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, result);
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             // uRemoteGridApi1D
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", -1);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", -1);
             var remoteResult = uRemoteUGridApi1DDiscretisation.Write1dDiscretisationPoints(branchIdx, offset);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteResult);
         }
@@ -2474,38 +2387,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int nMeshPoints = 5;
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", nMeshPoints);
             // uGrdi1DApi
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", nMeshPoints);
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(true).Repeat.Twice();
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", nMeshPoints);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             //uRemoteGrid1DApi
             uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
-//            Assert.AreEqual(nMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
             //uGrid1DApi
-            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
+            var result = uGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(nMeshPoints, result);
-            Assert.AreEqual(nMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(nMeshPoints, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
-//            Assert.AreEqual(nMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
             //uRemoteGrid1DApi
             var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(nMeshPoints, remoteResult);
-            Assert.AreEqual(nMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(nMeshPoints, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
         }
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
-//            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", nMeshPoints);
         [Test]
         [TestCase(false, true, 1)]
         [TestCase(true, false, 1)]
@@ -2513,9 +2415,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetNumberOfMeshDiscretisationPointsApiCallTest(bool isInitialized, bool isReady, int nMeshPoints)
         {
             //uGrid1DApi
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
-            UGridApi1dDiscretisation.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", nMeshPoints);
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(isInitialized).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.NetworkReady).Return(isReady).Repeat.Any();
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", nMeshPoints);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -2528,38 +2430,30 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             //uRemoteGrid1DApi
             uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
-//            Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
             //uGrid1DApi
-            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
+            var result = uGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(numberOfMeshPoints, result);
-            Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", nMeshPoints);
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
-//            Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
             //uRemoteGrid1DApi
-            TypeUtils.SetField(UGridApi1dDiscretisation, "nMeshPoints", nMeshPoints);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "nMeshPoints", nMeshPoints);
             var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(numberOfMeshPoints, remoteResult);
-            Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(UGridApi1dDiscretisation, "nMeshPoints"));
+            Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(uGridApi1DDiscretisation, "nMeshPoints"));
         }
-
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+        
         [Test]
         public void GetNumberOfMeshDiscretisationPointsApiCallFailedTest()
         {
             //uGrid1DApi
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -2572,32 +2466,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
             //uGrid1DApi
-            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
+            var result = uGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, result);
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             //uRemoteGrid1DApi
             var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
         }
 
-//            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(false).Repeat.Twice();
         [Test]
         public void GetNumberOfMeshDiscretisationPointsExceptionTest()
         {
             //uGrid1DApi
-            UGridApi1dDiscretisation.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+            uGridApi1DDiscretisation.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -2611,21 +2500,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();
 
-//            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
-            TypeUtils.SetField(UGridApi1dDiscretisation, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi1DDiscretisation, "wrapper", wrapper);
 
-//            uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             // uRemoteGridApi1D
             uRemoteUGridApi1DDiscretisation.Expect(a => a.GetNumberOf1dDiscretisationPoints()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
-//            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
             //uGrid1DApi
-            var result = UGridApi1dDiscretisation.GetNumberOf1dDiscretisationPoints();
+            var result = uGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, result);
 
-//            var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             //uRemoteGrid1DApi
             var remoteResult = uRemoteUGridApi1DDiscretisation.GetNumberOf1dDiscretisationPoints();
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteResult);
