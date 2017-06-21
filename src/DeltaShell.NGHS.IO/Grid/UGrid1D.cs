@@ -14,6 +14,11 @@ namespace DeltaShell.NGHS.IO.Grid
             GridApi = GridApiFactory.CreateNew1D();
         }
 
+        public bool IsUGridFormat()
+        {
+            return GridApi.GetConvention() == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
+        }
+
         #region Write 1D network
 
         public void Create1DNetworkInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)

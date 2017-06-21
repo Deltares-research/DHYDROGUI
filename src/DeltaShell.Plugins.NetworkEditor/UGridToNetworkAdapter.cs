@@ -60,7 +60,12 @@ namespace DeltaShell.Plugins.NetworkEditor
                 {
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
                     uGrid1D.Initialize();
-
+                    
+                    if (!uGrid1D.IsUGridFormat())
+                    {
+                        return null;
+                    }
+                    
                     int numberOfNetworks = uGrid1D.GetNumberOfNetworks();
 
                     if (numberOfNetworks < 1)

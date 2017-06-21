@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -213,6 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void LoadNetwork()
         {
+            if (!File.Exists(NetFilePath)) return;
             var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(NetFilePath);
             if (loadedNetwork == null) return;
             Network = loadedNetwork;
