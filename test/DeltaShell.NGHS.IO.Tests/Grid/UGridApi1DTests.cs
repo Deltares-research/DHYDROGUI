@@ -1335,7 +1335,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         [TestCase(false, 1)]
-        [TestCase(true, true, -1)]
+        [TestCase(true, -1)]
         public void ReadNetworkNodesInvalidInitializationTest(bool isInitialized, int nNodes)
         {
             // arrange

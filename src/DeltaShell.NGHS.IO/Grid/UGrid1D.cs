@@ -82,7 +82,6 @@ namespace DeltaShell.NGHS.IO.Grid
             GetNumberOfNetworkNodes(networkId);
             GetNumberOfNetworkBranches(networkId);
             GetNumberOfNetworkGeometryPoints(networkId);
-
         }
 
         public int GetNumberOfNetworkNodes(int networkId)
@@ -154,7 +153,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 throw new InvalidOperationException(
                     string.Format("Couldn't read 1d network geometry because of error number {0}", ierr));
             }
-
         }
 
         #endregion

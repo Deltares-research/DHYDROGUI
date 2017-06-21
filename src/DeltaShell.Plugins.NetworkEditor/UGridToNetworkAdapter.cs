@@ -62,7 +62,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                     
                     if (!uGrid1D.IsUGridFormat())
                     {
-                        uGrid1D.GridApi.Close();
                         return null;
                     }
                     
