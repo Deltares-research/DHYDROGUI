@@ -165,7 +165,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             var uGridApi1D = GridApi as IUGridApi1DNetwork;
             if (uGridApi1D == null) return false;
-            return base.IsInitialized() && uGridApi1D.NetworkReady;
+            return base.IsInitialized();
         }
 
         private T GetFromValidUGridApi<T>(Func<IUGridApi1DNetwork, T> function, T defaultValue)
