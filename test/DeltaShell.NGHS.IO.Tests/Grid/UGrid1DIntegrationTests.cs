@@ -276,7 +276,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     string[] nodesIds;
                     string[] nodesLongnames;
 
-                    ugrid1D.Read1DNetworkNodes(out nodesX, out nodesY, out nodesIds, out nodesLongnames);
+                    ugrid1D.Read1DNetworkNodes(networkId, out nodesX, out nodesY, out nodesIds, out nodesLongnames);
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrNodes);
                     Assert.AreEqual(network.Nodes.Count, nodesX.Length);
                     Assert.AreEqual(network.Nodes.Count, nodesY.Length);
@@ -315,7 +315,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     string[] branchIds;
                     string[] branchLongnames;
 
-                    ugrid1D.Read1DNetworkBranches(out sourceNodes, out targetNodes,
+                    ugrid1D.Read1DNetworkBranches(networkId, out sourceNodes, out targetNodes,
                         out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
 
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrBranches);
@@ -367,7 +367,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     double[] geopointsX;
                     double[] geopointsY;
 
-                    ugrid1D.Read1DNetworkGeometry(out geopointsX, out geopointsY);
+                    ugrid1D.Read1DNetworkGeometry(networkId, out geopointsX, out geopointsY);
 
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrGeometry);
                     Assert.AreEqual(network.Branches.Sum(b => b.Geometry.Coordinates.Length), geopointsX.Length);

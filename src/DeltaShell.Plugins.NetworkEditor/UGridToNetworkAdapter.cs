@@ -20,7 +20,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                 using (var uGrid1D = new UGrid1D(netFilePath, metaData))
                 {
                     uGrid1D.CreateFile();
-
                     uGrid1D.Initialize();
 
                     int networkId;
@@ -63,6 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     
                     if (!uGrid1D.IsUGridFormat())
                     {
+                        uGrid1D.GridApi.Close();
                         return null;
                     }
                     
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     double[] nodesY;
                     string[] nodesNames;
                     string[] nodesDescriptions;
-                    uGrid1D.Read1DNetworkNodes(out nodesX, out nodesY, out nodesNames, out nodesDescriptions);
+                    uGrid1D.Read1DNetworkNodes(networkId, out nodesX, out nodesY, out nodesNames, out nodesDescriptions);
 
                     int[] sourceNodes;
                     int[] targetNodes;
@@ -92,11 +92,11 @@ namespace DeltaShell.Plugins.NetworkEditor
                     int[] branchGeometryPoints;
                     string[] branchNames;
                     string[] branchDescriptions;
-                    uGrid1D.Read1DNetworkBranches(out sourceNodes, out targetNodes, out branchLengths, out branchGeometryPoints, out branchNames, out branchDescriptions);
+                    uGrid1D.Read1DNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeometryPoints, out branchNames, out branchDescriptions);
 
                     double[] geometryPointsX;
                     double[] geometryPointsY;
-                    uGrid1D.Read1DNetworkGeometry(out geometryPointsX, out geometryPointsY);
+                    uGrid1D.Read1DNetworkGeometry(networkId, out geometryPointsX, out geometryPointsY);
 
                     //var networkName = uGrid1D.GetNetworkName(networkId); // TODO: This doesn't work. Maybe because it is still based on the assumption that mesh and network are coupled?
                     // do we need a function ionc_get_network_name(ref int ioncid, ref int id, StringBuilder networkName)?

@@ -12,9 +12,9 @@
         int GetNumberOfNetworkBranches(int networkId);
         int GetNumberOfNetworkGeometryPoints(int networkId);
 
-      
-        void Read1DNetworkGeometry(out double[] geopointsX, out double[] geopointsY);
-        void Read1DNetworkBranches(out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames);
-        void Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames);
+
+        void Read1DNetworkNodes(int networkId, out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames);
+        void Read1DNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames);
+        void Read1DNetworkGeometry(int networkId, out double[] geopointsX, out double[] geopointsY);
     }
 }

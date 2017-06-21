@@ -23,9 +23,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public virtual bool NetworkReady
+        public virtual bool NetworkReadyForWriting
         {
-            get { return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.NetworkReady, false); }
+            get { return GetFromValidUGridApi1D(ugridApi1D => ugridApi1D.NetworkReadyForWriting, false); }
         }
         
         public virtual int Write1DNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
@@ -79,7 +79,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
         
-        public virtual int Read1DNetworkNodes(out double[] nodesX, out double[] nodesY, out string[] nodesIs, out string[] nodesLongnames)
+        public virtual int Read1DNetworkNodes(int networkId, out double[] nodesX, out double[] nodesY, out string[] nodesIs, out string[] nodesLongnames)
         {
             nodesX = new double[0];
             nodesY = new double[0];
@@ -89,11 +89,11 @@ namespace DeltaShell.NGHS.IO.Grid
             var ugridApi1D = api as IUGridApi1DNetwork;
 
             return ugridApi1D != null   
-                ? ugridApi1D.Read1DNetworkNodes(out nodesX, out nodesY, out nodesIs, out nodesLongnames)
+                ? ugridApi1D.Read1DNetworkNodes(networkId, out nodesX, out nodesY, out nodesIs, out nodesLongnames)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public virtual int Read1DNetworkBranches(out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths,
+        public virtual int Read1DNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths,
             out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames)
         {
             sourceNodes = new int[0];
@@ -106,12 +106,12 @@ namespace DeltaShell.NGHS.IO.Grid
             var ugridApi1D = api as IUGridApi1DNetwork;
 
             return ugridApi1D != null
-                ? ugridApi1D.Read1DNetworkBranches(out sourceNodes, out targetNodes, out branchLengths,
+                ? ugridApi1D.Read1DNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths,
                     out branchGeoPoints, out branchIds, out branchLongnames)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public virtual int Read1DNetworkGeometry(out double[] geopointsX, out double[] geopointsY)
+        public virtual int Read1DNetworkGeometry(int networkId, out double[] geopointsX, out double[] geopointsY)
         {
             geopointsX = new double[0];
             geopointsY = new double[0];
@@ -119,18 +119,11 @@ namespace DeltaShell.NGHS.IO.Grid
             var ugridApi1D = api as IUGridApi1DNetwork;
 
             return ugridApi1D != null
-                ? ugridApi1D.Read1DNetworkGeometry(out geopointsX, out geopointsY)
+                ? ugridApi1D.Read1DNetworkGeometry(networkId, out geopointsX, out geopointsY)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             
         }
-
-        public void SetNetworkId(int nwid)
-        {
-            var uGridApi1D = api as IUGridApi1DNetwork;
-            if (uGridApi1D == null) return;
-            uGridApi1D.SetNetworkId(nwid);
-        }
-
+        
         private T GetFromValidUGridApi1D<T>(Func<IUGridApi1DNetwork, T> function, T defaultValue)
         {
             var ugridApi1D = api as IUGridApi1DNetwork;

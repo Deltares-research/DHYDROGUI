@@ -337,17 +337,25 @@ namespace DeltaShell.NGHS.IO.Grid
         public void CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int)mode;
-            var ierr = wrapper.ionc_create(filePath, ref imode, ref ioncid);
+            int netcdfId = 0;
+            var ierr = wrapper.ionc_create(filePath, ref imode, ref netcdfId);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
                     string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}", filePath, ierr));
             }
 
-            CreateAndWriteDefaultNetCdfMetaData(filePath, globalMetaData);
+            CreateAndWriteDefaultNetCdfMetaData(filePath, globalMetaData, netcdfId);
+
+            // close the file after creation
+            ierr = wrapper.ionc_close(ref netcdfId);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new InvalidOperationException(string.Format("Couldn't close the new NetCDF file at location {0} because of error number: {1}.", filePath, ierr));
+            }
         }
 
-        private void CreateAndWriteDefaultNetCdfMetaData(string filePath, UGridGlobalMetaData globalMetaData)
+        private void CreateAndWriteDefaultNetCdfMetaData(string filePath, UGridGlobalMetaData globalMetaData, int netcdfId)
         {
             GridWrapper.interop_metadata metadata;
             metadata.institution = ToDataSizeCharArray("Deltares");
@@ -356,7 +364,7 @@ namespace DeltaShell.NGHS.IO.Grid
             metadata.version = ToDataSizeCharArray(globalMetaData.Version);
             metadata.modelname = ToDataSizeCharArray(globalMetaData.Modelname);
 
-            var ierr = wrapper.ionc_add_global_attributes(ref ioncid, metadata);
+            var ierr = wrapper.ionc_add_global_attributes(ref netcdfId, metadata);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
