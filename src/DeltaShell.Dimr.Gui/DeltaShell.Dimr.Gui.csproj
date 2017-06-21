@@ -58,6 +58,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Fluent">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\Fluent.dll</HintPath>
       <Private>False</Private>
@@ -74,7 +78,16 @@
       <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
@@ -128,6 +141,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

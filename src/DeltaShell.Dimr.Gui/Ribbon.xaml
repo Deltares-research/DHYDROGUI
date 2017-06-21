@@ -11,10 +11,10 @@
     </UserControl.Resources>
     <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
         <fluent:Ribbon.ContextualGroups>
-            <fluent:RibbonContextualTabGroup Header="GIS" Visibility="Visible" Name="geospatialContextualGroup" Background="Green" BorderBrush="Green" />
+            <fluent:RibbonContextualTabGroup Header="Config" Visibility="Visible" Name="configContextualGroup" Background="#008fc5" BorderBrush="#008fc5" />
         </fluent:Ribbon.ContextualGroups>
 
-        <fluent:RibbonTabItem Header="DIMR" Name="tabDimr" fluent:KeyTip.Keys="D" Group="{Binding ElementName=geospatialContextualGroup}">
+        <fluent:RibbonTabItem Header="DIMR" Name="tabDimr" fluent:KeyTip.Keys="D" Group="{Binding ElementName=configContextualGroup}">
             <fluent:RibbonGroupBox Header="DIMR">
                 <fluent:RibbonGroupBox.DataContext>
                     <viewModels:DIMRConfigRibbonViewModel/>

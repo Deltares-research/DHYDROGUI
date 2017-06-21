@@ -12,7 +12,9 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
@@ -205,6 +207,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private IEnumerable GetOutputItems(WaterFlowFMModel model)
         {
             yield return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
+            var dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+            if (dimrLogDataItem != null) yield return dimrLogDataItem;
+
 
             foreach (var p in GetOutputDataItemsCore(model))
             {

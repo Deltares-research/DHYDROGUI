@@ -12,12 +12,12 @@ namespace DeltaShell.Dimr.Gui
         public Ribbon()
         {
             InitializeComponent();
-            tabDimr.Group = geospatialContextualGroup;
+            tabDimr.Group = configContextualGroup;
         }
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
         {
-            return tabGroupName == geospatialContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
+            return tabGroupName == configContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
 
         }
 
