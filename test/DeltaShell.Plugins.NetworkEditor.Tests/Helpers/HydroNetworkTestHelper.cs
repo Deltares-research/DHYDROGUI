@@ -1,4 +1,5 @@
-﻿using GeoAPI.Extensions.Networks;
+﻿using DelftTools.Hydro;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 
@@ -26,10 +27,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             CompareAndAssertNodes(primaryBranch.Target, secondaryBranch.Target);
 
             // Compare geometries
-            CompareAndAssertGeometryPoints(primaryBranch.Geometry, secondaryBranch.Geometry);
+            CompareAndAssertGeometry(primaryBranch.Geometry, secondaryBranch.Geometry);
         }
 
-        public static void CompareAndAssertGeometryPoints(IGeometry primaryGeometry, IGeometry secondaryGeometry)
+        private static void CompareAndAssertGeometry(IGeometry primaryGeometry, IGeometry secondaryGeometry)
         {
             Assert.AreEqual(primaryGeometry.Coordinates.Length, secondaryGeometry.Coordinates.Length);
 
@@ -38,7 +39,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
                 Assert.AreEqual(primaryGeometry.Coordinates[i].X, secondaryGeometry.Coordinates[i].X);
                 Assert.AreEqual(primaryGeometry.Coordinates[i].Y, secondaryGeometry.Coordinates[i].Y);
             }
+        }
 
+        public static void CompareAndAssertNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
+        {
+            var primaryNodes = primaryNetwork.Nodes;
+            var secondaryNodes = secondaryNetwork.Nodes;
+            var primaryBranches = primaryNetwork.Branches;
+            var secondaryBranches = secondaryNetwork.Branches;
+
+            Assert.AreEqual(primaryNodes.Count, secondaryNodes.Count);
+            Assert.AreEqual(primaryBranches.Count, secondaryBranches.Count);
+
+            // loop over the nodes and assert each item
+            for (int i = 0; i < primaryNodes.Count; ++i)
+            {
+                var primaryNode = primaryNodes[i];
+                var secondaryNode = secondaryNodes[i];
+
+                CompareAndAssertNodes(primaryNode, secondaryNode);
+            }
+
+            // loop over the branches and assert each item
+            for (int i = 0; i < primaryBranches.Count; ++i)
+            {
+                var primaryBranch = primaryBranches[i];
+                var secondaryBranch = secondaryBranches[i];
+
+                CompareAndAssertBranches(primaryBranch, secondaryBranch);
+            }
         }
     }
 }

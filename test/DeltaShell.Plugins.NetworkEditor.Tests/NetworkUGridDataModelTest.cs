@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
@@ -153,9 +152,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.AreEqual(reconstructedBranch.Target.Network, reconstructedNetwork);
             }
         }
-
-
-
-        
     }
 }
