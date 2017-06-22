@@ -23,7 +23,7 @@ namespace DeltaShell.Dimr
         private readonly IDimrModel model;
         private IDimrApi dimrApi;
         protected bool runLocal;
-        private const string DimrRunLogfileDataItemTag = "DimrRunLog";
+        public const string DimrRunLogfileDataItemTag = "DimrRunLog";
 
         public DimrRunner(IDimrModel model)
         {

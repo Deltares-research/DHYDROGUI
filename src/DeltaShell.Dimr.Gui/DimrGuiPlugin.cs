@@ -6,7 +6,9 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
+using DeltaShell.Plugins.SharpMapGis.Gui;
 using Mono.Addins;
+using DeltaShell.Plugins.NetworkEditor.MapLayers;
 
 namespace DeltaShell.Dimr.Gui
 {
@@ -14,10 +16,6 @@ namespace DeltaShell.Dimr.Gui
     [Extension(typeof(IPlugin))]
     public class DimrGuiPlugin : GuiPlugin
     {
-        private bool settingGuiSelection;
-        private readonly IMapLayerProvider networkEditorMapLayerProvider;
-        //private IGui gui;
-
         public DimrGuiPlugin()
         {
             Instance = this;
@@ -34,6 +32,7 @@ namespace DeltaShell.Dimr.Gui
         {
             get
             {
+                if (!IsActiveViewMapViewWithRegion()) return false;
                 if(Gui.SelectedModel is IDimrModel) return true;
                 var compositeModel = Gui.SelectedModel as ICompositeActivity;
 
@@ -42,6 +41,23 @@ namespace DeltaShell.Dimr.Gui
                         compositeModel.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().Count();
 
             }
+        }
+
+        private bool IsActiveViewMapViewWithRegion()
+        {
+            var mapView = Gui.GetFocusedMapView();
+
+            if (mapView == null || mapView.Map == null)
+            {
+                return false;
+            }
+
+            if (mapView.Map.GetAllLayers(true).Any(l => l is HydroRegionMapLayer))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public override string DisplayName
@@ -68,31 +84,17 @@ namespace DeltaShell.Dimr.Gui
         {
             get { return new Ribbon(); }
         }
-
         
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return networkEditorMapLayerProvider; }
-        }
-
-        
-
         public override void Dispose()
         {
             base.Dispose();
 
             Instance = null;
         }
-
         
-
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return GetType().Assembly;
         }
-        
-        
-
-        
     }
 }

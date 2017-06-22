@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void RemovingModelBreaksLinks()
         {
-            var childModel = new SimpeHydroModel();
+            var childModel = new SimpleHydroModel();
 
             var network = new HydroNetwork();
             var reigon = new HydroRegion { SubRegions = { network } };
@@ -112,10 +112,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             simpleModel.Execute();
             simpleModel.Finish();
             Assert.IsFalse(hydroModel.OutputIsEmpty, "1 model with output");
-
+            //Submodel should also have output.
+            Assert.IsFalse(simpleModel.OutputIsEmpty, "1 model with output");
+            
             // Add child model without output:
             hydroModel.Activities.Add(new SimpleModel());
             Assert.IsFalse(hydroModel.OutputIsEmpty, "1 empty model and 1 model with output, so Integrated model has output");
+
+            //Clear output from the parent
+            hydroModel.ClearOutput();
+            Assert.IsTrue(hydroModel.OutputIsEmpty);
+            Assert.IsTrue(simpleModel.OutputIsEmpty);
+        }
+
+        [Test]
+        public void TestOutputIsNotEmptyForCompositeModelAfterRunActivity()
+        {
+            /*Sobek3-848*/
+            var hydroModel = new CompositeModel();
+            var simpleModel = new SimpleModel();
+            hydroModel.Activities.Add(simpleModel);
+            Assert.IsTrue(hydroModel.OutputIsEmpty);
+
+            ActivityRunner.RunActivity(hydroModel);
+            Assert.AreEqual(hydroModel.Status, ActivityStatus.Cleaned);
+            Assert.IsFalse(hydroModel.OutputIsEmpty);
         }
 
         [Test]
@@ -272,9 +293,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
         }
 
-        public class SimpeHydroModel : ModelBase, IHydroModel
+        public class SimpleHydroModel : ModelBase, IHydroModel
         {
-            public SimpeHydroModel()
+            public SimpleHydroModel()
             {
                 DataItems.Add(new DataItem(new HydroNetwork(), "network", SupportedRegionType, DataItemRole.Input, "network"));
             }

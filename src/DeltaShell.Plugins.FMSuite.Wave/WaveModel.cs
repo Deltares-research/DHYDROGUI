@@ -1074,6 +1074,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     EndEdit();
                 }
             }
+            OutputIsEmpty = false;
         }
 
         protected override void OnClearOutput()

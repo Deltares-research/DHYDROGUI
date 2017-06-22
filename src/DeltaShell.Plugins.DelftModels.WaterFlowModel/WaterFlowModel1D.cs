@@ -3508,6 +3508,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
 
             }
+
+            OutputIsEmpty = false;
         }
 
         private void SetFeaturesOnCoverage(string netFile, FeatureCoverage coverage)

@@ -1049,6 +1049,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
             //OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
             SetPathsOfFunctionStores(Path.Combine(outputPath, DirectoryName));
+            OutputIsEmpty = false;
         }
         public virtual ValidationReport Validate()
         {
