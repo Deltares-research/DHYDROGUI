@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     [TestFixture]
-    public class UGridToNetworkAdapterTest
+    public class UGridToNetworkAdapterIntegrationTest
     {
         private const string UGRID_TEST_FOLDER = @"ugrid\";
         
@@ -35,6 +35,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
                 UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
+
+                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
+
+                // Spaces in names are replaced by underscores while storing the network object. Do the same action for the network which is not stored.
+                ReplaceSpacesInStrings(storedNetwork);
+                ReplacesSpacesInStrings(networkDiscretisation);
+
+                HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFilePath);
+            }
+        }
+
+        [Test]
+        [TestCase(true, "simple_network_and_discretisation_testFile.nc")]
+        [TestCase(false, "save_load_network_and_discretisation_testFile.nc")]
+        [Category(TestCategory.DataAccess)]
+        public void SaveAndLoadNetworkAndDiscretisationTest(bool useSimpleNetwork, string netFilePath)
+        {
+            var testFilePath =
+                TestHelper.GetTestFilePath(UGRID_TEST_FOLDER + netFilePath);
+            var testFolderPath = Path.GetDirectoryName(testFilePath);
+            FileUtils.CreateDirectoryIfNotExists(testFolderPath);
+            FileUtils.DeleteIfExists(testFilePath);
+            try
+            {
+                var networkDiscretisation = useSimpleNetwork
+                    ? TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation()
+                    : TestNetworkAndDiscretisationProvider.CreateNetworkAndDiscretisation();
+                var storedNetwork = (IHydroNetwork)networkDiscretisation.Network;
+
+                UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
+                UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
                 UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretisation, testFilePath);
 
                 var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
@@ -44,11 +79,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 ReplaceSpacesInStrings(storedNetwork);
                 ReplacesSpacesInStrings(networkDiscretisation);
 
-                //Assert.AreEqual(loadedNetwork.Name, "DummyNetworkName"); // TODO: Implement the read/get network name functionality
-                //Assert.AreEqual(loadedDiscretisation.Name, networkDiscretisation.Name);
                 HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
                 HydroNetworkTestHelper.CompareAndAssertDiscretisations(networkDiscretisation, loadedDiscretisation);
-                // Compare and assert discretisations
             }
             finally
             {
