@@ -4,6 +4,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
@@ -33,24 +35,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 UGridGlobalMetaData metaData = new UGridGlobalMetaData(storedNetwork.Name, "PluginName", "PluginVersion");
                 UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
+                UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretisation, testFilePath);
 
                 var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
-                Assert.AreEqual(loadedNetwork.Name, "DummyNetworkName"); // TODO: Implement the read/get network name functionality
+                var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(testFilePath, loadedNetwork);
 
                 // Spaces in names are replaced by underscores while storing the network object. Do the same action for the network which is not stored.
                 ReplaceSpacesInStrings(storedNetwork);
-                
+                ReplacesSpacesInStrings(networkDiscretisation);
+
+                //Assert.AreEqual(loadedNetwork.Name, "DummyNetworkName"); // TODO: Implement the read/get network name functionality
+                //Assert.AreEqual(loadedDiscretisation.Name, networkDiscretisation.Name);
                 HydroNetworkTestHelper.CompareAndAssertNetworks(storedNetwork, loadedNetwork);
+                HydroNetworkTestHelper.CompareAndAssertDiscretisations(networkDiscretisation, loadedDiscretisation);
+                // Compare and assert discretisations
             }
             finally
             {
                 FileUtils.DeleteIfExists(testFilePath);
             }
         }
-        
-        private void ReplaceSpacesInStrings(IHydroNetwork storedNetwork)
+
+        private void ReplacesSpacesInStrings(IDiscretization discretization)
         {
-            foreach (var node in storedNetwork.Nodes)
+            if (discretization.Name != null)
+            {
+                discretization.Name = discretization.Name.Trim().Replace(" ", "_");
+            }
+
+            if (discretization.Network != null)
+            {
+                ReplaceSpacesInStrings(discretization.Network);
+            }
+        }
+
+        private void ReplaceSpacesInStrings(INetwork network)
+        {
+            network.Name = network.Name.Trim().Replace(" ", "_");
+
+            foreach (var node in network.Nodes)
             {
                 if (node.Name != null)
                 {
@@ -62,7 +85,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 }
             }
 
-            foreach (var branch in storedNetwork.Branches)
+            foreach (var branch in network.Branches)
             {
                 if (branch.Name != null)
                 {

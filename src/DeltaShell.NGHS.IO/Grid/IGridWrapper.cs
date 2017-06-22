@@ -242,11 +242,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
         /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_branchidx">The branch id for each mesh point (in)</param>
-        /// <param name="c_offset">The offset along the branch from the starting point (in)</param>
-        /// <param name="nmeshpoints">The number of mesh points (in)</param>
+        /// <param name="branchIndexPointer">The branch id for each mesh point (in)</param>
+        /// <param name="offsetPointer">The offset along the branch from the starting point (in)</param>
+        /// <param name="numberOfMeshPoints">The number of mesh points (in)</param>
         /// <returns></returns>
-        int ionc_write_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, [In] ref int nmeshpoints);
+        int ionc_write_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr branchIndexPointer, [In] ref IntPtr offsetPointer, [In] ref int numberOfMeshPoints);
 
         /// <summary>
         /// Get the number of network nodes

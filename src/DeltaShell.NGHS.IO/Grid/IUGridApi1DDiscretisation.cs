@@ -4,7 +4,8 @@
     {
         int Create1dDiscretisation(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId);
         int Write1dDiscretisationPoints(int[] branchIdx, double[] offset);
-        int GetNumberOf1dDiscretisationPoints();
-        int Read1dDiscretisationPoints(out int[] branchIdx, out double[] offset);
+        int GetMeshDiscretisationName(int meshId, out string meshName);
+        int GetNumberOf1dDiscretisationPoints(int meshId);
+        int Read1dDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset);
     }
 }

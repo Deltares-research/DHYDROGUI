@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
@@ -17,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             
             try
             {
-                using (var uGrid1D = new UGrid1D(netFilePath, metaData))
+                using (var uGrid1D = new UGrid1D(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
                 {
                     uGrid1D.CreateFile();
                     uGrid1D.Initialize();
@@ -60,7 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
                     uGrid1D.Initialize();
                     
-                    if (!uGrid1D.IsUGridFormat())
+                    if (uGrid1D.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
                     {
                         return null;
                     }
@@ -100,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     //var networkName = uGrid1D.GetNetworkName(networkId); // TODO: This doesn't work. Maybe because it is still based on the assumption that mesh and network are coupled?
                     // do we need a function ionc_get_network_name(ref int ioncid, ref int id, StringBuilder networkName)?
 
-                    var networkName = "DummyNetworkName";
+                    var networkName = "my_Network";
                     var coordinateSystem = uGrid1D.CoordinateSystem;
                     
                     var networkUGridDataModel = new NetworkUGridDataModel(networkName, coordinateSystem, nodesX, nodesY, nodesNames, nodesDescriptions, sourceNodes, targetNodes, branchLengths, branchGeometryPoints, branchNames, branchDescriptions, geometryPointsX, geometryPointsY);
@@ -116,30 +114,25 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public static void SaveNetworkDiscretisation(IDiscretization networkDiscretization, string netFilePath)
         {
+            var discretisationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
             try
             {
-                using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath))
+                using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
                 {
-                    var discretisationPoints = networkDiscretization.Locations.Values.ToArray();
+                    uGrid1DMesh.Initialize();
 
-                    var numberOfMeshEdges = discretisationPoints.Length - networkDiscretization.Network.Nodes.Count + networkDiscretization.Network.Branches.Count;
-
-                    if (!networkDiscretization.Network.Attributes.ContainsKey(IO_NETCDF_NETWORK_ID))
-                    {
-                        throw new InvalidOperationException("Couldn't retrieve network Id, can't save the network discretisation");
-                    };
-                    int networkId = (int)networkDiscretization.Network.Attributes[IO_NETCDF_NETWORK_ID];
+                    /* PLEASE NOTE:
+                     * The network discretisation must be coupled to a network, therefore the network ID is required.
+                     * At this moment only one network will be stored in a netCDF file and hence it is save to obtain the ALL the network IDs 
+                     * and pick the first in the list as the network to couple to.
+                     * However, when more networks will be stored this method is no longer valid and another method to obtain the correct 
+                     * network ID must be implemented.
+                     */
+                    var networkIds = uGrid1DMesh.GetNetworkIds();
+                    var networkId = networkIds[0]; //TODO: Obtain the network ID to couple the mesh to. Maybe by name? In case there is 1 network it won't be a problem. But what if there is also a mesh?
                     
-                    int[] branchIdx = discretisationPoints.Select(l => l.Branch)
-                        .ToArray()
-                        .Select(b => networkDiscretization.Network.Branches.IndexOf(b))
-                        .ToArray();
-
-                    double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray();
-
-                    uGrid1DMesh.Create1DMeshInFile(networkDiscretization.Name, discretisationPoints.Length, numberOfMeshEdges, networkId);
-                    uGrid1DMesh.Write1DMeshDiscretizationPoints(branchIdx, offset);
-
+                    uGrid1DMesh.Create1DMeshInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
+                    uGrid1DMesh.Write1DMeshDiscretizationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
                 }
             }
             catch (Exception ex)
@@ -154,19 +147,36 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath))
                 {
-                    var discretisation = new Discretization
+                    uGrid1DMesh.Initialize();
+                    
+                    if (uGrid1DMesh.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
                     {
-                        Name = "DummyDiscretisationName", // TODO: Obtain the discretisation name from the netCdf file?
-                        Network = network,
-                    };
+                        return null;
+                    }
 
-                    var numberOfDiscretisationPoints = uGrid1DMesh.GetNumberOf1DMeshDiscretisationPoints();
+                    var numberOfMeshDiscretisations = uGrid1DMesh.GetNumberOf1DDiscretisations();
 
-                    int[] branchIdx;
+                    if (numberOfMeshDiscretisations < 1)
+                    {
+                        return null;
+                    }
+
+                    var meshIds = uGrid1DMesh.Get1DMeshDiscretisationIds(numberOfMeshDiscretisations);
+
+                    // only one 1D discretisation mesh is supported, use the first id in the array
+                    var meshId = meshIds[0];
+
+                    uGrid1DMesh.InitializeForLoading(meshId);
+
+                    var meshDiscretisationName = uGrid1DMesh.Get1DMeshDiscretisationName(meshId);
+
+                    int[] branchIndices;
                     double[] offset;
-                    uGrid1DMesh.Read1DMeshDiscretisationPoints(out branchIdx, out offset);
+                    uGrid1DMesh.Read1DMeshDiscretisationPoints(meshId, out branchIndices, out offset);
+                    
+                    var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, meshDiscretisationName, branchIndices, offset);
 
-                    return discretisation;
+                    return networkDiscretisation;
                 }
                 
             }

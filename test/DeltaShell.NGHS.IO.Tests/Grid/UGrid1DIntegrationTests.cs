@@ -423,7 +423,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                         numberOfMeshEdges,
                         networkId
                     );
-                    Assert.AreEqual(expNrDiscrPoints, uGrid1DMesh.GetNumberOf1DMeshDiscretisationPoints());
+                    Assert.AreEqual(expNrDiscrPoints, uGrid1DMesh.GetNumberOf1DMeshDiscretisationPoints(1));
 
                     // write 1D discretisation points
                     int[] branchIdx = discretisationPoints.Select(l => l.Branch)
@@ -444,7 +444,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int[] loadedBranchIdx;
                     double[] loadedOffset;
-                    var ierr = uGrid1DMesh.Read1DMeshDiscretisationPoints(out loadedBranchIdx, out loadedOffset);
+                    var ierr = uGrid1DMesh.Read1DMeshDiscretisationPoints(1, out loadedBranchIdx, out loadedOffset);
 
                     Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
                     Assert.AreEqual(discretisationPoints.Length, loadedBranchIdx.Length);

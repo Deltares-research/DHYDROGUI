@@ -752,10 +752,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_create_1d_mesh_dll(ref ioncid, ref networkid, ref meshid, meshname, ref nmeshpoints, ref nmeshedges);
         }
 
-        public int ionc_write_1d_mesh_discretisation_points(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
-            ref IntPtr c_offset, ref int nmeshpoints)
+        public int ionc_write_1d_mesh_discretisation_points(ref int ioncid, ref int meshId, ref IntPtr branchIndexPointer,
+            ref IntPtr offsetPointer, ref int numberOfMeshPoints)
         {
-            return ionc_write_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref nmeshpoints);
+            return ionc_write_1d_mesh_discretisation_points_dll(ref ioncid, ref meshId, ref branchIndexPointer, ref offsetPointer, ref numberOfMeshPoints);
         }
 
         public int ionc_get_1d_network_nodes_count(ref int ioncid, ref int networkid, ref int nNodes)

@@ -323,6 +323,7 @@
     <Compile Include="Import\Wizard\SelectDataWizardPageTest.cs" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollectionTest.cs" />
     <Compile Include="MapLayers\Tools\Feature2DPointToolTest.cs" />
+    <Compile Include="NetworkDiscretisationUGridDataModelTest.cs" />
     <Compile Include="NetworkEditorApplicationPluginTest.cs" />
     <Compile Include="NetworkEditorMapLayerProviderTest.cs" />
     <Compile Include="NetworkEditorPluginTest.cs" />

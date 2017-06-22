@@ -201,7 +201,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return meshTypeCountDict;
         }
 
-        private int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
+        public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
         {
             numberOfMesh = 0;
 

@@ -1,8 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -12,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     [TestFixture]
     public class NetworkUGridDataModelTest
     {
-        private IDiscretization TestNetworkAndDiscretisation()
+        private IHydroNetwork TestNetwork()
         {
             var network = new HydroNetwork() { Name = "my Network" };
             var hydroNode1 = new HydroNode() { Name = "my Node1", Description = "Node 1 Description", Geometry = new Point(0, 0), Network = network };
@@ -34,32 +32,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             };
             network.Branches.Add(branch1);
 
-            var networkDiscretisation = new Discretization
-            {
-                Name = "my Discretisation",
-                Network = network
-            };
-
-            // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0));
-            // add calculation points
-            var location1 = new NetworkLocation(branch1, 1);
-            networkDiscretisation.Locations.Values.Add(location1);
-            var location2 = new NetworkLocation(branch1, 2);
-            networkDiscretisation.Locations.Values.Add(location2);
-            var location3 = new NetworkLocation(branch1, 3);
-            networkDiscretisation.Locations.Values.Add(location3);
-            // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5));
-
-            return networkDiscretisation;
+            return network;
         }
         
         [Test]
         public void ConstructNetworkDataModelTest()
         {
-            var discretisation = TestNetworkAndDiscretisation();
-            var network = (IHydroNetwork)discretisation.Network;
+            var network = TestNetwork();
 
             var networkDataModel = new NetworkUGridDataModel(network);
 
@@ -91,13 +70,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         public void ReconstructHydroNetworkTest()
         {
-            var discretisation = TestNetworkAndDiscretisation();
-            var network = (IHydroNetwork)discretisation.Network;
+            var network = TestNetwork();
 
             var networkDataModel = new NetworkUGridDataModel(network);
 
             var reconstructedNetwork = NetworkUGridDataModel.ReconstructHydroNetwork(networkDataModel);
-
+            HydroNetworkTestHelper.CompareAndAssertNetworks(network, reconstructedNetwork);
             Assert.AreEqual(network.Name, reconstructedNetwork.Name);
             Assert.AreEqual(network.CoordinateSystem, reconstructedNetwork.CoordinateSystem);
 

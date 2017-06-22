@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGridApi1DDiscretisation : GridApi, IUGridApi1DDiscretisation
     {
-        private int meshId;
+        private int meshIdForWriting;
         private int nMeshPoints;
         private int nMeshEdges;
 
@@ -13,7 +14,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             // Get the 1D network id in the constructor? While opening the file?
             // Obtain meshIds, networkIds?
-            meshId = -1;
+            meshIdForWriting = -1;
             nMeshPoints = -1;
             nMeshEdges = -1;
         }
@@ -39,7 +40,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref networkId, ref meshId, name, ref numberOfMeshPoints, ref numberOfMeshEdges);
+                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref networkId, ref meshIdForWriting, name, ref numberOfMeshPoints, ref numberOfMeshEdges);
 
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
@@ -58,30 +59,28 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int Write1dDiscretisationPoints(int[] branchIdx, double[] offset)
         {
-            if (!Initialized || !NetworkReady)
+            if (!Initialized || !NetworkReadyForWriting)
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
-
-            int numberOfMeshPoints = GetNumberOf1dDiscretisationPoints();
-
-            if (numberOfMeshPoints < 0
-                || numberOfMeshPoints != branchIdx.Length
-                || numberOfMeshPoints != offset.Length)
+            
+            if (nMeshPoints < 0
+                || nMeshPoints != branchIdx.Length
+                || nMeshPoints != offset.Length)
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR;
             }
 
-            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshPoints);
-            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfMeshPoints);
+            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nMeshPoints);
+            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
 
             try
             {
-                Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfMeshPoints);
-                Marshal.Copy(offset, 0, offsetPtr, numberOfMeshPoints);
+                Marshal.Copy(branchIdx, 0, branchIdxPtr, nMeshPoints);
+                Marshal.Copy(offset, 0, offsetPtr, nMeshPoints);
 
-                var ierr = wrapper.ionc_write_1d_mesh_discretisation_points(ref ioncid, ref meshId, ref branchIdxPtr,
-                    ref offsetPtr, ref numberOfMeshPoints);
+                var ierr = wrapper.ionc_write_1d_mesh_discretisation_points(ref ioncid, ref meshIdForWriting, ref branchIdxPtr,
+                    ref offsetPtr, ref nMeshPoints);
                 return ierr;
             }
             catch
@@ -103,9 +102,27 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Read 1D discretisation
 
-        public int GetNumberOf1dDiscretisationPoints()
+        public int GetMeshDiscretisationName(int meshId, out string meshName)
         {
-            if (Initialized && NetworkReady && nMeshPoints > 0)
+            meshName = string.Empty;
+            if (!Initialized)
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+
+            var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
+            var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref meshId, name);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                return ierr;
+            }
+            meshName = name.ToString();
+            return GridApiDataSet.GridConstants.IONC_NOERR;
+        }
+
+        public int GetNumberOf1dDiscretisationPoints(int meshId)
+        {
+            if (Initialized && nMeshPoints > 0)
             {
                 return nMeshPoints;
             }
@@ -127,13 +144,12 @@ namespace DeltaShell.NGHS.IO.Grid
             return numberOfMeshPoints;
         }
 
-        public int Read1dDiscretisationPoints(out int[] branchIdx, out double[] offset)
+        public int Read1dDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
         {
             branchIdx = new int[0];
             offset = new double[0];
-
-            var numberOfMeshPoints = GetNumberOf1dDiscretisationPoints();
-            if (Initialized || !NetworkReady || numberOfMeshPoints < 0)
+            
+            if (!Initialized || nMeshPoints < 0)
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
@@ -143,17 +159,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref meshId, ref branchIdxPtr, ref offsetPtr, ref numberOfMeshPoints);
+                var ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref meshId, ref branchIdxPtr, ref offsetPtr, ref nMeshPoints);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     return ierr;
                 }
 
-                branchIdx = new int[numberOfMeshPoints];
-                offset = new double[numberOfMeshPoints];
+                branchIdx = new int[nMeshPoints];
+                offset = new double[nMeshPoints];
 
-                Marshal.Copy(branchIdxPtr, branchIdx, 0, numberOfMeshPoints);
-                Marshal.Copy(offsetPtr, offset, 0, numberOfMeshPoints);
+                Marshal.Copy(branchIdxPtr, branchIdx, 0, nMeshPoints);
+                Marshal.Copy(offsetPtr, offset, 0, nMeshPoints);
 
                 return GridApiDataSet.GridConstants.IONC_NOERR;
             }
@@ -183,9 +199,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #endregion
 
-        public virtual bool NetworkReady
+        public virtual bool NetworkReadyForWriting
         {
-            get { return meshId > 0; }
+            get { return meshIdForWriting > 0; }
         }
     }
 }

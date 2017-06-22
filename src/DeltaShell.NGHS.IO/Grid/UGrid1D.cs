@@ -4,19 +4,14 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGrid1D : AGrid, IUGrid1D
     {
-        public UGrid1D(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
+        public UGrid1D(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
         {
             GridApi = GridApiFactory.CreateNew1D();
         }
 
-        public UGrid1D(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, globalMetaData, mode)
+        public UGrid1D(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, globalMetaData, mode)
         {
             GridApi = GridApiFactory.CreateNew1D();
-        }
-
-        public bool IsUGridFormat()
-        {
-            return GridApi.GetConvention() == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
         }
 
         #region Write 1D network
@@ -77,7 +72,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public void InitializeForLoading(int networkId)
         {
             var uGridApi1D = GridApi as IUGridApi1DNetwork;
-            if(uGridApi1D == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set");
+            if(uGridApi1D == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful. API is not set");
             
             GetNumberOfNetworkNodes(networkId);
             GetNumberOfNetworkBranches(networkId);

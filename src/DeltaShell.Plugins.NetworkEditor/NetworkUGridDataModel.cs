@@ -99,20 +99,20 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
         }
 
-        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel toNetwork)
+        public static IHydroNetwork ReconstructHydroNetwork(NetworkUGridDataModel dataModel)
         {
             var network = new HydroNetwork
             {
-                Name = toNetwork.Name,
-                CoordinateSystem = toNetwork.CoordinateSystem
+                Name = dataModel.Name,
+                CoordinateSystem = dataModel.CoordinateSystem
             };
 
-            var nodes = ConstructHydroNodes(network, toNetwork.NodesX, toNetwork.NodesY, toNetwork.NodesNames, toNetwork.NodesDescriptions);
+            var nodes = ConstructHydroNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions);
 
-            var branches = ConstructNetworkBranches(network, nodes, toNetwork.SourceNodeIds, toNetwork.TargedNodesIds,
-                toNetwork.BranchLengths,
-                toNetwork.NumberOfBranchGeometryPoints, toNetwork.BranchNames, toNetwork.BranchDescriptions,
-                toNetwork.GeopointsX, toNetwork.GeopointsY);
+            var branches = ConstructNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
+                dataModel.BranchLengths,
+                dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions,
+                dataModel.GeopointsX, dataModel.GeopointsY);
 
             network.Nodes.AddRange(nodes);
             network.Branches.AddRange(branches);

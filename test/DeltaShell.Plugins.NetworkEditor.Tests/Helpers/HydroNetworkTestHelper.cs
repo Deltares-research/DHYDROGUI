@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NUnit.Framework;
@@ -41,8 +42,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             }
         }
 
-        public static void CompareAndAssertNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
+        public static void CompareAndAssertNetworks(INetwork primaryNetwork, INetwork secondaryNetwork)
         {
+            Assert.AreEqual(primaryNetwork.Name, secondaryNetwork.Name);
+            Assert.AreEqual(primaryNetwork.CoordinateSystem, secondaryNetwork.CoordinateSystem);
+
             var primaryNodes = primaryNetwork.Nodes;
             var secondaryNodes = secondaryNetwork.Nodes;
             var primaryBranches = primaryNetwork.Branches;
@@ -67,6 +71,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
                 var secondaryBranch = secondaryBranches[i];
 
                 CompareAndAssertBranches(primaryBranch, secondaryBranch);
+            }
+        }
+
+        public static void CompareAndAssertDiscretisations(IDiscretization primaryDiscretisation, IDiscretization secondaryDiscretisation)
+        {
+            Assert.AreEqual(primaryDiscretisation.Name, secondaryDiscretisation.Name);
+            Assert.AreEqual(primaryDiscretisation.Locations.Values.Count, secondaryDiscretisation.Locations.Values.Count);
+
+            CompareAndAssertNetworks(primaryDiscretisation.Network, secondaryDiscretisation.Network);
+
+            for (int i = 0; i < primaryDiscretisation.Locations.Values.Count; i++)
+            {
+                var primaryLocation = primaryDiscretisation.Locations.Values[i];
+                var secondaryLocation = secondaryDiscretisation.Locations.Values[i];
+                
+                Assert.AreEqual(primaryLocation.Chainage, secondaryLocation.Chainage);
+                CompareAndAssertBranches(primaryLocation.Branch, secondaryLocation.Branch);
             }
         }
     }

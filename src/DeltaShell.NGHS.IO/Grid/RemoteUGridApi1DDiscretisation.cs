@@ -23,19 +23,29 @@ namespace DeltaShell.NGHS.IO.Grid
             return GetFromValidUGridApi1D(ugridApi1DMesh => ugridApi1DMesh.Write1dDiscretisationPoints(branchIdx, offset), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
-        public virtual int GetNumberOf1dDiscretisationPoints()
+        public int GetMeshDiscretisationName(int meshId, out string meshName)
         {
-            return GetFromValidUGridApi1D(ugridApi1DMesh => ugridApi1DMesh.GetNumberOf1dDiscretisationPoints(), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            var uGridApi1DMesh = api as IUGridApi1DDiscretisation;
+            meshName = string.Empty;
+            return uGridApi1DMesh != null
+                ? uGridApi1DMesh.GetMeshDiscretisationName(meshId, out meshName)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int Read1dDiscretisationPoints(out int[] branchIdx, out double[] offset)
+
+        public virtual int GetNumberOf1dDiscretisationPoints(int meshId)
+        {
+            return GetFromValidUGridApi1D(ugridApi1DMesh => ugridApi1DMesh.GetNumberOf1dDiscretisationPoints(meshId), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+        }
+
+        public int Read1dDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
         {
             branchIdx = new int[0];
             offset = new double[0];
 
             var uGridApi1DMesh = api as IUGridApi1DDiscretisation;
             return uGridApi1DMesh != null
-                ? uGridApi1DMesh.Read1dDiscretisationPoints(out branchIdx, out offset)
+                ? uGridApi1DMesh.Read1dDiscretisationPoints(meshId, out branchIdx, out offset)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
