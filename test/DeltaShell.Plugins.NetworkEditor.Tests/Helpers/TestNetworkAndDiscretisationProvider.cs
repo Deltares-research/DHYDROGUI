@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
     {
         public static IDiscretization CreateNetworkAndDiscretisation()
         {
-            var network = new HydroNetwork() { Name = "my Network" };
+            var network = new HydroNetwork() { Name = "Network" };
             var hydroNode1 = new HydroNode() { Name = "my Node 1", Description = "node 1 description", Geometry = new Point(-187.96667, 720.81667), Network = network };
             network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode() { Name = "my Node 2", Description = "node 2 description", Geometry = new Point(2195.7333, 708.71667), Network = network };
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 
         public static IDiscretization CreateSimpleNetworkAndDiscretisation()
         {
-            var network = new HydroNetwork() { Name = "my Network" };
+            var network = new HydroNetwork() { Name = "Network" };
             var hydroNode1 = new HydroNode() { Name = "my Node1", Geometry = new Point(1, 4), Network = network };
             network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode() { Name = "myNode2", Geometry = new Point(5, 1), Network = network };

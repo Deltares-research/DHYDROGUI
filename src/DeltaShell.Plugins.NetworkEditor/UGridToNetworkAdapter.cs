@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     //var networkName = uGrid1D.GetNetworkName(networkId); // TODO: This doesn't work. Maybe because it is still based on the assumption that mesh and network are coupled?
                     // do we need a function ionc_get_network_name(ref int ioncid, ref int id, StringBuilder networkName)?
 
-                    var networkName = "my_Network";
+                    var networkName = "Network";
                     var coordinateSystem = uGrid1D.CoordinateSystem;
                     
                     var networkUGridDataModel = new NetworkUGridDataModel(networkName, coordinateSystem, nodesX, nodesY, nodesNames, nodesDescriptions, sourceNodes, targetNodes, branchLengths, branchGeometryPoints, branchNames, branchDescriptions, geometryPointsX, geometryPointsY);
