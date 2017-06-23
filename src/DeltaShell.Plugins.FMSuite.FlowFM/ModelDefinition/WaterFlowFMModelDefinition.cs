@@ -33,8 +33,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     // TODO: Make this an [Entity]. Needs refactoring.
     public class WaterFlowFMModelDefinition
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
-
         public const string BathymetryDataItemName = "Bed Level";
         public const string InitialWaterLevelDataItemName = "Initial Water Level";
         public const string InitialSalinityDataItemName = "Initial Salinity";
@@ -53,6 +51,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             ViscosityDataItemName,
             DiffusivityDataItemName
         };
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
+        private bool isPartOf1D2DModel;
+
+        // This property is made because 1D2D integrated models do not support UGrid format.
+        // Remove when this dependency has vanished (DELFT3DFM-989)
+        public bool IsPartOf1D2DModel
+        {
+            get { return isPartOf1D2DModel; }
+            set
+            {
+                isPartOf1D2DModel = value;
+                SetMapFormatPropertyValue();
+            }
+        }
 
         public List<string> InitialTracerNames { get; private set; }
         public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
@@ -79,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return result;
         }
         
-        public IEventedList<IWindField> WindFields { get; private set; } 
+        public IEventedList<IWindField> WindFields { get; private set; }
 
         public HeatFluxModel HeatFluxModel { get; private set; }
 
@@ -152,6 +165,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             Dependencies.CompileEnabledDependencies(Properties);
             Dependencies.CompileVisibleDependencies(Properties);
+            waterFlowFmPropertyChangedHandler = new Dictionary<string, Action<WaterFlowFMProperty>>
+            {
+                {KnownProperties.ICdtyp.ToLower(), OnIcdTypePropertyChanged},
+                {GuiProperties.StopTime.ToLower(), OnTimePropertyChanged},
+                {GuiProperties.StartTime.ToLower(), OnTimePropertyChanged},
+                {KnownProperties.RefDate.ToLower(), OnTimePropertyChanged},
+                {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
+                {GuiProperties.UseTemperature.ToLower(), OnUseTemperaturePropertyChanged},
+                {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
+            };
 
             SetGuiTimePropertiesFromMduProperties();
 
@@ -179,6 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
 
         private bool handlingPropertyChanged;
+        private readonly Dictionary<string, Action<WaterFlowFMProperty>> waterFlowFmPropertyChangedHandler;
 
         [EditAction]
         private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -190,34 +214,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             try
             {
                 var prop = (WaterFlowFMProperty) sender;
-                var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
-                var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
-                var startTimeProp = GetModelProperty(GuiProperties.StartTime);
-                var refDateProp = GetModelProperty(KnownProperties.RefDate);
-                var temperatureProp = GetModelProperty(KnownProperties.Temperature);
-                var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
-                var useMorphologySedimentProp = GetModelProperty(GuiProperties.UseMorSed);
-
-                if (prop == icdtypProp)
-                {
-                    OnIcdTypePropertyChanged(prop);
-                }
-                else if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
-                {
-                    OnTimePropertyChanged();
-                }
-                else if (prop == temperatureProp)
-                {
-                    OnTemperaturePropertyChanged(prop);
-                }
-                else if (prop == useTemperatureProp)
-                {
-                    OnUseTemperaturePropertyChanged(prop);
-                }
-                else if (prop == useMorphologySedimentProp)
-                {
-                    OnMorphologySedimentPropertyChanged();
-                }
+                var propName = prop.PropertyDefinition.MduPropertyName.ToLower();
+                if (waterFlowFmPropertyChangedHandler.ContainsKey(propName))
+                    waterFlowFmPropertyChangedHandler[propName](prop);
             }
             finally
             {
@@ -238,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void OnTimePropertyChanged()
+        private void OnTimePropertyChanged(WaterFlowFMProperty prop)
         {
             UpdateOutputTimes();
         }
@@ -266,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void OnMorphologySedimentPropertyChanged()
+        private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
         {
             SetMapFormatPropertyValue();
         }
@@ -318,21 +317,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public void SetMapFormatPropertyValue()
         {
-            if (UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
+            if (IsPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
+            {
+                MapFormat = MapFormatType.NetCdf;
+            }
+            else if (!isPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
             {
                 MapFormat = MapFormatType.Ugrid;
-                Log.Info("MapFormat property value is changed to 4 due to activation of Morphology");
+                Log.Info("MapFormat property value of FlowFM model " + ModelName + " is changed to 4 due to activation of Morphology.");
             }
         }
 
         public bool UseMorphologySediment
         {
             get { return (bool)GetModelProperty(GuiProperties.UseMorSed).Value; }
-            set
-            {
-                GetModelProperty(GuiProperties.UseMorSed).Value = value;
-                SetMapFormatPropertyValue();
-            }
+            set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
         }
 
         public string RelativeMapFilePath

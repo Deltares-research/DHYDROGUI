@@ -37,24 +37,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void Iterative1D2DCouplerSetFlagsInFlow2DModel()
         {
-            var twoDimModel = (ITimeDependentModel)MockRepository.GenerateStrictMock(typeof(ITimeDependentModel), new[] { typeof(IDimrModel), typeof(INotifyPropertyChanged), typeof(IWaterFlowFMModel) });
+            var twoDimModel = new WaterFlowFMModel();
             var oneDimModel = MockRepository.GenerateStrictMock<ITimeDependentModel>();
 
             oneDimModel.Expect(m => m.AllDataItems).Return(Enumerable.Empty<IDataItem>());
-            ((INotifyPropertyChanged)twoDimModel).Expect(m => m.PropertyChanged += null).IgnoreArguments();
-            
-            ((IWaterFlowFMModel)twoDimModel).Stub(m => m.UseNetCDFMapFormat).PropertyBehavior();
-            ((IWaterFlowFMModel)twoDimModel).Stub(m => m.DisableFlowNodeRenumbering).PropertyBehavior();
-            ((IWaterFlowFMModel)twoDimModel).UseNetCDFMapFormat = false;
-            ((IWaterFlowFMModel)twoDimModel).DisableFlowNodeRenumbering = false;
 
-            ((IDimrModel)twoDimModel).Expect(m => m.SetVar(new[] { true }, Iterative1D2DCoupler.UseNetCDFMapFormatPropertyName, null, null))
-                .WhenCalled(invocation => ((IWaterFlowFMModel)twoDimModel).UseNetCDFMapFormat = true);
-            ((IDimrModel)twoDimModel).Expect(m => m.SetVar(new[] { true }, Iterative1D2DCoupler.DisableFlowNodeRenumberingPropertyName, null, null))
-                .WhenCalled(invocation => ((IWaterFlowFMModel)twoDimModel).DisableFlowNodeRenumbering = true);
+            twoDimModel.ModelDefinition.IsPartOf1D2DModel = false;
+            twoDimModel.DisableFlowNodeRenumbering = false;
 
-            ((IWaterFlowFMModel)twoDimModel).UseNetCDFMapFormat.Should().Be.False();
-            ((IWaterFlowFMModel)twoDimModel).DisableFlowNodeRenumbering.Should().Be.False();
+            Assert.IsFalse(twoDimModel.ModelDefinition.IsPartOf1D2DModel);
+            Assert.IsFalse(twoDimModel.DisableFlowNodeRenumbering);
 
             var coupler = new Iterative1D2DCoupler
             {
@@ -62,11 +54,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Flow1DModel = oneDimModel,
                 Flow2DModel = twoDimModel,
             };
-            ((IWaterFlowFMModel)twoDimModel).UseNetCDFMapFormat.Should().Be.True();
-            ((IWaterFlowFMModel)twoDimModel).DisableFlowNodeRenumbering.Should().Be.True();
 
-            twoDimModel.VerifyAllExpectations();
+            Assert.IsTrue(twoDimModel.ModelDefinition.IsPartOf1D2DModel);
+            Assert.IsTrue(twoDimModel.DisableFlowNodeRenumbering);
         }
+
         [Test]
         public void Iterative1D2DCouplerAsksFlow2DModelForLinkOutput()
         {

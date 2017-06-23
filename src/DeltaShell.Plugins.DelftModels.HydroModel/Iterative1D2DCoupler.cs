@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private List<FeatureCoverage> linkCoverages;
         private IHydroModel hydroModel;
         public const string GridPropertyName = "Grid";
-        public const string UseNetCDFMapFormatPropertyName = "UseNetCDFMapFormat";
+        public const string IsPartOf1D2DModelPropertyName = "IsPartOf1D2DModel";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
         
         public static string CellsToFeaturesName = "CellsToFeatures";
@@ -133,8 +133,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     ((INotifyPropertyChanged)flow2DModel).PropertyChanged += FlowModel2DDiscretizationChanged;
                     var dimrModel = flow2DModel as IDimrModel;
                     if (dimrModel == null) return;
-                    dimrModel.SetVar(new[] {true}, UseNetCDFMapFormatPropertyName, null, null);
-                    dimrModel.SetVar(new[] { true }, DisableFlowNodeRenumberingPropertyName, null, null);
+                    dimrModel.SetVar(new[] {true}, IsPartOf1D2DModelPropertyName);
+                    dimrModel.SetVar(new[] { true }, DisableFlowNodeRenumberingPropertyName);
                 }
             }
         }

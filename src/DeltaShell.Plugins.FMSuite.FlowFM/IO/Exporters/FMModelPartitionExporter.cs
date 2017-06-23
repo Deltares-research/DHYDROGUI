@@ -35,7 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                     Path.GetFileNameWithoutExtension(nonzeroPath));
 
                 var filePath = filePathWithoutExtension + ".mdu";
-                var igcSolverProperty = waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.SolverType);
+                var modelDefinition = waterFlowFMModel.ModelDefinition;
+                var igcSolverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
                 var originalSolverType = igcSolverProperty.GetValueAsString();
                 igcSolverProperty.SetValueAsString("2"); //ensure init works
 
@@ -59,9 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 partFileName += "_part.pol";
 
                 WriteNetPartition(api);
-                var netFileProperty = waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile);
-                var partFileProperty =
-                    waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.PartitionFile);
+                var netFileProperty = modelDefinition.GetModelProperty(KnownProperties.NetFile);
+                var partFileProperty = modelDefinition.GetModelProperty(KnownProperties.PartitionFile);
 
                 var originalNetFile = netFileProperty.GetValueAsString();
                 var originalPartFile = partFileProperty.GetValueAsString();
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
                     netFileProperty.SetValueAsString(netFile);
                     igcSolverProperty.SetValueAsString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
-                    new MduFile().WriteProperties(filePath, waterFlowFMModel.ModelDefinition.Properties, true, true, false, waterFlowFMModel.UseNetCDFMapFormat, waterFlowFMModel.DisableFlowNodeRenumbering);
+                    new MduFile().WriteProperties(filePath, modelDefinition.Properties, true, true, false, modelDefinition.IsPartOf1D2DModel, waterFlowFMModel.DisableFlowNodeRenumbering);
                 }
                 netFileProperty.SetValueAsString(originalNetFile);
                 partFileProperty.SetValueAsString(originalPartFile);

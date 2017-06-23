@@ -111,10 +111,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             boundaryCellValues.Clear();
             UpdateGrid();
-            var isNotUgridConvention = GetNcFileConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
+            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
 
-            var functions = GetFunctions(dataVariables, isNotUgridConvention);
-            if (isNotUgridConvention)
+            var functions = GetFunctions(dataVariables, isUgridConvention);
+            if (!isUgridConvention)
             {
                 LogWarningsForExcludedTimeDependentVariables(dataVariables);
             }
@@ -122,11 +122,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return functions;
         }
 
-        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isNotUgridConvention)
+        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention)
         {
             // Construct UnstructuredGridCoverages from file
-            var timeDepVarSelectionCriteria = isNotUgridConvention
-                ? (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2) : (v => v.IsTimeDependent && v.NumDimensions > 1);
+            var timeDepVarSelectionCriteria = isUgridConvention
+                ? (Func<NetCdfVariableInfo, bool>)(v => v.IsTimeDependent && v.NumDimensions > 1) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
             var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
             var functions = timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
 
