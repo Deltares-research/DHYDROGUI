@@ -222,7 +222,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void LoadNetworkDiscretisation()
         {
-            NetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(NetFilePath, Network);
+            if (!File.Exists(NetFilePath)) return;
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(NetFilePath, Network);
+            if (loadedNetworkDiscretisation == null) return;
+            NetworkDiscretisation = loadedNetworkDiscretisation;
         }
 
         private void SaveNetwork()
@@ -234,9 +237,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetworkDiscretisation()
         {
-            var metaData = new UGridGlobalMetaData(Name, FlowFMApplicationPlugin.PluginName,
-                    FlowFMApplicationPlugin.PluginVersion);
-
             UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretisation, NetFilePath);
         }
     }

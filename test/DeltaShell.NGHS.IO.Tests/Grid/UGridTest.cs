@@ -297,7 +297,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
             }
         }
         [Test]
@@ -322,7 +322,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
                 Assert.That(uGrid.NumberOfNodes(1), Is.EqualTo(5));
             }
         }
@@ -336,7 +336,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
                 Assert.That(uGrid.NumberOfEdges(1), Is.EqualTo(6));
             }
         }
@@ -350,7 +350,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
                 Assert.That(uGrid.NumberOfFaces(1), Is.EqualTo(2));
             }
         }
@@ -363,7 +363,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
                 Assert.That(uGrid.NumberOfMaxFaceNodes(1), Is.EqualTo(4));
             }
         }
@@ -377,7 +377,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
                 Assert.That(uGrid.GetAllNodeCoordinates(1), Is.True);
                 Assert.That(uGrid.NodeCoordinates[0], Is.Not.Null);
                 Assert.That(uGrid.NodeCoordinates[0].Count(), Is.EqualTo(uGrid.NumberOfNodes(1)));
@@ -393,7 +393,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.AreEqual(1, uGrid.NumberOfMesh());
+                Assert.AreEqual(1, uGrid.NumberOf2DMeshes());
                 uGrid.GetFaceNodesForMesh(1);
                 Assert.That(uGrid.FaceNodes[0], Is.Not.Null);
             }
@@ -425,7 +425,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             const int locationId = (int) GridApiDataSet.Locations.UG_LOC_FACE;
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(1));
+                Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
                 uGrid.GetNamesAtLocation(meshId, locationId);
                 Assert.That(uGrid.VarNameIdsAtLocationInMesh[meshId -1][locationId], Is.EqualTo(new []{20, 21}));
             }
@@ -529,7 +529,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     //Assert.That(uGrid.IsValidViaApi(), Is.True);
                     Assert.That(uGrid.GetDataSetConvention(), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
                     //Assert.That(uGrid.GetDataSetConventionViaApi(), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
-                    Assert.That(uGrid.NumberOfMesh(), Is.EqualTo(meshNr));
+                    Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(meshNr));
                     Assert.That(uGrid.NumberOfNodes(meshNr), Is.EqualTo(5));
                     Assert.That(uGrid.NumberOfEdges(meshNr), Is.EqualTo(6));
                     Assert.That(uGrid.NumberOfFaces(meshNr), Is.EqualTo(2));

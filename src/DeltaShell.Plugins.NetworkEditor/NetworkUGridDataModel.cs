@@ -152,22 +152,22 @@ namespace DeltaShell.Plugins.NetworkEditor
             return nodes;
         }
 
-        private static List<IBranch> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
+        private static List<IChannel> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
             double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY)
         {
-            var branches = new List<IBranch>();
-            int numberOfBranches = sourceNodes.Length;
+            var channels = new List<IChannel>();
+            int numberOfChannels = sourceNodes.Length;
 
-            if (numberOfBranches <= 0)
+            if (numberOfChannels <= 0)
             {
-                return branches;
+                return channels;
             }
 
-            if (numberOfBranches != targetNodes.Length
-                || numberOfBranches != branchLengths.Length
-                || numberOfBranches != branchNames.Length
-                || numberOfBranches != branchGeometryPoints.Length
-                || numberOfBranches != branchDescriptions.Length)
+            if (numberOfChannels != targetNodes.Length
+                || numberOfChannels != branchLengths.Length
+                || numberOfChannels != branchNames.Length
+                || numberOfChannels != branchGeometryPoints.Length
+                || numberOfChannels != branchDescriptions.Length)
             {
                 throw new InvalidOperationException(string.Format("The arrays are not the same length"));
             }
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
 
             int geoPointsIndex = 0;
-            for (int i = 0; i < numberOfBranches; ++i)
+            for (int i = 0; i < numberOfChannels; ++i)
             {
                 int sourceNodeIndex = sourceNodes[i];
                 int targetNodeIndex = targetNodes[i];
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 Coordinate[] coordinates = geometryCoordinates.Skip(geoPointsIndex).Take(numberOfBranchGeometryPoints).ToArray();
                 geoPointsIndex += numberOfBranchGeometryPoints;
 
-                var branch = new Branch
+                var channel = new Channel
                 {
                     Network = parentNetwork,
                     Name = branchNames[i] == "" ? null : branchNames[i],
@@ -207,10 +207,10 @@ namespace DeltaShell.Plugins.NetworkEditor
                     Geometry = new LineString(coordinates)
                 };
 
-                branches.Add(branch);
+                channels.Add(channel);
             }
 
-            return branches;
+            return channels;
         }
     }
 }

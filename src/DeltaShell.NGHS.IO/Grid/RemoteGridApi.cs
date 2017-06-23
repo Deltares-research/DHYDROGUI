@@ -48,9 +48,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 api.Close();
         }
 
-        public int GetMeshCount()
+        public int GetMeshCount(out int numberOfMeshes)
         {
-            return api != null ? api.GetMeshCount() : 0;
+            numberOfMeshes = 0;
+            return api != null ? api.GetMeshCount(out numberOfMeshes) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public int GetCoordinateSystemCode()

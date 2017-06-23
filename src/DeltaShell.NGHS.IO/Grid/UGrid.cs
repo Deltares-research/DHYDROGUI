@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Grid
             initializing = true;
             base.Initialize();
             if(!IsValid()) return;
-            var nMesh = NumberOfMesh();
+            var nMesh = NumberOf2DMeshes();
             NodeCoordinates = new Dictionary<int, Coordinate[]>();
             EdgeNodes = new int[nMesh][,];
             FaceNodes = new int[nMesh][,];
@@ -52,9 +52,14 @@ namespace DeltaShell.NGHS.IO.Grid
             initialized = true;
         }
         
-        public int NumberOfMesh()
+        
+        public int NumberOf2DMeshes()
         {
-            return GetFromValidUGridApi(uGridApi => uGridApi.GetMeshCount(), 0);
+            int numberOfMeshes;
+            var uGridApi = GetValidUGridApi();
+            var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh2D, out numberOfMeshes);
+            ThrowIfError(ierr, "Couldn't get the number of 2D meshes");
+            return numberOfMeshes;
         }
 
         public int NumberOfNodes(int mesh)

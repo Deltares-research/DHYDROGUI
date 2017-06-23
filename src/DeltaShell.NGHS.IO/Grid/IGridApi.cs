@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Gets the number of mesh from a data set.
         /// </summary>
         /// <returns>Number of meshes.</returns>
-        int GetMeshCount();
+        int GetMeshCount(out int numberOfMeshes);
 
         int GetCoordinateSystemCode();
 

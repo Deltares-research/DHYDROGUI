@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
         
         public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int mesh)
         {
-            if (mesh > uGrid.NumberOfMesh() || mesh <=0 ) return null;
+            if (mesh > uGrid.NumberOf2DMeshes() || mesh <=0 ) return null;
 
             var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(uGrid.NodeCoordinates[mesh-1].ToList(), uGrid.EdgeNodes[mesh-1], uGrid.FaceNodes[mesh-1]);
             if (grid != null) grid.CoordinateSystem = uGrid.CoordinateSystem;

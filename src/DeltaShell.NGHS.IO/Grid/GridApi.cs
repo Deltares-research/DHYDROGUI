@@ -125,7 +125,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var iconvtypeApi = 0;
             var ierr = wrapper.ionc_open(c_path, ref imode, ref ioncid, ref iconvtypeApi, ref convversion);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't open grid nc file : " + c_path + " because of err nr : " + ierr);
+                throw new Exception("Couldn't open grid nc file : " + c_path + " because of err nr : " + ierr); // TODO: Remove exception here, exception can't be passed through Remote
 
             iconvtype = typeof(GridApiDataSet.DataSetConventions).IsEnumDefined(iconvtypeApi)
                 ? (GridApiDataSet.DataSetConventions)iconvtypeApi
@@ -145,18 +145,28 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return;
             var ierr = wrapper.ionc_close(ref ioncid);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
+                throw new Exception("Couldn't close grid nc file because of err nr : " + ierr); // TODO: Remove exception here, exception can't be passed through Remote
             ioncid = 0;
         }
 
-        public int GetMeshCount()
+        public int GetMeshCount(out int numberOfMeshes)
         {
-            if (!Initialized) return 0;
-            var nmesh = 0;
-            var ierr = wrapper.ionc_get_mesh_count(ref ioncid, ref nmesh);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get number of meshes because of err nr : " + ierr); // TODO: Kunnen excepties hier wel gegooid worden?
-            return nmesh;
+            numberOfMeshes = 0;
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
+            try
+            {
+                var ierr = wrapper.ionc_get_mesh_count(ref ioncid, ref numberOfMeshes);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
         }
 
         public int GetNumberOfNetworks(out int numberOfNetworks)
@@ -320,7 +330,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var epsg_code = 0;
             var ierr = wrapper.ionc_get_coordinate_system(ref ioncid, ref epsg_code);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get coordinate system code because of err nr : " + ierr);
+                throw new Exception("Couldn't get coordinate system code because of err nr : " + ierr); // TODO: Remove exception from here.
             return epsg_code;
         }
 
@@ -342,7 +352,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
-                    string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}", filePath, ierr));
+                    string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}", filePath, ierr)); // TODO: Remove exception
             }
 
             CreateAndWriteDefaultNetCdfMetaData(filePath, globalMetaData, netcdfId);
@@ -351,7 +361,7 @@ namespace DeltaShell.NGHS.IO.Grid
             ierr = wrapper.ionc_close(ref netcdfId);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new InvalidOperationException(string.Format("Couldn't close the new NetCDF file at location {0} because of error number: {1}.", filePath, ierr));
+                throw new InvalidOperationException(string.Format("Couldn't close the new NetCDF file at location {0} because of error number: {1}.", filePath, ierr)); // TODO: Remove exception
             }
         }
 
@@ -368,8 +378,8 @@ namespace DeltaShell.NGHS.IO.Grid
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 throw new InvalidOperationException(
-                    string.Format("Couldn't write global metadata to NetCDF file at location {0} because of error number {1}"
-                    , filePath, ierr));
+                    string.Format("Couldn't write global metadata to NetCDF file at location {0} because of error number {1}"  // TODO: Remove exception
+                    , filePath, ierr)); 
             }
         }
 
@@ -414,8 +424,5 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             return elements;
         }
-
-
-
     }
 }

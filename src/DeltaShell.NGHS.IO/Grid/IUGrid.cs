@@ -6,7 +6,7 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public interface IUGrid :IGrid
     {
-        int NumberOfMesh();
+        int NumberOf2DMeshes();
         int NumberOfNodes(int mesh);
         int NumberOfEdges(int mesh);
         int NumberOfFaces(int mesh);

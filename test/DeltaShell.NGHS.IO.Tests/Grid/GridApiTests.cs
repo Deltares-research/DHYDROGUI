@@ -450,8 +450,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(0, gridApi.GetMeshCount());
-            Assert.AreEqual(0, remoteGridApi.GetMeshCount());
+            int numberOfMeshes;
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, gridApi.GetMeshCount(out numberOfMeshes));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteGridApi.GetMeshCount(out numberOfMeshes));
         }
 
         [Test]
@@ -474,12 +475,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(gridApi, "ioncid", 1);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(10, gridApi.GetMeshCount());
-            Assert.AreEqual(10, remoteGridApi.GetMeshCount());
+            int numberOfMeshes;
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, gridApi.GetMeshCount(out numberOfMeshes));
+            Assert.AreEqual(10, numberOfMeshes);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, remoteGridApi.GetMeshCount(out numberOfMeshes));
+            Assert.AreEqual(10, numberOfMeshes);
+
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get number of meshes because of err nr : -1000")]
         public void GetMeshCountWithExceptionTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -494,15 +498,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
                 .OutRef(0, 10)
+                .Throw(new Exception("exception"))
                 .Repeat.Once();
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
             TypeUtils.SetField(gridApi, "ioncid", 1);
             mocks.ReplayAll();
-            Assert.AreEqual(10, gridApi.GetMeshCount());
+            int numberOfMeshes;
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, gridApi.GetMeshCount(out numberOfMeshes));
+            Assert.AreEqual(0, numberOfMeshes);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get number of meshes because of err nr : -1000")]
         public void GetMeshCountInRemoteWithExceptionTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -522,7 +528,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(gridApi, "ioncid", 1);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(10, remoteGridApi.GetMeshCount());
+            int numberOfMeshes;
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteGridApi.GetMeshCount(out numberOfMeshes));
         }
 
         [Test]
