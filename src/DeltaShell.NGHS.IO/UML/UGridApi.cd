@@ -14,7 +14,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAIAAABAACAAQQCAAAwAAQgAAAAAAAAAACAABEEAAAA=</HashCode>
+      <HashCode>AAIAAABAACAAQQCAAAwAAQgAAAAAAAAAQCAABEEAAAA=</HashCode>
       <FileName>Grid\AGrid.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -89,14 +89,14 @@
   <Class Name="DeltaShell.NGHS.IO.Grid.GridApiFactory" Collapsed="true">
     <Position X="9.5" Y="9.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAEAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAABAAAAACAAA=</HashCode>
       <FileName>Grid\GridApiFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.GridWrapper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="13.5" Y="13" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AuCohLACll4UkAQClAG1olgSAvg6+AHsCWDNQALIAOI=</HashCode>
+      <HashCode>AuCohLACll4UkAQClAG1olgWAvg6+AHsCWTNYALIAOI=</HashCode>
       <FileName>Grid\GridWrapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -104,7 +104,7 @@
   <Class Name="DeltaShell.NGHS.IO.Grid.RemoteGridApi" Collapsed="true">
     <Position X="4" Y="13" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAEAAAACBAYQECIAQAAQAAAAAAAAAAACAAEACAAAA=</HashCode>
+      <HashCode>AAIAEAAAACBAYQECIAQAASAAAAAAAAAAACEAEACAAAA=</HashCode>
       <FileName>Grid\RemoteGridApi.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -120,27 +120,11 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.RemoteUGridApi1D" Collapsed="true">
-    <Position X="4" Y="14.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAAIAgAAAQAAIAAQEAgQAAAAAAAAAIBAAgAIQAAAAAA=</HashCode>
-      <FileName>Grid\RemoteUGridApi1D.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.UGrid" Collapsed="true">
     <Position X="8.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>SKAAQAAgABAAAUAQAACAAMAAGAAgAQIAABAgACABCAw=</HashCode>
+      <HashCode>QKAAQAAgABAABUAQAACAAOAAGAAgAQMAABAgACABAAw=</HashCode>
       <FileName>Grid\UGrid.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.UGrid1D" Collapsed="true">
-    <Position X="10.75" Y="6.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAAIAgAAAAAAAAAQEAgQAAAIUAABAIBAAAAAREAAAAA=</HashCode>
-      <FileName>Grid\UGrid1D.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -152,42 +136,58 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.UGridApi1D" Collapsed="true">
-    <Position X="10.75" Y="14.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAAIAgAAACAAIAAQEAgwAAAAAAAAAIBAAgAoQAAAEAA=</HashCode>
-      <FileName>Grid\UGridApi1D.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.UnstructuredGridFileHelper" Collapsed="true">
     <Position X="21.5" Y="1" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAQAAAAAAMAAgGAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAgAAQAAAAAAMAAgGAI=</HashCode>
       <FileName>Grid\UnstructuredGridFileHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.UGrid1DMesh" Collapsed="true">
-    <Position X="12.75" Y="6.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAQAAAAAA=</HashCode>
-      <FileName>Grid\UGrid1DMesh.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.RemoteUGridApi1DDiscretisation" Collapsed="true">
+  <Class Name="DeltaShell.NGHS.IO.Grid.RemoteUGridNetworkDiscretisationApi" Collapsed="true">
     <Position X="6" Y="14.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAABAAAQAAAAACAAAAAAAAAAAAAAAAAAAwAAAAAAA=</HashCode>
-      <FileName>Grid\RemoteUGridApi1dDiscretisation.cs</FileName>
+      <HashCode>CAAAAAABAAAAAgABAAAAAAAAAAAAAAAAgAAAAAAAAAg=</HashCode>
+      <FileName>Grid\RemoteUGridNetworkDiscretisationApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.UGridApi1DDiscretisation" Collapsed="true">
+  <Class Name="DeltaShell.NGHS.IO.Grid.RemoteUGridNetworkApi" Collapsed="true">
+    <Position X="4" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAgAAAAAAQEAQAAAAICACAACBABIAAQAAAAAA=</HashCode>
+      <FileName>Grid\RemoteUGridNetworkApi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.UGridNetworkApi" Collapsed="true">
+    <Position X="10.75" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAgCAAAAAQEIAgAAAICACAACBABIAAQAAAEAA=</HashCode>
+      <FileName>Grid\UGridNetworkApi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.UGridNetworkDiscretisationApi" Collapsed="true">
     <Position X="12.75" Y="14.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAABAAACAAIAACAAAACAAAAAAAIAAAAAAwAAAAAAA=</HashCode>
-      <FileName>Grid\UGridApi1DDiscretisation.cs</FileName>
+      <HashCode>CEAAAAAggCAAAgABAAAAAAAAAAAAACAAgAAAAAAAAAg=</HashCode>
+      <FileName>Grid\UGridNetworkDiscretisationApi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.UGridNetworkDiscretisation">
+    <Position X="12.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAgABAEAAAAAAQAAAABAAgAAAAAAAAAg=</HashCode>
+      <FileName>Grid\UGridNetworkDiscretisation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.UGridNetwork">
+    <Position X="10.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAggAgAAAAAAUEAAAAAAIWACAAABAAIAARAAAABA=</HashCode>
+      <FileName>Grid\UGridNetwork.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -211,29 +211,22 @@
   <Interface Name="DeltaShell.NGHS.IO.Grid.IGridApi" Collapsed="true">
     <Position X="7.5" Y="9.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAABAYQECIAQAAQAAAAAAAAAAAAAAEACAAAA=</HashCode>
+      <HashCode>AAAAEAAAAABAYQECIAQAASAAAAAAAAAAAAEAEACAAAA=</HashCode>
       <FileName>Grid\IGridApi.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="DeltaShell.NGHS.IO.Grid.IGridWrapper" Collapsed="true">
     <Position X="13.5" Y="12" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AuCggLAABhYEkAAAEAGQghAAAmgQSABgASAAAABIAKA=</HashCode>
+      <HashCode>AuCggLAABhYEkAAAEAGQghAEAmgQSABgASAAAABIAKI=</HashCode>
       <FileName>Grid\IGridWrapper.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="DeltaShell.NGHS.IO.Grid.IUGrid" Collapsed="true">
     <Position X="8.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAAQAAgAAAAAAAQAACAAEAACAAAAAIAABAgAAAAAAQ=</HashCode>
+      <HashCode>ACAAQAAgAAAAAAAQAACAAEAACAAAAAMAABAgAAAAAAQ=</HashCode>
       <FileName>Grid\IUGrid.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGrid1D" Collapsed="true">
-    <Position X="10.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAAIAgAAAAAAAAAQEAgQAAAIAAAAAIBAAAAAAAAAAAA=</HashCode>
-      <FileName>Grid\IUGrid1D.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridApi" Collapsed="true">
@@ -243,30 +236,37 @@
       <FileName>Grid\IUGridApi.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridApi1D" Collapsed="true">
-    <Position X="7.5" Y="10.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAAIAgAAAAAAIAAQEAgQAAAAAAAAAIBAAgAIQAAAAAA=</HashCode>
-      <FileName>Grid\IUGridApi1D.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGrid1DMesh" Collapsed="true">
-    <Position X="12.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAQAAAAAA=</HashCode>
-      <FileName>Grid\IUGrid1DMesh.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridApi1DDiscretisation" Collapsed="true">
-    <Position X="9.5" Y="10.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAACAAAAAAAAAAAAAAAAAAAwAAAAAAA=</HashCode>
-      <FileName>Grid\IUGridApi1dDiscretisation.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="GeoAPI.Extensions.CoordinateSystems.ICoordinateSystem" Collapsed="true">
     <Position X="14.5" Y="5" Width="1.75" />
     <TypeIdentifier />
+  </Interface>
+  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridNetworkDiscretisationApi" Collapsed="true">
+    <Position X="9.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAgABAAAAAAAAAAAAAAAAgAAAAAAAAAg=</HashCode>
+      <FileName>Grid\IUGridNetworkDiscretisationApi.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridNetworkApi" Collapsed="true">
+    <Position X="7.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAgAAAAAAQEAAAAAAICACAACBABIAAQAAAAAA=</HashCode>
+      <FileName>Grid\IUGridNetworkApi.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridNetworkDiscretisation" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAgABAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Grid\IUGridNetworkDiscretisation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.NGHS.IO.Grid.IUGridNetwork" Collapsed="true">
+    <Position X="10.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAggAgAAAAAAQEAAAAAAICACAAABAAIAAAAAAAAA=</HashCode>
+      <FileName>Grid\IUGridNetwork.cs</FileName>
+    </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

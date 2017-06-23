@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void CreateNetworkInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
         {
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to create the network in " + filename);
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to create the network in " + filename);
 
             var ierr = uGridApi.CreateNetworkDiscretisation(name, numberOfMeshPoints, numberOfMeshEdges, networkId);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset)
         {
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to write the network discretisation points");
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to write the network discretisation points");
             
             var ierr = uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public string GetNetworkDiscretisationName(int meshId)
         {
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to retrieve the network discretisation name");
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to retrieve the network discretisation name");
 
             string meshName;
             var ierr = uGridApi.GetNetworkDiscretisationName(meshId, out meshName);
@@ -55,38 +55,38 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfNetworkDiscretisations()
         {
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to retrieve the number of network discretisations");
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to retrieve the number of network discretisations");
 
-            int numberOf1DDiscretisations;
-            var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh1D, out numberOf1DDiscretisations);
+            int numberOfNetworkDiscretisations;
+            var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh1D, out numberOfNetworkDiscretisations);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new Exception(string.Format("Couldn't get the number of 1D network discretisations because of error number: {0}", ierr));
+                throw new Exception(string.Format("Couldn't get the number of network discretisations because of error number: {0}", ierr));
             }
-            return numberOf1DDiscretisations;
+            return numberOfNetworkDiscretisations;
         }
 
         public int[] GetNetworkDiscretisationIds(int numberOfMeshes)
         {
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to retrieve the network discretisation id's");
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to retrieve the network discretisation id's");
 
             int[] meshIds;
             var ierr = uGridApi.GetMeshIdsByType(UGridMeshType.Mesh1D, numberOfMeshes, out meshIds);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new Exception(string.Format("Couldn't get the 1D discretisation mesh IDs because of error number: {0}", ierr));
+                throw new Exception(string.Format("Couldn't get the network discretisation IDs because of error number: {0}", ierr));
             }
             return meshIds;
         }
 
         public int GetNumberOfNetworkDiscretisationPoints(int meshId)
         {
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to retrieve the number of network discretisation points");
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to retrieve the number of network discretisation points");
 
             var numberOfMeshPoints = uGridApi.GetNumberOfNetworkDiscretisationPoints(meshId);
             if (numberOfMeshPoints < 0)
             {
-                throw new InvalidOperationException(string.Format("Couldn't get the number of 1D mesh discretisation points because of error number {0}", numberOfMeshPoints));
+                throw new InvalidOperationException(string.Format("Couldn't get the number of network discretisation points because of error number {0}", numberOfMeshPoints));
             }
             return numberOfMeshPoints;
         }
@@ -96,12 +96,12 @@ namespace DeltaShell.NGHS.IO.Grid
             branchIdx = new int[0];
             offset = new double[0];
 
-            var uGridApi = GetValidGridApi<IUGridApiNetworkDiscretisation>("Not able to retrieve the network discretisation points");
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>("Not able to retrieve the network discretisation points");
 
             var ierr = uGridApi.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new InvalidOperationException(string.Format("Couldn't read the 1D mesh discretisation points because of error number {0}", ierr));
+                throw new InvalidOperationException(string.Format("Couldn't read the network discretisation points because of error number {0}", ierr));
             }
             return ierr;
         }

@@ -12,17 +12,17 @@ namespace DeltaShell.NGHS.IO.Grid
                     : new UGridApi();
         }
 
-        public static IUGridApiNetwork CreateNewNetwork()
+        public static IUGridNetworkApi CreateNewNetwork()
         {
             /*return (Environment.Is64BitProcess != Environment.Is64BitOperatingSystem)
-                    ? (IUGridApiNetwork)new RemoteUGridApi1D()
-                    : new UGridApiNetwork();*/
-            return new UGridApiNetwork();
+                    ? (IUGridNetworkApi)new RemoteUGridNetworkApi()
+                    : new UGridNetworkApi();*/
+            return new UGridNetworkApi();
         }
 
-        public static IUGridApiNetworkDiscretisation CreateNewNetworkDiscretisation()
+        public static IUGridNetworkDiscretisationApi CreateNewNetworkDiscretisation()
         {
-            return new UGridApiNetworkDiscretisation();
+            return new UGridNetworkDiscretisationApi();
         }
     }
 }
