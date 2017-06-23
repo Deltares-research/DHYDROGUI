@@ -297,10 +297,11 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetMeshIdsByType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
         {
             meshIds = new int[0];
-            IntPtr meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
+            IntPtr meshIdsPtr = IntPtr.Zero;
             try
             {
                 var type = (int) meshType;
+                meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
                 var ierr = wrapper.ionc_get_mesh_ids(ref ioncid, ref type, ref meshIdsPtr, ref numberOfMeshes);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {

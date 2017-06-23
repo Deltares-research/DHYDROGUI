@@ -1749,7 +1749,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void OnLoad(string mduPath)
         {
             LoadStateFromMdu(mduPath);
-            // TODO: uncomment and test loading a project into DeltaShell (DELFT3DFM-906)
             LoadNetwork();
             LoadNetworkDiscretisation();
             ImportSpatialOperationsAfterLoading();

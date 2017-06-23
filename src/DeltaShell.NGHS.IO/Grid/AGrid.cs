@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
     public abstract class AGrid : IGrid
     {
-        private readonly string filename;
+        protected readonly string filename;
         private readonly GridApiDataSet.NetcdfOpenMode mode;
         private bool disposed;
 
@@ -140,6 +140,15 @@ namespace DeltaShell.NGHS.IO.Grid
                 throw new Exception(string.Format("Couldn't get the network ids because of error: {0}", ierr));
             }
             return networkIds;
+        }
+
+        protected T GetValidGridApi<T>(string errormessage) where T: class
+        {
+            if (!IsInitialized()) Initialize();
+            var uGridApi = GridApi as T;
+            if (uGridApi == null)
+                throw new Exception(errormessage + ", because the API was not instantiated.");
+            return uGridApi;
         }
 
 

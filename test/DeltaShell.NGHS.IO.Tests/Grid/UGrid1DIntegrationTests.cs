@@ -208,7 +208,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             try
             {
-                using (var ugrid1D = new UGrid1D(testFilePath))
+                using (var ugrid1D = new UGridNetwork(testFilePath))
                 {
                     ugrid1D.CreateFile();
 
@@ -219,7 +219,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int networkId;
                     // create 1D grid
-                    ugrid1D.Create1DNetworkInFile(
+                    ugrid1D.CreateNetworkInFile(
                         network.Name,
                         network.Nodes.Count,
                         network.Branches.Count,
@@ -232,7 +232,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     };
 
                     // write 1D network nodes
-                    ugrid1D.Write1DNetworkNodes(
+                    ugrid1D.WriteNetworkNodes(
                         network.Nodes.Select(n => n.Geometry.Coordinates[0].X).ToArray(),
                         network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray(),
                         network.Nodes.Select(n => n.Name).ToArray(), network.Nodes.Select(n => n.Description).ToArray());
@@ -241,7 +241,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.AreEqual(expNrNwNodes, numberOfNetworkNodes);
 
                     // write 1D network branches
-                    ugrid1D.Write1DNetworkBranches(
+                    ugrid1D.WriteNetworkBranches(
                         network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
                         network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray(),
                         network.Branches.Select(b => b.Length).ToArray(),
@@ -260,7 +260,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.AreEqual(expNrNwBranches, numberOfNetworkBranches);
 
                     // write 1D network geometry
-                    ugrid1D.Write1DNetworkGeometry(
+                    ugrid1D.WriteNetworkGeometry(
                         network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray(),
                         network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray());
                     var numberOfNetworkGeometryPoints = ugrid1D.GetNumberOfNetworkGeometryPoints(networkId);
@@ -276,7 +276,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     string[] nodesIds;
                     string[] nodesLongnames;
 
-                    ugrid1D.Read1DNetworkNodes(networkId, out nodesX, out nodesY, out nodesIds, out nodesLongnames);
+                    ugrid1D.ReadNetworkNodes(networkId, out nodesX, out nodesY, out nodesIds, out nodesLongnames);
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrNodes);
                     Assert.AreEqual(network.Nodes.Count, nodesX.Length);
                     Assert.AreEqual(network.Nodes.Count, nodesY.Length);
@@ -315,7 +315,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     string[] branchIds;
                     string[] branchLongnames;
 
-                    ugrid1D.Read1DNetworkBranches(networkId, out sourceNodes, out targetNodes,
+                    ugrid1D.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes,
                         out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
 
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrBranches);
@@ -367,7 +367,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     double[] geopointsX;
                     double[] geopointsY;
 
-                    ugrid1D.Read1DNetworkGeometry(networkId, out geopointsX, out geopointsY);
+                    ugrid1D.ReadNetworkGeometry(networkId, out geopointsX, out geopointsY);
 
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrGeometry);
                     Assert.AreEqual(network.Branches.Sum(b => b.Geometry.Coordinates.Length), geopointsX.Length);
@@ -398,7 +398,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             try
             {
-                using (var uGrid1DMesh = new UGrid1DDiscretisation(localCopyOfTestFile))
+                using (var uGrid1DMesh = new UGridNetworkDiscretisation(localCopyOfTestFile))
                 {
                     #region Write 1D network discretisation
 
@@ -417,13 +417,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     int networkId = (int)networkDiscretization.Network.Attributes["IoNetCdfNetworkId"];
 
                     // create 1D mesh
-                    uGrid1DMesh.Create1DMeshInFile(
+                    uGrid1DMesh.CreateNetworkInFile(
                         networkDiscretization.Name,
                         discretisationPoints.Length,
                         numberOfMeshEdges,
                         networkId
                     );
-                    Assert.AreEqual(expNrDiscrPoints, uGrid1DMesh.GetNumberOf1DMeshDiscretisationPoints(1));
+                    Assert.AreEqual(expNrDiscrPoints, uGrid1DMesh.GetNumberOfNetworkDiscretisationPoints(1));
 
                     // write 1D discretisation points
                     int[] branchIdx = discretisationPoints.Select(l => l.Branch)
@@ -434,7 +434,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray();
 
-                    uGrid1DMesh.Write1DMeshDiscretizationPoints(
+                    uGrid1DMesh.WriteNetworkDiscretisationPoints(
                         branchIdx,
                         offset
                     );
@@ -444,7 +444,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int[] loadedBranchIdx;
                     double[] loadedOffset;
-                    var ierr = uGrid1DMesh.Read1DMeshDiscretisationPoints(1, out loadedBranchIdx, out loadedOffset);
+                    var ierr = uGrid1DMesh.ReadNetworkDiscretisationPoints(1, out loadedBranchIdx, out loadedOffset);
 
                     Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
                     Assert.AreEqual(discretisationPoints.Length, loadedBranchIdx.Length);

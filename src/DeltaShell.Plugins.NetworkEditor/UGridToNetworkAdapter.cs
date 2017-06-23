@@ -2,11 +2,13 @@
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
+using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
     public static class UGridToNetworkAdapter
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UGridToNetworkAdapter));
         private const string IO_NETCDF_NETWORK_ID = "IoNetCdfNetworkId";
 
         public static void SaveNetwork(IHydroNetwork network, string netFilePath, UGridGlobalMetaData metaData)
@@ -15,14 +17,14 @@ namespace DeltaShell.Plugins.NetworkEditor
             
             try
             {
-                using (var uGrid1D = new UGrid1D(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
+                using (var uGridNetwork = new UGridNetwork(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
                 {
-                    uGrid1D.CreateFile();
-                    uGrid1D.Initialize();
+                    uGridNetwork.CreateFile();
+                    uGridNetwork.Initialize();
 
                     int networkId;
                     
-                    uGrid1D.Create1DNetworkInFile(networkUGridDataModel.Name,
+                    uGridNetwork.CreateNetworkInFile(networkUGridDataModel.Name,
                         networkUGridDataModel.NumberOfNodes,
                         networkUGridDataModel.NumberOfBranches,
                         networkUGridDataModel.NumberOfGeometryPoints,
@@ -30,22 +32,22 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     networkUGridDataModel.NetworkId = networkId;
 
-                    uGrid1D.Write1DNetworkNodes(networkUGridDataModel.NodesX, networkUGridDataModel.NodesY,
+                    uGridNetwork.WriteNetworkNodes(networkUGridDataModel.NodesX, networkUGridDataModel.NodesY,
                         networkUGridDataModel.NodesNames, networkUGridDataModel.NodesDescriptions);
 
-                    uGrid1D.Write1DNetworkBranches(networkUGridDataModel.SourceNodeIds,
+                    uGridNetwork.WriteNetworkBranches(networkUGridDataModel.SourceNodeIds,
                         networkUGridDataModel.TargedNodesIds,
                         networkUGridDataModel.BranchLengths,
                         networkUGridDataModel.NumberOfBranchGeometryPoints,
                         networkUGridDataModel.BranchNames,
                         networkUGridDataModel.BranchDescriptions);
 
-                    uGrid1D.Write1DNetworkGeometry(networkUGridDataModel.GeopointsX, networkUGridDataModel.GeopointsY);
+                    uGridNetwork.WriteNetworkGeometry(networkUGridDataModel.GeopointsX, networkUGridDataModel.GeopointsY);
                 }
             }
             catch (Exception ex)
             {
-                throw ex; // TODO: Do something useful with the exceptions?
+                Log.Error(ex.Message);
             }
         }
 
@@ -53,35 +55,35 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             try
             {
-                using (var uGrid1D = new UGrid1D(netFilePath))
+                using (var uGridNetwork = new UGridNetwork(netFilePath))
                 {
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
-                    uGrid1D.Initialize();
+                    uGridNetwork.Initialize();
                     
-                    if (uGrid1D.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+                    if (uGridNetwork.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
                     {
                         return null;
                     }
                     
-                    int numberOfNetworks = uGrid1D.GetNumberOfNetworks();
+                    int numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
 
                     if (numberOfNetworks < 1)
                     {
                         return null; // throw new Exception(string.Format("No network is stored in netCFD file located at: {0}", netFilePath)); // TODO: Should this throw?
                     }
 
-                    var networkIds = uGrid1D.GetNetworkIds();
+                    var networkIds = uGridNetwork.GetNetworkIds();
 
                     // For now only use the first network id in the array
                     int networkId = networkIds[0];
 
-                    uGrid1D.InitializeForLoading(networkId);
+                    uGridNetwork.InitializeForLoading(networkId);
 
                     double[] nodesX;
                     double[] nodesY;
                     string[] nodesNames;
                     string[] nodesDescriptions;
-                    uGrid1D.Read1DNetworkNodes(networkId, out nodesX, out nodesY, out nodesNames, out nodesDescriptions);
+                    uGridNetwork.ReadNetworkNodes(networkId, out nodesX, out nodesY, out nodesNames, out nodesDescriptions);
 
                     int[] sourceNodes;
                     int[] targetNodes;
@@ -89,17 +91,17 @@ namespace DeltaShell.Plugins.NetworkEditor
                     int[] branchGeometryPoints;
                     string[] branchNames;
                     string[] branchDescriptions;
-                    uGrid1D.Read1DNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeometryPoints, out branchNames, out branchDescriptions);
+                    uGridNetwork.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeometryPoints, out branchNames, out branchDescriptions);
 
                     double[] geometryPointsX;
                     double[] geometryPointsY;
-                    uGrid1D.Read1DNetworkGeometry(networkId, out geometryPointsX, out geometryPointsY);
+                    uGridNetwork.ReadNetworkGeometry(networkId, out geometryPointsX, out geometryPointsY);
 
                     //var networkName = uGrid1D.GetNetworkName(networkId); // TODO: This doesn't work. Maybe because it is still based on the assumption that mesh and network are coupled?
                     // do we need a function ionc_get_network_name(ref int ioncid, ref int id, StringBuilder networkName)?
 
                     var networkName = "Network";
-                    var coordinateSystem = uGrid1D.CoordinateSystem;
+                    var coordinateSystem = uGridNetwork.CoordinateSystem;
                     
                     var networkUGridDataModel = new NetworkUGridDataModel(networkName, coordinateSystem, nodesX, nodesY, nodesNames, nodesDescriptions, sourceNodes, targetNodes, branchLengths, branchGeometryPoints, branchNames, branchDescriptions, geometryPointsX, geometryPointsY);
                     var network = NetworkUGridDataModel.ReconstructHydroNetwork(networkUGridDataModel);
@@ -108,7 +110,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
             catch (Exception ex)
             {
-                return null; // TODO: Do something useful with the exceptions.
+                Log.Error(ex.Message);
+                return null;
             }
         }
 
@@ -117,9 +120,9 @@ namespace DeltaShell.Plugins.NetworkEditor
             var discretisationDataModel = new NetworkDiscretisationUGridDataModel(networkDiscretization);
             try
             {
-                using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
+                using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
                 {
-                    uGrid1DMesh.Initialize();
+                    uGridNetworkDiscretisation.Initialize();
 
                     /* PLEASE NOTE:
                      * The network discretisation must be coupled to a network, therefore the network ID is required.
@@ -128,16 +131,16 @@ namespace DeltaShell.Plugins.NetworkEditor
                      * However, when more networks will be stored this method is no longer valid and another method to obtain the correct 
                      * network ID must be implemented.
                      */
-                    var networkIds = uGrid1DMesh.GetNetworkIds();
+                    var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
                     var networkId = networkIds[0]; //TODO: Obtain the network ID to couple the mesh to. Maybe by name? In case there is 1 network it won't be a problem. But what if there is also a mesh?
                     
-                    uGrid1DMesh.Create1DMeshInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
-                    uGrid1DMesh.Write1DMeshDiscretizationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
+                    uGridNetworkDiscretisation.CreateNetworkInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
+                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
                 }
             }
             catch (Exception ex)
             {
-                throw ex; // TODO: Do something useful with the exceptions.
+                Log.Error(ex.Message);
             }
         }
 
@@ -145,34 +148,34 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             try
             {
-                using (var uGrid1DMesh = new UGrid1DDiscretisation(netFilePath))
+                using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath))
                 {
-                    uGrid1DMesh.Initialize();
+                    uGridNetworkDiscretisation.Initialize();
                     
-                    if (uGrid1DMesh.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+                    if (uGridNetworkDiscretisation.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
                     {
                         return null;
                     }
 
-                    var numberOfMeshDiscretisations = uGrid1DMesh.GetNumberOf1DDiscretisations();
+                    var numberOfNetworkDiscretisations = uGridNetworkDiscretisation.GetNumberOfNetworkDiscretisations();
 
-                    if (numberOfMeshDiscretisations < 1)
+                    if (numberOfNetworkDiscretisations < 1)
                     {
                         return null;
                     }
 
-                    var meshIds = uGrid1DMesh.Get1DMeshDiscretisationIds(numberOfMeshDiscretisations);
+                    var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
 
                     // only one 1D discretisation mesh is supported, use the first id in the array
                     var meshId = meshIds[0];
 
-                    uGrid1DMesh.InitializeForLoading(meshId);
+                    uGridNetworkDiscretisation.InitializeForLoading(meshId);
 
-                    var meshDiscretisationName = uGrid1DMesh.Get1DMeshDiscretisationName(meshId);
+                    var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);
 
                     int[] branchIndices;
                     double[] offset;
-                    uGrid1DMesh.Read1DMeshDiscretisationPoints(meshId, out branchIndices, out offset);
+                    uGridNetworkDiscretisation.ReadNetworkDiscretisationPoints(meshId, out branchIndices, out offset);
                     
                     var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, meshDiscretisationName, branchIndices, offset);
 
@@ -182,7 +185,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             }
             catch (Exception ex)
             {
-                return null; // TODO: Do Something useful with the exceptions.?
+                Log.Error(ex.Message);
+                return null;
             }
         }
     }
