@@ -220,12 +220,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Network = loadedNetwork;
         }
 
-        private void LoadNetworkDiscretisation()
+        private void LoadNetworkAndDiscretisation()
         {
             if (!File.Exists(NetFilePath)) return;
-            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(NetFilePath, Network);
-            if (loadedNetworkDiscretisation == null) return;
-            NetworkDiscretisation = loadedNetworkDiscretisation;
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath);
+            if (loadedNetworkDiscretisation != null)
+            {
+                NetworkDiscretisation = loadedNetworkDiscretisation;
+                Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
+                return;
+            }
+
+            LoadNetwork();
+
         }
 
         private void SaveNetwork()

@@ -1749,8 +1749,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void OnLoad(string mduPath)
         {
             LoadStateFromMdu(mduPath);
-            LoadNetwork();
-            LoadNetworkDiscretisation();
+            
+            LoadNetworkAndDiscretisation();
+
             ImportSpatialOperationsAfterLoading();
         }
 

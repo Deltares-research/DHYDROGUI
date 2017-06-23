@@ -72,8 +72,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 UGridToNetworkAdapter.SaveNetwork(storedNetwork, testFilePath, metaData);
                 UGridToNetworkAdapter.SaveNetworkDiscretisation(networkDiscretisation, testFilePath);
 
-                var loadedNetwork = UGridToNetworkAdapter.LoadNetwork(testFilePath);
-                var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkDiscretisation(testFilePath, loadedNetwork);
+                var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(testFilePath);
+                var loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
 
                 // Spaces in names are replaced by underscores while storing the network object. Do the same action for the network which is not stored.
                 ReplaceSpacesInStrings(storedNetwork);

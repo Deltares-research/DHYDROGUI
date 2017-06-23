@@ -8,6 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor
     public class NetworkDiscretisationUGridDataModel
     {
         public string Name;
+        public int NetworkId;
         public int NumberOfMeshEdges;
         public int NumberOfDiscretisationPoints;
         public int[] BranchIdx = new int[0];
@@ -15,6 +16,14 @@ namespace DeltaShell.Plugins.NetworkEditor
         public NetworkDiscretisationUGridDataModel(IDiscretization discretisation)
         {
             SetNetworkDiscretisationData(discretisation);
+        }
+
+        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offset, int networkId)
+        {
+            Name = name;
+            BranchIdx = branchIndices;
+            Offset = offset;
+            NetworkId = networkId;
         }
 
         private void SetNetworkDiscretisationData(IDiscretization discretisation)
