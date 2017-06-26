@@ -4,14 +4,12 @@ using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Dimr;
-using log4net;
 using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public abstract class GridApi : IGridApi
     {
-        protected static readonly ILog Log = LogManager.GetLogger(typeof(GridApi));
         protected int ioncid;
         protected double convversion;
         protected GridApiDataSet.DataSetConventions iconvtype;
@@ -34,50 +32,54 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Read the convention from the grid nc file via the io_netcdf.dll
         /// </summary>
         /// <param name="file">The grid nc file</param>
-        /// <returns>The convention in the grid nc file (or other)</returns>
-        public GridApiDataSet.DataSetConventions GetConvention(string file)
+        /// <param name="convention">The convention in the grid nc file (or other) (out)</param>
+        /// <returns>Error code</returns>
+        public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
         {
-            if (string.IsNullOrEmpty(file)) return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+            if (string.IsNullOrEmpty(file))
+            {
+                convention = GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
 
             GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
             string filename = file;
 
-            try
-            {
-                Open(filename, mode);
-            }
-            catch (Exception ex_ionc)
+            var ierr = Open(filename, mode);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 try
                 {
                     filename = file;
-                    return GetConventionViaDSFramework(filename);
+                    convention = GetConventionViaDSFramework(filename);
+                    return GridApiDataSet.GridConstants.IONC_NOERR;
                 }
-                catch (Exception ex_dsfw)
+                catch
                 {
-                    Log.Warn("Couldn't open nc grid file : " + filename +
-                             " to determine what the convention in the nc file was. " + ex_dsfw.Message + " " +
-                             ex_ionc.Message);
-                    return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                    convention = GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                    return GridApiDataSet.GridConstants.IONC_NOERR;
                 }
-            }
-            try
-            {
-                Close();
-            }
-            catch (Exception e)
-            {
-                Log.Warn(e.Message);
-                return iconvtype;
             }
 
+            var ierrClose = Close();
+            if (ierrClose != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                convention = iconvtype;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            
             if (iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_NULL)
-                return GetConventionViaDSFramework(file);
+            {
+                convention = GetConventionViaDSFramework(file);
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
             if (iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID && convversion < 1.0d)
             {
-                return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                convention = GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
             }
-            return iconvtype;
+            convention = iconvtype;
+            return GridApiDataSet.GridConstants.IONC_NOERR;
         }
 
         /// <summary>
@@ -115,17 +117,19 @@ namespace DeltaShell.NGHS.IO.Grid
             return wrapper.ionc_adheresto_conventions(ref ioncid, ref iconvtypeApi);
         }
 
-        public virtual void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
+        public virtual int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
             if (Initialized)
                 Close();
-            if (c_path == null)
-                c_path = string.Empty;
+            if (filePath == null)
+                filePath = string.Empty;
             var imode = (int)mode;
             var iconvtypeApi = 0;
-            var ierr = wrapper.ionc_open(c_path, ref imode, ref ioncid, ref iconvtypeApi, ref convversion);
+            var ierr = wrapper.ionc_open(filePath, ref imode, ref ioncid, ref iconvtypeApi, ref convversion);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't open grid nc file : " + c_path + " because of err nr : " + ierr); // TODO: Remove exception here, exception can't be passed through Remote
+            {
+                return ierr;
+            }
 
             iconvtype = typeof(GridApiDataSet.DataSetConventions).IsEnumDefined(iconvtypeApi)
                 ? (GridApiDataSet.DataSetConventions)iconvtypeApi
@@ -133,6 +137,8 @@ namespace DeltaShell.NGHS.IO.Grid
             iconvtype = iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID && convversion < 1.0d
                 ? GridApiDataSet.DataSetConventions.IONC_CONV_OTHER
                 : iconvtype;
+
+            return GridApiDataSet.GridConstants.IONC_NOERR;
         }
 
         public virtual bool Initialized
@@ -140,13 +146,23 @@ namespace DeltaShell.NGHS.IO.Grid
             get { return ioncid > 0; }
         }
 
-        public virtual void Close()
+        public virtual int Close()
         {
-            if (!Initialized) return;
-            var ierr = wrapper.ionc_close(ref ioncid);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't close grid nc file because of err nr : " + ierr); // TODO: Remove exception here, exception can't be passed through Remote
-            ioncid = 0;
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            try
+            {
+                var ierr = wrapper.ionc_close(ref ioncid);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+                ioncid = 0;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
         }
 
         public int GetMeshCount(out int numberOfMeshes)
@@ -190,25 +206,6 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
-        }
-
-        public Dictionary<UGridMeshType, int> GetNumberOfMeshes()
-        {
-            Dictionary<UGridMeshType, int> meshTypeCountDict = new Dictionary<UGridMeshType, int>();
-
-            var meshTypes = Enum.GetValues(typeof(UGridMeshType));
-
-            foreach (UGridMeshType meshType in meshTypes)
-            {
-                int nMesh;
-                var ierr = GetNumberOfMeshByType(meshType, out nMesh);
-
-                nMesh = ierr == GridApiDataSet.GridConstants.IONC_NOERR ? nMesh : 0;
-
-                meshTypeCountDict.Add(meshType, nMesh);
-            }
-
-            return meshTypeCountDict;
         }
 
         public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
@@ -270,37 +267,13 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public Dictionary<UGridMeshType, int[]> GetMeshIds()
-        {
-            Dictionary<UGridMeshType, int[]> meshTypeIdsDict = new Dictionary<UGridMeshType, int[]>();
-
-            int[] meshIds = new int[0];
-            var meshTypes = Enum.GetValues(typeof(UGridMeshType));
-
-            foreach (UGridMeshType meshType in meshTypes)
-            {
-                int nMesh;
-                var ierr = GetNumberOfMeshByType(meshType, out nMesh);
-
-                if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    ierr = GetMeshIdsByType(meshType, nMesh, out meshIds);
-                }
-                
-                meshIds = ierr == GridApiDataSet.GridConstants.IONC_NOERR ? meshIds : new int[0];
-
-                meshTypeIdsDict.Add(meshType, meshIds);
-            }
-            return meshTypeIdsDict;
-        }
-
         public int GetMeshIdsByType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
         {
             meshIds = new int[0];
             IntPtr meshIdsPtr = IntPtr.Zero;
             try
             {
-                var type = (int) meshType;
+                var type = (int)meshType;
                 meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
                 var ierr = wrapper.ionc_get_mesh_ids(ref ioncid, ref type, ref meshIdsPtr, ref numberOfMeshes);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -323,16 +296,25 @@ namespace DeltaShell.NGHS.IO.Grid
                 meshIdsPtr = IntPtr.Zero;
             }
         }
-
-
-        public int GetCoordinateSystemCode()
+        
+        public int GetCoordinateSystemCode(out int epsg_code)
         {
-            if (!Initialized) return 0;
-            var epsg_code = 0;
-            var ierr = wrapper.ionc_get_coordinate_system(ref ioncid, ref epsg_code);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get coordinate system code because of err nr : " + ierr); // TODO: Remove exception from here.
-            return epsg_code;
+            epsg_code = 0;
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            try
+            {
+                var ierr = wrapper.ionc_get_coordinate_system(ref ioncid, ref epsg_code);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+                return GridApiDataSet.GridConstants.IONC_NOERR;
+
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
         }
 
         public GridApiDataSet.DataSetConventions GetConvention()
@@ -345,28 +327,32 @@ namespace DeltaShell.NGHS.IO.Grid
             return !Initialized ? double.NaN : convversion;
         }
 
-        public void CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        public int CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int)mode;
             int netcdfId = 0;
             var ierr = wrapper.ionc_create(filePath, ref imode, ref netcdfId);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new InvalidOperationException(
-                    string.Format("Couldn't create new NetCDF file at location {0} because of error number {1}", filePath, ierr)); // TODO: Remove exception
+                return ierr;
             }
 
-            CreateAndWriteDefaultNetCdfMetaData(filePath, globalMetaData, netcdfId);
+            ierr = CreateAndWriteDefaultNetCdfMetaData(globalMetaData, netcdfId);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                return ierr;
+            }
 
             // close the file after creation
             ierr = wrapper.ionc_close(ref netcdfId);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new InvalidOperationException(string.Format("Couldn't close the new NetCDF file at location {0} because of error number: {1}.", filePath, ierr)); // TODO: Remove exception
+                return ierr;
             }
+            return GridApiDataSet.GridConstants.IONC_NOERR;
         }
 
-        private void CreateAndWriteDefaultNetCdfMetaData(string filePath, UGridGlobalMetaData globalMetaData, int netcdfId)
+        private int CreateAndWriteDefaultNetCdfMetaData(UGridGlobalMetaData globalMetaData, int netcdfId)
         {
             GridWrapper.interop_metadata metadata;
             metadata.institution = ToDataSizeCharArray("Deltares");
@@ -376,12 +362,7 @@ namespace DeltaShell.NGHS.IO.Grid
             metadata.modelname = ToDataSizeCharArray(globalMetaData.Modelname);
 
             var ierr = wrapper.ionc_add_global_attributes(ref netcdfId, metadata);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(
-                    string.Format("Couldn't write global metadata to NetCDF file at location {0} because of error number {1}"  // TODO: Remove exception
-                    , filePath, ierr)); 
-            }
+            return ierr;
         }
 
         private static char[] ToDataSizeCharArray(string value)

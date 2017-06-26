@@ -196,7 +196,11 @@ namespace DeltaShell.NGHS.IO.Grid
             GridApiDataSet.DataSetConventions convention;
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                convention = gridApi.GetConvention(path);
+                var ierr = gridApi.GetConvention(path, out convention);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new Exception("Couldn't get the grid convention because of error number: " + ierr);
+                }
             }
             return convention;
         }

@@ -81,7 +81,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // gridApi
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Repeat.Once();
+            gridApi.Expect(a => a.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             // grid
             grid.Expect(g => g.CreateFile()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.IsInitialized()).Return(false).Repeat.Once();
             
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Repeat.Once();
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
             gridApi.Expect(a => a.Initialized).Return(false).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
             mocks.ReplayAll();
@@ -116,11 +116,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
 
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Once();
             gridApi.Expect(a => a.Initialized).Return(true)
                 .Repeat.Once();
-            gridApi.Expect(a => a.GetCoordinateSystemCode()).Return(3819).Repeat.Once();
+            int coordinateSystemCode = 3819;
+            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(4);
             ((AGrid) grid).Expect(g => g.CoordinateSystem)
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation)
@@ -140,11 +141,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
 
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Once();
             gridApi.Expect(a => a.Initialized).Return(true)
                 .Repeat.Once();
-            gridApi.Expect(a => a.GetCoordinateSystemCode()).Return(3819).Repeat.Once().Throw(new Exception());
+            int coordinateSystemCode = 3819;
+            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once().Throw(new Exception());
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(4);
             ((AGrid) grid).Expect(g => g.CoordinateSystem)
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation)

@@ -20,7 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.That(gridApi.GetConvention(netFilePath), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER));
+                GridApiDataSet.DataSetConventions convention;
+                var ierr = gridApi.GetConvention(netFilePath, out convention);
+                Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER));
             }
             var grid = NetFileImporter.ImportGrid(netFilePath);
             
@@ -52,7 +54,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.That(gridApi.GetConvention(netFilePath), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
+                GridApiDataSet.DataSetConventions convention;
+                var ierr = gridApi.GetConvention(netFilePath, out convention);
+                Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
             }
 
             // get original grid

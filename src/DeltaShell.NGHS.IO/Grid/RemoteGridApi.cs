@@ -15,9 +15,10 @@ namespace DeltaShell.NGHS.IO.Grid
             RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
         }
 
-        public GridApiDataSet.DataSetConventions GetConvention(string file)
+        public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
         {
-            return api != null ? api.GetConvention(file) : GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            convention = GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            return api != null ? api.GetConvention(file, out convention) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
@@ -25,16 +26,16 @@ namespace DeltaShell.NGHS.IO.Grid
             return api != null && api.adherestoConventions(convtype);
         }
 
-        public void CreateFile(string c_path, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        public int CreateFile(string filePath, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
-            if(api != null)
-                api.CreateFile(c_path, uGridGlobalMetaData, mode);
+            return api != null
+                ? api.CreateFile(filePath, uGridGlobalMetaData, mode)
+                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
+        public int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
-            if (api != null)
-                api.Open(c_path, mode);
+            return api != null ? api.Open(filePath, mode) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public bool Initialized
@@ -42,10 +43,9 @@ namespace DeltaShell.NGHS.IO.Grid
             get{ return api != null && api.Initialized;}
         }
 
-        public void Close()
+        public int Close()
         {
-            if (api != null)
-                api.Close();
+            return api != null ? api.Close() : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public int GetMeshCount(out int numberOfMeshes)
@@ -54,9 +54,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return api != null ? api.GetMeshCount(out numberOfMeshes) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int GetCoordinateSystemCode()
+        public int GetCoordinateSystemCode(out int coordinateSystemCode)
         {
-            return api != null ? api.GetCoordinateSystemCode() : 0;
+            coordinateSystemCode = 0;
+            return api != null ? api.GetCoordinateSystemCode(out coordinateSystemCode) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
         public GridApiDataSet.DataSetConventions GetConvention()

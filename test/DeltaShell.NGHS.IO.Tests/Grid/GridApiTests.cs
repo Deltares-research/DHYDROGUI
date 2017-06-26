@@ -38,103 +38,100 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetConventionWithNullOrEmptyStringFileNameTest()
         {
             mocks.ReplayAll();
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, gridApi.GetConvention(null));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, gridApi.GetConvention(string.Empty));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_NULL, remoteGridApi.GetConvention(null));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_NULL, remoteGridApi.GetConvention(string.Empty));
+            GridApiDataSet.DataSetConventions convention;
+
+            gridApi.GetConvention(null, out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
+
+            gridApi.GetConvention(string.Empty, out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
+
+            remoteGridApi.GetConvention(null, out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_NULL, convention);
+
+            remoteGridApi.GetConvention(string.Empty, out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_NULL, convention);
+
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, remoteGridApi.GetConvention(null));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, remoteGridApi.GetConvention(string.Empty));
+
+            remoteGridApi.GetConvention(null, out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
+
+            remoteGridApi.GetConvention(string.Empty, out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
         }
 
         [Test]
         public void GetConventionFailsButSucceedInFallBackTest()
         {
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .WhenCalled(invocation =>
-                    { throw new Exception("test") ; });
+                .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
             gridApi.Expect(a => ((GridApi)a).GetConventionViaDSFramework(Arg<string>.Is.Anything)).Return(GridApiDataSet.DataSetConventions.IONC_CONV_TEST).Repeat.Twice();
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, gridApi.GetConvention("test"));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, remoteGridApi.GetConvention("test"));
+
+            GridApiDataSet.DataSetConventions convention;
+            gridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, convention);
+
+            remoteGridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, convention);
         }
-        
+
         [Test]
         public void GetConventionFailsAndFailsInFallBackTest()
         {
-            LogHelper.ConfigureLogging(Level.Warn);
-            try
-            {
                 gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                    .WhenCalled(invocation =>
-                    { throw new Exception("Opening in with UGrid format failed."); });
+                    .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
                 gridApi.Expect(a => ((GridApi)a).GetConventionViaDSFramework(Arg<string>.Is.Anything))
                     .WhenCalled(invocation =>
                     { throw new Exception("test2"); });
                 TypeUtils.SetField(remoteGridApi, "api", gridApi);
                 mocks.ReplayAll();
-                TestHelper.AssertLogMessageIsGenerated(() =>
-                {
-                    Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, gridApi.GetConvention("test"));
-                }, "Couldn't open nc grid file : test to determine what the convention in the nc file was. Method 'GridApi.GetConventionViaDSFramework(anything);' requires a return value or an exception to throw. Opening in with UGrid format failed.");
 
-                TestHelper.AssertLogMessageIsGenerated(() =>
-                {
-                    Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, remoteGridApi.GetConvention("test"));
-                }, "Couldn't open nc grid file : test to determine what the convention in the nc file was. Method 'GridApi.GetConventionViaDSFramework(anything);' requires a return value or an exception to throw. Opening in with UGrid format failed.");
-            }
-            finally
-            {
-                LogHelper.ResetLogging();
-            }
+                GridApiDataSet.DataSetConventions convention;
+                gridApi.GetConvention("test", out convention);
+                Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
+
+                remoteGridApi.GetConvention("test", out convention);
+                Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
         }
 
         [Test]
         public void GetConventionAgainViaLegacyWay()
         {
-            
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .WhenCalled(invocation => { TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_NULL); }).Repeat.Twice();
+                .WhenCalled(invocation => { TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_NULL); }).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
             gridApi.Expect(a => a.Close())
-                .WhenCalled(invocation => { }).Repeat.Twice();
-            gridApi.Expect(a => ((GridApi) a).GetConventionViaDSFramework(Arg<string>.Is.Anything))
+                .WhenCalled(invocation => { }).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
+            gridApi.Expect(a => ((GridApi)a).GetConventionViaDSFramework(Arg<string>.Is.Anything))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, gridApi.GetConvention("test"));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, remoteGridApi.GetConvention("test"));
+            GridApiDataSet.DataSetConventions convention;
+            gridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
+
+            remoteGridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
         }
 
         [Test]
         public void GetConventionClosingFails()
         {
-            LogHelper.ConfigureLogging(Level.Warn);
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
+            .WhenCalled(invocation => { TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_TEST); }).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
+            gridApi.Expect(a => a.Close()).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Repeat.Twice();
+            TypeUtils.SetField(remoteGridApi, "api", gridApi);
+            mocks.ReplayAll();
 
-            try
-            {
-                gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .WhenCalled(invocation => { TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_TEST);  }).Repeat.Twice();
-                gridApi.Expect(a => a.Close())
-                    .WhenCalled(invocation => { throw new Exception("Closing failed"); }).Repeat.Twice();
-                TypeUtils.SetField(remoteGridApi, "api", gridApi);
-                mocks.ReplayAll();
-                TestHelper.AssertLogMessageIsGenerated(() =>
-                    {
-                        Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, gridApi.GetConvention("test"));
-                    },
-                    "Closing failed");
-                TestHelper.AssertLogMessageIsGenerated(() =>
-                    {
-                        Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, remoteGridApi.GetConvention("test"));
-                    },
-                    "Closing failed");
-            }
-            finally
-            {
-                LogHelper.ResetLogging();
-            }
-            
+            GridApiDataSet.DataSetConventions convention;
+            gridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, convention);
+
+            remoteGridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, convention);
         }
 
         [Test]
@@ -142,15 +139,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
 
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
-                .WhenCalled(invocation => { TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_UGRID); }).Repeat.Twice();
-            gridApi.Expect(a => a.Close())
+                .WhenCalled(invocation => { TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_UGRID); }).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
+            gridApi.Expect(a => a.Close()).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .WhenCalled(invocation => { }).Repeat.Twice();
             gridApi.Expect(a => ((GridApi)a).GetConventionViaDSFramework(Arg<string>.Is.Anything))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, gridApi.GetConvention("test"));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, remoteGridApi.GetConvention("test"));
+
+            GridApiDataSet.DataSetConventions convention;
+            gridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
+
+            remoteGridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, convention);
         }
 
         [Test]
@@ -162,15 +164,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     TypeUtils.SetField(gridApi, "iconvtype", GridApiDataSet.DataSetConventions.IONC_CONV_UGRID);
                     TypeUtils.SetField(gridApi, "convversion", GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
-                }).Repeat.Twice();
-            gridApi.Expect(a => a.Close())
+                }).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
+            gridApi.Expect(a => a.Close()).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .WhenCalled(invocation => { }).Repeat.Twice();
             gridApi.Expect(a => ((GridApi)a).GetConventionViaDSFramework(Arg<string>.Is.Anything))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, gridApi.GetConvention("test"));
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, remoteGridApi.GetConvention("test"));
+
+            GridApiDataSet.DataSetConventions convention;
+            gridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, convention);
+
+            remoteGridApi.GetConvention("test", out convention);
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, convention);
         }
 
         [Test]
@@ -191,7 +198,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int ioncid = 0;
-            int iconvtype = (int) GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            int iconvtype = (int)GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
 
             wrapper.Expect(w =>
                     w.ionc_adheresto_conventions(
@@ -209,7 +216,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsFalse(remoteGridApi.adherestoConventions(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER));
 
             mocks.BackToRecordAll();
-        
+
             wrapper.Expect(w =>
                     w.ionc_adheresto_conventions(
                     ref ioncid,
@@ -233,7 +240,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
-            int ioncid = 0 ;
+            int ioncid = 0;
             int iconvtype = (int)GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
             double l = 0.0d;
             wrapper.Expect(w =>
@@ -266,7 +273,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
-            int ioncid = 0 ;
+            int ioncid = 0;
             int iconvtype = (int)GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
             double l = 0.0d;
             wrapper.Expect(w =>
@@ -294,12 +301,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file : test.nc because of err nr : -1000")]
         public void OpenWithErrorTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
-            int j = 0 ;
+            int j = 0;
             int k = 0;
             double l = 0.0d;
 
@@ -316,16 +322,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
-            gridApi.Open("test.nc", Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            var ierr = gridApi.Open("test.nc", Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            Assert.AreEqual(-1000, ierr);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file : test.nc because of err nr : -1000")]
         public void OpenInRemoteWithErrorTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
-            int j = 0 ;
+            int j = 0;
             int k = 0;
             double l = 0.0d;
 
@@ -343,7 +349,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            remoteGridApi.Open("test.nc", Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            var ierr = remoteGridApi.Open("test.nc", Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            Assert.AreEqual(-1000, ierr);
         }
 
         [Test]
@@ -390,7 +397,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't close grid nc file because of err nr : -1000")]
         public void CloseWithErrorTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -405,12 +411,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
             TypeUtils.SetField(gridApi, "ioncid", 1);
-            gridApi.Close();
+            var ierr = gridApi.Close();
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.AreEqual(1, TypeUtils.GetField(gridApi, "ioncid"));
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't close grid nc file because of err nr : -1000")]
         public void CloseInRemoteWithErrorTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -427,7 +433,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
             TypeUtils.SetField(gridApi, "ioncid", 1);
 
-            remoteGridApi.Close();
+            var ierr = remoteGridApi.Close();
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.AreEqual(1, TypeUtils.GetField(gridApi, "ioncid"));
         }
 
@@ -437,7 +444,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             int j = 0;
-            
+
             wrapper.Expect(w =>
                     w.ionc_get_mesh_count(
                             ref i,
@@ -461,7 +468,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             int j = 0;
-            
+
             wrapper.Expect(w =>
                     w.ionc_get_mesh_count(
                             ref i,
@@ -489,7 +496,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             int j = 0;
-            
+
             wrapper.Expect(w =>
                     w.ionc_get_mesh_count(
                             ref i,
@@ -514,7 +521,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             int j = 0;
-            
+
             wrapper.Expect(w =>
                     w.ionc_get_mesh_count(
                             ref i,
@@ -551,8 +558,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(0, gridApi.GetCoordinateSystemCode());
-            Assert.AreEqual(0, remoteGridApi.GetCoordinateSystemCode());
+            int coordinateSystemCode;
+            var ierr = gridApi.GetCoordinateSystemCode(out coordinateSystemCode);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(0, coordinateSystemCode);
+
+            ierr = remoteGridApi.GetCoordinateSystemCode(out coordinateSystemCode);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(0, coordinateSystemCode);
         }
 
         [Test]
@@ -575,12 +588,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(gridApi, "ioncid", 1);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(2887, gridApi.GetCoordinateSystemCode());
-            Assert.AreEqual(2887, remoteGridApi.GetCoordinateSystemCode());
+            int coordinateSystemCode;
+            var ierr = gridApi.GetCoordinateSystemCode(out coordinateSystemCode);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+            Assert.AreEqual(2887, coordinateSystemCode);
+            ierr = remoteGridApi.GetCoordinateSystemCode(out coordinateSystemCode);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+            Assert.AreEqual(2887, coordinateSystemCode);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get coordinate system code because of err nr : -1000")]
         public void GetCoordinateSystemCodeWithExceptionTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -594,16 +611,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                             ))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Throw(new Exception())
                 .OutRef(0, 2887)
                 .Repeat.Once();
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
             TypeUtils.SetField(gridApi, "ioncid", 1);
             mocks.ReplayAll();
-            Assert.AreEqual(2887, gridApi.GetCoordinateSystemCode());
+            int coordinateSystemCode;
+            var ierr = gridApi.GetCoordinateSystemCode(out coordinateSystemCode);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(0, coordinateSystemCode);
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get coordinate system code because of err nr : -1000")]
         public void GetCoordinateSystemCodeInRemoteWithExceptionTest()
         {
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -617,13 +637,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                             ))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)
+                .Throw(new Exception())
                 .OutRef(0, 2887)
                 .Repeat.Once();
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
             TypeUtils.SetField(gridApi, "ioncid", 1);
             TypeUtils.SetField(remoteGridApi, "api", gridApi);
             mocks.ReplayAll();
-            Assert.AreEqual(2887, remoteGridApi.GetCoordinateSystemCode());
+            int coordinateSystemCode;
+            var ierr = remoteGridApi.GetCoordinateSystemCode(out coordinateSystemCode);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
+            Assert.AreEqual(0, coordinateSystemCode);
         }
 
         [Test]
@@ -666,7 +690,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             gridApi.Expect(api => api.Close()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
-            
+
             // Create the nc-file and close the connection to it
             var metaData = new UGridGlobalMetaData("My Model", "My Source", "1.0");
             gridApi.CreateFile(c_path, metaData);
@@ -689,7 +713,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [TestCase(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR)]
         [TestCase(GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR)]
-        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Couldn't create new NetCDF file at location", MatchType = MessageMatch.Contains)]
         public void CreateFileFailedTest(int apiCallReturnValue)
         {
             var wrapper = mocks.StrictMock<IGridWrapper>();
@@ -705,7 +728,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             TypeUtils.SetField(gridApi, "wrapper", wrapper);
 
-            gridApi.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            var ierr = gridApi.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything);
+            Assert.AreEqual(apiCallReturnValue, ierr);
         }
     }
 }

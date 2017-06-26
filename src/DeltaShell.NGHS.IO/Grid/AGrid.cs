@@ -74,7 +74,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual void CreateFile()
         {
-            if (filename != null && !File.Exists(filename)) GridApi.CreateFile(filename, GlobalMetaData);
+            if (filename != null && !File.Exists(filename))
+            {
+                var ierr = GridApi.CreateFile(filename, GlobalMetaData);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new Exception("Couldn't create new NetCDF file at location " + filename + " because of error number " + ierr); 
+                }
+            }
         }
 
         public virtual void Initialize()
@@ -86,14 +93,24 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             if (GridApi != null)
             {
-                GridApi.Open(filename, mode);
+                var ierr = GridApi.Open(filename, mode);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    throw new Exception("Couldn't open grid nc file: " + filename + " because of error number: " + ierr);
+                }
             
                 if (!GridApi.Initialized)
                     throw new Exception("Couldn't open grid nc file : " + filename);
             
                 try
                 {
-                    int epsg_code = GridApi.GetCoordinateSystemCode();
+                    int epsg_code;
+                    ierr = GridApi.GetCoordinateSystemCode(out epsg_code);
+                    if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    {
+                        CoordinateSystem = null;
+                        throw new Exception("Couldn't get coordinate system code because of err nr : " + ierr);
+                    }
                     CoordinateSystem = epsg_code > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsg_code) : null;
                 }
                 catch (Exception)
@@ -187,7 +204,11 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 if (GridApi != null)
                 {
-                    GridApi.Close();
+                    var ierr = GridApi.Close();
+                    if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    {
+                        throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
+                    }
                     GridApi = null;
                 }
             }

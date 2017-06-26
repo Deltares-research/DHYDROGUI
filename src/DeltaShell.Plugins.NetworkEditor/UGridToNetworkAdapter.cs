@@ -30,7 +30,20 @@ namespace DeltaShell.Plugins.NetworkEditor
                         networkUGridDataModel.NumberOfBranches,
                         networkUGridDataModel.NumberOfGeometryPoints,
                         out networkId);
-                    
+
+                    if (network.Attributes == null)
+                    {
+                        network.Attributes = new DictionaryFeatureAttributeCollection();
+                    }
+                    if (network.Attributes.Keys.Contains(IO_NETCDF_NETWORK_ID))
+                    {
+                        network.Attributes[IO_NETCDF_NETWORK_ID] = networkId;
+                    }
+                    else
+                    {
+                        network.Attributes.Add(IO_NETCDF_NETWORK_ID, networkId);
+                    }
+
                     networkUGridDataModel.NetworkId = networkId;
 
                     uGridNetwork.WriteNetworkNodes(networkUGridDataModel.NodesX, networkUGridDataModel.NodesY,

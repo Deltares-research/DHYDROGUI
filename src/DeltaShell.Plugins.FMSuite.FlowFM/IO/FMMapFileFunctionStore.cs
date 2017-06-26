@@ -335,7 +335,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 using (var api = GridApiFactory.CreateNew())
                 {
-                    return api.GetConvention(netCdfFile.Path);
+                    GridApiDataSet.DataSetConventions convention;
+                    var ierr = api.GetConvention(netCdfFile.Path, out convention);
+                    if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    {
+                        throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
+                    } 
+                    return convention;
                 }
             }
             catch (Exception e)
