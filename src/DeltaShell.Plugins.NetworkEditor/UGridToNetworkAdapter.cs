@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using log4net;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
@@ -214,7 +215,8 @@ namespace DeltaShell.Plugins.NetworkEditor
                     // only one 1D discretisation mesh is supported, use the first id in the array
                     var meshId = meshIds[0];
 
-                    var networkId = 1; // uGrid1DMesh.GetNetworkId(meshId);
+                    var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
+                    var networkId = networkIds[0]; // uGrid1DMesh.GetNetworkId(meshId);
 
                     uGridNetworkDiscretisation.InitializeForLoading(meshId);
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);

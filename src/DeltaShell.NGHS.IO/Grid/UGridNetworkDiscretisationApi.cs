@@ -120,16 +120,17 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.IONC_NOERR;
         }
 
-        public int GetNumberOfNetworkDiscretisationPoints(int meshId)
+        public int GetNumberOfNetworkDiscretisationPoints(int meshId, out int numberOfDiscretisationPoints)
         {
+            numberOfDiscretisationPoints = 0;
             if (Initialized && nNetworkPoints > 0)
             {
-                return nNetworkPoints;
+                numberOfDiscretisationPoints = nNetworkPoints;
+                return GridApiDataSet.GridConstants.IONC_NOERR;
             }
-            int numberOfNetworkDiscretisationPoints = -1;
             try
             {
-                var ierr = wrapper.ionc_get_1d_mesh_discretisation_points_count(ref ioncid, ref meshId, ref numberOfNetworkDiscretisationPoints);
+                var ierr = wrapper.ionc_get_1d_mesh_discretisation_points_count(ref ioncid, ref meshId, ref numberOfDiscretisationPoints);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                 {
                     return ierr;
@@ -140,8 +141,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 // on exception don't crash...
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
-            nNetworkPoints = numberOfNetworkDiscretisationPoints;
-            return numberOfNetworkDiscretisationPoints;
+            nNetworkPoints = numberOfDiscretisationPoints;
+            return GridApiDataSet.GridConstants.IONC_NOERR;
         }
 
         public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)

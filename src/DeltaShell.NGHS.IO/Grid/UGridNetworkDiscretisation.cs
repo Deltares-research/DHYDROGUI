@@ -71,12 +71,13 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             const string errorMessage = "Couldn't get the number of network discretisation points";
             var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(errorMessage);
-            var numberOfMeshPoints = uGridApi.GetNumberOfNetworkDiscretisationPoints(meshId);
-            if (numberOfMeshPoints < 0)
+            int numberOfDiscretisationPoints;
+            var ierr = uGridApi.GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new InvalidOperationException(string.Format(errorMessage + " because of error number {0}", numberOfMeshPoints));
+                throw new InvalidOperationException(string.Format(errorMessage + " because of error number {0}", ierr));
             }
-            return numberOfMeshPoints;
+            return GridApiDataSet.GridConstants.IONC_NOERR;
         }
 
         public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)

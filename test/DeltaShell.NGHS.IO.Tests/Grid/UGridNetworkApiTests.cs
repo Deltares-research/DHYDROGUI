@@ -2278,7 +2278,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(a => a.WriteNetworkDiscretisationPoints(branchIdx, offset)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            int nPoints;
+            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1, out nPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
@@ -2352,18 +2353,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGridNetworkDiscretisationApi, "nNetworkPoints", nNetworkPoints);
 
             //uRemoteGridNetworkApi
-            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            int nPoints;
+            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1, out nPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             //uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
-            Assert.AreEqual(nNetworkPoints, result);
+            var ierr = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(nNetworkPoints, TypeUtils.GetField(uGridNetworkDiscretisationApi, "nNetworkPoints"));
 
             //uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
-            Assert.AreEqual(nNetworkPoints, remoteResult);
+            ierr = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(nNetworkPoints, TypeUtils.GetField(uGridNetworkDiscretisationApi, "nNetworkPoints"));
         }
 
@@ -2390,19 +2392,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGridNetworkDiscretisationApi, "wrapper", wrapper);
 
             //uRemoteGridNetworkApi
-            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            int nPoints;
+            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1, out nPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             //uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
-            Assert.AreEqual(numberOfMeshPoints, result);
+            var ierr = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(uGridNetworkDiscretisationApi, "nNetworkPoints"));
 
             //uRemoteGridNetworkApi
             TypeUtils.SetField(uGridNetworkDiscretisationApi, "nNetworkPoints", nNetworkPoints);
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
-            Assert.AreEqual(numberOfMeshPoints, remoteResult);
+            ierr = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(numberOfMeshPoints, TypeUtils.GetField(uGridNetworkDiscretisationApi, "nNetworkPoints"));
         }
         
@@ -2426,16 +2429,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGridNetworkDiscretisationApi, "wrapper", wrapper);
 
             // uRemoteGridNetworkApi
-            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            int nPoints;
+            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1, out nPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             //uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
+            var result = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, result);
 
             //uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
         }
 
@@ -2460,16 +2464,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGridNetworkDiscretisationApi, "wrapper", wrapper);
 
             // uRemoteGridNetworkApi
-            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            int nPoints;
+            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.GetNumberOfNetworkDiscretisationPoints(1, out nPoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             //uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
+            var result = uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, result);
 
             //uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1);
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(1, out nPoints);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, remoteResult);
         }
 
