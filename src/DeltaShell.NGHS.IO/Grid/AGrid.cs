@@ -122,10 +122,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (GridApi == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set"); ; 
             int numberOfNetworks;
             var ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't get the number of networks because of error: {0}", ierr));
-            }
+            ThrowIfError(ierr, "Couldn't get the number of networks");
             return numberOfNetworks;
         }
 
@@ -135,10 +132,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             int[] networkIds;
             var ierr = GridApi.GetNetworkIds(out networkIds);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new Exception(string.Format("Couldn't get the network ids because of error: {0}", ierr));
-            }
+            ThrowIfError(ierr, "Couldn't get the network ids");
             return networkIds;
         }
 
@@ -146,11 +140,19 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (!IsInitialized()) Initialize();
             var uGridApi = GridApi as T;
-            if (uGridApi == null)
+            var isValid = uGridApi != null && IsValid();
+            if (!isValid)
                 throw new Exception(errormessage + ", because the API was not instantiated.");
             return uGridApi;
         }
 
+        protected void ThrowIfError(int ierr, string exceptionText)
+        {
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new Exception(string.Format(exceptionText + " because of error number: {0}", ierr));
+            }
+        }
 
         public virtual void Dispose()
         {

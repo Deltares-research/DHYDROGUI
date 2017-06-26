@@ -16,7 +16,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
-    public class UGrid1DIntegrationTests
+    public class UGridNetworkIntegrationTests
     {
         private const string UGRID_TEST_FILE = @"ugrid\Custom_Ugrid.nc";
         

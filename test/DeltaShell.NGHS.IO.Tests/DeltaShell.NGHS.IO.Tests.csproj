@@ -133,7 +133,7 @@
     <Compile Include="Grid\AGridTests.cs" />
     <Compile Include="Grid\GridApiTests.cs" />
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
-    <Compile Include="Grid\UGrid1DIntegrationTests.cs" />
+    <Compile Include="Grid\UGridNetworkIntegrationTests.cs" />
     <Compile Include="Grid\Ugrid1DTests.cs" />
     <Compile Include="Grid\UGrid2DIntegrationTests.cs" />
     <Compile Include="Grid\UGridNetworkApiTests.cs" />

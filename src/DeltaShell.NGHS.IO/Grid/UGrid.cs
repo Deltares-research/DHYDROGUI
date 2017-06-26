@@ -228,14 +228,6 @@ namespace DeltaShell.NGHS.IO.Grid
             return meshName;
         }
 
-        private void ThrowIfError(int ierr, string exceptionText)
-        {
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new Exception(string.Format(exceptionText + " because of error number: {0}", ierr));
-            }
-        }
-
         private IUGridApi GetValidUGridApi()
         {
             var uGridApi = GridApi as IUGridApi;

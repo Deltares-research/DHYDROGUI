@@ -4,7 +4,6 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using log4net;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {

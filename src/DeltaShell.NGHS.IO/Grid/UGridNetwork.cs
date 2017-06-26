@@ -56,24 +56,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public string GetNetworkName(int networkId)
         {
-            var uGridNetworkApi = GridApi as IUGridNetworkApi;
-            if (uGridNetworkApi == null) return string.Empty;
-
             string networkName;
+            const string errorMessage = "Couldn't obtain the network name";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.GetNetworkName(networkId, out networkName);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't obtain the network name because of error: {0}", ierr));
-            }
+            ThrowIfError(ierr, errorMessage);
 
             return networkName;
         }
 
         public void InitializeForLoading(int networkId)
         {
-            var uGridNetworkApi = GridApi as IUGridNetworkApi;
-            if(uGridNetworkApi == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful. API is not set");
-            
             GetNumberOfNetworkNodes(networkId);
             GetNumberOfNetworkBranches(networkId);
             GetNumberOfNetworkGeometryPoints(networkId);
@@ -82,72 +75,58 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfNetworkNodes(int networkId)
         {
             int numberOfNetworkNodes;
-            IUGridNetworkApi uGridNetworkApi = GetValidIUGridNetworkApi();
+            const string errorMessage = "Couldn't get number of network nodes";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.GetNumberOfNetworkNodes(networkId, out numberOfNetworkNodes);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't get number of network nodes because of error number {0}", ierr));
-            }
+            ThrowIfError(ierr, errorMessage);
+
             return numberOfNetworkNodes;
         }
 
         public int GetNumberOfNetworkBranches(int networkId)
         {
             int numberOfNetworkBranches;
-            IUGridNetworkApi uGridNetworkApi = GetValidIUGridNetworkApi();
+            const string errorMessage = "Couldn't get the number of network branches";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.GetNumberOfNetworkBranches(networkId, out numberOfNetworkBranches);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't get the number of network branches because of error number {0}", ierr));
-            }
+            ThrowIfError(ierr, errorMessage);
+
             return numberOfNetworkBranches;
         }
 
         public int GetNumberOfNetworkGeometryPoints(int networkId)
         {
             int numberOfNetworkGeometryPoints;
-            IUGridNetworkApi uGridNetworkApi = GetValidIUGridNetworkApi();
+            const string errorMessage = "Couldn't get the number of network geometry points";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.GetNumberOfNetworkGeometryPoints(networkId, out numberOfNetworkGeometryPoints);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't get the number of network geometry points because of error number {0}", ierr));
-            }
+            ThrowIfError(ierr, errorMessage);
+
             return numberOfNetworkGeometryPoints;
         }
 
         public void ReadNetworkNodes(int networkId, out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames)
         {
-            IUGridNetworkApi uGridNetworkApi = GetValidIUGridNetworkApi();
+            const string errorMessage = "Couldn't read network nodes";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.ReadNetworkNodes(networkId, out nodesX, out nodesY, out nodesIds, out nodesLongnames);
-
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(
-                    string.Format("Couldn't read network nodes because of error number {0}", ierr));
-            }
+            ThrowIfError(ierr, errorMessage);
         }
 
         public void ReadNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames)
         {
-            IUGridNetworkApi uGridNetworkApi = GetValidIUGridNetworkApi();
+            const string errorMessage = "Couldn't read network branches";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
-
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format("Couldn't read network branches because of error number {0}", ierr));
-            }
-
+            ThrowIfError(ierr, errorMessage);
         }
 
         public void ReadNetworkGeometry(int networkId, out double[] geopointsX, out double[] geopointsY)
         {
-            var uGridNetworkApi = GetValidIUGridNetworkApi();
+            const string errorMessage = "Couldn't read network geometry";
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.ReadNetworkGeometry(networkId, out geopointsX, out geopointsY);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(
-                    string.Format("Couldn't read 1d network geometry because of error number {0}", ierr));
-            }
+            ThrowIfError(ierr, errorMessage);
         }
 
         #endregion
@@ -159,33 +138,17 @@ namespace DeltaShell.NGHS.IO.Grid
             return base.IsInitialized();
         }
 
-        private T GetFromValidUGridApi<T>(Func<IUGridNetworkApi, T> function, T defaultValue)
+        private T GetFromValidUGridApi<T>(Func<IUGridNetworkApi, T> function, T defaultValue, string errorMessage)
         {
-            var uGridNetworkApi = GetValidIUGridNetworkApi();
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             return uGridNetworkApi != null ? function(uGridNetworkApi) : defaultValue;
         }
 
         private void DoWithValidUGridNetworkApi(Func<IUGridNetworkApi, int> function, string errorMessage)
         {
-            var uGridNetworkApi = GetValidIUGridNetworkApi();
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = function(uGridNetworkApi);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-            {
-                throw new InvalidOperationException(string.Format(errorMessage + " because of error number {0}", ierr));
-            }
-        }
-
-        private IUGridNetworkApi GetValidIUGridNetworkApi()
-        {
-            if (!IsInitialized()) Initialize();
-            var uGridNetworkApi = GridApi as IUGridNetworkApi;
-
-            var isValid = uGridNetworkApi != null && IsInitialized() && IsValid();
-            if (!isValid)
-            {
-                throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set");
-            }
-            return uGridNetworkApi;
+            ThrowIfError(ierr, errorMessage);
         }
     }
 }
