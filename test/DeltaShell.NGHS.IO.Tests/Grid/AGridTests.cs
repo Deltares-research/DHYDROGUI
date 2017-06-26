@@ -31,7 +31,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.VerifyAll();
         }
 
-
         [Test]
         public void IsValidTest()
         {

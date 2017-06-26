@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                      */
 
                     var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
-                    var networkId = networkIds[0]; //TODO: Obtain the network ID to couple the mesh to. Maybe by name? In case there is 1 network it won't be a problem. But what if there is also a mesh?
+                    var networkId = networkIds[0];
                     
                     uGridNetworkDiscretisation.CreateNetworkInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var meshId = meshIds[0];
 
                     var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
-                    var networkId = networkIds[0]; // uGrid1DMesh.GetNetworkId(meshId);
+                    var networkId = networkIds[0]; // uGridNetworkDiscretisation.GetNetworkId(meshId);
 
                     uGridNetworkDiscretisation.InitializeForLoading(meshId);
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);

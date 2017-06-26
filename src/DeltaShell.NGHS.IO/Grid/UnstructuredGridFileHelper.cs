@@ -103,7 +103,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 string meshName;
                 using (var uGrid = new UGrid(path))
                 {
-                    meshName = uGrid.NameOfMesh(1);
+                    meshName = uGrid.GetMeshName(1);
                 }
                 if (string.IsNullOrEmpty(meshName))
                     return;
