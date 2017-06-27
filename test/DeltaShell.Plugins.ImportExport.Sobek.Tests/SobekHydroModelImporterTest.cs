@@ -94,8 +94,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var acts1D = hydroModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().ToList();
             Assert.NotNull(acts1D);
             Assert.IsNotEmpty(acts1D);
-
-            Assert.DoesNotThrow(() => hydroModel.CurrentWorkflow.Activities.Remove(acts1D.First()));
+            var actToRemove = acts1D.First();
+            Assert.DoesNotThrow(() => hydroModel.CurrentWorkflow.Activities.Remove(actToRemove));
+            Assert.That(!hydroModel.CurrentWorkflow.Activities.Contains(actToRemove));
         }
 
         private static HydroModel CreateHydroModel()
