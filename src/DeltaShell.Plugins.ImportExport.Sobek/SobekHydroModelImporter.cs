@@ -9,6 +9,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using log4net;
 
@@ -207,6 +208,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
                 }
             }
+
+            WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
+            WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);
         }
 
         public bool IsActive { get; set; }

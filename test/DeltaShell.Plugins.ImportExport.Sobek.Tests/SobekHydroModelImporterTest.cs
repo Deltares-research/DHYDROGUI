@@ -1,5 +1,9 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Linq;
+using DelftTools.Hydro.Helpers;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
@@ -67,6 +71,31 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             sobekModelImporter.Import();
 
             Assert.AreEqual("(RR + Flow1D)", hydroModel.CurrentWorkflow.ToString());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportSobekModelWithSalinityThenRemoveWaterFlow1DShouldNotCrash()
+        {
+            string pathToSobekModel = TestHelper.GetDataDir() + @"\SOBEK3-1015\6\DEFTOP.1";
+
+            var hydroModel = CreateHydroModel();
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
+            var sobekModelImporter = new SobekHydroModelImporter(false)
+            {
+                TargetObject = hydroModel,
+                PartialSobekImporter = importer,
+                PathSobek = pathToSobekModel
+            };
+
+            sobekModelImporter.Import();
+
+            var acts1D = hydroModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().ToList();
+            Assert.NotNull(acts1D);
+            Assert.IsNotEmpty(acts1D);
+
+            Assert.DoesNotThrow(() => hydroModel.CurrentWorkflow.Activities.Remove(acts1D.First()));
         }
 
         private static HydroModel CreateHydroModel()

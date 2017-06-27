@@ -199,6 +199,7 @@
     <Compile Include="ImportExport\StructureFileWriter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DExporter.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DFileImporter.cs" />
+    <Compile Include="ImportExport\WaterFlowModel1DImporterHelper.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DMorphologyFile.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DOutputCoverageMappings.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DOutputFileConstants.cs" />
