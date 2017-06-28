@@ -361,26 +361,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         ~RemoteFlexibleMeshModelApi()
         {
             // in case someone forgets to dispose..
-            DisposeInternal();
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            if (disposed) return;
-            try
-            {
-                DisposeInternal();
-            }
-            catch (Exception e)
-            {
-                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
-                throw;
-            }
-            finally
-            {
-                // Must always ensure this happens to prevent GC deadlock on project close!
-                GC.SuppressFinalize(this);
-            }
+            Dispose(true);
+            // Must always ensure this happens to prevent GC deadlock on project close!
+            GC.SuppressFinalize(this);
+            
         }
 
         private void DisposeInternal()
@@ -390,6 +379,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             remoteInstanceApi = null;
             disposed = true;
             Thread.Sleep(100); // wait for process to truly exit
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        DisposeInternal();
+                    }
+                    catch (Exception e)
+                    {
+                        TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
+                        throw;
+                    }
+                }
+                disposed = true;
+            }
         }
     }
 }
