@@ -417,7 +417,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     int networkId = (int)networkDiscretization.Network.Attributes["IoNetCdfNetworkId"];
 
                     // create 1D mesh
-                    uGrid1DMesh.CreateNetworkInFile(
+                    uGrid1DMesh.CreateNetworkDiscretisationInFile(
                         networkDiscretization.Name,
                         discretisationPoints.Length,
                         numberOfMeshEdges,

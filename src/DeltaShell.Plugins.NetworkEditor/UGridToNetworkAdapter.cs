@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                      */
 
                     var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
-                    var networkId = GetNetworkId(networkIds);
+                    var networkId =  GetNetworkId(networkIds);
                     
                     uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
@@ -208,12 +208,10 @@ namespace DeltaShell.Plugins.NetworkEditor
                     }
 
                     var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
-
+                    var meshId = meshIds[0];
 
                     var networkId =  uGridNetworkDiscretisation.GetNetworkId(meshId);
 
-                    // only one 1D discretisation mesh is supported, use the first id in the array
-                    var meshId = meshIds[0];
                     uGridNetworkDiscretisation.InitializeForLoading(meshId);
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);
 
@@ -252,6 +250,13 @@ namespace DeltaShell.Plugins.NetworkEditor
             var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(loadedNetwork, discretisationDataModel.Name, discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
             
             return networkDiscretisation;
+        }
+
+        private static int GetNetworkId(int[] networkIds)
+        {
+            if (networkIds.Length > 1)
+                Log.Warn("Using more than one network in one mesh is currently not supported by DeltaShell. The first network stored in the NetCDF file will be returned.");
+            return networkIds[0];
         }
     }
 }
