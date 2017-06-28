@@ -47,6 +47,10 @@ namespace DeltaShell.NGHS.IO.Grid
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_close", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_close_dll([In] ref int ioncid);
 
+        //-Get the network names------///
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_network_name", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_network_name_dll([In] ref int ncidin, [In] ref int networkId, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder networkName);
+
         #region UGRID specifics
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
@@ -552,14 +556,17 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <summary>
         /// Gets the mesh ids
         /// </summary>
-        /// <param name="ncidin"></param>
+        /// <param name="ioncid"></param>
         /// <param name="meshType"></param>
-        /// <param name="c_meshids"></param>
+        /// <param name="pointerToMeshIds"></param>
         /// <param name="nnumNetworks"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_ug_get_mesh_ids", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_ug_get_mesh_ids_dll([In] ref int ncidin, [In] ref int meshType, [In, Out] ref IntPtr c_meshids, [In] ref int nnumNetworks);
-
+        private static extern int ionc_ug_get_mesh_ids_dll([In] ref int ioncid, [In] ref int meshType, [In, Out] ref IntPtr pointerToMeshIds, [In] ref int nnumNetworks);
+        
+        //-Get the network id for a specified mesh
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_network_id_from_mesh_id", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_network_id_from_mesh_id_dll([In] ref int ioncid, [In] ref int meshid, [In, Out] ref int networkid);
 
 
         #endregion
@@ -584,6 +591,11 @@ namespace DeltaShell.NGHS.IO.Grid
         public int ionc_close(ref int ioncid)
         {
             return ionc_close_dll(ref ioncid);
+        }
+
+        public int ionc_get_network_name(ref int ioncid, ref int networkId, StringBuilder networkName)
+        {
+            return ionc_get_network_name_dll(ref ioncid, ref networkId, networkName);
         }
 
         public int ionc_def_var(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName,
@@ -844,6 +856,11 @@ namespace DeltaShell.NGHS.IO.Grid
         public int ionc_get_number_of_meshes(ref int ioncid, ref int meshType, ref int numMeshes)
         {
             return ionc_get_number_of_meshes_dll(ref ioncid, ref meshType, ref numMeshes);
+        }
+
+        public int ionc_get_network_id_from_mesh_id(ref int ioncid, ref int meshId, ref int networkId)
+        {
+            return ionc_get_network_id_from_mesh_id_dll(ref ioncid, ref meshId, ref networkId);
         }
 
         public int ionc_get_network_ids(ref int ioncid, ref IntPtr pointerToNetworkIds, ref int numberOfNetworks)

@@ -47,6 +47,15 @@ namespace DeltaShell.NGHS.IO.Grid
         /// 
         /// </summary>
         /// <param name="ioncid"></param>
+        /// <param name="networkId"></param>
+        /// <param name="networkName"></param>
+        /// <returns></returns>
+        int ionc_get_network_name([In] ref int ioncid, [In] ref int networkId, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder networkName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ioncid"></param>
         /// <param name="meshId"></param>
         /// <param name="varId"></param>
         /// <param name="type"></param>
@@ -383,6 +392,9 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="numberOfMeshes">The number of meshes for the specified type (out)</param>
         /// <returns></returns>
         int ionc_get_number_of_meshes([In] ref int ioncid, [In] ref int meshType, [In, Out] ref int numberOfMeshes);
+
+
+        int ionc_get_network_id_from_mesh_id([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int networkId);
 
     }
 }

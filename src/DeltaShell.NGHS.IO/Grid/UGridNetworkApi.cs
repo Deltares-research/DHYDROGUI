@@ -244,7 +244,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             
             var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-            var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref networkId, name);
+            var ierr = wrapper.ionc_get_network_name(ref ioncid, ref networkId, name);
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
                 return ierr;

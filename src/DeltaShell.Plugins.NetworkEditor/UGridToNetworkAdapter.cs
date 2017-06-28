@@ -148,10 +148,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             double[] geometryPointsY;
             uGridNetwork.ReadNetworkGeometry(networkId, out geometryPointsX, out geometryPointsY);
 
-            //var networkName = uGrid1D.GetNetworkName(networkId); // TODO: This isn't implemented in the API yet
-            // do we need a function ionc_get_network_name(ref int ioncid, ref int id, StringBuilder networkName)?
-
-            var networkName = "Network";
+            var networkName = uGridNetwork.GetNetworkName(networkId);
             var coordinateSystem = uGridNetwork.CoordinateSystem;
 
             var networkUGridDataModel = new NetworkUGridDataModel(networkName, coordinateSystem, nodesX, nodesY, nodesNames,
@@ -213,8 +210,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
 
 
-                    var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
-                    var networkId = GetNetworkId(networkIds);
+                    var networkId =  uGridNetworkDiscretisation.GetNetworkId(meshId);
 
                     // only one 1D discretisation mesh is supported, use the first id in the array
                     var meshId = meshIds[0];
@@ -236,13 +232,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                 Log.Error(ex.Message);
                 return null; 
             }
-        }
-
-        private static int GetNetworkId(int[] networkIds)
-        {
-            if (networkIds.Length > 1)
-                Log.Warn("Using more than one network in one mesh is currently not supported by DeltaShell. The first network stored in the NetCDF file will be returned.");
-            return networkIds[0];
         }
 
         public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath)

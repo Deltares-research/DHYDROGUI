@@ -102,6 +102,24 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Read Network Discretisation
 
+        public int GetNetworkIdFromMeshId(int meshId, out int networkId)
+        {
+            networkId = 0;
+            if (!Initialized)
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+            try
+            {
+                var ierr = wrapper.ionc_get_network_id_from_mesh_id(ref ioncid, ref meshId, ref networkId);
+                return ierr;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+        }
+
         public int GetNetworkDiscretisationName(int meshId, out string meshName)
         {
             meshName = string.Empty;
@@ -109,15 +127,22 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
-
-            var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-            var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref meshId, name);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            try
             {
-                return ierr;
+                var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
+                var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref meshId, name);
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    return ierr;
+                }
+                meshName = name.ToString();
+                return GridApiDataSet.GridConstants.IONC_NOERR;
             }
-            meshName = name.ToString();
-            return GridApiDataSet.GridConstants.IONC_NOERR;
+            catch
+            {
+                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+            
         }
 
         public int GetNumberOfNetworkDiscretisationPoints(int meshId, out int numberOfDiscretisationPoints)

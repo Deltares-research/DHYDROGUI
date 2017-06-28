@@ -23,6 +23,11 @@ namespace DeltaShell.NGHS.IO.Grid
             return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.WriteNetworkDiscretisationPoints(branchIdx, offset), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
         }
 
+        public int GetNetworkIdFromMeshId(int meshId, out int networkId)
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetNetworkDiscretisationName(int meshId, out string meshName)
         {
             var uGridNetworkDiscretisationApi = api as IUGridNetworkDiscretisationApi;

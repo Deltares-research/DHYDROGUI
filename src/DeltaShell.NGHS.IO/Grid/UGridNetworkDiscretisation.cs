@@ -43,6 +43,22 @@ namespace DeltaShell.NGHS.IO.Grid
             return meshName;
         }
 
+        // DELFT3DFM-905
+        // Have written a failing test for this method.
+        // When the API-call for getting the network ID is in place:
+        // *    develop this method
+        // *    use this method in UGridToNetworkAdapter.LoadNetworkDiscretisationDataModel && UGridToNetworkAdapter.SaveNetworkDiscretisation && UGridToNetworkAdapter.LoadNetwork
+        // *    erase these comments
+        public int GetNetworkId(int meshId)
+        {
+            const string errorMessage = "Couldn't get the network Id corresponding to the network discretisation";
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(errorMessage);
+            int networkId;
+            var ierr = uGridApi.GetNetworkIdFromMeshId(meshId, out networkId);
+            ThrowIfError(ierr, errorMessage);
+            return networkId;
+        }
+
         public int GetNumberOfNetworkDiscretisations()
         {
             int numberOfNetworkDiscretisations;
