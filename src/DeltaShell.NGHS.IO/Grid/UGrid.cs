@@ -157,7 +157,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 var ierr = uGridApi.GetVarNames(mesh, location, out varIds);
                 ThrowIfError(ierr, errorMessage);
 
-                var varNameIdsAtLocation = new Dictionary<int, int[]> {[location] = varIds};
+                var varNameIdsAtLocation = new Dictionary<int, int[]>();
+                varNameIdsAtLocation[location] = varIds;
                 if (VarNameIdsAtLocationInMesh == null) VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<int, int[]>>();
                 VarNameIdsAtLocationInMesh[mesh - 1] = varNameIdsAtLocation;
             }, errorMessage);
