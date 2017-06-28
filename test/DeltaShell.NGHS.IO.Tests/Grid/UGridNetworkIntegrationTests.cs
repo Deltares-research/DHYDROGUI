@@ -444,9 +444,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int[] loadedBranchIdx;
                     double[] loadedOffset;
-                    var ierr = uGrid1DMesh.ReadNetworkDiscretisationPoints(1, out loadedBranchIdx, out loadedOffset);
-
-                    Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+                    uGrid1DMesh.ReadNetworkDiscretisationPoints(1, out loadedBranchIdx, out loadedOffset);
+                    
                     Assert.AreEqual(discretisationPoints.Length, loadedBranchIdx.Length);
                     Assert.AreEqual(discretisationPoints.Length, loadedOffset.Length);
 

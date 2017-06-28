@@ -6,7 +6,7 @@
         void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset);
         int GetNetworkId(int meshId);
         int GetNumberOfNetworkDiscretisationPoints(int meshId);
-        int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset);
+        void ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset);
 
     }
 }

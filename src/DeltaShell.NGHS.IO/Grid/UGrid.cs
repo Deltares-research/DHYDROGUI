@@ -23,8 +23,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public double zCoordinateFillValue
         {
-            get { return GetFromValidUGridApi<IUGridApi, double>(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, "Couldn't get the z-coordinate"); }
-            set { DoWithValidUGridApi(uGridApi => uGridApi.zCoordinateFillValue = value, "Couldn't set the z-coordinate"); }
+            get { return GetFromValidGridApi<IUGridApi, double>(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, "Couldn't get the z-coordinate"); }
+            set { DoWithValidGridApi<IUGridApi>(uGridApi => uGridApi.zCoordinateFillValue = value, "Couldn't set the z-coordinate"); }
         }
 
         public int NumberOf2DMeshes()
@@ -81,7 +81,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public bool GetAllNodeCoordinates(int mesh)
         {
-            return GetFromValidUGridApi<IUGridApi, bool>(uGridApi =>
+            return GetFromValidGridApi<IUGridApi, bool>(uGridApi =>
             {
                 var nNode = NumberOfNodes(mesh);
                 if (nNode == 0) return false;
@@ -151,14 +151,13 @@ namespace DeltaShell.NGHS.IO.Grid
         public void GetNamesAtLocation(int mesh, int location)
         {
             const string errorMessage = "Couldn't get the names at location";
-            DoWithValidUGridApi(uGridApi =>
+            DoWithValidGridApi<IUGridApi>(uGridApi =>
             {
                 int[] varIds;
                 var ierr = uGridApi.GetVarNames(mesh, location, out varIds);
                 ThrowIfError(ierr, errorMessage);
 
-                var varNameIdsAtLocation = new Dictionary<int, int[]>();
-                varNameIdsAtLocation[location] = varIds;
+                var varNameIdsAtLocation = new Dictionary<int, int[]> {[location] = varIds};
                 if (VarNameIdsAtLocationInMesh == null) VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<int, int[]>>();
                 VarNameIdsAtLocationInMesh[mesh - 1] = varNameIdsAtLocation;
             }, errorMessage);
@@ -217,12 +216,6 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, errorMessage);
 
             return meshName;
-        }
-
-        private void DoWithValidUGridApi(Action<IUGridApi> action, string errorMessage)
-        {
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
-            action(uGridApi);
         }
     }
 }

@@ -29,19 +29,19 @@ namespace DeltaShell.NGHS.IO.Grid
         public void WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
             const string errorMessage = "Couldn't write 1d network nodes";
-            DoWithValidUGridNetworkApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), errorMessage);
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), errorMessage);
         }
         
         public void WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
         {
             const string errorMessage = "Couldn't write 1d network branches";
-            DoWithValidUGridNetworkApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames), errorMessage);
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames), errorMessage);
         }
 
         public void WriteNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
             const string errorMessage = "Couldn't write 1d network geometry";
-            DoWithValidUGridNetworkApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), errorMessage);
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), errorMessage);
         }
 
         #endregion

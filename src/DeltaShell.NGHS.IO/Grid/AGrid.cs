@@ -120,8 +120,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual GridApiDataSet.DataSetConventions GetDataSetConvention()
         {
-            if (GridApi != null) return GridApi.GetConvention();
-            return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+            if(!IsInitialized()) Initialize();
+            return IsInitialized() ? GridApi.GetConvention() : GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
         }
 
         public virtual bool IsInitialized()
@@ -158,14 +158,20 @@ namespace DeltaShell.NGHS.IO.Grid
             return uGridApi;
         }
 
-        protected void DoWithValidUGridNetworkApi<T>(Func<T, int> function, string errorMessage) where T: class
+        protected void DoWithValidGridApi<T>(Func<T, int> function, string errorMessage) where T: class
         {
             var uGridNetworkApi = GetValidGridApi<T>(errorMessage);
             var ierr = function(uGridNetworkApi);
             ThrowIfError(ierr, errorMessage);
         }
 
-        protected T GetFromValidUGridApi<S, T>(Func<S, T> function, T defaultValue, string errorMessage) where S : class
+        protected void DoWithValidGridApi<T>(Action<T> action, string errorMessage) where T : class
+        {
+            var uGridApi = GetValidGridApi<T>(errorMessage);
+            action(uGridApi);
+        }
+
+        protected T GetFromValidGridApi<S, T>(Func<S, T> function, T defaultValue, string errorMessage) where S : class
         {
             var uGridApi = GetValidGridApi<S>(errorMessage);
             return uGridApi != null ? function(uGridApi) : defaultValue;

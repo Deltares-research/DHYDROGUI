@@ -88,7 +88,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                     }
 
                     var networkIds = uGridNetwork.GetNetworkIds();
-
                     int networkId = func(networkIds);
 
                     var networkUGridDataModel = LoadNetworkUGridDataModel(uGridNetwork, networkId);
@@ -193,8 +192,6 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath))
                 {
-                    uGridNetworkDiscretisation.Initialize();
-                    
                     if (uGridNetworkDiscretisation.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
                     {
                         return null;
@@ -210,7 +207,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
                     var meshId = meshIds[0];
 
-                    var networkId =  uGridNetworkDiscretisation.GetNetworkId(meshId);
+                    var networkId = uGridNetworkDiscretisation.GetNetworkId(meshId);
 
                     uGridNetworkDiscretisation.InitializeForLoading(meshId);
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);
