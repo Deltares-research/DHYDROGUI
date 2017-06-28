@@ -207,10 +207,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 {
                     log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
                 }
+
+                WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
+                WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);
             }
 
-            WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
-            WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);
         }
 
         public bool IsActive { get; set; }
