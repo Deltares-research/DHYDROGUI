@@ -23,31 +23,10 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public double zCoordinateFillValue
         {
-            get { return GetFromValidUGridApi(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, "Couldn't get the z-coordinate"); }
+            get { return GetFromValidUGridApi<IUGridApi, double>(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, "Couldn't get the z-coordinate"); }
             set { DoWithValidUGridApi(uGridApi => uGridApi.zCoordinateFillValue = value, "Couldn't set the z-coordinate"); }
         }
 
-
-        //public override void Initialize()
-        //{
-            //    initializing = true;
-            //    base.Initialize();
-            //    if(!IsValid()) return;
-            //    var nMesh = NumberOf2DMeshes();
-            //    NodeCoordinates = new Dictionary<int, Coordinate[]>();
-            //    EdgeNodes = new int[nMesh][,];
-            //    FaceNodes = new int[nMesh][,];
-            //    VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<int, int[]>>(); 
-
-            //    for (var mesh = 1; mesh <= nMesh; mesh++)
-            //    {
-            //        GetAllNodeCoordinates(mesh);
-            //        GetEdgeNodesForMesh(mesh);
-            //        GetFaceNodesForMesh(mesh);
-            //    }
-
-            //    initializing = false;
-        //}
 
         public void SetupForLoading()
         {
