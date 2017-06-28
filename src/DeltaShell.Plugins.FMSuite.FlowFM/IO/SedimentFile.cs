@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -176,40 +177,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
                     if (samplesOperation != null)
                     {
-                        var directoryName = Path.GetDirectoryName(model.MduFilePath);
-                        if (directoryName != null)
-                        {
-                            var xyzFilePath = Path.Combine(directoryName,
-                                spatialOperation.Name + "." + XyzFile.Extension);
-
-                            var newFile = new XyzFile();
-                            newFile.Write(xyzFilePath, samplesOperation.GetPoints());
-                        }
-                        else
-                        {
-                            throw new ArgumentException("Could not get directory name from file path" +
-                                                        model.MduFilePath);
-                        }
+                        WriteXYZIfDirectoryExists(model, spatialOperation, samplesOperation.GetPoints());
                         continue;
                     }
 
                     var addSamplesOperation = spatialOperation as AddSamplesOperation;
                     if (addSamplesOperation != null)
                     {
-                        var directoryName = Path.GetDirectoryName(model.MduFilePath);
-                        if (directoryName != null)
-                        {
-                            var xyzFilePath = Path.Combine(directoryName,
-                                spatialOperation.Name + "." + XyzFile.Extension);
-
-                            var newFile = new XyzFile();
-                            newFile.Write(xyzFilePath, addSamplesOperation.GetPoints());
-                        }
-                        else
-                        {
-                            throw new ArgumentException("Could not get directory name from file path" +
-                                                        model.MduFilePath);
-                        }
+                        WriteXYZIfDirectoryExists(model, spatialOperation, addSamplesOperation.GetPoints());
                         continue;
                     }
                     /*var valueOperation = spatialOperation as ValueOperationBase;
@@ -219,13 +194,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     
                         continue;
                     }*/
+
                     Log.ErrorFormat("Cannot serialize spatial operation with name {0} of type {1} to xyz file, please fix the operation so it can be serialized",
                         spatialOperation.Name, spatialOperation.GetType());
                 }
-
-                //throw new NotImplementedException( string.Format("Cannot serialize operation of type {0} to xyz file", spatialOperation.GetType()));
             }
 
+        }
+
+        private static void WriteXYZIfDirectoryExists(IWaterFlowFMModel model, ISpatialOperation spatialOperation,
+            IEnumerable<IPointValue> xyValuePoints)
+        {
+            var directoryName = Path.GetDirectoryName(model.MduFilePath);
+            if (directoryName != null)
+            {
+                var xyzFilePath = Path.Combine(directoryName,
+                    spatialOperation.Name + "." + XyzFile.Extension);
+
+                var newFile = new XyzFile();
+                newFile.Write(xyzFilePath, xyValuePoints);
+            }
+            else
+            {
+                throw new ArgumentException("Could not get directory name from file path" +
+                                            model.MduFilePath);
+            }
         }
 
         private static Dictionary<string, IList<ISpatialOperation>> SpatialOperations(List<IDataItem> dataItemsWithConverter)

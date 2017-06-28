@@ -10,7 +10,6 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
@@ -47,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string AveragingTypeKey = "AVERAGINGTYPE";
         public const string RelSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
         private const string InitialTracerPrefix = "initialtracer";
-        private const string InitialSpatialVaryingSedimentPrefix = "initialspatialvaryingsediment";
+        private const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
         private static readonly string[] UnsupportedQuantityKeys = { "WUANTITY", "_UANTITY" };
 
         // items that existed in the file when the file was read
@@ -852,8 +851,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else if (forceFileItem.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix))
                 {
-                    string spatialvaryingsedimentname = forceFileItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length); // remove prefix to get the name
-                    ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity, spatialvaryingsedimentname);
+                    string spatialvaryingsedimentname =
+                        forceFileItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix
+                            .Length); // remove prefix to get the name
+                    ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity,
+                        spatialvaryingsedimentname);
+                }
+                else if( forceFileItem.FileName.EndsWith(".xyz")) // then it was a spatial varying operation.
+                {
+                    log.Error("The model may not run. Spatial varying quantity "+forceFileItem.Quantity+" could not be imported because the prefix does not match "+InitialTracerPrefix+" for Tracers or "+InitialSpatialVaryingSedimentPrefix+" for Spatial Varying Sediments.");
                 }
 
             }
