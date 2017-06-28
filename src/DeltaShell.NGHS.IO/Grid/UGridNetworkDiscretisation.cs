@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write network discretisation
 
-        public void CreateNetworkInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
+        public void CreateNetworkDiscretisationInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
         {
             string errorMessage = "Couldn't create new network in " + filename;
             var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(errorMessage);
@@ -41,17 +41,6 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, errorMessage);
 
             return meshName;
-        }
-
-        // DELFT3DFM-905
-        // Have written a failing test for this method.
-        // When the API-call for getting the network ID is in place:
-        // *    develop this method
-        // *    use this method in UGridToNetworkAdapter.LoadNetworkDiscretisationDataModel && UGridToNetworkAdapter.SaveNetworkDiscretisation && UGridToNetworkAdapter.LoadNetwork
-        // *    erase these comments
-        public int GetNetworkId(int meshId)
-        {
-            throw new NotImplementedException();
         }
 
         public int GetNumberOfNetworkDiscretisations()
