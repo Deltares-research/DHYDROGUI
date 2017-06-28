@@ -77,10 +77,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (filename != null && !File.Exists(filename))
             {
                 var ierr = GridApi.CreateFile(filename, GlobalMetaData);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new Exception("Couldn't create new NetCDF file at location " + filename + " because of error number " + ierr); 
-                }
+                ThrowIfError(ierr, "Couldn't create new NetCDF file at location " + filename);
             }
         }
 
@@ -93,14 +90,12 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             if (GridApi != null)
             {
+                string errorMessage = "Couldn't open grid nc file: " + filename;
                 var ierr = GridApi.Open(filename, mode);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new Exception("Couldn't open grid nc file: " + filename + " because of error number: " + ierr);
-                }
+                ThrowIfError(ierr, errorMessage);
             
                 if (!GridApi.Initialized)
-                    throw new Exception("Couldn't open grid nc file : " + filename);
+                    throw new Exception(errorMessage);
             
                 try
                 {
@@ -163,6 +158,19 @@ namespace DeltaShell.NGHS.IO.Grid
             return uGridApi;
         }
 
+        protected void DoWithValidUGridNetworkApi<T>(Func<T, int> function, string errorMessage) where T: class
+        {
+            var uGridNetworkApi = GetValidGridApi<T>(errorMessage);
+            var ierr = function(uGridNetworkApi);
+            ThrowIfError(ierr, errorMessage);
+        }
+
+        protected T GetFromValidUGridApi<S, T>(Func<S, T> function, T defaultValue, string errorMessage) where S : class
+        {
+            var uGridApi = GetValidGridApi<S>(errorMessage);
+            return uGridApi != null ? function(uGridApi) : defaultValue;
+        }
+
         protected void ThrowIfError(int ierr, string exceptionText)
         {
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
@@ -205,10 +213,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (GridApi != null)
                 {
                     var ierr = GridApi.Close();
-                    if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                    {
-                        throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
-                    }
+                    ThrowIfError(ierr, "Couldn't close grid nc file");
                     GridApi = null;
                 }
             }

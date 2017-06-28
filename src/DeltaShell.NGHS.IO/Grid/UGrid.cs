@@ -27,23 +27,6 @@ namespace DeltaShell.NGHS.IO.Grid
             set { DoWithValidUGridApi(uGridApi => uGridApi.zCoordinateFillValue = value, "Couldn't set the z-coordinate"); }
         }
 
-
-        public void SetupForLoading()
-        {
-            var nMesh = NumberOf2DMeshes();
-            NodeCoordinates = new Dictionary<int, Coordinate[]>();
-            EdgeNodes = new int[nMesh][,];
-            FaceNodes = new int[nMesh][,];
-            VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<int, int[]>>();
-
-            for (var mesh = 1; mesh <= nMesh; mesh++)
-            {
-                GetAllNodeCoordinates(mesh);
-                GetEdgeNodesForMesh(mesh);
-                GetFaceNodesForMesh(mesh);
-            }
-        }
-
         public int NumberOf2DMeshes()
         {
             int numberOfMeshes;
@@ -98,7 +81,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public bool GetAllNodeCoordinates(int mesh)
         {
-            return GetFromValidUGridApi(uGridApi =>
+            return GetFromValidUGridApi<IUGridApi, bool>(uGridApi =>
             {
                 var nNode = NumberOfNodes(mesh);
                 if (nNode == 0) return false;
@@ -123,6 +106,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     coordinates[i] = new Coordinate(xCoordinates[i], yCoordinates[i], zCoordinates[i]);
                 }
+                if(NodeCoordinates == null) NodeCoordinates = new Dictionary<int, Coordinate[]>();
                 NodeCoordinates[mesh - 1] = coordinates;
 
                 return true;
@@ -136,7 +120,8 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
             var ierr = uGridApi.GetEdgeNodesForMesh(mesh, out edgeNodes);
             ThrowIfError(ierr, errorMessage);
-            
+
+            if(EdgeNodes == null) EdgeNodes = new int[NumberOf2DMeshes()][,];
             EdgeNodes[mesh - 1] = edgeNodes;
         }
 
@@ -148,6 +133,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var ierr = uGridApi.GetFaceNodesForMesh(mesh, out faceNodes);
             ThrowIfError(ierr, errorMessage);
 
+            if(FaceNodes == null) FaceNodes = new int[NumberOf2DMeshes()][,];
             FaceNodes[mesh - 1] = faceNodes;
         }
 
@@ -173,6 +159,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 var varNameIdsAtLocation = new Dictionary<int, int[]>();
                 varNameIdsAtLocation[location] = varIds;
+                if (VarNameIdsAtLocationInMesh == null) VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<int, int[]>>();
                 VarNameIdsAtLocationInMesh[mesh - 1] = varNameIdsAtLocation;
             }, errorMessage);
         }
@@ -230,28 +217,6 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, errorMessage);
 
             return meshName;
-        }
-
-        //private IUGridApi GetValidUGridApi()
-        //{
-        //    var uGridApi = GridApi as IUGridApi;
-        //    if (!IsInitialized() && !initializing)
-        //    {
-        //        Initialize();
-        //    }
-
-        //    bool isValid = uGridApi != null && IsInitialized() && IsValid();
-        //    if (!isValid)
-        //    {
-        //        throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set");
-        //    }
-        //    return uGridApi;
-        //}
-
-        private T GetFromValidUGridApi<T>(Func<IUGridApi, T> function, T defaultValue, string errorMessage)
-        {
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
-            return uGridApi != null ? function(uGridApi) : defaultValue;
         }
 
         private void DoWithValidUGridApi(Action<IUGridApi> action, string errorMessage)

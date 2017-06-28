@@ -18,36 +18,30 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void CreateNetworkInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)
         {
-            networkId = -1;
-            if (!IsInitialized()) Initialize();
-            var uGridNetworkApi = GridApi as IUGridNetworkApi;
-            if (uGridNetworkApi == null) return;
-
+            string errorMessage = 
+                string.Format("Couldn't create new 1d network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}",
+                name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.CreateNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out networkId);
-            if (ierr == GridApiDataSet.GridConstants.IONC_NOERR) return;
-
-            throw new InvalidOperationException(
-                string.Format(
-                    "Couldn't create new 1d network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3} because of error number {4}",
-                    name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, ierr));
+            ThrowIfError(ierr, errorMessage);
         }
 
         public void WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
             const string errorMessage = "Couldn't write 1d network nodes";
-            DoWithValidUGridNetworkApi(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), errorMessage);
+            DoWithValidUGridNetworkApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), errorMessage);
         }
         
         public void WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
         {
             const string errorMessage = "Couldn't write 1d network branches";
-            DoWithValidUGridNetworkApi(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames), errorMessage);
+            DoWithValidUGridNetworkApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames), errorMessage);
         }
 
         public void WriteNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
             const string errorMessage = "Couldn't write 1d network geometry";
-            DoWithValidUGridNetworkApi(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), errorMessage);
+            DoWithValidUGridNetworkApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), errorMessage);
         }
 
         #endregion
@@ -136,19 +130,6 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridNetworkApi = GridApi as IUGridNetworkApi;
             if (uGridNetworkApi == null) return false;
             return base.IsInitialized();
-        }
-
-        private T GetFromValidUGridApi<T>(Func<IUGridNetworkApi, T> function, T defaultValue, string errorMessage)
-        {
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
-            return uGridNetworkApi != null ? function(uGridNetworkApi) : defaultValue;
-        }
-
-        private void DoWithValidUGridNetworkApi(Func<IUGridNetworkApi, int> function, string errorMessage)
-        {
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
-            var ierr = function(uGridNetworkApi);
-            ThrowIfError(ierr, errorMessage);
         }
     }
 }
