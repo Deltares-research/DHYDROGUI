@@ -317,7 +317,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network nodes" + standardErrorMessage)]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network geometry" + standardErrorMessage)]
         public void WhenInvoking_ReadNetworkGeometry_AndApiReturnsAnErrorValueThenThrowException()
         {
             uGridNetworkApi.Expect(api => api.ReadNetworkGeometry(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy))
