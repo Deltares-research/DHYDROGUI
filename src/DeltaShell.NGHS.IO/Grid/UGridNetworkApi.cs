@@ -291,7 +291,8 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             if (nNodes < 0)
             {
-                GetNumberOfNetworkNodes(networkId, out int _);
+                int numberOfNetworkNodes;
+                GetNumberOfNetworkNodes(networkId, out numberOfNetworkNodes);
                 if (nNodes < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
 
@@ -381,7 +382,8 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             if (nBranches < 0)
             {
-                GetNumberOfNetworkBranches(networkId, out int _);
+                int numberOfNetworkBranches;
+                GetNumberOfNetworkBranches(networkId, out numberOfNetworkBranches);
                 if (nBranches < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
 
@@ -479,7 +481,8 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             if (nGeometryPoints < 0)
             {
-                GetNumberOfNetworkGeometryPoints(networkId, out int _);
+                int numberOfNetworkGeometryPoints;
+                GetNumberOfNetworkGeometryPoints(networkId, out numberOfNetworkGeometryPoints);
                 if(nGeometryPoints < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
 

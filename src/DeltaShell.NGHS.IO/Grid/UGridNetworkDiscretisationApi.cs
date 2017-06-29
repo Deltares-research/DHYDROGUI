@@ -178,7 +178,8 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             if (nNetworkPoints < 0)
             {
-                GetNumberOfNetworkDiscretisationPoints(meshId, out int _);
+                int numberOfDiscretisationPoints;
+                GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
                 if(nNetworkPoints < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
             
