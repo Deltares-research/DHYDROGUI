@@ -29,6 +29,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             SetExpectanciesSuchThatGridNetworkApiIsValid();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            mocks.VerifyAll();
+        }
+
         private void SetExpectanciesSuchThatGridNetworkApiIsValid()
         {
             uGridNetworkApi.Expect(api => api.Initialized).Return(true).Repeat.Any();
@@ -48,8 +54,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.CreateNetworkInFile(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -61,8 +65,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.CreateNetworkInFile(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -75,8 +77,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.WriteNetworkNodes(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -88,8 +88,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.WriteNetworkNodes(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -102,8 +100,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -115,8 +111,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -129,8 +123,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.WriteNetworkGeometry(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -142,8 +134,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.WriteNetworkGeometry(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -156,8 +146,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.GetNetworkName(Arg<int>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -171,8 +159,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var networkName = gridNetwork.GetNetworkName(Arg<int>.Is.Anything);
             Assert.That(networkName, Is.EqualTo(name));
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -185,8 +171,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.GetNumberOfNetworkNodes(Arg<int>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -200,8 +184,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var numberOfNetworkNodes = gridNetwork.GetNumberOfNetworkNodes(Arg<int>.Is.Anything);
             Assert.That(numberOfNetworkNodes, Is.EqualTo(nNodes));
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -214,8 +196,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.GetNumberOfNetworkBranches(Arg<int>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -229,8 +209,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var numberOfBranches = gridNetwork.GetNumberOfNetworkBranches(Arg<int>.Is.Anything);
             Assert.That(numberOfBranches, Is.EqualTo(nBranches));
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -243,8 +221,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.GetNumberOfNetworkGeometryPoints(Arg<int>.Is.Anything);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -258,8 +234,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var numberOfBranches = gridNetwork.GetNumberOfNetworkGeometryPoints(Arg<int>.Is.Anything);
             Assert.That(numberOfBranches, Is.EqualTo(nGeometryPoints));
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -272,8 +246,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.ReadNetworkNodes(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -285,8 +257,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.ReadNetworkNodes(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -299,8 +269,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -312,8 +280,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -326,8 +292,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.ReadNetworkGeometry(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
-
-            mocks.VerifyAll();
         }
 
         [Test]
@@ -339,8 +303,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             gridNetwork.ReadNetworkGeometry(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
-
-            mocks.VerifyAll();
         }
     }
 }
