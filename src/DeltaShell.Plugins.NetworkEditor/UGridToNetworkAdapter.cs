@@ -205,8 +205,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
                     var meshId = meshIds[0];
                     var networkId = uGridNetworkDiscretisation.GetNetworkId(meshId);
-
-                    uGridNetworkDiscretisation.InitializeForLoading(meshId);
+                    
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);
 
                     int[] branchIndices;

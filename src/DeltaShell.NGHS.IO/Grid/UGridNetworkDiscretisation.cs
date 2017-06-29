@@ -101,10 +101,5 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         #endregion
-        
-        public void InitializeForLoading(int meshId)
-        {
-            GetNumberOfNetworkDiscretisationPoints(meshId);
-        }
     }
 }

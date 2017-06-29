@@ -175,9 +175,11 @@ namespace DeltaShell.NGHS.IO.Grid
             branchIdx = new int[0];
             offset = new double[0];
             
-            if (!Initialized || nNetworkPoints < 0)
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (nNetworkPoints < 0)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                GetNumberOfNetworkDiscretisationPoints(meshId, out int _);
+                if(nNetworkPoints < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
             
             IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nNetworkPoints);
