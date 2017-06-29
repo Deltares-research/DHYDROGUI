@@ -13,9 +13,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private MockRepository mocks;
         private IUGridNetworkApi uGridNetworkApi;
         private UGridNetwork gridNetwork;
+        private const string standardErrorMessage = " because of error number: -1";
         private int errorValue = -1;
         private int noErrorValue = GridApiDataSet.GridConstants.IONC_NOERR;
-        private const string standardErrorMessage = " because of error number: -1";
 
         [SetUp]
         public void Setup()
@@ -26,6 +26,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 GridApi = uGridNetworkApi
             };
+            SetExpectanciesSuchThatGridNetworkApiIsValid();
         }
 
         private void SetExpectanciesSuchThatGridNetworkApiIsValid()
@@ -41,7 +42,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't create new network ", MatchType = MessageMatch.StartsWith)]
         public void WhenInvokingCreateNetworkInFileAndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.CreateNetwork(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -55,7 +55,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvokingCreateNetworkInFileAndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.CreateNetwork(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -70,7 +69,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write network nodes" + standardErrorMessage)]
         public void WhenInvoking_WriteNetworkNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.WriteNetworkNodes(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
                 .Return(errorValue).Repeat.Once();
 
@@ -84,7 +82,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvoking_WriteNetworkNodes_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.WriteNetworkNodes(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -99,7 +96,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write network branches" + standardErrorMessage)]
         public void WhenInvoking_WriteNetworkBranches_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
                 .Return(errorValue).Repeat.Once();
 
@@ -113,7 +109,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvoking_WriteNetworkBranches_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -128,7 +123,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write network geometry" + standardErrorMessage)]
         public void WhenInvoking_WriteNetworkGeometry_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.WriteNetworkGeometry(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything))
                 .Return(errorValue).Repeat.Once();
 
@@ -142,7 +136,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvoking_WriteNetworkGeometry_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.WriteNetworkGeometry(Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -157,7 +150,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't obtain the network name" + standardErrorMessage)]
         public void WhenInvoking_GetNetworkName_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNetworkName(Arg<int>.Is.Anything, out Arg<string>.Out("MyNetwork").Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -172,7 +164,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WhenInvoking_GetNetworkName_AndApiReturnsNoErrorValueThenReturnNameValue()
         {
             var name = "MyNetwork";
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNetworkName(Arg<int>.Is.Anything, out Arg<string>.Out(name).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -188,7 +179,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get number of network nodes" + standardErrorMessage)]
         public void WhenInvoking_GetNumberOfNetworkNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNumberOfNetworkNodes(Arg<int>.Is.Anything, out Arg<int>.Out(52).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -203,7 +193,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WhenInvoking_GetNumberOfNetworkNodes_AndApiReturnsNoErrorValueThenReturnValue()
         {
             var nNodes = 52;
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNumberOfNetworkNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -219,7 +208,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of network branches" + standardErrorMessage)]
         public void WhenInvoking_GetNumberOfNetworkBranches_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNumberOfNetworkBranches(Arg<int>.Is.Anything, out Arg<int>.Out(33).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -234,7 +222,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WhenInvoking_GetNumberOfNetworkBranches_AndApiReturnsNoErrorValueThenReturnValue()
         {
             var nBranches = 33;
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNumberOfNetworkBranches(Arg<int>.Is.Anything, out Arg<int>.Out(nBranches).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -250,7 +237,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of network geometry points" + standardErrorMessage)]
         public void WhenInvoking_GetNumberOfNetworkGeometryPoints_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNumberOfNetworkGeometryPoints(Arg<int>.Is.Anything, out Arg<int>.Out(33).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -265,7 +251,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WhenInvoking_GetNumberOfNetworkGeometryPoints_AndApiReturnsNoErrorValueThenReturnValue()
         {
             var nGeometryPoints = 33;
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.GetNumberOfNetworkGeometryPoints(Arg<int>.Is.Anything, out Arg<int>.Out(nGeometryPoints).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -281,7 +266,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network nodes" + standardErrorMessage)]
         public void WhenInvoking_ReadNetworkNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.ReadNetworkNodes(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -295,7 +279,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvoking_ReadNetworkNodes_AndApiReturnsNoErrorValueThenMethodCompletes()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.ReadNetworkNodes(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -310,7 +293,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network branches" + standardErrorMessage)]
         public void WhenInvoking_ReadNetworkBranches_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -324,7 +306,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvoking_ReadNetworkBranches_AndApiReturnsNoErrorValueThenMethodCompletes()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
@@ -336,10 +317,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network geometry" + standardErrorMessage)]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network nodes" + standardErrorMessage)]
         public void WhenInvoking_ReadNetworkGeometry_AndApiReturnsAnErrorValueThenThrowException()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.ReadNetworkGeometry(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy))
                 .Return(errorValue).Repeat.Once();
 
@@ -353,7 +333,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void WhenInvoking_ReadNetworkGeometry_AndApiReturnsNoErrorValueThenMethodCompletes()
         {
-            SetExpectanciesSuchThatGridNetworkApiIsValid();
             uGridNetworkApi.Expect(api => api.ReadNetworkGeometry(Arg<int>.Is.Anything, out Arg<double[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
