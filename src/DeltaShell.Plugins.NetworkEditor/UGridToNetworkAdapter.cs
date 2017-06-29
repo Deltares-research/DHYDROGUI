@@ -126,8 +126,6 @@ namespace DeltaShell.Plugins.NetworkEditor
         
         private static NetworkUGridDataModel LoadNetworkUGridDataModel(UGridNetwork uGridNetwork, int networkId)
         {
-            uGridNetwork.InitializeForLoading(networkId);
-
             double[] nodesX;
             double[] nodesY;
             string[] nodesNames;
@@ -206,7 +204,6 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
                     var meshId = meshIds[0];
-
                     var networkId = uGridNetworkDiscretisation.GetNetworkId(meshId);
 
                     uGridNetworkDiscretisation.InitializeForLoading(meshId);

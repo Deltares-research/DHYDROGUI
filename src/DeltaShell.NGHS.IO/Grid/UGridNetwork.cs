@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public void CreateNetworkInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)
         {
             string errorMessage = 
-                string.Format("Couldn't create new 1d network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}",
+                string.Format("Couldn't create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}",
                 name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
             var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.CreateNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out networkId);
@@ -28,19 +28,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
-            const string errorMessage = "Couldn't write 1d network nodes";
+            const string errorMessage = "Couldn't write network nodes";
             DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), errorMessage);
         }
         
         public void WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
         {
-            const string errorMessage = "Couldn't write 1d network branches";
+            const string errorMessage = "Couldn't write network branches";
             DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames), errorMessage);
         }
 
         public void WriteNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
-            const string errorMessage = "Couldn't write 1d network geometry";
+            const string errorMessage = "Couldn't write network geometry";
             DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), errorMessage);
         }
 
@@ -57,13 +57,6 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, errorMessage);
 
             return networkName;
-        }
-
-        public void InitializeForLoading(int networkId)
-        {
-            GetNumberOfNetworkNodes(networkId);
-            GetNumberOfNetworkBranches(networkId);
-            GetNumberOfNetworkGeometryPoints(networkId);
         }
 
         public int GetNumberOfNetworkNodes(int networkId)
@@ -124,12 +117,5 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         #endregion
-
-        public override bool IsInitialized()
-        {
-            var uGridNetworkApi = GridApi as IUGridNetworkApi;
-            if (uGridNetworkApi == null) return false;
-            return base.IsInitialized();
-        }
     }
 }

@@ -138,6 +138,7 @@
     <Compile Include="Grid\UGrid2DIntegrationTests.cs" />
     <Compile Include="Grid\UGridNetworkApiTests.cs" />
     <Compile Include="Grid\UGridApiTests.cs" />
+    <Compile Include="Grid\UGridNetworkTests.cs" />
     <Compile Include="Grid\UGridStub.cs" />
     <Compile Include="Grid\UGridTest.cs" />
     <Compile Include="Helpers\StringArrayExtensionsTest.cs" />
