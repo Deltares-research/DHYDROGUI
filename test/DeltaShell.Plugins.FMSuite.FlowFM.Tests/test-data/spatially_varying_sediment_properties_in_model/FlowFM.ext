@@ -1,6 +1,6 @@
 
-QUANTITY=initialspatialvaryingsedimentgouwe_IniSedThick
-FILENAME=initialspatialvaryingsedimentgouwe_IniSedThick.xyz
+QUANTITY=initialsedfracgouwe_IniSedThick
+FILENAME=initialsedfracgouwe_IniSedThick.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
