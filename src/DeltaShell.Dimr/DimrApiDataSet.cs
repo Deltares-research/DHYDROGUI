@@ -43,18 +43,18 @@ namespace DeltaShell.Dimr
             Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
         }
         
-        public static DebugLevel LogFileLevel = DebugLevel.LOG_DETAIL;
-        public static DebugLevel FeedbackLevel = DebugLevel.WARN;
+        public static DimrLoggingLevel LogFileLevel = DimrLoggingLevel.LOG_DETAIL;
+        public static DimrLoggingLevel FeedbackLevel = DimrLoggingLevel.WARN;
 
 
         [Flags]
         public enum DebugLevel : long
         {
-            SILENT            = 1L,
-            ALWAYS            = 2L,
-            WARN              = 4L,
-            MAJOR             = 8L,
-            MINOR             = 16L,
+            SILENT            = 0L,
+            ALWAYS            = 1L,
+            WARN              = 2L,
+            MAJOR             = 4L,
+            MINOR             = 8L,
             DETAIL            = 16L,
             CONFIG_MAJOR      = 32L,
             ITER_MAJOR        = 64L,
@@ -83,6 +83,16 @@ namespace DeltaShell.Dimr
             RESERVED_29       = 268435456L,
             RESERVED_30       = 536870912L,
             LOG_DETAIL        = 1073741824L,
+        }
+
+        public enum DimrLoggingLevel : long
+        {
+            ALWAYS     = DebugLevel.ALWAYS,
+            WARN       = DebugLevel.ALWAYS + DebugLevel.WARN,
+            MAJOR      = DebugLevel.ALWAYS + DebugLevel.WARN + DebugLevel.MAJOR,
+            MINOR      = DebugLevel.ALWAYS + DebugLevel.WARN + DebugLevel.MAJOR + DebugLevel.MINOR,
+            DETAIL     = DebugLevel.ALWAYS + DebugLevel.WARN + DebugLevel.MAJOR + DebugLevel.MINOR + DebugLevel.DETAIL,
+            LOG_DETAIL = DebugLevel.LOG_DETAIL
         }
 
     }
