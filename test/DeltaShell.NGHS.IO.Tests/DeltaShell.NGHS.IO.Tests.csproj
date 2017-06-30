@@ -142,6 +142,7 @@
     <Compile Include="Grid\UGridNetworkUnitTests.cs" />
     <Compile Include="Grid\UGridStub.cs" />
     <Compile Include="Grid\UGridTest.cs" />
+    <Compile Include="Grid\UGridUnitTests.cs" />
     <Compile Include="Helpers\StringArrayExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
         {
             if (mesh > uGrid.NumberOf2DMeshes() || mesh <=0 ) return null;
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(uGrid.NodeCoordinates[mesh-1].ToList(), uGrid.EdgeNodes[mesh-1], uGrid.FaceNodes[mesh-1]);
+            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(uGrid.NodeCoordinates[mesh-1].ToList(), uGrid.EdgeNodesPerMesh[mesh-1], uGrid.FaceNodesPerMesh[mesh-1]);
             if (grid != null) grid.CoordinateSystem = uGrid.CoordinateSystem;
             return grid;
         }

@@ -219,12 +219,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 var type = (int)meshType;
                 int nMesh = 0;
                 var ierr = wrapper.ionc_get_number_of_meshes(ref ioncid, ref type, ref nMesh);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    return ierr;
-                }
-                numberOfMesh = nMesh;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                if(ierr == GridApiDataSet.GridConstants.IONC_NOERR) numberOfMesh = nMesh;
+
+                return ierr;
             }
             catch
             {
@@ -405,6 +402,14 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
             }
             return elements;
+        }
+
+        protected void ThrowIfError(int ierr)
+        {
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            {
+                throw new Exception();
+            }
         }
     }
 }

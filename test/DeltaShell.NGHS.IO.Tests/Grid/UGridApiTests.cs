@@ -1518,7 +1518,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshid = 0;
             int numberOfEdges = nEdges;
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
 
             wrapper.Expect(w => w.ionc_get_edge_nodes(ref id, ref meshid, ref ptr, ref numberOfEdges)).IgnoreArguments()
                 .OutRef(id, meshid, ptr, numberOfEdges).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
@@ -1535,7 +1535,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var ierr = api.GetEdgeNodesForMesh(1, out edgeNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.That(edgeNodes.GetLength(0) == nEdges);
-            Assert.That(edgeNodes.GetLength(1) == GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+            Assert.That(edgeNodes.GetLength(1) == GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
         }
 
         [Test]
@@ -1554,7 +1554,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshid = 0;
             int numberOfEdges = nEdges;
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
 
             wrapper.Expect(w => w.ionc_get_edge_nodes(ref id, ref meshid, ref ptr, ref numberOfEdges)).IgnoreArguments()
                 .OutRef(id, meshid, ptr, numberOfEdges).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
@@ -1590,7 +1590,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshid = 0;
             int numberOfEdges = nEdges;
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
 
             wrapper.Expect(w => w.ionc_get_edge_nodes(ref id, ref meshid, ref ptr, ref numberOfEdges)).IgnoreArguments()
                 .OutRef(id, meshid, ptr, numberOfEdges).Return(GridApiDataSet.GridConstants.TESTING_ERROR)

@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.Grid
             public const int MAXDIMS = 6;
             public const int MAXSTRLEN = 255; // Must be equal to MAXSTRLEN in io_netcdf.dll (kernel)
             
-            public const int NUMBER_OF_NODES_ON_A_EDGE = 2;
+            public const int NUMBER_OF_NODES_ON_AN_EDGE = 2;
            
             public const int IONC_NOERR = 0;
             public const int IONC_GENERAL_FATAL_ERR = -1000;

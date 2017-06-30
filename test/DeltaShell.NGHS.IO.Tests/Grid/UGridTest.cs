@@ -378,7 +378,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
                 Assert.That(uGrid.NumberOf2DMeshes(), Is.EqualTo(1));
-                Assert.That(uGrid.GetAllNodeCoordinates(1), Is.True);
+                Assert.That(uGrid.GetAllNodeCoordinatesForMesh(1), Is.True);
                 Assert.That(uGrid.NodeCoordinates[0], Is.Not.Null);
                 Assert.That(uGrid.NodeCoordinates[0].Count(), Is.EqualTo(uGrid.NumberOfNodes(1)));
             }
@@ -395,7 +395,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 Assert.AreEqual(1, uGrid.NumberOf2DMeshes());
                 uGrid.GetFaceNodesForMesh(1);
-                Assert.That(uGrid.FaceNodes[0], Is.Not.Null);
+                Assert.That(uGrid.FaceNodesPerMesh[0], Is.Not.Null);
             }
         }
 
@@ -534,7 +534,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.That(uGrid.NumberOfEdges(meshNr), Is.EqualTo(6));
                     Assert.That(uGrid.NumberOfFaces(meshNr), Is.EqualTo(2));
                     Assert.That(uGrid.NumberOfMaxFaceNodes(meshNr), Is.EqualTo(4));
-                    Assert.That(uGrid.GetAllNodeCoordinates(meshNr), Is.True);
+                    Assert.That(uGrid.GetAllNodeCoordinatesForMesh(meshNr), Is.True);
                     var nodeCoordinates = uGrid.NodeCoordinates[meshNr-1].ToList();
                     Assert.That(nodeCoordinates, Is.Not.Null);
                     Assert.That(nodeCoordinates.Count(), Is.EqualTo(5));
@@ -564,17 +564,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     uGrid.GetFaceNodesForMesh(meshNr);
                     
-                    Assert.That(uGrid.FaceNodes[meshNr - 1], Is.Not.Null);
+                    Assert.That(uGrid.FaceNodesPerMesh[meshNr - 1], Is.Not.Null);
                     //cast from int[,] (2d int array) to int[][] (2 1d int arrays)
-                    var faceNodesForThisMesh = uGrid.FaceNodes[meshNr - 1].ConvertToTwoOneDimensionalArrays();
+                    var faceNodesForThisMesh = uGrid.FaceNodesPerMesh[meshNr - 1].ConvertToTwoOneDimensionalArrays();
                     Assert.That(faceNodesForThisMesh[0], Is.EqualTo(new[] { 1, 2, 5, -999 }));
                     Assert.That(faceNodesForThisMesh[1], Is.EqualTo(new[] { 2, 3, 4, 5 }));
                     
                     uGrid.GetEdgeNodesForMesh(meshNr);
                     
-                    Assert.That(uGrid.EdgeNodes, Is.Not.Null);
+                    Assert.That(uGrid.EdgeNodesPerMesh, Is.Not.Null);
                     //cast from int[,] (2d int array) to int[][] (2 1d int arrays)
-                    var edgeNodesForThisMesh = uGrid.EdgeNodes[meshNr - 1].ConvertToTwoOneDimensionalArrays();
+                    var edgeNodesForThisMesh = uGrid.EdgeNodesPerMesh[meshNr - 1].ConvertToTwoOneDimensionalArrays();
                     Assert.That(edgeNodesForThisMesh[0], Is.EqualTo(new[] { 5, 2 }));
                     Assert.That(edgeNodesForThisMesh[1], Is.EqualTo(new[] { 2, 1 }));
                     Assert.That(edgeNodesForThisMesh[2], Is.EqualTo(new[] { 1, 5 }));
