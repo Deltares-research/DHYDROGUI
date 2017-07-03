@@ -43,27 +43,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+    <Reference Include="DelftTools.Shell.Core, Version=1.2.0.37226, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Fluent">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\Fluent.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\Fluent.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -79,11 +80,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37520\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -96,12 +97,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="ViewModels\DIMRConfigRibbonViewModel.cs" />
     <Compile Include="DimrGuiPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -155,18 +156,18 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
     <Error Condition="Exists('..\..\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
   </Target>
-  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37520\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37520\build\net40\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37520\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37520\build\net40\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.2.0.37699\build\net40\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.2.0.37699\build\net40\DeltaShell.Framework.targets'))" />
   </Target>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.2.0.37699\build\net40\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.2.0.37699\build\net40\DeltaShell.Framework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
