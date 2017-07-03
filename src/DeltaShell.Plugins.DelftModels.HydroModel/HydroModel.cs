@@ -759,7 +759,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             foreach (var nonSupportedWorkFlowName in nonSupportedWorkflowNames)
             {
                 if (CurrentWorkflow.Name.Equals(nonSupportedWorkFlowName))
-                    validationIssues.Add(new ValidationIssue(Name, ValidationSeverity.Error,
+                    validationIssues.Add(new ValidationIssue(this, ValidationSeverity.Error,
                         "The workflow '" + nonSupportedWorkFlowName + "' is currently not supported in DeltaShell"));
             }
             return validationIssues;
