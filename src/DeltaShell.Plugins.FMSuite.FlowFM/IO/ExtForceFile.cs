@@ -223,8 +223,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
                 if(spatialOperations == null || !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension || s is AddSamplesOperation)) continue;
                 extForceFileItems.AddRange(
-                    WriteSpatialData(InitialSpatialVaryingSedimentPrefix + spatiallyVaryingSedimentPropertyName,
-                    spatialOperations)
+                    WriteSpatialData(spatiallyVaryingSedimentPropertyName,
+                    spatialOperations, InitialSpatialVaryingSedimentPrefix)
                     .Distinct());
             }
 
@@ -281,7 +281,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations)
+        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, string prefix = null)
         {
             if(spatialOperations != null)
             {
@@ -294,7 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
                         yield return
                             ExtForceFileHelper.WriteInitialConditionsSamples(FilePath, quantity, importSamplesOperation,
-                                existingItem, WriteToDisk);
+                                existingItem, WriteToDisk, prefix);
                         continue;
                     }
                         
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         yield return
                             ExtForceFileHelper.WriteInitialConditionsUnsupported(FilePath, quantity, addSamplesOperation,
-                                WriteToDisk);
+                                WriteToDisk, prefix);
                         continue;
                     }
 

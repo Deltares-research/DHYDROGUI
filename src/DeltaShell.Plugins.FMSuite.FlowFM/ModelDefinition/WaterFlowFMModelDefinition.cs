@@ -685,8 +685,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    var spatialOperations = spatialOperationValueConverter.SpatialOperationSet.Operations
-                        .Where(s => !( s is ISpatialOperationSet )).Select(ConvertSpatialOperation)
+                    var eventedList = spatialOperationValueConverter.SpatialOperationSet.Operations;
+                    var operations = eventedList.Where(s => !( s is ISpatialOperationSet ));
+                    var enumerable = operations.Select(ConvertSpatialOperation);
+                    var spatialOperations = enumerable
                         .ToList();
 
                     SpatialOperations.Add(dataItem.Name, spatialOperations);
