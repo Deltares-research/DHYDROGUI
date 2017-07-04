@@ -507,7 +507,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
             if (t == null)
             {
-                InitialFractions.Add(CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid));
+                var unstructuredGridCellCoverage = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+                InitialFractions.Add(unstructuredGridCellCoverage);
             }
             else
             {
@@ -516,6 +517,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
                     InitialFractions.Add((UnstructuredGridCellCoverage) t.Value);
+                    /* DELFT3DFM-1077 
+                     * Apparently the spatial operation is not being executed after being added (which should be)
+                     * We can force it here.
+                     */
+                    var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
+                    if (spOperationSet != null) spOperationSet.SpatialOperationSet.Execute();
                 }
                 else
                 {
