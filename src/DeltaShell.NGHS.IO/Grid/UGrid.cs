@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGrid : AGrid, IUGrid
     {
-        public int[][,] FaceNodesPerMesh { get; protected set; }
-        public int[][,] EdgeNodesPerMesh { get; protected set; }
-        public Dictionary<int, Coordinate[]> NodeCoordinates { get; protected set; }
-        public Dictionary<int, Dictionary<int, int[]>> VarNameIdsAtLocationInMesh;
+        public int[][,] FaceNodesByMeshId { get; protected set; }
+        public int[][,] EdgeNodesByMeshId { get; protected set; }
+        public Dictionary<int, Coordinate[]> NodeCoordinatesByMeshId { get; protected set; }
+        public Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>> VarNameIdsAtLocationInMesh;
 
         public UGrid(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
         {
@@ -21,188 +22,176 @@ namespace DeltaShell.NGHS.IO.Grid
             GridApi = GridApiFactory.CreateNew();
         }
 
-        public double zCoordinateFillValue
+        public double ZCoordinateFillValue
         {
-            get { return GetFromValidGridApi<IUGridApi, double>(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, "Couldn't get the z-coordinate"); }
-            set { DoWithValidGridApi<IUGridApi>(uGridApi => uGridApi.zCoordinateFillValue = value, "Couldn't set the z-coordinate"); }
+            get { return GetFromValidGridApi<IUGridApi, double>(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, Resources.UGrid_ZCoordinateFillValue_Couldn_t_get_the_z_coordinate); }
+            set { DoWithValidGridApi<IUGridApi>(uGridApi => uGridApi.zCoordinateFillValue = value, Resources.UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate); }
         }
 
-        public int NumberOf2DMeshes()
+        public int GetNumberOf2DMeshes()
         {
             int numberOfMeshes;
-            const string errorMessage = "Couldn't get the number of 2D meshes";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOf2DMeshes_Couldn_t_get_the_number_of_2D_meshes);
             var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh2D, out numberOfMeshes);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGrid_GetNumberOf2DMeshes_Couldn_t_get_the_number_of_2D_meshes);
             return numberOfMeshes;
         }
 
-        public int NumberOfNodes(int meshId)
+        public int GetNumberOfNodesForMeshId(int meshId)
         {
             int numberOfNodes;
-            const string errorMessage = "Couldn't get number of nodes";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes);
             var ierr = uGridApi.GetNumberOfNodes(meshId, out numberOfNodes);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes);
             return numberOfNodes;
             
         }
 
-        public int NumberOfEdges(int meshId)
+        public int GetNumberOfEdgesForMeshId(int meshId)
         {
             int numberOfEdges;
-            const string errorMessage = "Couldn't get number of edges";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfEdgesForMeshId_Couldn_t_get_number_of_edges);
             var ierr = uGridApi.GetNumberOfEdges(meshId, out numberOfEdges);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGrid_GetNumberOfEdgesForMeshId_Couldn_t_get_number_of_edges);
             
             return numberOfEdges;
         }
 
-        public int NumberOfFaces(int meshId)
+        public int GetNumberOfFacesForMeshId(int meshId)
         {
             int numberOfFaces;
-            const string errorMessage = "Couldn't get number of faces";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfFacesForMeshId_Couldn_t_get_number_of_faces);
             var ierr = uGridApi.GetNumberOfFaces(meshId, out numberOfFaces);
-            ThrowIfError(ierr, "Couldn't get number of faces");
+            ThrowIfError(ierr, Resources.UGrid_GetNumberOfFacesForMeshId_Couldn_t_get_number_of_faces);
             return numberOfFaces;
         }
 
-        public int NumberOfMaxFaceNodes(int meshId)
+        public int GetNumberOfMaxFaceNodesForMeshId(int meshId)
         {
             int maxFaceNodes;
-            const string errorMessage = "Couldn't get max face nodes";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfMaxFaceNodesForMeshId_Couldn_t_get_max_face_nodes);
             var ierr = uGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGrid_GetNumberOfMaxFaceNodesForMeshId_Couldn_t_get_max_face_nodes);
             return maxFaceNodes;
         }
 
-        public Coordinate[] GetAllNodeCoordinatesForMesh(int meshId)
+        public Coordinate[] GetAllNodeCoordinatesForMeshId(int meshId)
         {
             return GetFromValidGridApi<IUGridApi, Coordinate[]>(uGridApi =>
             {
-                var nNode = NumberOfNodes(meshId);
+                var nNode = GetNumberOfNodesForMeshId(meshId);
                 if (nNode == 0) return new Coordinate[0];
                 
                 //retrieve x
                 double[] xCoordinates;
                 var ierr = uGridApi.GetNodeXCoordinates(meshId, out xCoordinates);
-                ThrowIfError(ierr, "Couldn't get x node coordinates");
+                ThrowIfError(ierr, Resources.UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_x_node_coordinates);
 
                 //retrieve y
                 double[] yCoordinates;
                 ierr = uGridApi.GetNodeYCoordinates(meshId, out yCoordinates);
-                ThrowIfError(ierr, "Couldn't get y node coordinates");
+                ThrowIfError(ierr, Resources.UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_y_node_coordinates);
                 
                 //retrieve z
                 double[] zCoordinates;
                 ierr = uGridApi.GetNodeZCoordinates(meshId, out zCoordinates);
-                ThrowIfError(ierr, "Couldn't get z node coordinates");
+                ThrowIfError(ierr, Resources.UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_z_node_coordinates);
                 
                 var coordinates = new Coordinate[nNode];
                 for (int i = 0; i < nNode; i++)
                 {
                     coordinates[i] = new Coordinate(xCoordinates[i], yCoordinates[i], zCoordinates[i]);
                 }
-                if(NodeCoordinates == null) NodeCoordinates = new Dictionary<int, Coordinate[]>();
-                NodeCoordinates[meshId - 1] = coordinates;
+                if(NodeCoordinatesByMeshId == null) NodeCoordinatesByMeshId = new Dictionary<int, Coordinate[]>();
+                NodeCoordinatesByMeshId[meshId - 1] = coordinates;
 
                 return coordinates;
-            }, new Coordinate[0], "Couldn't get the node coordinates");
+            }, new Coordinate[0], Resources.UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_the_node_coordinates);
         }
 
-        public int[,] GetEdgeNodesForMesh(int meshId)
+        public int[,] GetEdgeNodesForMeshId(int meshId)
         {
             int[,] edgeNodes;
-            const string errorMessage = "Couldn't get edge nodes of the mesh";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
-            var ierr = uGridApi.GetEdgeNodesForMesh(meshId, out edgeNodes);
-            ThrowIfError(ierr, errorMessage);
 
-            if(EdgeNodesPerMesh == null) EdgeNodesPerMesh = new int[NumberOf2DMeshes()][,];
-            EdgeNodesPerMesh[meshId - 1] = edgeNodes;
+            if (EdgeNodesByMeshId == null) EdgeNodesByMeshId = new int[GetNumberOf2DMeshes()][,];
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
+            var ierr = uGridApi.GetEdgeNodesForMesh(meshId, out edgeNodes);
+            ThrowIfError(ierr, Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
+
+            EdgeNodesByMeshId[meshId - 1] = edgeNodes;
             return edgeNodes;
         }
 
-        public int[,] GetFaceNodesForMesh(int meshId)
+
+        public int[,] GetFaceNodesForMeshId(int meshId)
         {
             int[,] faceNodes;
-            const string errorMessage = "Couldn't get face nodes of the mesh";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
             var ierr = uGridApi.GetFaceNodesForMesh(meshId, out faceNodes);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
 
-            if(FaceNodesPerMesh == null) FaceNodesPerMesh = new int[NumberOf2DMeshes()][,];
-            FaceNodesPerMesh[meshId - 1] = faceNodes;
+            if(FaceNodesByMeshId == null) FaceNodesByMeshId = new int[GetNumberOf2DMeshes()][,];
+            FaceNodesByMeshId[meshId - 1] = faceNodes;
             return faceNodes;
         }
 
-        public int NumberOfNamesAtLocation(int mesh, int location)
+        public int NumberOfNamesForLocationType(int meshId, GridApiDataSet.LocationType locationType)
         {
             int nCount;
-            const string errorMessage = "Couldn't get the number of names at location";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
-            var ierr = uGridApi.GetVarCount(mesh, location, out nCount);
-            ThrowIfError(ierr, errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_NumberOfNamesAtLocation_Couldn_t_get_the_number_of_names_for_location_type);
+            var ierr = uGridApi.GetVarCount(meshId, locationType, out nCount);
+            ThrowIfError(ierr, Resources.UGrid_NumberOfNamesAtLocation_Couldn_t_get_the_number_of_names_for_location_type);
 
             return nCount;
         }
 
-        public Dictionary<int, int[]> GetNamesAtLocation(int mesh, int location)
+        public Dictionary<GridApiDataSet.LocationType, int[]> GetNamesAtLocation(int meshId, GridApiDataSet.LocationType locationType)
         {
-            const string errorMessage = "Couldn't get the names at location";
             DoWithValidGridApi<IUGridApi>(uGridApi =>
             {
                 int[] varIds;
-                var ierr = uGridApi.GetVarNames(mesh, location, out varIds);
-                ThrowIfError(ierr, errorMessage);
+                var ierr = uGridApi.GetVarNames(meshId, locationType, out varIds);
+                ThrowIfError(ierr, Resources.UGrid_GetNamesAtLocation_Couldn_t_get_the_names_at_location);
 
-                var varNameIdsAtLocation = new Dictionary<int, int[]>();
-                varNameIdsAtLocation[location] = varIds;
-                if (VarNameIdsAtLocationInMesh == null) VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<int, int[]>>();
-                VarNameIdsAtLocationInMesh[mesh - 1] = varNameIdsAtLocation;
-            }, errorMessage);
-            return VarNameIdsAtLocationInMesh[mesh - 1];
+                var varNameIdsAtLocation = new Dictionary<GridApiDataSet.LocationType, int[]>();
+                varNameIdsAtLocation[locationType] = varIds;
+                if (VarNameIdsAtLocationInMesh == null) VarNameIdsAtLocationInMesh = new Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>>();
+                VarNameIdsAtLocationInMesh[meshId - 1] = varNameIdsAtLocation;
+            }, Resources.UGrid_GetNamesAtLocation_Couldn_t_get_the_names_at_location);
+            return VarNameIdsAtLocationInMesh[meshId - 1];
         }
 
         /// <summary>
         /// Overwrites the existing x and y coordinates of the vertices with new values. Note: the number of supplied values must equal
         /// the number of existing values. Useful for coordinate transformation etc.
         /// </summary>
-        public void RewriteGridCoordinates(int mesh, double[] xValues, double[] yValues)
+        public void RewriteGridCoordinatesForMeshId(int meshId, double[] xValues, double[] yValues)
         {
             DoWithValidGridApi<IUGridApi>(
-                uGridApi => uGridApi.WriteXYCoordinateValues(mesh, xValues, yValues)
-                , "Couldn't rewrite grid coordinates");
+                uGridApi => uGridApi.WriteXYCoordinateValues(meshId, xValues, yValues)
+                , Resources.UGrid_RewriteGridCoordinates_Couldn_t_rewrite_grid_coordinates);
         }
         
-        public void WriteZValuesAtFaces(int meshId, double[] zValues)
+        public void WriteZValuesAtFacesForMeshId(int meshId, double[] zValues)
         {
-            const string faceBedLevelVariableName = "face_z";
-            const string faceBedLevelVariableLongName = "z-coordinate of mesh faces";
             DoWithValidGridApi<IUGridApi>(
-                uGridApi => uGridApi.WriteZCoordinateValues(meshId, (int)GridApiDataSet.Locations.UG_LOC_FACE, faceBedLevelVariableName, faceBedLevelVariableLongName, zValues)
-                , "Couldn't save x and y coordinates at mesh faces");
+                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, Resources.UGrid_WriteZValuesAtFacesForMeshId_face_z, Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces, zValues)
+                , Resources.UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces);
         }
 
-        public void WriteZValuesAtNodes(int meshId, double[] zValues)
+        public void WriteZValuesAtNodesForMeshId(int meshId, double[] zValues)
         {
-            const string nodeBedLevelVariableName = "node_z";
-            const string nodeBedLevelVariableLongName = "z-coordinate of mesh nodes";
             DoWithValidGridApi<IUGridApi>(
-                uGridApi => uGridApi.WriteZCoordinateValues(meshId, (int)GridApiDataSet.Locations.UG_LOC_NODE, nodeBedLevelVariableName, nodeBedLevelVariableLongName, zValues)
-                , "Couldn't save x and y coordinates at mesh nodes");
+                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, Resources.UGrid_WriteZValuesAtNodesForMeshId_node_z, Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes, zValues)
+                , Resources.UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes);
         }
 
-        public string GetMeshName(int mesh)
+        public string GetMeshName(int meshId)
         {
             string meshName;
-            const string errorMessage = "Couldn't get meshname";
-            var uGridApi = GetValidGridApi<IUGridApi>(errorMessage);
-            var ierr = uGridApi.GetMeshName(mesh, out meshName);
-            ThrowIfError(ierr, errorMessage);
+            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetMeshName_Couldn_t_get_meshname);
+            var ierr = uGridApi.GetMeshName(meshId, out meshName);
+            ThrowIfError(ierr, Resources.UGrid_GetMeshName_Couldn_t_get_meshname);
 
             return meshName;
         }

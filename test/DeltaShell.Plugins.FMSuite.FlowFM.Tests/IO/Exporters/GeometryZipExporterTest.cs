@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.WriteZValuesAtNodes(1, newZValues);
+                uGrid.WriteZValuesAtNodesForMeshId(1, newZValues);
             }
 
             // read new grid
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.WriteZValuesAtFaces(1, newZValues);
+                uGrid.WriteZValuesAtFacesForMeshId(1, newZValues);
             }
 
             using (var ncFile = new NetCdfFileWrapper(netFilePath))

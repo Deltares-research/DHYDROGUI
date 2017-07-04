@@ -81,10 +81,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>Error code</returns>
         int GetFaceNodesForMesh(int meshId, out int[,] faceNodes);
 
-        int GetVarCount(int meshId, int locationId, out int nCount);
-        int GetVarNames(int meshId, int locationIdout , out int[] varIds);
+        int GetVarCount(int meshId, GridApiDataSet.LocationType locationType, out int nCount);
+        int GetVarNames(int meshId, GridApiDataSet.LocationType locationType , out int[] varIds);
         int WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues);
-        int WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues);
+        int WriteZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, string longName, double[] zValues);
         int GetMeshName(int meshId, out string meshName);
         int ionc_write_geom_ugrid(string filename);
         int ionc_write_map_ugrid(string filename);

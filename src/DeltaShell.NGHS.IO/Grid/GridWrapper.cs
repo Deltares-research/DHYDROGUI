@@ -598,9 +598,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_network_name_dll(ref ioncid, ref networkId, networkName);
         }
 
-        public int ionc_def_var(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName,
+        public int ionc_def_var(ref int ioncid, ref int meshId, ref int varId, ref int type, GridApiDataSet.LocationType locationType, string varName,
             string standardName, string longName, string unit, ref double fillValue)
         {
+            var locType = (int) locationType;
             return ionc_def_var_dll(ref ioncid, ref meshId, ref varId, ref type, ref locType, varName, standardName,
                 longName, unit, ref fillValue);
         }
@@ -685,9 +686,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_coordinate_system_dll(ref ioncid, ref nmesh);
         }
 
-        public int ionc_get_var_count(ref int ioncid, ref int mesh, ref int location, ref int nCount)
+        public int ionc_get_var_count(ref int ioncid, ref int mesh, GridApiDataSet.LocationType locationType, ref int nCount)
         {
-            return ionc_get_var_count_dll(ref ioncid, ref mesh, ref location, ref nCount);
+            var locType = (int) locationType;
+            return ionc_get_var_count_dll(ref ioncid, ref mesh, ref locType, ref nCount);
         }
 
         public int ionc_inq_varid(ref int ioncid, ref int meshId, string varName, ref int varId)
@@ -695,15 +697,17 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_inq_varid_dll(ref ioncid, ref meshId, varName, ref varId);
         }
 
-        public int ionc_inq_varid_by_standard_name(ref int ioncid, ref int meshId, ref int location, string standardName,
+        public int ionc_inq_varid_by_standard_name(ref int ioncid, ref int meshId, GridApiDataSet.LocationType locationId, string standardName,
             ref int varId)
         {
-            return ionc_inq_varid_by_standard_name_dll(ref ioncid, ref meshId, ref location, standardName, ref varId);
+            var locId = (int) locationId;
+            return ionc_inq_varid_by_standard_name_dll(ref ioncid, ref meshId, ref locId, standardName, ref varId);
         }
 
-        public int ionc_inq_varids(ref int ioncid, ref int meshId, ref int location, ref IntPtr ptr, ref int nVar)
+        public int ionc_inq_varids(ref int ioncid, ref int meshId, GridApiDataSet.LocationType locationType, ref IntPtr ptr, ref int nVar)
         {
-            return ionc_inq_varids_dll(ref ioncid, ref meshId, ref location, ref ptr, ref nVar);
+            var locType = (int) locationType;
+            return ionc_inq_varids_dll(ref ioncid, ref meshId, ref locType, ref ptr, ref nVar);
         }
 
         public int ionc_initialize(IO_NetCDF_Message_Callback c_message_callback, IO_NetCDF_Progress_Callback c_progress_callback)
@@ -716,9 +720,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_var_dll(ref ioncid, ref meshId, ref location, varname, ref c_zptr, ref nNode, ref c_fillvalue);
         }
 
-        public int ionc_put_var(ref int ioncid, ref int meshid, ref int iloctype, string c_varname, ref IntPtr c_values_ptr, ref int nVal)
+        public int ionc_put_var(ref int ioncid, ref int meshid, GridApiDataSet.LocationType locationType, string c_varname, ref IntPtr c_values_ptr, ref int nVal)
         {
-            return ionc_put_var_dll(ref ioncid, ref meshid, ref iloctype, c_varname, ref c_values_ptr, ref nVal);
+            var locType = (int) locationType;
+            return ionc_put_var_dll(ref ioncid, ref meshid, ref locType, c_varname, ref c_values_ptr, ref nVal);
         }
 
         public int ionc_put_node_coordinates(ref int ioncid, ref int meshid, ref IntPtr c_xvalues_ptr, ref IntPtr c_yvalues_ptr, ref int nNode)

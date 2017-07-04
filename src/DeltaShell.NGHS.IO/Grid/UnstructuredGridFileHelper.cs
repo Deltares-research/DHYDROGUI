@@ -56,7 +56,7 @@ namespace DeltaShell.NGHS.IO.Grid
                         {
                             case BedLevelLocation.Faces:
                             case BedLevelLocation.FacesMeanLevFromNodes:
-                                uGrid.WriteZValuesAtFaces(1, values);
+                                uGrid.WriteZValuesAtFacesForMeshId(1, values);
                                 break;
                             case BedLevelLocation.CellEdges:
                                 Log.WarnFormat("Unable to Write z-values at this location, CellEdges are not currently supported");
@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Grid
                             case BedLevelLocation.NodesMeanLev:
                             case BedLevelLocation.NodesMinLev:
                             case BedLevelLocation.NodesMaxLev:
-                                uGrid.WriteZValuesAtNodes(1, values);
+                                uGrid.WriteZValuesAtNodesForMeshId(1, values);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException("location", location, null);
@@ -172,7 +172,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.IONC_CONV_UGRID:
                     using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
                     {
-                        uGrid.RewriteGridCoordinates(1, unstructuredGrid.Vertices.Select(v => v.X).ToArray(),
+                        uGrid.RewriteGridCoordinatesForMeshId(1, unstructuredGrid.Vertices.Select(v => v.X).ToArray(),
                             unstructuredGrid.Vertices.Select(v => v.Y).ToArray());
                     }
                     break;

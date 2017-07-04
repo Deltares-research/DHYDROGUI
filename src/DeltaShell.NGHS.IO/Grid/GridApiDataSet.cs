@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Grid
             nf90_share          = 2048 
         }
 
-        public enum Locations
+        public enum LocationType
         {
             UG_LOC_NONE = 0,
             UG_LOC_NODE = 1,

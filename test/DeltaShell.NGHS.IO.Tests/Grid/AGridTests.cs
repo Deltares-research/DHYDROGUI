@@ -93,16 +93,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file : ")]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file: ", MatchType = MessageMatch.StartsWith)]
         public void InitializeCouldNotOpenExceptionTest()
         {
+            var gridApi = mocks.DynamicMock<IGridApi>();
+
             grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(false).Repeat.Once();
-            
-            var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
-            gridApi.Expect(a => a.Initialized).Return(false).Repeat.Once();
-            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
+            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(2);
+
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
+
             mocks.ReplayAll();
 
             grid.Initialize();
@@ -235,17 +236,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetDataSetConventionTest()
         {
-            grid.Expect(g => g.GridApi).Return(null).Repeat.Once();
-            grid.Expect(g => g.GetDataSetConvention()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            mocks.ReplayAll();
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER, grid.GetDataSetConvention());
-            mocks.BackToRecordAll();
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.GetConvention()).Return(GridApiDataSet.DataSetConventions.IONC_CONV_TEST).Repeat.Once();
 
-            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Twice();
+            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Once();
+            grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
             grid.Expect(g => g.GetDataSetConvention()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+
+            gridApi.Expect(a => a.GetConvention()).Return(GridApiDataSet.DataSetConventions.IONC_CONV_TEST).Repeat.Once();
             mocks.ReplayAll();
+
             Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, grid.GetDataSetConvention());
         }
 

@@ -204,13 +204,13 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     var meshIds = uGridNetworkDiscretisation.GetNetworkDiscretisationIds(numberOfNetworkDiscretisations);
                     var meshId = meshIds[0];
-                    var networkId = uGridNetworkDiscretisation.GetNetworkId(meshId);
+                    var networkId = uGridNetworkDiscretisation.GetNetworkIdForMeshId(meshId);
                     
                     var meshDiscretisationName = uGridNetworkDiscretisation.GetNetworkDiscretisationName(meshId);
 
                     int[] branchIndices;
                     double[] offset;
-                    uGridNetworkDiscretisation.ReadNetworkDiscretisationPoints(meshId, out branchIndices, out offset);
+                    uGridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(meshId, out branchIndices, out offset);
                     
                     var networkDiscretisationDataModel = new NetworkDiscretisationUGridDataModel(meshDiscretisationName, branchIndices, offset, networkId);
 

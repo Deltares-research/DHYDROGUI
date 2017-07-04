@@ -126,7 +126,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.GetNetworkId(Arg<int>.Is.Anything);
+            gridNetworkDiscretisation.GetNetworkIdForMeshId(Arg<int>.Is.Anything);
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            var networkId = gridNetworkDiscretisation.GetNetworkId(Arg<int>.Is.Anything);
+            var networkId = gridNetworkDiscretisation.GetNetworkIdForMeshId(Arg<int>.Is.Anything);
             Assert.That(networkId, Is.EqualTo(id));
         }
 
@@ -204,7 +204,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.GetNumberOfNetworkDiscretisationPoints(Arg<int>.Is.Anything);
+            gridNetworkDiscretisation.GetNumberOfNetworkDiscretisationPointsForMeshId(Arg<int>.Is.Anything);
         }
 
         [Test]
@@ -216,7 +216,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            var numberOfDiscretisationPoints = gridNetworkDiscretisation.GetNumberOfNetworkDiscretisationPoints(Arg<int>.Is.Anything);
+            var numberOfDiscretisationPoints = gridNetworkDiscretisation.GetNumberOfNetworkDiscretisationPointsForMeshId(Arg<int>.Is.Anything);
             Assert.That(numberOfDiscretisationPoints, Is.EqualTo(nPoints));
         }
 
@@ -229,7 +229,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.ReadNetworkDiscretisationPoints(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
+            gridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.ReadNetworkDiscretisationPoints(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
+            gridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
         }
     }
 }

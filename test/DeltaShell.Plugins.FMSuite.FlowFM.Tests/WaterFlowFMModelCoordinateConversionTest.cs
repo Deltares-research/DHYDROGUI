@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.RewriteGridCoordinates(1, grid.Vertices.Select(v => v.X).ToArray(), grid.Vertices.Select(v => v.Y).ToArray());
+                uGrid.RewriteGridCoordinatesForMeshId(1, grid.Vertices.Select(v => v.X).ToArray(), grid.Vertices.Select(v => v.Y).ToArray());
             }
 
             // read new grid

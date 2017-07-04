@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                 {
-                    bathymetryNoDataValue = uGridAdaptor.uGrid.zCoordinateFillValue;
+                    bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
                 });
 
             FireImportProgressChanged(this, "Renaming sub files", 5, TotalImportSteps);

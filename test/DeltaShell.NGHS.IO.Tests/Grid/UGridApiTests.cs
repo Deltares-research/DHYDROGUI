@@ -205,10 +205,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
             // uGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 }));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 }));
 
             // uRemoteGridApi
-            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 }));
+            Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, uRemoteGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 }));
         }
         
         [Test]
@@ -222,11 +222,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int meshid = 0;
             IntPtr zPtr = IntPtr.Zero;
             int nVal = 0;
-            int locationId = 0;
+            GridApiDataSet.LocationType locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             string varName = "";
-            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, ref locationId, varName, ref zPtr, ref nVal))
+            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, locationType, varName, ref zPtr, ref nVal))
                 .IgnoreArguments()
-                .OutRef(id, meshid, locationId, zPtr, nVal)
+                .OutRef(id, meshid, locationType, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
@@ -237,11 +237,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
+            var ierr = uGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
         }
@@ -253,15 +253,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            int id = 0;
-            int meshid = 0;
+            int ioncid = 0;
+            int meshId = 0;
             IntPtr zPtr = IntPtr.Zero;
             int nVal = 0;
-            int locationId = 0;
+            GridApiDataSet.LocationType locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             string varName = "";
-            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, ref locationId, varName, ref zPtr, ref nVal))
+            wrapper.Expect(w => w.ionc_put_var(ref ioncid, ref meshId, locationType, varName, ref zPtr, ref nVal))
                 .IgnoreArguments()
-                .OutRef(id, meshid, locationId, zPtr, nVal)
+                .OutRef(ioncid, meshId, locationType, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
@@ -272,11 +272,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
+            var ierr = uGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
         }
 
@@ -291,11 +291,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int meshid = 0;
             IntPtr zPtr = IntPtr.Zero;
             int nVal = 0;
-            int locationId = 0;
+            GridApiDataSet.LocationType locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             string varName = "";
-            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, ref locationId, varName, ref zPtr, ref nVal))
+            wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, locationType, varName, ref zPtr, ref nVal))
                 .IgnoreArguments()
-                .OutRef(id, meshid, locationId, zPtr, nVal)
+                .OutRef(id, meshid, locationType, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Throw(new Exception("testException"))
                 .Repeat.Twice();
@@ -307,11 +307,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
+            var ierr = uGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.WriteZCoordinateValues(1, 1, "", "", new[] { 0.0 });
+            ierr = uRemoteGridApi.WriteZCoordinateValues(1, GridApiDataSet.LocationType.UG_LOC_NODE, "", "", new[] { 0.0 });
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
@@ -1282,24 +1282,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetNodeZCoordinatesGetNodesFailedTest()
         {
+            int nNodes = 4;
+
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            int nNodes;
-            uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments()
+            uGridApi.Expect(a => a.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
 
             mocks.ReplayAll();
 
             // uGridApi
-            double[] zCoordinates;
-            var ierr = uGridApi.GetNodeZCoordinates(1, out zCoordinates);
+            double[] zCoordinates = {2.0, 4.0};
+            var ierr = uGridApi.GetNodeZCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(zCoordinates).Dummy);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
-            Assert.That(zCoordinates.Length == 0);
-            
+
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetNodeZCoordinates(1, out zCoordinates);
+            ierr = uRemoteGridApi.GetNodeZCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(zCoordinates).Dummy);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
-            Assert.That(zCoordinates.Length == 0);
         }
 
         [Test]
@@ -1343,19 +1342,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(false)]
         public void GetNodeZCoordinates_NetNodeZ_Test(bool useLocalApi)
         {
-            // uGridApi
+            var nNodes = 3;
             double[] zCoordinates;
-            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
 
-            int nNodes = 3;
-            uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
+            uGridApi.Expect(a => a.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int meshid = 0;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
-            nNodes = 3;
             int location = 0;
             string varName = "";
             double fillValue = 0;
@@ -1385,19 +1383,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(false)]
         public void GetNodeZCoordinatesApiCallFailedTest(bool useLocalApi)
         {
-            // uGridApi
-            double[] zCoordinates;
-            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
-
             int nNodes = 3;
-            uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
+            double[] zCoordinates;
+
+            // uGridApi
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
+            uGridApi.Expect(a => a.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int meshid = 0;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
-            nNodes = 3;
             int location = 0;
             string varName = "";
             double fillValue = 0;
@@ -1486,15 +1483,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             int nEdges = 3;
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).IgnoreArguments().OutRef(nEdges)
+            uGridApi.Expect(a => a.GetNumberOfEdges(Arg<int>.Is.Anything, out Arg<int>.Out(nEdges).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Twice();
-            // uRemoteGridApi
 
             mocks.ReplayAll();
 
             // uGridApi
-            int[,] edgeNodes;
-            var ierr = uGridApi.GetEdgeNodesForMesh(1, out edgeNodes);
+            var edgeNodes = new int[0, 0];
+            var ierr = uGridApi.GetEdgeNodesForMesh(Arg<int>.Is.Anything, out Arg<int[,]>.Out(edgeNodes).Dummy);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
@@ -1638,9 +1634,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetFaceNodesForMeshGetFacesFailedTest(bool useLocalApi)
         {
             // uGridApi
-            int nFaces;
+            int nFaces = 2;
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
-            uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).IgnoreArguments()
+            uGridApi.Expect(a => a.GetNumberOfFaces(Arg<int>.Is.Anything, out Arg<int>.Out(nFaces).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
 
             mocks.ReplayAll();
@@ -1659,21 +1655,22 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(false)]
         public void GetFaceNodesForMeshGetFaceNodesFailedTest(bool useLocalApi)
         {
+            var nFaces = 1;
+            var maxFaceNodes = 1;
+
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
-            int nFaces;
-            uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).IgnoreArguments()
+            uGridApi.Expect(a => a.GetNumberOfFaces(Arg<int>.Is.Anything, out Arg<int>.Out(nFaces).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
-            int maxFaceNodes;
-            uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).IgnoreArguments()
+            uGridApi.Expect(a => a.GetMaxFaceNodes(Arg<int>.Is.Anything, out Arg<int>.Out(maxFaceNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
 
             mocks.ReplayAll();
 
             // uGridApi : uRemoteGridApi
-            int[,] faceNodes;
+            int[,] faceNodes = new int[0, 0]; ;
             var api = useLocalApi ? uGridApi : uRemoteGridApi;
-            var ierr = api.GetFaceNodesForMesh(1, out faceNodes);
+            var ierr = api.GetFaceNodesForMesh(Arg<int>.Is.Anything, out Arg<int[,]>.Out(faceNodes).Dummy);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.That(faceNodes.GetLength(0) == 0);
             Assert.That(faceNodes.GetLength(1) == 0);
@@ -1684,13 +1681,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(false)]
         public void GetFaceNodesForMeshTest(bool useLocalApi)
         {
+            int nFaces = 4;
+            int maxFaceNodes = 3;
+
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
-            int nFaces = 4;
-            uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).IgnoreArguments()
+            uGridApi.Expect(a => a.GetNumberOfFaces(Arg<int>.Is.Anything, out Arg<int>.Out(nFaces).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
-            int maxFaceNodes = 3;
-            uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).IgnoreArguments()
+            uGridApi.Expect(a => a.GetMaxFaceNodes(Arg<int>.Is.Anything, out Arg<int>.Out(maxFaceNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
@@ -1793,8 +1791,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetVarCountInitializationFailedTest()
         {
-            int meshId = 0;
-            int locationId = 0;
+            var meshId = 0;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             int nCount;
 
             // uGridApi
@@ -1803,11 +1801,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            var ierr = uGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
@@ -1816,13 +1814,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var ioncid = 1;
             var meshId = 1;
-            var locationId = 1;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             var nCount = 0;
 
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(ioncid, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR)
+            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(ioncid, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
@@ -1833,11 +1831,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            var ierr = uGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
         }
 
@@ -1846,13 +1844,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var ioncid = 1;
             var meshId = 1;
-            var locationId = 1;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             var nCount = 0;
 
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(ioncid, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(ioncid, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
@@ -1863,11 +1861,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            var ierr = uGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
         }
 
@@ -1876,13 +1874,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var ioncid = 1;
             var meshId = 1;
-            var locationId = 1;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             var nCount = 0;
 
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(ioncid, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+            wrapper.Expect(w => w.ionc_get_var_count(ref ioncid, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(ioncid, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("TestException")).Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
@@ -1893,11 +1891,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetVarCount(meshId, locationId, out nCount);
+            var ierr = uGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetVarCount(meshId, locationId, out nCount);
+            ierr = uRemoteGridApi.GetVarCount(meshId, locationType, out nCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
@@ -1905,7 +1903,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetVarNamesInitializationFailedTest()
         {
             int meshId = 1;
-            int locationId = 1;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             int[] varIds;
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Once();
@@ -1913,11 +1911,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetVarNames(meshId, locationId, out varIds);
+            var ierr = uGridApi.GetVarNames(meshId, locationType, out varIds);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetVarNames(meshId, locationId, out varIds);
+            ierr = uRemoteGridApi.GetVarNames(meshId, locationType, out varIds);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
         }
 
@@ -1927,7 +1925,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetVarNamesGetVarCountFailedTest(bool useLocalApi)
         {
             int meshId = 0;
-            int locationId = 0;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             int[] varIds;
 
             // uGridApi
@@ -1936,8 +1934,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(id, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
+            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
             
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
 
@@ -1945,7 +1943,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi : uRemoteGridApi
             var api = useLocalApi ? uGridApi : uRemoteGridApi;
-            var ierr = api.GetVarNames(meshId, locationId, out varIds);
+            var ierr = api.GetVarNames(meshId, locationType, out varIds);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.That(varIds.Length == 0);
         }
@@ -1956,7 +1954,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetVarNamesTest(bool useLocalApi)
         {
             int meshId = 0;
-            int locationId = 0;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             int[] varIds;
 
             // uGridApi
@@ -1965,12 +1963,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(id, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
-            wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, ref locationId, ref ptr, ref nVar))
+            wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, locationType, ref ptr, ref nVar))
                 .IgnoreArguments().OutRef(nVar).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
@@ -1979,7 +1977,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             
             // uGridApi : uRemoteGridApi
             var api = useLocalApi ? uGridApi : uRemoteGridApi;
-            var ierr = api.GetVarNames(meshId, locationId, out varIds);
+            var ierr = api.GetVarNames(meshId, locationType, out varIds);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.That(varIds.Length == nCount);
         }
@@ -1990,7 +1988,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetVarNamesApiCallFailedTest(bool useLocalApi)
         {
             int meshId = 0;
-            int locationId = 0;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             int[] varIds;
 
             // uGridApi
@@ -1999,12 +1997,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(id, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
-            wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, ref locationId, ref ptr, ref nVar))
+            wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, locationType, ref ptr, ref nVar))
                 .IgnoreArguments().OutRef(nVar).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
@@ -2013,7 +2011,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi : uRemoteGridApi
             var api = useLocalApi ? uGridApi : uRemoteGridApi;
-            var ierr = api.GetVarNames(meshId, locationId, out varIds);
+            var ierr = api.GetVarNames(meshId, locationType, out varIds);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
             Assert.That(varIds.Length == 0);
         }
@@ -2024,7 +2022,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void GetVarNamesExceptionTest(bool useLocalApi)
         {
             int meshId = 0;
-            int locationId = 0;
+            var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
             int[] varIds;
 
             // uGridApi
@@ -2033,12 +2031,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, ref locationId, ref nCount)).IgnoreArguments()
-                .OutRef(id, meshId, locationId, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+            wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, locationType, ref nCount)).IgnoreArguments()
+                .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
-            wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, ref locationId, ref ptr, ref nVar))
+            wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, locationType, ref ptr, ref nVar))
                 .IgnoreArguments().OutRef(nVar)
                 .Throw(new Exception("testException"))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
@@ -2049,7 +2047,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridApi : uRemoteGridApi
             var api = useLocalApi ? uGridApi : uRemoteGridApi;
-            var ierr = api.GetVarNames(meshId, locationId, out varIds);
+            var ierr = api.GetVarNames(meshId, locationType, out varIds);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.That(varIds.Length == 0);
         }

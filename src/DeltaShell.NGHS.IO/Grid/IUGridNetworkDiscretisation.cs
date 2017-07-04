@@ -4,9 +4,9 @@
     {
         void CreateNetworkDiscretisationInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId);
         void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset);
-        int GetNetworkId(int meshId);
-        int GetNumberOfNetworkDiscretisationPoints(int meshId);
-        void ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset);
+        int GetNetworkIdForMeshId(int meshId);
+        int GetNumberOfNetworkDiscretisationPointsForMeshId(int meshId);
+        void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset);
 
     }
 }

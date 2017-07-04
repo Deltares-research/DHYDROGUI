@@ -118,23 +118,23 @@ namespace DeltaShell.NGHS.IO.Grid
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int GetVarCount(int meshId, int locationId, out int nCount)
+        public int GetVarCount(int meshId, GridApiDataSet.LocationType locationType, out int nCount)
         {
             nCount = -1;
             bool isValid;
             var uGridApi = GetValidUGridApi(out isValid);
             return isValid
-                ? uGridApi.GetVarCount(meshId, locationId, out nCount)
+                ? uGridApi.GetVarCount(meshId, locationType, out nCount)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int GetVarNames(int meshId, int locationId, out int[] varIds)
+        public int GetVarNames(int meshId, GridApiDataSet.LocationType locationType, out int[] varIds)
         {
             varIds = new int[0];
             bool isValid;
             var uGridApi = GetValidUGridApi(out isValid);
             return isValid
-                ? uGridApi.GetVarNames(meshId, locationId, out varIds)
+                ? uGridApi.GetVarNames(meshId, locationType, out varIds)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
@@ -147,12 +147,12 @@ namespace DeltaShell.NGHS.IO.Grid
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 
-        public int WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues)
+        public int WriteZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, string longName, double[] zValues)
         {
             bool isValid;
             var uGridApi = GetValidUGridApi(out isValid);
             return isValid 
-                ? uGridApi.WriteZCoordinateValues(meshId, locationId, varName, longName, zValues)
+                ? uGridApi.WriteZCoordinateValues(meshId, locationType, varName, longName, zValues)
                 : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
         }
 

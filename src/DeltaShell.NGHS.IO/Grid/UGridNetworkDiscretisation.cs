@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return meshName;
         }
 
-        public int GetNetworkId(int meshId)
+        public int GetNetworkIdForMeshId(int meshId)
         {
             int networkId;
             const string errorMessage = "Couldn't get the network Id corresponding to the network discretisation";
@@ -77,7 +77,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return meshIds;
         }
 
-        public int GetNumberOfNetworkDiscretisationPoints(int meshId)
+        public int GetNumberOfNetworkDiscretisationPointsForMeshId(int meshId)
         {
             int numberOfDiscretisationPoints;
             const string errorMessage = "Couldn't get the number of network discretisation points";
@@ -89,7 +89,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return numberOfDiscretisationPoints;
         }
 
-        public void ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
+        public void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset)
         {
             branchIdx = new int[0];
             offset = new double[0];

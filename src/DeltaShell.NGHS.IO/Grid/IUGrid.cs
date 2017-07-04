@@ -6,17 +6,17 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public interface IUGrid :IGrid
     {
-        int NumberOf2DMeshes();
-        int NumberOfNodes(int meshId);
-        int NumberOfEdges(int meshId);
-        int NumberOfFaces(int meshId);
-        int NumberOfMaxFaceNodes(int meshId);
-        Coordinate[] GetAllNodeCoordinatesForMesh(int meshId);
-        int[,] GetFaceNodesForMesh(int meshId);
-        int[,] GetEdgeNodesForMesh(int meshId);
-        int[][,] FaceNodesPerMesh { get; }
-        int[][,] EdgeNodesPerMesh { get; }
-        Dictionary<int,Coordinate[]> NodeCoordinates{ get; }
-        double zCoordinateFillValue { get; set; }
+        int GetNumberOf2DMeshes();
+        int GetNumberOfNodesForMeshId(int meshId);
+        int GetNumberOfEdgesForMeshId(int meshId);
+        int GetNumberOfFacesForMeshId(int meshId);
+        int GetNumberOfMaxFaceNodesForMeshId(int meshId);
+        Coordinate[] GetAllNodeCoordinatesForMeshId(int meshId);
+        int[,] GetFaceNodesForMeshId(int meshId);
+        int[,] GetEdgeNodesForMeshId(int meshId);
+        int[][,] FaceNodesByMeshId { get; }
+        int[][,] EdgeNodesByMeshId { get; }
+        Dictionary<int,Coordinate[]> NodeCoordinatesByMeshId{ get; }
+        double ZCoordinateFillValue { get; set; }
     }
 }

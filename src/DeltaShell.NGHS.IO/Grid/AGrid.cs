@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -72,15 +73,6 @@ namespace DeltaShell.NGHS.IO.Grid
                                        GridApi.GetVersion() >= GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
         }
 
-        public virtual void CreateFile()
-        {
-            if (filename != null && !File.Exists(filename))
-            {
-                var ierr = GridApi.CreateFile(filename, GlobalMetaData);
-                ThrowIfError(ierr, "Couldn't create new NetCDF file at location " + filename);
-            }
-        }
-
         public virtual void Initialize()
         {
             if (IsInitialized())
@@ -90,12 +82,9 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             if (GridApi != null)
             {
-                string errorMessage = "Couldn't open grid nc file: " + filename;
+                string errorMessage = Resources.AGrid_Initialize_Couldn_t_open_grid_nc_file__ + filename;
                 var ierr = GridApi.Open(filename, mode);
                 ThrowIfError(ierr, errorMessage);
-            
-                if (!GridApi.Initialized)
-                    throw new Exception(errorMessage);
             
                 try
                 {
@@ -104,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
                     {
                         CoordinateSystem = null;
-                        throw new Exception("Couldn't get coordinate system code because of err nr : " + ierr);
+                        throw new Exception(Resources.AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ + ierr);
                     }
                     CoordinateSystem = epsg_code > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsg_code) : null;
                 }
@@ -118,33 +107,41 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public virtual GridApiDataSet.DataSetConventions GetDataSetConvention()
-        {
-            if(!IsInitialized()) Initialize();
-            return IsInitialized() ? GridApi.GetConvention() : GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
-        }
-
         public virtual bool IsInitialized()
         {
             return GridApi != null && GridApi.Initialized;
         }
 
+        public virtual void CreateFile()
+        {
+            if (filename != null && !File.Exists(filename))
+            {
+                var ierr = GridApi.CreateFile(filename, GlobalMetaData);
+                ThrowIfError(ierr, Resources.AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_ + filename);
+            }
+        }
+
+        public virtual GridApiDataSet.DataSetConventions GetDataSetConvention()
+        {
+            if(!IsInitialized()) Initialize();
+            return GridApi.GetConvention();
+        }
+
         public int GetNumberOfNetworks()
         {
-            if (GridApi == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set"); ; 
+            if (!IsInitialized()) Initialize(); 
             int numberOfNetworks;
             var ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
-            ThrowIfError(ierr, "Couldn't get the number of networks");
+            ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_number_of_networks);
             return numberOfNetworks;
         }
 
         public int[] GetNetworkIds()
         {
-            if (GridApi == null) throw new InvalidOperationException("Communication with netCDF file was unsuccessful, API is not set");
-
+            if (!IsInitialized()) Initialize();
             int[] networkIds;
             var ierr = GridApi.GetNetworkIds(out networkIds);
-            ThrowIfError(ierr, "Couldn't get the network ids");
+            ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_network_ids);
             return networkIds;
         }
 
@@ -154,7 +151,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridApi = GridApi as T;
             var isValid = uGridApi != null && IsValid();
             if (!isValid)
-                throw new Exception(errormessage + ", because the API was not instantiated.");
+                throw new Exception(errormessage + Resources.AGrid___because_the_API_was_not_instantiated_);
             return uGridApi;
         }
 
@@ -181,7 +178,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
             {
-                throw new Exception(string.Format(exceptionText + " because of error number: {0}", ierr));
+                throw new Exception(string.Format(exceptionText + Resources.AGrid_ThrowIfError__because_of_error_number___0_, ierr));
             }
         }
 
@@ -219,7 +216,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (GridApi != null)
                 {
                     var ierr = GridApi.Close();
-                    ThrowIfError(ierr, "Couldn't close grid nc file");
+                    ThrowIfError(ierr, Resources.AGrid_CleanUp_Couldn_t_close_grid_nc_file);
                     GridApi = null;
                 }
             }

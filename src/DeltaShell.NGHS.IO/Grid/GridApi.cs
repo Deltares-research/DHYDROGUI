@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.Properties;
 using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
@@ -371,11 +372,11 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             GridWrapper.IO_NetCDF_Message_Callback message_callback = (int level, string message) =>
             {
-                Console.WriteLine("Level: {0}. message = {1}", level, message);
+                Console.WriteLine(Resources.GridApi_Initialize_Level_0__Message_1_, level, message);
             };
             GridWrapper.IO_NetCDF_Progress_Callback progress_callback = (string message, ref double progress) =>
             {
-                Console.WriteLine("Progress: {0:P2}. message = {1}", progress, message);
+                Console.WriteLine(Resources.GridApi_Initialize_Progress_0_Message_1_, progress, message);
             };
             var ierr = wrapper.ionc_initialize(message_callback, progress_callback);
             return ierr;
