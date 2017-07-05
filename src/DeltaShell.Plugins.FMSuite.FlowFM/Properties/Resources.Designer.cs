@@ -286,6 +286,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MapFormat property value of FlowFM model {0} is changed to 1, because it is part of an 1D2D integrated model..
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_" +
+                        "FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model" +
+                        "_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MapFormat property value of FlowFM model {0} is changed to 4 due to activation of Morphology..
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_" +
+                        "FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap WeirSmall {

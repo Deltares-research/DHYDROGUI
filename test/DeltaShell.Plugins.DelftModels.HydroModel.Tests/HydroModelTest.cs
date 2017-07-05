@@ -26,6 +26,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        public void GivenHydroModelWhenValidatingWith_RR__RTC_Flow1D__WorkflowThenReturnValidationError()
+        {
+            var activities = new EventedList<IActivity>();
+
+            var mocks = new MockRepository();
+            var hydroModelWorkFlow = mocks.DynamicMock<ICompositeActivity>();
+            hydroModelWorkFlow.Expect(wf => wf.Name).Return("RR + (RTC + Flow1D)").Repeat.Any();
+            hydroModelWorkFlow.Expect(wf => wf.Activities).Return(activities).Repeat.Any();
+            mocks.ReplayAll();
+
+            var hydroModel = new HydroModel
+            {
+                CurrentWorkflow = hydroModelWorkFlow
+            };
+            var result = hydroModel.Validate();
+            Assert.That(result.ErrorCount, Is.EqualTo(1));
+
+            mocks.VerifyAll();
+        }
+
+        [Test]
         public void HydroModelAddsItsSelfToIHydroModelWorkFlow()
         {
             var mocks = new MockRepository();
@@ -68,8 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var childModel = new SimpleHydroModel();
 
             var network = new HydroNetwork();
-            var reigon = new HydroRegion { SubRegions = { network } };
-            var hydroModel = new HydroModel { Region = reigon, Activities = { childModel } };
+            var region = new HydroRegion { SubRegions = { network } };
+            var hydroModel = new HydroModel { Region = region, Activities = { childModel } };
 
             var target = childModel.GetDataItemByValue(childModel.Region);
             var source = hydroModel.GetDataItemByValue(network);

@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
@@ -48,16 +49,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             var obs1 = modelDef.Obstacles[0];
             var obs2 = modelDef.Obstacles[1];
-
+            
+            Assert.AreEqual("Obstacle 1", obs1.Name);
             Assert.AreEqual(ObstacleType.Dam, obs1.Type);
+            Assert.AreEqual(0, obs1.Height, 1e-05);
+            Assert.AreEqual(2.5999, obs1.Alpha, 1e-03);
             Assert.AreEqual(0.15, obs1.Beta, 1e-05);
+            Assert.AreEqual(0, obs1.TransmissionCoefficient, 1e-05);
             Assert.AreEqual(ReflectionType.No, obs1.ReflectionType);
             
+            Assert.AreEqual("Obstacle 2", obs2.Name);
             Assert.AreEqual(ObstacleType.Sheet, obs2.Type);
+            Assert.AreEqual(0, obs2.Height, 1e-05);
+            Assert.AreEqual(0, obs2.Alpha, 1e-05);
+            Assert.AreEqual(0, obs2.Beta, 1e-05);
             Assert.AreEqual(0.5, obs2.TransmissionCoefficient, 1e-05);
             Assert.AreEqual(ReflectionType.No, obs2.ReflectionType);
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadObstaclesInvalidFile()
+        {
+            var mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tstInvalidObtFile.mdw");
+            var mdwFile = new MdwFile();
+
+            const string warningMessage = "Parsing error in file 'tstInvalid.obt'. Can't convert 'ThisInvalidString' to a double. The property 'Beta' has been given the default value '0'.";
+            
+            WaveModelDefinition modelDef = null;
+            LogHelper.ConfigureLogging();
+            LogHelper.SetLoggingLevel(Level.Warn);
+            TestHelper.AssertLogMessageIsGenerated(
+                () => modelDef = mdwFile.Load(mdwPath), warningMessage);
+            LogHelper.SetLoggingLevel(Level.Error);
+            LogHelper.ResetLogging();
+            
+            var obs1 = modelDef.Obstacles[0];
+            var obs2 = modelDef.Obstacles[1];
+
+            Assert.AreEqual("Obstacle 1", obs1.Name);
+            Assert.AreEqual(ObstacleType.Dam, obs1.Type);
+            Assert.AreEqual(0, obs1.Height, 1e-05);
+            Assert.AreEqual(2.5999, obs1.Alpha, 1e-03);
+            Assert.AreEqual(0, obs1.Beta, 1e-05); // The Beta value in the file is "ThisInvalidString" -> reading this should return the default value (0)
+            Assert.AreEqual(0, obs1.TransmissionCoefficient, 1e-05);
+            Assert.AreEqual(ReflectionType.No, obs1.ReflectionType);
+
+            Assert.AreEqual("Obstacle 2", obs2.Name);
+            Assert.AreEqual(ObstacleType.Sheet, obs2.Type);
+            Assert.AreEqual(0, obs2.Height, 1e-05);
+            Assert.AreEqual(0, obs2.Alpha, 1e-05);
+            Assert.AreEqual(0, obs2.Beta, 1e-05);
+            Assert.AreEqual(0.5, obs2.TransmissionCoefficient, 1e-05);
+            Assert.AreEqual(ReflectionType.No, obs2.ReflectionType);
+        }
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadTimePoints()

@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         #region write logic
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea,
-            bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool useNetCDFMapFormat = false, bool disableFlowNodeRenumbering = false)
+            bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false)
         {
             var targetDir = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
             // write at the end in case of updated file paths
-            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:useNetCDFMapFormat, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
+            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:modelDefinition.IsPartOf1D2DModel, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
 
             if (!switchTo)
             {
@@ -607,6 +607,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ReadMorphologyProperties(mduFilePath, KnownProperties.MorFile, modelDefinition);
                 modelDefinition.UseMorphologySediment = true;
             }
+            // TODO: Remove this please!
+            // This is a bloody awful HACK, because we do not want to adapt the MapFormat to the kernels
+            modelDefinition.SetMapFormatPropertyValue();
         }
 
         private void ReadProperties(string filePath, WaterFlowFMModelDefinition definition)

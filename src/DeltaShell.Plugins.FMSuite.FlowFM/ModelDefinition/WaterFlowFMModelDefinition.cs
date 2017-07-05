@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -33,8 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     // TODO: Make this an [Entity]. Needs refactoring.
     public class WaterFlowFMModelDefinition
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
-
         public const string BathymetryDataItemName = "Bed Level";
         public const string InitialWaterLevelDataItemName = "Initial Water Level";
         public const string InitialSalinityDataItemName = "Initial Salinity";
@@ -53,6 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             ViscosityDataItemName,
             DiffusivityDataItemName
         };
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
 
         public List<string> InitialTracerNames { get; private set; }
         public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             return result;
         }
         
-        public IEventedList<IWindField> WindFields { get; private set; } 
+        public IEventedList<IWindField> WindFields { get; private set; }
 
         public HeatFluxModel HeatFluxModel { get; private set; }
 
@@ -152,6 +153,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             Dependencies.CompileEnabledDependencies(Properties);
             Dependencies.CompileVisibleDependencies(Properties);
+            waterFlowFmPropertyChangedHandler = new Dictionary<string, Action<WaterFlowFMProperty>>
+            {
+                {KnownProperties.ICdtyp.ToLower(), OnIcdTypePropertyChanged},
+                {GuiProperties.StopTime.ToLower(), OnTimePropertyChanged},
+                {GuiProperties.StartTime.ToLower(), OnTimePropertyChanged},
+                {KnownProperties.RefDate.ToLower(), OnTimePropertyChanged},
+                {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
+                {GuiProperties.UseTemperature.ToLower(), OnUseTemperaturePropertyChanged},
+                {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
+                {GuiProperties.PartOf1D2DModel.ToLower(), OnPartOf1D2DModelPropertyChanged},
+            };
 
             SetGuiTimePropertiesFromMduProperties();
 
@@ -179,6 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
 
         private bool handlingPropertyChanged;
+        private readonly Dictionary<string, Action<WaterFlowFMProperty>> waterFlowFmPropertyChangedHandler;
 
         [EditAction]
         private void OnWaterFlowFMPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -190,34 +203,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             try
             {
                 var prop = (WaterFlowFMProperty) sender;
-                var icdtypProp = GetModelProperty(KnownProperties.ICdtyp);
-                var stopTimeProp = GetModelProperty(GuiProperties.StopTime);
-                var startTimeProp = GetModelProperty(GuiProperties.StartTime);
-                var refDateProp = GetModelProperty(KnownProperties.RefDate);
-                var temperatureProp = GetModelProperty(KnownProperties.Temperature);
-                var useTemperatureProp = GetModelProperty(GuiProperties.UseTemperature);
-                var useMorphologySedimentProp = GetModelProperty(GuiProperties.UseMorSed);
-
-                if (prop == icdtypProp)
-                {
-                    OnIcdTypePropertyChanged(prop);
-                }
-                else if (prop == stopTimeProp || prop == startTimeProp || prop == refDateProp)
-                {
-                    OnTimePropertyChanged();
-                }
-                else if (prop == temperatureProp)
-                {
-                    OnTemperaturePropertyChanged(prop);
-                }
-                else if (prop == useTemperatureProp)
-                {
-                    OnUseTemperaturePropertyChanged(prop);
-                }
-                else if (prop == useMorphologySedimentProp)
-                {
-                    OnMorphologySedimentPropertyChanged();
-                }
+                var propName = prop.PropertyDefinition.MduPropertyName.ToLower();
+                if (waterFlowFmPropertyChangedHandler.ContainsKey(propName))
+                    waterFlowFmPropertyChangedHandler[propName](prop);
             }
             finally
             {
@@ -238,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void OnTimePropertyChanged()
+        private void OnTimePropertyChanged(WaterFlowFMProperty prop)
         {
             UpdateOutputTimes();
         }
@@ -266,9 +254,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void OnMorphologySedimentPropertyChanged()
+        private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
         {
             SetMapFormatPropertyValue();
+        }
+
+        private void OnPartOf1D2DModelPropertyChanged(WaterFlowFMProperty prop)
+        {
+            SetMapFormatPropertyValue();
+            if (IsPartOf1D2DModel && UseMorphologySediment)
+                UseMorphologySediment = false;
         }
         
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
@@ -318,21 +313,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public void SetMapFormatPropertyValue()
         {
-            if (UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
+            if (IsPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
+            {
+                MapFormat = MapFormatType.NetCdf;
+                Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_, ModelName);
+            }
+            else if (!IsPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
             {
                 MapFormat = MapFormatType.Ugrid;
-                Log.Info("MapFormat property value is changed to 4 due to activation of Morphology");
+                Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_, ModelName);
             }
+        }
+
+        public bool IsPartOf1D2DModel
+        {
+            get { return (bool) GetModelProperty(GuiProperties.PartOf1D2DModel).Value; }
+            set { GetModelProperty(GuiProperties.PartOf1D2DModel).Value = value; }
         }
 
         public bool UseMorphologySediment
         {
             get { return (bool)GetModelProperty(GuiProperties.UseMorSed).Value; }
-            set
-            {
-                GetModelProperty(GuiProperties.UseMorSed).Value = value;
-                SetMapFormatPropertyValue();
-            }
+            set { GetModelProperty(GuiProperties.UseMorSed).Value = value; }
         }
 
         public string RelativeMapFilePath
@@ -686,8 +688,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    var spatialOperations = spatialOperationValueConverter.SpatialOperationSet.Operations
-                        .Where(s => !( s is ISpatialOperationSet )).Select(ConvertSpatialOperation)
+                    var eventedList = spatialOperationValueConverter.SpatialOperationSet.Operations;
+                    var operations = eventedList.Where(s => !( s is ISpatialOperationSet ));
+                    var enumerable = operations.Select(ConvertSpatialOperation);
+                    var spatialOperations = enumerable
                         .ToList();
 
                     SpatialOperations.Add(dataItem.Name, spatialOperations);

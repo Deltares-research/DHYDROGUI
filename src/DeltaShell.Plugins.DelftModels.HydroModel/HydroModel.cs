@@ -735,8 +735,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     new ValidationIssue(CurrentWorkflow, ValidationSeverity.Error, "Current Workflow cannot be empty")
                 });
             }
-            
+
             var validationReports = new List<ValidationReport>();
+            var nonSupportedValidationIssues = LogErrorsWhenUnsupportedWorkflow();
+
             if (CurrentWorkflow != null)
             {
                 var dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
@@ -746,8 +748,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     validationReports.Add(dimrModel.Validate());
                 }
             }
-            return new ValidationReport(Name + " (Hydro Model)",
-                                        validationReports);
+            return new ValidationReport(Name + " (Hydro Model)", nonSupportedValidationIssues, validationReports);
+        }
+
+        private List<ValidationIssue> LogErrorsWhenUnsupportedWorkflow()
+        {
+            var validationIssues = new List<ValidationIssue>();
+
+            string[] nonSupportedWorkflowNames = {"RR + (RTC + Flow1D)"};
+            foreach (var nonSupportedWorkFlowName in nonSupportedWorkflowNames)
+            {
+                if (CurrentWorkflow.Name.Equals(nonSupportedWorkFlowName))
+                    validationIssues.Add(new ValidationIssue(this, ValidationSeverity.Error,
+                        "The workflow '" + nonSupportedWorkFlowName + "' is currently not supported in DeltaShell"));
+            }
+            return validationIssues;
         }
 
         public virtual bool Sobek2CompareTest { get; set; }

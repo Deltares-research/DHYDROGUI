@@ -13,7 +13,7 @@
     <UserControl.DataContext>
         <editors:SedimentFractionsEditorViewModel/>
     </UserControl.DataContext>
-    <ScrollViewer>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>

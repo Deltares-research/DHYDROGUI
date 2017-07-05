@@ -11,14 +11,20 @@ namespace DeltaShell.Dimr.Tests.ViewModels
         [Test]
         public void DIMRConfigRibbonViewModelSetDebuggerLevelsTest()
         {
-            Assert.AreEqual(DimrApiDataSet.FeedbackLevel, DimrApiDataSet.DebugLevel.WARN);
-            Assert.AreEqual(DimrApiDataSet.LogFileLevel, DimrApiDataSet.DebugLevel.LOG_DETAIL);
+            // Check default values
+            Assert.AreEqual(DimrApiDataSet.FeedbackLevel, DimrApiDataSet.DimrLoggingLevel.WARN);
+            Assert.AreEqual(DimrApiDataSet.LogFileLevel, DimrApiDataSet.DimrLoggingLevel.LOG_DETAIL);
+
             var viewModel = new DIMRConfigRibbonViewModel();
             Assert.That(viewModel.Levels.Count(), Is.GreaterThan(0));
-            viewModel.CurrentFeedbackLevel = DimrApiDataSet.DebugLevel.MINOR;
-            viewModel.CurrentLogfileLevel = DimrApiDataSet.DebugLevel.MAJOR;
-            Assert.AreEqual(DimrApiDataSet.FeedbackLevel, DimrApiDataSet.DebugLevel.MINOR);
-            Assert.AreEqual(DimrApiDataSet.LogFileLevel, DimrApiDataSet.DebugLevel.MAJOR);
+
+            // Set values on view model
+            viewModel.CurrentFeedbackLevel = DimrApiDataSet.DimrLoggingLevel.MINOR;
+            viewModel.CurrentLogfileLevel = DimrApiDataSet.DimrLoggingLevel.MAJOR;
+
+            // Check values have been updated
+            Assert.AreEqual(DimrApiDataSet.FeedbackLevel, DimrApiDataSet.DimrLoggingLevel.MINOR);
+            Assert.AreEqual(DimrApiDataSet.LogFileLevel, DimrApiDataSet.DimrLoggingLevel.MAJOR);
         }
     }
 }

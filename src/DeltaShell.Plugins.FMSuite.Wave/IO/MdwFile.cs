@@ -22,6 +22,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
     public class MdwFile : FMSuiteFileBase
     {
+        private const string PolyfileName = "PolylineFile";
+
+        private const string WaveObstaclePropertyName = "Name";
+        private const string WaveObstaclePropertyType = "Type";
+        private const string WaveObstaclePropertyTransmissionCoefficient = "TransmCoef";
+        private const double WaveObstacleDefaultValueTransmissionCoefficient = 0.0;
+        private const string WaveObstaclePropertyHeight = "Height";
+        private const double WaveObstacleDefaultValueHeight = 0.0;
+        private const string WaveObstaclePropertyAlpha = "Alpha";
+        private const double WaveObstacleDefaultValueAlpha = 0.0;
+        private const string WaveObstaclePropertyBeta = "Beta";
+        private const double WaveObstacleDefaultValueBeta = 0.0;
+        private const string WaveObstaclePropertyReflections = "Reflections";
+        private const string WaveObstaclePropertyReflectionCoefficient = "ReflecCoef";
+        private const double WaveObstacleDefaultValueReflectionCoefficient = 0.0;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(MdwFile));
 
         /// <summary>
@@ -247,29 +263,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             var fileInfo = new DelftIniCategory(KnownWaveCategories.ObstacleFileInfoCategory);
             fileInfo.AddProperty("FileVersion", "02.00");
-            fileInfo.AddProperty("PolylineFile", geometryFile);
+            fileInfo.AddProperty(PolyfileName, geometryFile);
             obtCategories.Add(fileInfo);
 
             foreach (var obstacle in modelDefinition.Obstacles.OfType<WaveObstacle>())
             {
                 var obstacleCategory = new DelftIniCategory(KnownWaveCategories.ObstacleCategory);
 
-                obstacleCategory.AddProperty("Name", obstacle.Name);
-                obstacleCategory.AddProperty("Type", obstacle.Type.ToString().ToLower());
+                obstacleCategory.AddProperty(WaveObstaclePropertyName, obstacle.Name);
+                obstacleCategory.AddProperty(WaveObstaclePropertyType, obstacle.Type.ToString().ToLower());
                 if (obstacle.Type == ObstacleType.Sheet)
                 {
-                    obstacleCategory.AddProperty("TransmCoef", obstacle.TransmissionCoefficient);
+                    obstacleCategory.AddProperty(WaveObstaclePropertyTransmissionCoefficient, obstacle.TransmissionCoefficient);
                 }
                 else
                 {
-                    obstacleCategory.AddProperty("Height", obstacle.Height);
-                    obstacleCategory.AddProperty("Alpha", obstacle.Alpha);
-                    obstacleCategory.AddProperty("Beta", obstacle.Beta);
+                    obstacleCategory.AddProperty(WaveObstaclePropertyHeight, obstacle.Height);
+                    obstacleCategory.AddProperty(WaveObstaclePropertyAlpha, obstacle.Alpha);
+                    obstacleCategory.AddProperty(WaveObstaclePropertyBeta, obstacle.Beta);
                 }
-                obstacleCategory.AddProperty("Reflections", obstacle.ReflectionType.ToString().ToLower());
+                obstacleCategory.AddProperty(WaveObstaclePropertyReflections, obstacle.ReflectionType.ToString().ToLower());
                 if (obstacle.ReflectionType != ReflectionType.No)
                 {
-                    obstacleCategory.AddProperty("ReflecCoef", obstacle.Name);
+                    obstacleCategory.AddProperty(WaveObstaclePropertyReflectionCoefficient, obstacle.ReflectionCoefficient);
                 }
 
                 obtCategories.Add(obstacleCategory);
@@ -1037,8 +1053,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var obtCategories = delftIniReader.ReadDelftIniFile(obstacleFilePath);
 
             var fileInfo = obtCategories.First(c => c.Name == KnownWaveCategories.ObstacleFileInfoCategory);
-
-            var polylineFileName = fileInfo.GetPropertyValue("PolylineFile");
+            var polylineFileName = fileInfo.GetPropertyValue(PolyfileName);
             var geometryFilePath = Path.Combine(mdwDirectory, polylineFileName);
             if (!File.Exists(geometryFilePath))
             {
@@ -1053,7 +1068,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             foreach (var obstacle in obtCategories.Where(o => o.Name == KnownWaveCategories.ObstacleCategory))
             {
-                var name = obstacle.GetPropertyValue("Name", "default name");
+                var name = obstacle.GetPropertyValue(WaveObstaclePropertyName, "default name");
                 if (!features.ContainsKey(name))
                 {
                     Log.ErrorFormat("Obstacle polyline file {0} does not contain geometry for obstacle {1}, skipping", geometryFilePath, name);
@@ -1072,20 +1087,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                         Geometry = features[name].Geometry
                     };
                 obs.Name = name;
-                obs.Type = obstacle.GetPropertyValue("Type") == "dam" ? ObstacleType.Dam : ObstacleType.Sheet;
-                obs.TransmissionCoefficient = double.Parse(obstacle.GetPropertyValue("TransmCoef", "0.0"),
-                                                           NumberStyles.Any, CultureInfo.InvariantCulture);
-                obs.Height = double.Parse(obstacle.GetPropertyValue("Height", "0.0"), NumberStyles.Any, CultureInfo.InvariantCulture);
-                obs.Alpha = double.Parse(obstacle.GetPropertyValue("Alpha", "0.0"), NumberStyles.Any, CultureInfo.InvariantCulture);
-                obs.Beta = double.Parse(obstacle.GetPropertyValue("Beta", "0.0"), NumberStyles.Any, CultureInfo.InvariantCulture);
-                var reflType = obstacle.GetPropertyValue("Reflections");
+
+                obs.Type = obstacle.GetPropertyValue(WaveObstaclePropertyType) == "dam" ? ObstacleType.Dam : ObstacleType.Sheet;
+
+                var reflType = obstacle.GetPropertyValue(WaveObstaclePropertyReflections);
                 obs.ReflectionType = ReflectionType.No;
                 if (reflType == "specular") obs.ReflectionType = ReflectionType.Specular;
                 if (reflType == "diffuse") obs.ReflectionType = ReflectionType.Diffuse;
-                obs.ReflectionCoefficient = double.Parse(obstacle.GetPropertyValue("ReflecCoef", "0.0"),
-                                                         NumberStyles.Any, CultureInfo.InvariantCulture);
+
+                obs.TransmissionCoefficient = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyTransmissionCoefficient, WaveObstacleDefaultValueTransmissionCoefficient);
+                obs.Height = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyHeight, WaveObstacleDefaultValueHeight);
+                obs.Alpha = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyAlpha, WaveObstacleDefaultValueAlpha);
+                obs.Beta = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyBeta, WaveObstacleDefaultValueBeta);
+                obs.ReflectionCoefficient = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyReflectionCoefficient, WaveObstacleDefaultValueReflectionCoefficient);
+                
                 yield return obs;
             }
+        }
+
+        private double GetObstaclePropertyAndLogIfFails(DelftIniCategory obstacle, string fileName, string property, double defaultValue)
+        {
+            var input = obstacle.GetPropertyValue(property);
+            if (input == null)
+            {
+                return defaultValue;
+            }
+
+            double result;
+            if (double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            {
+                return result;
+            }
+
+            Log.WarnFormat("Parsing error in file '{0}'. Can't convert '{1}' to a double. The property '{2}' has been given the default value '{3}'.", fileName, input, property, defaultValue);
+            return defaultValue;
         }
 
         private WaveBoundaryImportDefinitionType GetImportDefinition(string value)

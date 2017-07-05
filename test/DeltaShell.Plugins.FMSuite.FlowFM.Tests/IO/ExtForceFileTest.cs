@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BasicModelInterface;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -98,6 +98,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var sampleDef = (ImportSamplesOperation)roughnessOperations[0];
             Assert.AreEqual("chezy", sampleDef.Name);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadWrongSpatialVaryingPropertiesShouldGiveAnError()
+        {
+            //LogHelper.ConfigureLogging(|Level);
+            var def = new WaterFlowFMModelDefinition();
+            var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
+            var extForceFile = new ExtForceFile();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), "The model may not run. Spatial varying quantity ");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadCorrectSpatialVaryingPropertiesShouldBeOk()
+        {
+            //LogHelper.ConfigureLogging(|Level);
+            var def = new WaterFlowFMModelDefinition();
+            var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
+            var extForceFile = new ExtForceFile();
+            TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def), 0);
         }
 
         [Test]

@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     WriteNetFile(NetFilePath, Grid);
                 }
 
-                var newGrid = ReadGridFromNetFile(NetFilePath, UseNetCDFMapFormat); //may throw...
+                var newGrid = ReadGridFromNetFile(NetFilePath, ModelDefinition.IsPartOf1D2DModel); //may throw...
                 if (newGrid == null)
                 {
                     Grid = new UnstructuredGrid();
@@ -388,9 +388,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return result;
         }
 
-        private static UnstructuredGrid ReadGridFromNetFile(string netFilePath, bool useNetCdfMapFormat)
+        private static UnstructuredGrid ReadGridFromNetFile(string netFilePath, bool is1D2DModel)
         {
-            if (useNetCdfMapFormat)
+            if (is1D2DModel)
             {
                 try
                 {
@@ -639,9 +639,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         internal int SnapVersion { get; private set; }
-        public bool UseNetCDFMapFormat { get; set; }
-        public bool DisableFlowNodeRenumbering { get; set; }
-
+        
         public void InvalidateSnapping()
         {
             DisposeSnapApi();

@@ -56,7 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private readonly DimrRunner runner;
 
         public const string CellsToFeaturesName = "CellsToFeatures";
-        public const string UseNetCDFMapFormatPropertyName = "UseNetCDFMapFormat";
+        
+
+        public const string IsPartOf1D2DModelPropertyName = "IsPartOf1D2DModel";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
         public const string GridPropertyName = "Grid";
         private DepthLayerDefinition depthLayerDefinition;
@@ -72,11 +74,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // Computational Grid For network
             NetworkDiscretisation = new Discretization { Network = network, Name = "Computational 1D Grid" };
 
-            // Create empty model definition
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
+            ModelDefinition.IsPartOf1D2DModel = false;
 
             SynchronizeModelDefinitions();
+
 
             Grid = new UnstructuredGrid();
             InitializeUnstructuredGridCoverages();
@@ -96,7 +99,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // set default settings
             SnapVersion = 0;
             ValidateBeforeRun = true;
-            UseNetCDFMapFormat = false;
             DisableFlowNodeRenumbering = false;
             TracerDefinitions = new EventedList<string>();
             SedimentFractions = new EventedList<ISedimentFraction>();
@@ -308,12 +310,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             TracerDefinitions.Clear();
             
-            LoadModelFromMdu(this, mduFilePath);
+            LoadModelFromMdu(mduFilePath);
 
             SynchronizeModelDefinitions();
 
             FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
-            Grid = ReadGridFromNetFile(NetFilePath, UseNetCDFMapFormat) ?? new UnstructuredGrid();
+            Grid = ReadGridFromNetFile(NetFilePath, ModelDefinition.IsPartOf1D2DModel) ?? new UnstructuredGrid();
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                 {
@@ -509,7 +511,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
             if (t == null)
             {
-                InitialFractions.Add(CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid));
+                var unstructuredGridCellCoverage = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+                InitialFractions.Add(unstructuredGridCellCoverage);
             }
             else
             {
@@ -518,6 +521,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
                     InitialFractions.Add((UnstructuredGridCellCoverage) t.Value);
+                    /* DELFT3DFM-1077 
+                     * Apparently the spatial operation is not being executed after being added (which should be)
+                     * We can force it here.
+                     */
+                    var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
+                    if (spOperationSet != null) spOperationSet.SpatialOperationSet.Execute();
                 }
                 else
                 {
@@ -1598,37 +1607,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
         
-        private static void LoadModelFromMdu(WaterFlowFMModel model, string mduFilePath)
+        private void LoadModelFromMdu(string mduFilePath)
         {
-            model.MduFilePath = mduFilePath;
+            MduFilePath = mduFilePath;
             var mduFileDir = Path.GetDirectoryName(mduFilePath);
-            model.Name = Path.GetFileNameWithoutExtension(mduFilePath);
-            model.ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, model.Name);
+            Name = Path.GetFileNameWithoutExtension(mduFilePath);
+            ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
             
             // intialize model definition from mdu file if it exists
             if (File.Exists(mduFilePath))
             {
-                model.mduFile.Read(mduFilePath, model.ModelDefinition, model.Area, (name, current, total) => FireImportProgressChanged(model, "Reading mdu - " + name, current, total));
-                model.SyncModelTimesWithBase();
+                mduFile.Read(mduFilePath, ModelDefinition, Area, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total));
+                SyncModelTimesWithBase();
             }
 
-            var sedimentFileProperty = model.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
-            if (mduFileDir != null && sedimentFileProperty != null && model.UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
+            var sedimentFileProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
+            if (mduFileDir != null && sedimentFileProperty != null && UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
             {
-                SedimentFile.LoadSediments(model.SedFilePath, model);
+                SedimentFile.LoadSediments(SedFilePath, this);
             }
 
-            var netFileProperty = model.ModelDefinition.GetModelProperty(KnownProperties.NetFile);
+            var netFileProperty = ModelDefinition.GetModelProperty(KnownProperties.NetFile);
             if (String.IsNullOrEmpty(netFileProperty.GetValueAsString()))
             {
-                netFileProperty.Value = model.Name + NetFile.FullExtension;
+                netFileProperty.Value = Name + NetFile.FullExtension;
             }
 
-            FireImportProgressChanged(model, "Loading restart", 2, TotalImportSteps);
-            model.LoadRestartInfo(mduFilePath);
+            FireImportProgressChanged(this, "Loading restart", 2, TotalImportSteps);
+            LoadRestartInfo(mduFilePath);
 
             // sync the heat flux model, because events are off during reading
-            model.HeatFluxModelType = model.ModelDefinition.HeatFluxModel.Type;
+            HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
         }
         
         internal void SyncModelTimesWithBase()
@@ -1679,7 +1688,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             WriteMorSedFilesIfNeeded(mduPath);
 
-            mduFile.Write(mduPath, ModelDefinition, Area, switchTo, writeExtForcings, writeFeatures, UseNetCDFMapFormat, DisableFlowNodeRenumbering);
+            mduFile.Write(mduPath, ModelDefinition, Area, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
 
             if (Network != null)
             {
@@ -2484,11 +2493,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
-            if (category == UseNetCDFMapFormatPropertyName)
+            if (category == IsPartOf1D2DModelPropertyName)
             {
                 var boolArray = values as bool[];
                 if (boolArray != null && boolArray.Length > 0)
-                    UseNetCDFMapFormat = boolArray[0];
+                    IsPartOf1D2DModel = boolArray[0];
             }
             if (category == DisableFlowNodeRenumberingPropertyName)
             {
@@ -2498,6 +2507,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
         }
+        public bool DisableFlowNodeRenumbering { get; set; }
+
+        // This property is made because 1D2D integrated models do not support UGrid format.
+        // Remove when this dependency has vanished (DELFT3DFM-989)
+        public bool IsPartOf1D2DModel
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value; }
+            set { ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = value; }
+        }
+
+
         #endregion
 
         #region TimeDependentModelBase

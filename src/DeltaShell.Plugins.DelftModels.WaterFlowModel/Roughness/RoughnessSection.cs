@@ -585,7 +585,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
 
         private static IDictionary<IBranch, IFunction> ConvertExistingFunctionsToNewNetwork(IDictionary<IBranch, IFunction> functionPerBranch, INetwork newNetwork)
         {
-            if (functionPerBranch == null) return null;
+            if (functionPerBranch == null
+                || newNetwork == null) return null;
 
             var convertedFunctionPerBranch = new Dictionary<IBranch, IFunction>();
             foreach (var function in functionPerBranch)

@@ -926,19 +926,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
-        [TestCase(MapFormatType.Tecplot, false, MapFormatType.Tecplot)]
-        [TestCase(MapFormatType.Both, true, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
-        public void SetMapFormatPropertyValueTest(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
+        [TestCase(MapFormatType.NetCdf, true, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, false, false, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Tecplot, false, false, MapFormatType.Tecplot)]
+        [TestCase(MapFormatType.Both, true, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, false, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, true, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, true, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.NetCdf, false, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Tecplot, false, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Both, true, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, false, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, true, true, MapFormatType.NetCdf)]
+        public void SetMapFormatPropertyValueTest(MapFormatType mapFormatType, bool useMorSed, bool isPartOf1D2DModel, MapFormatType expectedMapFormatType)
         {
             Assert.NotNull(mapFormatType);
             Assert.NotNull(expectedMapFormatType);
 
             var modelDefinition = new WaterFlowFMModelDefinition
             {
+                IsPartOf1D2DModel = isPartOf1D2DModel,
                 MapFormat = mapFormatType,
                 UseMorphologySediment = useMorSed
             };
@@ -949,14 +956,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
-        [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
-        [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
-        public void UseMorSedPropertyChangeTest(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
+        [TestCase(MapFormatType.NetCdf, true, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, false, false, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, true, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.Ugrid, false, false, MapFormatType.Ugrid)]
+        [TestCase(MapFormatType.NetCdf, true, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.NetCdf, false, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, true, true, MapFormatType.NetCdf)]
+        [TestCase(MapFormatType.Ugrid, false, true, MapFormatType.NetCdf)]
+        public void GivenModelDefinitionWhenSettingUseMorSedValueThenMapFormatHasExpectedValue(MapFormatType mapFormatType, bool useMorSed, bool isPartOf1D2DModel, MapFormatType expectedMapFormatType)
         {
             var modelDefinition = new WaterFlowFMModelDefinition
             {
+                IsPartOf1D2DModel = isPartOf1D2DModel,
                 MapFormat = mapFormatType
             };
             modelDefinition.UseMorphologySediment = useMorSed;
@@ -972,7 +984,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.NetCdf, false)]
         [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.Ugrid, false)]
         [Category(TestCategory.Integration)]
-        public void ChangeMapFormatAfterMduImportTest(string relativeMduFilepath, MapFormatType expectedMapFormatType, bool expectedUseMorSedValue)
+        public void GivenMduFileWhenImportingThenMapFormatHasExpectedValue(string relativeMduFilepath, MapFormatType expectedMapFormatType, bool expectedUseMorSedValue)
         {
             // setup
             var mduFilePath = TestHelper.GetTestFilePath(relativeMduFilepath);
@@ -981,13 +993,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Read the mdu file for modelDefinition properties
             var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName)
+            {
+                IsPartOf1D2DModel = false
+            };
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area);
 
             // Check that MapFormat property value has been changed accordingly in modelDefinition
             Assert.AreEqual(expectedUseMorSedValue, modelDefinition.UseMorphologySediment);
             Assert.AreEqual(expectedMapFormatType, modelDefinition.MapFormat);
+        }
+
+        [Test]
+        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", true)]
+        [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", true)]
+        [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", false)]
+        [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", false)]
+        [Category(TestCategory.Integration)]
+        public void GivenMduFileWith1D2DModelWhenImportingThenMapFormatHasExpectedValue(string relativeMduFilepath, bool expectedUseMorSedValue)
+        {
+            // setup
+            var mduFilePath = TestHelper.GetTestFilePath(relativeMduFilepath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            // Read the mdu file for modelDefinition properties
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName)
+            {
+                IsPartOf1D2DModel = true
+            };
+            var mduFile = new MduFile();
+            mduFile.Read(mduFilePath, modelDefinition, area);
+
+            // Check that MapFormat property value has been changed accordingly in modelDefinition
+            Assert.AreEqual(expectedUseMorSedValue, modelDefinition.UseMorphologySediment);
+            Assert.AreEqual(MapFormatType.NetCdf, modelDefinition.MapFormat);
         }
     }
 }

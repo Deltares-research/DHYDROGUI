@@ -15,8 +15,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Units;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.UndoRedo;
 using DeltaShell.Core.Services;
@@ -34,16 +32,15 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Plugins.NetCDF;
@@ -1265,6 +1262,57 @@ namespace Sobek.IntegrationTests
                 projectService.Close(project);
                 FileUtils.DeleteIfExists(localPath);
             }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Given1D2DHydroModelWhenUseMorSedValueSetToTrueThenMapFormatEqualToNetCdfMapFormatType()
+        {
+            var hydroModel = GetHydroModelWithFmSubModel(true);
+
+            var fmSubModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault();
+            if (fmSubModel == null) throw new Exception("Integrated model was not of type WaterFlowFMModel");
+
+            Assert.That(fmSubModel.ModelDefinition.UseMorphologySediment, Is.EqualTo(false));
+            Assert.That(fmSubModel.ModelDefinition.MapFormat, Is.EqualTo(MapFormatType.NetCdf));
+
+            fmSubModel.ModelDefinition.UseMorphologySediment = true;
+            Assert.That(fmSubModel.ModelDefinition.UseMorphologySediment, Is.EqualTo(true));
+            Assert.That(fmSubModel.ModelDefinition.MapFormat, Is.EqualTo(MapFormatType.NetCdf));
+        }
+
+        [Test]
+        public void GivenNon1D2DHydroModelWhenUseMorSedValueSetToTrueThenMapFormatEqualToUGridMapFormatType()
+        {
+            var hydroModel = GetHydroModelWithFmSubModel(false);
+
+            var fmSubModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault();
+            if (fmSubModel == null) throw new Exception("Integrated model was not of type WaterFlowFMModel");
+
+            Assert.That(fmSubModel.ModelDefinition.UseMorphologySediment, Is.EqualTo(false));
+            Assert.That(fmSubModel.ModelDefinition.MapFormat, Is.EqualTo(MapFormatType.NetCdf));
+
+            fmSubModel.ModelDefinition.UseMorphologySediment = true;
+            Assert.That(fmSubModel.ModelDefinition.UseMorphologySediment, Is.EqualTo(true));
+            Assert.That(fmSubModel.ModelDefinition.MapFormat, Is.EqualTo(MapFormatType.Ugrid));
+        }
+
+        private static HydroModel GetHydroModelWithFmSubModel(bool isPartOf1D2DModel)
+        {
+            var fmModel = new WaterFlowFMModel
+            {
+                ModelDefinition =
+                {
+                    IsPartOf1D2DModel = isPartOf1D2DModel,
+                    MapFormat = MapFormatType.NetCdf
+                }
+            };
+
+            var hydroModel = new HydroModel()
+            {
+                Activities = {fmModel}
+            };
+            return hydroModel;
         }
     }
 }

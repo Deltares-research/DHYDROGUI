@@ -1650,14 +1650,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 InitialSaltConcentration.Network = Network;
                 DispersionCoverage.Network = Network;
-                if (cachedDispersionF3Coverage != null)
-                {
-                    DispersionF3Coverage.Network = Network;
-                }
-                if (cachedDispersionF4Coverage != null)
-                {
-                    DispersionF4Coverage.Network = Network;
-                }
+                if (DispersionF3Coverage != null) DispersionF3Coverage.Network = Network;
+                if (DispersionF4Coverage != null) DispersionF4Coverage.Network = Network;
+                if (cachedDispersionF3Coverage != null) cachedDispersionF3Coverage.Network = Network;
+                if (cachedDispersionF4Coverage != null) cachedDispersionF4Coverage.Network = Network;
             }
 
             if (UseTemperature)

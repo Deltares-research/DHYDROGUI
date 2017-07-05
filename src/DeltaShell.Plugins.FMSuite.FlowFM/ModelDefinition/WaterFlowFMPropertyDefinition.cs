@@ -115,6 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public const string UseTemperature = "UseTemperature";
         public const string UseMorSed = "UseMorSed";
+        public const string PartOf1D2DModel = "PartOf1D2DModel";
     }
 
 

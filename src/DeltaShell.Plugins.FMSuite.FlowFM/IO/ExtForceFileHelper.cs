@@ -582,8 +582,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static ExtForceFileItem WriteInitialConditionsSamples(string extForceFilePath,
             string extForceFileQuantityName, ImportSamplesSpatialOperationExtension importSamplesOperation,
-            ExtForceFileItem existingExtForceFileItem, bool writeToDisk)
+            ExtForceFileItem existingExtForceFileItem, bool writeToDisk, string prefix = null)
         {
+            var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
             var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
             if (writeToDisk)
             {
@@ -601,7 +602,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(extForceFileQuantityName)
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
             {
                 FileName = targetDirectory != null ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "") : importSamplesOperation.FilePath,
                 FileType = GetSpatialOperationFileType(importSamplesOperation),
@@ -617,13 +618,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             extForceFileItem.Enabled = importSamplesOperation.Enabled;
             extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
 
+            var directoryName = Path.GetDirectoryName(extForceFilePath);
+            if (directoryName != null)
+            {
+                var xyzFilePath = Path.Combine(directoryName, importSamplesOperation.Name + "." + XyzFile.Extension);
+
+                var newFile = new XyzFile();
+                newFile.Write(xyzFilePath, importSamplesOperation.GetPoints());
+            }
+
             return extForceFileItem;
         }
 
         public static ExtForceFileItem WriteInitialConditionsUnsupported(string filePath, string quantity,
-            AddSamplesOperation operation, bool writeToDisk)
+            AddSamplesOperation operation, bool writeToDisk, string prefix = null)
         {
-            var forceFileItem = new ExtForceFileItem(quantity)
+            var quantityName = prefix != null ? prefix + quantity : quantity;
+            var forceFileItem = new ExtForceFileItem(quantityName)
             {
                 FileName = ExtForceFile.MakeXyzFileName(quantity),
                 FileType = ExtForceQuantNames.FileTypes.Triangulation,
