@@ -16,13 +16,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private IUGridApi uRemoteGridApi;
         private MockRepository mocks;
 
+        private const string nNodesVarName = "nNodes";
+        private const string nEdgesVarName = "nEdges";
+        private const string nFacesVarName = "nFaces";
+        private const string nMaxFaceNodesVarName = "nMaxFaceNodes";
+        private const string wrapperVarName = "wrapper";
+        private const string apiVarName = "api";
+        private const string fillValueVarName = "fillValue";
+
         [SetUp]
         public void SetUp()
         {
             mocks = new MockRepository();
             uGridApi = mocks.DynamicMock<UGridApi>();
             uRemoteGridApi = mocks.DynamicMock<RemoteUGridApi>();
-            TypeUtils.SetField(uRemoteGridApi, "api", uGridApi);
+            TypeUtils.SetField(uRemoteGridApi, apiVarName, uGridApi);
         }
 
         [TearDown]
@@ -35,27 +43,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void UGridApiTest()
         {
             mocks.ReplayAll();
-            Assert.AreEqual(0.0d, TypeUtils.GetField<UGridApi, double>(uGridApi, "fillValue"), 0.001d);
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nNodes"));
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nEdges"));
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nFaces"));
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nMaxFaceNodes"));
+            Assert.AreEqual(0.0d, TypeUtils.GetField<UGridApi, double>(uGridApi, fillValueVarName), 0.001d);
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nNodesVarName));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nEdgesVarName));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nFacesVarName));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nMaxFaceNodesVarName));
         }
 
         [Test]
         public void RemoteUGridApiTest()
         {
             mocks.ReplayAll();
-            var api = TypeUtils.GetField(uRemoteGridApi, "api");
+            var api = TypeUtils.GetField(uRemoteGridApi, apiVarName);
             var ugridApi = api as IUGridApi;
             Assert.That(api != null);
             Assert.That(ugridApi != null);
 
-            Assert.AreEqual(0.0d, TypeUtils.GetField<UGridApi, double>(ugridApi, "fillValue"), 0.001d);
-            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, "nNodes"));
-            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, "nEdges"));
-            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, "nFaces"));
-            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, "nMaxFaceNodes"));
+            Assert.AreEqual(0.0d, TypeUtils.GetField<UGridApi, double>(ugridApi, fillValueVarName), 0.001d);
+            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, nNodesVarName));
+            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, nEdgesVarName));
+            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, nFacesVarName));
+            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, nMaxFaceNodesVarName));
         }
 
         [Test]
@@ -112,7 +120,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -147,7 +155,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -182,7 +190,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -230,7 +238,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -265,7 +273,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -300,7 +308,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -344,7 +352,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_mesh_name(ref id, ref meshId, meshName)).OutRef(id, meshId)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -374,7 +382,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_mesh_name(ref id, ref meshId, meshName)).OutRef(id, meshId)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -404,7 +412,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_mesh_name(ref id, ref meshId, meshName)).OutRef(id, meshId)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Throw(new Exception("testException")).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -433,7 +441,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(meshId, out nodes))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nNodes", nNodes);
+            TypeUtils.SetField(uGridApi, nNodesVarName, nNodes);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 1;
@@ -442,7 +450,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_node_count(ref id, ref nwid, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(id, nwid, nNetworkNodes).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -452,15 +460,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var ierr = uGridApi.GetNumberOfNodes(meshId, out nodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(nNetworkNodes, nodes);
-            Assert.AreEqual(nNetworkNodes, TypeUtils.GetField(uGridApi, "nNodes"));
+            Assert.AreEqual(nNetworkNodes, TypeUtils.GetField(uGridApi, nNodesVarName));
 
             // uRemoteGridApi
             int rNodes;
-            TypeUtils.SetField(uGridApi, "nNodes", nNodes);
+            TypeUtils.SetField(uGridApi, nNodesVarName, nNodes);
             ierr = uRemoteGridApi.GetNumberOfNodes(meshId, out rNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(nNetworkNodes, rNodes);
-            Assert.AreEqual(nNetworkNodes, TypeUtils.GetField(uGridApi, "nNodes"));
+            Assert.AreEqual(nNetworkNodes, TypeUtils.GetField(uGridApi, nNodesVarName));
         }
 
         [Test]
@@ -470,7 +478,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nNodes;
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nNodes", 8);
+            TypeUtils.SetField(uGridApi, nNodesVarName, 8);
 
             mocks.ReplayAll();
 
@@ -503,7 +511,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_node_count(ref id, ref nwid, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(id, nwid, nNetworkNodes).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
             int rNodes;
@@ -515,14 +523,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var ierr = uGridApi.GetNumberOfNodes(1, out nodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
             Assert.AreEqual(-1, nodes);
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nNodes"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nNodesVarName));
 
             // uRemoteGridApi
-            TypeUtils.SetField(uGridApi, "nNodes", -1);
+            TypeUtils.SetField(uGridApi, nNodesVarName, -1);
             ierr = uRemoteGridApi.GetNumberOfNodes(1, out rNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
             Assert.AreEqual(-1, rNodes);
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nNodes"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nNodesVarName));
         }
 
         [Test]
@@ -543,7 +551,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .OutRef(id, nwid, nNetworkNodes).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("testException")).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
             int rNodes;
@@ -555,14 +563,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var ierr = uGridApi.GetNumberOfNodes(1, out nodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.AreEqual(-1, nodes);
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nNodes"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nNodesVarName));
 
             // uRemoteGridApi
-            TypeUtils.SetField(uGridApi, "nNodes", -1);
+            TypeUtils.SetField(uGridApi, nNodesVarName, -1);
             ierr = uRemoteGridApi.GetNumberOfNodes(1, out rNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR, ierr);
             Assert.AreEqual(-1, rNodes);
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, "nNodes"));
+            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, nNodesVarName));
         }
 
         [Test]
@@ -576,7 +584,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfEdges(meshId, out edges))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nEdges", nEdges);
+            TypeUtils.SetField(uGridApi, nEdgesVarName, nEdges);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -588,7 +596,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -600,7 +608,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(numberOfEdges, edges);
             // uRemoteGridApi
 
-            TypeUtils.SetField(uGridApi, "nEdges", nEdges);
+            TypeUtils.SetField(uGridApi, nEdgesVarName, nEdges);
             ierr = uRemoteGridApi.GetNumberOfEdges(meshid, out edges);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(numberOfEdges, edges);
@@ -613,7 +621,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nEdges;
             uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nEdges", 8);
+            TypeUtils.SetField(uGridApi, nEdgesVarName, 8);
 
             mocks.ReplayAll();
 
@@ -647,7 +655,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -684,7 +692,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -713,7 +721,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfFaces(meshId, out faces))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nFaces", nFaces);
+            TypeUtils.SetField(uGridApi, nFacesVarName, nFaces);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -725,7 +733,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -737,7 +745,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(numberOfFaces, faces);
             // uRemoteGridApi
 
-            TypeUtils.SetField(uGridApi, "nFaces", nFaces);
+            TypeUtils.SetField(uGridApi, nFacesVarName, nFaces);
             ierr = uRemoteGridApi.GetNumberOfFaces(meshid, out faces);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(numberOfFaces, faces);
@@ -750,7 +758,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nFaces;
             uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nFaces", 8);
+            TypeUtils.SetField(uGridApi, nFacesVarName, 8);
 
             mocks.ReplayAll();
 
@@ -783,7 +791,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -819,7 +827,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -847,7 +855,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(meshId, out maxFaceNodes))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nMaxFaceNodes", nMaxFaceNodes);
+            TypeUtils.SetField(uGridApi, nMaxFaceNodesVarName, nMaxFaceNodes);
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -858,7 +866,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, numberOfMaxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
             
 
             mocks.ReplayAll();
@@ -869,7 +877,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(numberOfMaxFaceNodes, maxFaceNodes);
 
             // uRemoteGridApi
-            TypeUtils.SetField(uGridApi, "nMaxFaceNodes", nMaxFaceNodes);
+            TypeUtils.SetField(uGridApi, nMaxFaceNodesVarName, nMaxFaceNodes);
             ierr = uRemoteGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
             Assert.AreEqual(numberOfMaxFaceNodes, maxFaceNodes);
@@ -882,7 +890,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int maxFaceNodes;
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, "nMaxFaceNodes", 8);
+            TypeUtils.SetField(uGridApi, nMaxFaceNodesVarName, 8);
 
             mocks.ReplayAll();
 
@@ -915,7 +923,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -951,7 +959,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -1032,7 +1040,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
             
             mocks.ReplayAll();
 
@@ -1067,7 +1075,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1103,7 +1111,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1178,7 +1186,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1212,7 +1220,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1248,7 +1256,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1326,7 +1334,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, location, zPtr, nNodes, fillValue)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1366,7 +1374,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, location, zPtr, nNodes, fillValue)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1407,7 +1415,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .IgnoreArguments().OutRef(id, meshid, location, zPtr, nNodes, fillValue)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1446,7 +1454,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1519,7 +1527,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_edge_nodes(ref id, ref meshid, ref ptr, ref numberOfEdges)).IgnoreArguments()
                 .OutRef(id, meshid, ptr, numberOfEdges).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -1555,7 +1563,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_edge_nodes(ref id, ref meshid, ref ptr, ref numberOfEdges)).IgnoreArguments()
                 .OutRef(id, meshid, ptr, numberOfEdges).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -1593,7 +1601,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uRemoteGridApi
 
@@ -1700,7 +1708,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     ref fillValue)).IgnoreArguments().OutRef(id, meshid, ptr, nFaces, maxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1736,7 +1744,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     ref fillValue)).IgnoreArguments().OutRef(id, meshid, ptr, nFaces, maxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1774,7 +1782,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1823,7 +1831,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .OutRef(ioncid, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
@@ -1853,7 +1861,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .OutRef(ioncid, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
@@ -1883,7 +1891,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .OutRef(ioncid, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("TestException")).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
@@ -1937,7 +1945,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
             
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -1971,7 +1979,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, locationType, ref ptr, ref nVar))
                 .IgnoreArguments().OutRef(id, meshId, ptr, nVar).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
             
@@ -2005,7 +2013,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, locationType, ref ptr, ref nVar))
                 .IgnoreArguments().OutRef(nVar).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
@@ -2041,7 +2049,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Throw(new Exception("testException"))
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
-            TypeUtils.SetField(uGridApi, "wrapper", wrapper);
+            TypeUtils.SetField(uGridApi, wrapperVarName, wrapper);
 
             mocks.ReplayAll();
 
