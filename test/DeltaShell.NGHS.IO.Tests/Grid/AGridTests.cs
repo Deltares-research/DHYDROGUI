@@ -118,18 +118,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // grid
             grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
+            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
+            ((AGrid) grid).Expect(g => g.CoordinateSystem)
+                .CallOriginalMethod(OriginalCallOptions.NoExpectation)
+                .PropertyBehavior();
 
             // gridApi
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Once();
-            gridApi.Expect(a => a.Initialized).Return(true)
-                .Repeat.Once();
             gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
-            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(4);
-            ((AGrid) grid).Expect(g => g.CoordinateSystem)
-                .CallOriginalMethod(OriginalCallOptions.NoExpectation)
-                .PropertyBehavior();
             TypeUtils.SetField(grid, "disposed", true);
+
             mocks.ReplayAll();
 
             grid.Initialize();
@@ -139,22 +138,24 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void InitializeAndGetCoordinateSystemWithExceptionTest()
         {
+            int coordinateSystemCode = 3819;
+            var gridApi = mocks.DynamicMock<IGridApi>();
+
+            // grid
             grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
-
-            var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
-                .Repeat.Once();
-            gridApi.Expect(a => a.Initialized).Return(true)
-                .Repeat.Once();
-            int coordinateSystemCode = 3819;
-            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once().Throw(new Exception());
-            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(4);
+            grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
             ((AGrid) grid).Expect(g => g.CoordinateSystem)
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation)
                 .PropertyBehavior();
+
+            // gridApi
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
+                .Repeat.Once();
+            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once().Throw(new Exception());
             TypeUtils.SetField(grid, "disposed", true);
+
             mocks.ReplayAll();
 
             grid.Initialize();

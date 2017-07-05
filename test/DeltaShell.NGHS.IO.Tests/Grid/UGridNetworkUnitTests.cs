@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private MockRepository mocks;
         private IUGridNetworkApi uGridNetworkApi;
         private UGridNetwork gridNetwork;
-        private const string standardErrorMessage = " because of error number: -1";
+        private const string standardErrorMessage = ", because of error number: -1";
         private int errorValue = -1;
         private int noErrorValue = GridApiDataSet.GridConstants.IONC_NOERR;
 

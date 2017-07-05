@@ -517,7 +517,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string c_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
             c_path = TestHelper.CreateLocalCopy(c_path);
             Assert.IsTrue(File.Exists(c_path));
-            int ioncid = 0; //file variable 
+            int ioncid = 0; //file variable
             int mode = 0; //create in read mode
             var wrapper = new GridWrapper();
             var ierr = wrapper.ionc_open(c_path, ref mode, ref ioncid, ref iconvtype, ref convversion);

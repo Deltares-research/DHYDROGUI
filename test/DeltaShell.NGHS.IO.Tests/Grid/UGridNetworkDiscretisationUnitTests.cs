@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private UGridNetworkDiscretisation gridNetworkDiscretisation;
         private int errorValue = -1;
         private int noErrorValue = GridApiDataSet.GridConstants.IONC_NOERR;
-        private const string standardErrorMessage = " because of error number: -1";
+        private const string standardErrorMessage = ", because of error number: -1";
 
         [SetUp]
         public void Setup()
