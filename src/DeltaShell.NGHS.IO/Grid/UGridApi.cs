@@ -8,16 +8,12 @@ namespace DeltaShell.NGHS.IO.Grid
     public class UGridApi : GridApi, IUGridApi
     {
         private double fillValue;
-        private int nNodes;
-        private int nEdges;
         private int nFaces;
         private int nMaxFaceNodes;
 
         public UGridApi()
         {
             fillValue = 0.0d;
-            nNodes = -1;
-            nEdges = -1;
             nFaces = -1;
             nMaxFaceNodes = -1;
         }
@@ -144,54 +140,35 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual int GetNumberOfNodes(int meshid, out int numberOfNodes)
         {
+            int ierr;
             numberOfNodes = -1;
-            if (Initialized && meshid > 0 && nNodes > 0)
-            {
-                numberOfNodes = nNodes;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
-            }
-            
+            if(!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+
             try
             {
-                int rnNodes = -1;
-                var ierr = wrapper.ionc_get_node_count(ref ioncid, ref meshid, ref rnNodes);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
-
-                numberOfNodes = rnNodes;
-                nNodes = rnNodes;
-                return ierr;
+                ierr = wrapper.ionc_get_node_count(ref ioncid, ref meshid, ref numberOfNodes);
             }
             catch
             {
-                // on exception don't crash...
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                ierr = GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
+            return ierr;
         }
 
         public virtual int GetNumberOfEdges(int meshid, out int numberOfMeshEdges)
         {
+            int ierr;
             numberOfMeshEdges = -1;
-            if (Initialized && meshid > 0 && nEdges > 0)
-            {
-                numberOfMeshEdges = nEdges;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
-            }
 
             try
             {
-                int rnEdges = -1;
-                var ierr = wrapper.ionc_get_edge_count(ref ioncid, ref meshid, ref rnEdges);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
-
-                numberOfMeshEdges = rnEdges;
-                nEdges = numberOfMeshEdges;
-                return ierr;
+                ierr = wrapper.ionc_get_edge_count(ref ioncid, ref meshid, ref numberOfMeshEdges);
             }
             catch
             {
-                // on exception don't crash...
                 return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
+            return ierr;
         }
 
         public virtual int GetNumberOfFaces(int meshid, out int numberOfFaces)

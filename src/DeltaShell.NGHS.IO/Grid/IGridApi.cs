@@ -73,6 +73,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
         int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh);
 
-        int GetMeshIdsByType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds);
+        int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds);
     }
 }

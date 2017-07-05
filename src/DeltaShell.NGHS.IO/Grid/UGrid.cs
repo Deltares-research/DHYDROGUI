@@ -7,6 +7,8 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGrid : AGrid, IUGrid
     {
+        public int nNodes;
+
         public int[][,] FaceNodesByMeshId { get; protected set; }
         public int[][,] EdgeNodesByMeshId { get; protected set; }
         public Dictionary<int, Coordinate[]> NodeCoordinatesByMeshId { get; protected set; }
@@ -44,7 +46,6 @@ namespace DeltaShell.NGHS.IO.Grid
             var ierr = uGridApi.GetNumberOfNodes(meshId, out numberOfNodes);
             ThrowIfError(ierr, Resources.UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes);
             return numberOfNodes;
-            
         }
 
         public int GetNumberOfEdgesForMeshId(int meshId)
@@ -79,8 +80,8 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return GetFromValidGridApi<IUGridApi, Coordinate[]>(uGridApi =>
             {
-                var nNode = GetNumberOfNodesForMeshId(meshId);
-                if (nNode == 0) return new Coordinate[0];
+                var numberOfNodes = GetNumberOfNodesForMeshId(meshId);
+                if (numberOfNodes == 0) return new Coordinate[0];
                 
                 //retrieve x
                 double[] xCoordinates;
@@ -97,8 +98,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 ierr = uGridApi.GetNodeZCoordinates(meshId, out zCoordinates);
                 ThrowIfError(ierr, Resources.UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_z_node_coordinates);
                 
-                var coordinates = new Coordinate[nNode];
-                for (int i = 0; i < nNode; i++)
+                var coordinates = new Coordinate[numberOfNodes];
+                for (int i = 0; i < numberOfNodes; i++)
                 {
                     coordinates[i] = new Coordinate(xCoordinates[i], yCoordinates[i], zCoordinates[i]);
                 }

@@ -374,7 +374,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="pointerToMeshIds">Pointer to array of mesh ids</param>
         /// <param name="numberOfMeshes">Number of meshes</param>
         /// <returns></returns>
-        int ionc_get_mesh_ids([In] ref int ioncid, [In] ref int meshType, [In, Out] ref IntPtr pointerToMeshIds, [In] ref int numberOfMeshes);
+        int ionc_get_mesh_ids([In] ref int ioncid, UGridMeshType meshType, [In, Out] ref IntPtr pointerToMeshIds, [In] ref int numberOfMeshes);
 
         /// <summary>
         /// Gets the number of network in a NetCDF file

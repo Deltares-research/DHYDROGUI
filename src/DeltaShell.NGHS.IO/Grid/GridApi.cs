@@ -215,47 +215,54 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
 
+            int ierr;
             try
             {
                 var type = (int)meshType;
                 int nMesh = 0;
-                var ierr = wrapper.ionc_get_number_of_meshes(ref ioncid, ref type, ref nMesh);
+                ierr = wrapper.ionc_get_number_of_meshes(ref ioncid, ref type, ref nMesh);
                 if(ierr == GridApiDataSet.GridConstants.IONC_NOERR) numberOfMesh = nMesh;
-
-                return ierr;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                ierr = GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
+            return ierr;
         }
 
         public int GetNetworkIds(out int[] networkIds)
         {
             networkIds = new int[0];
-            int numberOfNetworks;
+            int numberOfNetworks = 0;
+            IntPtr networkIdsPtr = IntPtr.Zero;
+            int ierr;
 
-            var ierr = GetNumberOfNetworks(out numberOfNetworks);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
-
-            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
-
-            IntPtr networkIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNetworks);
             try
             {
-                ierr = wrapper.ionc_get_network_ids(ref ioncid, ref networkIdsPtr, ref numberOfNetworks);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    return ierr;
-                }
-
-                networkIds = new int[numberOfNetworks];
-                Marshal.Copy(networkIdsPtr, networkIds, 0, numberOfNetworks);
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                ierr = GetNumberOfNetworks(out numberOfNetworks);
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                ierr = GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            }
+
+            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (numberOfNetworks != 0) networkIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNetworks);
+
+            try
+            {
+                ierr = wrapper.ionc_get_network_ids(ref ioncid, ref networkIdsPtr, ref numberOfNetworks);
+                if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
+                {
+                    networkIds = new int[numberOfNetworks];
+                    Marshal.Copy(networkIdsPtr, networkIds, 0, numberOfNetworks);
+                    return GridApiDataSet.GridConstants.IONC_NOERR;
+                }
+            }
+            catch
+            {
+                ierr = GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -263,29 +270,27 @@ namespace DeltaShell.NGHS.IO.Grid
                     Marshal.FreeCoTaskMem(networkIdsPtr);
                 networkIdsPtr = IntPtr.Zero;
             }
+            return ierr;
         }
 
-        public int GetMeshIdsByType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
+        public int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
         {
             meshIds = new int[0];
             IntPtr meshIdsPtr = IntPtr.Zero;
+            int ierr;
             try
             {
-                var type = (int)meshType;
                 meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
-                var ierr = wrapper.ionc_get_mesh_ids(ref ioncid, ref type, ref meshIdsPtr, ref numberOfMeshes);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                ierr = wrapper.ionc_get_mesh_ids(ref ioncid, meshType, ref meshIdsPtr, ref numberOfMeshes);
+                if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
                 {
-                    return ierr;
+                    meshIds = new int[numberOfMeshes];
+                    Marshal.Copy(meshIdsPtr, meshIds, 0, numberOfMeshes);
                 }
-
-                meshIds = new int[numberOfMeshes];
-                Marshal.Copy(meshIdsPtr, meshIds, 0, numberOfMeshes);
-                return GridApiDataSet.GridConstants.IONC_NOERR;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                ierr = GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -293,6 +298,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     Marshal.FreeCoTaskMem(meshIdsPtr);
                 meshIdsPtr = IntPtr.Zero;
             }
+            return ierr;
         }
         
         public int GetCoordinateSystemCode(out int epsg_code)

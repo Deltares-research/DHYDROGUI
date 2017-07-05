@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             int[] meshIds;
             var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(Resources.UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs);
-            var ierr = uGridApi.GetMeshIdsByType(UGridMeshType.Mesh1D, numberOfMeshes, out meshIds);
+            var ierr = uGridApi.GetMeshIdsByMeshType(UGridMeshType.Mesh1D, numberOfMeshes, out meshIds);
             ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs);
 
             return meshIds;

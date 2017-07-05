@@ -173,7 +173,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WhenInvoking_GetNetworkDiscretisationIds_AndApiReturnsAnErrorValueThenThrowException()
         {
             int[] ids = {1, 1, 2, 3, 5, 8};
-            uGridNetworkDiscretisationApi.Expect(api => api.GetMeshIdsByType(Arg<UGridMeshType>.Is.Anything, Arg<int>.Is.Anything, out Arg<int[]>.Out(ids).Dummy))
+            uGridNetworkDiscretisationApi.Expect(api => api.GetMeshIdsByMeshType(Arg<UGridMeshType>.Is.Anything, Arg<int>.Is.Anything, out Arg<int[]>.Out(ids).Dummy))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
@@ -185,7 +185,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void WhenInvoking_GetNetworkDiscretisationIds_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
             int[] ids = { 1, 1, 2, 3, 5, 8 };
-            uGridNetworkDiscretisationApi.Expect(api => api.GetMeshIdsByType(Arg<UGridMeshType>.Is.Anything, Arg<int>.Is.Anything, out Arg<int[]>.Out(ids).Dummy))
+            uGridNetworkDiscretisationApi.Expect(api => api.GetMeshIdsByMeshType(Arg<UGridMeshType>.Is.Anything, Arg<int>.Is.Anything, out Arg<int[]>.Out(ids).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
             mocks.ReplayAll();
