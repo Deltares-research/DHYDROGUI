@@ -190,8 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("DIMR_Introduction")]
-        [Category(TestCategory.WorkInProgress)]
         public void TestCallSetValuesWaterLevels()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
@@ -204,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Assert.IsNotNull(waterLevels);
 
-                var newWaterLevels = waterLevels.Select(s => 1.5*s).ToArray();
+                var newWaterLevels = waterLevels.Select(s => 1.5*(s+1)).ToArray();
 
                 model.SetVar(newWaterLevels, "s0");
 
@@ -217,8 +215,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("DIMR_Introduction")]
-        [Category(TestCategory.WorkInProgress)]
         public void TestCallGetNonExistingValues()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
@@ -227,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 model.Initialize();
-                Assert.IsNaN(((double[])model.GetVar("party", "at", "myplace"))[0]);
+                Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
             }
         }
 
