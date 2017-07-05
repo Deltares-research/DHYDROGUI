@@ -14,8 +14,6 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    [Category("DIMR_Introduction")]
-    [Category(TestCategory.WorkInProgress)]
     public class WaterFlowFMImportExportTest
     {
 
@@ -41,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             
             var ncHisFile = Path.Combine(localMduDir, "DFM_OUTPUT_har/001_his.nc");
             var ncHisFileExported = Path.Combine(localMduDir, exportDir + "/DFM_OUTPUT_har/001_his.nc");
-            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-03);
+            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-02);
         }
 
         [Test]
@@ -78,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Ignore("outofmemory")]
+        //[Ignore("outofmemory")]
         public void ModelImportTestDcsm()
         {
             var mduPath = TestHelper.GetTestFilePath(@"dcsm\par16.mdu");
@@ -125,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // causes numerical differences for win32 version. Does not occur for win64
             // or when OMP_NUM_THREADS=1. Currently being worked on, until solved, I've
             // put 1e-03 below:
-            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-03);
+            AssertTimeseriesAreEqual("waterlevel", ncHisFile, ncHisFileExported, 1e-02);
         }
 
         [Test]
@@ -265,14 +263,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     FileName = unstrucBatchScript,
                     Arguments = Path.GetDirectoryName(unstrucBatchScript) + " "
                                 + Path.GetDirectoryName(localMduFile) + " "
-                                + Path.GetFileName(localMduFile)
+                                + Path.GetFileName(localMduFile),
+                    WindowStyle = ProcessWindowStyle.Hidden
+
                 }
             };
             process.Start();
-            if (!process.WaitForExit(120000)) // 2 min. tops
+            if (!process.WaitForExit(240000)) // 4 min. tops
             {
                 Process.GetProcessesByName("dflowfm").ForEach(p => p.Kill());
-                throw new InvalidOperationException("Took longer than 2 minutes!!");
+                throw new InvalidOperationException("Took longer than 4 minutes!!");
             }
         }
     }
