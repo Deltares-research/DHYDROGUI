@@ -216,4 +216,73 @@
   <data name="UGrid_GetMeshName_Couldn_t_get_meshname" xml:space="preserve">
     <value>Couldn't get meshname</value>
   </data>
+  <data name="UGridApi_WriteZCoordinateValues_altitude" xml:space="preserve">
+    <value>altitude</value>
+  </data>
+  <data name="UGridApi_WriteZCoordinateValues_m" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="UGridApi_GetNodeZCoordinates_node_z" xml:space="preserve">
+    <value>node_z</value>
+  </data>
+  <data name="UGridApi_GetNodeZCoordinates_NetNode_z" xml:space="preserve">
+    <value>NetNode_z</value>
+  </data>
+  <data name="UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_" xml:space="preserve">
+    <value>Couldn't create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}</value>
+  </data>
+  <data name="UGridNetwork_WriteNetworkNodes_Couldn_t_write_network_nodes" xml:space="preserve">
+    <value>Couldn't write network nodes</value>
+  </data>
+  <data name="UGridNetwork_WriteNetworkBranches_Couldn_t_write_network_branches" xml:space="preserve">
+    <value>Couldn't write network branches</value>
+  </data>
+  <data name="UGridNetwork_WriteNetworkGeometry_Couldn_t_write_network_geometry" xml:space="preserve">
+    <value>Couldn't write network geometry</value>
+  </data>
+  <data name="UGridNetwork_GetNetworkName_Couldn_t_obtain_the_network_name" xml:space="preserve">
+    <value>Couldn't obtain the network name</value>
+  </data>
+  <data name="UGridNetwork_GetNumberOfNetworkNodes_Couldn_t_get_number_of_network_nodes" xml:space="preserve">
+    <value>Couldn't get number of network nodes</value>
+  </data>
+  <data name="UGridNetwork_GetNumberOfNetworkBranches_Couldn_t_get_the_number_of_network_branches" xml:space="preserve">
+    <value>Couldn't get the number of network branches</value>
+  </data>
+  <data name="UGridNetwork_GetNumberOfNetworkGeometryPoints_Couldn_t_get_the_number_of_network_geometry_points" xml:space="preserve">
+    <value>Couldn't get the number of network geometry points</value>
+  </data>
+  <data name="UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes" xml:space="preserve">
+    <value>Couldn't read network nodes</value>
+  </data>
+  <data name="UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches" xml:space="preserve">
+    <value>Couldn't read network branches</value>
+  </data>
+  <data name="UGridNetwork_ReadNetworkGeometry_Couldn_t_read_network_geometry" xml:space="preserve">
+    <value>Couldn't read network geometry</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_" xml:space="preserve">
+    <value>Couldn't create new network in </value>
+  </data>
+  <data name="UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points" xml:space="preserve">
+    <value>Couldn't write the network discretisation points</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_GetNetworkDiscretisationName_Couldn_t_get_the_mesh_discretisation_name" xml:space="preserve">
+    <value>Couldn't get the mesh discretisation name</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_GetNetworkIdForMeshId_Couldn_t_get_the_network_Id_corresponding_to_the_network_discretisation" xml:space="preserve">
+    <value>Couldn't get the network Id corresponding to the network discretisation</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_number_of_network_discretisations" xml:space="preserve">
+    <value>Couldn't get the number of network discretisations</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs" xml:space="preserve">
+    <value>Couldn't get the network discretisation IDs</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisationPointsForMeshId_Couldn_t_get_the_number_of_network_discretisation_points" xml:space="preserve">
+    <value>Couldn't get the number of network discretisation points</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points" xml:space="preserve">
+    <value>Couldn't read the network discretisation points</value>
+  </data>
 </root>

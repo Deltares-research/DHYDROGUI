@@ -428,7 +428,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 Assert.That(uGrid.GetNumberOf2DMeshes(), Is.EqualTo(1));
                 uGrid.GetNamesAtLocation(meshId, locationType);
-                Assert.That(uGrid.VarNameIdsAtLocationInMesh[meshId -1][locationType], Is.EqualTo(new []{20, 21}));
+                Assert.That(uGrid.VarNameIdsByLocationTypeByMeshId[meshId -1][locationType], Is.EqualTo(new []{20, 21}));
             }
         }
         

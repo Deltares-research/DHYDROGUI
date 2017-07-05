@@ -8,7 +8,6 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         private int meshIdForWriting;
         private int nNetworkPoints;
-        private int nMeshEdges;
 
         public UGridNetworkDiscretisationApi()
         {
@@ -16,7 +15,6 @@ namespace DeltaShell.NGHS.IO.Grid
             // Obtain meshIds, networkIds?
             meshIdForWriting = -1;
             nNetworkPoints = -1;
-            nMeshEdges = -1;
         }
 
         #region Write Network Discretisation
@@ -30,10 +28,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
             // replace spaces in network name by underscores
-            if (name != null)
-            {
-                name = name.Replace(' ', '_');
-            }
+            if (name != null) name = name.Replace(' ', '_');
 
             // ReSharper disable once RedundantAssignment
             int ierr = GridApiDataSet.GridConstants.IONC_NOERR;
@@ -42,12 +37,8 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref networkId, ref meshIdForWriting, name, ref numberOfNetworkPoints, ref numberOfMeshEdges);
 
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    return ierr;
-                }
+                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
                 nNetworkPoints = numberOfNetworkPoints;
-                nMeshEdges = numberOfMeshEdges;
             }
             catch
             {

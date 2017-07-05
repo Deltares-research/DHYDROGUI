@@ -394,7 +394,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             grid.GetNamesAtLocation(meshId, locationType);
-            var varNameIds = grid.VarNameIdsAtLocationInMesh[meshId - 1];
+            var varNameIds = grid.VarNameIdsByLocationTypeByMeshId[meshId - 1];
 
             Assert.That(varNameIds[locationType], Is.EqualTo(varIds));
         }

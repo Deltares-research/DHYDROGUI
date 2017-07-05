@@ -100,7 +100,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            gridNetworkDiscretisation.GetNetworkDiscretisationName(Arg<int>.Is.Anything);
+            gridNetworkDiscretisation.GetNetworkDiscretisationNameForMeshId(Arg<int>.Is.Anything);
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            var nName = gridNetworkDiscretisation.GetNetworkDiscretisationName(Arg<int>.Is.Anything);
+            var nName = gridNetworkDiscretisation.GetNetworkDiscretisationNameForMeshId(Arg<int>.Is.Anything);
             Assert.That(nName, Is.EqualTo(name));
         }
 

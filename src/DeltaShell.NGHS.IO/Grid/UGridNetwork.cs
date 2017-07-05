@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -19,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public void CreateNetworkInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)
         {
             string errorMessage = 
-                string.Format("Couldn't create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}",
+                string.Format(Resources.UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_,
                 name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
             var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
             var ierr = uGridNetworkApi.CreateNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out networkId);
@@ -28,20 +29,20 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
-            const string errorMessage = "Couldn't write network nodes";
-            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), errorMessage);
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), 
+                Resources.UGridNetwork_WriteNetworkNodes_Couldn_t_write_network_nodes);
         }
         
         public void WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
         {
-            const string errorMessage = "Couldn't write network branches";
-            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames), errorMessage);
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames),
+                Resources.UGridNetwork_WriteNetworkBranches_Couldn_t_write_network_branches);
         }
 
         public void WriteNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
-            const string errorMessage = "Couldn't write network geometry";
-            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), errorMessage);
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), 
+                Resources.UGridNetwork_WriteNetworkGeometry_Couldn_t_write_network_geometry);
         }
 
         #endregion
@@ -51,10 +52,9 @@ namespace DeltaShell.NGHS.IO.Grid
         public string GetNetworkName(int networkId)
         {
             string networkName;
-            const string errorMessage = "Couldn't obtain the network name";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_GetNetworkName_Couldn_t_obtain_the_network_name);
             var ierr = uGridNetworkApi.GetNetworkName(networkId, out networkName);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_GetNetworkName_Couldn_t_obtain_the_network_name);
 
             return networkName;
         }
@@ -62,10 +62,9 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfNetworkNodes(int networkId)
         {
             int numberOfNetworkNodes;
-            const string errorMessage = "Couldn't get number of network nodes";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_GetNumberOfNetworkNodes_Couldn_t_get_number_of_network_nodes);
             var ierr = uGridNetworkApi.GetNumberOfNetworkNodes(networkId, out numberOfNetworkNodes);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_GetNumberOfNetworkNodes_Couldn_t_get_number_of_network_nodes);
 
             return numberOfNetworkNodes;
         }
@@ -73,10 +72,9 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfNetworkBranches(int networkId)
         {
             int numberOfNetworkBranches;
-            const string errorMessage = "Couldn't get the number of network branches";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_GetNumberOfNetworkBranches_Couldn_t_get_the_number_of_network_branches);
             var ierr = uGridNetworkApi.GetNumberOfNetworkBranches(networkId, out numberOfNetworkBranches);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_GetNumberOfNetworkBranches_Couldn_t_get_the_number_of_network_branches);
 
             return numberOfNetworkBranches;
         }
@@ -84,36 +82,32 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfNetworkGeometryPoints(int networkId)
         {
             int numberOfNetworkGeometryPoints;
-            const string errorMessage = "Couldn't get the number of network geometry points";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_GetNumberOfNetworkGeometryPoints_Couldn_t_get_the_number_of_network_geometry_points);
             var ierr = uGridNetworkApi.GetNumberOfNetworkGeometryPoints(networkId, out numberOfNetworkGeometryPoints);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_GetNumberOfNetworkGeometryPoints_Couldn_t_get_the_number_of_network_geometry_points);
 
             return numberOfNetworkGeometryPoints;
         }
 
         public void ReadNetworkNodes(int networkId, out double[] nodesX, out double[] nodesY, out string[] nodesIds, out string[] nodesLongnames)
         {
-            const string errorMessage = "Couldn't read network nodes";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes);
             var ierr = uGridNetworkApi.ReadNetworkNodes(networkId, out nodesX, out nodesY, out nodesIds, out nodesLongnames);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes);
         }
 
         public void ReadNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames)
         {
-            const string errorMessage = "Couldn't read network branches";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches);
             var ierr = uGridNetworkApi.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches);
         }
 
         public void ReadNetworkGeometry(int networkId, out double[] geopointsX, out double[] geopointsY)
         {
-            const string errorMessage = "Couldn't read network geometry";
-            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_ReadNetworkGeometry_Couldn_t_read_network_geometry);
             var ierr = uGridNetworkApi.ReadNetworkGeometry(networkId, out geopointsX, out geopointsY);
-            ThrowIfError(ierr, errorMessage);
+            ThrowIfError(ierr, Resources.UGridNetwork_ReadNetworkGeometry_Couldn_t_read_network_geometry);
         }
 
         #endregion

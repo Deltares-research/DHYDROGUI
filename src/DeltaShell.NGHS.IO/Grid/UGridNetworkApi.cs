@@ -30,10 +30,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
 
             // replace spaces in network name by underscores
-            if (name != null)
-            {
-                name = name.Replace(' ', '_');
-            }
+            if (name != null) name = name.Replace(' ', '_');
 
             try
             {

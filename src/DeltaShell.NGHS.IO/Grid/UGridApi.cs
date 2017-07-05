@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -71,23 +72,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                const string StandardName = "altitude";
                 int varId = 0;
-
-                wrapper.ionc_inq_varid_by_standard_name(ref ioncid, ref meshId, locationType, StandardName,
-                    ref varId);
+                wrapper.ionc_inq_varid_by_standard_name(ref ioncid, ref meshId, locationType, Resources.UGridApi_WriteZCoordinateValues_altitude, ref varId);
 
                 // Testing...
                 wrapper.ionc_inq_varid(ref ioncid, ref meshId, varName, ref varId);
 
                 if (varId == -1) // does not exist
                 {
-                    const string Unit = "m";
                     int NF90_DOUBLE = 6;
                     double fillValue = -999.9;
 
                     wrapper.ionc_def_var(ref ioncid, ref meshId, ref varId, ref NF90_DOUBLE, locationType, varName,
-                        StandardName, longName, Unit, ref fillValue);
+                        Resources.UGridApi_WriteZCoordinateValues_altitude, longName, Resources.UGridApi_WriteZCoordinateValues_m, ref fillValue);
                 }
 
                 Marshal.Copy(zValues, 0, zPtr, nVal);
@@ -302,16 +299,14 @@ namespace DeltaShell.NGHS.IO.Grid
             if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
            
             int locationId = (int)GridApiDataSet.LocationType.UG_LOC_NODE;
-            string varname = "node_z";
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             try
             {
-                ierr = wrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref ptr,
+                ierr = wrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, Resources.UGridApi_GetNodeZCoordinates_node_z, ref ptr,
                     ref numberOfNodes, ref fillValue);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
                 {
-                    varname = "NetNode_z";
-                    ierr = wrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref ptr,
+                    ierr = wrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, Resources.UGridApi_GetNodeZCoordinates_NetNode_z, ref ptr,
                         ref numberOfNodes, ref fillValue);
                     if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
                     if (ptr == IntPtr.Zero) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;

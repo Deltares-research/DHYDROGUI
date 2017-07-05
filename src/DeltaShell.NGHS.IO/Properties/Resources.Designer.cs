@@ -356,5 +356,223 @@ namespace DeltaShell.NGHS.IO.Properties {
                 return ResourceManager.GetString("UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NetNode_z.
+        /// </summary>
+        public static string UGridApi_GetNodeZCoordinates_NetNode_z {
+            get {
+                return ResourceManager.GetString("UGridApi_GetNodeZCoordinates_NetNode_z", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to node_z.
+        /// </summary>
+        public static string UGridApi_GetNodeZCoordinates_node_z {
+            get {
+                return ResourceManager.GetString("UGridApi_GetNodeZCoordinates_node_z", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to altitude.
+        /// </summary>
+        public static string UGridApi_WriteZCoordinateValues_altitude {
+            get {
+                return ResourceManager.GetString("UGridApi_WriteZCoordinateValues_altitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to m.
+        /// </summary>
+        public static string UGridApi_WriteZCoordinateValues_m {
+            get {
+                return ResourceManager.GetString("UGridApi_WriteZCoordinateValues_m", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}.
+        /// </summary>
+        public static string UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_ {
+            get {
+                return ResourceManager.GetString("UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_n" +
+                        "odes__1___number_of_branches__2___number_of_geometry_points__3_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t obtain the network name.
+        /// </summary>
+        public static string UGridNetwork_GetNetworkName_Couldn_t_obtain_the_network_name {
+            get {
+                return ResourceManager.GetString("UGridNetwork_GetNetworkName_Couldn_t_obtain_the_network_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the number of network branches.
+        /// </summary>
+        public static string UGridNetwork_GetNumberOfNetworkBranches_Couldn_t_get_the_number_of_network_branches {
+            get {
+                return ResourceManager.GetString("UGridNetwork_GetNumberOfNetworkBranches_Couldn_t_get_the_number_of_network_branch" +
+                        "es", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the number of network geometry points.
+        /// </summary>
+        public static string UGridNetwork_GetNumberOfNetworkGeometryPoints_Couldn_t_get_the_number_of_network_geometry_points {
+            get {
+                return ResourceManager.GetString("UGridNetwork_GetNumberOfNetworkGeometryPoints_Couldn_t_get_the_number_of_network_" +
+                        "geometry_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get number of network nodes.
+        /// </summary>
+        public static string UGridNetwork_GetNumberOfNetworkNodes_Couldn_t_get_number_of_network_nodes {
+            get {
+                return ResourceManager.GetString("UGridNetwork_GetNumberOfNetworkNodes_Couldn_t_get_number_of_network_nodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read network branches.
+        /// </summary>
+        public static string UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches {
+            get {
+                return ResourceManager.GetString("UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read network geometry.
+        /// </summary>
+        public static string UGridNetwork_ReadNetworkGeometry_Couldn_t_read_network_geometry {
+            get {
+                return ResourceManager.GetString("UGridNetwork_ReadNetworkGeometry_Couldn_t_read_network_geometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read network nodes.
+        /// </summary>
+        public static string UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes {
+            get {
+                return ResourceManager.GetString("UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t write network branches.
+        /// </summary>
+        public static string UGridNetwork_WriteNetworkBranches_Couldn_t_write_network_branches {
+            get {
+                return ResourceManager.GetString("UGridNetwork_WriteNetworkBranches_Couldn_t_write_network_branches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t write network geometry.
+        /// </summary>
+        public static string UGridNetwork_WriteNetworkGeometry_Couldn_t_write_network_geometry {
+            get {
+                return ResourceManager.GetString("UGridNetwork_WriteNetworkGeometry_Couldn_t_write_network_geometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t write network nodes.
+        /// </summary>
+        public static string UGridNetwork_WriteNetworkNodes_Couldn_t_write_network_nodes {
+            get {
+                return ResourceManager.GetString("UGridNetwork_WriteNetworkNodes_Couldn_t_write_network_nodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create new network in .
+        /// </summary>
+        public static string UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_ {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_" +
+                        "network_in_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the network discretisation IDs.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_d" +
+                        "iscretisation_IDs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the mesh discretisation name.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_GetNetworkDiscretisationName_Couldn_t_get_the_mesh_discretisation_name {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_GetNetworkDiscretisationName_Couldn_t_get_the_mesh_dis" +
+                        "cretisation_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the network Id corresponding to the network discretisation.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_GetNetworkIdForMeshId_Couldn_t_get_the_network_Id_corresponding_to_the_network_discretisation {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_GetNetworkIdForMeshId_Couldn_t_get_the_network_Id_corr" +
+                        "esponding_to_the_network_discretisation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the number of network discretisation points.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisationPointsForMeshId_Couldn_t_get_the_number_of_network_discretisation_points {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisationPointsForMeshId_Couldn" +
+                        "_t_get_the_number_of_network_discretisation_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get the number of network discretisations.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_number_of_network_discretisations {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_num" +
+                        "ber_of_network_discretisations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read the network discretisation points.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read" +
+                        "_the_network_discretisation_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t write the network discretisation points.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_ne" +
+                        "twork_discretisation_points", resourceCulture);
+            }
+        }
     }
 }
