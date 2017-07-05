@@ -226,7 +226,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string varName = "";
             wrapper.Expect(w => w.ionc_put_var(ref id, ref meshid, locationType, varName, ref zPtr, ref nVal))
                 .IgnoreArguments()
-                .OutRef(id, meshid, locationType, zPtr, nVal)
+                .OutRef(id, meshid, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Twice();
 
@@ -261,7 +261,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string varName = "";
             wrapper.Expect(w => w.ionc_put_var(ref ioncid, ref meshId, locationType, varName, ref zPtr, ref nVal))
                 .IgnoreArguments()
-                .OutRef(ioncid, meshId, locationType, zPtr, nVal)
+                .OutRef(ioncid, meshId, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
@@ -1964,12 +1964,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int nCount = 5;
             wrapper.Expect(w => w.ionc_get_var_count(ref id, ref meshId, locationType, ref nCount)).IgnoreArguments()
-                .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+                .OutRef(id, meshId, nCount).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
             wrapper.Expect(w => w.ionc_inq_varids(ref id, ref meshId, locationType, ref ptr, ref nVar))
-                .IgnoreArguments().OutRef(nVar).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+                .IgnoreArguments().OutRef(id, meshId, ptr, nVar).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, "wrapper", wrapper);
 

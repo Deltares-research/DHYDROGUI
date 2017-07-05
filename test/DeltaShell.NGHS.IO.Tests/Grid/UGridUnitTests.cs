@@ -345,7 +345,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of names at location" + standardErrorMessage)]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of names for location type" + standardErrorMessage)]
         public void WhenInvoking_NumberOfNamesAtLocation_AndApiReturnsAnErrorValueThenThrowException()
         {
             int nCount = 33;

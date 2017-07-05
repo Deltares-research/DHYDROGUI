@@ -112,15 +112,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void InitializeAndGetCoordinateSystemTest()
         {
+            int coordinateSystemCode = 3819;
+            var gridApi = mocks.DynamicMock<IGridApi>();
+
+            // grid
             grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
 
-            var gridApi = mocks.DynamicMock<IGridApi>();
+            // gridApi
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
                 .Repeat.Once();
             gridApi.Expect(a => a.Initialized).Return(true)
                 .Repeat.Once();
-            int coordinateSystemCode = 3819;
             gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(4);
             ((AGrid) grid).Expect(g => g.CoordinateSystem)
