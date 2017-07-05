@@ -95,5 +95,6 @@ namespace DeltaShell.Dimr
             LOG_DETAIL = DebugLevel.LOG_DETAIL
         }
 
+        public const double DIMR_FILL_VALUE = -999000.0d;
     }
 }

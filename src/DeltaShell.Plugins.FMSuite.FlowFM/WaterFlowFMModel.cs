@@ -2469,14 +2469,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var boolArray = values as bool[];
                 if (boolArray != null && boolArray.Length > 0)
                     IsPartOf1D2DModel = boolArray[0];
+                return;
             }
             if (category == DisableFlowNodeRenumberingPropertyName)
             {
                 var boolArray = values as bool[];
                 if (boolArray != null && boolArray.Length > 0)
                     DisableFlowNodeRenumbering = boolArray[0];
+                return;
             }
-            runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+            if (!string.IsNullOrEmpty(itemName))
+            {
+                if (!string.IsNullOrEmpty(parameter))
+                {
+                    runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+                    return;
+                }
+                runner.SetVar(string.Format("{0}/{1}/{2}", Name, category, itemName), values);
+                return;
+            }
+            runner.SetVar(string.Format("{0}/{1}", Name, category), values);
         }
         public bool DisableFlowNodeRenumbering { get; set; }
 
