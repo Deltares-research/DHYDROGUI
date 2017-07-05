@@ -90,7 +90,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ProtoBufRemote">
-      <HintPath>..\..\..\nghs-trunk\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="QuickGraph">
