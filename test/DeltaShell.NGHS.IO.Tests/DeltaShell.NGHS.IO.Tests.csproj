@@ -94,6 +94,10 @@
       <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ProtoBufRemote">
+      <HintPath>..\..\..\nghs-trunk\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.1.2.0.37699\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
