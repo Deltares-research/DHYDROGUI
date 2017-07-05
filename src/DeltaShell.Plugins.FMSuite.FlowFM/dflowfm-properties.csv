@@ -172,7 +172,8 @@ trachytopes,TrtDt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time inte
 GUIOnly,StartTime,timeframe,,Start Time,DateTime,,,,FALSE,,,,,,Begin of simulation period
 GUIOnly,StopTime,timeframe,,Stop Time,DateTime,,,,FALSE,,,,,,End of simulation period
 GUIOnly,UseTemperature,processes,,Temperature,0|1,0,0,1,FALSE,,,,,,Include temperature
-GUIOnly,UseMorSed,processes,,Sediment/Morphology [Beta],0|1,0,0,1,FALSE,,,,,,Include Sediment/Morphology [Beta version]
+GUIOnly,PartOf1D2DModel,processes,,Is part of a 1D2D Integrated Model,0|1,0,0,1,FALSE,,FALSE,,,,Is part of a 1D2D Integrated Model
+GUIOnly,UseMorSed,processes,,Sediment/Morphology [Beta],0|1,0,0,1,FALSE,PartOf1D2DModel=0,,,,,Include Sediment/Morphology [Beta version]
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteHisFile,output,His,Write His File,0|1,0,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,His,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output

@@ -2468,7 +2468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var boolArray = values as bool[];
                 if (boolArray != null && boolArray.Length > 0)
-                    ModelDefinition.IsPartOf1D2DModel = boolArray[0];
+                    IsPartOf1D2DModel = boolArray[0];
             }
             if (category == DisableFlowNodeRenumberingPropertyName)
             {
@@ -2478,6 +2478,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
         }
+        public bool DisableFlowNodeRenumbering { get; set; }
+
+        // This property is made because 1D2D integrated models do not support UGrid format.
+        // Remove when this dependency has vanished (DELFT3DFM-989)
+        public bool IsPartOf1D2DModel
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value; }
+            set { ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = value; }
+        }
+
+
         #endregion
 
         #region TimeDependentModelBase

@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -53,19 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         };
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
-        private bool isPartOf1D2DModel;
-
-        // This property is made because 1D2D integrated models do not support UGrid format.
-        // Remove when this dependency has vanished (DELFT3DFM-989)
-        public bool IsPartOf1D2DModel
-        {
-            get { return isPartOf1D2DModel; }
-            set
-            {
-                isPartOf1D2DModel = value;
-                SetMapFormatPropertyValue();
-            }
-        }
 
         public List<string> InitialTracerNames { get; private set; }
         public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
@@ -174,6 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
                 {GuiProperties.UseTemperature.ToLower(), OnUseTemperaturePropertyChanged},
                 {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
+                {GuiProperties.PartOf1D2DModel.ToLower(), OnPartOf1D2DModelPropertyChanged},
             };
 
             SetGuiTimePropertiesFromMduProperties();
@@ -269,6 +258,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             SetMapFormatPropertyValue();
         }
+
+        private void OnPartOf1D2DModelPropertyChanged(WaterFlowFMProperty prop)
+        {
+            SetMapFormatPropertyValue();
+            if (IsPartOf1D2DModel && UseMorphologySediment)
+                UseMorphologySediment = false;
+        }
         
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
         {
@@ -320,12 +316,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             if (IsPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
             {
                 MapFormat = MapFormatType.NetCdf;
+                Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_, ModelName);
             }
-            else if (!isPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
+            else if (!IsPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
             {
                 MapFormat = MapFormatType.Ugrid;
-                Log.Info("MapFormat property value of FlowFM model " + ModelName + " is changed to 4 due to activation of Morphology.");
+                Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_, ModelName);
             }
+        }
+
+        public bool IsPartOf1D2DModel
+        {
+            get { return (bool) GetModelProperty(GuiProperties.PartOf1D2DModel).Value; }
+            set { GetModelProperty(GuiProperties.PartOf1D2DModel).Value = value; }
         }
 
         public bool UseMorphologySediment

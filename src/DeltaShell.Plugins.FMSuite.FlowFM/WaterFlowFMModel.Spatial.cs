@@ -622,8 +622,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         internal int SnapVersion { get; private set; }
-        public bool DisableFlowNodeRenumbering { get; set; }
-
+        
         public void InvalidateSnapping()
         {
             DisposeSnapApi();

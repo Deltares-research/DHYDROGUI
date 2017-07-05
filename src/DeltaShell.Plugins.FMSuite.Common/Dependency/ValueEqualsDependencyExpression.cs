@@ -38,10 +38,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                                  StringComparison.InvariantCultureIgnoreCase));
             if (dependencyProperty != null)
             {
-                if (dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
+                if (dependencyProperty.PropertyDefinition.DataType != typeof(bool) &&
+                    dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
                     !dependencyProperty.PropertyDefinition.DataType.IsEnum)
                 {
-                    return String.Format("Model property '{0}' should be have 'int' or 'enum' data type.", dependencyPropertyName);
+                    return String.Format("Model property '{0}' should be have 'bool', 'int' or 'enum' data type.", dependencyPropertyName);
                 }
             }
 
