@@ -175,14 +175,14 @@ namespace DeltaShell.NGHS.IO.Grid
         public void WriteZValuesAtFacesForMeshId(int meshId, double[] zValues)
         {
             DoWithValidGridApi<IUGridApi>(
-                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, Resources.UGrid_WriteZValuesAtFacesForMeshId_face_z, Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces, zValues)
+                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, GridApiDataSet.UGridApiConstants.FaceZ, Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces, zValues)
                 , Resources.UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces);
         }
 
         public void WriteZValuesAtNodesForMeshId(int meshId, double[] zValues)
         {
             DoWithValidGridApi<IUGridApi>(
-                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, Resources.UGrid_WriteZValuesAtNodesForMeshId_node_z, Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes, zValues)
+                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, GridApiDataSet.UGridApiConstants.NodeZ, Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes, zValues)
                 , Resources.UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes);
         }
 

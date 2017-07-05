@@ -198,35 +198,17 @@
   <data name="UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces" xml:space="preserve">
     <value>Couldn't get z values at mesh faces</value>
   </data>
-  <data name="UGrid_WriteZValuesAtFacesForMeshId_face_z" xml:space="preserve">
-    <value>face_z</value>
-  </data>
   <data name="UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces" xml:space="preserve">
     <value>z-coordinate of mesh faces</value>
   </data>
   <data name="UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes" xml:space="preserve">
     <value>Couldn't write z values at mesh nodes</value>
   </data>
-  <data name="UGrid_WriteZValuesAtNodesForMeshId_node_z" xml:space="preserve">
-    <value>node_z</value>
-  </data>
   <data name="UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes" xml:space="preserve">
     <value>z-coordinate of mesh nodes</value>
   </data>
   <data name="UGrid_GetMeshName_Couldn_t_get_meshname" xml:space="preserve">
     <value>Couldn't get meshname</value>
-  </data>
-  <data name="UGridApi_WriteZCoordinateValues_altitude" xml:space="preserve">
-    <value>altitude</value>
-  </data>
-  <data name="UGridApi_WriteZCoordinateValues_m" xml:space="preserve">
-    <value>m</value>
-  </data>
-  <data name="UGridApi_GetNodeZCoordinates_node_z" xml:space="preserve">
-    <value>node_z</value>
-  </data>
-  <data name="UGridApi_GetNodeZCoordinates_NetNode_z" xml:space="preserve">
-    <value>NetNode_z</value>
   </data>
   <data name="UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_" xml:space="preserve">
     <value>Couldn't create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}</value>

@@ -295,15 +295,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to face_z.
-        /// </summary>
-        public static string UGrid_WriteZValuesAtFacesForMeshId_face_z {
-            get {
-                return ResourceManager.GetString("UGrid_WriteZValuesAtFacesForMeshId_face_z", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to z-coordinate of mesh faces.
         /// </summary>
         public static string UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces {
@@ -318,15 +309,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes {
             get {
                 return ResourceManager.GetString("UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to node_z.
-        /// </summary>
-        public static string UGrid_WriteZValuesAtNodesForMeshId_node_z {
-            get {
-                return ResourceManager.GetString("UGrid_WriteZValuesAtNodesForMeshId_node_z", resourceCulture);
             }
         }
         
@@ -354,42 +336,6 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate {
             get {
                 return ResourceManager.GetString("UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to NetNode_z.
-        /// </summary>
-        public static string UGridApi_GetNodeZCoordinates_NetNode_z {
-            get {
-                return ResourceManager.GetString("UGridApi_GetNodeZCoordinates_NetNode_z", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to node_z.
-        /// </summary>
-        public static string UGridApi_GetNodeZCoordinates_node_z {
-            get {
-                return ResourceManager.GetString("UGridApi_GetNodeZCoordinates_node_z", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to altitude.
-        /// </summary>
-        public static string UGridApi_WriteZCoordinateValues_altitude {
-            get {
-                return ResourceManager.GetString("UGridApi_WriteZCoordinateValues_altitude", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to m.
-        /// </summary>
-        public static string UGridApi_WriteZCoordinateValues_m {
-            get {
-                return ResourceManager.GetString("UGridApi_WriteZCoordinateValues_m", resourceCulture);
             }
         }
         

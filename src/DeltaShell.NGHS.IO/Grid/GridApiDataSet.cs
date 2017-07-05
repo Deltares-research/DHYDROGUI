@@ -17,10 +17,18 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public class Names
             {
-                public const string Location = "location";    
+                public const string Location = "location";
             }
         }
 
+        public class UGridApiConstants
+        {
+            public const string Altitude = "altitude";
+            public const string NodeZ = "node_z";
+            public const string NetNodeZ = "NetNode_z";
+            public const string FaceZ = "face_z";
+            public const string M = "m";
+        }
         
         public class GridConstants
         {
