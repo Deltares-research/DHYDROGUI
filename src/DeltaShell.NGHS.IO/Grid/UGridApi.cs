@@ -159,6 +159,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             int ierr;
             numberOfMeshEdges = -1;
+            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
 
             try
             {

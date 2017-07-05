@@ -479,7 +479,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        public void GivenUGridApiWhenApiCallThrosExceptionThenReturnFatalErrorValue()
+        public void GivenUGridApiWhenApiCallThrowsExceptionThenReturnFatalErrorValue()
         {
             int ioncid = 1;
             int networkId = 1;
