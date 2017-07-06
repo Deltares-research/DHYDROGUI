@@ -541,9 +541,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             new TimFile().Read(filePath, sourceAndSink.Data, modelReferenceDate);
         }
 
-        public static ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceFileItem existingExtForceFileItem = null, bool writeToDisk = true)
+        public static ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceFileItem existingExtForceFileItem = null, bool writeToDisk = true, string prefix = null)
         {
-            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(extForceFileQuantityName)
+            var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
+            var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
             {
                 FileName = string.Format("{0}_{1}.pol", extForceFileQuantityName, operation.Name.Replace(" ", "_").Replace("\t", "_")),
                 FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
@@ -584,7 +585,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             string extForceFileQuantityName, ImportSamplesSpatialOperationExtension importSamplesOperation,
             ExtForceFileItem existingExtForceFileItem, bool writeToDisk, string prefix = null)
         {
-            var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
             var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
             if (writeToDisk)
             {
@@ -601,7 +601,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     
                 }
             }
-            
+
+            var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
             var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
             {
                 FileName = targetDirectory != null ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "") : importSamplesOperation.FilePath,
@@ -617,15 +618,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             extForceFileItem.Enabled = importSamplesOperation.Enabled;
             extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
-
-            var directoryName = Path.GetDirectoryName(extForceFilePath);
-            if (directoryName != null)
-            {
-                var xyzFilePath = Path.Combine(directoryName, importSamplesOperation.Name + "." + XyzFile.Extension);
-
-                var newFile = new XyzFile();
-                newFile.Write(xyzFilePath, importSamplesOperation.GetPoints());
-            }
 
             return extForceFileItem;
         }

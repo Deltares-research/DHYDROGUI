@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Coverages;
+using SharpMap;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.Data.Providers;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -40,7 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var overalCat = MorphologySedimentIniFileGenerator.GenerateOverallRegion(model.SedimentOverallProperties);
                 AddPropertiesToCategory(model, overalCat, OverallHeader);
                 sedCategories.Add(overalCat);
-                
+
+                WriteSpatiallyVaryingSedimentPropertySubFiles(model);
+
                 foreach (var sedimentFraction in model.SedimentFractions)
                 {
                     var sedimentCategory = new DelftIniCategory(Header);
@@ -79,6 +93,189 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
+        private static void WriteSpatiallyVaryingSedimentPropertySubFiles(IWaterFlowFMModel model)
+        {
+            var spaceVarNames = model.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where( n => !n.EndsWith("SedConc")).ToList();
+
+
+            var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.StartsWith(spaceVarName))).ToArray();
+            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
+            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
+            var spatialOperations = SpatialOperations(dataItemsWithConverter);
+
+            var coverageByType = dataItemsWithOutConverter.Select(di => di.Value)
+                    .OfType<UnstructuredGridCoverage>()
+                    .GroupBy(c => c.GetType())
+                    .ToList();
+            var dataItemNameLookup = dataItemsWithOutConverter.ToDictionary(di => di.Value, di => di.Name);
+
+            foreach (var coverageGrouping in coverageByType)
+            {
+                Coordinate[] coordinates = null;
+
+                foreach (var coverage in coverageGrouping)
+                {
+                    if (coverage.IsTimeDependent)
+                        throw new NotSupportedException(
+                            "Converting time dependent spatial data to samples is not supported");
+
+                    var component = coverage.Components[0] as IVariable<double>;
+                    if (component == null)
+                    {
+                        throw new NotSupportedException(
+                            "Converting a non-double valued coverage component to a point cloud is not supported");
+                    }
+
+                    var values = component.Values;
+                    double? noDataValue = (double?)component.NoDataValue;
+
+                    var pointCloud = new PointCloud();
+                    var i = 0;
+                    foreach (double v in values) // using enumerable next is faster than using index (for loop)
+                    {
+                        if (noDataValue.HasValue && v == noDataValue.Value)
+                        {
+                            i++;
+                            continue;
+                        }
+
+                        if (coordinates == null)
+                        {
+                            coordinates = coverage.Coordinates.ToArray();
+
+                            if (coordinates.Length != values.Count)
+                                throw new InvalidOperationException(
+                                    "Spatial data is not consistent: number of coordinate does not match number of values");
+                        }
+
+                        var coord = coordinates[i];
+                        pointCloud.PointValues.Add(new PointValue { X = coord.X, Y = coord.Y, Value = v });
+                        i++;
+                    }
+
+                    if (pointCloud.PointValues.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var pointCloudFeatureProvider = new PointCloudFeatureProvider
+                    {
+                        PointCloud = pointCloud
+                    };
+
+                    var newOperation = new AddSamplesOperation(false) { Name = coverage.Name };
+                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
+
+                    spatialOperations.Add(dataItemNameLookup[coverage], new[] { newOperation });
+                }
+            }
+
+            foreach (var operations in spatialOperations)
+            {
+                foreach (var spatialOperation in operations.Value)
+                {
+                    var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+                    if (samplesOperation != null)
+                    {
+                        WriteXYZIfDirectoryExists(model, spatialOperation, samplesOperation.GetPoints());
+                        continue;
+                    }
+
+                    var addSamplesOperation = spatialOperation as AddSamplesOperation;
+                    if (addSamplesOperation != null)
+                    {
+                        WriteXYZIfDirectoryExists(model, spatialOperation, addSamplesOperation.GetPoints());
+                        continue;
+                    }
+                    /*var valueOperation = spatialOperation as ValueOperationBase;
+                    if (valueOperation != null)
+                    {
+                        Log.ErrorFormat("Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file.", spatialOperation.Name);
+    
+                        continue;
+                    }*/
+
+                    Log.ErrorFormat("Cannot serialize spatial operation with name {0} of type {1} to xyz file, please fix the operation so it can be serialized",
+                        spatialOperation.Name, spatialOperation.GetType());
+                }
+            }
+
+        }
+
+        private static void WriteXYZIfDirectoryExists(IWaterFlowFMModel model, ISpatialOperation spatialOperation,
+            IEnumerable<IPointValue> xyValuePoints)
+        {
+            var directoryName = Path.GetDirectoryName(model.MduFilePath);
+            if (directoryName != null)
+            {
+                var xyzFilePath = Path.Combine(directoryName,
+                    spatialOperation.Name + "." + XyzFile.Extension);
+
+                var newFile = new XyzFile();
+                newFile.Write(xyzFilePath, xyValuePoints);
+            }
+            else
+            {
+                throw new ArgumentException("Could not get directory name from file path" +
+                                            model.MduFilePath);
+            }
+        }
+
+        private static Dictionary<string, IList<ISpatialOperation>> SpatialOperations(List<IDataItem> dataItemsWithConverter)
+        {
+            var spatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
+            foreach (var dataItem in dataItemsWithConverter)
+            {
+                var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
+                if (
+                    spatialOperationValueConverter.SpatialOperationSet.Operations.All(
+                        WaterFlowFMModelDefinition.SupportedByExtForceFile))
+                {
+                    // put in everything except spatial operation sets,
+                    // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
+                    var spatialOperation = spatialOperationValueConverter.SpatialOperationSet.GetOperationsRecursive()
+                        .Where(s => !(s is ISpatialOperationSet))
+                        .Select(WaterFlowFMModelDefinition.ConvertSpatialOperation)
+                        .ToList();
+
+                    //spatialOperations.AddRange(spatialOperation);
+                    spatialOperations.Add(dataItem.Name, spatialOperation);
+                }
+                // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
+                else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
+                {
+                    // unsupported operations are converted to sample operations that are saved with an xyz file via the model definition.
+                    var coverage =
+                        spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
+                            UnstructuredGridCoverage;
+
+                    // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
+                    // (This can happen when exporting spatial operations that comprise of added points but no interpolation
+                    // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
+                    if (coverage == null || (coverage.Components[0].NoDataValues != null &&
+                                             coverage.GetValues<double>()
+                                                 .All(v => coverage.Components[0].NoDataValues.Contains(v))))
+                    {
+                        continue;
+                    }
+
+                    var newOperation = new AddSamplesOperation(false)
+                    {
+                        Name = spatialOperationValueConverter.SpatialOperationSet.Name
+                    };
+                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
+                        new PointCloudFeatureProvider
+                        {
+                            PointCloud = coverage.ToPointCloud(0, true),
+                        });
+
+                    spatialOperations.Add(dataItem.Name, new[] { newOperation } );
+                }
+            }
+            return spatialOperations;
+        }
+
+        
         private static readonly Dictionary<string, Action<IDelftIniCategory, string, WaterFlowFMModel>> SectionLoaders = new Dictionary
                 <string, Action<IDelftIniCategory, string, WaterFlowFMModel>>
                 {
@@ -221,7 +418,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void AddSedimentTypeProperties(ISedimentFraction sedimentFraction, IDelftIniCategory sedimentCategory)
         {
-            foreach (var sedimentProperty in sedimentFraction.CurrentSedimentType.Properties)
+            foreach (var sedimentProperty in sedimentFraction.CurrentSedimentType.Properties.Where(n => !n.Name.EndsWith("SedConc")))
             {
                 sedimentProperty.SedimentPropertyWrite(sedimentCategory);
             }

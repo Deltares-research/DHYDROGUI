@@ -678,8 +678,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             var dataItemsFound = SpatialDataItemNames.Concat(InitialTracerNames).Concat(InitialSpatiallyVaryingSedimentPropertyNames).SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n))).ToArray();
 
-            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
-            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
+            var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).Distinct().ToList();
+            var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).Distinct().ToList();
 
             foreach (var dataItem in dataItemsWithConverter)
             {
@@ -688,10 +688,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    var eventedList = spatialOperationValueConverter.SpatialOperationSet.Operations;
-                    var operations = eventedList.Where(s => !( s is ISpatialOperationSet ));
-                    var enumerable = operations.Select(ConvertSpatialOperation);
-                    var spatialOperations = enumerable
+                    var spatialOperations = spatialOperationValueConverter.SpatialOperationSet.Operations
+                        .Where(s => !( s is ISpatialOperationSet )).Select(ConvertSpatialOperation)
                         .ToList();
 
                     SpatialOperations.Add(dataItem.Name, spatialOperations);
@@ -722,12 +720,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                             PointCloud = coverage.ToPointCloud(0, true),
                         });
 
-                    SpatialOperations.Add(dataItem.Name, new[] { newOperation });
+                    if (SpatialOperations.ContainsKey(dataItem.Name))
+                    {
+                        Log.Warn("Duplication of spatial operations for "+dataItem.Name+". Please verify the model after saving.");
+                    }
+                    else
+                    {
+                        SpatialOperations.Add(dataItem.Name, new[] { newOperation });
+                    }
                 }
             }
 
             var coverageByType = dataItemsWithOutConverter.Select(di => di.Value).OfType<UnstructuredGridCoverage>().GroupBy(c => c.GetType()).ToList();
-            var dataItemNameLookup = dataItemsWithOutConverter.ToDictionary(di => di.Value,di => di.Name);
+            
+            var dataItemNameLookup = dataItemsWithOutConverter
+                                        .GroupBy(o => o.Name).Select(o => o.FirstOrDefault())   //Removing duplicates.
+                                        .ToDictionary(di => di.Value,di => di.Name);
 
             foreach (var coverageGrouping in coverageByType)
             {
@@ -783,7 +791,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     var newOperation = new AddSamplesOperation(false) { Name = coverage.Name };
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
 
-                    SpatialOperations.Add(dataItemNameLookup[coverage], new[] { newOperation });
+                    if (SpatialOperations.ContainsKey(dataItemNameLookup[coverage]))
+                    {
+                        Log.Warn("Duplication of spatial operations for " + dataItemNameLookup[coverage] +
+                                 ". Please verify the model after saving.");
+                    }
+                    else
+                    {
+                        SpatialOperations.Add(dataItemNameLookup[coverage], new[] {newOperation});
+                    }
                 }
             }
         }

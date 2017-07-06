@@ -222,10 +222,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
                 if(spatialOperations == null || !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension || s is AddSamplesOperation)) continue;
-                extForceFileItems.AddRange(
-                    WriteSpatialData(spatiallyVaryingSedimentPropertyName,
-                    spatialOperations, InitialSpatialVaryingSedimentPrefix)
-                    .Distinct());
+                var forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
+                        spatialOperations, InitialSpatialVaryingSedimentPrefix)
+                    .Distinct().ToList();
+                
+                //Remove the postfix from the quantity (it is not accepted by the kernel)
+                if(spatiallyVaryingSedimentPropertyName.EndsWith("_SedConc"))
+                    forceFileItems.ForEach( ffi => ffi.Quantity = ffi.Quantity.Substring(0, ffi.Quantity.Length - "_SedConc".Length));
+                extForceFileItems.AddRange(forceFileItems);
             }
 
             return extForceFileItems;
@@ -304,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var existingItem = GetExistingForceFileItemOrNull(spatialOperation);
                         yield return
                             ExtForceFileHelper.WriteInitialConditionsPolygon(FilePath, quantity, polygonOperation,
-                                existingItem, WriteToDisk);
+                                existingItem, WriteToDisk, prefix);
                         continue;
                     }
 

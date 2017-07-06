@@ -340,7 +340,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var loadedSpatDoubleProp = loadedSedimentFraction.CurrentSedimentType.Properties.FirstOrDefault(st => st.Name == "SedConc") as ISpatiallyVaryingSedimentProperty<double>;
                 Assert.IsNotNull(loadedSpatDoubleProp);
-                Assert.That(loadedSpatDoubleProp.Value, Is.EqualTo(33.4).Within(0.01));
             }
             finally
             {
@@ -414,9 +413,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
-                Assert.That(sedWritten, Is.StringContaining("SedConc"));
+                Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 
                 Assert.That(sedWritten, Is.StringContaining("IniSedThick"));
@@ -635,9 +634,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 var sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
-                Assert.That(sedWritten, Is.StringContaining("SedConc"));
+                Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 
                 /* 

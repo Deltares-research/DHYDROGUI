@@ -152,6 +152,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 if (prop == null) return;
                 var spatVaryingFile = (string)Convert.ChangeType(prop.Value, typeof(string));
                 IsSpatiallyVarying = !string.IsNullOrEmpty(spatVaryingFile);
+//                if (spatVaryingFile != null && spatVaryingFile.EndsWith(".xyz"))
+//                    spatVaryingFile = spatVaryingFile.Substring(0, spatVaryingFile.Length - ".xyz".Length );
                 SpatiallyVaryingName = spatVaryingFile;
             }
             

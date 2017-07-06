@@ -110,6 +110,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 //Assert.AreEqual(2, loadedOperations.Count);
             }
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void LoadAndRunModelWithMorphologyAndSpatialOperationsTest()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Run();
+
+                app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
+                //app.OpenProject(TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj"));
+
+                var mduPath = TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm\zm_dfm.mdu");
+                var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
+
+                var model = new WaterFlowFMModel(mduFilePath);
+
+                app.Project.RootFolder.Add(model);
+
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                loadedModel.ClearOutput();
+                Assert.NotNull(loadedModel);
+                Assert.IsTrue(loadedModel.OutputIsEmpty);
+
+                app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
+                app.RunActivity(loadedModel);
+                Assert.IsFalse(loadedModel.OutputIsEmpty);
+
+                app.CloseProject();
+            }
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
