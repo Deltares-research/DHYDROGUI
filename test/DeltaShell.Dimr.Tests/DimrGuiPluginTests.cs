@@ -1,0 +1,89 @@
+﻿using NUnit.Framework;
+using System.Linq;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Gui;
+using DeltaShell.Gui.Forms.ViewManager;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using Rhino.Mocks;
+using SharpMap;
+using SharpMap.Api.Layers;
+
+namespace DeltaShell.Dimr.Gui.Tests
+{
+    [TestFixture()]
+    public class DimrGuiPluginTests
+    {
+        [Test()]
+        public void TestDimrGuiPlugin()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var dimrGuiPlugin = new DimrGuiPlugin();
+                gui.Plugins.Add(dimrGuiPlugin);
+                gui.Run();
+                Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
+                Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
+                Assert.AreEqual(Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
+                Assert.AreEqual("1.0.0.0", DimrGuiPlugin.Instance.FileFormatVersion);
+                Assert.That(DimrGuiPlugin.Instance.Version, Is.StringStarting("1.0.0"));
+                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Is.StringStarting("DeltaShell.Dimr.Gui"));
+            }
+            Assert.IsNull(DimrGuiPlugin.Instance);
+        }
+
+        [Test()]
+        public void TestIsOnlyDimrModelSelected()
+        {
+            
+            var mocks = new MockRepository();
+            var map = new Map();
+            var mapView = new MapView();
+            mapView.Map = map;
+            var viewlist = mocks.DynamicMock<IViewList>();
+            viewlist.Expect(vl => vl.ActiveView).Return(mapView);
+            var gui = mocks.DynamicMock<IGui>();
+            gui.Expect(g => g.DocumentViews).Return(viewlist).Repeat.Any();
+            mocks.ReplayAll();
+            using (var guiPlugin = new DimrGuiPlugin())
+            {
+                Assert.False(guiPlugin.IsOnlyDimrModelSelected);
+                guiPlugin.Gui = gui;
+                Assert.False(guiPlugin.IsOnlyDimrModelSelected);
+                map.Layers.Add(new HydroRegionMapLayer());
+                Assert.False(guiPlugin.IsOnlyDimrModelSelected);
+                mocks.BackToRecordAll();
+                viewlist.Expect(vl => vl.ActiveView).Return(mapView);
+                gui.Expect(g => g.DocumentViews).Return(viewlist).Repeat.Any();
+                var dimrModel = mocks.DynamicMock<IDimrModel>();
+                gui.Expect(g => g.SelectedModel).Return(dimrModel).Repeat.Any();
+                mocks.ReplayAll();
+                Assert.True(guiPlugin.IsOnlyDimrModelSelected);
+                mocks.BackToRecordAll();
+                viewlist.Expect(vl => vl.ActiveView).Return(mapView);
+                gui.Expect(g => g.DocumentViews).Return(viewlist).Repeat.Any();
+                var workflow = mocks.DynamicMock<ICompositeActivity>();
+                workflow.Expect(wf => wf.Activities).Return(new EventedList<IActivity>() { dimrModel } ).Repeat.Any();
+                var compositeActivity = mocks.DynamicMultiMock<IModel>(typeof(ICompositeActivity));
+                ((ICompositeActivity) compositeActivity).Expect(ca => ca.CurrentWorkflow).Return(workflow).Repeat.Any();
+                gui.Expect(g => g.SelectedModel).Return(compositeActivity).Repeat.Any();
+                mocks.ReplayAll();
+                Assert.True(guiPlugin.IsOnlyDimrModelSelected);
+            }
+            mocks.VerifyAll();
+        }
+
+        [Test()]
+        public void TestGetPersistentAssemblies()
+        {
+            using (var dimrGuiPlugin = new DimrGuiPlugin())
+            {
+                Assert.True(dimrGuiPlugin.GetPersistentAssemblies().Contains(typeof(DimrGuiPlugin).Assembly));
+                Assert.AreEqual(1, dimrGuiPlugin.GetPersistentAssemblies().Count());
+            }
+        }
+    }
+}

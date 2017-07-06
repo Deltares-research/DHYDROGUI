@@ -72,7 +72,7 @@ namespace DeltaShell.Dimr
             model.ExplicitWorkingDirectory = ExportDimrModel(model.ExplicitWorkingDirectory, model, exporter);
 
             // generate the dimr config xml
-            dimrFile = GenerateDimrXML(model.ExplicitWorkingDirectory);
+            dimrFile = GenerateDimrXML(model, model.ExplicitWorkingDirectory);
 
             // initialize dimr
             log.Info(model.KernelVersions);
@@ -169,7 +169,7 @@ namespace DeltaShell.Dimr
             set { dimrApi = value; }
         }
 
-        private string GenerateDimrXML(string workDirectory)
+        public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)
         {
             // generate dimconfig
             var dimrFile = Path.Combine(workDirectory, "dimr.xml");
@@ -177,17 +177,17 @@ namespace DeltaShell.Dimr
             var dimrConfig = new dimrXML() { documentation = documentation };
 
             // control section
-            var element = new dimrComponentOrCouplerRefXML() { name = model.Name };
+            var element = new dimrComponentOrCouplerRefXML() { name = dimrModel.Name };
             dimrConfig.control = new[] { element };
 
             // component section
             var component = new dimrComponentXML
             {
-                name = model.Name,
+                name = dimrModel.Name,
 
-                library = model.LibraryName,
-                workingDir = model.DirectoryName,
-                inputFile = model.InputFile
+                library = dimrModel.LibraryName,
+                workingDir = dimrModel.DirectoryName,
+                inputFile = dimrModel.InputFile
             };
             dimrConfig.component = new[] { component };
             //XmlValidate(dimrConfig.Serialize());

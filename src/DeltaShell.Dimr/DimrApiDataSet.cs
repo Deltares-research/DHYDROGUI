@@ -42,7 +42,10 @@ namespace DeltaShell.Dimr
             path = SharedDllPath + ";" + path;
             Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
         }
-        
+
+        public const string FEEDBACKLEVELKEY = "feedbackLevel";
+        public const string LOGFILELEVELKEY = "debugLevel";
+
         public static DimrLoggingLevel LogFileLevel = DimrLoggingLevel.LOG_DETAIL;
         public static DimrLoggingLevel FeedbackLevel = DimrLoggingLevel.WARN;
 

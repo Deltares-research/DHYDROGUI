@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -19,7 +20,6 @@ namespace DeltaShell.Dimr
         private double tStep;
         private double tCurrent;
         private List<string> messages;
-        private DimrApiWrapper.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
         private bool reduceLogging = false;
         public string KernelDirs { get; set; }
 
@@ -35,9 +35,30 @@ namespace DeltaShell.Dimr
             tStart = tEnd = tStep = tCurrent = 0;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel("feedbackLevel", (long)DimrApiDataSet.FeedbackLevel);
-            SetLoggingLevel("debugLevel", (long)DimrApiDataSet.LogFileLevel);
-            set_logger();
+            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, (long)DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, (long)DimrApiDataSet.LogFileLevel);
+            set_feedback_logger();
+            Logger = BMI_Logger_function;
+        }
+        [ExcludeFromCodeCoverage]
+        private void BMI_Logger_function(Level level, string message)
+        {
+            var msg = message != null ? string.Copy(message) : string.Empty;
+            
+            msg = string.Format("Dimr [{0}] {1} >> {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(Level), level), msg);
+            if (useMessagesBuffering)
+            {
+                messages.Add(msg);
+            }
+            else
+            {
+                Console.WriteLine(msg);
+                Log.DebugFormat(msg);
+            }
+        }
+        public void set_logger()
+        {
+            DimrApiWrapper.set_logger(Logger);
         }
 
         #region Implementation of IDimrApi
@@ -70,29 +91,39 @@ namespace DeltaShell.Dimr
             get { return DimrRefDate.AddSeconds(tCurrent); }
         }
 
-        public void set_logger()
+        public void set_feedback_logger()
         {
-            cMessageCallback = (time, message, level) =>
+            DimrApiWrapper.set_logger_callback(FeedbackLog);
+        }
+
+        [ExcludeFromCodeCoverage]
+        private void FeedbackLog(string time, string message, uint level)
+        {
+            var msg = message != null ? string.Copy(message) : string.Empty;
+            string dateTimeString = string.Empty;
+            try
             {
-                var msg = message != null ? string.Copy(message) : string.Empty;
-                var dateTime =
-                    new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)
-                        .AddSeconds((long) (double.Parse(time.Split('.')[0], System.Globalization.CultureInfo.InvariantCulture)))
-                        .AddMilliseconds((long) (double.Parse(time.Split('.')[1], System.Globalization.CultureInfo.InvariantCulture)))
-                        .AddDays(-1)
-                        .ToLocalTime();
-                msg = string.Format("Dimr [{0}] {1} >> {2}", dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(DimrApiDataSet.DebugLevel), level), msg);
-                if (useMessagesBuffering)
-                {
-                    messages.Add(msg);
-                }
-                else
-                {
-                    Console.WriteLine(msg);
-                    Log.DebugFormat(msg);
-                }
-            };
-            DimrApiWrapper.set_logger_callback(cMessageCallback);
+                var dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddSeconds((long)(double.Parse(time.Split('.')[0], System.Globalization.CultureInfo.InvariantCulture)))
+                    .AddMilliseconds((long)(double.Parse(time.Split('.')[1], System.Globalization.CultureInfo.InvariantCulture)))
+                    .AddDays(-1)
+                    .ToLocalTime();
+                dateTimeString = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            }
+            catch
+            {
+                dateTimeString = time;
+            }
+            
+            msg = string.Format("Dimr [{0}] {1} >> {2}", dateTimeString , Enum.GetName(typeof(DimrApiDataSet.DebugLevel), level), msg);
+            if (useMessagesBuffering)
+            {
+                messages.Add(msg);
+            }
+            else
+            {
+                Console.WriteLine(msg);
+                Log.DebugFormat(msg);
+            }
         }
 
         public int Initialize(string xmlFile)
@@ -227,7 +258,8 @@ namespace DeltaShell.Dimr
         public Array GetValues(string variable)
         {
             double[] value = { default(double) };
-            IntPtr dPtr = Marshal.AllocCoTaskMem(value.Length * Marshal.SizeOf(typeof(double)));
+            GCHandle handle = GCHandle.Alloc(value.Length * Marshal.SizeOf(typeof(double)), GCHandleType.Pinned);
+            IntPtr dPtr = handle.AddrOfPinnedObject();
             try
             {
                 DimrApiWrapper.get_var(variable, ref dPtr);
@@ -236,14 +268,7 @@ namespace DeltaShell.Dimr
             finally
             {
                 if (dPtr != IntPtr.Zero)
-                {
-                    try
-                    {
-                        //Marshal.FreeCoTaskMem(dPtr);
-                    }
-                    catch { }
-                }
-
+                    handle.Free();
                 dPtr = IntPtr.Zero;
             }
 
@@ -293,7 +318,6 @@ namespace DeltaShell.Dimr
 
         public void SetValues(string variable, Array values)
         {
-            Debugger.Launch();
             var valuesDouble = values as double[];
             if (valuesDouble != null)
             {
@@ -326,7 +350,7 @@ namespace DeltaShell.Dimr
 
         public void ProcessMessages()
         {
-            if (!useMessagesBuffering)
+            if (useMessagesBuffering)
             {
                 var infoMsgs = Messages;
                 if (infoMsgs.Length > 0 && !(infoMsgs.Length == 1 && infoMsgs[0] == string.Empty))
