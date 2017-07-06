@@ -187,16 +187,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         WriteXYZIfDirectoryExists(model, spatialOperation, addSamplesOperation.GetPoints());
                         continue;
                     }
-                    /*var valueOperation = spatialOperation as ValueOperationBase;
+                    
+                    var valueOperation = spatialOperation as ValueOperationBase;
                     if (valueOperation != null)
                     {
-                        Log.ErrorFormat("Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file.", spatialOperation.Name);
+                        Log.WarnFormat("Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file.", spatialOperation.Name);
     
                         continue;
-                    }*/
+                    }
 
-                    Log.ErrorFormat("Cannot serialize spatial operation with name {0} of type {1} to xyz file, please fix the operation so it can be serialized",
-                        spatialOperation.Name, spatialOperation.GetType());
+//                    Log.ErrorFormat("Cannot serialize spatial operation with name {0} of type {1} to xyz file, please fix the operation so it can be serialized",
+//                        spatialOperation.Name, spatialOperation.GetType());
                 }
             }
 
