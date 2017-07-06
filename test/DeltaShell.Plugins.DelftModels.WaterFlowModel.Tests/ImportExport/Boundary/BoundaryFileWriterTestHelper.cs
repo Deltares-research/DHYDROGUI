@@ -116,10 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             boundaryNodeData.Data.Arguments.Clear();
             boundaryNodeData.Data.Arguments.Add(argument);
 
-            var component = new Variable<double>();
-            component.Values.AddRange(componentValues);
-            boundaryNodeData.Data.Components.Clear();
-            boundaryNodeData.Data.Components.Add(component);
+            boundaryNodeData.Data.SetValues(componentValues);
 
             return boundaryNodeData;
         }
@@ -138,10 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             boundaryNodeData.Data.Arguments.Clear();
             boundaryNodeData.Data.Arguments.Add(argument);
 
-            var component = new Variable<double>();
-            component.Values.AddRange(componentValues);
-            boundaryNodeData.Data.Components.Clear();
-            boundaryNodeData.Data.Components.Add(component);
+            boundaryNodeData.Data.SetValues(componentValues);
 
             return boundaryNodeData;
         }
@@ -173,10 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             lateralSourceData.Data.Arguments.Clear();
             lateralSourceData.Data.Arguments.Add(argument);
 
-            var component = new Variable<double>();
-            component.Values.AddRange(componentValues);
-            lateralSourceData.Data.Components.Clear();
-            lateralSourceData.Data.Components.Add(component);
+            lateralSourceData.Data.SetValues(componentValues);
 
             return lateralSourceData;
         }
@@ -195,10 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             lateralSourceData.Data.Arguments.Clear();
             lateralSourceData.Data.Arguments.Add(argument);
 
-            var component = new Variable<double>();
-            component.Values.AddRange(componentValues);
-            lateralSourceData.Data.Components.Clear();
-            lateralSourceData.Data.Components.Add(component);
+            lateralSourceData.Data.SetValues(componentValues);
 
             return lateralSourceData;
         }

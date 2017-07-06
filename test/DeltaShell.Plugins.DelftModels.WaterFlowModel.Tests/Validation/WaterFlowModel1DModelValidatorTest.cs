@@ -9,10 +9,10 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary;
@@ -58,6 +58,110 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
                                         "Cannot perform calculation in geographical coordinate system WGS 84"));
+        }
+
+        [Test]
+        public void TestBoundaryConditions_FlowWaterLevel_ValuesInSequenceAreValid()
+        {
+            // Setup
+            var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+
+            IHydroNetwork network = model.Network;
+            var nwNodes = network.HydroNodes.ToList();
+
+            model.BoundaryConditions.ForEach(bc => bc.DataType = WaterFlowModel1DBoundaryNodeDataType.None);
+
+            var argumentValues = new double[] { 0, 1, 2, 3, 4, 5, 6 };
+            var componentValues = new double[] { 0, -1, -2, -3, -5, -8, -13 };
+
+            var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
+                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+
+            var previous = model.BoundaryConditions.First(bc => bc.Feature == nwNodes[0]);
+            model.BoundaryConditions.Remove(previous);
+            model.BoundaryConditions.Add(boundaryNodeData);           
+
+            // Check negative sequential values should be valid
+            var report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+
+            componentValues = new double[] { -13, -8, -5, -3, -2, -1, 0 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+
+            // Check positive sequential values should be valid
+            componentValues = new double[] { 0, 1, 2, 3, 5, 8, 13 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+
+            componentValues = new double[] { 13, 8, 5, 3, 2, 1, 0 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+
+            // check mix of positive and negative values in sequence should be valid
+            componentValues = new double[] { -1, 0, 1, 2, 3, 5, 8 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+
+            componentValues = new double[] { 1, 0, -1, -2, -3, -5, -8 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.None, report.Severity());
+        }
+
+        [Test]
+        public void TestBoundaryConditions_FlowWaterLevel_ValuesOutOfSequenceAreInvalid()
+        {
+            // Setup
+            var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+
+            IHydroNetwork network = model.Network;
+            var nwNodes = network.HydroNodes.ToList();
+
+            model.BoundaryConditions.ForEach(bc => bc.DataType = WaterFlowModel1DBoundaryNodeDataType.None);
+
+            var argumentValues = new double[] { 0, 1, 2, 3, 4, 5, 6 };
+            var componentValues = new double[] { 0, -1, 2, -3, 5, -8, 13 };
+
+            var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
+                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+
+            var previous = model.BoundaryConditions.First(bc => bc.Feature == nwNodes[0]);
+            model.BoundaryConditions.Remove(previous);
+            model.BoundaryConditions.Add(boundaryNodeData);
+
+            // Check values not in sequence should be invalid
+            var report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+
+            var expectedError = string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues, boundaryNodeData.Name);
+            Assert.IsTrue(ContainsError(report, expectedError));
+
+            componentValues = new double[] { -1, -1, -1, -3, -5, -5, -13 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+
+            expectedError = string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues, boundaryNodeData.Name);
+            Assert.IsTrue(ContainsError(report, expectedError));
+
+            componentValues = new double[] { 1, 1, 1, 3, 5, 5, 13 };
+            boundaryNodeData.Data.Components[0].SetValues(componentValues);
+
+            report = WaterFlowModel1DModelDataValidator.Validate(model);
+            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+
+            Assert.IsTrue(ContainsError(report, expectedError));
         }
 
         [Test]

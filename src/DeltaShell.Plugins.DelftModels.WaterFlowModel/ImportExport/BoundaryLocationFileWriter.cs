@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 boundaryNodes.Select(
                     boundaryNodeData =>
                         GenerateBoundaryLocationDefinition(boundaryNodeData, 
-                                                    (int) WaterFlowModel1DHelper.GetBoundaryType(boundaryNodeData.DataType))));
+                            (int) WaterFlowModel1DHelper.GetBoundaryType(boundaryNodeData))));
 
             if (File.Exists(targetFile)) File.Delete(targetFile);
             new IniFileWriter().WriteIniFile(categories, targetFile);
