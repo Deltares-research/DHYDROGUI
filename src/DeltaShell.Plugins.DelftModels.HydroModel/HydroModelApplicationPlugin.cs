@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using Mono.Addins;
@@ -17,7 +18,7 @@ using log4net.Repository.Hierarchy;
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
     [Extension(typeof(IPlugin))]
-    public class HydroModelApplicationPlugin : ApplicationPlugin
+    public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         public static int MainThreadId;
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
@@ -151,6 +152,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CreateModel = owner => HydroModel.BuildModel(modelGroup)
                 };
             }
+        }
+        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
+        {
+            yield return new Iterative1D2DCouplerDataAccessListener();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

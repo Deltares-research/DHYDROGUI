@@ -28,6 +28,7 @@ using Rhino.Mocks;
 using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
@@ -41,11 +42,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var oneDimModel = MockRepository.GenerateStrictMock<ITimeDependentModel>();
 
             oneDimModel.Expect(m => m.AllDataItems).Return(Enumerable.Empty<IDataItem>());
+            var isPartOf1D2DModelGuiProperty = twoDimModel.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = false;
 
-            twoDimModel.ModelDefinition.IsPartOf1D2DModel = false;
             twoDimModel.DisableFlowNodeRenumbering = false;
 
-            Assert.IsFalse(twoDimModel.ModelDefinition.IsPartOf1D2DModel);
+            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
             Assert.IsFalse(twoDimModel.DisableFlowNodeRenumbering);
 
             var coupler = new Iterative1D2DCoupler
@@ -55,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Flow2DModel = twoDimModel,
             };
 
-            Assert.IsTrue(twoDimModel.ModelDefinition.IsPartOf1D2DModel);
+            Assert.IsTrue((bool)isPartOf1D2DModelGuiProperty.Value);
             Assert.IsTrue(twoDimModel.DisableFlowNodeRenumbering);
         }
 

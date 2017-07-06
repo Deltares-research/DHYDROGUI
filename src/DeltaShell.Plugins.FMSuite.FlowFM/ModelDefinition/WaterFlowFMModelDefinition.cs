@@ -162,7 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
                 {GuiProperties.UseTemperature.ToLower(), OnUseTemperaturePropertyChanged},
                 {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
-                {GuiProperties.PartOf1D2DModel.ToLower(), OnPartOf1D2DModelPropertyChanged},
             };
 
             SetGuiTimePropertiesFromMduProperties();
@@ -259,13 +258,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             SetMapFormatPropertyValue();
         }
 
-        private void OnPartOf1D2DModelPropertyChanged(WaterFlowFMProperty prop)
-        {
-            SetMapFormatPropertyValue();
-            if (IsPartOf1D2DModel && UseMorphologySediment)
-                UseMorphologySediment = false;
-        }
-        
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
         {
             var prop = GetModelProperty(mduPropertyName);
@@ -313,22 +305,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public void SetMapFormatPropertyValue()
         {
-            if (IsPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
+            var isPartOf1D2DModel = (bool)GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            if (isPartOf1D2DModel && MapFormat != MapFormatType.NetCdf)
             {
                 MapFormat = MapFormatType.NetCdf;
                 Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_, ModelName);
             }
-            else if (!IsPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
+            else if (!isPartOf1D2DModel && UseMorphologySediment && MapFormat != MapFormatType.Ugrid)
             {
                 MapFormat = MapFormatType.Ugrid;
                 Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_, ModelName);
             }
-        }
-
-        public bool IsPartOf1D2DModel
-        {
-            get { return (bool) GetModelProperty(GuiProperties.PartOf1D2DModel).Value; }
-            set { GetModelProperty(GuiProperties.PartOf1D2DModel).Value = value; }
         }
 
         public bool UseMorphologySediment

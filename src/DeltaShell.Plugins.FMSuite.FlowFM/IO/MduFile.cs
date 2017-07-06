@@ -251,8 +251,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
+            var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             // write at the end in case of updated file paths
-            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:modelDefinition.IsPartOf1D2DModel, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
+            WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:isPartOf1D2DModel, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
 
             if (!switchTo)
             {

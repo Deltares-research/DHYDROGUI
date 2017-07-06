@@ -286,6 +286,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
+        /// </summary>
+        public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morph" +
+                        "ology_properties_and___or_sediments__Removing_these_properties_from_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MapFormat property value of FlowFM model {0} is changed to 1, because it is part of an 1D2D integrated model..
         /// </summary>
         public static string WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_ {

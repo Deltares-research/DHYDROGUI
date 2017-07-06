@@ -71,7 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // write mdu with adjusted properties
             var mduFile = new MduFile();
-            mduFile.WriteProperties(mduFilePath, adjustedMduProperties, false, false, useNetCDFMapFormat:model.ModelDefinition.IsPartOf1D2DModel, disableFlowNodeRenumbering:model.DisableFlowNodeRenumbering);
+            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            mduFile.WriteProperties(mduFilePath, adjustedMduProperties, false, false, useNetCDFMapFormat:isPartOf1D2DModel, disableFlowNodeRenumbering:model.DisableFlowNodeRenumbering);
 
             // do write grid file
             var gridFile = model.NetFilePath;
