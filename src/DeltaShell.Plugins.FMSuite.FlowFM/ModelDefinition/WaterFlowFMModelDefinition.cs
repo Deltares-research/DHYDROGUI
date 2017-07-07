@@ -709,7 +709,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                     if (SpatialOperations.ContainsKey(dataItem.Name))
                     {
-                        Log.Warn("Duplication of spatial operations for "+dataItem.Name+". Please verify the model after saving.");
+                        Log.WarnFormat(Resources.WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_, dataItem.Name);
                     }
                     else
                     {
@@ -780,8 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                     if (SpatialOperations.ContainsKey(dataItemNameLookup[coverage]))
                     {
-                        Log.Warn("Duplication of spatial operations for " + dataItemNameLookup[coverage] +
-                                 ". Please verify the model after saving.");
+                        Log.WarnFormat(Resources.WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_, dataItemNameLookup[coverage]);
                     }
                     else
                     {

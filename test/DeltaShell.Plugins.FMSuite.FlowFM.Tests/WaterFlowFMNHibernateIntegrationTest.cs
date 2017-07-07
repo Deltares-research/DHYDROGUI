@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void ReadWriteModelWithSpatialOperationsTest()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void LoadAndRunModelWithMorphologyAndSpatialOperationsTest()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());

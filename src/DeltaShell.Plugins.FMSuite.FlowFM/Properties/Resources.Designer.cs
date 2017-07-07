@@ -100,6 +100,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments..
+        /// </summary>
+        public static string ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_ {
+            get {
+                return ResourceManager.GetString("ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__" +
+                        "could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__f" +
+                        "or_Spatial_Varying_Sediments_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows to simulate 2D/3D flow of water in rivers, channels, lakes, estuarine &amp; coastal areas and seas..
         /// </summary>
         public static string FlowFMApplicationPlugin_Description {
@@ -226,6 +237,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file..
+        /// </summary>
+        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_and_we_can_create_the_xyz_file_ {
+            get {
+                return ResourceManager.GetString("SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file" +
+                        "_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operati" +
+                        "on__please_interpolate_the_operation_to_the_grid_and_we_can_create_the_xyz_file_" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not get directory name from file path {0}.
+        /// </summary>
+        public static string SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_ {
+            get {
+                return ResourceManager.GetString("SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_pat" +
+                        "h__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {
@@ -282,6 +315,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("unstrucWater", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplication of spatial operations for {0}. Please verify the model after saving..
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operati" +
+                        "ons_for__0___Please_verify_the_model_after_saving_", resourceCulture);
             }
         }
         

@@ -12,7 +12,6 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
@@ -365,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 doubleSpatProp.SpatiallyVaryingName = "mysedimentName_SedConc";
                 doubleSpatProp.Value = 12.3;
 
-                var doubleSpatProp2 = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, 0, true, "Joule", "mydoubledescription", false, false);
+                var doubleSpatProp2 = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, 0, true, "Joule", "mydoubledescription", true, false);
                 doubleSpatProp2.SpatiallyVaryingName = "mysedimentName_IniSedThick";
                 doubleSpatProp2.Value = 80.1;
 
@@ -385,22 +384,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                
                 /*  Test    */
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                var coverage = new UnstructuredGridCellCoverage(grid, false);
-                coverage[0] = 0.1;
-                coverage[1] = 3.2;
-                coverage[2] = 5.4;
-                coverage[3] = 7.6;
-
-                coverage.Name = "mysedimentName_SedConc";
-
-                coverage.Components[0].NoDataValue = -999;
                 
-                var dataItem = new DataItem();
-                dataItem.Name = "mysedimentName_SedConc";
-                dataItem.Value = coverage;
-                dataItem.Role = DataItemRole.Input;
+                /*SedThick coverage*/
+                var covSedThick = new UnstructuredGridCellCoverage(grid, false);
+                covSedThick[0] = 0.1;
+                covSedThick[1] = 3.2;
+                covSedThick[2] = 5.4;
+                covSedThick[3] = 7.6;
 
-                fmModel.DataItems = new EventedList<IDataItem> { dataItem };
+                covSedThick.Name = "mysedimentName_IniSedThick";
+
+                covSedThick.Components[0].NoDataValue = -999;
+                
+                var dataSedThickItem = new DataItem();
+                dataSedThickItem.Name = "mysedimentName_IniSedThick";
+                dataSedThickItem.Value = covSedThick;
+                dataSedThickItem.Role = DataItemRole.Input;
+                
+                /*SedCon coverage*/
+                var covSedConc = new UnstructuredGridCellCoverage(grid, false);
+                covSedConc[0] = 0.1;
+                covSedConc[1] = 3.2;
+                covSedConc[2] = 5.4;
+                covSedConc[3] = 7.6;
+
+                covSedConc.Name = "mysedimentName_SedConc";
+
+                covSedConc.Components[0].NoDataValue = -999;
+
+                var dataSedConcItem = new DataItem();
+                dataSedConcItem.Name = "mysedimentName_SedConc";
+                dataSedConcItem.Value = covSedConc;
+                dataSedConcItem.Role = DataItemRole.Input;
+
+                /*Add coverages to fraction and model.*/
+                fmModel.DataItems = new EventedList<IDataItem> { dataSedThickItem, dataSedConcItem };
                 fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>();
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
                 fmModel.SedimentFractions.Add(fraction);
@@ -419,8 +437,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 
                 Assert.That(sedWritten, Is.StringContaining("IniSedThick"));
-                Assert.That(sedWritten, Is.Not.StringContaining("mysedimentName_IniSedThick"));
-                Assert.That(sedWritten, Is.StringContaining("80.1"));
+                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_IniSedThick.xyz#"));
+                Assert.That(sedWritten, Is.Not.StringContaining("80.1"));
 
                 Assert.IsFalse(File.Exists(generatedXyzFile));
                 
@@ -430,23 +448,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 var extFile = new ExtForceFile();
                 extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                Assert.IsTrue(File.Exists(generatedXyzFile));
 
                 var xyzFileValues = new XyzFile().Read(generatedXyzFile).ToList();
-                Assert.That(xyzFileValues.ElementAt(0).X, Is.EqualTo(coverage.Coordinates.ElementAt(0).X));
-                Assert.That(xyzFileValues.ElementAt(0).Y, Is.EqualTo(coverage.Coordinates.ElementAt(0).Y));
-                Assert.That(xyzFileValues.ElementAt(0).Value, Is.EqualTo(coverage.GetValues<double>().ElementAt(0)));
+                Assert.That(xyzFileValues.ElementAt(0).X, Is.EqualTo(covSedThick.Coordinates.ElementAt(0).X));
+                Assert.That(xyzFileValues.ElementAt(0).Y, Is.EqualTo(covSedThick.Coordinates.ElementAt(0).Y));
+                Assert.That(xyzFileValues.ElementAt(0).Value, Is.EqualTo(covSedThick.GetValues<double>().ElementAt(0)));
 
-                Assert.That(xyzFileValues.ElementAt(1).X, Is.EqualTo(coverage.Coordinates.ElementAt(1).X));
-                Assert.That(xyzFileValues.ElementAt(1).Y, Is.EqualTo(coverage.Coordinates.ElementAt(1).Y));
-                Assert.That(xyzFileValues.ElementAt(1).Value, Is.EqualTo(coverage.GetValues<double>().ElementAt(1)));
+                Assert.That(xyzFileValues.ElementAt(1).X, Is.EqualTo(covSedThick.Coordinates.ElementAt(1).X));
+                Assert.That(xyzFileValues.ElementAt(1).Y, Is.EqualTo(covSedThick.Coordinates.ElementAt(1).Y));
+                Assert.That(xyzFileValues.ElementAt(1).Value, Is.EqualTo(covSedThick.GetValues<double>().ElementAt(1)));
 
-                Assert.That(xyzFileValues.ElementAt(2).X, Is.EqualTo(coverage.Coordinates.ElementAt(2).X));
-                Assert.That(xyzFileValues.ElementAt(2).Y, Is.EqualTo(coverage.Coordinates.ElementAt(2).Y));
-                Assert.That(xyzFileValues.ElementAt(2).Value, Is.EqualTo(coverage.GetValues<double>().ElementAt(2)));
+                Assert.That(xyzFileValues.ElementAt(2).X, Is.EqualTo(covSedThick.Coordinates.ElementAt(2).X));
+                Assert.That(xyzFileValues.ElementAt(2).Y, Is.EqualTo(covSedThick.Coordinates.ElementAt(2).Y));
+                Assert.That(xyzFileValues.ElementAt(2).Value, Is.EqualTo(covSedThick.GetValues<double>().ElementAt(2)));
 
-                Assert.That(xyzFileValues.ElementAt(3).X, Is.EqualTo(coverage.Coordinates.ElementAt(3).X));
-                Assert.That(xyzFileValues.ElementAt(3).Y, Is.EqualTo(coverage.Coordinates.ElementAt(3).Y));
-                Assert.That(xyzFileValues.ElementAt(3).Value, Is.EqualTo(coverage.GetValues<double>().ElementAt(3)));
+                Assert.That(xyzFileValues.ElementAt(3).X, Is.EqualTo(covSedThick.Coordinates.ElementAt(3).X));
+                Assert.That(xyzFileValues.ElementAt(3).Y, Is.EqualTo(covSedThick.Coordinates.ElementAt(3).Y));
+                Assert.That(xyzFileValues.ElementAt(3).Value, Is.EqualTo(covSedThick.GetValues<double>().ElementAt(3)));
             }
             finally
             {
