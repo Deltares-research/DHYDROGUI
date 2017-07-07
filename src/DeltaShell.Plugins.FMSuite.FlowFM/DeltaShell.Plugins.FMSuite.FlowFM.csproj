@@ -295,6 +295,7 @@
     <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="WaterFlowFMModel.Spatial.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
+    <None Include="Uml\FlowFMOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
