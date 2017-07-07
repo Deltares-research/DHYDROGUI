@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private string logFile;
         private string boundaryLocations;
         private string structures;
+        private string netCdf;
 
         private const string CrossSectionDefinitionFilename = "CrossSectionDefinitions.ini";
         private const string CrossSectionLocationFilename = "CrossSectionLocations.ini";
@@ -41,6 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private const string BoundaryConditionsFilename = "BoundaryConditions.bc"; 
         public const string ModelDefinitionFilename = "ModelDefinition.md1d";
         public const string ModelFilenameExtension = ".md1d";
+        private const string NetCfdFilename = "NetworkAndComputationalGrid_net.nc";
         
         public IEventedList<string> RoughnessFiles { get; private set; }
         
@@ -153,6 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             Retention = RetentionFilename;
             LogFile = LogFileName;
             Structures = StructureFilename;
+            NetCdf = NetCfdFilename;
             RoughnessFiles = new EventedList<string>();
             RoughnessFiles.CollectionChanged += RoughnessFiles_CollectionChanged;
         }
@@ -240,5 +243,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         }
 
         public string TargetPath { get { return targetPath; } }
+
+        public string NetCdf
+        {
+            get { return Path.Combine(targetPath, netCdf); }
+            private set { netCdf = value; }
+        }
     }
 }

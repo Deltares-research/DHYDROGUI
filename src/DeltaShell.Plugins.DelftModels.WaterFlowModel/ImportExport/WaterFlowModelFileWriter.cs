@@ -7,7 +7,9 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
+using DeltaShell.Plugins.NetworkEditor;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -50,6 +52,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             NetworkAndGridWriter.WriteFile(fileName.Network, waterFlowModel1D.Network, waterFlowModel1D.NetworkDiscretization);
             if (!File.Exists(fileName.Network))
                 throw new FileWritingException(string.Format("{0} is not written at location {1}.", Path.GetFileName(fileName.Network), fileName.TargetPath));
+
+            #region Write network and computational grid in ugrid
+
+            UGridGlobalMetaData metaData = new UGridGlobalMetaData("NetworkGeneratedInWaterFlowModel1D",  WaterFlowModel1DApplicationPlugin.PluginName, WaterFlowModel1DApplicationPlugin.PluginVersion);
+
+            UGridToNetworkAdapter.SaveNetwork(waterFlowModel1D.Network, fileName.NetCdf, metaData);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(waterFlowModel1D.NetworkDiscretization, fileName.NetCdf);
+
+            #endregion
 
             waterFlowModel1D.WriteSpatialData(fileName.TargetPath);
 
