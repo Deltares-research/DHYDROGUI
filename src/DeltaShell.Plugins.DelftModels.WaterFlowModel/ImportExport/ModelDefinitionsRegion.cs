@@ -6,6 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     {
         public const string FilesIniHeader = "Files";
         public static readonly ConfigurationSetting NetworkFile = new ConfigurationSetting(key: "networkFile", description: "#Name and location of the network file");
+        public static readonly ConfigurationSetting NetworkUGridFile = new ConfigurationSetting(key: "networkUgridFile", description: "#Name and location of the network file in ugrid format");
         public static readonly ConfigurationSetting CrossSectionLocationsFile = new ConfigurationSetting(key: "crossLocFile", description: "Name and location of the file containing the locations of the cross sections");
         public static readonly ConfigurationSetting CrossSectionDefinitionsFile = new ConfigurationSetting(key: "crossDefFile", description: "Name and location of the file containing the definitions of the cross sections");
         public static readonly ConfigurationSetting StructuresFile = new ConfigurationSetting(key: "structureFile", description: "Name and location of the structure file");
@@ -139,6 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting VolumeCorrection = new ConfigurationSetting(key: "VolumeCorrection");
         public static readonly ConfigurationSetting WaterQualityInUse = new ConfigurationSetting(key: "WaterQualityInUse");
         public static readonly ConfigurationSetting WriteNetCDF = new ConfigurationSetting(key: "WriteNetCDF", description: "0=false, 1=true");
+        public static readonly ConfigurationSetting ReadNetworkFromUGrid = new ConfigurationSetting(key: "ReadNetworkFromUGrid", description: "0=false, 1=true");
 
         public const string TransportComputationValuesHeader = "TransportComputation";
         public static readonly ConfigurationSetting UseTemperature = new ConfigurationSetting(key: "Temperature", description: "0=false, 1=true");

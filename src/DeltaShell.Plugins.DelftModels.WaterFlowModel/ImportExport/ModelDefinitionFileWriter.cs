@@ -99,6 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var modelFileNames = new ModelFileNames();
              
             filesRegion.AddProperty(ModelDefinitionsRegion.NetworkFile.Key, modelFileNames.Network, ModelDefinitionsRegion.NetworkFile.Description);
+            filesRegion.AddProperty(ModelDefinitionsRegion.NetworkUGridFile.Key, modelFileNames.NetCdf, ModelDefinitionsRegion.NetworkUGridFile.Description);
             filesRegion.AddProperty(ModelDefinitionsRegion.CrossSectionLocationsFile.Key, modelFileNames.CrossSectionLocations, ModelDefinitionsRegion.CrossSectionLocationsFile.Description);
             filesRegion.AddProperty(ModelDefinitionsRegion.CrossSectionDefinitionsFile.Key, modelFileNames.CrossSectionDefinitions, ModelDefinitionsRegion.CrossSectionDefinitionsFile.Description);
             filesRegion.AddProperty(ModelDefinitionsRegion.StructuresFile.Key, modelFileNames.Structures, ModelDefinitionsRegion.StructuresFile.Description);
