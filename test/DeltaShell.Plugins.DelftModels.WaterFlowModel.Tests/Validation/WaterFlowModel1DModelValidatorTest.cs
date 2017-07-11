@@ -141,27 +141,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             // Check values not in sequence should be invalid
             var report = WaterFlowModel1DModelDataValidator.Validate(model);
-            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+            Assert.AreEqual(ValidationSeverity.Warning, report.Severity());
 
-            var expectedError = string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues, boundaryNodeData.Name);
-            Assert.IsTrue(ContainsError(report, expectedError));
+            var expectedWarning = string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues, boundaryNodeData.Name);
+            Assert.IsTrue(ContainsWarning(report, expectedWarning));
 
             componentValues = new double[] { -1, -1, -1, -3, -5, -5, -13 };
             boundaryNodeData.Data.Components[0].SetValues(componentValues);
 
             report = WaterFlowModel1DModelDataValidator.Validate(model);
-            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+            Assert.AreEqual(ValidationSeverity.Warning, report.Severity());
 
-            expectedError = string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues, boundaryNodeData.Name);
-            Assert.IsTrue(ContainsError(report, expectedError));
+            expectedWarning = string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues, boundaryNodeData.Name);
+            Assert.IsTrue(ContainsWarning(report, expectedWarning));
 
             componentValues = new double[] { 1, 1, 1, 3, 5, 5, 13 };
             boundaryNodeData.Data.Components[0].SetValues(componentValues);
 
             report = WaterFlowModel1DModelDataValidator.Validate(model);
-            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+            Assert.AreEqual(ValidationSeverity.Warning, report.Severity());
 
-            Assert.IsTrue(ContainsError(report, expectedError));
+            Assert.IsTrue(ContainsWarning(report, expectedWarning));
         }
 
         [Test]

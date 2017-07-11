@@ -73,13 +73,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
                 if (values.GroupBy(n => n).Any(c => c.Count() > 1)) // check for duplicates
                 {
-                    issues.Add(new ValidationIssue(bc, ValidationSeverity.Error, string.Format(
+                    issues.Add(new ValidationIssue(bc, ValidationSeverity.Warning, string.Format(
                         Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues, bc.Name)));
                     continue;
                 }
 
                 if(!IsPositiveSequence(values) && !IsNegativeSequence(values))
-                    issues.Add(new ValidationIssue(bc, ValidationSeverity.Error, string.Format(
+                    issues.Add(new ValidationIssue(bc, ValidationSeverity.Warning, string.Format(
                         Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues, bc.Name)));
             }
 
