@@ -4,20 +4,24 @@ using System.Linq;
 using BasicModelInterface;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -120,6 +124,158 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
             var extForceFile = new ExtForceFile();
             TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def), 0);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ExtFileDoesNotSaveSedimentSpatiallyVaryingOperationsButSedConc()
+        {
+            //define model
+            var sedFile = Path.GetTempFileName();
+            var extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
+            var sedConcXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            var customPropXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_IniSedThick." + XyzFile.Extension);
+            string fileCopyName = "";
+            try
+            {
+                /* Define new model */
+                var fmModel = new WaterFlowFMModel(sedFile);
+                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                fmModel.Grid = grid;
+
+                /* Define test properties */
+                var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
+                {
+                    SpatiallyVaryingName = "mysedimentName_SedConc",
+                    Value = 12.3
+                };
+                var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
+                {
+                    SpatiallyVaryingName = "mysedimentName_IniSedThick",
+                    Value = 12.3
+                };
+                thickProp.IsSpatiallyVarying = true;
+
+                /* Set sediment and formula properties */
+                var testSedimentType = new SedimentType
+                {
+                    Key = "sand",
+                    Properties = new EventedList<ISedimentProperty> { doubleSpatProp, thickProp }
+                };
+
+                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false)
+                {
+                    Value = 80.1
+                };
+
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+
+                /*Add the fraction to the model*/
+                var fraction = new SedimentFraction
+                {
+                    Name = "mysedimentName",
+                    CurrentSedimentType = testSedimentType
+                };
+
+                fileCopyName = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz"));
+
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>();
+                fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
+                fmModel.SedimentFractions.Add(fraction);
+
+                /* Coverage for SedConc */
+                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
+
+                // retrieve / create value converter for mysedimentName_SedConc dataitem
+                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
+                var samplesSedConc = new AddSamplesOperation(false);
+                samplesSedConc.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
+                {
+                    PointCloud = new PointCloud
+                    {
+                        PointValues = new List<IPointValue>
+                        {
+                            new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12},
+                            new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30},
+                            new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31},
+                        },
+                    },
+
+                });
+                valueConverter.SpatialOperationSet.AddOperation(samplesSedConc);
+                valueConverter.SpatialOperationSet.Execute();
+
+                /* Create coverage for CustomProp */
+                var thickDataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_IniSedThick");
+
+                // retrieve / create value converter for mysedimentName_SedConc dataitem
+                var valueConverThick = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(thickDataItem, "mysedimentName_IniSedThick");
+                var samplesThick = new AddSamplesOperation(false);
+                samplesThick.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
+                {
+                    PointCloud = new PointCloud
+                    {
+                        PointValues = new List<IPointValue>
+                        {
+                            new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 2},
+                            new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 15},
+                            new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 28},
+                        },
+                    },
+
+                });
+                valueConverThick.SpatialOperationSet.AddOperation(samplesThick);
+                valueConverThick.SpatialOperationSet.Execute();
+
+                // update model definition (called during export)
+                var initialSpatialOps = new List<string>() { doubleSpatProp.SpatiallyVaryingName, thickProp.SpatiallyVaryingName };
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                
+                // create an interpolate operation using the samples added earlier
+                var intOpSedConc = new InterpolateOperation();
+                intOpSedConc.SetInputData(InterpolateOperation.InputSamplesName, samplesSedConc.Output.Provider);
+                Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(intOpSedConc));
+                var intOpThick = new InterpolateOperation();
+                intOpThick.SetInputData(InterpolateOperation.InputSamplesName, samplesThick.Output.Provider);
+                Assert.IsNotNull(valueConverThick.SpatialOperationSet.AddOperation(intOpThick));
+
+                // update model definition (called during export)
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+
+                /* Save ext file */
+                var extFile = new ExtForceFile();
+                extFile.Write(extForceFile, fmModel.ModelDefinition);
+                Assert.IsTrue(File.Exists(extForceFile));
+
+                /* Check SedConc has generated only one Xyz File and one entry in the Ext file
+                 * for SedConc but not for CustomProp.       */
+                var extWritten = File.ReadAllText(extForceFile);
+                Assert.That(extWritten, Is.StringContaining("QUANTITY=initialsedfracmysedimentName"));
+                Assert.That(extWritten, Is.StringContaining("FILENAME=mysedimentName_SedConc.xyz"));
+                /* Nothing related to the customProp */
+                Assert.That(extWritten, Is.Not.StringContaining("mysedimentName_IniSedThick"));
+                Assert.That(extWritten, Is.Not.StringContaining("IniSedThick"));
+
+                Assert.IsTrue(File.Exists(sedConcXyzFile));
+                Assert.IsFalse(File.Exists(customPropXyzFile));
+
+                /* Save the sediments now and check for the xyz */
+                SedimentFile.Save(sedFile, fmModel);
+                Assert.IsTrue(File.Exists(customPropXyzFile));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(sedFile);
+                FileUtils.DeleteIfExists(fileCopyName);
+                FileUtils.DeleteIfExists(extForceFile);
+                FileUtils.DeleteIfExists(sedConcXyzFile);
+                FileUtils.DeleteIfExists(customPropXyzFile);
+            }
+
+            //save model
+            //check no custom spatially varying op is saved.
+            //check sed conc spatially varying is saved.
         }
 
         [Test]

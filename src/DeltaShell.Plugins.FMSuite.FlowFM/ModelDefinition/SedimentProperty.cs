@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using SharpMap;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -134,7 +135,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
             else
             {
-                category.AddSedimentProperty(Name, string.Format("#{0}#", SpatiallyVaryingName), Unit, Description);
+                /* DFlowFM Kernel requires this field to include the extension. */
+                category.AddSedimentProperty(Name, string.Format("#{0}#", SpatiallyVaryingName + "." + XyzFile.Extension), Unit, Description);
             }
         }
 
@@ -152,8 +154,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 if (prop == null) return;
                 var spatVaryingFile = (string)Convert.ChangeType(prop.Value, typeof(string));
                 IsSpatiallyVarying = !string.IsNullOrEmpty(spatVaryingFile);
-//                if (spatVaryingFile != null && spatVaryingFile.EndsWith(".xyz"))
-//                    spatVaryingFile = spatVaryingFile.Substring(0, spatVaryingFile.Length - ".xyz".Length );
+                
+                /* DFlowFM Kernel requires this field to include the extension. */
+                if (spatVaryingFile != null && spatVaryingFile.EndsWith(XyzFile.Extension))
+                    spatVaryingFile = spatVaryingFile.Substring(0, spatVaryingFile.Length - ("." + XyzFile.Extension).Length );
+
                 SpatiallyVaryingName = spatVaryingFile;
             }
             

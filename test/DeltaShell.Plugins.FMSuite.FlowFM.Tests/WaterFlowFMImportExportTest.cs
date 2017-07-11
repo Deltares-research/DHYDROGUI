@@ -9,6 +9,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -16,6 +17,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMImportExportTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportModelWithSedimentSpatiallyVaryingOperations()
+        {
+            /* This test is relevant because when we are importing a model we do not load the state from the DB
+              so it could happen the Spatially Varying operations are not loaded. */
+            var mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
+            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localMduFilePath);
+
+            var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
+            Assert.IsNotNull(fraction);
+            var spatvaryingProp =
+                fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as
+                    ISpatiallyVaryingSedimentProperty;
+            Assert.IsNotNull(spatvaryingProp);
+            Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
+            var dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
+            Assert.IsNotNull(dataItem);
+            var coverage = dataItem.Value as UnstructuredGridCellCoverage;
+            Assert.IsNotNull(coverage);
+        }
 
         /*
          * These are non-functional tests. It tests a dflowfm.exe that is not even used in the application. 
