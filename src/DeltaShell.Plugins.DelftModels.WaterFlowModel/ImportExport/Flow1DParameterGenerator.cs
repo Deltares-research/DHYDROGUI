@@ -255,28 +255,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
 
             //TODO: Add PreissmannMinClosedManholes ???
-            
-            //TODO: Add QDrestart ???
-            
-            //TODO: Add River ???
-            
-            //TODO: Add Sewer ???
-            
-            //TODO: Add SiphonUpstreamThresholdSwitchOff ???
-            
-            //TODO: Add StrucAlfa ???
-            
-            //TODO: Add StructureDynamicsFactor ???
-            
-            //TODO: Add StructureStabilityFactor ???
-            
-            //TODO: Add ThresholdForSummerDike ???
 
-            var timersOutputFrequency = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.TimersOutputFrequency.Key);
-            if (timersOutputFrequency != null)
+            //TODO: Add QDrestart ???
+
+//            var readNetworkInUGridFormat = false; // always false - not currently configurable in the GUI
+            var readNetworkInUGridFormat = true; // Testing
+            if (readNetworkInUGridFormat != null)
             {
-                simulationOptionsValues.AddProperty(ModelDefinitionsRegion.TimersOutputFrequency.Key, timersOutputFrequency.Value, ModelDefinitionsRegion.TimersOutputFrequency.Description);
+                simulationOptionsValues.AddProperty(ModelDefinitionsRegion.ReadNetworkFromUGrid.Key, Convert.ToBoolean(readNetworkInUGridFormat) ? 1 : 0, ModelDefinitionsRegion.ReadNetworkFromUGrid.Description);
             }
+
+            //TODO: Add River ???
+
+            //TODO: Add Sewer ???
+
+            //TODO: Add SiphonUpstreamThresholdSwitchOff ???
+
+            //TODO: Add StrucAlfa ???
+
+            //TODO: Add StructureDynamicsFactor ???
+
+            //TODO: Add StructureStabilityFactor ???
+
+            //TODO: Add ThresholdForSummerDike ???
 
             //TODO: Add use1d2dcoupling ???
 
@@ -286,10 +287,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var useRestart = useRestartParameter != null ? Convert.ToBoolean(useRestartParameter.Value) : waterFlowModel1D.UseRestart;
             simulationOptionsValues.AddProperty(ModelDefinitionsRegion.UseRestart.Key, useRestart ? 1 : 0, ModelDefinitionsRegion.UseRestart.Description);
 
-            var writeRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.WriteRestart.Key);
-            var writeRestart = writeRestartParameter != null ? Convert.ToBoolean(writeRestartParameter.Value) : waterFlowModel1D.WriteRestart;
-            simulationOptionsValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
-            
+            var timersOutputFrequency = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.TimersOutputFrequency.Key);
+            if (timersOutputFrequency != null)
+            {
+                simulationOptionsValues.AddProperty(ModelDefinitionsRegion.TimersOutputFrequency.Key, timersOutputFrequency.Value, ModelDefinitionsRegion.TimersOutputFrequency.Description);
+            }
+
             var useTimers = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.UseTimers.Key);
             if (useTimers != null)
             {
@@ -297,11 +300,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
 
             //TODO: Add Usevariableteta ???
-            
+
             //TODO: Add VolumeCheck ???
-            
+
             //TODO: Add VolumeCorrection ???
-            
+
             //TODO: Add WaterQualityInUse ???
 
             var writeNetCdf = true; // always true - not currently configurable in the GUI
@@ -310,12 +313,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 simulationOptionsValues.AddProperty(ModelDefinitionsRegion.WriteNetCDF.Key, Convert.ToBoolean(writeNetCdf) ? 1 : 0, ModelDefinitionsRegion.WriteNetCDF.Description);
             }
 
-            var readNetworkInUGridFormat = false; // always false - not currently configurable in the GUI
-            if (readNetworkInUGridFormat != null)
-            {
-                simulationOptionsValues.AddProperty(ModelDefinitionsRegion.ReadNetworkFromUGrid.Key, Convert.ToBoolean(readNetworkInUGridFormat) ? 1 : 0, ModelDefinitionsRegion.ReadNetworkFromUGrid.Description);
-            }
-
+            var writeRestartParameter = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.WriteRestart.Key);
+            var writeRestart = writeRestartParameter != null ? Convert.ToBoolean(writeRestartParameter.Value) : waterFlowModel1D.WriteRestart;
+            simulationOptionsValues.AddProperty(ModelDefinitionsRegion.WriteRestart.Key, writeRestart ? 1 : 0, ModelDefinitionsRegion.WriteRestart.Description);
 
             return simulationOptionsValues;
 
