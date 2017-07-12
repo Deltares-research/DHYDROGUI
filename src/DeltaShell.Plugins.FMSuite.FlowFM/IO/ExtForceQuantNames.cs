@@ -22,10 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string OpenFlowConditionAtBound = "outflowbnd";
         public const string SalinityAtBound = "salinitybnd";
         public const string TemperatureAtBound = "temperaturebnd";
-        public const string ConcentrationAtBound = "concentrationbnd";
-        public const string BedLevelAtBound = "bedlevelbnd";
-        public const string BedLevelChangeAtBound = "bedlevelchangebnd";
-        public const string BedLoadAtBound = "bedloadbnd";
         public const string TracerAtBound = "tracerbnd";
         public const string LowerGateLevel = "lowergatelevel";
         public const string DamLevel = "damlevel";
@@ -151,10 +147,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {OpenFlowConditionAtBound, FlowBoundaryQuantityType.Outflow},
                 {SalinityAtBound, FlowBoundaryQuantityType.Salinity},
                 {TemperatureAtBound,FlowBoundaryQuantityType.Temperature},
-                {ConcentrationAtBound,FlowBoundaryQuantityType.SedimentConcentration},
-                {BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
-                {BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed},
-                {BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+                {BcmFileFlowBoundaryDataBuilder.ConcentrationAtBound,FlowBoundaryQuantityType.SedimentConcentration},
+                {BcmFileFlowBoundaryDataBuilder.BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+                {BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+                {BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
                 {QhAtBound, FlowBoundaryQuantityType.WaterLevel}
             };
 
@@ -193,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (quantity == FlowBoundaryQuantityType.SedimentConcentration)
             {
-                return ConcentrationAtBound + boundaryCondition.SedimentFractionName;
+                return BcmFileFlowBoundaryDataBuilder.ConcentrationAtBound + boundaryCondition.SedimentFractionName;
             }
             if (BoundaryToQuantityMapping.Values.Contains(quantity))
             {

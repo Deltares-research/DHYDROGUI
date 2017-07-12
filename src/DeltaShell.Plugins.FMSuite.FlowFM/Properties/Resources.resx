@@ -211,4 +211,7 @@
   <data name="WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_" xml:space="preserve">
     <value>Duplication of spatial operations for {0}. Please verify the model after saving.</value>
   </data>
+  <data name="MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_" xml:space="preserve">
+    <value>Cannot read ibedcond because this is not an integer (number) in file {0}</value>
+  </data>
 </root>

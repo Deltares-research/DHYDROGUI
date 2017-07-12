@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
-        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
         public void TestMorphologyBoundaryConditionOnlyWithOneTimeSeries(FlowBoundaryQuantityType quantityType)
         {
             var model = CreateValidModel();
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             /* Check everything went alright just with one data point */
             Assert.AreEqual(1, flowBoundary.PointData.Count);
-            Assert.IsNull(flowBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0)); // data for morphology is on all data points the same (Horizontally Uniform)
             Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
@@ -152,13 +152,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
 
             report = WaterFlowFMBoundaryConditionValidator.Validate(model);
-            Assert.AreEqual(1, report.ErrorCount);
+            Assert.AreEqual(0, report.ErrorCount);
         }
 
         [Test]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
-        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
         public void TestMorphologyBoundaryConditionWithEmptyTimeSeriesIsValid(FlowBoundaryQuantityType quantityType)
         {
             var model = CreateValidModel();
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             /* Check everything went alright just with one data point */
             Assert.AreEqual(1, flowBoundary.PointData.Count);
-            Assert.IsNull(flowBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0));
             Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
-        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
         public void TestMorphologyBoundaryConditionOnlyAllowsOneCondition(FlowBoundaryQuantityType quantityType)
         {
             var model = CreateValidModel();

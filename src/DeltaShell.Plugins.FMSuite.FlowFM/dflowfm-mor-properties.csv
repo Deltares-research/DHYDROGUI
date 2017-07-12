@@ -66,6 +66,7 @@ morphology,Sus,morphology,Multiplication (calibration) factors,Current related r
 morphology,Bed,morphology,Multiplication (calibration) factors,Current related transport vector factor,Double,1,1e-36,,FALSE,,,,,,Multiplication factor for bed-load transport vector magnitude
 morphology,SusW,morphology,Multiplication (calibration) factors,SusW,Double,1,1e-36,,TRUE,,,,,,Wave-related suspended sed. transport factor
 morphology,BedW,morphology,Multiplication (calibration) factors,BedW,Double,1,1e-36,,TRUE,,,,,,Wave-related bed-load sed. transport factor
-morphology,SedThr,morphology,General,Minimun depth for sediment computations,Double,0.1,1e-36,,FALSE,,,,,,Minimum water depth for sediment computations
+morphology,SedThr,morphology,General,Minimum depth for sediment computations,Double,0.1,1e-36,,FALSE,,,,,,Minimum water depth for sediment computations
+morphology,BcFil,morphology,General,Morphology boundary condition file,String,,,,FALSE,FALSE,,,,,Morphology boundary conditions file
 morphology,ThetSD,morphology,Multiplication (calibration) factors,Factor for erosion of adjacent dry cells,Double,1e-36,1e-36,,FALSE,,,,,,Factor for erosion of adjacent dry cells
 morphology,HMaxTH,morphology,Multiplication (calibration) factors,HMaxTH,Double,1.5,1e-36,,FALSE,,,,,,Max depth for variable THETSD. Set < SEDTHR to use global value only

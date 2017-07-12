@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.NGHS.IO
 {
@@ -13,6 +16,8 @@ namespace DeltaShell.NGHS.IO
 
         private const string BlockKey = "table-name";
         private const string ContentsKey = "contents";
+        private const string LocationKey = "location";
+        private const string TimeFunctionKey = "time-function";
         private const string ReferenceTimeKey = "reference-time";
         private const string TimeUnitKey = "time-unit";
         private const string InterpolationKey = "interpolation";
@@ -20,13 +25,16 @@ namespace DeltaShell.NGHS.IO
         private const string RecordsInTableKey = "records-in-table";
         private const string UnitKey = "unit";
         private const string TimeUnit = "minutes";
+        private int blocknr = 0;
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
         {
             FlowBoundaryQuantityType.SedimentConcentration,
             FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
-            FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed,
+            FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed,
             FlowBoundaryQuantityType.MorphologyBedLoadTransport,
+            FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint,
+            FlowBoundaryQuantityType.MorphologyBedLevelFixed,
         };
 
         private readonly int columnWidth = RecordsInTableKey.Length + 1; /* Largest string length */
@@ -78,15 +86,26 @@ namespace DeltaShell.NGHS.IO
             WriteLine(keyString.PadRight(columnWidth) + valueString);
         }
 
+        public override void Write(
+            IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
+        {
+            blocknr = 0;
+            base.Write(boundaryConditions, filePath, boundaryDataBuilder, refDate);
+        }
+        
+
         protected override void WriteBlock(BcBlockData block)
         {
             var bcmBlock = block as BcmBlockData;
             if (bcmBlock == null) return;
 
             var startDateTime = new DateTime();
-            
-            WriteKeyValuePairLine(BlockKey, WriteBetweenCommas(bcmBlock.SupportPoint));
-            WriteKeyValuePairLine(ContentsKey, bcmBlock.FunctionType);
+            blocknr++;
+            WriteKeyValuePairLine(BlockKey, WriteBetweenCommas(string.Format("Boundary Section : {0}", blocknr)));
+            WriteKeyValuePairLine(LocationKey, WriteBetweenCommas(bcmBlock.Location));
+            WriteKeyValuePairLine(ContentsKey, WriteBetweenCommas("Uniform"));
+            WriteKeyValuePairLine(TimeFunctionKey, WriteBetweenCommas("non-equidistant"));
 
             if (bcmBlock.TimeInterpolationType != null)
             {
@@ -187,6 +206,11 @@ namespace DeltaShell.NGHS.IO
                 {
                     if (line.StartsWith(BlockKey))
                     {
+                        line = GetNextLine();
+                    }
+
+                    if (line.StartsWith(LocationKey))
+                    {
                         var splitHeader = SplitString(line);
                         var boundaryName = splitHeader.Length == 2 ? splitHeader[1] : "BoundaryName";
                         var block = ReadDataBlock(out line, boundaryName);
@@ -208,12 +232,12 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        private BcBlockData ReadDataBlock(out string line, string blockName)
+        private BcmBlockData ReadDataBlock(out string line, string blockName)
         {
             string blockValue = blockName; //supportPointName
             string contentsValue = null;
             string verticalProfileDefinition = null;
-            string locationValue = "location";
+            string locationValue = blockName;
             string timeFunctionValue = "timeseries"; //time-function
             DateTime referenceTimeValue = new DateTime(); //with the timeUnitValue helps determine the time reference and time steps for each entry.
             string timeUnitValue = null;
@@ -256,7 +280,11 @@ namespace DeltaShell.NGHS.IO
                 }
                 if (split[0] == ContentsKey)
                 {
-                    contentsValue = split[1];
+                    contentsValue = timeFunctionValue;
+                }
+                if (split[0] == LocationKey)
+                {
+                    locationValue = split[1];
                 }
                 if (split[0] == InterpolationKey)
                 {
@@ -318,8 +346,11 @@ namespace DeltaShell.NGHS.IO
                     SupportPoint = blockName,
                     FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
                     TimeInterpolationType = interpolationValue,
+                    Location = locationValue,
                     Quantities = quantityDataList
                 };
         }
+
+        
     }
 }

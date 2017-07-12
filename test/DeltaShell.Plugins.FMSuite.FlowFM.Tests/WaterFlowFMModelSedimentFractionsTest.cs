@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed
+                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
                                     || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
                     .ToList());
 
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.TimeSeries));
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
-                new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed, BoundaryConditionDataType.TimeSeries));
+                new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries));
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport, BoundaryConditionDataType.TimeSeries));
 
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(model.BoundaryConditions.ToList().Count, 3);
             Assert.AreEqual(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed
+                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
                                     || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
                     .ToList().Count, 3);
 
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(model.BoundaryConditions.ToList().Count, 2);
             Assert.AreEqual(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)
+                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)
                     .ToList().Count, 2);
             Assert.IsEmpty(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport).ToList());

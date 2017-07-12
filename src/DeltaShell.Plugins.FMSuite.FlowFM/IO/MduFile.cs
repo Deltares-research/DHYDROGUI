@@ -533,7 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadProperties(filePath, modelDefinition);
 
             reportProgress("Reading morphology properties", 2, totalSteps);
-            ReadMorphologyFile(filePath, modelDefinition);
+            MorphologyFile.Read(filePath, modelDefinition);
 
             reportProgress("Reading area features", 3, totalSteps);
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
@@ -567,52 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
-
-        private void ReadMorphologyProperties(string mduFilePath, string propertyKey, WaterFlowFMModelDefinition definition)
-        {
-            var filePath = MduFileHelper.GetSubfilePath(mduFilePath, definition.GetModelProperty(propertyKey));
-            if (!File.Exists(filePath)) return;
-
-            var propertiesCategories = new SedMorDelftIniReader().ReadDelftIniFile(filePath);
-            foreach (var category in propertiesCategories)
-            {
-                var currentGroupName = category.Name;
-                if(currentGroupName == MorphologyFile.GeneralHeader) continue; // don't store MorphologyFileInformation in model definition
-                foreach (var readProp in category.Properties)
-                {
-                    if (!definition.ContainsProperty(readProp.Name))
-                    {
-                        // create definition for unknown property:
-                        var propDef = WaterFlowFMProperty.CreatePropertyDefinitionForUnknownProperty(MorphologyFile.MorphologyUnknownProperty,
-                                readProp.Name, readProp.Comment);
-                        propDef.Category = currentGroupName;
-                        var newProp = new WaterFlowFMProperty(propDef, readProp.Value);
-                        /*  We set the value now to avoid catching a 'used custom value' in the SedimentFile, or elsewhere */
-                        if (!string.IsNullOrEmpty(readProp.Value))
-                            newProp.SetValueAsString(readProp.Value);
-                        definition.AddProperty(newProp);
-                        continue;
-                    }
-                    if (!string.IsNullOrEmpty(readProp.Value))
-                    {
-                        definition.GetModelProperty(readProp.Name).SetValueAsString(readProp.Value);
-                    }
-                }
-            }
-        }
-
-        private void ReadMorphologyFile(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
-        {
-            if (!modelDefinition.GetModelProperty(KnownProperties.MorFile).Value.Equals(string.Empty))
-            {
-                ReadMorphologyProperties(mduFilePath, KnownProperties.MorFile, modelDefinition);
-                modelDefinition.UseMorphologySediment = true;
-            }
-            // TODO: Remove this please!
-            // This is a bloody awful HACK, because we do not want to adapt the MapFormat to the kernels
-            modelDefinition.SetMapFormatPropertyValue();
-        }
-
+        
         private void ReadProperties(string filePath, WaterFlowFMModelDefinition definition)
         {
             Path = filePath;

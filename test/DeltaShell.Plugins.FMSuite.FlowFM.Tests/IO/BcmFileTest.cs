@@ -4,6 +4,7 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -45,9 +46,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(0, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Discharge));
         }
 
-        [TestCase(@"BcmFiles\MorphologyBedLevelPrescribed.bcm", new [] { "time", "bedlevelbnd" }, 23)]
-        [TestCase(@"BcmFiles\MorphologyBedLevelChangedPrescribed.bcm", new[] { "time", "bedlevelchangebnd" }, 12)]
-        [TestCase(@"BcmFiles\MorphologyBedLoadTransport.bcm", new[] { "time", "bedloadbndabc", "bedloadbnddef" }, 289)]
+        [TestCase(@"BcmFiles\MorphologyBedLevelPrescribed.bcm", new [] { "time", BcmFileFlowBoundaryDataBuilder.BedLevelAtBound }, 23)]
+        [TestCase(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm", new[] { "time", BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound }, 12)]
+        [TestCase(@"BcmFiles\MorphologyBedLoadTransport.bcm", new[] { "time", BcmFileFlowBoundaryDataBuilder.BedLoadAtBound+"abc", BcmFileFlowBoundaryDataBuilder.BedLoadAtBound + "def" }, 289)]
         [Category(TestCategory.DataAccess)]
         public void TestReadMorphologyBoundaryConditions(string testFile, string[] quantityNames, int numValues)
         {

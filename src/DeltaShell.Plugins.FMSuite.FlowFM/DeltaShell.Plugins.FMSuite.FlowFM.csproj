@@ -136,6 +136,7 @@
     <Compile Include="CoverageDefinition\CoverageDepthLayersList.cs" />
     <Compile Include="Coverages\FileBasedFeatureCoverage.cs" />
     <Compile Include="Coverages\UnstructuredGridCoverageExtensions.cs" />
+    <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverter.cs" />
     <Compile Include="FeatureData\FlowBoundaryCondition.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionFactory.cs" />
     <Compile Include="FeatureData\SupportedVerticalProfileTypes.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="IO\Exporters\GeometryZipExporter.cs" />
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporter.cs" />
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
+    <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />
     <Compile Include="IO\Importers\FMRstFileImporter.cs" />
     <Compile Include="IO\Importers\PolFileImporterExporter.cs" />

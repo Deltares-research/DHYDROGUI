@@ -708,8 +708,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                       BoundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
                                       BoundaryCondition.VariableName == "WaterLevel";
             
-            fileImportButton.Enabled = BoundaryCondition != null;
-            fileExportButton.Enabled = BoundaryCondition != null;
+            fileImportButton.Enabled = BoundaryCondition != null && BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
+            fileExportButton.Enabled = BoundaryCondition != null && BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
         }
 
         void GenerateDataButtonClick(object sender, EventArgs e)

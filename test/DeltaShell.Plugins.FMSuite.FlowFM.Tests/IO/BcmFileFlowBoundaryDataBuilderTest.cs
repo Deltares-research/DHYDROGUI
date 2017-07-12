@@ -23,7 +23,7 @@ public class BcmFileFlowBoundaryDataBuilderTest
         var feature = new Feature2D
         {
             Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1)}),
-            Name = "Boundary01_0001"
+            Name = "Boundary01"
         };
 
         var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
@@ -52,7 +52,7 @@ public class BcmFileFlowBoundaryDataBuilderTest
         var feature = new Feature2D
         {
             Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1) }),
-            Name = "Boundary01_0001"
+            Name = "Boundary01"
         };
 
         var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
@@ -74,14 +74,14 @@ public class BcmFileFlowBoundaryDataBuilderTest
     [Category(TestCategory.DataAccess)]
     public void ImportMorphologyBedLevelChangedPrescribedBoundaryConditions()
     {
-        var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelChangedPrescribed.bcm");
+        var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm");
         var fileReader = new BcmFile();
         var dataBlocks = fileReader.Read(filePath).ToList();
 
         var feature = new Feature2D
         {
             Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1) }),
-            Name = "Boundary01_0001"
+            Name = "Boundary01"
         };
 
         var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
@@ -96,7 +96,7 @@ public class BcmFileFlowBoundaryDataBuilderTest
 
         Assert.IsNotNull(boundaryCondition);
         Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
-        Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed, boundaryCondition.FlowQuantity);
+        Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, boundaryCondition.FlowQuantity);
     }
 }
 

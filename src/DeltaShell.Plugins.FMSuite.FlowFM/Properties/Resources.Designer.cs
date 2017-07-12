@@ -217,6 +217,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot read ibedcond because this is not an integer (number) in file {0}.
+        /// </summary>
+        public static string MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_ {
+            get {
+                return ResourceManager.GetString("MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_inte" +
+                        "ger__number__in_file__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Observation {

@@ -309,6 +309,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         Controller = controller
                     };
                     v.ShowSupportPointNames = true;
+                    var condition = o.BoundaryConditions.FirstOrDefault();
+                    if(condition == null) return;
+                    v.SelectedCategory = condition.ProcessName;
+                    v.SelectedBoundaryCondition = condition;
                 },
                 CloseForData = (v, bcs) => Equals(v.Data, bcs)
             };

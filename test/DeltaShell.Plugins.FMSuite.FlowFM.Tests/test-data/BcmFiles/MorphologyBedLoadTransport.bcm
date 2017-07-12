@@ -1,11 +1,12 @@
 table-name       'Boundary01_0001'
+location         'Boundary01'
 contents         timeseries
 interpolation    'linear'
 reference-time   20010101
 time-unit        'minutes'
 parameter        'time' unit 'minutes'
-parameter        'bedloadbndabc' unit '-'
-parameter        'bedloadbnddef' unit '-'
+parameter        'transport incl pores abc' unit '-'
+parameter        'transport incl pores def' unit '-'
 records-in-table 289
 0               0  0
 300             3  0

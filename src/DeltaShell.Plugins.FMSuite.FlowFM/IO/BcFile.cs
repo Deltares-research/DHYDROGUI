@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var discriminator = BcDiscriminator(MultiFileMode);
             return boundaryConditionSets.SelectMany(bcs =>
-                bcs.BoundaryConditions.Where(bc => SupportedProcesses.Contains(bc.ProcessName))
+                bcs.BoundaryConditions.Where(bc => SupportedProcesses.Contains(bc.ProcessName) && bc.DataType != BoundaryConditionDataType.Empty) // don't write empty bc!
                 .Select(bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
                 .GroupBy(t => discriminator(t.Item1));
         }
