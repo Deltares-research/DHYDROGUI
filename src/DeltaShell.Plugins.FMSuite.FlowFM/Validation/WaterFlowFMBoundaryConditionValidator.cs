@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
 
                 issues.AddRange(ValidateSupportPointNames(boundaryConditionSet));
+                issues.AddRange(ValidateMorphologyBoundaryHaveHydroBoundaries(boundaryConditionSet));
 
                 var quantities = flowBoundaryConditions.Select(fbc => fbc.FlowQuantity);
 
@@ -56,6 +57,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Water flow FM model boundary conditions", issues);
         }
 
+        private static IEnumerable<ValidationIssue> ValidateMorphologyBoundaryHaveHydroBoundaries(BoundaryConditionSet boundaryConditionSet)
+        {
+            if (boundaryConditionSet.BoundaryConditions.All(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)))
+                yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
+                    "Morphology boundary condition must have a Hydro boundary condition!");
+        }
+
         private static void ValidateFlowBoundaryConditions(WaterFlowFMModel model, List<ValidationIssue> issues)
         {
             foreach (var bcSet in model.BoundaryConditionSets)
@@ -68,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
             }
 
-            foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>())
+            foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>().Where(fbc => fbc.DataType != BoundaryConditionDataType.Empty))
             {
                 var boundaryConditionName = boundaryCondition.VariableDescription;
 

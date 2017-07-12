@@ -536,7 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public static bool MorphologyBoundaryConditionHasGeneratedData(IBoundaryCondition boundaryCondition)
         {
-            var generatedData = boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 0;
+            var generatedData = boundaryCondition.DataType != BoundaryConditionDataType.Empty  && boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 0;
             return generatedData && IsMorphologyBoundary(boundaryCondition);
         }
 
