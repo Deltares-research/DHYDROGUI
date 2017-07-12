@@ -467,6 +467,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var sedimentFraction = sender as ISedimentFraction;
                 if (sedimentFraction != null)
                 {
+                    sedimentFraction.UpdateSpatiallyVaryingNames();
                     var activeSpatiallyVarying = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
                     var spatiallyVarying = sedimentFraction.GetAllSpatiallyVaryingPropertyNames();
                     InitialFractions.RemoveAllWhere( 
