@@ -214,4 +214,7 @@
   <data name="MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_" xml:space="preserve">
     <value>Cannot read ibedcond because this is not an integer (number) in file {0}</value>
   </data>
+  <data name="BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target" xml:space="preserve">
+    <value>Morphology boundary condition bcm-file importer could not import data onto given target</value>
+  </data>
 </root>

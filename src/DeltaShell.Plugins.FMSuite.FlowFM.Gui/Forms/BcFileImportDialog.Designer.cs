@@ -191,16 +191,16 @@
 
         #endregion
 
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        protected System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.CheckBox overwriteCheckBox;
-        private System.Windows.Forms.CheckedListBox quantitiesListBox;
-        private System.Windows.Forms.CheckedListBox dataTypesListBox;
+        protected System.Windows.Forms.CheckBox overwriteCheckBox;
+        protected System.Windows.Forms.CheckedListBox quantitiesListBox;
+        protected System.Windows.Forms.CheckedListBox dataTypesListBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.CheckBox deleteDataCheckBox;
+        protected System.Windows.Forms.CheckBox deleteDataCheckBox;
         private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

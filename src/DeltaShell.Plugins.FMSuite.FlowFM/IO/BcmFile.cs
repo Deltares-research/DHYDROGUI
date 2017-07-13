@@ -198,7 +198,7 @@ namespace DeltaShell.NGHS.IO
         }
         public override IEnumerable<BcBlockData> Read(string inputFile)
         {
-            OpenInputFile(inputFile);
+                OpenInputFile(inputFile);
             try
             {
                 var line = GetNextLine();
@@ -281,10 +281,6 @@ namespace DeltaShell.NGHS.IO
                 if (split[0] == ContentsKey)
                 {
                     contentsValue = timeFunctionValue;
-                }
-                if (split[0] == LocationKey)
-                {
-                    locationValue = split[1];
                 }
                 if (split[0] == InterpolationKey)
                 {

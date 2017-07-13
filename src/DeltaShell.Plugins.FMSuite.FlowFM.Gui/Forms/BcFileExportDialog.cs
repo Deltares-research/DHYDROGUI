@@ -16,15 +16,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     public partial class BcFileExportDialog : Form, IConfigureDialog, IView
     {
-        private readonly IDictionary<string, FlowBoundaryQuantityType> quantities;
-        private readonly IDictionary<string, BoundaryConditionDataType> dataTypes;
+        protected readonly IDictionary<string, FlowBoundaryQuantityType> quantities;
+        protected readonly IDictionary<string, BoundaryConditionDataType> dataTypes;
 
         public BcFileExportDialog()
         {
             InitializeComponent();
-            saveFileDialog.DefaultExt = BcFile.Extension;
-            saveFileDialog.Filter = new BcFileExporter().FileFilter;
-
+         
             quantities =
                 FlowBoundaryConditionEditorController.SupportedFlowQuantities.ToDictionary(
                     FlowBoundaryCondition.GetDescription, q => q);
@@ -42,9 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 dataTypesListBox.SetItemChecked(i, true);
             }
-            exportModeComboBox.Items.AddRange(Enum.GetValues(typeof (BcFile.WriteMode)).Cast<object>().ToArray());
-            exportModeComboBox.SelectedIndex = 0;
-            exportModeComboBox.Format+=ExportModeComboBoxFormat;
         }
 
         private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
@@ -57,8 +52,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public string Title { get; set; }
 
-        public DelftDialogResult ShowModal()
+        public virtual DelftDialogResult ShowModal()
         {
+            saveFileDialog.DefaultExt = BcFile.Extension;
+            saveFileDialog.Filter = new BcFileExporter().FileFilter;
+
+            exportModeComboBox.Items.AddRange(Enum.GetValues(typeof(BcFile.WriteMode)).Cast<object>().ToArray());
+            exportModeComboBox.SelectedIndex = 0;
+            exportModeComboBox.Format += ExportModeComboBoxFormat;
+
             if (saveFileDialog.ShowDialog(this) != DialogResult.OK)
             {
                 return DelftDialogResult.Cancel;
@@ -67,14 +69,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
         }
 
-        private string FilePath { get; set; }
+        protected string FilePath { get; set; }
 
         public DelftDialogResult ShowModal(object owner)
         {
             return ShowModal();
         }
 
-        public void Configure(object model)
+        public virtual void Configure(object model)
         {
             var bcFileExporter = model as BcFileExporter;
             if (bcFileExporter != null)

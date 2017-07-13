@@ -29,7 +29,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             boundaryConditionSet2.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries));
             boundaryConditionSet2.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.TimeSeries));
 
-            var boundaryConditions = new List<BoundaryConditionSet>() { boundaryConditionSet1, boundaryConditionSet2 };
+            var boundaryConditionSet3 = new BoundaryConditionSet();
+            boundaryConditionSet3.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelFixed, BoundaryConditionDataType.Empty));
+
+            var boundaryConditions = new List<BoundaryConditionSet>() { boundaryConditionSet1, boundaryConditionSet2, boundaryConditionSet3 };
 
             // group boundary conditions
             var bcmFile = new BcmFile();
@@ -37,6 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // check that non-Morphology related boundary conditions are filtered out
             var groupedBoundaryConditions = groupings.SelectMany(g => g).Select(g => g.Item1).OfType<FlowBoundaryCondition>().ToList();
+            // there are 6 conditions but 1 of them is without boundary data... so that is also not in the count!
             Assert.AreEqual(5, groupedBoundaryConditions.Count);
 
             Assert.AreEqual(1, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed));

@@ -14,8 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     public partial class BcFileImportDialog : Form, IConfigureDialog, IView
     {
-        private readonly IDictionary<string, FlowBoundaryQuantityType> quantities;
-        private readonly IDictionary<string,BoundaryConditionDataType> dataTypes;
+        protected readonly IDictionary<string, FlowBoundaryQuantityType> quantities;
+        protected readonly IDictionary<string,BoundaryConditionDataType> dataTypes;
         
         public BcFileImportDialog()
         {
@@ -41,11 +41,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             overwriteCheckBox.Checked = true;
         }
 
-        private string[] FilePaths { get; set; }
+        protected string[] FilePaths { get; set; }
 
         public string Title { get; set; }
 
-        public DelftDialogResult ShowModal()
+        public virtual DelftDialogResult ShowModal()
         {
             openFileDialog.Filter = new BcFileImporter().FileFilter;
             if (openFileDialog.ShowDialog() != DialogResult.OK)
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowModal();
         }
 
-        public void Configure(object importer)
+        public virtual void Configure(object importer)
         {
             var bcFileImporter = importer as BcFileImporter;
             if (bcFileImporter != null)

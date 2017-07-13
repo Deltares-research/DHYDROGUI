@@ -19,10 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         internal const string MorphologyUnknownProperty = "MorphologyUnknownProperty";
         public const string GeneralHeader = "MorphologyFileInformation";
         public const string Header = "Morphology";
-        private const string BoundaryHeader = "Boundary";
-        private const string BoundaryName = "Name";
-        private const string BoundaryBedCondition = "IBedCond";
-        private const string BcFile = "BcFil";
+        public const string BoundaryHeader = "Boundary";
+        public const string BoundaryName = "Name";
+        public const string BoundaryBedCondition = "IBedCond";
+        public const string BcFile = "BcFil";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologyFile));
 
@@ -234,6 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!File.Exists(pliFilePath))
             {
                 Log.WarnFormat("Boundary location file {0} not found", pliFilePath);
+                return Enumerable.Empty<Feature2D>();
             }
 
             var reader = new PliFile<Feature2D>();

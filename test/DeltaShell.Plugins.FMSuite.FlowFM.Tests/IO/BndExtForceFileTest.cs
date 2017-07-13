@@ -12,6 +12,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -721,6 +722,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(0, newDef.Boundaries.Count);
             Assert.AreEqual(0, newDef.BoundaryConditionSets.Count);
             Assert.AreEqual(1, newDef.Embankments.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteMorphBoundaryCondition()
+        {
+            var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
+            modelDefinition.ModelName = "MyModelName";
+
+            var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
+                    BoundaryConditionDataType.TimeSeries)
+                { Feature = modelDefinition.Boundaries[0] };
+
+            modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morbc1 });
+
+            var writer = new BndExtForceFile();
+            writer.Write("testbnd.ext", modelDefinition);
+            Assert.IsTrue(File.Exists(modelDefinition.ModelName + BcmFile.Extension));
         }
     }
 }

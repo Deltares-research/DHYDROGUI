@@ -182,13 +182,13 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckedListBox quantitiesListBox;
+        protected System.Windows.Forms.CheckedListBox quantitiesListBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckedListBox dataTypesListBox;
+        protected System.Windows.Forms.CheckedListBox dataTypesListBox;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOk;
-        private System.Windows.Forms.ComboBox exportModeComboBox;
+        protected System.Windows.Forms.ComboBox exportModeComboBox;
         private System.Windows.Forms.Label fileModeLabel;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        protected System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }

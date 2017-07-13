@@ -61,10 +61,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolylineFiles; 
         private readonly IDictionary<IBoundaryCondition, DelftIniCategory> existingBndForceFileItems;
+        private string filePath;
 
         public bool WriteToDisk { get; set; }
 
-        private string FilePath { get; set; } 
+        private string FilePath
+        {
+            get { return filePath; }
+            set { filePath = value; }
+        }
 
         private string GetFullPath(string relativePath)
         {

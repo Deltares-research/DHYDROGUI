@@ -429,6 +429,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             // Importers and exporters
+            yield return new ViewInfo<BcmFileImporter, BcmFileImportDialog>();
+            yield return new ViewInfo<BcmFileExporter, BcmFileExportDialog>();
             yield return new ViewInfo<BcFileImporter, BcFileImportDialog>();
             yield return new ViewInfo<BcFileExporter, BcFileExportDialog>();
             yield return

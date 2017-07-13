@@ -71,6 +71,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Morphology boundary condition bcm-file importer could not import data onto given target.
+        /// </summary>
+        public static string BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target {
+            get {
+                return ResourceManager.GetString("BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_" +
+                        "not_import_data_onto_given_target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap down {
@@ -329,22 +339,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplication of spatial operations for {0}. Please verify the model after saving..
-        /// </summary>
-        public static string WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_ {
-            get {
-                return ResourceManager.GetString("WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operati" +
-                        "ons_for__0___Please_verify_the_model_after_saving_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>
         public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morph" +
                         "ology_properties_and___or_sediments__Removing_these_properties_from_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplication of spatial operations for {0}. Please verify the model after saving..
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operati" +
+                        "ons_for__0___Please_verify_the_model_after_saving_", resourceCulture);
             }
         }
         

@@ -488,7 +488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.SedimentConcentration:
                         return new Unit("", "kg/m³");
                     case FlowBoundaryQuantityType.MorphologyBedLoadTransport:
-                        return new Unit("", "m³/s/m");
+                        return new Unit("cubic meters per second per meter", "m³/s/m");
                     default:
                         throw new ArgumentOutOfRangeException(String.Format("VariableName type {0} not supported",
                                                                             FlowQuantity));
