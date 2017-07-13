@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             MultiFileMode = WriteMode.SingleFile;
         }
 
-        public WriteMode MultiFileMode { private get; set; }
+        public WriteMode MultiFileMode { get; set; }
 
         public bool CorrectionFile { private get; set; }
 
