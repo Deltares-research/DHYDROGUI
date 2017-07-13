@@ -302,6 +302,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(data.Components[3].GetValues<double>().ToList().SequenceEqual(phasecorrections));
         }
 
-        
+        [Test]
+        public void ExportImportSedimentConcentrationToSingleFile()
+        {
+            //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
+            var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+            var model = new WaterFlowFMModel(testFilePath);
+            model.Name = "newname";
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            model.SedimentFractions.Add(sedFrac);
+
+            var boundary = new Feature2D
+            {
+                Name = "bound",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var fbcFactory = new FlowBoundaryConditionFactory();
+            fbcFactory.Model = model;
+            var bCond = fbcFactory.CreateBoundaryCondition(boundary,
+                sedFrac.Name,
+                BoundaryConditionDataType.TimeSeries,
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
+
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(bCond);
+
+            bCond.AddPoint(0);
+            var dataAtZero = bCond.GetDataAtPoint(0);
+            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 36.0 };
+
+            var exporter = new BcFileExporter
+            {
+                WriteMode = BcFile.WriteMode.SingleFile
+            };
+            exporter.Export(model.BoundaryConditionSets, "sedimentConcentration.bc");
+
+            Assert.IsTrue(File.Exists("sedimentConcentration.bc"));
+
+            var fileText = File.ReadAllText("sedimentConcentration.bc");
+            Assert.That(fileText, Is.StringContaining(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound+"frac1").And.StringContaining("L1_0001").And.StringContaining(BcFile.BlockKey).And.StringContaining(BcFile.BlockKey).And.StringContaining(BcFile.QuantityKey));
+            //Import
+            var importer = new BcFileImporter
+            {
+                DeleteDataBeforeImport = false,
+
+                FilePaths = new[] { "sedimentConcentration.bc" }
+            };
+            importer.ImportItem(null, model.BoundaryConditionSets);
+
+            var scBoundCond =
+                model.BoundaryConditions.FirstOrDefault(
+                    bc => bc.DataType == BoundaryConditionDataType.TimeSeries);
+
+            Assert.IsNotNull(scBoundCond);
+            Assert.IsTrue(scBoundCond.DataPointIndices.Contains(0));
+
+            var data = scBoundCond.GetDataAtPoint(0);
+            Assert.That(data.GetValues<double>().First(), Is.EqualTo(36.0).Within(0.01));
+        }
+
+
+
     }
 }

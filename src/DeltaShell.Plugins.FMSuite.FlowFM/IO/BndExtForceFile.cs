@@ -18,8 +18,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BndExtForceFile : FMSuiteFileBase
     {
-        private const string BoundaryBlockKey = "[boundary]";
-        private const string QuantityKey = "quantity";
+        public const string BoundaryBlockKey = "[boundary]";
+        public const string QuantityKey = "quantity";
         public const string LocationFileKey = "locationfile";
         public const string ForcingFileKey = "forcingfile";
         private const string AreaKey = "area";
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly ILog Log = LogManager.GetLogger(typeof (BndExtForceFile));
 
         private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
-        private const BcmFile.WriteMode BcmFileWriteMode = BcmFile.WriteMode.SingleFile; 
+        private const BcFile.WriteMode BcmFileWriteMode = BcFile.WriteMode.SingleFile; 
 
         // items that existed in the file when the file was read
         private readonly IDictionary<Feature2D, string> existingPolylineFiles; 

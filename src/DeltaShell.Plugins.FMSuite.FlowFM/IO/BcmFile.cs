@@ -47,16 +47,6 @@ namespace DeltaShell.NGHS.IO
                 .SelectMany(element => element).ToArray();
         }
 
-        private bool IsNewBcmCategory(List<string> line, ref string newCategory)
-        {
-            if (line.Count == 2 && line[0].Equals(BlockKey))
-            {
-                newCategory = line[1];
-                return true;
-            }
-            return false;
-        }
-
         protected override List<string> SupportedProcesses
         {
             get

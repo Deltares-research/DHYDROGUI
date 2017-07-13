@@ -40,11 +40,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // check that non-Morphology related boundary conditions are filtered out
             var groupedBoundaryConditions = groupings.SelectMany(g => g).Select(g => g.Item1).OfType<FlowBoundaryCondition>().ToList();
-            // there are 6 conditions but 1 of them is without boundary data... so that is also not in the count!
-            Assert.AreEqual(5, groupedBoundaryConditions.Count);
+            // there are 3 conditions but 1 of them is without boundary data... so that is also not in the count!
+            Assert.AreEqual(2, groupedBoundaryConditions.Count);
 
             Assert.AreEqual(1, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed));
-            Assert.AreEqual(3, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration));
+            Assert.AreEqual(0, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration));
             Assert.AreEqual(0, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel));
             Assert.AreEqual(1, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport));
             Assert.AreEqual(0, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Discharge));

@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             return true;
         }
 
-        public BcmFile.WriteMode WriteMode { private get; set; }
+        public BcFile.WriteMode WriteMode { private get; set; }
 
         private BoundaryConditionSet FilterBoundaryConditionSet(BoundaryConditionSet inputSet)
         {

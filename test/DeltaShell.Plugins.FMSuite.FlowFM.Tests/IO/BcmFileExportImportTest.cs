@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             const string filePath = "BcmFileIsWrittenFromMorphology.bcm";
 
-            var writer = new BcmFile() { MultiFileMode = BcmFile.WriteMode.SingleFile };
+            var writer = new BcmFile() { MultiFileMode = BcFile.WriteMode.SingleFile };
             writer.Write(new[] { boundaryConditionSet }, filePath, new BcmFileFlowBoundaryDataBuilder());
 
             //Check whether if there are two blocks as well.
@@ -99,68 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsNotNull(dataBlocks);
             Assert.AreEqual(2, dataBlocks.Count);
         }
-        [Test]
-        [Ignore]
-        public void ExportImportSedimentConcentrationToSingleFile()
-        {
-            //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
-            model.Name = "newname";
-
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            var sedFrac = new SedimentFraction() { Name = "frac1" };
-            model.SedimentFractions.Add(sedFrac);
-
-            var boundary = new Feature2D
-            {
-                Name = "bound",
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
-            };
-            model.Boundaries.Add(boundary);
-
-            var fbcFactory = new FlowBoundaryConditionFactory();
-            fbcFactory.Model = model;
-            var bCond = fbcFactory.CreateBoundaryCondition(boundary,
-                sedFrac.Name,
-                BoundaryConditionDataType.TimeSeries,
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
-
-            model.BoundaryConditionSets[0].BoundaryConditions.Add(bCond);
-
-            bCond.AddPoint(0);
-            var dataAtZero = bCond.GetDataAtPoint(0);
-            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 36.0 };
-
-            var exporter = new BcmFileExporter
-            {
-                WriteMode = BcFile.WriteMode.SingleFile
-            };
-            exporter.Export(model.BoundaryConditionSets, "sedimentConcentration.bcm");
-
-            Assert.IsTrue(File.Exists("sedimentConcentration.bcm"));
-
-            var fileText = File.ReadAllText("sedimentConcentration.bcm");
-            Assert.That(fileText, Is.StringContaining("concentrationbndfrac1"));
-            //Import
-            var importer = new BcmFileImporter
-            {
-                DeleteDataBeforeImport = false,
-
-                FilePaths = new[] { "sedimentConcentration.bcm" }
-            };
-            importer.ImportItem(null, model.BoundaryConditionSets);
-
-            var scBoundCond =
-                model.BoundaryConditions.FirstOrDefault(
-                    bc => bc.DataType == BoundaryConditionDataType.TimeSeries);
-
-            Assert.IsNotNull(scBoundCond);
-            Assert.IsTrue(scBoundCond.DataPointIndices.Contains(0));
-
-            var data = scBoundCond.GetDataAtPoint(0);
-            Assert.That(data.GetValues<double>().First(), Is.EqualTo(36.0).Within(0.01));
-        }
-
+        
         [Test]
         public void ExportImportSedimentBedLoadToSingleFile()
         {
@@ -196,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var exporter = new BcmFileExporter
             {
-                WriteMode = BcmFile.WriteMode.SingleFile
+                WriteMode = BcFile.WriteMode.SingleFile
             };
             exporter.Export(model.BoundaryConditionSets, "sedimentBedLoadTransport.bcm");
 

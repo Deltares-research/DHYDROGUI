@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
@@ -12,9 +13,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            if (e.ListItem is BcmFile.WriteMode)
+            if (e.ListItem is BcFile.WriteMode)
             {
-                e.Value = EnumDescriptionAttributeTypeConverter.GetEnumDescription((BcmFile.WriteMode)e.ListItem);
+                e.Value = EnumDescriptionAttributeTypeConverter.GetEnumDescription((BcFile.WriteMode)e.ListItem);
             }
         }
 
@@ -22,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             saveFileDialog.DefaultExt = BcmFile.Extension;
             saveFileDialog.Filter = new BcmFileExporter().FileFilter;
-            exportModeComboBox.Items.AddRange(Enum.GetValues(typeof(BcmFile.WriteMode)).Cast<object>().ToArray());
+            exportModeComboBox.Items.AddRange(Enum.GetValues(typeof(BcFile.WriteMode)).Cast<object>().ToArray());
             exportModeComboBox.SelectedIndex = 0;
             exportModeComboBox.Format += ExportModeComboBoxFormat;
 
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                         .Select(k => dataTypes[k])
                         .ToList();
 
-                bcmFileExporter.WriteMode = (BcmFile.WriteMode)exportModeComboBox.SelectedItem;
+                bcmFileExporter.WriteMode = (BcFile.WriteMode)exportModeComboBox.SelectedItem;
 
                 bcmFileExporter.FilePath = FilePath;
             }

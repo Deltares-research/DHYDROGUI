@@ -15,12 +15,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected readonly ILog log = LogManager.GetLogger(typeof (BcFile));
 
         public const string Extension = ".bc";
-        
-        private const string BlockKey = "[forcing]";
+
+        public const string BlockKey = "[forcing]";
         private const string SupportPointKey = "Name";
         private const string ForcingTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
-        private const string QuantityKey = "Quantity";
+        public const string QuantityKey = "Quantity";
         private const string UnitKey = "Unit";
         private const string TimeInterpolationKey = "Time-interpolation";
         private const string VerticalIntepolationKey = "Vertical interpolation";
