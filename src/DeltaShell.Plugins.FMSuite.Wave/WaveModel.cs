@@ -935,10 +935,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             if (IsRunByDimr) return;
 
-            // dt = -1.0 will run wave on all timepoints
+            
             if (!IsCoupledToFlow)
             {
-                waveApi.Update();
+                // dt = total seconds of the last time moment to calculate minus the reference time should be sent as parameter. (in seconds) 
+                // will run wave on all timepoints
+                var timestep = StopTime - ModelDefinition.ModelReferenceDateTime;
+                waveApi.Update(timestep.TotalSeconds);
                 CurrentTime = StopTime;
             }
             else

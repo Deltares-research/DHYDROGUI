@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void WaveOutputSaveLoadTest()
         {
-            using (var app = new DeltaShellApplication())
+            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -318,8 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
 
                 const string projPath = "outputSaveLoadTest.dsproj";
-                app.SaveProjectAs(projPath); // save to initialize file repository..
-
+                
                 var path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
                 var localPath = TestHelper.CreateLocalCopy(path);
 
@@ -329,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 ActivityRunner.RunActivity(model);
 
-                app.SaveProject();
+                app.SaveProjectAs(projPath);
                 app.CloseProject();
 
                 app.OpenProject(projPath);
