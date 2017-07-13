@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     
     public class BcmFileFlowBoundaryDataBuilder : BcFileFlowBoundaryDataBuilder
     {
-        public const string ConcentrationAtBound = "concentrationbnd";
         public const string BedLevelAtBound = "bed level";
         public const string BedLevelChangeAtBound = "bed level change";
         public const string BedLoadAtBound = "transport incl pores ";
@@ -46,7 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly IDictionary<string[], FlowBoundaryQuantityType> flowQuantityKeys = new Dictionary<string[], FlowBoundaryQuantityType>
         {
-              {new[] {ConcentrationAtBound}, FlowBoundaryQuantityType.SedimentConcentration},
               {new[] {BedLevelAtBound}, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
               {new[] {BedLevelChangeAtBound}, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
               {new[] {BedLoadAtBound}, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
@@ -77,39 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Location = boundaryCondition.FeatureName
             };
         }
-
-        protected override FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName, FlowBoundaryQuantityType flowQuantityEnum, BoundaryConditionDataType forcingType, Feature2D feature, TimeSpan timelag, IGrouping<FlowBoundaryQuantityType, KeyValuePair<Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> grouping)
-        {
-            var bc = base.CreateNewBoundaryCondition(quantityName, flowQuantityEnum, forcingType, feature, timelag, grouping);
-            bc.SedimentFractionNames = GetFractionNames(grouping).ToList();
-            if (flowQuantityEnum == FlowBoundaryQuantityType.SedimentConcentration)
-            {
-                var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.Equals(k)));
-                if (flowQuantityComponentsPair.Key == null)
-                {
-                    flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.StartsWith(k)));
-                }
-                if (flowQuantityComponentsPair.Key != null)
-                {
-                    var matchingQuantity = flowQuantityComponentsPair.Key.FirstOrDefault(k => quantityName.StartsWith(k));
-                    if (matchingQuantity != null)
-                    {
-                        var fractionName = quantityName.Replace(matchingQuantity, string.Empty);
-                        bc.SedimentFractionName = fractionName;
-                    }
-                }
-            }
-            return bc;
-        }
-
-        private IEnumerable<string> GetFractionNames(IGrouping<FlowBoundaryQuantityType, KeyValuePair<Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> quantityGroup)
-        {
-            return quantityGroup.Key == FlowBoundaryQuantityType.MorphologyBedLoadTransport
-                ? quantityGroup.Select(qg => qg.Value).Select(q => q.Quantity.Replace(BedLoadAtBound, String.Empty))
-                : Enumerable.Empty<string>();
-        }
-
-      
+        
         protected override IEnumerable<string> PrintValues(IVariable variable, DateTime? referenceTime, Func<double, double> converter)
         {
             if (variable.ValueType == typeof(string))

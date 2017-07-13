@@ -529,8 +529,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    || quantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
                    || quantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
                    || quantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed
-                   || quantity == FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint
-                   || quantity == FlowBoundaryQuantityType.SedimentConcentration;
+                   || quantity == FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint;
         }
 
         #endregion

@@ -100,6 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(2, dataBlocks.Count);
         }
         [Test]
+        [Ignore]
         public void ExportImportSedimentConcentrationToSingleFile()
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.

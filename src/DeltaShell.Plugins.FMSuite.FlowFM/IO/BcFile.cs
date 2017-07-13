@@ -44,7 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             FlowBoundaryQuantityType.VelocityVector,
             FlowBoundaryQuantityType.Salinity,
             FlowBoundaryQuantityType.Temperature,
-            FlowBoundaryQuantityType.Tracer,        
+            FlowBoundaryQuantityType.Tracer,     
+            FlowBoundaryQuantityType.SedimentConcentration   
         };
 
         private readonly int columnWidth = VerticalPositionSpecKey.Length;

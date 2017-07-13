@@ -486,7 +486,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.Temperature:
                         return new Unit("degree celsius", "°C");
                     case FlowBoundaryQuantityType.SedimentConcentration:
-                        return new Unit("", "kg/m³");
+                        return new Unit("kilograms per cubic meter", "kg/m³");
                     case FlowBoundaryQuantityType.MorphologyBedLoadTransport:
                         return new Unit("cubic meters per second per meter", "m³/s/m");
                     default:

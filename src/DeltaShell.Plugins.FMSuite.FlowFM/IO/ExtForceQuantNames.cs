@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {OpenFlowConditionAtBound, FlowBoundaryQuantityType.Outflow},
                 {SalinityAtBound, FlowBoundaryQuantityType.Salinity},
                 {TemperatureAtBound,FlowBoundaryQuantityType.Temperature},
-                {BcmFileFlowBoundaryDataBuilder.ConcentrationAtBound,FlowBoundaryQuantityType.SedimentConcentration},
+                {BcFileFlowBoundaryDataBuilder.ConcentrationAtBound,FlowBoundaryQuantityType.SedimentConcentration},
                 {BcmFileFlowBoundaryDataBuilder.BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
                 {BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
                 {BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},

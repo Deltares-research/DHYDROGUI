@@ -29,7 +29,6 @@ namespace DeltaShell.NGHS.IO
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
         {
-            FlowBoundaryQuantityType.SedimentConcentration,
             FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
             FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed,
             FlowBoundaryQuantityType.MorphologyBedLoadTransport,
