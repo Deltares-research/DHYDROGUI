@@ -173,35 +173,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
             };
 
-            var flowBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            var morphologyBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
                 SedimentFractionNames = new List<string>() { "testFrac" }
             };
 
-            model.Boundaries.Add(boundary);
-            model.BoundaryConditionSets[0].BoundaryConditions.Add(flowBoundary);
+            var flowBoundary1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+            };
 
-            flowBoundary.AddPoint(1);
-            var timeSeriesP1 = flowBoundary.GetDataAtPoint(1);
+
+            model.Boundaries.Add(boundary);
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundary, flowBoundary1 });
+
+            morphologyBoundary.AddPoint(1);
+            var timeSeriesP1 = morphologyBoundary.GetDataAtPoint(1);
 
             timeSeriesP1[model.StartTime] = 0.5;
             timeSeriesP1[model.StopTime] = 0.5;
 
             /* Check everything went alright just with one data point */
-            Assert.AreEqual(1, flowBoundary.PointData.Count);
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0));
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
+            Assert.AreEqual(1, morphologyBoundary.PointData.Count);
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(1));
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
 
             /* Now add a second data point and expect the validation to fail.*/
-            flowBoundary.AddPoint(0);
+            morphologyBoundary.AddPoint(0);
 
-            Assert.AreEqual(2, flowBoundary.PointData.Count);
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0));
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
+            Assert.AreEqual(2, morphologyBoundary.PointData.Count);
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(1));
 
             report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
@@ -228,15 +234,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Boundaries.Add(boundary);
             var bcSet = model.BoundaryConditionSets[0].BoundaryConditions;
 
-            var flowBoundary1 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            var morphologyBoundary1 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
                 SedimentFractionNames = new List<string>() { "testFrac" }
             };
-            
-            bcSet.Add(flowBoundary1);
 
-            Assert.AreEqual(1, bcSet.Count);
+            var flowBoundary1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+            };
+            
+            bcSet.AddRange(new [] { morphologyBoundary1, flowBoundary1});
+
+            Assert.AreEqual(2, bcSet.Count);
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
 
@@ -248,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             };
             bcSet.Add(flowBoundary2);
 
-            Assert.AreEqual(2, bcSet.Count);
+            Assert.AreEqual(3, bcSet.Count);
             report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(1, report.ErrorCount);
         }
