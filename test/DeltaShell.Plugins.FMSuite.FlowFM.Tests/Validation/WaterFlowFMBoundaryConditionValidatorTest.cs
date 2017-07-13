@@ -118,38 +118,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
             };
 
-            var flowBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            var flowBoundary = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+            };
+
+            var morphologyBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
                 SedimentFractionNames = new List<string>() { "testFrac" }
             };
 
             model.Boundaries.Add(boundary);
-            model.BoundaryConditionSets[0].BoundaryConditions.Add(flowBoundary);
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new [] { morphologyBoundary, flowBoundary});
 
-            flowBoundary.AddPoint(1);
-            var timeSeriesP1 = flowBoundary.GetDataAtPoint(1);
+            morphologyBoundary.AddPoint(1);
+            var timeSeriesP1 = morphologyBoundary.GetDataAtPoint(1);
 
             timeSeriesP1[model.StartTime] = 0.5;
             timeSeriesP1[model.StopTime] = 0.5;
 
             /* Check everything went alright just with one data point */
-            Assert.AreEqual(1, flowBoundary.PointData.Count);
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0)); // data for morphology is on all data points the same (Horizontally Uniform)
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
+            Assert.AreEqual(1, morphologyBoundary.PointData.Count);
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(0)); // data for morphology is on all data points the same (Horizontally Uniform)
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(1));
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
 
             /* Now add a second data point and expect the validation to fail.*/
-            flowBoundary.AddPoint(0);
-            var timeSeriesP0 = flowBoundary.GetDataAtPoint(0);
+            morphologyBoundary.AddPoint(0);
+            var timeSeriesP0 = morphologyBoundary.GetDataAtPoint(0);
             timeSeriesP0[model.StartTime] = 0.5;
             timeSeriesP0[model.StopTime] = 0.5;
 
-            Assert.AreEqual(2, flowBoundary.PointData.Count);
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(0));
-            Assert.IsNotNull(flowBoundary.GetDataAtPoint(1));
+            Assert.AreEqual(2, morphologyBoundary.PointData.Count);
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(0));
+            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(1));
 
             report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
