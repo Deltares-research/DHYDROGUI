@@ -288,9 +288,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var feature = mocks.StrictMock<Feature2D>();
             var featureName = "MyFeature";
             var featureGeometry = mocks.StrictMock<IGeometry>();
+            featureGeometry.Expect(g => g.Coordinates).Return(new[] {new Coordinate()}).Repeat.Once();
 
             feature.Expect(f => f.Name).Return(featureName).Repeat.Times(2);
-            feature.Expect(f => f.Geometry).Return(featureGeometry).Repeat.Times(1);
+            feature.Expect(f => f.Geometry).Return(featureGeometry).Repeat.Times(2);
 
             mocks.ReplayAll();
 
