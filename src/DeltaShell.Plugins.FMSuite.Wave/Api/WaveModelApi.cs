@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             }
         }
 
-        public DateTime StopTime { get; }
+        public DateTime StopTime { get; set; }
 
         public DateTime ReferenceDateTime { get; set; }
 
@@ -103,8 +103,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             }
         }
 
-        public TimeSpan TimeStep { get; }
-        public string[] VariableNames { get; }
+        public TimeSpan TimeStep { get; set; }
+        public string[] VariableNames { get; set; }
         public Logger Logger { get; set; }
 
         public void Dispose()
