@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -54,6 +55,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var api = new RemoteFlexibleMeshModelApi())
             {
                 api.Initialize(model.MduFilePath);
+            }
+        }
+
+        [Test]
+        public void TestDimrRunLogIsRetrieved()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            using (var model = new WaterFlowFMModel(localCopy))
+            {
+                model.Initialize();
+                model.Execute();
+                model.Finish();
+                model.Cleanup();
+
+                var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+                Assert.NotNull(dimrLogDataItem, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
+                Assert.NotNull(dimrLogDataItem.Value, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
             }
         }
 

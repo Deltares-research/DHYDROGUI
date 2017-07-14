@@ -144,7 +144,7 @@ namespace DeltaShell.Dimr
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
-        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected_stdout_stderr.log";
+        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected.log";
 
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
         {
