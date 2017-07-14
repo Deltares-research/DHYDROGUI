@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -16,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var timerCategory = modelDefinition.GetModelProperty(GuiProperties.StartTime).PropertyDefinition.Category;
             var solverProperty = modelDefinition.GetModelProperty(KnownProperties.SolverType);
             var bedLevelTypeProperty = modelDefinition.GetModelProperty(KnownProperties.BedlevType);
+            var conveyanceTypeProperty = modelDefinition.GetModelProperty(KnownProperties.Conveyance2d);
             foreach (var propertyGroup in modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.Category))
             {
                 var issues = new List<ValidationIssue>();
@@ -45,12 +47,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (bedLevelTypeProperty != null && waterFlowFmProperty == bedLevelTypeProperty)
                     {
                         int bedLevelTypeNumber;
-                        bool result = Int32.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber);
-                        var morphologyActive = (bool) modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
-                        if (morphologyActive && result && !bedLevelTypeNumber.Equals((int)UnstructuredGridFileHelper.BedLevelLocation.Faces))
-                        {
+                        var useMorSed = (bool) modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
+                        if (useMorSed
+                            && int.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber) &&
+                            !bedLevelTypeNumber.Equals((int) UnstructuredGridFileHelper.BedLevelLocation.Faces))
                             issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
                                 "Bed level locations should be set to 'cells' when morphology is active."));
+                    }
+
+                    // enum of conveyance2d is validated in Test LoadConveyance2dEnumAndVerifyThatItHasNotChanged
+                    // Whenever morphology is active, give an error in the validation report 
+                    // when if conveyance 2d type is not set to:
+                    // * R=HU   : -1
+                    // * R=H    : -0
+                    // * R=A/P  : -1
+                    if (conveyanceTypeProperty != null && waterFlowFmProperty == conveyanceTypeProperty)
+                    {
+                        int conveyance2DTypeNumber;
+                        var useMorSed = (bool)modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
+                        if (useMorSed 
+                            && int.TryParse(waterFlowFmProperty.GetValueAsString(), out conveyance2DTypeNumber))
+                        {
+                            if (conveyance2DTypeNumber != -1
+                                && conveyance2DTypeNumber != 0
+                                && conveyance2DTypeNumber != 1)
+                            {
+                                issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
+                                    Resources.WaterFlowFMModelDefinitionValidator_Validate_));
+                            }
                         }
                     }
                 }

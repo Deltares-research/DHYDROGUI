@@ -77,6 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string BedlevType = "bedlevtype";
         public const string MapFormat = "MapFormat";
         public const string RenumberFlowNodes = "RenumberFlowNodes";
+        public const string Conveyance2d = "conveyance2d";
     }
 
 

@@ -412,6 +412,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conveyance2D type in Geometry should be set to &apos;R=HU&apos; (-1), &apos;R=H&apos; (0) or &apos;R=A/P&apos; (1) when morphology is active..
+        /// </summary>
+        public static string WaterFlowFMModelDefinitionValidator_Validate_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap WeirSmall {

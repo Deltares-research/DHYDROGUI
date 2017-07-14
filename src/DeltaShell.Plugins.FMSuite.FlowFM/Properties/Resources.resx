@@ -226,4 +226,7 @@
   <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_" xml:space="preserve">
     <value>No spatial operations of type Import, Add or Value found for spatially varying property {0}. Remember to interpolate them to generate the xyz file. Otherwise the model might not run as expected.</value>
   </data>
+  <data name="WaterFlowFMModelDefinitionValidator_Validate_" xml:space="preserve">
+    <value>Conveyance2D type in Geometry should be set to 'R=HU' (-1), 'R=H' (0) or 'R=A/P' (1) when morphology is active.</value>
+  </data>
 </root>
