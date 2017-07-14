@@ -220,4 +220,7 @@
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
     <value>Morphology boundary condition must have a Hydro boundary condition!</value>
   </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
+    <value>Sediment concentration boundary condition must have a Hydro boundary condition!</value>
+  </data>
 </root>

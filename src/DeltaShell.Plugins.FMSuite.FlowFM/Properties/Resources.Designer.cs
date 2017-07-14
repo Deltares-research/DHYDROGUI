@@ -349,6 +349,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sediment concentration boundary condition must have a Hydro boundary condition!.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHy" +
+                        "droBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_bounda" +
+                        "ry_condition_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>
         public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
