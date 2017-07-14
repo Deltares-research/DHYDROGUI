@@ -14,7 +14,6 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap;
-using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
@@ -595,6 +594,78 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(generatedXyzFile);
             }
 
+        }
+
+        [Test]
+        public void LoadSedFileWithSpatiallyVaryingProperties_MudFraction()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+
+            using (var model = new WaterFlowFMModel(localCopy))
+            {
+                var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "mudFraction");
+                Assert.IsNotNull(fraction);
+                var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as ISpatiallyVaryingSedimentProperty;
+                Assert.IsNotNull(spatvaryingProp);
+                Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
+                var dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_IniSedThick");
+                Assert.IsNotNull(dataItem);
+                var coverage = dataItem.Value as UnstructuredGridCellCoverage;
+                Assert.IsNotNull(coverage);
+                var values = coverage.GetValues<double>();
+
+                Assert.That(values.Count == 9);
+                Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[1], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[2], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[3], Is.EqualTo(10.0).Within(0.1));
+                Assert.That(values[4], Is.EqualTo(10.0).Within(0.1));
+                Assert.That(values[5], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[6], Is.EqualTo(10.0).Within(0.1));
+                Assert.That(values[7], Is.EqualTo(10.0).Within(0.1));
+                Assert.That(values[8], Is.EqualTo(-999.0).Within(0.1));
+
+                spatvaryingProp = fraction.CurrentFormulaType.Properties.FirstOrDefault(p => p.Name == "TcrSed") as ISpatiallyVaryingSedimentProperty;
+                Assert.IsNotNull(spatvaryingProp);
+                Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
+                dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_TcrSed");
+                Assert.IsNotNull(dataItem);
+                coverage = dataItem.Value as UnstructuredGridCellCoverage;
+                Assert.IsNotNull(coverage);
+                values = coverage.GetValues<double>();
+
+                Assert.That(values.Count == 9);
+                Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[1], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[2], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[3], Is.EqualTo(6.0).Within(0.1));
+                Assert.That(values[4], Is.EqualTo(6.0).Within(0.1));
+                Assert.That(values[5], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[6], Is.EqualTo(6.0).Within(0.1));
+                Assert.That(values[7], Is.EqualTo(6.0).Within(0.1));
+                Assert.That(values[8], Is.EqualTo(-999.0).Within(0.1));
+
+                spatvaryingProp = fraction.CurrentFormulaType.Properties.FirstOrDefault(p => p.Name == "TcrEro") as ISpatiallyVaryingSedimentProperty;
+                Assert.IsNotNull(spatvaryingProp);
+                Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
+                dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_TcrEro");
+                Assert.IsNotNull(dataItem);
+                coverage = dataItem.Value as UnstructuredGridCellCoverage;
+                Assert.IsNotNull(coverage);
+                values = coverage.GetValues<double>();
+
+                Assert.That(values.Count == 9);
+                Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[1], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[2], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[3], Is.EqualTo(8.0).Within(0.1));
+                Assert.That(values[4], Is.EqualTo(8.0).Within(0.1));
+                Assert.That(values[5], Is.EqualTo(-999.0).Within(0.1));
+                Assert.That(values[6], Is.EqualTo(8.0).Within(0.1));
+                Assert.That(values[7], Is.EqualTo(8.0).Within(0.1));
+                Assert.That(values[8], Is.EqualTo(-999.0).Within(0.1));
+            }
         }
 
         [Test]

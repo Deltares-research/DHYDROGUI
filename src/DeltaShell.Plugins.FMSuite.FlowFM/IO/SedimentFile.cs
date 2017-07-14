@@ -308,6 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         /* Custom properties will not get loaded here.*/
                         sedimentFormulaProperty.SedimentPropertyLoad(category);
+                        LoadSpatiallyVaryingOperationForProperty(sedimentFormulaProperty, model, path);
                     }
                     fraction.CurrentFormulaType = sedimentFormula;
                 }
