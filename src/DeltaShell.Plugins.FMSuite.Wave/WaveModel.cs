@@ -912,7 +912,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             ModelSaveTo(filePath, false);
 
-            waveApi.SetVar("mode", IsCoupledToFlow ? "online with DflowFM" : "stand-alone");
+            waveApi.SetValues("mode", IsCoupledToFlow ? new[] { "online with DflowFM" }: new [] {"stand-alone"});
             if (!IsCoupledToFlow)
             {
                 waveApi.Initialize(filePath);
@@ -940,8 +940,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 // dt = total seconds of the last time moment to calculate minus the reference time should be sent as parameter. (in seconds) 
                 // will run wave on all timepoints
-                var timestep = StopTime - ModelDefinition.ModelReferenceDateTime;
-                waveApi.Update(timestep.TotalSeconds);
+                double timestep = 0;
+                if (ModelDefinition != null && ModelDefinition.ModelReferenceDateTime != default(DateTime))
+                {
+                    DateTime lastTimePointData;
+                    if (TimePointData != null && TimePointData.TimePoints != null)
+                    {
+                        lastTimePointData = TimePointData.TimePoints.LastOrDefault();
+                        if (lastTimePointData == default(DateTime))
+                        {
+                            lastTimePointData = ModelDefinition.ModelReferenceDateTime;
+                        }
+                    }
+                    else
+                    {
+                        lastTimePointData = ModelDefinition.ModelReferenceDateTime;
+                    }
+                    var timeStepSpan = lastTimePointData - ModelDefinition.ModelReferenceDateTime;
+                    timestep = timeStepSpan.TotalSeconds >= 0 ? timeStepSpan.TotalSeconds : 0;
+                }
+                waveApi.Update(timestep);
                 CurrentTime = StopTime;
             }
             else
