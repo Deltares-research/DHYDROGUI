@@ -23,9 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        public static FlowBoundaryQuantityType ConvertMorphologyBoundaryConditionQuantityTypeToFlowBoundaryConditionQuantityType(MorphologyBoundaryConditionQuantityType BedCond)
+        public static FlowBoundaryQuantityType ConvertMorphologyBoundaryConditionQuantityTypeToFlowBoundaryConditionQuantityType(MorphologyBoundaryConditionQuantityType type)
         {
-            switch (BedCond)
+            switch (type)
             {
                 case MorphologyBoundaryConditionQuantityType.BedLevelFixed:
                     return FlowBoundaryQuantityType.MorphologyBedLevelFixed;

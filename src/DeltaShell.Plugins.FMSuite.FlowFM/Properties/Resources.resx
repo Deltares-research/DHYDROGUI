@@ -217,4 +217,7 @@
   <data name="BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target" xml:space="preserve">
     <value>Morphology boundary condition bcm-file importer could not import data onto given target</value>
   </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
+    <value>Morphology boundary condition must have a Hydro boundary condition!</value>
+  </data>
 </root>

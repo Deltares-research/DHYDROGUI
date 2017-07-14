@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             if (boundaryConditionSet.BoundaryConditions.All(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)))
                 yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
-                    "Morphology boundary condition must have a Hydro boundary condition!");
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
         }
 
         private static void ValidateFlowBoundaryConditions(WaterFlowFMModel model, List<ValidationIssue> issues)

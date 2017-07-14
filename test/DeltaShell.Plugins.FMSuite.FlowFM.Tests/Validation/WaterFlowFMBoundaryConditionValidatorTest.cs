@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -332,6 +334,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
 
             Assert.AreEqual(1, report.ErrorCount);
+        }
+
+        [Test]
+        public void TestMorphologyBoundaryConditionWithoutHydroBoundaryConditionShouldCreateValidationError()
+        {
+            var model = CreateValidModel();
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.SedimentFractions = new EventedList<ISedimentFraction>();
+            model.SedimentFractions.Add(new SedimentFraction() { Name = "testFrac" });
+
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+
+            var morphologyBoundary = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionNames = new List<string>() { "testFrac" }
+            };
+
+            model.Boundaries.Add(boundary);
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundary });
+
+            var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.That(report.Issues.First(i => i.Severity == ValidationSeverity.Error).Message,
+                Is.EqualTo(Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_));
+
         }
     }
 }
