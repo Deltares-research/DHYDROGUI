@@ -182,11 +182,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var valueOperation = spatialOperation as ValueOperationBase;
                     if (valueOperation != null)
                     {
-                        Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_and_we_can_create_the_xyz_file_, spatialOperation.Name);
+                        Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_, operations.Key);
                     }
                 }
             }
 
+            var spatialOperationNames = spatialOperations.SelectMany(sp => sp.Value.Select(spv => spv.Name));
+            foreach (var spaceVarName in spaceVarNames.Where( spN => ! spatialOperationNames.Contains(spN)))
+            {
+                //Give a warning for all those space varying properties which have NO operations.
+                Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, spaceVarName);
+            }
         }
 
         private static void WriteXYZIfDirectoryExists(IWaterFlowFMModel model, string sedPath, ISpatialOperation spatialOperation,

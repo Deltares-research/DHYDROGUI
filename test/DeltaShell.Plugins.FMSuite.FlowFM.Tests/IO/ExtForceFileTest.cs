@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
@@ -10,6 +11,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -276,6 +278,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //save model
             //check no custom spatially varying op is saved.
             //check sed conc spatially varying is saved.
+        }
+
+        [Test]
+        public void SaveExtFileWithSpatiallyVaryingSedConcButNoOperationsGeneratesWarningMessage()
+        {
+            var sedFile = Path.GetTempFileName();
+            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            var extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
+
+            try
+            {
+                /* Define new model */
+                var fmModel = new WaterFlowFMModel(sedFile);
+                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                fmModel.Grid = grid;
+
+                var fraction = new SedimentFraction() { Name = "Frac1" };
+                fmModel.SedimentFractions.Add(fraction);
+
+                /* Save ext file */
+                var extFile = new ExtForceFile();
+                //Save SedFile with no fractions. No warnings should be given.
+                TestHelper.AssertLogMessagesCount(() => extFile.Write(extForceFile, fmModel.ModelDefinition), 0);
+
+                //Update model , we need to force it as we are not saving directly from the model but from the ModelDefinition
+                var sedConcProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name == "SedConc");
+                var initialSpatialOps = new List<string>() { sedConcProp.SpatiallyVaryingName};
+                //Add another spatially varying prop -> Warning should be given.
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => extFile.Write(extForceFile, fmModel.ModelDefinition),
+                        String.Format(
+                            Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, 
+                            sedConcProp.SpatiallyVaryingName));
+
+                
+                //Add a 'value' operation, another warning should be given.
+                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == sedConcProp.SpatiallyVaryingName);
+
+                // retrieve / create value converter for mysedimentName_SedConc dataitem
+                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, sedConcProp.SpatiallyVaryingName);
+                var samples = new SetValueOperation();
+                samples.SetInputData(ValueOperationBase.MainInputName, new PointCloudFeatureProvider
+                {
+                    PointCloud = new PointCloud
+                    {
+                        PointValues = new List<IPointValue>
+                        {
+                            new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12},
+                            new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30},
+                            new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31},
+                        },
+                    },
+
+                });
+                valueConverter.SpatialOperationSet.AddOperation(samples);
+                valueConverter.SpatialOperationSet.Execute();
+
+                // update model definition (called during export)
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                //New warning should be given.
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => extFile.Write(extForceFile, fmModel.ModelDefinition),
+                        String.Format(
+                            Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_,
+                            sedConcProp.SpatiallyVaryingName));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(sedFile);
+                FileUtils.DeleteIfExists(extForceFile);
+                FileUtils.DeleteIfExists(generatedXyzFile);
+            }
         }
 
         [Test]

@@ -199,8 +199,8 @@
   <data name="WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model" xml:space="preserve">
     <value>FM Model {0} is part of a 1D2D model and can't have morphology properties and / or sediments. Removing these properties from the model</value>
   </data>
-  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_and_we_can_create_the_xyz_file_" xml:space="preserve">
-    <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file.</value>
+  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_" xml:space="preserve">
+    <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid to generate the xyz file.</value>
   </data>
   <data name="ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_" xml:space="preserve">
     <value>The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments.</value>
@@ -222,5 +222,8 @@
   </data>
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
     <value>Sediment concentration boundary condition must have a Hydro boundary condition!</value>
+  </data>
+  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_" xml:space="preserve">
+    <value>No spatial operations of type Import, Add or Value found for spatially varying property {0}. Remember to interpolate them to generate the xyz file. Otherwise the model might not run as expected.</value>
   </data>
 </root>

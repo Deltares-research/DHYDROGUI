@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
@@ -487,6 +488,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(generatedXyzFile);
             }
 
+        }
+
+        [Test]
+        public void SaveSedFileWithSpatiallyVaryingPropertiesAndNoOperationsGeneratesWarningMessages()
+        {
+            var sedFile = Path.GetTempFileName();
+            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+
+            try
+            {
+                /* Define new model */
+                var fmModel = new WaterFlowFMModel(sedFile);
+                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                fmModel.Grid = grid;
+
+                var fraction = new SedimentFraction() { Name = "Frac1" };
+                fmModel.SedimentFractions.Add(fraction);
+                
+                // Save SedFile with no spatially varying properties. No warnings should be given.
+                TestHelper.AssertLogMessagesCount( () => SedimentFile.Save(sedFile, fmModel), 0);
+                
+                // Add a spatially varying prop 
+                var randomSVProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name != "SedConc");
+                Assert.NotNull(randomSVProp);
+                randomSVProp.IsSpatiallyVarying = true;
+                // Warning should be given.
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => SedimentFile.Save(sedFile, fmModel),
+                    String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, randomSVProp.SpatiallyVaryingName));
+
+                //Add a 'value' operation, another warning should be given.
+                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == randomSVProp.SpatiallyVaryingName);
+
+                // retrieve / create value converter for mysedimentName_SedConc dataitem
+                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, randomSVProp.SpatiallyVaryingName);
+                var samples = new SetValueOperation();
+                samples.SetInputData(ValueOperationBase.MainInputName, new PointCloudFeatureProvider
+                {
+                    PointCloud = new PointCloud
+                    {
+                        PointValues = new List<IPointValue>
+                        {
+                            new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12},
+                            new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30},
+                            new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31},
+                        },
+                    },
+
+                });
+                var sp = valueConverter.SpatialOperationSet.AddOperation(samples);
+                valueConverter.SpatialOperationSet.Execute();
+
+                // update model definition (called during export)
+                var initialSpatialOps = new List<string>() { randomSVProp.SpatiallyVaryingName };
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+
+                // New Warning should be given.
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => SedimentFile.Save(sedFile, fmModel),
+                    String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_, randomSVProp.SpatiallyVaryingName));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(sedFile);
+                FileUtils.DeleteIfExists(generatedXyzFile);
+            }
         }
 
         [Test]

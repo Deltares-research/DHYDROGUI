@@ -257,14 +257,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid and we can create the xyz file..
+        ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid to generate the xyz file..
         /// </summary>
-        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_and_we_can_create_the_xyz_file_ {
+        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_ {
             get {
                 return ResourceManager.GetString("SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file" +
                         "_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operati" +
-                        "on__please_interpolate_the_operation_to_the_grid_and_we_can_create_the_xyz_file_" +
-                        "", resourceCulture);
+                        "on__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No spatial operations of type Import, Add or Value found for spatially varying property {0}. Remember to interpolate them to generate the xyz file. Otherwise the model might not run as expected..
+        /// </summary>
+        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_ {
+            get {
+                return ResourceManager.GetString("SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_" +
+                        "of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_" +
+                        "to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_" +
+                        "as_expected_", resourceCulture);
             }
         }
         

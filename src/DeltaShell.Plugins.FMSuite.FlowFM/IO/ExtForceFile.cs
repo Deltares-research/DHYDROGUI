@@ -228,7 +228,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
             {
                 var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
-                if(spatialOperations == null || !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension || s is AddSamplesOperation)) continue;
+                if (spatialOperations == null ||
+                    !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension ||
+                                                s is AddSamplesOperation))
+                {
+                    var warnMsg = String.Format(
+                        Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
+                        spatiallyVaryingSedimentPropertyName); 
+                    if (spatialOperations != null)
+                    {
+                        warnMsg = String.Format(
+                            Resources
+                                .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_,
+                            spatiallyVaryingSedimentPropertyName);
+                    }
+
+                    log.Warn(warnMsg);
+                    continue;
+                }
                 var forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
                         spatialOperations, InitialSpatialVaryingSedimentPrefix)
                     .Distinct().ToList();
