@@ -55,27 +55,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                 "Bed level locations should be set to 'cells' when morphology is active."));
                     }
 
-                    // enum of conveyance2d is validated in Test LoadConveyance2dEnumAndVerifyThatItHasNotChanged
                     // Whenever morphology is active, give an error in the validation report 
                     // when if conveyance 2d type is not set to:
-                    // * R=HU   : -1
-                    // * R=H    : -0
-                    // * R=A/P  : -1
+                    // * R=HU 
+                    // * R=H  
+                    // * R=A/P
                     if (conveyanceTypeProperty != null && waterFlowFmProperty == conveyanceTypeProperty)
                     {
-                        int conveyance2DTypeNumber;
+                        Conveyance2DType currentConveyanceType;
                         var useMorSed = (bool)modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
-                        if (useMorSed 
-                            && int.TryParse(waterFlowFmProperty.GetValueAsString(), out conveyance2DTypeNumber))
-                        {
-                            if (conveyance2DTypeNumber != -1
-                                && conveyance2DTypeNumber != 0
-                                && conveyance2DTypeNumber != 1)
+                        if (useMorSed && Enum.TryParse(waterFlowFmProperty.GetValueAsString(),
+                                out currentConveyanceType))
+                            if (currentConveyanceType != Conveyance2DType.RisHU
+                                && currentConveyanceType != Conveyance2DType.RisH
+                                && currentConveyanceType != Conveyance2DType.RisAperP)
                             {
                                 issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
                                     Resources.WaterFlowFMModelDefinitionValidator_Validate_));
                             }
-                        }
                     }
                 }
                 if (propertyGroup.Key.Equals(timerCategory))

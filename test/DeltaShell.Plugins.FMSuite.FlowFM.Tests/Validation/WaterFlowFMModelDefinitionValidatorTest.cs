@@ -196,20 +196,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        [TestCase(-1, false)]//R=HU
-        [TestCase(0, false)]//R=H
-        [TestCase(1, false)]//R=A/P
-        [TestCase(2, true)]//K=analytic-1D conv
-        [TestCase(3, true)]//K=analytic-2D conv
-        public void CheckConveyance2DType(int type, bool validationErrorThrown)
+        [TestCase(Conveyance2DType.RisHU, false)]//R=HU
+        [TestCase(Conveyance2DType.RisH, false)]//R=H
+        [TestCase(Conveyance2DType.RisAperP, false)]//R=A/P
+        [TestCase(Conveyance2DType.Kisanalytic1Dconv, true)]//K=analytic-1D conv
+        [TestCase(Conveyance2DType.Kisanalytic2Dconv, true)]//K=analytic-2D conv
+        public void CheckConveyance2DType(Conveyance2DType type, bool validationErrorThrown)
         {
             //please note the enum is validated with test LoadConveyance2dEnumAndVerifyThatItHasNotChanged
             var model = CreateValidModel();
             var sedFrac = new SedimentFraction() { Name = "Frac1" };
             model.SedimentFractions.Add(sedFrac);
-            model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString("1");
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("1");
-            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString(type.ToString());
+            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString(((int)type).ToString());
             var report = model.Validate();
             var issues = string.Join(";", report.AllErrors.Where(e => e.Severity == ValidationSeverity.Error).Select(e => e.Message));
             Assert.That(issues.Contains(Resources.WaterFlowFMModelDefinitionValidator_Validate_), Is.EqualTo(validationErrorThrown));

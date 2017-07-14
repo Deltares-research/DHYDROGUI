@@ -70,15 +70,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var values = GetEnumValues(convEnum);
             Assert.AreEqual(5, values.Count, "The enum size of "+ KnownProperties.Conveyance2d + " has changed!");
             Assert.AreEqual("R=HU", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[0]));
-            Assert.AreEqual("-1", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
+            Assert.AreEqual(((int)Conveyance2DType.RisHU).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[0]));
             Assert.AreEqual("R=H", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[1]));
-            Assert.AreEqual("0", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[1]));
+            Assert.AreEqual(((int)Conveyance2DType.RisH).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[1]));
             Assert.AreEqual("R=A/P", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[2]));
-            Assert.AreEqual("1", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[2]));
+            Assert.AreEqual(((int)Conveyance2DType.RisAperP).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[2]));
             Assert.AreEqual("K=analytic-1D conv", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[3]));
-            Assert.AreEqual("2", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[3]));
+            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic1Dconv).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[3]));
             Assert.AreEqual("K=analytic-2D conv", EnumDescriptionAttributeTypeConverter.GetEnumDescription(values[4]));
-            Assert.AreEqual("3", EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[4]));
+            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic2Dconv).ToString(), EnumDescriptionAttributeTypeConverter.GetEnumDisplayName(values[4]));
         }
 
         [Test]

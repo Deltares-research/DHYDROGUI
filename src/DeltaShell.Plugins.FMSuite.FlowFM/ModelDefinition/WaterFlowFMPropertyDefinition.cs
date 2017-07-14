@@ -129,4 +129,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         Both = 3,
         Ugrid = 4
     }
+
+    public enum Conveyance2DType
+    {
+        RisHU = -1,
+        RisH = 0,
+        RisAperP = 1,
+        Kisanalytic1Dconv = 2,
+        Kisanalytic2Dconv = 3
+    }
 }
