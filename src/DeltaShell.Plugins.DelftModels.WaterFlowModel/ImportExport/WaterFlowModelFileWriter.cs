@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             #region Write network and computational grid in ugrid
 
-            UGridGlobalMetaData metaData = new UGridGlobalMetaData("NetworkGeneratedInWaterFlowModel1D",  WaterFlowModel1DApplicationPlugin.PluginName, WaterFlowModel1DApplicationPlugin.PluginVersion);
+            UGridGlobalMetaData metaData = new UGridGlobalMetaData("NetworkGeneratedInWaterFlowModel1D", Properties.Resources.WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin, typeof(WaterFlowModel1D).Assembly.GetName().Version.ToString());
 
             UGridToNetworkAdapter.SaveNetwork(waterFlowModel1D.Network, fileName.NetCdf, metaData);
             UGridToNetworkAdapter.SaveNetworkDiscretisation(waterFlowModel1D.NetworkDiscretization, fileName.NetCdf);

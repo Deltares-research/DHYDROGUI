@@ -255,21 +255,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
 
             //TODO: Add PreissmannMinClosedManholes ???
-            
+
             //TODO: Add QDrestart ???
-            
+
+            var readNetworkInUGridFormat = false; // always false - not currently configurable in the GUI
+            if (readNetworkInUGridFormat != null)
+            {
+                simulationOptionsValues.AddProperty(ModelDefinitionsRegion.ReadNetworkFromUGrid.Key, Convert.ToBoolean(readNetworkInUGridFormat) ? 1 : 0, ModelDefinitionsRegion.ReadNetworkFromUGrid.Description);
+            }
+
             //TODO: Add River ???
-            
+
             //TODO: Add Sewer ???
-            
+
             //TODO: Add SiphonUpstreamThresholdSwitchOff ???
-            
+
             //TODO: Add StrucAlfa ???
-            
+
             //TODO: Add StructureDynamicsFactor ???
-            
+
             //TODO: Add StructureStabilityFactor ???
-            
+
             //TODO: Add ThresholdForSummerDike ???
 
             var timersOutputFrequency = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.TimersOutputFrequency.Key);
@@ -309,16 +315,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 simulationOptionsValues.AddProperty(ModelDefinitionsRegion.WriteNetCDF.Key, Convert.ToBoolean(writeNetCdf) ? 1 : 0, ModelDefinitionsRegion.WriteNetCDF.Description);
             }
-
-            var readNetworkInUGridFormat = false; // always false - not currently configurable in the GUI
-            if (readNetworkInUGridFormat != null)
-            {
-                simulationOptionsValues.AddProperty(ModelDefinitionsRegion.ReadNetworkFromUGrid.Key, Convert.ToBoolean(readNetworkInUGridFormat) ? 1 : 0, ModelDefinitionsRegion.ReadNetworkFromUGrid.Description);
-            }
-
-
+            
             return simulationOptionsValues;
-
         }
 
         private DelftIniCategory GenerateNumericalParametersValues(WaterFlowModel1D waterFlowModel1D)

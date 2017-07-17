@@ -36,13 +36,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private const string BoundaryLocationFilename = "BoundaryLocations.ini";
         private const string StructureFilename = "Structures.ini";
         private const string NetworkFilename = "NetworkDefinition.ini";
+        private const string NetCfdFilename = "NetworkDefinition.nc";
         private const string SobekSimFilename = "SobekSim.ini";
         private const string RetentionFilename = "Retention.ini";
         private const string LogFileName = "sobek.log";
         private const string BoundaryConditionsFilename = "BoundaryConditions.bc"; 
         public const string ModelDefinitionFilename = "ModelDefinition.md1d";
         public const string ModelFilenameExtension = ".md1d";
-        private const string NetCfdFilename = "NetworkAndComputationalGrid_net.nc";
+        
         
         public IEventedList<string> RoughnessFiles { get; private set; }
         

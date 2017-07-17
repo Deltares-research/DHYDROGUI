@@ -539,6 +539,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to D-Flow1D Plugin.
+        /// </summary>
+        public static string WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Branch &apos;{0}&apos; has Q/H dependent roughness defined on section &apos;{1}&apos;. Q/H dependent roughness is only supported on branches with ZW crosssections (tabulated)..
         /// </summary>
         public static string WaterFlowModel1DModelDataValidator_GetRoughnessValidationIssuesForSection_Branch___0___has_Q_H_dependent_roughness_defined_on_section {
@@ -679,7 +688,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Morphology file does not exist..
         /// </summary>
-        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Morphology_file_does_not_exist {
+        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_file_does_not_exist__ {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_fil" +
                         "e_does_not_exist__", resourceCulture);
@@ -689,7 +698,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sediment file does not exist..
         /// </summary>
-        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Sediment_file_does_not_exist {
+        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_does_not_exist__ {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_" +
                         "does_not_exist__", resourceCulture);

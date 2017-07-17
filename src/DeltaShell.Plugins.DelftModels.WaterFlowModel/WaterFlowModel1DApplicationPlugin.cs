@@ -17,16 +17,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1DApplicationPlugin));
 
-        public static string PluginVersion; 
-        public static string PluginName;
-
-        public WaterFlowModel1DApplicationPlugin()
-        {
-            PluginVersion = Version;
-            PluginName = DisplayName;
-        }
-
-
         public override string Name
         {
             get { return "1D water flow model"; }
@@ -34,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public override string DisplayName
         {
-            get { return "D-Flow1D Plugin"; }
+            get { return Properties.Resources.WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin; }
         }
 
         public override string Description

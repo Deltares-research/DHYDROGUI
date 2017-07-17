@@ -409,4 +409,7 @@
   <data name="WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues" xml:space="preserve">
     <value>The boundary condition {0} has non-sequential values. All values in Q(h) boundaries must be sequential.</value>
   </data>
+  <data name="WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin" xml:space="preserve">
+    <value>D-Flow1D Plugin</value>
+  </data>
 </root>
