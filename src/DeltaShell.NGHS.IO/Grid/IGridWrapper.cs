@@ -396,5 +396,11 @@ namespace DeltaShell.NGHS.IO.Grid
 
         int ionc_get_network_id_from_mesh_id([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int networkId);
 
+
+        //-Branch order functions -------------------//
+        int ionc_put_1d_network_branchorder(int ncidin, int networkid, IntPtr c_branchorder, int nbranches);
+
+        int ionc_get_1d_network_branchorder(int ncidin, int networkid, ref IntPtr c_branchorder, int nbranches);
+
     }
 }

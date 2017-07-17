@@ -510,6 +510,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         ////// read the netcdf file created in the test above
         [Test]
+        [Ignore("should be in unit test of io_netcdf kernel")]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void read1dUGRIDNetcdf()
         {

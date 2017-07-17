@@ -253,7 +253,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                             })
                             .ToArray(),
                         network.Branches.Select(b => b.Name).ToArray(),
-                        network.Branches.Select(b => b.Description).ToArray()
+                        network.Branches.Select(b => b.Description).ToArray(),
+                        network.Branches.Select(b => b.OrderNumber).ToArray()
                     );
 
                     var numberOfNetworkBranches = ugrid1D.GetNumberOfNetworkBranches(networkId);
@@ -314,9 +315,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     int[] branchGeoPoints;
                     string[] branchIds;
                     string[] branchLongnames;
+                    int[] branchOrderNumbers;
 
                     ugrid1D.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes,
-                        out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
+                        out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames, out branchOrderNumbers);
 
                     //Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierrBranches);
                     Assert.AreEqual(network.Branches.Count, sourceNodes.Length);

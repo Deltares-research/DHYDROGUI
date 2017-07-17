@@ -199,6 +199,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                     {
+                        if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
+                        {
+                            bathymetryNoDataValue = -999.0d;
+                            return ;
+                        }
+                        uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(1);
+
                         bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
                     });
                     Grid = newGrid;

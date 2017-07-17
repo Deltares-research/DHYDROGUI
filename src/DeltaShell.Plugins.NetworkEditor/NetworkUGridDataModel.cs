@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         public int[] TargedNodesIds = new int[0];
         public double[] BranchLengths = new double[0];
         public int[] NumberOfBranchGeometryPoints = new int[0];
+        public int[] BranchOrderNumbers = new int[0];
         public string[] BranchNames = new string[0];
         public string[] BranchDescriptions = new string[0];
         public double[] GeopointsX = new double[0];
@@ -38,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             SetNetworkData(network);
         }
 
-        public NetworkUGridDataModel(string networkName, ICoordinateSystem coordinateSystem, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions, int[] sourceNodes, int[] targetNodes, double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY)
+        public NetworkUGridDataModel(string networkName, ICoordinateSystem coordinateSystem, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions, int[] sourceNodes, int[] targetNodes, double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers)
         {
             Name = networkName;
             CoordinateSystem = coordinateSystem;
@@ -54,6 +55,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             NumberOfBranchGeometryPoints = branchGeometryPoints;
             BranchNames = branchNames;
             BranchDescriptions = branchDescriptions;
+
+            BranchOrderNumbers = branchOrderNumbers;
 
             GeopointsX = geometryPointsX;
             GeopointsY = geometryPointsY;
@@ -94,6 +97,8 @@ namespace DeltaShell.Plugins.NetworkEditor
                 BranchNames = network.Branches.Select(b => b.Name).ToArray();
                 BranchDescriptions = network.Branches.Select(b => b.Description).ToArray();
 
+                BranchOrderNumbers = network.Branches.Select(b => b.OrderNumber).ToArray();
+
                 GeopointsX = network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray();
                 GeopointsY = network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray();
             }
@@ -111,8 +116,9 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             var branches = ConstructNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
                 dataModel.BranchLengths,
-                dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions,
-                dataModel.GeopointsX, dataModel.GeopointsY);
+                dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions, 
+                dataModel.GeopointsX, dataModel.GeopointsY, 
+                dataModel.BranchOrderNumbers);
 
             network.Nodes.AddRange(nodes);
             network.Branches.AddRange(branches);
@@ -153,7 +159,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         }
 
         private static List<IChannel> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
-            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY)
+            double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers)
         {
             var channels = new List<IChannel>();
             int numberOfChannels = sourceNodes.Length;
@@ -204,7 +210,8 @@ namespace DeltaShell.Plugins.NetworkEditor
                     Description = branchDescriptions[i] == "" ? null : branchDescriptions[i],
                     Source = nodes[sourceNodeIndex],
                     Target = nodes[targetNodeIndex],
-                    Geometry = new LineString(coordinates)
+                    Geometry = new LineString(coordinates),
+                    OrderNumber = branchOrderNumbers[i]
                 };
 
                 channels.Add(channel);

@@ -94,23 +94,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write network branches" + standardErrorMessage)]
         public void WhenInvoking_WriteNetworkBranches_AndApiReturnsAnErrorValueThenThrowException()
         {
-            uGridNetworkApi.Expect(api => api.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
+            uGridNetworkApi.Expect(api => api.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<int[]>.Is.Anything))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetwork.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
+            gridNetwork.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<int[]>.Is.Anything);
         }
 
         [Test]
         public void WhenInvoking_WriteNetworkBranches_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            uGridNetworkApi.Expect(api => api.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything))
+            uGridNetworkApi.Expect(api => api.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<int[]>.Is.Anything))
                 .Return(noErrorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetwork.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything);
+            gridNetwork.WriteNetworkBranches(Arg<int[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<double[]>.Is.Anything, Arg<int[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<string[]>.Is.Anything, Arg<int[]>.Is.Anything);
         }
 
         [Test]
@@ -263,23 +263,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read network branches" + standardErrorMessage)]
         public void WhenInvoking_ReadNetworkBranches_AndApiReturnsAnErrorValueThenThrowException()
         {
-            uGridNetworkApi.Expect(api => api.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy))
+            uGridNetworkApi.Expect(api => api.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetwork.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy);
+            gridNetwork.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy);
         }
 
         [Test]
         public void WhenInvoking_ReadNetworkBranches_AndApiReturnsNoErrorValueThenMethodCompletes()
         {
-            uGridNetworkApi.Expect(api => api.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy))
+            uGridNetworkApi.Expect(api => api.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetwork.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy);
+            gridNetwork.ReadNetworkBranches(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<string[]>.Out(null).Dummy, out Arg<int[]>.Out(null).Dummy);
         }
 
         [Test]

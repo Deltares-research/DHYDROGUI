@@ -55,7 +55,8 @@ namespace DeltaShell.Plugins.NetworkEditor
                         networkUGridDataModel.BranchLengths,
                         networkUGridDataModel.NumberOfBranchGeometryPoints,
                         networkUGridDataModel.BranchNames,
-                        networkUGridDataModel.BranchDescriptions);
+                        networkUGridDataModel.BranchDescriptions,
+                        networkUGridDataModel.BranchOrderNumbers);
 
                     uGridNetwork.WriteNetworkGeometry(networkUGridDataModel.GeopointsX, networkUGridDataModel.GeopointsY);
                 }
@@ -138,8 +139,10 @@ namespace DeltaShell.Plugins.NetworkEditor
             int[] branchGeometryPoints;
             string[] branchNames;
             string[] branchDescriptions;
+            int[] branchOrderNumbers;
+
             uGridNetwork.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths,
-                out branchGeometryPoints, out branchNames, out branchDescriptions);
+                out branchGeometryPoints, out branchNames, out branchDescriptions, out branchOrderNumbers);
 
             double[] geometryPointsX;
             double[] geometryPointsY;
@@ -150,7 +153,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             var networkUGridDataModel = new NetworkUGridDataModel(networkName, coordinateSystem, nodesX, nodesY, nodesNames,
                 nodesDescriptions, sourceNodes, targetNodes, branchLengths, branchGeometryPoints, branchNames,
-                branchDescriptions, geometryPointsX, geometryPointsY);
+                branchDescriptions, geometryPointsX, geometryPointsY, branchOrderNumbers);
             return networkUGridDataModel;
         }
 

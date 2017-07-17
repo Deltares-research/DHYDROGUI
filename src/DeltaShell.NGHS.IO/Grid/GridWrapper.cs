@@ -563,7 +563,17 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_ug_get_mesh_ids", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_ug_get_mesh_ids_dll([In] ref int ioncid, [In] ref int meshType, [In, Out] ref IntPtr pointerToMeshIds, [In] ref int nnumNetworks);
-        
+
+        //-Branch order functions -------------------//
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_1d_network_branchorder", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_put_1d_network_branchorder_dll([In] ref int ncidin, [In] ref int networkid, [In] ref IntPtr c_branchorder, [In] ref int nbranches);
+
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_1d_network_branchorder", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ionc_get_1d_network_branchorder_dll([In] ref int ncidin, [In] ref int networkid, [In, Out] ref IntPtr c_branchorder, [In] ref int nbranches);
+
+
         //-Get the network id for a specified mesh
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_network_id_from_mesh_id", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_network_id_from_mesh_id_dll([In] ref int ioncid, [In] ref int meshid, [In, Out] ref int networkid);
@@ -867,7 +877,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return ionc_get_network_id_from_mesh_id_dll(ref ioncid, ref meshId, ref networkId);
         }
-
+        
         public int ionc_get_network_ids(ref int ioncid, ref IntPtr pointerToNetworkIds, ref int numberOfNetworks)
         {
             return ionc_get_network_ids_dll(ref ioncid, ref pointerToNetworkIds, ref numberOfNetworks);
@@ -879,6 +889,15 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_ug_get_mesh_ids_dll(ref ioncid, ref mType, ref pointerToMeshIds, ref numberOfMeshes);
         }
 
+        public int ionc_put_1d_network_branchorder(int ncidin, int networkid, IntPtr c_branchorder, int nbranches)
+        {
+            return ionc_put_1d_network_branchorder_dll(ref ncidin, ref networkid, ref c_branchorder, ref nbranches);
+        }
+
+        public int ionc_get_1d_network_branchorder(int ncidin, int networkid, ref IntPtr c_branchorder, int nbranches)
+        {
+            return ionc_get_1d_network_branchorder_dll(ref ncidin, ref networkid, ref c_branchorder, ref nbranches);
+        }
         #endregion
     }
 }

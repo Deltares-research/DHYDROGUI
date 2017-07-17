@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                 WaterFlowModel1D waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().ToList()[0];
                 //string targetPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 string targetPath = Path.Combine(Path.GetTempPath(), "FileWriters");
+                FileUtils.DeleteIfExists(targetPath);
                 
                 var modelFilename = Path.Combine(targetPath, ModelFileNames.ModelDefinitionFilename);
                 

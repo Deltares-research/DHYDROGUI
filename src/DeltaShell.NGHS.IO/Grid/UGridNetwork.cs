@@ -33,9 +33,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 Resources.UGridNetwork_WriteNetworkNodes_Couldn_t_write_network_nodes);
         }
         
-        public void WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames)
+        public void WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames, int[] branchOrderNumbers)
         {
-            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames),
+            DoWithValidGridApi<IUGridNetworkApi>(uGridNetworkApi => uGridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames, branchOrderNumbers),
                 Resources.UGridNetwork_WriteNetworkBranches_Couldn_t_write_network_branches);
         }
 
@@ -96,10 +96,10 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, Resources.UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes);
         }
 
-        public void ReadNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames)
+        public void ReadNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames, out int[] branchOrderNumbers)
         {
             var uGridNetworkApi = GetValidGridApi<IUGridNetworkApi>(Resources.UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches);
-            var ierr = uGridNetworkApi.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames);
+            var ierr = uGridNetworkApi.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths, out branchGeoPoints, out branchIds, out branchLongnames, out branchOrderNumbers);
             ThrowIfError(ierr, Resources.UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches);
         }
 
