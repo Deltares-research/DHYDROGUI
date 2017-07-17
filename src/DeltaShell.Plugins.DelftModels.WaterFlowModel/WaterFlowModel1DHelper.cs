@@ -29,9 +29,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return bc;
         }
 
-        public static BoundaryType GetBoundaryType(WaterFlowModel1DBoundaryNodeDataType boundaryNodeDataType)
+        public static BoundaryType GetBoundaryType(WaterFlowModel1DBoundaryNodeData boundaryNodeData)
         {
-            switch (boundaryNodeDataType)
+            switch (boundaryNodeData.DataType)
             {
                 case WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries:
                     return BoundaryType.Level;
@@ -42,9 +42,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 case WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant:
                     return BoundaryType.Level;
                 case WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable:
-                    return BoundaryType.Discharge;
+                    // SOBEK3-1035
+                    if (boundaryNodeData.Data != null && 
+                        boundaryNodeData.Data.Components.Any() && 
+                        boundaryNodeData.Data.Components[0].ValueType == typeof(double) &&
+                        boundaryNodeData.Data.Components[0].Values.Count > 0 &&
+                        (double)boundaryNodeData.Data.Components[0].MinValue <= 0 &&
+                        (double)boundaryNodeData.Data.Components[0].MaxValue <= 0)
+                    {
+                        // if Q <= 0 return WaterLevel type
+                        return BoundaryType.Level;
+                    }
+                    // if Q >= 0 return Discharge type (returned by default)
+                    return BoundaryType.Discharge;         
                 default:
-                    throw new ArgumentOutOfRangeException(string.Format("BoundaryNodeDataType {0} is not supported by the ModelApi",boundaryNodeDataType));
+                    throw new ArgumentOutOfRangeException(string.Format("BoundaryNodeDataType {0} is not supported by the ModelApi", boundaryNodeData.DataType));
             }
         }
 

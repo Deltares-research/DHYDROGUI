@@ -158,8 +158,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 yield return FlowBoundaryQuantityType.SedimentConcentration;
                 yield return FlowBoundaryQuantityType.Tracer;
                 yield return FlowBoundaryQuantityType.MorphologyBedLevelPrescribed;
-                yield return FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed;
+                yield return FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed;
                 yield return FlowBoundaryQuantityType.MorphologyBedLoadTransport;
+                yield return FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint;
+                yield return FlowBoundaryQuantityType.MorphologyBedLevelFixed;
             }
         }
 
@@ -186,8 +188,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
             if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.SedimentConcentration)
                 || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLoadTransport))
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelFixed))
             {
                 return (Model != null && Model.UseMorSed);
             }

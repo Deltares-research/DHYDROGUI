@@ -55,8 +55,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {FlowBoundaryQuantityType.Salinity, "s"},
                 {FlowBoundaryQuantityType.Temperature, "T"},
                 {FlowBoundaryQuantityType.SedimentConcentration, "con"},
+                {FlowBoundaryQuantityType.MorphologyBedLevelFixed, "bLF"},
+                {FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint, "nBLC"},
                 {FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, "bLvP"},
-                {FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed, "bLvCP"},
+                {FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, "bLvCP"},
                 {FlowBoundaryQuantityType.MorphologyBedLoadTransport, "bLT"},
                 {FlowBoundaryQuantityType.Tracer, "tr"},
             };

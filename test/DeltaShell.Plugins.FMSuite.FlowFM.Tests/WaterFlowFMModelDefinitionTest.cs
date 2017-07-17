@@ -945,10 +945,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var modelDefinition = new WaterFlowFMModelDefinition
             {
-                IsPartOf1D2DModel = isPartOf1D2DModel,
                 MapFormat = mapFormatType,
                 UseMorphologySediment = useMorSed
             };
+            var isPartOf1D2DModelGuiProperty = modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
+
             modelDefinition.SetMapFormatPropertyValue();
 
             // Check that MapFormat property value has been changed accordingly
@@ -968,9 +970,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var modelDefinition = new WaterFlowFMModelDefinition
             {
-                IsPartOf1D2DModel = isPartOf1D2DModel,
                 MapFormat = mapFormatType
             };
+            var isPartOf1D2DModelGuiProperty = modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
             modelDefinition.UseMorphologySediment = useMorSed;
 
             // Check that MapFormat property value has been changed accordingly
@@ -993,10 +996,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Read the mdu file for modelDefinition properties
             var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName)
-            {
-                IsPartOf1D2DModel = false
-            };
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            
+            var isPartOf1D2DModelGuiProperty = modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = false;
+
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area);
 
@@ -1020,10 +1024,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Read the mdu file for modelDefinition properties
             var area = new HydroArea();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName)
-            {
-                IsPartOf1D2DModel = true
-            };
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            var isPartOf1D2DModelGuiProperty = modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = true;
+
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area);
 

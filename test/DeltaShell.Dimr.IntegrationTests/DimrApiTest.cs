@@ -22,7 +22,7 @@ namespace DeltaShell.Dimr.IntegrationTests
             {
                 try
                 {
-                    dimrApi.set_logger();
+                    dimrApi.set_feedback_logger();
                 }
                 catch (Exception ex)
                 {
@@ -38,7 +38,7 @@ namespace DeltaShell.Dimr.IntegrationTests
             {
                 try
                 {
-                    dimrApi.set_logger();
+                    dimrApi.set_feedback_logger();
                     dimrApi.Initialize(dimrConfig);
                 }
                 catch (Exception ex)
@@ -55,7 +55,7 @@ namespace DeltaShell.Dimr.IntegrationTests
             {
                 try
                 {
-                    dimrApi.set_logger();
+                    dimrApi.set_feedback_logger();
                     dimrApi.Initialize(dimrConfig);
                     dimrApi.Update(0.1d);
                 }
@@ -73,7 +73,7 @@ namespace DeltaShell.Dimr.IntegrationTests
             {
                 try
                 {
-                    dimrApi.set_logger();
+                    dimrApi.set_feedback_logger();
                     dimrApi.Initialize(dimrConfig);
                     dimrApi.Update(0.1d);
                     dimrApi.Finish();

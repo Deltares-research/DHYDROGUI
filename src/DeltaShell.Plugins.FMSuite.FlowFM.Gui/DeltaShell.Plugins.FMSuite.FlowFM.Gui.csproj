@@ -242,6 +242,12 @@
     </Compile>
     <Compile Include="FlowFMGuiPlugin.cs" />
     <Compile Include="FlowFMMapViewDecorator.cs" />
+    <Compile Include="Forms\BcmFileExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BcmFileImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FMModelInspectionWindow.cs">
       <SubType>Form</SubType>
     </Compile>

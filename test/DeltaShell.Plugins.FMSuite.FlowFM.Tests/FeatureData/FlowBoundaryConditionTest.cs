@@ -25,17 +25,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 return BoundaryConditionDataType.Constant;
             }
             var argument = function.Arguments.Last();
-            if (argument.ValueType == typeof (DateTime))
+            if (argument.ValueType == typeof(DateTime))
             {
                 return BoundaryConditionDataType.TimeSeries;
             }
-            if (argument.ValueType == typeof (string))
+            if (argument.ValueType == typeof(string))
             {
                 return function.Components.Count == 4
-                           ? BoundaryConditionDataType.AstroCorrection
-                           : BoundaryConditionDataType.AstroComponents;
+                    ? BoundaryConditionDataType.AstroCorrection
+                    : BoundaryConditionDataType.AstroComponents;
             }
-            if (argument.ValueType == typeof (double))
+            if (argument.ValueType == typeof(double))
             {
                 if (function.Components.Count == 1)
                 {
@@ -44,8 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 else
                 {
                     return function.Components.Count == 4
-                           ? BoundaryConditionDataType.HarmonicCorrection
-                           : BoundaryConditionDataType.Harmonics;
+                        ? BoundaryConditionDataType.HarmonicCorrection
+                        : BoundaryConditionDataType.Harmonics;
                 }
             }
             throw new ArgumentException("Unable to determine data type of given boundary condition data.");
@@ -54,7 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void TestCurrentsSupportedForcingAndInterpolationTypes()
         {
-            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries);
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
+                BoundaryConditionDataType.TimeSeries);
 
             Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Logarithmic));
             Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Linear));
@@ -66,7 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void TestRiemannSupportedForcingAndInterpolationTypes()
         {
-            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries);
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.TimeSeries);
 
             Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Uniform));
             Assert.IsFalse(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Logarithmic));
@@ -79,7 +81,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void TestSedimentSupportedForcingAndInterpolationTypes()
         {
-            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries);
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration,
+                BoundaryConditionDataType.TimeSeries);
 
             Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Logarithmic));
             Assert.IsTrue(data.SupportedVerticalInterpolationTypes.Contains(VerticalInterpolationType.Linear));
@@ -92,19 +95,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         public void DataSyncingWithDataPointAdded()
         {
             var feature2D = new Feature2D
-                {
-                    Geometry =
-                        new LineString(new []
-                            {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
-                };
+            {
+                Geometry =
+                    new LineString(new[]
+                        {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
+            };
 
-            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries)
-                {
-                    Feature = feature2D
-                };
-            
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature2D
+            };
+
             data.DataPointIndices.Add(2);
-            
+
             Assert.AreEqual(1, data.PointData.Count);
             Assert.AreEqual(BoundaryConditionDataType.TimeSeries, DetermineDataType(data.PointData[0]));
             Assert.IsNull(data.GetDataAtPoint(0));
@@ -119,17 +123,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
             };
 
-            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries)
+            var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
+                BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature2D
             };
 
             data.AddPoint(0);
-            data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 30,
-                                                                               40, 30);
+            data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                30,
+                40, 30);
             data.AddPoint(2);
             data.DataPointIndices.Remove(2);
 
@@ -138,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.IsNull(data.GetDataAtPoint(2));
             Assert.IsNotNull(data.GetDataAtPoint(0));
             Assert.AreEqual(1, data.PointDepthLayerDefinitions.Count);
-            Assert.AreEqual(VerticalProfileType.PercentageFromBed,data.PointDepthLayerDefinitions[0].Type);
+            Assert.AreEqual(VerticalProfileType.PercentageFromBed, data.PointDepthLayerDefinitions[0].Type);
         }
 
         [Test]
@@ -146,22 +152,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         public void SettingMultipleLayersForWaterLevelGivesException()
         {
             var feature2D = new Feature2D
-                {
-                    Geometry =
-                        new LineString(new []
-                            {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
-                };
+            {
+                Geometry =
+                    new LineString(new[]
+                        {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
+            };
 
             var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                 BoundaryConditionDataType.TimeSeries)
-                {
-                    Feature = feature2D
-                };
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = feature2D
+            };
 
             data.AddPoint(0);
 
-            data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 30,
-                                                                               40, 30);
+            data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                30,
+                40, 30);
         }
 
         [Test]
@@ -170,11 +177,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
             };
 
             var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
-                                                 BoundaryConditionDataType.TimeSeries)
+                BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature2D
             };
@@ -183,18 +190,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             data.AddPoint(2);
 
             data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.Uniform);
-            data.PointDepthLayerDefinitions[1] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 30,
-                                                                               70);
-            data.PointDepthLayerDefinitions[2] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 30,
-                                                                               40, 30);
-            
+            data.PointDepthLayerDefinitions[1] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                30,
+                70);
+            data.PointDepthLayerDefinitions[2] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                30,
+                40, 30);
+
             var function1 = data.GetDataAtPoint(0);
             function1[new DateTime(2000, 1, 1)] = 20.00;
-            
-            var function2 = data.GetDataAtPoint(1);            
+
+            var function2 = data.GetDataAtPoint(1);
             function2[new DateTime(2001, 1, 1)] = new[] {20.01, 40.02};
             function2[new DateTime(2002, 1, 1)] = new[] {20.02, 40.04};
-            
+
             var function3 = data.GetDataAtPoint(2);
             function3[new DateTime(2003, 1, 1)] = new[] {20.03, 40.06, 60.09};
 
@@ -202,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             function1 = data.GetDataAtPoint(0);
             Assert.AreEqual(20.00, function1[new DateTime(2000, 1, 1)]);
-            
+
             function2 = data.GetDataAtPoint(1);
             Assert.AreEqual(20.01, function2[new DateTime(2001, 1, 1)]);
             Assert.AreEqual(20.02, function2[new DateTime(2002, 1, 1)]);
@@ -218,11 +227,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
             };
 
             var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
-                                                 BoundaryConditionDataType.TimeSeries)
+                BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature2D
             };
@@ -231,20 +240,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             data.AddPoint(2);
 
             data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.Uniform);
-            data.PointDepthLayerDefinitions[1] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 30,
-                                                                               70);
-            data.PointDepthLayerDefinitions[2] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 30,
-                                                                               40, 30);
-            
+            data.PointDepthLayerDefinitions[1] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                30,
+                70);
+            data.PointDepthLayerDefinitions[2] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                30,
+                40, 30);
+
             var function1 = data.GetDataAtPoint(0);
             function1[new DateTime(2000, 1, 1)] = 20.00;
 
             var function2 = data.GetDataAtPoint(1);
-            function2[new DateTime(2001, 1, 1)] = new[] { 20.01, 40.02 };
-            function2[new DateTime(2002, 1, 1)] = new[] { 20.02, 40.04 };
+            function2[new DateTime(2001, 1, 1)] = new[] {20.01, 40.02};
+            function2[new DateTime(2002, 1, 1)] = new[] {20.02, 40.04};
 
             var function3 = data.GetDataAtPoint(2);
-            function3[new DateTime(2003, 1, 1)] = new[] { 20.03, 40.06, 60.09 };
+            function3[new DateTime(2003, 1, 1)] = new[] {20.03, 40.06, 60.09};
 
             data.KeepBottomLayer();
 
@@ -265,25 +276,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
             };
 
 
 
             var data = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport,
-                                                 BoundaryConditionDataType.TimeSeries)
+                BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature2D,
-                SedimentFractionNames = new List<string> { "abc", "def"}
+                SedimentFractionNames = new List<string> {"abc", "def"}
             };
 
             var function = TypeUtils.CallPrivateMethod<IFunction>(data, "CreateFunction");
             var view = new FunctionView {Data = function};
 
             function[DateTime.Now] = new[] {1.0, 2.0};
-            function[DateTime.Now.AddHours(1)] = new[] { 2.0, 3.0 };
+            function[DateTime.Now.AddHours(1)] = new[] {2.0, 3.0};
 
             WindowsFormsTestHelper.ShowModal(view);
+        }
+
+        [Test]
+        public void MorphologyBoundaryConditionHasGeneratedDataTest()
+        {
+            var condition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed,
+                BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = new Feature2D
+                {
+                    Name = "bnd1",
+                    Geometry =
+                        new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 10)})
+                }
+            };
+            Assert.IsFalse(FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(condition));
+            condition.AddPoint(0);
+            var startDateTime = new DateTime(1981, 8, 30);
+            var endDateTime = new DateTime(1981, 8, 31);
+            condition.PointData[0].Arguments[0].SetValues(new[] {startDateTime, endDateTime});
+            condition.PointData[0][startDateTime] = 0.5;
+            condition.PointData[0][endDateTime] = 0.6;
+            Assert.IsTrue(FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(condition));
+            TypeUtils.SetPrivatePropertyValue(condition, "FlowQuantity", FlowBoundaryQuantityType.Discharge);
+            Assert.IsFalse(FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(condition));
+            TypeUtils.SetPrivatePropertyValue(condition, "FlowQuantity",
+                FlowBoundaryQuantityType.MorphologyBedLevelFixed);
+            Assert.IsTrue(FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(condition));
+            condition.DataType = BoundaryConditionDataType.Empty;
+            Assert.IsFalse(FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(condition));
+        }
+
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, "meters", "m")]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, "meters", "m")]
+        [TestCase(FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint, "", "-")]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelFixed, "", "-")]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport, "cubic meters per second per meter", "m³/s/m")]
+        public void MorphologyVariableUnitTest(FlowBoundaryQuantityType type, string name_expectation, string symbol_expectation)
+        {
+            var unit = new FlowBoundaryCondition(type, BoundaryConditionDataType.TimeSeries).VariableUnit;
+            Assert.That(unit.Name, Is.EqualTo(name_expectation));
+            Assert.That(unit.Symbol, Is.EqualTo(symbol_expectation));
         }
     }
 }

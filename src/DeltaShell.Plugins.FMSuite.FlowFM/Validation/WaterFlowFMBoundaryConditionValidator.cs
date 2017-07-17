@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -33,6 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
 
                 issues.AddRange(ValidateSupportPointNames(boundaryConditionSet));
+                issues.AddRange(ValidateMorphologyBoundaryHaveHydroBoundaries(boundaryConditionSet));
+                issues.AddRange(ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(boundaryConditionSet));
 
                 var quantities = flowBoundaryConditions.Select(fbc => fbc.FlowQuantity);
 
@@ -56,6 +59,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Water flow FM model boundary conditions", issues);
         }
 
+        private static IEnumerable<ValidationIssue> ValidateMorphologyBoundaryHaveHydroBoundaries(BoundaryConditionSet boundaryConditionSet)
+        {
+            if (boundaryConditionSet.BoundaryConditions.All(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)))
+                yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
+        }
+
+        private static IEnumerable<ValidationIssue> ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(BoundaryConditionSet boundaryConditionSet)
+        {
+            //Check if any other snapped boundary at this location have a flow boundary condition in it.
+            yield break;
+            var flowBoundaryConditions = boundaryConditionSet.BoundaryConditions.Cast<FlowBoundaryCondition>().ToList();
+            if (flowBoundaryConditions.Count == boundaryConditionSet.BoundaryConditions.Count && flowBoundaryConditions.All(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration))
+                yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_);
+        }
+
         private static void ValidateFlowBoundaryConditions(WaterFlowFMModel model, List<ValidationIssue> issues)
         {
             foreach (var bcSet in model.BoundaryConditionSets)
@@ -68,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
             }
 
-            foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>())
+            foreach (var boundaryCondition in model.BoundaryConditions.OfType<FlowBoundaryCondition>().Where(fbc => fbc.DataType != BoundaryConditionDataType.Empty))
             {
                 var boundaryConditionName = boundaryCondition.VariableDescription;
 

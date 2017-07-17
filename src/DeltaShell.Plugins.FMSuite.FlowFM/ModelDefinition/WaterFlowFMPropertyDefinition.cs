@@ -72,10 +72,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string morphology = "morphology";
         public const string sediment = "sediment";
         public const string MorFile = "MorFile";
+        public const string BcmFile = "BcFil";
         public const string SedFile = "SedFile";
         public const string BedlevType = "bedlevtype";
         public const string MapFormat = "MapFormat";
         public const string RenumberFlowNodes = "RenumberFlowNodes";
+        public const string Conveyance2d = "conveyance2d";
     }
 
 
@@ -126,5 +128,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         Tecplot = 2,
         Both = 3,
         Ugrid = 4
+    }
+
+    public enum Conveyance2DType
+    {
+        RisHU = -1,
+        RisH = 0,
+        RisAperP = 1,
+        Kisanalytic1Dconv = 2,
+        Kisanalytic2Dconv = 3
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -115,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed
+                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
                                     || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
                     .ToList());
 
@@ -131,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.TimeSeries));
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
-                new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed, BoundaryConditionDataType.TimeSeries));
+                new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries));
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport, BoundaryConditionDataType.TimeSeries));
 
@@ -139,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(model.BoundaryConditions.ToList().Count, 3);
             Assert.AreEqual(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed
+                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
                                     || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
                     .ToList().Count, 3);
 
@@ -149,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(model.BoundaryConditions.ToList().Count, 2);
             Assert.AreEqual(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
-                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed)
+                                    || bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)
                     .ToList().Count, 2);
             Assert.IsEmpty(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                     .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport).ToList());
@@ -203,5 +205,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         }
 
+        [Test]
+        public void ChangeSedimentTypeOrFormulaToSpatiallyVaryingCreatesAnInitialFractionWithName()
+        {
+            var model = CreateSimpleBoxModel();
+            Assert.IsEmpty(model.InitialFractions.ToList());
+            var fraction = new SedimentFraction() { Name = "Frac1" };
+
+            model.SedimentFractions.Add(fraction);
+            //Get all available sediment types
+            foreach (var sedType in fraction.AvailableSedimentTypes)
+            {
+                fraction.CurrentSedimentType = sedType;
+                //Set the spatially varying props to true
+                var typesSVProps = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().ToList();
+                CheckInitialConditionWithName(typesSVProps, model, fraction, typesSVProps.Count);
+
+                //get all formula types
+                var suportedFormulas = fraction.SupportedFormulaTypes;
+                foreach (var formula in suportedFormulas)
+                {
+                    fraction.CurrentFormulaType = formula;
+                    /* Changing formula type resets Spatially Varying Formula operations */
+                    Assert.AreEqual(model.InitialFractions.Count, typesSVProps.Count);
+                    //Set the spatially varying props to true
+                    var formulaSVProps = fraction.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().ToList();
+                    CheckInitialConditionWithName(formulaSVProps, model, fraction, formulaSVProps.Count + typesSVProps.Count); /* SedConc is always SpatiallyVarying*/
+                    
+                }
+            }
+        }
+
+        private static void CheckInitialConditionWithName(List<ISpatiallyVaryingSedimentProperty> svProps, WaterFlowFMModel model, SedimentFraction fraction, int svPropsCount)
+        {
+            if (svProps.Count > 0)
+            {
+                /*The spatially varying name should be available when changing the current sediment type or formula*/
+                svProps.ForEach(f => Assert.NotNull(f.SpatiallyVaryingName));
+                svProps.ForEach(f => f.IsSpatiallyVarying = true);
+
+                //assert if the initial condition has not been added.
+                Assert.AreEqual(model.InitialFractions.Count, svPropsCount); /*SedConc is always Spatially varying*/
+
+                //assert if the initial condition does not have the correct name.
+                model.InitialFractions.ForEach(iniFrac => Assert.NotNull(iniFrac.Name));
+                model.InitialFractions.ForEach(iniFrac => Assert.That(fraction.GetAllActiveSpatiallyVaryingPropertyNames().Contains(iniFrac.Name)));
+            }
+        }
     }
 }

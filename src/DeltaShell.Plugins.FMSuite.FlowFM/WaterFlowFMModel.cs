@@ -31,6 +31,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
-            ModelDefinition.IsPartOf1D2DModel = false;
+            ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = false;
 
             SynchronizeModelDefinitions();
 
@@ -315,7 +316,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             SynchronizeModelDefinitions();
 
             FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
-            Grid = ReadGridFromNetFile(NetFilePath, ModelDefinition.IsPartOf1D2DModel) ?? new UnstructuredGrid();
+            var is1D2DModel = (bool) ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            Grid = ReadGridFromNetFile(NetFilePath, is1D2DModel) ?? new UnstructuredGrid();
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                 {
@@ -469,6 +471,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var sedimentFraction = sender as ISedimentFraction;
                 if (sedimentFraction != null)
                 {
+                    sedimentFraction.UpdateSpatiallyVaryingNames();
                     var activeSpatiallyVarying = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
                     var spatiallyVarying = sedimentFraction.GetAllSpatiallyVaryingPropertyNames();
                     InitialFractions.RemoveAllWhere( 
@@ -2497,27 +2500,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var boolArray = values as bool[];
                 if (boolArray != null && boolArray.Length > 0)
-                    IsPartOf1D2DModel = boolArray[0];
+                {
+                    var isPartOf1D2DModel = boolArray[0];
+                    // This property is made because 1D2D integrated models do not support UGrid format.
+                    // Remove when this dependency has vanished (DELFT3DFM-989)
+                    var isPartOf1D2DModelGuiProperty = ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+                    if ((bool)isPartOf1D2DModelGuiProperty.Value != isPartOf1D2DModel)
+                    {
+
+                        isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
+                        if (isPartOf1D2DModel && UseMorSed)
+                        {
+                            ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = false;
+                            Log.InfoFormat(
+                                Resources
+                                    .WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model,
+                                Name);
+                        }
+                        ModelDefinition.SetMapFormatPropertyValue();
+                    }
+                }
+                return;
             }
             if (category == DisableFlowNodeRenumberingPropertyName)
             {
                 var boolArray = values as bool[];
                 if (boolArray != null && boolArray.Length > 0)
                     DisableFlowNodeRenumbering = boolArray[0];
+                return;
             }
-            runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+            if (!string.IsNullOrEmpty(itemName))
+            {
+                if (!string.IsNullOrEmpty(parameter))
+                {
+                    runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+                    return;
+                }
+                runner.SetVar(string.Format("{0}/{1}/{2}", Name, category, itemName), values);
+                return;
+            }
+            runner.SetVar(string.Format("{0}/{1}", Name, category), values);
         }
         public bool DisableFlowNodeRenumbering { get; set; }
-
-        // This property is made because 1D2D integrated models do not support UGrid format.
-        // Remove when this dependency has vanished (DELFT3DFM-989)
-        public bool IsPartOf1D2DModel
-        {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value; }
-            set { ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = value; }
-        }
-
-
+        
         #endregion
 
         #region TimeDependentModelBase

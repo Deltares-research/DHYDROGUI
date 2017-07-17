@@ -8,7 +8,7 @@
     Name                  = #gouwe#                          Name of sediment fraction
     SedTyp                = sand                             Must be "sand", "mud" or "bedload"
     SedConc               = 0                      [kg/m³]   Initial Concentration
-    IniSedThick           = gouwe_IniSedThick      [m]       Initial sediment layer thickness at bed
+    IniSedThick           = #gouwe_IniSedThick.xyz# [m]       Initial sediment layer thickness at bed
     FacDss                = 1                                Initial suspended sediment diameter
     RhoSol                = 0                      [kg/m³]   Specific density
     TraFrm                = -2                               Integer selecting the transport formula

@@ -73,7 +73,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
                     netFileProperty.SetValueAsString(netFile);
                     igcSolverProperty.SetValueAsString(SolverType > 0 ? SolverType.ToString() : originalSolverType);
-                    new MduFile().WriteProperties(filePath, modelDefinition.Properties, true, true, false, modelDefinition.IsPartOf1D2DModel, waterFlowFMModel.DisableFlowNodeRenumbering);
+                    var isPartOf1D2DModel = (bool)modelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+                    new MduFile().WriteProperties(filePath, modelDefinition.Properties, true, true, false, isPartOf1D2DModel, waterFlowFMModel.DisableFlowNodeRenumbering);
                 }
                 netFileProperty.SetValueAsString(originalNetFile);
                 partFileProperty.SetValueAsString(originalPartFile);

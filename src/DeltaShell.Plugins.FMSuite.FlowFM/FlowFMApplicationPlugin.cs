@@ -86,6 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new FMHisFileImporter();
             yield return new FMRstFileImporter(){GetFMModelForRestartState = GetFMModelForRestartState};
             yield return new BcFileImporter();
+            yield return new BcmFileImporter();
             yield return new BoundaryConditionWpsImporter();
 
             yield return new PliFileImporterExporter<Embankment, Embankment>
@@ -183,6 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
             yield return new StructuresListExporter(StructuresListType.Gates) { GetModelForList = GetModelForCollection };
             yield return new BcFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
+            yield return new BcmFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
             yield return new PliFileImporterExporter<Embankment, Embankment> { Mode = Feature2DImportExportMode.Export };
             yield return new PliFileImporterExporter<FixedWeir, FixedWeir> { Mode = Feature2DImportExportMode.Export };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };

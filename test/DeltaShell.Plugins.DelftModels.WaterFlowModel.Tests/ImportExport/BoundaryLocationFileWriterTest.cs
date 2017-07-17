@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
@@ -31,10 +32,94 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
     [TestFixture]
     public class BoundaryLocationFileWriterTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            if(File.Exists(FileWriterTestHelper.ModelFileNames.BoundaryLocations))
+                File.Delete(FileWriterTestHelper.ModelFileNames.BoundaryLocations);
+        }
+
+        [Test]
+        public void TestBoundaryLocationsFileWriterGivesExpectedTypeForFlowWaterLevelTable_WaterLevel()
+        {
+            // Setup
+            IHydroNetwork network = new HydroNetwork();
+            var nwNodes = new List<INode>() { network.AddNode() };
+            
+            var argumentValues = new double[] { 1, 2, 3, 4, 5, 6 };
+            var componentValues = new double[] { 0, -1, -2, -3, -4, -5 };
+
+            var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
+                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+
+            var boundLocNodes = new List<WaterFlowModel1DBoundaryNodeData> {boundaryNodeData};
+
+            // Write boundary locations
+            BoundaryLocationFileWriter.WriteFileBoundaryLocations(FileWriterTestHelper.ModelFileNames.BoundaryLocations, boundLocNodes, nwNodes);
+
+            // Read boundary locations
+            var delftIniReader = new DelftIniReader();
+            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.BoundaryLocations);
+
+            // Assert expected result
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            var general = categories.Where(c => c.Name == GeneralRegion.IniHeader).ToList().First();
+            var filetypeProperty = general.Properties.First(p => p.Name == GeneralRegion.FileType.Key);
+            Assert.AreEqual(GeneralRegion.FileTypeName.BoundaryLocation, filetypeProperty.Value);
+
+            Assert.AreEqual(1, categories.Count(b => b.Name == BoundaryRegion.BoundaryHeader));
+
+            var content = categories.Where(c => c.Name == BoundaryRegion.BoundaryHeader).ToList();
+
+            var nodeIdProperty = content.ElementAt(0).Properties.First(p => p.Name == BoundaryRegion.NodeId.Key);
+            Assert.AreEqual(nwNodes[0].Name, nodeIdProperty.Value);
+
+            var typeProperty = content.ElementAt(0).Properties.First(p => p.Name == BoundaryRegion.Type.Key);
+            Assert.AreEqual(((int)BoundaryType.Level).ToString(), typeProperty.Value);
+        }
+
+        [Test]
+        public void TestBoundaryLocationsFileWriterGivesExpectedTypeForFlowWaterLevelTable_Discharge()
+        {
+            // Setup
+            IHydroNetwork network = new HydroNetwork();
+            var nwNodes = new List<INode>() { network.AddNode() };
+
+            var argumentValues = new double[] { 1, 2, 3, 4, 5, 6 };
+            var componentValues = new double[] { 0, 1, 2, 3, 4, 5 };
+
+            var boundaryNodeData = BoundaryFileWriterTestHelper.GetBoundaryNodeDataWithFlowWaterLevelData(nwNodes[0].Name,
+                WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable, argumentValues, componentValues);
+
+            var boundLocNodes = new List<WaterFlowModel1DBoundaryNodeData> { boundaryNodeData };
+
+            // Write boundary locations
+            BoundaryLocationFileWriter.WriteFileBoundaryLocations(FileWriterTestHelper.ModelFileNames.BoundaryLocations, boundLocNodes, nwNodes);
+
+            // Read boundary locations
+            var delftIniReader = new DelftIniReader();
+            var categories = delftIniReader.ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.BoundaryLocations);
+
+            // Assert expected result
+            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
+            var general = categories.Where(c => c.Name == GeneralRegion.IniHeader).ToList().First();
+            var filetypeProperty = general.Properties.First(p => p.Name == GeneralRegion.FileType.Key);
+            Assert.AreEqual(GeneralRegion.FileTypeName.BoundaryLocation, filetypeProperty.Value);
+
+            Assert.AreEqual(1, categories.Count(b => b.Name == BoundaryRegion.BoundaryHeader));
+
+            var content = categories.Where(c => c.Name == BoundaryRegion.BoundaryHeader).ToList();
+
+            var nodeIdProperty = content.ElementAt(0).Properties.First(p => p.Name == BoundaryRegion.NodeId.Key);
+            Assert.AreEqual(nwNodes[0].Name, nodeIdProperty.Value);
+
+            var typeProperty = content.ElementAt(0).Properties.First(p => p.Name == BoundaryRegion.Type.Key);
+            Assert.AreEqual(((int)BoundaryType.Discharge).ToString(), typeProperty.Value);
+        }
+
         [Test]
         public void TestBoundaryLocationsFileWriterGivesExpectedResults()
         {
-            File.Delete(FileWriterTestHelper.ModelFileNames.BoundaryLocations);
             var boundLocNodes = new List<WaterFlowModel1DBoundaryNodeData>();
             IHydroNetwork network = new HydroNetwork();
             

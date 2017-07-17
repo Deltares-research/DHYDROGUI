@@ -308,6 +308,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         Controller = controller
                     };
                     v.ShowSupportPointNames = true;
+                    var condition = o.BoundaryConditions.FirstOrDefault();
+                    if(condition == null) return;
+                    v.SelectedCategory = condition.ProcessName;
+                    v.SelectedBoundaryCondition = condition;
                 },
                 CloseForData = (v, bcs) => Equals(v.Data, bcs)
             };
@@ -424,6 +428,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             // Importers and exporters
+            yield return new ViewInfo<BcmFileImporter, BcmFileImportDialog>();
+            yield return new ViewInfo<BcmFileExporter, BcmFileExportDialog>();
             yield return new ViewInfo<BcFileImporter, BcFileImportDialog>();
             yield return new ViewInfo<BcFileExporter, BcFileExportDialog>();
             yield return

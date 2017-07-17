@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using BasicModelInterface;
 
 namespace DeltaShell.Dimr
 {
@@ -38,5 +39,9 @@ namespace DeltaShell.Dimr
 
         [DllImport(DimrApiDataSet.DIMR_DLL_NAME, EntryPoint = "get_var", CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_var(string varName, ref IntPtr value);
+
+        [DllImport(DimrApiDataSet.DIMR_DLL_NAME, EntryPoint = "set_logger", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void set_logger(Logger logger);
+
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
+using BasicModelInterface;
 using DelftTools.Utils.Remoting;
 using DeltaShell.Dimr;
+using ProtoBufRemote;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Api
 {
@@ -12,35 +14,71 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         public RemoteWaveModelApi(bool showConsole)
         {
+            RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
             remoteInstanceApi =
-                RemoteInstanceContainer.CreateInstance<IWaveModelApi, WaveModelApi>(Environment.Is64BitOperatingSystem, null, showConsole,  typeof(DimrApi).Assembly);}
+                RemoteInstanceContainer.CreateInstance<IWaveModelApi, WaveModelApi>(Environment.Is64BitOperatingSystem, null, showConsole, typeof(DimrApi).Assembly);}
 
-        public void Initialize(string mdwFilePath)
+        public int Initialize(string mdwFilePath)
         {
-            remoteInstanceApi.Initialize(mdwFilePath);
+            return remoteInstanceApi.Initialize(mdwFilePath);
         }
 
-        public void Update(double timestep)
+        public int Update(double timestep)
         {
-            remoteInstanceApi.Update(timestep);
+            return remoteInstanceApi.Update(timestep);
         }
 
-        public void Finish()
+        public int Finish()
         {
-            remoteInstanceApi.Finish();
+            return remoteInstanceApi.Finish();
         }
 
-        public void SetVar(string variable, string value)
+        public int[] GetShape(string variable)
         {
-            remoteInstanceApi.SetVar(variable, value);
+            return remoteInstanceApi.GetShape(variable);
         }
 
+        public Array GetValues(string variable)
+        {
+            return remoteInstanceApi.GetValues(variable);
+        }
+
+        public Array GetValues(string variable, int[] index)
+        {
+            return remoteInstanceApi.GetValues(variable, index);
+        }
+
+        public Array GetValues(string variable, int[] start, int[] count)
+        {
+            return remoteInstanceApi.GetValues(variable, start, count);
+        }
+
+        public void SetValues(string variable, Array values)
+        {
+            remoteInstanceApi.SetValues(variable, values);
+        }
+
+        public void SetValues(string variable, int[] start, int[] count, Array values)
+        {
+            remoteInstanceApi.SetValues(variable, start, count, values);
+        }
+
+        public void SetValues(string variable, int[] index, Array values)
+        {
+            remoteInstanceApi.SetValues(variable, index, values);
+        }
+        
         public DateTime StartTime { get { return remoteInstanceApi.StartTime; } }
+        public DateTime StopTime { get { return remoteInstanceApi.StopTime; } }
 
         public DateTime CurrentTime
         {
             get { return remoteInstanceApi.CurrentTime; }
         }
+
+        public TimeSpan TimeStep { get { return remoteInstanceApi.TimeStep; } }
+        public string[] VariableNames { get { return remoteInstanceApi.VariableNames; } }
+        public Logger Logger { get { return remoteInstanceApi.Logger; } set { remoteInstanceApi.Logger = value; } }
 
         public DateTime ReferenceDateTime
         {

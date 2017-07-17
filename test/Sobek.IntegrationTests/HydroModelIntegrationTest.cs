@@ -1303,10 +1303,11 @@ namespace Sobek.IntegrationTests
             {
                 ModelDefinition =
                 {
-                    IsPartOf1D2DModel = isPartOf1D2DModel,
                     MapFormat = MapFormatType.NetCdf
                 }
             };
+            var isPartOf1D2DModelGuiProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
 
             var hydroModel = new HydroModel()
             {

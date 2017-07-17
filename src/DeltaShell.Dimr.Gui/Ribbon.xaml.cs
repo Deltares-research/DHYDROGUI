@@ -17,7 +17,7 @@ namespace DeltaShell.Dimr.Gui
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
         {
-            return tabGroupName == configContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
+            return tabGroupName == configContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance != null && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
 
         }
 
@@ -29,9 +29,7 @@ namespace DeltaShell.Dimr.Gui
             }
         }
 
-        public void ValidateItems()
-        {
-        }
+        public void ValidateItems(){}
 
         public object GetRibbonControl() { return RibbonControl; }
 

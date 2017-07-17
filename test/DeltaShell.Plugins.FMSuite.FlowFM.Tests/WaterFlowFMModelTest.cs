@@ -558,9 +558,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void FmModelSetVarUseNetCDFMapFormat()
         {
             var model = new WaterFlowFMModel();
-            Assert.IsFalse(model.ModelDefinition.IsPartOf1D2DModel);
+            var isPartOf1D2DModelGuiProperty = model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+            isPartOf1D2DModelGuiProperty.Value = false;
+
+            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
             model.SetVar(new[] {true}, WaterFlowFMModel.IsPartOf1D2DModelPropertyName);
-            Assert.IsTrue(model.ModelDefinition.IsPartOf1D2DModel);
+            Assert.IsTrue((bool)isPartOf1D2DModelGuiProperty.Value);
         }
 
         [Test]

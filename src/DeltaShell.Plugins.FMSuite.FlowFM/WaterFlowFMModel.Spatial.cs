@@ -173,8 +173,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     WriteNetFile(NetFilePath, Grid);
                 }
+                var isPartOf1D2DModel = (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
 
-                var newGrid = ReadGridFromNetFile(NetFilePath, ModelDefinition.IsPartOf1D2DModel); //may throw...
+                var newGrid = ReadGridFromNetFile(NetFilePath, isPartOf1D2DModel); //may throw...
                 if (newGrid == null)
                 {
                     Grid = new UnstructuredGrid();

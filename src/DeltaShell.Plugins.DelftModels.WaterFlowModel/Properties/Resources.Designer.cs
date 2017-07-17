@@ -569,6 +569,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The boundary condition {0} has duplicate values. All values in Q(h) boundaries must be sequential..
+        /// </summary>
+        public static string WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The boundary condition {0} has non-sequential values. All values in Q(h) boundaries must be sequential..
+        /// </summary>
+        public static string WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The boundary condition {0} has a salinity type of None. All open boundaries must specify salinity values..
         /// </summary>
         public static string WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_a_salinity_type_of_None__All_open_boundaries_must_specify_salinity_values_ {

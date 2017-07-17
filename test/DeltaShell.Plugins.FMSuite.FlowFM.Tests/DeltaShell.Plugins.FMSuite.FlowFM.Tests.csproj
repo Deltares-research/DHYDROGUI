@@ -225,6 +225,7 @@
     <Compile Include="Editors\FlowBoundaryConditionEditorControllerTest.cs" />
     <Compile Include="Editors\FlowBoundaryConditionsListViewTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
+    <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
+    <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
     <Compile Include="IO\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />

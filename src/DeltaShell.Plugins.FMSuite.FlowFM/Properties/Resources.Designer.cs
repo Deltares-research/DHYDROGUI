@@ -71,6 +71,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Morphology boundary condition bcm-file importer could not import data onto given target.
+        /// </summary>
+        public static string BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target {
+            get {
+                return ResourceManager.GetString("BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_" +
+                        "not_import_data_onto_given_target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap down {
@@ -96,6 +106,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct {
             get {
                 return ResourceManager.GetString("ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments..
+        /// </summary>
+        public static string ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_ {
+            get {
+                return ResourceManager.GetString("ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__" +
+                        "could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__f" +
+                        "or_Spatial_Varying_Sediments_", resourceCulture);
             }
         }
         
@@ -206,6 +227,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot read ibedcond because this is not an integer (number) in file {0}.
+        /// </summary>
+        public static string MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_ {
+            get {
+                return ResourceManager.GetString("MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_inte" +
+                        "ger__number__in_file__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Observation {
@@ -222,6 +253,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("PumpSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid to generate the xyz file..
+        /// </summary>
+        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_ {
+            get {
+                return ResourceManager.GetString("SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file" +
+                        "_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operati" +
+                        "on__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No spatial operations of type Import, Add or Value found for spatially varying property {0}. Remember to interpolate them to generate the xyz file. Otherwise the model might not run as expected..
+        /// </summary>
+        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_ {
+            get {
+                return ResourceManager.GetString("SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_" +
+                        "of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_" +
+                        "to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_" +
+                        "as_expected_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not get directory name from file path {0}.
+        /// </summary>
+        public static string SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_ {
+            get {
+                return ResourceManager.GetString("SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_pat" +
+                        "h__0_", resourceCulture);
             }
         }
         
@@ -286,6 +350,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Morphology boundary condition must have a Hydro boundary condition!.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundari" +
+                        "es_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sediment concentration boundary condition must have a Hydro boundary condition!.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHy" +
+                        "droBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_bounda" +
+                        "ry_condition_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
+        /// </summary>
+        public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morph" +
+                        "ology_properties_and___or_sediments__Removing_these_properties_from_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplication of spatial operations for {0}. Please verify the model after saving..
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operati" +
+                        "ons_for__0___Please_verify_the_model_after_saving_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MapFormat property value of FlowFM model {0} is changed to 1, because it is part of an 1D2D integrated model..
         /// </summary>
         public static string WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_ {
@@ -303,6 +408,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_" +
                         "FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conveyance2D type in Geometry should be set to &apos;R=HU&apos; (-1), &apos;R=H&apos; (0) or &apos;R=A/P&apos; (1) when morphology is active..
+        /// </summary>
+        public static string WaterFlowFMModelDefinitionValidator_Validate_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
             }
         }
         

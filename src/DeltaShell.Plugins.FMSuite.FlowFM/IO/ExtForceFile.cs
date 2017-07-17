@@ -9,9 +9,11 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -47,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string RelSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
         private const string InitialTracerPrefix = "initialtracer";
         private const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
+        private const string SedConcPostfix = "_SedConc";
         private static readonly string[] UnsupportedQuantityKeys = { "WUANTITY", "_UANTITY" };
 
         // items that existed in the file when the file was read
@@ -218,14 +221,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     .Distinct());
             }
 
-            foreach (var spatiallyVaryingSedimentPropertyName in modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames)
+            /* DELFT3DFM-1112
+             * This is only meant for SedimentConcentration */
+            var sedConcSpatiallyVarying =
+                modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(SedConcPostfix));
+            foreach (var spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
             {
                 var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
-                if(spatialOperations == null || !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension || s is AddSamplesOperation)) continue;
-                extForceFileItems.AddRange(
-                    WriteSpatialData(spatiallyVaryingSedimentPropertyName,
-                    spatialOperations, InitialSpatialVaryingSedimentPrefix)
-                    .Distinct());
+                if (spatialOperations == null ||
+                    !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension ||
+                                                s is AddSamplesOperation))
+                {
+                    var warnMsg = String.Format(
+                        Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
+                        spatiallyVaryingSedimentPropertyName); 
+                    if (spatialOperations != null)
+                    {
+                        warnMsg = String.Format(
+                            Resources
+                                .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_,
+                            spatiallyVaryingSedimentPropertyName);
+                    }
+
+                    log.Warn(warnMsg);
+                    continue;
+                }
+                var forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
+                        spatialOperations, InitialSpatialVaryingSedimentPrefix)
+                    .Distinct().ToList();
+                
+                //Remove the postfix from the quantity (it is not accepted by the kernel)
+                if(spatiallyVaryingSedimentPropertyName.EndsWith(SedConcPostfix))
+                    forceFileItems.ForEach( ffi => ffi.Quantity = ffi.Quantity.Substring(0, ffi.Quantity.Length - SedConcPostfix.Length));
+                extForceFileItems.AddRange(forceFileItems);
             }
 
             return extForceFileItems;
@@ -304,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var existingItem = GetExistingForceFileItemOrNull(spatialOperation);
                         yield return
                             ExtForceFileHelper.WriteInitialConditionsPolygon(FilePath, quantity, polygonOperation,
-                                existingItem, WriteToDisk);
+                                existingItem, WriteToDisk, prefix);
                         continue;
                     }
 
@@ -851,15 +879,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else if (forceFileItem.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix))
                 {
-                    string spatialvaryingsedimentname =
-                        forceFileItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix
-                            .Length); // remove prefix to get the name
+                    /* DELFT3DFM-1112
+                     * The only Spatially Varying Sediment that gets read from the ExtForces file is
+                     * SedimentConcentration. We could simply remove its prefix, however, due to the 
+                     * way it's meant to be written in said file, we need to add the postfix */
+                    string spatialvaryingSedConc = forceFileItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
                     ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity,
-                        spatialvaryingsedimentname);
+                        spatialvaryingSedConc);
                 }
-                else if( forceFileItem.FileName.EndsWith(".xyz")) // then it was a spatial varying operation.
+                else if( forceFileItem.FileName.EndsWith(XyzFile.Extension)) // then it was a spatial varying operation.
                 {
-                    log.Error("The model may not run. Spatial varying quantity "+forceFileItem.Quantity+" could not be imported because the prefix does not match "+InitialTracerPrefix+" for Tracers or "+InitialSpatialVaryingSedimentPrefix+" for Spatial Varying Sediments.");
+                    log.ErrorFormat(Resources.ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_, forceFileItem.Quantity, InitialTracerPrefix, InitialSpatialVaryingSedimentPrefix);
                 }
 
             }

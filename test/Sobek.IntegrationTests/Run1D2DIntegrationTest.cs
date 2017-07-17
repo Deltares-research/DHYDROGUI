@@ -435,19 +435,34 @@ namespace Sobek.IntegrationTests
             Assert.IsFalse(fmModel.UseMorSed);
             useMorSedModelProperty.Value = true;
             Assert.IsTrue(fmModel.UseMorSed);
+            var isPartOf1D2DModelGuiProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
+
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
                 {
                     fmModel.ModelDefinition.MapFormat = MapFormatType.NetCdf;
-                    fmModel.IsPartOf1D2DModel = false;
+                    isPartOf1D2DModelGuiProperty.Value = false;
+                    fmModel.SetVar(new [] {true},Iterative1D2DCoupler.IsPartOf1D2DModelPropertyName);
+                    isPartOf1D2DModelGuiProperty.Value = false;
+                    useMorSedModelProperty.Value = true;
                 },
                 string.Format(DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_, fmModel.Name));
 
-            Assert.IsFalse(fmModel.IsPartOf1D2DModel);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                {
+                    isPartOf1D2DModelGuiProperty.Value = false;
+                    fmModel.SetVar(new [] {true},Iterative1D2DCoupler.IsPartOf1D2DModelPropertyName);
+                    isPartOf1D2DModelGuiProperty.Value = false;
+                    useMorSedModelProperty.Value = true;
+
+                },
+                string.Format(DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources.WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model, fmModel.Name));
+
+            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
 
             var hydroModelBuilder = new HydroModelBuilder();
             var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.Empty);
             hydroModel.Activities.Add(fmModel);
-            Assert.IsFalse(fmModel.IsPartOf1D2DModel);
+            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
             Assert.IsTrue(useMorSedModelProperty.IsEnabled(fmModel.ModelDefinition.Properties));
             Assert.IsTrue(fmModel.UseMorSed);
 
@@ -456,7 +471,7 @@ namespace Sobek.IntegrationTests
                 hydroModel.Activities.Add(f1dModel),
                 string.Format(DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_1__because_it_is_part_of_an_1D2D_integrated_model_, fmModel.Name));
 
-            Assert.IsTrue(fmModel.IsPartOf1D2DModel);
+            Assert.IsTrue((bool)isPartOf1D2DModelGuiProperty.Value);
             Assert.IsFalse(useMorSedModelProperty.IsEnabled(fmModel.ModelDefinition.Properties));
             Assert.IsFalse(fmModel.UseMorSed);
         }

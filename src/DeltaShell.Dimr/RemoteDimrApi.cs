@@ -59,9 +59,9 @@ namespace DeltaShell.Dimr
         public string KernelDirs { get { return api.KernelDirs; } set { api.KernelDirs = value; } }
         public DateTime DimrRefDate { get { return api.DimrRefDate; } set { api.DimrRefDate = value; } }
 
-        public void set_logger()
+        public void set_feedback_logger()
         {
-            if (api != null) api.set_logger();
+            if (api != null) api.set_feedback_logger();
         }
 
         

@@ -15,12 +15,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected readonly ILog log = LogManager.GetLogger(typeof (BcFile));
 
         public const string Extension = ".bc";
-        
-        private const string BlockKey = "[forcing]";
+
+        public const string BlockKey = "[forcing]";
         private const string SupportPointKey = "Name";
         private const string ForcingTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
-        private const string QuantityKey = "Quantity";
+        public const string QuantityKey = "Quantity";
         private const string UnitKey = "Unit";
         private const string TimeInterpolationKey = "Time-interpolation";
         private const string VerticalIntepolationKey = "Vertical interpolation";
@@ -44,7 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             FlowBoundaryQuantityType.VelocityVector,
             FlowBoundaryQuantityType.Salinity,
             FlowBoundaryQuantityType.Temperature,
-            FlowBoundaryQuantityType.Tracer,        
+            FlowBoundaryQuantityType.Tracer,     
+            FlowBoundaryQuantityType.SedimentConcentration   
         };
 
         private readonly int columnWidth = VerticalPositionSpecKey.Length;
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             MultiFileMode = WriteMode.SingleFile;
         }
 
-        public WriteMode MultiFileMode { private get; set; }
+        public WriteMode MultiFileMode { get; set; }
 
         public bool CorrectionFile { private get; set; }
 
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var discriminator = BcDiscriminator(MultiFileMode);
             return boundaryConditionSets.SelectMany(bcs =>
-                bcs.BoundaryConditions.Where(bc => SupportedProcesses.Contains(bc.ProcessName))
+                bcs.BoundaryConditions.Where(bc => SupportedProcesses.Contains(bc.ProcessName) && bc.DataType != BoundaryConditionDataType.Empty) // don't write empty bc!
                 .Select(bc => new Tuple<IBoundaryCondition, BoundaryConditionSet>(bc, bcs)))
                 .GroupBy(t => discriminator(t.Item1));
         }

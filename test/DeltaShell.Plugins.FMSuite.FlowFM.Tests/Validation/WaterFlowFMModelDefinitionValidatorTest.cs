@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
@@ -71,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = CreateValidModel();
 
             var modelDefinition = model.ModelDefinition;
-            modelDefinition.GetModelProperty("conveyance2d").SetValueAsString("4"); // This method now throws. For TOOLS-20091 this should not happen any more.
+            modelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString("4"); // This method now throws. For TOOLS-20091 this should not happen any more.
             var issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(1, issues.ErrorCount);
@@ -192,5 +195,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             return model;
         }
 
+        [Test]
+        [TestCase(Conveyance2DType.RisHU, false)]//R=HU
+        [TestCase(Conveyance2DType.RisH, false)]//R=H
+        [TestCase(Conveyance2DType.RisAperP, false)]//R=A/P
+        [TestCase(Conveyance2DType.Kisanalytic1Dconv, true)]//K=analytic-1D conv
+        [TestCase(Conveyance2DType.Kisanalytic2Dconv, true)]//K=analytic-2D conv
+        public void CheckConveyance2DType(Conveyance2DType type, bool validationErrorThrown)
+        {
+            //please note the enum is validated with test LoadConveyance2dEnumAndVerifyThatItHasNotChanged
+            var model = CreateValidModel();
+            var sedFrac = new SedimentFraction() { Name = "Frac1" };
+            model.SedimentFractions.Add(sedFrac);
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("1");
+            model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString(((int)type).ToString());
+            var report = model.Validate();
+            var issues = string.Join(";", report.AllErrors.Where(e => e.Severity == ValidationSeverity.Error).Select(e => e.Message));
+            Assert.That(issues.Contains(Resources.WaterFlowFMModelDefinitionValidator_Validate_), Is.EqualTo(validationErrorThrown));
+        }
     }
 }

@@ -403,4 +403,10 @@
   <data name="WaterFlowModel1DTemperatureValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_a_temperature_type_of_None__All_open_boundaries_must_specify_temperature_values_" xml:space="preserve">
     <value>The boundary condition {0} has a temperature type of None. All open boundaries must specify temperature values.</value>
   </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues" xml:space="preserve">
+    <value>The boundary condition {0} has duplicate values. All values in Q(h) boundaries must be sequential.</value>
+  </data>
+  <data name="WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues" xml:space="preserve">
+    <value>The boundary condition {0} has non-sequential values. All values in Q(h) boundaries must be sequential.</value>
+  </data>
 </root>

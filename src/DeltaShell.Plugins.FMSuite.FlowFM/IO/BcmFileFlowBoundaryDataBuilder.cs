@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using DelftTools.Functions;
+using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     
     public class BcmBlockData : BcBlockData
     {
+        public string Location { get; set; }
+
         public BcmBlockData()
         {
             Quantities = new List<BcQuantityData>();
@@ -29,18 +34,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     
     public class BcmFileFlowBoundaryDataBuilder : BcFileFlowBoundaryDataBuilder
     {
+        public const string BedLevelAtBound = "bed level";
+        public const string BedLevelChangeAtBound = "bed level change";
+        public const string BedLoadAtBound = "transport incl pores ";
+
         protected override IDictionary<string[], FlowBoundaryQuantityType> FlowQuantityKeys
         {
             get { return flowQuantityKeys; }
         }
 
-        private static readonly IDictionary<string[], FlowBoundaryQuantityType> flowQuantityKeys = new Dictionary
-            <string[], FlowBoundaryQuantityType>
+        private static readonly IDictionary<string[], FlowBoundaryQuantityType> flowQuantityKeys = new Dictionary<string[], FlowBoundaryQuantityType>
         {
-              {new[] {ExtForceQuantNames.ConcentrationAtBound}, FlowBoundaryQuantityType.SedimentConcentration},
-              {new[] {ExtForceQuantNames.BedLevelAtBound}, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
-              {new[] {ExtForceQuantNames.BedLevelChangeAtBound}, FlowBoundaryQuantityType.MorphologyBedLevelChangedPrescribed},
-              {new[] {ExtForceQuantNames.BedLoadAtBound}, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+              {new[] {BedLevelAtBound}, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
+              {new[] {BedLevelChangeAtBound}, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
+              {new[] {BedLoadAtBound}, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
         };
 
         protected override BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime)
@@ -64,10 +71,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             return new BcmBlockData
             {
-                SupportPoint = boundaryCondition.IsHorizontallyUniform ? boundaryCondition.FeatureName : supportPoint
+                SupportPoint = boundaryCondition.IsHorizontallyUniform ? boundaryCondition.FeatureName : supportPoint,
+                Location = boundaryCondition.FeatureName
             };
         }
-
+        
         protected override IEnumerable<string> PrintValues(IVariable variable, DateTime? referenceTime, Func<double, double> converter)
         {
             if (variable.ValueType == typeof(string))
@@ -163,6 +171,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             throw new ArgumentException(String.Format("Value type {0} with unit {1} not supported by bcm file parser.",
                 type, format));
         }
+
+        
     }
     
 }

@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Extensions.Feature;
 using log4net;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -51,6 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     // TODO: this class is a mess, needs refactoring
     public class BcFileFlowBoundaryDataBuilder
     {
+        public const string ConcentrationAtBound = "sedfracbnd";
+
         private class ForcingTypeDefinition
         {
             public BoundaryConditionDataType ForcingType;
@@ -62,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
             new Dictionary<string, ForcingTypeDefinition>
-                {
+            {
                     {
                         "timeseries",
                         new ForcingTypeDefinition
@@ -142,8 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             get { return flowQuantityKeys; }
         }
 
-        private static readonly IDictionary<string[], FlowBoundaryQuantityType> flowQuantityKeys = new Dictionary
-            <string[], FlowBoundaryQuantityType>
+        private static readonly IDictionary<string[], FlowBoundaryQuantityType> flowQuantityKeys = new Dictionary<string[], FlowBoundaryQuantityType>
         {
             {new[] {ExtForceQuantNames.WaterLevelAtBound}, FlowBoundaryQuantityType.WaterLevel},
             {new[] {ExtForceQuantNames.DischargeAtBound}, FlowBoundaryQuantityType.Discharge},
@@ -157,12 +159,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {new[] {"x-velocity", "y-velocity"}, FlowBoundaryQuantityType.VelocityVector},
             {new[] {ExtForceQuantNames.SalinityAtBound}, FlowBoundaryQuantityType.Salinity},
             {new[] {ExtForceQuantNames.TemperatureAtBound}, FlowBoundaryQuantityType.Temperature},
-            {new[] {ExtForceQuantNames.TracerAtBound}, FlowBoundaryQuantityType.Tracer}
+            {new[] {ExtForceQuantNames.TracerAtBound}, FlowBoundaryQuantityType.Tracer},
+            {new[] {ConcentrationAtBound}, FlowBoundaryQuantityType.SedimentConcentration},
         };
          
         private static readonly IDictionary<string, VerticalProfileType> VerticalDefinitionKeys =
             new Dictionary<string, VerticalProfileType>
-                {
+            {
                     {"single", VerticalProfileType.Uniform},
                     {"uniform", VerticalProfileType.Uniform},
                     {"none", VerticalProfileType.Uniform},
@@ -393,7 +396,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     // add component variable
                     if (FlowQuantityKeys.Keys.SelectMany(a => a).Any(k => flowQuantity.StartsWith(k)))
                     {
-                        var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => flowQuantity.StartsWith(k)));
+                        var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => flowQuantity == k));
+                        if (flowQuantityComponentsPair.Key == null)
+                            flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => flowQuantity.StartsWith(k)));
 
                         int layerIndex;
                         if (flowQuantityComponentsPair.Key != null && TryParseVerticalPosition(quantity, out layerIndex))
@@ -445,10 +450,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     FlowBoundaryCondition boundaryCondition = null;
                     
-                    var fractionNames = ((quantityGroup.Key == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
-                        ? quantityGroup.Select(qg => qg.Value).Select(q => q.Quantity.Replace("bedloadbnd", string.Empty))
-                        : Enumerable.Empty<string>()).ToList();
-
                     // create actual boundary condition if not already exists
                     foreach (var quantity in quantityGroup)
                     {
@@ -477,31 +478,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     }
                                 }
 
-                                boundaryCondition =
-                                    new FlowBoundaryCondition(flowQuantityEnum,
-                                        forcingTypeDefinition.ForcingType)
-                                    {
-                                        Feature = selectedSet.Feature,
-                                        ThatcherHarlemanTimeLag = timelag,
-                                        SedimentFractionNames = fractionNames
-                                    };
-
-                                if (flowQuantityEnum == FlowBoundaryQuantityType.SedimentConcentration)
-                                {
-                                    var quantityName = quantity.Value.Quantity;
-
-                                    var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.StartsWith(k)));
-                                    if (flowQuantityComponentsPair.Key != null)
-                                    {
-                                        var matchingQuantity = flowQuantityComponentsPair.Key.FirstOrDefault(k => quantityName.StartsWith(k));
-                                        if (matchingQuantity != null)
-                                        {
-                                            var fractionName = quantityName.Replace(matchingQuantity, string.Empty);
-                                            boundaryCondition.SedimentFractionName = fractionName;
-                                        }
-                                    }
-                                }
-
+                                boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum, forcingTypeDefinition.ForcingType, selectedSet.Feature, timelag, quantityGroup);
+                                
                                 if (flowQuantityEnum == FlowBoundaryQuantityType.Tracer)
                                 {
                                     boundaryCondition.TracerName = quantity.Value.TracerName;
@@ -664,6 +642,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // If the data block is not completely used, the logic should go through this data block again.
             // So if any blocks are skipped, return false so it is not removed from the list of blocks to go through.
             return !skippedAny; 
+        }
+
+        protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName, FlowBoundaryQuantityType flowQuantityEnum, BoundaryConditionDataType forcingType, Feature2D feature, TimeSpan timelag, IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> grouping)
+        {
+            var bc = new FlowBoundaryCondition(flowQuantityEnum, forcingType)
+            {
+                Feature = feature,
+                ThatcherHarlemanTimeLag = timelag,
+            };
+            bc.SedimentFractionNames = GetFractionNames(grouping).ToList();
+            if (flowQuantityEnum == FlowBoundaryQuantityType.SedimentConcentration)
+            {
+                var flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.Equals(k)));
+                if (flowQuantityComponentsPair.Key == null)
+                {
+                    flowQuantityComponentsPair = FlowQuantityKeys.FirstOrDefault(kvp => kvp.Key.Any(k => quantityName.StartsWith(k)));
+                }
+                if (flowQuantityComponentsPair.Key != null)
+                {
+                    var matchingQuantity = flowQuantityComponentsPair.Key.FirstOrDefault(k => quantityName.StartsWith(k));
+                    if (matchingQuantity != null)
+                    {
+                        var fractionName = quantityName.Replace(matchingQuantity, string.Empty);
+                        bc.SedimentFractionName = fractionName;
+                    }
+                }
+            }
+            return bc;
+        }
+
+        private IEnumerable<string> GetFractionNames(IGrouping<FlowBoundaryQuantityType, KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>> quantityGroup)
+        {
+            return quantityGroup.Key == FlowBoundaryQuantityType.MorphologyBedLoadTransport
+                ? quantityGroup.Select(qg => qg.Value).Select(q => q.Quantity.Replace(BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, String.Empty))
+                : Enumerable.Empty<string>();
         }
 
         private static bool MatchBoundaryCondition(FlowBoundaryCondition bc, FlowBoundaryQuantityType quantity,
@@ -1222,6 +1235,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         .Select(m => m.ToString(CultureInfo.InvariantCulture));
             }
             return Enumerable.Empty<string>();
+        }
+
+        public void InsertEmptyBoundaryData(List<BoundaryConditionSet> bcSets, FlowBoundaryQuantityType flowBoundaryQuantityType)
+        {
+            // Get matching set for this data from ALL boundaryConditionSets (the other boundaryConditionSets are not used...)
+            var selectedSet = bcSets.FirstOrDefault();
+            if (selectedSet == null)
+            {
+                Log.WarnFormat("Support points are not found in boundaries; omitting block.");
+                return;
+            }
+
+            // If we are filtering on location and the location doesn't match up, return
+            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter))
+            {
+                return;
+            }
+            
+                // parse and validate forcingType
+                if (ExcludedDataTypes != null && ExcludedDataTypes.Contains(BoundaryConditionDataType.Empty))
+                {
+                    Log.InfoFormat("Skipping boundary data of function type {0}.", BoundaryConditionDataType.Empty);
+                    return ;
+                }
+                FlowBoundaryCondition boundaryCondition =
+                    new FlowBoundaryCondition(flowBoundaryQuantityType,
+                        BoundaryConditionDataType.Empty)
+                    {
+                        Feature = selectedSet.Feature,
+                    };
+
+                if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
+                {
+                    selectedSet.BoundaryConditions.Add(boundaryCondition);
+                }
+
         }
     }
 }

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using BasicModelInterface;
 using log4net;
 
 namespace DeltaShell.Dimr
 {
+    [ExcludeFromCodeCoverage]
     public class DimrExe : IDimrApi
     {
         private readonly bool useMessagesBuffering;
@@ -123,7 +125,7 @@ namespace DeltaShell.Dimr
         public string KernelDirs { get; set; }
         public DateTime DimrRefDate { get; set; }
 
-        public void set_logger()
+        public void set_feedback_logger()
         {
             
         }

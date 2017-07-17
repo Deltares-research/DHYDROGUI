@@ -54,19 +54,60 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var invalidBoundaryConditions = model.BoundaryConditions
+            var boundaryConditionsWithMultipleConnectingBranches = model.BoundaryConditions
                 .Where(bc => bc.Feature.IsConnectedToMultipleBranches
                              && (bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowConstant
                                  || bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowTimeSeries
                                  || bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable));
 
-            foreach (var bc in invalidBoundaryConditions)
+            foreach (var bc in boundaryConditionsWithMultipleConnectingBranches)
             {
                 issues.Add(new ValidationIssue(bc, ValidationSeverity.Error, string.Format(
                     Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_multiple_connecting_branches__This_is_only_possible_for_waterlevel_boundary_conditions_, bc.Name)));
             }
 
+            // SOBEK3-1035: Q(h) boundaries should have values in sequence
+            foreach (var bc in model.BoundaryConditions.Where(bc => bc.DataType == WaterFlowModel1DBoundaryNodeDataType.FlowWaterLevelTable && bc.Data != null))
+            {
+                var values = bc.Data.GetValues<double>().ToList();
+
+                if (values.GroupBy(n => n).Any(c => c.Count() > 1)) // check for duplicates
+                {
+                    issues.Add(new ValidationIssue(bc, ValidationSeverity.Warning, string.Format(
+                        Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_DuplicateValues, bc.Name)));
+                    continue;
+                }
+
+                if(!IsPositiveSequence(values) && !IsNegativeSequence(values))
+                    issues.Add(new ValidationIssue(bc, ValidationSeverity.Warning, string.Format(
+                        Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_NonSequentialValues, bc.Name)));
+            }
+
             return new ValidationReport(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_Boundary_conditions, issues);
+        }
+
+        private static bool IsPositiveSequence(IList<double> values)
+        {
+            if (values.Count > 1)
+            {
+                for (var i = 1; i < values.Count; i++)
+                {
+                    if (values[i - 1] >= values[i]) return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool IsNegativeSequence(IList<double> values)
+        {
+            if (values.Count > 1)
+            {
+                for (var i = 1; i < values.Count; i++)
+                {
+                    if (values[i - 1] <= values[i]) return false;
+                }
+            }
+            return true;
         }
 
         private static ValidationReport ValidateStructures(IHydroNetwork network)

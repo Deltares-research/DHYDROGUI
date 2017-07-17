@@ -7,7 +7,7 @@ namespace DeltaShell.Dimr
     {
         string KernelDirs { get; set; }
         DateTime DimrRefDate { get; set; }
-        void set_logger();
+        void set_feedback_logger();
         string[] Messages { get; }
         void ProcessMessages();
         void SetValuesDouble(string variable, double[] values);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BasicModelInterface;
 using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Api
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         /// Initializes the wave model, mdw file directory will be used to switch to
         /// </summary>
         /// <param name="mdwFilePath">the full filepath of the mdw file</param>
-        public void Initialize(string mdwFilePath)
+        public int Initialize(string mdwFilePath)
         {
             workingDirectory = Path.GetDirectoryName(mdwFilePath);
             var mdwFileName = Path.GetFileName(mdwFilePath);
@@ -23,26 +24,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             {
                 WaveModelDll.initialize(mdwFileName);
             }
+            return 0;
         }
 
-        public void Update(double timestep)
+        public int Update(double timestep)
         {
             using (new WaveDllHelper(workingDirectory))
             {
                 WaveModelDll.update(timestep);
             }
+            return 0;
         }
 
-        public void Finish()
+        public int Finish()
         {
             WaveModelDll.finalize();
+            return 0;
         }
 
-        public void SetVar(string variable, string value)
+        public int[] GetShape(string variable)
         {
-            WaveModelDll.set_var(variable, value);
+            return new int[] { };
         }
 
+        public Array GetValues(string variable)
+        {
+            return null;
+        }
+
+        public Array GetValues(string variable, int[] index)
+        {
+            return null;
+        }
+
+        public Array GetValues(string variable, int[] start, int[] count)
+        {
+            return null;
+        }
+
+        public void SetValues(string variable, Array values)
+        {
+            foreach (var value in values)
+            {
+                WaveModelDll.set_var(variable, value.ToString());
+            }
+        }
+
+        public void SetValues(string variable, int[] start, int[] count, Array values)
+        {
+        }
+
+        public void SetValues(string variable, int[] index, Array values)
+        {
+        }
+
+        
         public DateTime StartTime
         {
             get
@@ -52,6 +88,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                 return ReferenceDateTime.AddSeconds(t);
             }
         }
+
+        public DateTime StopTime { get; set; }
 
         public DateTime ReferenceDateTime { get; set; }
 
@@ -64,6 +102,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                 return ReferenceDateTime.AddSeconds(t);
             }
         }
+
+        public TimeSpan TimeStep { get; set; }
+        public string[] VariableNames { get; set; }
+        public Logger Logger { get; set; }
 
         public void Dispose()
         {

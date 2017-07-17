@@ -12,6 +12,9 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -721,6 +724,131 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(0, newDef.Boundaries.Count);
             Assert.AreEqual(0, newDef.BoundaryConditionSets.Count);
             Assert.AreEqual(1, newDef.Embankments.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteMorphBoundaryCondition()
+        {
+            var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
+            modelDefinition.ModelName = "MyModelName";
+
+            var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
+                    BoundaryConditionDataType.TimeSeries)
+                { Feature = modelDefinition.Boundaries[0] };
+
+            modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morbc1 });
+
+            var writer = new BndExtForceFile();
+            writer.Write("testbnd.ext", modelDefinition);
+            Assert.IsTrue(File.Exists(modelDefinition.ModelName + BcmFile.Extension));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteSedimentConcentration()
+        {
+            //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
+            var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+            var model = new WaterFlowFMModel(testFilePath);
+            model.Name = "newname";
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            model.SedimentFractions.Add(sedFrac);
+
+            var boundary = new Feature2D
+            {
+                Name = "bound",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var fbcFactory = new FlowBoundaryConditionFactory();
+            fbcFactory.Model = model;
+            var bCond = fbcFactory.CreateBoundaryCondition(boundary,
+                sedFrac.Name,
+                BoundaryConditionDataType.TimeSeries,
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
+
+            model.BoundaryConditionSets[1].BoundaryConditions.Add(bCond);
+
+            bCond.AddPoint(0);
+            var dataAtZero = bCond.GetDataAtPoint(0);
+            dataAtZero[model.StartTime] = new[] { 36.0 };
+            dataAtZero[model.StartTime.AddMinutes(2)] = new[] { 18.0 };
+
+            var bndExtForceFile = new BndExtForceFile();
+            var extFileName = model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
+            if (string.IsNullOrEmpty(extFileName))
+                extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
+            
+            bndExtForceFile.Write(extFileName, model.ModelDefinition);
+
+            Assert.IsTrue(File.Exists(extFileName));
+            var fileText = File.ReadAllText(extFileName);
+            Assert.That(fileText, Is.StringContaining(BndExtForceFile.BoundaryBlockKey)
+                                    .And.StringContaining(BndExtForceFile.QuantityKey + "=" + BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
+                                    .And.StringContaining(BndExtForceFile.LocationFileKey + "=" + "L1.pli")
+                                    .And.StringContaining(BndExtForceFile.ForcingFileKey + "=" + "frac1.bc"));
+
+            //check to see if only 2 boundaries are written
+            Assert.AreEqual(2, new Regex(Regex.Escape(BndExtForceFile.BoundaryBlockKey)).Matches(fileText).Count);
+
+            Assert.IsTrue(File.Exists("frac1.bc"));
+
+            fileText = File.ReadAllText("frac1.bc");
+            Assert.That(fileText, Is.StringContaining(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
+                                    .And.StringContaining("bound_0001")
+                                    .And.StringContaining(BcFile.BlockKey)
+                                    .And.StringContaining(BcFile.QuantityKey)
+                                    .And.StringContaining("36").And.StringContaining("18"));
+        }
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteReadSedimentConcentration()
+        {
+            //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
+            var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+            var model = new WaterFlowFMModel(testFilePath);
+            model.Name = "newname";
+
+            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            model.SedimentFractions.Add(sedFrac);
+
+            var boundary = new Feature2D
+            {
+                Name = "bound",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var fbcFactory = new FlowBoundaryConditionFactory();
+            fbcFactory.Model = model;
+            var bCond = fbcFactory.CreateBoundaryCondition(boundary,
+                sedFrac.Name,
+                BoundaryConditionDataType.TimeSeries,
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(FlowBoundaryQuantityType.SedimentConcentration));
+
+            model.BoundaryConditionSets[1].BoundaryConditions.Add(bCond);
+
+            bCond.AddPoint(0);
+            var dataAtZero = bCond.GetDataAtPoint(0);
+            dataAtZero[model.StartTime] = new[] { 36.0 };
+            dataAtZero[model.StartTime.AddMinutes(2)] = new[] { 18.0 };
+
+            var bndExtForceFile = new BndExtForceFile();
+            var extFileName = model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).GetValueAsString();
+            if (string.IsNullOrEmpty(extFileName))
+                extFileName = model.ModelDefinition.ModelName + ExtForceFile.Extension;
+
+            bndExtForceFile.Write(extFileName, model.ModelDefinition);
+            var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
+            bndExtForceFile = new BndExtForceFile();
+            bndExtForceFile.Read(extFileName, modelDefinition);
         }
     }
 }

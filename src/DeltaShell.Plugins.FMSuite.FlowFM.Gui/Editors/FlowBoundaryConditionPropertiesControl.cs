@@ -145,11 +145,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     thatcherTimeSpanEditor.Value = TimeSpan.Zero;
                 }
-                
+
 
                 factorTextBox.Text = string.Format("{0:0.00}", FlowBoundaryCondition.Factor);
                 offsetTextBox.Text = string.Format("{0:0.00}", FlowBoundaryCondition.Offset);
                 offsetUnitLabel.Text = FlowBoundaryCondition.VariableUnit.Symbol;
+                if (BoundaryCondition.DataType == BoundaryConditionDataType.Empty)
+                {
+                    factorTextBox.Enabled = false;
+                    offsetTextBox.Enabled = false;
+                    offsetUnitLabel.Enabled = false;
+                }
             }
             finally
             {

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Controls;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -28,7 +30,7 @@ namespace DeltaShell.Dimr.Gui
             get { return "Dimr (UI)"; }
         }
 
-        public bool IsOnlyDimrModelSelected
+        public virtual bool IsOnlyDimrModelSelected
         {
             get
             {
@@ -67,14 +69,16 @@ namespace DeltaShell.Dimr.Gui
 
         public override string Description
         {
-            get { return "Provides possibilities to configure DIMR settings"; }
+            get { return Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings; }
         }
 
+        [ExcludeFromCodeCoverage]
         public override string Version
         {
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
+        [ExcludeFromCodeCoverage]
         public override string FileFormatVersion
         {
             get { return "1.0.0.0"; }
@@ -91,7 +95,7 @@ namespace DeltaShell.Dimr.Gui
 
             Instance = null;
         }
-        
+
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return GetType().Assembly;

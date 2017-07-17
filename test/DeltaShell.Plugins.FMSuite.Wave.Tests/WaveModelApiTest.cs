@@ -24,7 +24,7 @@ public class WaveModelApiTest
 
             using (var api = new RemoteWaveModelApi(false) {ReferenceDateTime = refDate})
             {
-                api.SetVar("mode", "stand-alone");
+                api.SetValues("mode", new[] { "stand-alone" });
                 api.Initialize(Path.GetFileName(localPath));
                 api.Update(3600.0);
                 var apiCurrentTime = api.CurrentTime;
@@ -57,7 +57,7 @@ public class WaveModelApiTest
 
             using (var api = new WaveModelApi {ReferenceDateTime = refDate})
             {
-                api.SetVar("mode", "stand-alone");
+                api.SetValues("mode", new [] { "stand-alone" });
                 api.Initialize(Path.GetFileName(localPath));
                 api.Update(3600.0);
                 var apiCurrentTime = api.CurrentTime;
