@@ -76,8 +76,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             if (network.Branches != null)
             {
                 NumberOfBranches = network.Branches.Count;
-                SourceNodeIds = network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n) + 1).ToArray();  // Index must be 1-based, not 0-based
-                TargedNodesIds = network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n) + 1).ToArray();  // Index must be 1-based, not 0-based
+                SourceNodeIds = network.Branches.Select(b => b.Source).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray();
+                TargedNodesIds = network.Branches.Select(b => b.Target).ToArray().Select(n => network.Nodes.IndexOf(n)).ToArray();
                 BranchLengths = network.Branches.Select(b => b.Length).ToArray();
 
                 NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);

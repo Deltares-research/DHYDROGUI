@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             BranchIdx = discretisationPoints.Select(l => l.Branch)
                 .ToArray()
-                .Select(b => discretisation.Network.Branches.IndexOf(b) + 1)     // Index must be 1-based, not 0-based
+                .Select(b => discretisation.Network.Branches.IndexOf(b))
                 .ToArray();
 
             Offset = discretisationPoints.Select(l => l.Chainage).ToArray();
