@@ -102,8 +102,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             try
             {
-                var ierr = wrapper.ionc_get_network_id_from_mesh_id(ref ioncid, ref meshId, ref networkId);
-                return ierr;
+                return wrapper.ionc_get_network_id_from_mesh_id(ref ioncid, ref meshId, ref networkId);
             }
             catch
             {

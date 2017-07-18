@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;

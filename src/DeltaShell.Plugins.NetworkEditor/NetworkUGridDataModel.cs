@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor
@@ -114,7 +113,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             var nodes = ConstructHydroNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions);
 
-            var branches = ConstructNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
+            var branches = ConstructNetworkChannels(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
                 dataModel.BranchLengths,
                 dataModel.NumberOfBranchGeometryPoints, dataModel.BranchNames, dataModel.BranchDescriptions, 
                 dataModel.GeopointsX, dataModel.GeopointsY, 
@@ -158,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             return nodes;
         }
 
-        private static List<IChannel> ConstructNetworkBranches(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
+        private static List<IChannel> ConstructNetworkChannels(INetwork parentNetwork, List<IHydroNode> nodes, int[] sourceNodes, int[] targetNodes,
             double[] branchLengths, int[] branchGeometryPoints, string[] branchNames, string[] branchDescriptions, double[] geometryPointsX, double[] geometryPointsY, int[] branchOrderNumbers)
         {
             var channels = new List<IChannel>();
