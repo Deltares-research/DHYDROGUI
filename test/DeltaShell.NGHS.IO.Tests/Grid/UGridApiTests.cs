@@ -17,8 +17,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private MockRepository mocks;
 
         // UGridApi field names
-        private const string NumFacesVarName = "nFaces";
-        private const string NumMaxFaceNodesVarName = "nMaxFaceNodes";
         private const string WrapperVarName = "wrapper";
         private const string ApiVarName = "api";
         private const string FillValueVarName = "fillValue";
@@ -43,8 +41,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             mocks.ReplayAll();
             Assert.AreEqual(0.0d, TypeUtils.GetField<UGridApi, double>(uGridApi, FillValueVarName), 0.001d);
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, NumFacesVarName));
-            Assert.AreEqual(-1, TypeUtils.GetField(uGridApi, NumMaxFaceNodesVarName));
         }
 
         [Test]
@@ -57,8 +53,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.That(ugridApi != null);
 
             Assert.AreEqual(0.0d, TypeUtils.GetField<UGridApi, double>(ugridApi, FillValueVarName), 0.001d);
-            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, NumFacesVarName));
-            Assert.AreEqual(-1, TypeUtils.GetField(ugridApi, NumMaxFaceNodesVarName));
         }
 
         [Test]
@@ -561,44 +555,22 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [TestCase(false, 1, 1)]
-        [TestCase(true, -1, 1)]
-        [TestCase(true, 1, -1)]
-        public void GetNumberOfFacesInitializationFailedTest(bool initialized, int meshId, int nFaces)
+        public void GetNumberOfFacesInitializationFailedTest()
         {
             int faces;
             // uGridApi
-            uGridApi.Expect(a => a.GetNumberOfFaces(meshId, out faces))
+            uGridApi.Expect(a => a.GetNumberOfFaces(Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, NumFacesVarName, nFaces);
-
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
-
-            int id = 0;
-            int localMeshId = 0;
-            int numberOfFaces = 5;
-            wrapper.Expect(w => w.GetFaceCount(id, localMeshId, ref numberOfFaces)).IgnoreArguments()
-                .OutRef(numberOfFaces)
-                .Return(GridApiDataSet.GridConstants.NOERR)
-                .Repeat.Twice();
-
-            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
-
-            // uRemoteGridApi
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetNumberOfFaces(localMeshId, out faces);
-            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
-            Assert.AreEqual(numberOfFaces, faces);
-            // uRemoteGridApi
+            var ierr = uGridApi.GetNumberOfFaces(Arg<int>.Is.Anything, out faces);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
 
-            TypeUtils.SetField(uGridApi, NumFacesVarName, nFaces);
-            ierr = uRemoteGridApi.GetNumberOfFaces(localMeshId, out faces);
-            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
-            Assert.AreEqual(numberOfFaces, faces);
+            ierr = uRemoteGridApi.GetNumberOfFaces(Arg<int>.Is.Anything, out faces);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
         }
 
         [Test]
@@ -608,17 +580,26 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nFaces;
             uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, NumFacesVarName, 8);
 
+            // wrapper
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+
+            int ioncId = 0;
+            int networkId = 0;
+            nFaces = 8;
+            wrapper.Expect(w => w.GetFaceCount(ioncId, networkId, ref nFaces)).IgnoreArguments()
+                .OutRef(nFaces).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
+                
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetNumberOfFaces(1, out nFaces);
+            var ierr = uGridApi.GetNumberOfFaces(Arg<int>.Is.Anything, out nFaces);
             Assert.AreEqual(8, nFaces);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetNumberOfFaces(1, out nFaces);
+            ierr = uRemoteGridApi.GetNumberOfFaces(Arg<int>.Is.Anything, out nFaces);
             Assert.AreEqual(8, nFaces);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
         }
@@ -629,7 +610,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             int nFaces;
             uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -642,20 +623,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
-
-            // uRemoteGridApi
-
+            
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetNumberOfFaces(meshId, out nFaces);
+            var ierr = uGridApi.GetNumberOfFaces(Arg<int>.Is.Anything, out nFaces);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
-            Assert.AreEqual(-1, nFaces);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetNumberOfFaces(meshId, out nFaces);
+            ierr = uRemoteGridApi.GetNumberOfFaces(Arg<int>.Is.Anything, out nFaces);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
-            Assert.AreEqual(-1, nFaces);
         }
 
         [Test]
@@ -664,7 +641,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             int nFaces;
             uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -695,42 +672,35 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [TestCase(false, 1, 1)]
-        [TestCase(true, -1, 1)]
-        [TestCase(true, 1, -1)]
-        public void GetMaxFaceNodesInitializationFailedTest(bool initialized, int meshId, int nMaxFaceNodes)
+        public void GetMaxFaceNodesInitializationFailedTest()
         {
             // uGridApi
             int maxFaceNodes;
-            uGridApi.Expect(a => a.GetMaxFaceNodes(meshId, out maxFaceNodes))
+            uGridApi.Expect(a => a.GetMaxFaceNodes(Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGridApi.Expect(a => a.Initialized).Return(initialized).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, NumMaxFaceNodesVarName, nMaxFaceNodes);
+            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            //var wrapper = mocks.DynamicMock<IGridWrapper>();
 
-            int id = 0;
-            int localMeshId = 0;
-            int numberOfMaxFaceNodes = 8;
-            wrapper.Expect(w => w.GetMaxFaceNodes(id, localMeshId, ref numberOfMaxFaceNodes))
-                .IgnoreArguments().OutRef(numberOfMaxFaceNodes)
-                .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
+            //int id = 0;
+            //int localMeshId = 0;
+            //int numberOfMaxFaceNodes = 8;
+            //wrapper.Expect(w => w.GetMaxFaceNodes(id, localMeshId, ref numberOfMaxFaceNodes))
+            //    .IgnoreArguments().OutRef(numberOfMaxFaceNodes)
+            //    .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
 
-            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+            //TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
             
 
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetMaxFaceNodes(localMeshId, out maxFaceNodes);
-            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
-            Assert.AreEqual(numberOfMaxFaceNodes, maxFaceNodes);
+            var ierr = uGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
 
             // uRemoteGridApi
-            TypeUtils.SetField(uGridApi, NumMaxFaceNodesVarName, nMaxFaceNodes);
-            ierr = uRemoteGridApi.GetMaxFaceNodes(localMeshId, out maxFaceNodes);
-            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
-            Assert.AreEqual(numberOfMaxFaceNodes, maxFaceNodes);
+            ierr = uRemoteGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
         }
 
         [Test]
@@ -740,17 +710,25 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int maxFaceNodes;
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            TypeUtils.SetField(uGridApi, NumMaxFaceNodesVarName, 8);
 
+            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            int ioncId = 0;
+            int meshId = 0;
+            maxFaceNodes = 8;
+            wrapper.Expect(w => w.GetMaxFaceNodes(ioncId, meshId, ref maxFaceNodes)).IgnoreArguments()
+                .OutRef(maxFaceNodes).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
+
+            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+            
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetMaxFaceNodes(1, out maxFaceNodes);
+            var ierr = uGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
             Assert.AreEqual(8, maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetMaxFaceNodes(1, out maxFaceNodes);
+            ierr = uRemoteGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
             Assert.AreEqual(8, maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
         }
@@ -761,7 +739,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             int maxFaceNodes;
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -780,14 +758,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
+            var ierr = uGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
-            Assert.AreEqual(-1, maxFaceNodes);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
+            ierr = uRemoteGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, ierr);
-            Assert.AreEqual(-1, maxFaceNodes);
         }
 
         [Test]
@@ -796,7 +772,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             int maxFaceNodes;
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
+            uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             var wrapper = mocks.DynamicMock<IGridWrapper>();
 
@@ -816,14 +792,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             // uGridApi
-            var ierr = uGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
+            var ierr = uGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
-            Assert.AreEqual(-1, maxFaceNodes);
 
             // uRemoteGridApi
-            ierr = uRemoteGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
+            ierr = uRemoteGridApi.GetMaxFaceNodes(Arg<int>.Is.Anything, out maxFaceNodes);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
-            Assert.AreEqual(-1, maxFaceNodes);
         }
 
         [Test]

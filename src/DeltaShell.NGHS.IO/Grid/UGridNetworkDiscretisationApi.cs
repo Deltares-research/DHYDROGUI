@@ -7,21 +7,16 @@ namespace DeltaShell.NGHS.IO.Grid
     public class UGridNetworkDiscretisationApi : GridApi, IUGridNetworkDiscretisationApi
     {
         private int meshIdForWriting;
-        private int nNetworkPoints;
 
         public UGridNetworkDiscretisationApi()
         {
-            // Get the network id in the constructor? While opening the file?
-            // Obtain meshIds, networkIds?
             meshIdForWriting = -1;
-            nNetworkPoints = -1;
         }
 
         #region Write Network Discretisation
 
         public int CreateNetworkDiscretisation(string name, int numberOfNetworkPoints, int numberOfMeshEdges, int networkId)
         {
-            //meshId = identifier;
             if (!Initialized)
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
@@ -38,7 +33,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 ierr = wrapper.Create1DMesh(ioncId, networkId, ref meshIdForWriting, name, numberOfNetworkPoints, numberOfMeshEdges);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
-                nNetworkPoints = numberOfNetworkPoints;
             }
             catch
             {
@@ -55,24 +49,24 @@ namespace DeltaShell.NGHS.IO.Grid
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             
-            if (nNetworkPoints < 0
-                || nNetworkPoints != branchIdx.Length
-                || nNetworkPoints != offset.Length)
+            if (branchIdx.Length < 0
+                || offset.Length != branchIdx.Length)
             {
                 return GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR;
             }
 
-            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nNetworkPoints);
-            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNetworkPoints);
+            var numberOfDiscretisationPoints = branchIdx.Length;
+
+            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
+            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
 
             try
             {
-                Marshal.Copy(branchIdx, 0, branchIdxPtr, nNetworkPoints);
-                Marshal.Copy(offset, 0, offsetPtr, nNetworkPoints);
+                Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
+                Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
 
-                var ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
-                    offsetPtr, nNetworkPoints);
-                return ierr;
+                return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
+                    offsetPtr, numberOfDiscretisationPoints);
             }
             catch
             {
@@ -102,8 +96,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             try
             {
-                var ierr = wrapper.GetNetworkIdFromMeshId(ioncId, meshId, ref networkId);
-                return ierr;
+                return wrapper.GetNetworkIdFromMeshId(ioncId, meshId, ref networkId);
             }
             catch
             {
@@ -133,63 +126,59 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
-            
         }
 
         public int GetNumberOfNetworkDiscretisationPoints(int meshId, out int numberOfDiscretisationPoints)
         {
             numberOfDiscretisationPoints = 0;
-            if (Initialized && nNetworkPoints > 0)
-            {
-                numberOfDiscretisationPoints = nNetworkPoints;
-                return GridApiDataSet.GridConstants.NOERR;
-            }
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+   
             try
             {
-                var ierr = wrapper.Get1DMeshDiscretisationPointsCount(ioncId, meshId, ref numberOfDiscretisationPoints);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
+                return wrapper.Get1DMeshDiscretisationPointsCount(ioncId, meshId, ref numberOfDiscretisationPoints);
             }
             catch
             {
-                // on exception don't crash...
+                //on exception don't crash...
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
-            nNetworkPoints = numberOfDiscretisationPoints;
-            return GridApiDataSet.GridConstants.NOERR;
         }
 
         public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
         {
             branchIdx = new int[0];
             offset = new double[0];
-            
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            if (nNetworkPoints < 0)
-            {
-                int numberOfDiscretisationPoints;
-                GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
-                if(nNetworkPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-            
-            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nNetworkPoints);
-            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNetworkPoints);
+
+            int numberOfDiscretisationPoints;
 
             try
             {
-                var ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, nNetworkPoints);
+                var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+                if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
+            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
+
+            try
+            {
+                var ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, numberOfDiscretisationPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
 
-                branchIdx = new int[nNetworkPoints];
-                offset = new double[nNetworkPoints];
+                branchIdx = new int[numberOfDiscretisationPoints];
+                offset = new double[numberOfDiscretisationPoints];
 
-                Marshal.Copy(branchIdxPtr, branchIdx, 0, nNetworkPoints);
-                Marshal.Copy(offsetPtr, offset, 0, nNetworkPoints);
+                Marshal.Copy(branchIdxPtr, branchIdx, 0, numberOfDiscretisationPoints);
+                Marshal.Copy(offsetPtr, offset, 0, numberOfDiscretisationPoints);
 
                 return GridApiDataSet.GridConstants.NOERR;
             }
