@@ -7,7 +7,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -49,6 +48,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 }
             }
             throw new ArgumentException("Unable to determine data type of given boundary condition data.");
+        }
+
+        [Test]
+        public void GetFlowBoundaryReflectionUnitTest()
+        {
+            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries);
+            Assert.AreEqual("", bc1.ReflectionUnit.Name);
+            Assert.AreEqual("s²", bc1.ReflectionUnit.Symbol);
+
+            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.TimeSeries);
+            Assert.AreEqual("time", bc2.ReflectionUnit.Name);
+            Assert.AreEqual("s", bc2.ReflectionUnit.Symbol);
+
+            var bc3 = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries);
+            try
+            {
+                var ru = bc3.ReflectionUnit;
+                Assert.Fail("Get reflection unit should have thrown an exception");
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // this should be hit, everything is okay.
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("Not the right kind of exception {0}", e));
+            }
+        }
+
+        [Test]
+        public void RemoveSedimentFractionFromNullFunctionTest()
+        {
+            var flowCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries);
+            try
+            {
+                flowCondition.RemoveSedimentFractionFromFunction(null, "TestFraction");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("Removing sediment franction from null function should not fail. {0}", e));
+            }
+        }
+
+        [Test]
+        public void RemoveSedimentFractionFromFunctionTest()
+        {
+            var flowCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = new Feature2D
+                {
+                    Name = "bnd1",
+                    Geometry =
+                        new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 10) })
+                }
+            };
+            flowCondition.SedimentFractionNames = new List<string>() { "TestFraction" };
+            flowCondition.AddPoint(0);
+            var startDateTime = new DateTime(1981, 8, 30);
+            var endDateTime = new DateTime(1981, 8, 31);
+            flowCondition.PointData[0].Arguments[0].SetValues(new[] { startDateTime, endDateTime });
+            flowCondition.PointData[0][startDateTime] = 0.5;
+            flowCondition.PointData[0][endDateTime] = 0.6;
+
+            try
+            {
+                flowCondition.RemoveSedimentFractionFromFunction(flowCondition.PointData[0], "TestFraction");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("Removing sediment franction from null function should not fail. {0}", e));
+            }
+        }
+
+        [Test]
+        public void GetSupporteDataTypesForQuantityIsEmptyForNoBedLevelAndBedLevelFixed()
+        {
+            var expectedSupportedDataTypes = new List<BoundaryConditionDataType>(){BoundaryConditionDataType.Empty};
+
+            Assert.AreEqual(expectedSupportedDataTypes, FlowBoundaryCondition.GetSupportedDataTypesForQuantity(FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint));
+            Assert.AreEqual(expectedSupportedDataTypes, FlowBoundaryCondition.GetSupportedDataTypesForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelFixed));
         }
 
         [Test]

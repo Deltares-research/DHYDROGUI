@@ -98,5 +98,14 @@ public class BcmFileFlowBoundaryDataBuilderTest
         Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
         Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, boundaryCondition.FlowQuantity);
     }
+
+    [Test]
+    public void GetBcmBlockDataTest()
+    {
+        var bcmBlockData = new BcmBlockData();
+        Assert.NotNull( bcmBlockData );
+        Assert.NotNull( bcmBlockData.Quantities );
+        Assert.IsEmpty( bcmBlockData.Quantities );
+    }
 }
 

@@ -227,6 +227,7 @@
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
+    <Compile Include="FeatureData\SourceAndSinkTest.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
     <Compile Include="Gui\AstroComponentSelectionTest.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="IO\BcmFileExportImportTest.cs" />
     <Compile Include="IO\BcmFileTest.cs" />
     <Compile Include="IO\BndExtForceFileTest.cs" />
+    <Compile Include="IO\BoundaryConditionWpsImporterTest.cs" />
     <Compile Include="IO\CmpFileTest.cs" />
     <Compile Include="IO\DelftIniCategoryExtensionTests.cs" />
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
@@ -298,6 +300,7 @@
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
+    <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
     <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
     <Compile Include="WaterFlowFMImportExportTest.cs" />

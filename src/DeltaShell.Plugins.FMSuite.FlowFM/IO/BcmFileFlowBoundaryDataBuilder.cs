@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using DelftTools.Functions;
-using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    
     public class BcmBlockData : BcBlockData
     {
         public string Location { get; set; }

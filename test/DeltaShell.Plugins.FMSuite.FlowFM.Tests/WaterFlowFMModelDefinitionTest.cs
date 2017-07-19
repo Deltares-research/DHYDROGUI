@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -32,7 +32,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class WaterFlowFMModelDefinitionTest
     {
         [Test]
-        [Category(TestCategory.DataAccess)]
+        public void SetGuiTimePropertiesFromMduPropertiesTest()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            modelDefinition.GetModelProperty(KnownProperties.MapInterval).Value = new List<double>();
+            modelDefinition.GetModelProperty(KnownProperties.HisInterval).Value = new List<double>();
+            modelDefinition.GetModelProperty(KnownProperties.RstInterval).Value = new List<double>();
+            modelDefinition.GetModelProperty(KnownProperties.WaqInterval).Value = new List<double>();
+
+            modelDefinition.SetGuiTimePropertiesFromMduProperties();
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value);
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void WriteMduFile_UpdatesCoordinateSystemInNetFileIfNecessary()
         {
             const string netFileName = "bendprof_map.nc";
@@ -69,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void WriteMduFile_UpdatesCoordinateSystemInNetFileIfNecessary_UGrid()
         {
             const string netFileName = "Custom_Ugrid.nc";
@@ -116,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadAndWriteMduFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -144,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadWriteMduFilesWithDifferentUnknownProperties()
         {
             // read model A
@@ -197,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadLandBoundaryAndObservationsFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -234,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadFixedWeirsWithMissingValuesFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -260,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadExtForceFileAndPlifiles()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -303,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadStructuresFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -322,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadAndWriteOutputSettings()
         {
             var mduDir =
@@ -389,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadAndWriteModelDefinitionIvkModel()
         {
             var mduDir =
@@ -443,7 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadAndWriteModelDefinitionHarlingenModel()
         {
             var mduDir =
@@ -495,7 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         } 
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadAndWriteModelDefinitionC010TimeSeries()
         {
             var mduDir =
@@ -536,7 +561,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadModelDefinitionC075Frictiontypes()
         {
             var mduDir =
@@ -551,7 +576,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadWriteModelDefinitionHarlingenAndCheckAstroComponents()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -588,7 +613,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void ReadMduAndVerifyIsEnabled()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -611,7 +636,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void PropertyChangedEventsAreBubbledForModelProperties()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -634,7 +659,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void SettingUseMorSedShouldWriteSedimentSection()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -683,7 +708,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void MduSubFilesShouldChangeNamesAfterModelRename()
         {
             var model = new WaterFlowFMModel();
@@ -713,8 +738,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void IrregularlyNamedMduSubfilesShouldKeepNames()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -743,7 +768,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void SaveLoadTracerTest()
         {
             var model = new WaterFlowFMModel {Name = "feest"};
@@ -782,8 +807,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void SelectSpatialOperationsOnlySelectsCompletedOperationsTest()
         {
             // Issue#: DELFT3DFM-508
@@ -845,8 +870,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void ImportSpatialOperationsTest()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -986,7 +1011,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.Ugrid, true)]
         [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.NetCdf, false)]
         [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", MapFormatType.Ugrid, false)]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenMduFileWhenImportingThenMapFormatHasExpectedValue(string relativeMduFilepath, MapFormatType expectedMapFormatType, bool expectedUseMorSedValue)
         {
             // setup
@@ -1014,7 +1039,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(@"morphology\MorphologyActiveAndMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", true)]
         [TestCase(@"morphology\NoMorphologyActiveAndMapFormatEqualTo1.dsproj_data\FlowFM\FlowFM.mdu", false)]
         [TestCase(@"morphology\NoMorphologyButMapFormatEqualTo4.dsproj_data\FlowFM\FlowFM.mdu", false)]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenMduFileWith1D2DModelWhenImportingThenMapFormatHasExpectedValue(string relativeMduFilepath, bool expectedUseMorSedValue)
         {
             // setup
