@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var morReport = report.SubReports.FirstOrDefault(r => r.Category.Contains("Morphology / Sediment Beta warning"));
             Assert.IsNull(morReport);
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             report = model.Validate();
             morReport = report.SubReports.FirstOrDefault(r => r.Category.Contains("Morphology / Sediment Beta warning"));
             Assert.AreEqual(0, morReport.AllErrors.Count());

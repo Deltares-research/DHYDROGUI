@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
 
@@ -291,7 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
 

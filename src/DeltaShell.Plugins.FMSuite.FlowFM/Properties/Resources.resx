@@ -229,4 +229,13 @@
   <data name="WaterFlowFMModelDefinitionValidator_Validate_" xml:space="preserve">
     <value>Conveyance2D type in Geometry should be set to 'R=HU' (-1), 'R=H' (0) or 'R=A/P' (1) when morphology is active.</value>
   </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_" xml:space="preserve">
+    <value>A morphology boundary condition cannot have more than one point with generated data.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_" xml:space="preserve">
+    <value>Time series contains forbidden negative values for {0} at point {1}</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_" xml:space="preserve">
+    <value>Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}</value>
+  </data>
 </root>

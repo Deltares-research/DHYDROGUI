@@ -350,6 +350,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time series contains forbidden negative values for {0} at point {1}.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_se" +
+                        "ries_contains_forbidden_negative_values_for__0__at_point__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A morphology boundary condition cannot have more than one point with generated data..
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology" +
+                        "_boundary_condition_cannot_have_more_than_one_point_with_generated_data_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Morphology boundary condition must have a Hydro boundary condition!.
         /// </summary>
         public static string WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_ {
@@ -367,6 +387,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
                 return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHy" +
                         "droBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_bounda" +
                         "ry_condition_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_po" +
+                        "int_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1" +
+                        "_", resourceCulture);
             }
         }
         

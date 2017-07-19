@@ -997,7 +997,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var model = new WaterFlowFMModel();
                 //Enable Morphology and Sediment
-                model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                model.ModelDefinition.UseMorphologySediment = true;
                 app.Project.RootFolder.Add(model);
                 
                 app.SaveProjectAs(path);
@@ -1036,7 +1036,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var model = new WaterFlowFMModel();
                 //Enable Morphology and Sediment
-                model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                model.ModelDefinition.UseMorphologySediment = true;
                 app.Project.RootFolder.Add(model);
 
                 model.SedimentOverallProperties.Add(new SedimentProperty<double>("MyOverall Property", 0,0, false, 1, false, string.Empty,string.Empty, false) {Value = 0.5});
@@ -1126,7 +1126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var model = new WaterFlowFMModel(mduPath);
                 //Enable Morphology and Sediment
-                model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                model.ModelDefinition.UseMorphologySediment = true;
                 app.Project.RootFolder.Add(model);
 
                 app.SaveProjectAs(mduPath);

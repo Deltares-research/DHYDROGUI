@@ -754,7 +754,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var model = new WaterFlowFMModel(testFilePath);
             model.Name = "newname";
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction() { Name = "frac1" };
             model.SedimentFractions.Add(sedFrac);
 
@@ -815,7 +815,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var model = new WaterFlowFMModel(testFilePath);
             model.Name = "newname";
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction() { Name = "frac1" };
             model.SedimentFractions.Add(sedFrac);
 

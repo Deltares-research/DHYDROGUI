@@ -17,9 +17,11 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -47,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CheckSedimentFormulaPropertyEventPropagatesToModel()
         {
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction
             {
                 Name = "testFrac",
@@ -77,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CheckSedimentPropertyEventPropagatesToModel()
         {
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction { Name = "testFrac" };
             model.SedimentFractions.Add(sedFrac);
 

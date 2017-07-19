@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
             model.Name = "newname";
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac1 = new SedimentFraction() { Name = "frac1" };
             var sedFrac2 = new SedimentFraction() { Name = "frac2" };
             model.SedimentFractions.Add(sedFrac1);

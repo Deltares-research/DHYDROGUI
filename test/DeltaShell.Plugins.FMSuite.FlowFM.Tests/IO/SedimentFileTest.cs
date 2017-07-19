@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel();
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /*  Definition of properties   */
                 var intProp = new SedimentProperty<int>("MyIntProp", 0, 0,false, 0, false, "liter", "MyIntDescription", false);
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel();
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
 
 
                 /*Add the fraction to the model*/
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel();
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
                 var intProp = new SedimentProperty<int>("IopSus", 0, 0, false, 0, false, "liter", "myintdescription", false);
@@ -372,7 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false);
@@ -500,7 +500,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
 
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
                 var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
 
@@ -780,7 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
-                fmModel.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+                fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("IniSed", 0, 0, false, 0, true, "cc",
