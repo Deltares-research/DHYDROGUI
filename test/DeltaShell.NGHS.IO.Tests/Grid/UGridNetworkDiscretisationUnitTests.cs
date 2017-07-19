@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private IUGridNetworkDiscretisationApi uGridNetworkDiscretisationApi;
         private UGridNetworkDiscretisation gridNetworkDiscretisation;
         private int errorValue = -1;
-        private int noErrorValue = GridApiDataSet.GridConstants.IONC_NOERR;
+        private int noErrorValue = GridApiDataSet.GridConstants.NOERR;
         private const string standardErrorMessage = ", because of error number: -1";
 
         [SetUp]
@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private void SetExpectanciesSuchThatGridNetworkApiIsValid()
         {
             uGridNetworkDiscretisationApi.Expect(api => api.Initialized).Return(true).Repeat.Any();
-            uGridNetworkDiscretisationApi.Expect(api => api.GetConvention()).Return(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID).Repeat
+            uGridNetworkDiscretisationApi.Expect(api => api.GetConvention()).Return(GridApiDataSet.DataSetConventions.CONV_UGRID).Repeat
                 .Once();
             uGridNetworkDiscretisationApi.Expect(api => api.GetVersion()).Return(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION).Repeat
                 .Once();

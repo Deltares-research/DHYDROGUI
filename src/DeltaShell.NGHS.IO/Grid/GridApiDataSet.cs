@@ -37,9 +37,9 @@ namespace DeltaShell.NGHS.IO.Grid
             
             public const int NUMBER_OF_NODES_ON_AN_EDGE = 2;
            
-            public const int IONC_NOERR = 0;
-            public const int IONC_GENERAL_FATAL_ERR = -1000;
-            public const int IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR = -1001;
+            public const int NOERR = 0;
+            public const int GENERAL_FATAL_ERR = -1000;
+            public const int GENERAL_ARRAY_LENGTH_FATAL_ERR = -1001;
 
             public const double UG_CONV_MIN_VERSION = 1.0d;
 
@@ -47,16 +47,20 @@ namespace DeltaShell.NGHS.IO.Grid
             public const string UG_CONV_UGRID = "UGRID-1.0";
 
             public const int TESTING_ERROR = -9999;
+
+            public const int NF90_DOUBLE = 6;
+            public const double DEFAULT_FILL_VALUE = -999.9;
+
         }
 
         public enum DataSetConventions
         {
-            IONC_CONV_NULL = 0,//Dataset conventions not yet detected
-            IONC_CONV_CF = 1,
-            IONC_CONV_UGRID = 2,//Dataset based on UGRID-conventions
-            IONC_CONV_SGRID = 4,//Dataset based on SGRID-conventions
-            IONC_CONV_OTHER = -99,//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
-            IONC_CONV_TEST = -111111 //Dataset Id for testing
+            CONV_NULL = 0,//Dataset conventions not yet detected
+            CONV_CF = 1,
+            CONV_UGRID = 2,//Dataset based on UGRID-conventions
+            CONV_SGRID = 4,//Dataset based on SGRID-conventions
+            CONV_OTHER = -99,//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
+            CONV_TEST = -111111 //Dataset Id for testing
         }
 
         public enum NetcdfOpenMode

@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridNetworkApi = api as IUGridNetworkApi;
             return uGridNetworkApi != null
                 ? uGridNetworkApi.CreateNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints,out nwId)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public virtual bool NetworkReadyForWriting
@@ -30,17 +30,17 @@ namespace DeltaShell.NGHS.IO.Grid
         
         public virtual int WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
-            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames),GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames),GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public virtual int WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths, int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames, int[] branchOrderNumbers)
         {
-            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames, branchOrderNumbers), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.WriteNetworkBranches(sourceNodeId, targetNodeId, branchLengths, nbranchgeometrypoints, branchIds, branchLongnames, branchOrderNumbers), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public virtual int WriteNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
-            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.WriteNetworkGeometry(geopointsX, geopointsY), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public int GetNetworkName(int networkId, out string networkName)
@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridNetworkApi = api as IUGridNetworkApi;
             return uGridNetworkApi != null
                 ? uGridNetworkApi.GetNetworkName(networkId, out networkName)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public virtual int GetNumberOfNetworkNodes(int networkId, out int numberOfNetworkNodes)
@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var ugridNetworkApi = api as IUGridNetworkApi;
             return ugridNetworkApi != null
                 ? ugridNetworkApi.GetNumberOfNetworkNodes(networkId, out numberOfNetworkNodes)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public virtual int GetNumberOfNetworkBranches(int networkId, out int numberOfNetworkBranches)
@@ -67,7 +67,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridNetworkApi = api as IUGridNetworkApi;
             return uGridNetworkApi != null
                 ? uGridNetworkApi.GetNumberOfNetworkBranches(networkId, out numberOfNetworkBranches)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public virtual int GetNumberOfNetworkGeometryPoints(int networkId, out int numberOfNetworkGeometryPoints)
@@ -76,7 +76,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridNetworkApi = api as IUGridNetworkApi;
             return uGridNetworkApi != null
                 ? uGridNetworkApi.GetNumberOfNetworkGeometryPoints(networkId, out numberOfNetworkGeometryPoints)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
         
         public virtual int ReadNetworkNodes(int networkId, out double[] nodesX, out double[] nodesY, out string[] nodesIs, out string[] nodesLongnames)
@@ -90,7 +90,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             return ugridNetworkApi != null   
                 ? ugridNetworkApi.ReadNetworkNodes(networkId, out nodesX, out nodesY, out nodesIs, out nodesLongnames)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public virtual int ReadNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames, out int[] branchOrderNumbers)
@@ -108,7 +108,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ugridNetworkApi != null
                 ? ugridNetworkApi.ReadNetworkBranches(networkId, out sourceNodes, out targetNodes, out branchLengths,
                     out branchGeoPoints, out branchIds, out branchLongnames, out branchOrderNumbers)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public virtual int ReadNetworkGeometry(int networkId, out double[] geopointsX, out double[] geopointsY)
@@ -120,7 +120,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             return ugridNetworkApi != null
                 ? ugridNetworkApi.ReadNetworkGeometry(networkId, out geopointsX, out geopointsY)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             
         }
         

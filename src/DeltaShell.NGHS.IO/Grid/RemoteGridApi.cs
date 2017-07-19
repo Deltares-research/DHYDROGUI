@@ -17,8 +17,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
         {
-            convention = GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
-            return api != null ? api.GetConvention(file, out convention) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            convention = GridApiDataSet.DataSetConventions.CONV_NULL;
+            return api != null ? api.GetConvention(file, out convention) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
@@ -30,12 +30,12 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return api != null
                 ? api.CreateFile(filePath, uGridGlobalMetaData, mode)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
-            return api != null ? api.Open(filePath, mode) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            return api != null ? api.Open(filePath, mode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public bool Initialized
@@ -45,24 +45,24 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int Close()
         {
-            return api != null ? api.Close() : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            return api != null ? api.Close() : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetMeshCount(out int numberOfMeshes)
         {
             numberOfMeshes = 0;
-            return api != null ? api.GetMeshCount(out numberOfMeshes) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            return api != null ? api.GetMeshCount(out numberOfMeshes) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetCoordinateSystemCode(out int coordinateSystemCode)
         {
             coordinateSystemCode = 0;
-            return api != null ? api.GetCoordinateSystemCode(out coordinateSystemCode) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            return api != null ? api.GetCoordinateSystemCode(out coordinateSystemCode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public GridApiDataSet.DataSetConventions GetConvention()
         {
-            return api != null ? api.GetConvention() : GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            return api != null ? api.GetConvention() : GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         public double GetVersion()
@@ -79,13 +79,13 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfNetworks(out int numberOfNetworks)
         {
             numberOfNetworks = 0;
-            return api != null ? api.GetNumberOfNetworks(out numberOfNetworks) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            return api != null ? api.GetNumberOfNetworks(out numberOfNetworks) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetNetworkIds(out int[] networkIds)
         {
             networkIds = new int[0];
-            return api != null ? api.GetNetworkIds(out networkIds) : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            return api != null ? api.GetNetworkIds(out networkIds) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
@@ -93,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Grid
             numberOfMesh = 0;
             return api != null
                 ? api.GetNumberOfMeshByType(meshType, out numberOfMesh)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO.Grid
             meshIds = new int[0];
             return api != null
                 ? api.GetMeshIdsByMeshType(meshType, numberOfMeshes, out meshIds)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
 

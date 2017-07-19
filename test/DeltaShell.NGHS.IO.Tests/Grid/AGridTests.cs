@@ -44,7 +44,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var gridApi = mocks.DynamicMock<IGridApi>();
             gridApi.Expect(a => a.GetConvention())
-                .Return(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+                .Return(GridApiDataSet.DataSetConventions.CONV_UGRID)
                 .Repeat.Once();
             gridApi.Expect(a => a.GetVersion())
                 .Return(0.0)
@@ -57,7 +57,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.BackToRecordAll();
             gridApi.Expect(a => a.GetConvention())
-                .Return(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+                .Return(GridApiDataSet.DataSetConventions.CONV_UGRID)
                 .Repeat.Once();
             gridApi.Expect(a => a.GetVersion())
                 .Return(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION)
@@ -80,7 +80,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // gridApi
             var gridApi = mocks.DynamicMock<IGridApi>();
-            gridApi.Expect(a => a.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+            gridApi.Expect(a => a.CreateFile(Arg<string>.Is.Anything, Arg<UGridGlobalMetaData>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
             // grid
             grid.Expect(g => g.CreateFile()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
@@ -102,7 +102,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.IsInitialized()).Return(false).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(2);
 
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR).Repeat.Once();
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR).Repeat.Once();
 
             mocks.ReplayAll();
 
@@ -124,9 +124,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .PropertyBehavior();
 
             // gridApi
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Once();
-            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once();
+            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
             TypeUtils.SetField(grid, "disposed", true);
 
             mocks.ReplayAll();
@@ -151,9 +151,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .PropertyBehavior();
 
             // gridApi
-            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.IONC_NOERR)
+            gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Once();
-            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.IONC_NOERR).Repeat.Once().Throw(new Exception());
+            gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once().Throw(new Exception());
             TypeUtils.SetField(grid, "disposed", true);
 
             mocks.ReplayAll();
@@ -246,10 +246,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
             grid.Expect(g => g.GetDataSetConvention()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
-            gridApi.Expect(a => a.GetConvention()).Return(GridApiDataSet.DataSetConventions.IONC_CONV_TEST).Repeat.Once();
+            gridApi.Expect(a => a.GetConvention()).Return(GridApiDataSet.DataSetConventions.CONV_TEST).Repeat.Once();
             mocks.ReplayAll();
 
-            Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_TEST, grid.GetDataSetConvention());
+            Assert.AreEqual(GridApiDataSet.DataSetConventions.CONV_TEST, grid.GetDataSetConvention());
         }
 
         [Test]

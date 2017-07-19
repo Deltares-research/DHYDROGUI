@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private UGridNetwork gridNetwork;
         private const string standardErrorMessage = ", because of error number: -1";
         private int errorValue = -1;
-        private int noErrorValue = GridApiDataSet.GridConstants.IONC_NOERR;
+        private int noErrorValue = GridApiDataSet.GridConstants.NOERR;
 
         [SetUp]
         public void Setup()
@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private void SetExpectanciesSuchThatGridNetworkApiIsValid()
         {
             uGridNetworkApi.Expect(api => api.Initialized).Return(true).Repeat.Any();
-            uGridNetworkApi.Expect(api => api.GetConvention()).Return(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID).Repeat
+            uGridNetworkApi.Expect(api => api.GetConvention()).Return(GridApiDataSet.DataSetConventions.CONV_UGRID).Repeat
                 .Once();
             uGridNetworkApi.Expect(api => api.GetVersion()).Return(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION).Repeat
                 .Once();

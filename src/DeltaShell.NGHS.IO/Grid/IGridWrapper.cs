@@ -11,51 +11,51 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Datasets may adhere to multiple conventions at the same time, so use this method
         /// to check for individual conventions.
         /// </summary>
-        /// <param name="ioncid"></param>
-        /// <param name="iconvtype">The NetCDF conventions type to check for.</param>
+        /// <param name="ioncId"></param>
+        /// <param name="convtype">The NetCDF conventions type to check for.</param>
         /// <returns>Whether or not the file adheres to the specified conventions.</returns>
-        bool ionc_adheresto_conventions(ref int ioncid, ref int iconvtype);
+        bool adheresto_conventions(int ioncId, int convtype);
 
         /// <summary>
         /// Inquire the NetCDF conventions used in the dataset.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="iconvtype">The NetCDF conventions type of the dataset.</param>
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="convtype">The NetCDF conventions type of the dataset.</param>
         /// <param name="convversion"></param>
-        /// <returns>Result status, ionc_noerr if successful.</returns>
-        int ionc_inq_conventions(ref int ioncid, ref int iconvtype, ref double convversion);
+        /// <returns>Result status, noerr if successful.</returns>
+        int inq_conventions(int ioncId, ref int convtype, ref double convversion);
 
         /// <summary>
         /// Tries to open a NetCDF file and initialize based on its specified conventions.
         /// </summary>
-        /// <param name="c_path">File name for netCDF dataset to be opened.</param>
+        /// <param name="path">File name for netCDF dataset to be opened.</param>
         /// <param name="mode">NetCDF open mode, e.g. NF90_NOWRITE.</param>
-        /// <param name="ioncid">The io_netcdf dataset id (this is not the NetCDF ncid, which is stored in datasets(ioncid)%ncid.</param>
-        /// <param name="iconvtype">The detected conventions in the file.</param>
+        /// <param name="ioncId">The io_netcdf dataset id (this is not the NetCDF ncid, which is stored in datasets(ioncId)%ncid.</param>
+        /// <param name="convtype">The detected conventions in the file.</param>
         /// <param name="convversion"></param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_open([In] string c_path, [In, Out] ref int mode, [In, Out] ref int ioncid, [In, Out] ref int iconvtype, ref double convversion);
+        /// <returns>Result status (NOERR if successful).</returns>
+        int open(string path, int mode, ref int ioncId, ref int convtype, ref double convversion);
 
         /// <summary>
         /// Tries to close an open io_netcdf data set.
         /// </summary>
-        /// <param name="ioncid">The io_netcdf dataset id (this is not the NetCDF ncid, which is stored in datasets(ioncid)%ncid.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_close([In] ref int ioncid);
+        /// <param name="ioncId">The io_netcdf dataset id (this is not the NetCDF ncid, which is stored in datasets(ioncId)%ncid.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int close([In] int ioncId);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ioncid"></param>
+        /// <param name="ioncId"></param>
         /// <param name="networkId"></param>
         /// <param name="networkName"></param>
         /// <returns></returns>
-        int ionc_get_network_name([In] ref int ioncid, [In] ref int networkId, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder networkName);
+        int get_network_name(int ioncId, int networkId, [MarshalAs(UnmanagedType.LPStr)] StringBuilder networkName);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ioncid"></param>
+        /// <param name="ioncId"></param>
         /// <param name="meshId"></param>
         /// <param name="varId"></param>
         /// <param name="type"></param>
@@ -66,341 +66,341 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="unit"></param>
         /// <param name="fillValue"></param>
         /// <returns></returns>
-        int ionc_def_var(ref int ioncid, ref int meshId, ref int varId, ref int type, GridApiDataSet.LocationType locationType, string varName, string standardName, string longName, string unit, ref double fillValue);
+        int def_var(int ioncId, int meshId, int varId, int type, GridApiDataSet.LocationType locationType, string varName, string standardName, string longName, string unit, double fillValue);
 
         /// <summary>
         /// Gets the number of mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="nmesh">Number of meshes.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_mesh_count([In, Out] ref int ioncid, [In, Out] ref int nmesh);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="numberOfMesh">Number of meshes.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_mesh_count(int ioncId, ref int numberOfMesh);
 
         /// <summary>
         /// Gets the name of mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">Mesh id.</param>
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">Mesh id.</param>
         /// <param name="meshName">The mesh name.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_mesh_name([In, Out] ref int ioncid, [In, Out] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder meshName);
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_mesh_name(int ioncId, int meshId, [MarshalAs(UnmanagedType.LPStr)] [In] [Out] StringBuilder meshName);
 
         /// <summary>
         /// Gets the number of nodes in a single mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="nnode">Number of nodes.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_node_count(ref int ioncid, ref int meshid, ref int nnode);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="numberOfNodes">Number of nodes.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_node_count(int ioncId, int meshId, ref int numberOfNodes);
 
         /// <summary>
         /// Gets the number of edges in a single mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="nedge">Number of edges.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_edge_count(ref int ioncid, ref int meshid, ref int nedge);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="numberOfEdges">Number of edges.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_edge_count(int ioncId, int meshId, ref int numberOfEdges);
 
         /// <summary>
         /// Gets the number of faces in a single mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="nface">Number of faces.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_face_count(ref int ioncid, ref int meshid, ref int nface);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="numberOfFaces">Number of faces.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_face_count(int ioncId, int meshId, ref int numberOfFaces);
 
         /// <summary>
         /// Gets the maximum number of nodes for any face in a single mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="nmaxfacenodes">The maximum number of nodes per face in the mesh.Number of faces.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_max_face_nodes(ref int ioncid, ref int meshid, ref int nmaxfacenodes);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="numberOfMaxFaceNodes">The maximum number of nodes per face in the mesh.Number of faces.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_max_face_nodes(int ioncId, int meshId, ref int numberOfMaxFaceNodes);
 
         /// <summary>
         /// Gets the x,y coordinates for all nodes in a single mesh from a data set.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="c_xptr">Pointer to array for x-coordinates</param>
-        /// <param name="c_yptr">Pointer to array for y-coordinates</param>
-        /// <param name="nnode">The number of nodes in the mesh.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_node_coordinates([In, Out] ref int ioncid, [In, Out] ref int meshid, [In, Out] ref IntPtr c_xptr, [In, Out]ref IntPtr c_yptr, [In, Out] ref int nnode);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="xptr">Pointer to array for x-coordinates</param>
+        /// <param name="yptr">Pointer to array for y-coordinates</param>
+        /// <param name="numberOfNodes">The number of nodes in the mesh.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_node_coordinates(int ioncId, int meshId, ref IntPtr xptr, ref IntPtr yptr, int numberOfNodes);
 
         /// <summary>
         /// Gets the edge-node connectvit table for all edges in the specified mesh.
         /// The output edge_nodes array is supposed to be of exact correct size already.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="c_edge_nodes_ptr">Pointer to array for the edge-node connectivity table.</param>
-        /// <param name="nedge">The number of edges in the mesh.</param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_edge_nodes(ref int ioncid, ref int meshid, ref IntPtr c_edge_nodes_ptr, ref int nedge);
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="edge_nodes_ptr">Pointer to array for the edge-node connectivity table.</param>
+        /// <param name="numberOfEdges">The number of edges in the mesh.</param>
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_edge_nodes(int ioncId, int meshId, ref IntPtr edge_nodes_ptr, int numberOfEdges);
 
         /// <summary>
         /// Gets the face-node connectvit table for all faces in the specified mesh.
         /// The output face_nodes array is supposed to be of exact correct size already.
         /// </summary>
-        /// <param name="ioncid">The IONC data set id.</param>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
-        /// <param name="c_face_nodes_ptr">Pointer to array for the face-node connectivity table.</param>
-        /// <param name="nface">The number of faces in the mesh.</param>
-        /// <param name="nmaxfacenodes">The maximum number of nodes per face in the mesh.</param>
+        /// <param name="ioncId">The IONC data set id.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
+        /// <param name="face_nodes_ptr">Pointer to array for the face-node connectivity table.</param>
+        /// <param name="numberOfFaces">The number of faces in the mesh.</param>
+        /// <param name="numberOfMaxFaceNodes">The maximum number of nodes per face in the mesh.</param>
         /// <param name="fillvalue"></param>
-        /// <returns>Result status (IONC_NOERR if successful).</returns>
-        int ionc_get_face_nodes(ref int ioncid, ref int meshid, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue);
+        /// <returns>Result status (NOERR if successful).</returns>
+        int get_face_nodes(int ioncId, int meshId, ref IntPtr face_nodes_ptr, int numberOfFaces, int numberOfMaxFaceNodes, ref int fillvalue);
 
-        int ionc_write_geom_ugrid(string filename);
-        int ionc_write_map_ugrid(string filename);
-        int ionc_get_coordinate_system([In] ref int ioncid, [In, Out] ref int nmesh);
-        int ionc_get_var_count([In] ref int ioncid,[In] ref int mesh,[In] GridApiDataSet.LocationType locationType, [In,Out] ref int nCount);
-        int ionc_inq_varid(ref int ioncid, ref int meshId, string varName, ref int varId);
-        int ionc_inq_varid_by_standard_name(ref int ioncid, ref int meshId, GridApiDataSet.LocationType locationId, string standardName, ref int varId);
-        int ionc_inq_varids(ref int ioncid, ref int meshId, GridApiDataSet.LocationType locationType, ref IntPtr ptr, ref int nVar);
-        int ionc_initialize(GridWrapper.IO_NetCDF_Message_Callback c_message_callback, GridWrapper.IO_NetCDF_Progress_Callback c_progress_callback);
-        int ionc_get_var(ref int ioncid, ref int meshId, ref int location, string varname, ref IntPtr c_zptr, ref int nNode, ref double c_fillvalue);
-        int ionc_put_var(ref int ioncid, ref int meshid, GridApiDataSet.LocationType locationType, string c_varname, ref IntPtr c_values_ptr,ref int nVal);
-        int ionc_put_node_coordinates(ref int ioncid, ref int meshid, ref IntPtr c_xvalues_ptr, ref IntPtr c_yvalues_ptr, ref int nNode);
+        int write_geom_ugrid(string filename);
+        int write_map_ugrid(string filename);
+        int get_coordinate_system(int ioncId, ref int epsg);
+        int get_var_count(int ioncId, int meshId, GridApiDataSet.LocationType locationType, ref int numberOfVarCount);
+        int inq_varid(int ioncId, int meshId, string varName, ref int varId);
+        int inq_varid_by_standard_name(int ioncId, int meshId, GridApiDataSet.LocationType locationId, string standardName, ref int varId);
+        int inq_varids(int ioncId, int meshId, GridApiDataSet.LocationType locationType, ref IntPtr ptr, int numberOfVar);
+        int initialize(GridWrapper.IO_NetCDF_Message_Callback message_callback, GridWrapper.IO_NetCDF_Progress_Callback progress_callback);
+        int get_var(int ioncId, int meshId, int location, string varname, ref IntPtr values_ptr, int numberOfValues, ref double fillvalue);
+        int put_var(int ioncId, int meshId, GridApiDataSet.LocationType locationType, string varname, IntPtr values_ptr, int numberOfValues);
+        int put_node_coordinates(int ioncId, int meshId, IntPtr xvalues_ptr, IntPtr yvalues_ptr, int numberOfNodes);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ioncid"></param>
+        /// <param name="ioncId"></param>
         /// <param name="metadata"></param>
         /// <returns></returns>
-        int ionc_add_global_attributes( [In] ref int ioncid, GridWrapper.interop_metadata metadata);
+        int add_global_attributes(int ioncId, GridWrapper.interop_metadata metadata);
 
         /// <summary>
         /// This function creates a new netCDF file
         /// </summary>
-        /// <param name="c_path">The path where the file will be created (in)</param>
+        /// <param name="path">The path where the file will be created (in)</param>
         /// <param name="mode"> The netCDF opening mode (in)</param>
-        /// <param name="ioncid">The netCDF file id (out)</param>
+        /// <param name="ioncId">The netCDF file id (out)</param>
         /// <returns></returns>
-        int ionc_create([In] string c_path, [In] ref int mode, [In, Out] ref int ioncid);
+        int create(string path, int mode, ref int ioncId);
 
         /// <summary>
         /// Create a 1d network in an opened netCDF file  
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (out)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (out)</param>
         /// <param name="networkName">The network name (in) </param>
-        /// <param name="nNodes">The number of network nodes (in) </param>
-        /// <param name="nBranches">The number of network branches (in)</param>
-        /// <param name="nGeometry">The number of geometry points (in)</param>
+        /// <param name="numberOfNodes">The number of network nodes (in) </param>
+        /// <param name="numberOfBranches">The number of network branches (in)</param>
+        /// <param name="numberOfGeometry">The number of geometry points (in)</param>
         /// <returns></returns>
-        int ionc_create_1d_network([In] ref int ioncid, [In, Out] ref int networkid, [In] string networkName, [In] ref int nNodes, [In] ref int nBranches, [In] ref int nGeometry);
+        int create_1d_network(int ioncId, ref int networkId, string networkName, int numberOfNodes, int numberOfBranches, int numberOfGeometry);
 
         /// <summary>
         /// Write the coordinates of the network nodes
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_nodesX">The x coordinates of the network nodes (in)</param>
-        /// <param name="c_nodesY">The y coordinates of the network nodes (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="x_nodes_ptr">The x coordinates of the network nodes (in)</param>
+        /// <param name="y_nodes_ptr">The y coordinates of the network nodes (in)</param>
         /// <param name="nodesinfo">The network infos (in)</param>
-        /// <param name="nNodes">The number of network nodes (in)</param>
+        /// <param name="numberOfNodes">The number of network nodes (in)</param>
         /// <returns></returns>
-        int ionc_write_1d_network_nodes([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_nodesX, [In] ref IntPtr c_nodesY, GridWrapper.interop_charinfo[] nodesinfo, [In] ref int nNodes);
+        int write_1d_network_nodes(int ioncId, int networkId, IntPtr x_nodes_ptr, IntPtr y_nodes_ptr, GridWrapper.interop_charinfo[] nodesinfo, int numberOfNodes);
 
         /// <summary>
         /// Write the coordinates of the network branches
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_sourcenodeid">The source node id (in)</param>
-        /// <param name="c_targetnodeid">The target node id (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="source_node_ids_ptr">The source node id (in)</param>
+        /// <param name="target_node_ids_ptr">The target node id (in)</param>
         /// <param name="branchinfo">The branch info (in)</param>
-        /// <param name="c_branchlengths">The branch lengths (in)</param>
-        /// <param name="c_nbranchgeometrypoints">The number of geometry points in each branch (in)</param>
-        /// <param name="nBranches">The number of branches (in)</param>
+        /// <param name="branch_lengths_ptr">The branch lengths (in)</param>
+        /// <param name="number_of_branch_geometry_points_ptr">The number of geometry points in each branch (in)</param>
+        /// <param name="numberOfBranches">The number of branches (in)</param>
         /// <returns></returns>
-        int ionc_write_1d_network_branches( [In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_sourcenodeid, [In] ref IntPtr c_targetnodeid, GridWrapper.interop_charinfo[] branchinfo, [In] ref IntPtr c_branchlengths, [In] ref IntPtr c_nbranchgeometrypoints, [In] ref int nBranches);
+        int write_1d_network_branches(int ioncId, int networkId, IntPtr source_node_ids_ptr, IntPtr target_node_ids_ptr, GridWrapper.interop_charinfo[] branchinfo, IntPtr branch_lengths_ptr, IntPtr number_of_branch_geometry_points_ptr, int numberOfBranches);
 
         /// <summary>
         /// Writes the branch geometry (the geometry points)  
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_geopointsX">The x coordinates of the geometry points (in)</param>
-        /// <param name="c_geopointsY">The y coordinates of the geometry points (in)</param>
-        /// <param name="nGeometry">The number of geometry points (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="x_geometry_points_ptr">The x coordinates of the geometry points (in)</param>
+        /// <param name="y_geometry_points_ptr">The y coordinates of the geometry points (in)</param>
+        /// <param name="numberOfGeometryPoints">The number of geometry points (in)</param>
         /// <returns></returns>
-        int ionc_write_1d_network_branches_geometry([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_geopointsX, [In] ref IntPtr c_geopointsY, [In] ref int nGeometry);
+        int write_1d_network_branches_geometry(int ioncId, int networkId, IntPtr x_geometry_points_ptr, IntPtr y_geometry_points_ptr, int numberOfGeometryPoints);
 
         /// <summary>
         /// Writes a 1d mesh. The geometrical features (e.g. the branches and geometry points) are described in the network above
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
         /// <param name="meshId">The mesh id (out)</param>
         /// <param name="meshname">The mesh name (in)</param>
-        /// <param name="nmeshpoints">The number of mesh points (in)</param>
-        /// <param name="nmeshedges">The number of mesh edges (in)</param>
+        /// <param name="numberOfMeshPoints">The number of mesh points (in)</param>
+        /// <param name="numberOfMeshEdges">The number of mesh edges (in)</param>
         /// <returns></returns>
-        int ionc_create_1d_mesh([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int meshId, string meshname, [In] ref int nmeshpoints, [In] ref int nmeshedges);
+        int create_1d_mesh(int ioncId, int networkId, ref int meshId, string meshname, int numberOfMeshPoints, int numberOfMeshEdges);
 
         /// <summary>
         /// Writes the mesh coordinates points 
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="branchIndexPointer">The branch id for each mesh point (in)</param>
-        /// <param name="offsetPointer">The offset along the branch from the starting point (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="meshId">The network id (in)</param>
+        /// <param name="branch_indices_ptr">The branch id for each mesh point (in)</param>
+        /// <param name="offset_ptr">The offset along the branch from the starting point (in)</param>
         /// <param name="numberOfMeshPoints">The number of mesh points (in)</param>
         /// <returns></returns>
-        int ionc_write_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr branchIndexPointer, [In] ref IntPtr offsetPointer, [In] ref int numberOfMeshPoints);
+        int write_1d_mesh_discretisation_points(int ioncId, int meshId, IntPtr branch_indices_ptr, IntPtr offset_ptr, int numberOfMeshPoints);
 
         /// <summary>
         /// Get the number of network nodes
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="nNodes">The number of nodes(out)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="numberOfNodes">The number of nodes(out)</param>
         /// <returns></returns>
-        int ionc_get_1d_network_nodes_count([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int nNodes);
+        int get_1d_network_nodes_count(int ioncId, int networkId, ref int numberOfNodes);
 
         /// <summary>
         /// Get the number of branches
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="nBranches">The number of branches (out)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="numberOfBranches">The number of branches (out)</param>
         /// <returns></returns>
-        int ionc_get_1d_network_branches_count([In] ref int ioncid, [In] ref int networkid, [In,Out] ref int nBranches);
+        int get_1d_network_branches_count(int ioncId, int networkId, ref int numberOfBranches);
 
         /// <summary>
         /// Get the number of geometry points
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="ngeometrypoints">The number of geometry points (out)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="numberOfGeometryPoints">The number of geometry points (out)</param>
         /// <returns></returns>
-        int ionc_get_1d_network_branches_geometry_coordinate_count([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int ngeometrypoints);
+        int get_1d_network_branches_geometry_coordinate_count(int ioncId, int networkId, ref int numberOfGeometryPoints);
 
         /// <summary>
         /// Read the node coordinates and the charinfo
         /// </summary>
-        /// <param name="ioncid">The netCDF file id</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_nodesX">The x coordinates of the network nodes (out)</param>
-        /// <param name="c_nodesY">The y coordinates of the network nodes (out)</param>
+        /// <param name="ioncId">The netCDF file id</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="x_nodes_ptr">The x coordinates of the network nodes (out)</param>
+        /// <param name="y_nodes_ptr">The y coordinates of the network nodes (out)</param>
         /// <param name="nodesinfo">The network infos (out)</param>
-        /// <param name="nNodes">The number of network nodes (in)</param>
+        /// <param name="numberOfNodes">The number of network nodes (in)</param>
         /// <returns></returns>
-        int ionc_read_1d_network_nodes([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_nodesX, [In, Out] ref IntPtr c_nodesY, [In, Out]  GridWrapper.interop_charinfo[] nodesinfo, [In] ref int nNodes);
+        int read_1d_network_nodes(int ioncId, int networkId, ref IntPtr x_nodes_ptr, ref IntPtr y_nodes_ptr, GridWrapper.interop_charinfo[] nodesinfo, int numberOfNodes);
 
         /// <summary>
         /// Read the coordinates of the network branches
         /// </summary>
-        /// <param name="ioncid">The netCDF file id</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_sourcenodeid">The source node id (out)</param>
-        /// <param name="c_targetnodeid">The target node id (out)</param>
-        /// <param name="c_branchlengths">The branch lengths (out)</param>
+        /// <param name="ioncId">The netCDF file id</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="source_node_ids_ptr">The source node id (out)</param>
+        /// <param name="target_node_ids_ptr">The target node id (out)</param>
+        /// <param name="branch_lengths_ptr">The branch lengths (out)</param>
         /// <param name="branchinfo">The branch info (out)</param>
-        /// <param name="c_nbranchgeometrypoints">he number of geometry points in each branch (out)</param>
-        /// <param name="nBranches">The number of branches (in)</param>
+        /// <param name="number_of_branch_geometry_points_ptr">he number of geometry points in each branch (out)</param>
+        /// <param name="numberOfBranches">The number of branches (in)</param>
         /// <returns></returns>
-        int ionc_read_1d_network_branches([In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_sourcenodeid, [In, Out] ref IntPtr c_targetnodeid, [In, Out] ref IntPtr c_branchlengths, [In, Out]  GridWrapper.interop_charinfo[] branchinfo, [In, Out] ref IntPtr c_nbranchgeometrypoints, [In] ref int nBranches);
+        int read_1d_network_branches(int ioncId, int networkId, ref IntPtr source_node_ids_ptr, ref IntPtr target_node_ids_ptr, ref IntPtr branch_lengths_ptr, GridWrapper.interop_charinfo[] branchinfo, ref IntPtr number_of_branch_geometry_points_ptr, int numberOfBranches);
 
         /// <summary>
         /// Reads the branch geometry
         /// </summary>
-        /// <param name="ioncid">The netCDF file id</param>
-        /// <param name="networkid">The network id (in)</param>
-        /// <param name="c_geopointsX">The x coordinates of the geometry points (out)</param>
-        /// <param name="c_geopointsY">The y coordinates of the geometry points (out)</param>
-        /// <param name="nNodes">The number of nodes (in)</param>
+        /// <param name="ioncId">The netCDF file id</param>
+        /// <param name="networkId">The network id (in)</param>
+        /// <param name="x_geometry_points_ptr">The x coordinates of the geometry points (out)</param>
+        /// <param name="y_geometry_points_ptr">The y coordinates of the geometry points (out)</param>
+        /// <param name="numberOfNodes">The number of nodes (in)</param>
         /// <returns></returns>
-        int ionc_read_1d_network_branches_geometry( [In] ref int ioncid, [In] ref int networkid, [In, Out] ref IntPtr c_geopointsX, [In, Out] ref IntPtr c_geopointsY, [In] ref int nNodes);
+        int read_1d_network_branches_geometry(int ioncId, int networkId, ref IntPtr x_geometry_points_ptr, ref IntPtr y_geometry_points_ptr, int numberOfNodes);
 
         /// <summary>
         /// Get the number of mesh discretization points 
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
         /// <param name="meshId">The mesh id (in)</param>
-        /// <param name="nmeshpoints">The number of mesh points (out)</param>
+        /// <param name="numberOfMeshPoints">The number of mesh points (out)</param>
         /// <returns></returns>
-        int ionc_get_1d_mesh_discretisation_points_count([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int nmeshpoints);
+        int get_1d_mesh_discretisation_points_count(int ioncId, int meshId, ref int numberOfMeshPoints);
 
         /// <summary>
         /// Read the coordinates of the mesh points  
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
         /// <param name="meshId">The mesh id (in)</param>
-        /// <param name="c_branchidx">The branch id for each mesh point (out)</param>
-        /// <param name="c_offset">The offset along the branch from the starting point (out)</param>
-        /// <param name="nmeshpoints">The number of mesh points (in)</param>
+        /// <param name="x_branch_indices_ptr">The branch id for each mesh point (out)</param>
+        /// <param name="offset_ptr">The offset along the branch from the starting point (out)</param>
+        /// <param name="numberOfMeshPoints">The number of mesh points (in)</param>
         /// <returns></returns>
-        int ionc_read_1d_mesh_discretisation_points([In] ref int ioncid, [In] ref int meshId, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In] ref int nmeshpoints);
+        int read_1d_mesh_discretisation_points(int ioncId, int meshId, ref IntPtr x_branch_indices_ptr, ref IntPtr offset_ptr, int numberOfMeshPoints);
 
         /// <summary>
         /// Reads the network id for the 1D network
         /// </summary>
-        /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (out)</param>
+        /// <param name="ioncId">The netCDF file id (in)</param>
+        /// <param name="networkId">The network id (out)</param>
         /// <returns></returns>
-        int ionc_get_1d_network_id([In]ref int ioncid, [In, Out] ref int networkid);
+        int get_1d_network_id(int ioncId, ref int networkId);
 
         /// <summary>
         /// Reads the mesh id for the 1D mesh
         /// </summary>
-        /// <param name="ioncid"></param>
-        /// <param name="meshid"></param>
+        /// <param name="ioncId"></param>
+        /// <param name="meshId"></param>
         /// <returns></returns>
-        int ionc_get_1d_mesh_id([In] ref int ioncid, [In, Out] ref int meshid);
+        int get_1d_mesh_id(int ioncId, ref int meshId);
 
         /// <summary>
         /// Gets the network ids
         /// </summary>
-        /// <param name="ioncid">The IONC data set id</param>
+        /// <param name="ioncId">The IONC data set id</param>
         /// <param name="pointerToNetworkIds">Pointer to array of network ids (out)</param>
         /// <param name="numberOfNetworks"></param>
         /// <returns></returns>
-        int ionc_get_network_ids([In] ref int ioncid, [In, Out] ref IntPtr pointerToNetworkIds, [In] ref int numberOfNetworks);
+        int get_network_ids(int ioncId, ref IntPtr pointerToNetworkIds, int numberOfNetworks);
 
         /// <summary>
         /// Gets the mesh ids for a specified mesh type
         /// </summary>
-        /// <param name="ioncid">The IONC data set id</param>
+        /// <param name="ioncId">The IONC data set id</param>
         /// <param name="meshType">Mesh type: 0 = any type, 1 = 1D mesh, 2 = 2D mesh, 3 = 3D mesh</param>
         /// <param name="pointerToMeshIds">Pointer to array of mesh ids</param>
         /// <param name="numberOfMeshes">Number of meshes</param>
         /// <returns></returns>
-        int ionc_get_mesh_ids([In] ref int ioncid, UGridMeshType meshType, [In, Out] ref IntPtr pointerToMeshIds, [In] ref int numberOfMeshes);
+        int get_mesh_ids(int ioncId, UGridMeshType meshType, ref IntPtr pointerToMeshIds, int numberOfMeshes);
 
         /// <summary>
         /// Gets the number of network in a NetCDF file
-        /// </summary>  
-        /// <param name="ioncid">The IONC data set id.</param>
+        /// </summary>
+        /// <param name="ioncId">The IONC data set id.</param>
         /// <param name="numberOfNetworks">The number of networks in the file (out)</param>
         /// <returns></returns>
-        int ionc_get_number_of_networks([In] ref int ioncid, [In, Out] ref int numberOfNetworks);
+        int get_number_of_networks(int ioncId, ref int numberOfNetworks);
 
         /// <summary>
         /// Gets the number of meshes by type in a NetCDF file
         /// </summary>
-        /// <param name="ioncid">The IONC data set id</param>
+        /// <param name="ioncId">The IONC data set id</param>
         /// <param name="meshType">Mesh type: 0 = any type, 1 = 1D mesh, 2 = 2D mesh, 3 = 3D mesh</param>
         /// <param name="numberOfMeshes">The number of meshes for the specified type (out)</param>
         /// <returns></returns>
-        int ionc_get_number_of_meshes([In] ref int ioncid, [In] ref int meshType, [In, Out] ref int numberOfMeshes);
+        int get_number_of_meshes(int ioncId, int meshType, ref int numberOfMeshes);
 
 
-        int ionc_get_network_id_from_mesh_id([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int networkId);
+        int get_network_id_from_mesh_id(int ioncId, int meshId, ref int networkId);
 
 
         //-Branch order functions -------------------//
-        int ionc_put_1d_network_branchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches);
+        int put_1d_network_branchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches);
 
-        int ionc_get_1d_network_branchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches);
+        int get_1d_network_branchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches);
 
     }
 }

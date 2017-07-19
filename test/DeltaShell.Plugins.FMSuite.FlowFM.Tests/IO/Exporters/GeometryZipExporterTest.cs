@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 GridApiDataSet.DataSetConventions convention;
                 gridApi.GetConvention(netFilePath, out convention);
-                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.IONC_CONV_OTHER);
+                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_OTHER);
             }
             var grid = NetFileImporter.ImportGrid(netFilePath);
 
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 GridApiDataSet.DataSetConventions convention;
                 gridApi.GetConvention(netFilePath, out convention);
-                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.IONC_CONV_UGRID);
+                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_UGRID);
             }
 
             // get original grid
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 GridApiDataSet.DataSetConventions convention;
                 gridApi.GetConvention(netFilePath, out convention);
-                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.IONC_CONV_UGRID);
+                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_UGRID);
             }
 
             // get original grid

@@ -121,7 +121,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             using (var uGrid = new UGrid(localCopyOfTestFile))
             {
                 uGrid.Initialize();
-                Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, uGrid.GetDataSetConvention());
+                Assert.AreEqual(GridApiDataSet.DataSetConventions.CONV_UGRID, uGrid.GetDataSetConvention());
             }
         }
 
@@ -176,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             using (var uGrid = new UGridStub(localCopyOfTestFile))
             {
-                Assert.AreEqual(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID, uGrid.GetDataSetConvention());
+                Assert.AreEqual(GridApiDataSet.DataSetConventions.CONV_UGRID, uGrid.GetDataSetConvention());
             }
         }
 
@@ -283,7 +283,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 zValues = ncFile.GetValues1D<double>("mesh2d_face_z");
             }
 
-            Assert.NotNull(zValues); // variable should have been created by ionc_def_var
+            Assert.NotNull(zValues); // variable should have been created by def_var
             Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
         }
 
@@ -515,7 +515,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var testFilePath = Path.Combine(testDir, "Custom_Ugrid.nc");
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                gridApi.ionc_write_geom_ugrid(testFilePath);
+                gridApi.write_geom_ugrid(testFilePath);
             }
             
             
@@ -528,8 +528,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.That(uGrid.CoordinateSystem, Is.EqualTo(new OgrCoordinateSystemFactory().CreateFromEPSG(4326))); // mag dit?
                     Assert.That(uGrid.IsValid(), Is.True);
                     //Assert.That(uGrid.IsValidViaApi(), Is.True);
-                    Assert.That(uGrid.GetDataSetConvention(), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
-                    //Assert.That(uGrid.GetDataSetConventionViaApi(), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
+                    Assert.That(uGrid.GetDataSetConvention(), Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
+                    //Assert.That(uGrid.GetDataSetConventionViaApi(), Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
                     Assert.That(uGrid.GetNumberOf2DMeshes(), Is.EqualTo(meshId));
                     Assert.That(uGrid.GetNumberOfNodesForMeshId(meshId), Is.EqualTo(5));
                     Assert.That(uGrid.GetNumberOfEdgesForMeshId(meshId), Is.EqualTo(6));

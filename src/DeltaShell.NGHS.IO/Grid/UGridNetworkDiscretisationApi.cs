@@ -24,25 +24,25 @@ namespace DeltaShell.NGHS.IO.Grid
             //meshId = identifier;
             if (!Initialized)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
             // replace spaces in network name by underscores
             if (name != null) name = name.Replace(' ', '_');
 
             // ReSharper disable once RedundantAssignment
-            int ierr = GridApiDataSet.GridConstants.IONC_NOERR;
+            int ierr = GridApiDataSet.GridConstants.NOERR;
 
             try
             {
-                ierr = wrapper.ionc_create_1d_mesh(ref ioncid, ref networkId, ref meshIdForWriting, name, ref numberOfNetworkPoints, ref numberOfMeshEdges);
+                ierr = wrapper.create_1d_mesh(ioncId, networkId, ref meshIdForWriting, name, numberOfNetworkPoints, numberOfMeshEdges);
 
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR) return ierr;
+                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
                 nNetworkPoints = numberOfNetworkPoints;
             }
             catch
             {
-                ierr = GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
             return ierr;
@@ -52,14 +52,14 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (!Initialized || !NetworkReadyForWriting)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             
             if (nNetworkPoints < 0
                 || nNetworkPoints != branchIdx.Length
                 || nNetworkPoints != offset.Length)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR;
             }
 
             IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nNetworkPoints);
@@ -70,13 +70,13 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, nNetworkPoints);
                 Marshal.Copy(offset, 0, offsetPtr, nNetworkPoints);
 
-                var ierr = wrapper.ionc_write_1d_mesh_discretisation_points(ref ioncid, ref meshIdForWriting, ref branchIdxPtr,
-                    ref offsetPtr, ref nNetworkPoints);
+                var ierr = wrapper.write_1d_mesh_discretisation_points(ioncId, meshIdForWriting, branchIdxPtr,
+                    offsetPtr, nNetworkPoints);
                 return ierr;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -98,15 +98,16 @@ namespace DeltaShell.NGHS.IO.Grid
             networkId = 0;
             if (!Initialized)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             try
             {
-                return wrapper.ionc_get_network_id_from_mesh_id(ref ioncid, ref meshId, ref networkId);
+                var ierr = wrapper.get_network_id_from_mesh_id(ioncId, meshId, ref networkId);
+                return ierr;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
@@ -115,22 +116,22 @@ namespace DeltaShell.NGHS.IO.Grid
             meshName = string.Empty;
             if (!Initialized)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             try
             {
                 var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-                var ierr = wrapper.ionc_get_mesh_name(ref ioncid, ref meshId, name);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.get_mesh_name(ioncId, meshId, name);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
                 meshName = name.ToString();
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             
         }
@@ -141,12 +142,12 @@ namespace DeltaShell.NGHS.IO.Grid
             if (Initialized && nNetworkPoints > 0)
             {
                 numberOfDiscretisationPoints = nNetworkPoints;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             try
             {
-                var ierr = wrapper.ionc_get_1d_mesh_discretisation_points_count(ref ioncid, ref meshId, ref numberOfDiscretisationPoints);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.get_1d_mesh_discretisation_points_count(ioncId, meshId, ref numberOfDiscretisationPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -154,10 +155,10 @@ namespace DeltaShell.NGHS.IO.Grid
             catch
             {
                 // on exception don't crash...
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             nNetworkPoints = numberOfDiscretisationPoints;
-            return GridApiDataSet.GridConstants.IONC_NOERR;
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
         public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
@@ -165,12 +166,12 @@ namespace DeltaShell.NGHS.IO.Grid
             branchIdx = new int[0];
             offset = new double[0];
             
-            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             if (nNetworkPoints < 0)
             {
                 int numberOfDiscretisationPoints;
                 GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
-                if(nNetworkPoints < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                if(nNetworkPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             
             IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nNetworkPoints);
@@ -178,8 +179,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.ionc_read_1d_mesh_discretisation_points(ref ioncid, ref meshId, ref branchIdxPtr, ref offsetPtr, ref nNetworkPoints);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.read_1d_mesh_discretisation_points(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, nNetworkPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -190,11 +191,11 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(branchIdxPtr, branchIdx, 0, nNetworkPoints);
                 Marshal.Copy(offsetPtr, offset, 0, nNetworkPoints);
 
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {

@@ -69,7 +69,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual bool IsValid()
         {
-            return GridApi != null && (GridApi.GetConvention() == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID &&
+            return GridApi != null && (GridApi.GetConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID &&
                                        GridApi.GetVersion() >= GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
         }
 
@@ -90,7 +90,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     int epsg_code;
                     ierr = GridApi.GetCoordinateSystemCode(out epsg_code);
-                    if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                    if (ierr != GridApiDataSet.GridConstants.NOERR)
                     {
                         CoordinateSystem = null;
                         throw new Exception(Resources.AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ + ierr);
@@ -176,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         protected void ThrowIfError(int ierr, string exceptionText)
         {
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 throw new Exception(string.Format(exceptionText + Resources.AGrid_ThrowIfError__because_of_error_number___0_, ierr));
             }

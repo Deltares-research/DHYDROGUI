@@ -27,16 +27,16 @@ namespace DeltaShell.NGHS.IO.Grid
         public int CreateNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int outNetworkId)
         {
             outNetworkId = -1;
-            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             // replace spaces in network name by underscores
             if (name != null) name = name.Replace(' ', '_');
 
             try
             {
-                var ierr = wrapper.ionc_create_1d_network(ref ioncid, ref networkIdForWriting, name, ref numberOfNodes, ref numberOfBranches, ref totalNumberOfGeometryPoints);
+                var ierr = wrapper.create_1d_network(ioncId, ref networkIdForWriting, name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
 
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -45,33 +45,33 @@ namespace DeltaShell.NGHS.IO.Grid
                 nBranches = numberOfBranches;
                 nGeometryPoints = totalNumberOfGeometryPoints;
 
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
         public int WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
-            if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             // replace spaces by underscores in the branch names/ids
             nodesids = nodesids.ReplaceSpacesInString();
             nodeslongNames = nodeslongNames.ReplaceSpacesInString();
 
             int numberOfNodes;
-            if (GetNumberOfNetworkNodes(networkIdForWriting, out numberOfNodes) != GridApiDataSet.GridConstants.IONC_NOERR)
+            if (GetNumberOfNetworkNodes(networkIdForWriting, out numberOfNodes) != GridApiDataSet.GridConstants.NOERR)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
             if (numberOfNodes < 0
                 || numberOfNodes != nodesX.Length
                 || numberOfNodes != nodesY.Length
                 || numberOfNodes != nodesids.Length
-                || numberOfNodes != nodeslongNames.Length) return GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR;
+                || numberOfNodes != nodeslongNames.Length) return GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR;
 
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
@@ -91,14 +91,14 @@ namespace DeltaShell.NGHS.IO.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     nodesinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                var ierr = wrapper.ionc_write_1d_network_nodes(ref ioncid, ref networkIdForWriting, ref xPtr, ref yPtr,
-                    nodesinfo, ref numberOfNodes);
+                var ierr = wrapper.write_1d_network_nodes(ioncId, networkIdForWriting, xPtr, yPtr,
+                    nodesinfo, numberOfNodes);
                 return ierr;
             }
             catch
             {
                 // on exception don't crash
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -114,16 +114,16 @@ namespace DeltaShell.NGHS.IO.Grid
         public int WriteNetworkBranches(int[] sourceNodeId, int[] targetNodeId, double[] branchLengths,
             int[] nbranchgeometrypoints, string[] branchIds, string[] branchLongnames, int[] branchOrderNumbers)
         {
-            if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             // replace spaces by underscores in the branch names/ids
             branchIds = branchIds.ReplaceSpacesInString();
             branchLongnames = branchLongnames.ReplaceSpacesInString();
 
             int numberOfBranches;
-            if (GetNumberOfNetworkBranches(networkIdForWriting, out numberOfBranches) != GridApiDataSet.GridConstants.IONC_NOERR)
+            if (GetNumberOfNetworkBranches(networkIdForWriting, out numberOfBranches) != GridApiDataSet.GridConstants.NOERR)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             if (numberOfBranches < 0
                 || numberOfBranches != sourceNodeId.Length
@@ -133,7 +133,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 || numberOfBranches != branchIds.Length
                 || numberOfBranches != branchLongnames.Length
                 || numberOfBranches != branchOrderNumbers.Length)
-                return GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR;
 
             IntPtr sourceIdPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfBranches);
             IntPtr targetIdPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfBranches);
@@ -163,19 +163,19 @@ namespace DeltaShell.NGHS.IO.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     branchinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                var ierr = wrapper.ionc_write_1d_network_branches(ref ioncid, ref networkIdForWriting, ref sourceIdPtr,
-                    ref targetIdPtr, branchinfo, ref branchLengthsPtr, ref nrOfGeometryPointsInBranchPtr,
-                    ref numberOfBranches);
-                if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.write_1d_network_branches(ioncId, networkIdForWriting, sourceIdPtr,
+                    targetIdPtr, branchinfo, branchLengthsPtr, nrOfGeometryPointsInBranchPtr,
+                    numberOfBranches);
+                if (ierr == GridApiDataSet.GridConstants.NOERR)
                 {
-                    ierr = wrapper.ionc_put_1d_network_branchorder(ioncid, networkIdForWriting, branchOrderNumbersPtr, numberOfBranches);
+                    ierr = wrapper.put_1d_network_branchorder(ioncId, networkIdForWriting, branchOrderNumbersPtr, numberOfBranches);
                 }
                 return ierr;
             }
             catch
             {
                 // on exception don't crash
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -199,17 +199,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int WriteNetworkGeometry(double[] geopointsX, double[] geopointsY)
         {
-            if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized || !NetworkReadyForWriting) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             int numberOfGeometryPoints;
-            if (GetNumberOfNetworkGeometryPoints(networkIdForWriting, out numberOfGeometryPoints) != GridApiDataSet.GridConstants.IONC_NOERR)
+            if (GetNumberOfNetworkGeometryPoints(networkIdForWriting, out numberOfGeometryPoints) != GridApiDataSet.GridConstants.NOERR)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             if (numberOfGeometryPoints < 0
                 || numberOfGeometryPoints != geopointsX.Length
                 || numberOfGeometryPoints != geopointsY.Length)
-                return GridApiDataSet.GridConstants.IONC_GENERAL_ARRAY_LENGTH_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR;
 
             IntPtr geopointsXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfGeometryPoints);
             IntPtr geopointsYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfGeometryPoints);
@@ -218,14 +218,14 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Marshal.Copy(geopointsX, 0, geopointsXPtr, numberOfGeometryPoints);
                 Marshal.Copy(geopointsY, 0, geopointsYPtr, numberOfGeometryPoints);
-                var ierr = wrapper.ionc_write_1d_network_branches_geometry(ref ioncid, ref networkIdForWriting,
-                    ref geopointsXPtr, ref geopointsYPtr, ref numberOfGeometryPoints);
+                var ierr = wrapper.write_1d_network_branches_geometry(ioncId, networkIdForWriting,
+                    geopointsXPtr, geopointsYPtr, numberOfGeometryPoints);
                 return ierr;
             }
             catch
             {
                 // on exception don't crash
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -247,17 +247,17 @@ namespace DeltaShell.NGHS.IO.Grid
             networkName = string.Empty;
             if (!Initialized)
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             
             var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-            var ierr = wrapper.ionc_get_network_name(ref ioncid, ref networkId, name);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+            var ierr = wrapper.get_network_name(ioncId, networkId, name);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
             }
             networkName = name.ToString();
-            return GridApiDataSet.GridConstants.IONC_NOERR;
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
         public virtual int GetNumberOfNetworkNodes(int networkId, out int numberOfNetworkNodes)
@@ -266,14 +266,14 @@ namespace DeltaShell.NGHS.IO.Grid
             if (Initialized && nNodes > 0)
             {
                 numberOfNetworkNodes = nNodes;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             
             try
             {
                 int rnNodes = -1;
-                var ierr = wrapper.ionc_get_1d_network_nodes_count(ref ioncid, ref networkId, ref rnNodes);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.get_1d_network_nodes_count(ioncId, networkId, ref rnNodes);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -284,7 +284,7 @@ namespace DeltaShell.NGHS.IO.Grid
             catch
             {
                 // on exception don't crash...
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
@@ -295,12 +295,12 @@ namespace DeltaShell.NGHS.IO.Grid
             nodesIds = new string[0];
             nodesLongnames = new string[0];
 
-            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             if (nNodes < 0)
             {
                 int numberOfNetworkNodes;
                 GetNumberOfNetworkNodes(networkId, out numberOfNetworkNodes);
-                if (nNodes < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                if (nNodes < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
             IntPtr nodesXPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -310,9 +310,9 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 var nodesinfo = new GridWrapper.interop_charinfo[nNodes];
 
-                var ierr = wrapper.ionc_read_1d_network_nodes(ref ioncid, ref networkId, ref nodesXPtr, ref nodesYPtr, nodesinfo, ref nNodes);
+                var ierr = wrapper.read_1d_network_nodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, nodesinfo, nNodes);
 
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -336,7 +336,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -355,14 +355,14 @@ namespace DeltaShell.NGHS.IO.Grid
             if (Initialized && nBranches > 0)
             {
                 numberOfNetworkBranches = nBranches;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             
             try
             {
                 int rnBranches = -1;
-                var ierr = wrapper.ionc_get_1d_network_branches_count(ref ioncid, ref networkId, ref rnBranches);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.get_1d_network_branches_count(ioncId, networkId, ref rnBranches);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -373,7 +373,7 @@ namespace DeltaShell.NGHS.IO.Grid
             catch
             {
                 // on exception don't crash...
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
@@ -387,12 +387,12 @@ namespace DeltaShell.NGHS.IO.Grid
             branchLongnames = new string[0];
             branchOrderNumbers = new int[0];
 
-            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             if (nBranches < 0)
             {
                 int numberOfNetworkBranches;
                 GetNumberOfNetworkBranches(networkId, out numberOfNetworkBranches);
-                if (nBranches < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                if (nBranches < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
             IntPtr sourceNodePtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
@@ -404,15 +404,15 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var branchinfo = new GridWrapper.interop_charinfo[nBranches];
-                var ierr = wrapper.ionc_read_1d_network_branches(ref ioncid, ref networkId, ref sourceNodePtr,
-                    ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, ref nBranches);
+                var ierr = wrapper.read_1d_network_branches(ioncId, networkId, ref sourceNodePtr,
+                    ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches);
 
-                if (ierr == GridApiDataSet.GridConstants.IONC_NOERR)
+                if (ierr == GridApiDataSet.GridConstants.NOERR)
                 {
-                    ierr = wrapper.ionc_get_1d_network_branchorder(ioncid, networkId, ref branchOrderNumbersPtr, nBranches);
+                    ierr = wrapper.get_1d_network_branchorder(ioncId, networkId, ref branchOrderNumbersPtr, nBranches);
                 }
 
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -441,7 +441,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {
@@ -467,14 +467,14 @@ namespace DeltaShell.NGHS.IO.Grid
             if (Initialized && nGeometryPoints > 0)
             {
                 numberOfNetworkGeometryPoints = nGeometryPoints;
-                return GridApiDataSet.GridConstants.IONC_NOERR;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             
             try
             {
                 int rnGeometryPoints = -1;
-                var ierr = wrapper.ionc_get_1d_network_branches_geometry_coordinate_count(ref ioncid, ref networkId, ref rnGeometryPoints);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                var ierr = wrapper.get_1d_network_branches_geometry_coordinate_count(ioncId, networkId, ref rnGeometryPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -485,7 +485,7 @@ namespace DeltaShell.NGHS.IO.Grid
             catch
             {
                 // on exception don't crash...
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
@@ -494,12 +494,12 @@ namespace DeltaShell.NGHS.IO.Grid
             geopointsX = new double[0];
             geopointsY = new double[0];
 
-            if (!Initialized) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             if (nGeometryPoints < 0)
             {
                 int numberOfNetworkGeometryPoints;
                 GetNumberOfNetworkGeometryPoints(networkId, out numberOfNetworkGeometryPoints);
-                if(nGeometryPoints < 0) return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                if(nGeometryPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
             IntPtr geopointsYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometryPoints);
@@ -507,9 +507,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.ionc_read_1d_network_branches_geometry(ref ioncid, ref networkId, ref geopointsXPtr, ref geopointsYPtr, ref nGeometryPoints);
+                var ierr = wrapper.read_1d_network_branches_geometry(ioncId, networkId, ref geopointsXPtr, ref geopointsYPtr, nGeometryPoints);
 
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
@@ -524,7 +524,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             catch
             {
-                return GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
             finally
             {

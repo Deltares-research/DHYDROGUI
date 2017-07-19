@@ -15,12 +15,12 @@ namespace DeltaShell.NGHS.IO.Grid
         
         public virtual int CreateNetworkDiscretisation(string name, int numberOfNetworkPoints, int numberOfMeshEdges, int networkId)
         {
-            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.CreateNetworkDiscretisation(name, numberOfNetworkPoints, numberOfMeshEdges, networkId), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.CreateNetworkDiscretisation(name, numberOfNetworkPoints, numberOfMeshEdges, networkId), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public virtual int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset)
         {
-            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.WriteNetworkDiscretisationPoints(branchIdx, offset), GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR);
+            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.WriteNetworkDiscretisationPoints(branchIdx, offset), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public int GetNetworkIdFromMeshId(int meshId, out int networkId)
@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.Grid
             meshName = string.Empty;
             return uGridNetworkDiscretisationApi != null
                 ? uGridNetworkDiscretisationApi.GetNetworkDiscretisationName(meshId, out meshName)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
 
@@ -44,7 +44,7 @@ namespace DeltaShell.NGHS.IO.Grid
             numberOfDiscretisationPoints = 0;
             return uGridNetworkDiscretisationApi != null
                 ? uGridNetworkDiscretisationApi.GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
@@ -55,7 +55,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var uGridApiNetworkDiscretisation = api as IUGridNetworkDiscretisationApi;
             return uGridApiNetworkDiscretisation != null
                 ? uGridApiNetworkDiscretisation.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset)
-                : GridApiDataSet.GridConstants.IONC_GENERAL_FATAL_ERR;
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         private T GetFromValidUGridApiNetwork<T>(Func<IUGridNetworkDiscretisationApi, T> function, T defaultValue)

@@ -7,34 +7,34 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <summary>
         /// Gets the number of nodes in a single mesh from a data set.
         /// </summary>
-        /// <param name="meshid">The mesh id of the specified data set.</param>
+        /// <param name="meshId">The mesh id of the specified data set.</param>
         /// <param name="numberOfNodes">The number of nodes of the specified data set.</param>
         /// <returns>Error code</returns>
-        int GetNumberOfNodes(int meshid, out int numberOfNodes);
+        int GetNumberOfNodes(int meshId, out int numberOfNodes);
 
         /// <summary>
         /// Gets the number of edges in a single mesh from a data set.
         /// </summary>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="numberOfEdges">Number of edges.</param>
         /// <returns>Error code</returns>
-        int GetNumberOfEdges(int meshid, out int numberOfEdges);
+        int GetNumberOfEdges(int meshId, out int numberOfEdges);
 
         /// <summary>
         /// Gets the number of faces in a single mesh from a data set.
         /// </summary>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="numberOfFaces">Number of faces.</param>
         /// <returns>Error code</returns>
-        int GetNumberOfFaces(int meshid, out int numberOfFaces);
+        int GetNumberOfFaces(int meshId, out int numberOfFaces);
 
         /// <summary>
         /// Gets the maximum number of nodes for any face in a single mesh from a data set.
         /// </summary>
-        /// <param name="meshid">The mesh id in the specified data set.</param>
+        /// <param name="meshId">The mesh id in the specified data set.</param>
         /// <param name="maxFaceNodes">The maximum number of nodes per face in the mesh. Number of faces.</param>
         /// <returns>Error code</returns>
-        int GetMaxFaceNodes(int meshid, out int maxFaceNodes);
+        int GetMaxFaceNodes(int meshId, out int maxFaceNodes);
 
         /// <summary>
         /// Gets the x coordinates for all nodes in a single mesh from a data set.
@@ -86,7 +86,7 @@ namespace DeltaShell.NGHS.IO.Grid
         int WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues);
         int WriteZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, string longName, double[] zValues);
         int GetMeshName(int meshId, out string meshName);
-        int ionc_write_geom_ugrid(string filename);
-        int ionc_write_map_ugrid(string filename);
+        int write_geom_ugrid(string filename);
+        int write_map_ugrid(string filename);
     }
 }

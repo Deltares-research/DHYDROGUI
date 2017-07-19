@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     // Open the file to load the network. There can be multiple networks stored in the NetCDF file
                     uGridNetwork.Initialize();
 
-                    if (uGridNetwork.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+                    if (uGridNetwork.GetDataSetConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID)
                     {
                         return null;
                     }
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath))
                 {
-                    if (uGridNetworkDiscretisation.GetDataSetConvention() != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+                    if (uGridNetworkDiscretisation.GetDataSetConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID)
                     {
                         return null;
                     }

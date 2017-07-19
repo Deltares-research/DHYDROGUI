@@ -513,7 +513,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var localCopyOfTestFile = Path.Combine(testDir, "Custom_Ugrid.nc");
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                gridApi.ionc_write_geom_ugrid(localCopyOfTestFile);
+                gridApi.write_geom_ugrid(localCopyOfTestFile);
             }
 
             try
