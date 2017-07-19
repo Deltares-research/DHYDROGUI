@@ -201,7 +201,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int iconvtype = (int)GridApiDataSet.DataSetConventions.CONV_NULL;
 
             wrapper.Expect(w =>
-                    w.adheresto_conventions(
+                    w.AdherestoConventions(
                         ioncId,
                         iconvtype))
                 .IgnoreArguments()
@@ -218,7 +218,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.BackToRecordAll();
 
             wrapper.Expect(w =>
-                    w.adheresto_conventions(
+                    w.AdherestoConventions(
                     ioncId,
                     iconvtype))
                 .IgnoreArguments()
@@ -244,7 +244,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int iconvtype = (int)GridApiDataSet.DataSetConventions.CONV_NULL;
             double l = 0.0d;
             wrapper.Expect(w =>
-                    w.open("",
+                    w.Open("",
                     mode,
                     ref ioncId,
                     ref iconvtype,
@@ -277,7 +277,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int iconvtype = (int)GridApiDataSet.DataSetConventions.CONV_NULL;
             double l = 0.0d;
             wrapper.Expect(w =>
-                    w.open("",
+                    w.Open("",
                     mode,
                     ref ioncId,
                     ref iconvtype,
@@ -310,7 +310,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double l = 0.0d;
 
             wrapper.Expect(w =>
-                    w.open("",
+                    w.Open("",
                             i,
                             ref j,
                             ref k,
@@ -336,7 +336,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             double l = 0.0d;
 
             wrapper.Expect(w =>
-                    w.open("",
+                    w.Open("",
                             i,
                             ref j,
                             ref k,
@@ -359,7 +359,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
-                    w.close(i))
+                    w.Close(i))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR)
                 .Repeat.Never();
@@ -378,7 +378,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
-                    w.close(i))
+                    w.Close(i))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
@@ -402,7 +402,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
-                    w.close(i))
+                    w.Close(i))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR)
                 .Repeat.Once();
@@ -422,7 +422,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
-                    w.close(i))
+                    w.Close(i))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR)
                 .Repeat.Once();
@@ -446,7 +446,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_mesh_count(
+                    w.GetMeshCount(
                             i,
                             ref j
                             ))
@@ -470,7 +470,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_mesh_count(
+                    w.GetMeshCount(
                             i,
                             ref j
                             ))
@@ -498,7 +498,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_mesh_count(
+                    w.GetMeshCount(
                             i,
                             ref j
                             ))
@@ -523,7 +523,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_mesh_count(
+                    w.GetMeshCount(
                             i,
                             ref j
                             ))
@@ -547,7 +547,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_coordinate_system(
+                    w.GetCoordinateSystem(
                             i,
                             ref j
                             ))
@@ -576,7 +576,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_coordinate_system(
+                    w.GetCoordinateSystem(
                             i,
                             ref j
                             ))
@@ -605,7 +605,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_coordinate_system(
+                    w.GetCoordinateSystem(
                             i,
                             ref j
                             ))
@@ -631,7 +631,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int j = 0;
 
             wrapper.Expect(w =>
-                    w.get_coordinate_system(
+                    w.GetCoordinateSystem(
                             i,
                             ref j
                             ))

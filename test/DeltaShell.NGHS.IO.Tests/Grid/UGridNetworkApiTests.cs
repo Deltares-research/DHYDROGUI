@@ -137,7 +137,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int ngeoPoints = 3;
 
             wrapper
-                .Expect(w => w.create_1d_network(id, ref nwid, "", nnodes, nbranches, ngeoPoints))
+                .Expect(w => w.Create1DNetwork(id, ref nwid, "", nnodes, nbranches, ngeoPoints))
                 .IgnoreArguments()
                 .OutRef(nwid)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -194,7 +194,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nbranches = 2;
             int ngeoPoints = 3;
             wrapper
-                .Expect(w => w.create_1d_network(id, ref nwid, "", nnodes, nbranches, ngeoPoints))
+                .Expect(w => w.Create1DNetwork(id, ref nwid, "", nnodes, nbranches, ngeoPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nnodes, nbranches, ngeoPoints)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -251,7 +251,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nbranches = 2;
             int ngeoPoints = 3;
             wrapper
-                .Expect(w => w.create_1d_network(id, ref nwid, "", nnodes, nbranches, ngeoPoints))
+                .Expect(w => w.Create1DNetwork(id, ref nwid, "", nnodes, nbranches, ngeoPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nnodes, nbranches, ngeoPoints)
                 .Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR)
@@ -335,7 +335,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr nodesYPtr = IntPtr.Zero;
             var nodesInfo = new GridWrapper.interop_charinfo[nNodes];
 
-            wrapper.Expect(w => w.write_1d_network_nodes(id, nwid, nodesXPtr, nodesYPtr,
+            wrapper.Expect(w => w.Write1DNetworkNodes(id, nwid, nodesXPtr, nodesYPtr,
                     nodesInfo, nNodes))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nodesXPtr, nodesYPtr, nNodes)
@@ -382,7 +382,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr nodesYPtr = IntPtr.Zero;
             var nodesInfo = new GridWrapper.interop_charinfo[nNodes];
 
-            wrapper.Expect(w => w.write_1d_network_nodes(id, nwid, nodesXPtr, nodesYPtr,
+            wrapper.Expect(w => w.Write1DNetworkNodes(id, nwid, nodesXPtr, nodesYPtr,
                     nodesInfo, nNodes))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nodesXPtr, nodesYPtr, nNodes)
@@ -430,7 +430,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr nodesYPtr = IntPtr.Zero;
             var nodesInfo = new GridWrapper.interop_charinfo[nNodes];
 
-            wrapper.Expect(w => w.write_1d_network_nodes(id, nwid, nodesXPtr, nodesYPtr,
+            wrapper.Expect(w => w.Write1DNetworkNodes(id, nwid, nodesXPtr, nodesYPtr,
                     nodesInfo, nNodes))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nodesXPtr, nodesYPtr, nNodes)
@@ -545,7 +545,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPtr = IntPtr.Zero;
             var branchesInfo = new GridWrapper.interop_charinfo[nBranches];
 
-            wrapper.Expect(w => w.write_1d_network_branches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr, branchGeoPtr, nBranches))
+            wrapper.Expect(w => w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr, branchGeoPtr, nBranches))
                 .IgnoreArguments()
                 .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -601,7 +601,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPtr = IntPtr.Zero;
             var branchesInfo = new GridWrapper.interop_charinfo[nBranches];
 
-            wrapper.Expect(w => w.write_1d_network_branches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr, branchGeoPtr, nBranches))
+            wrapper.Expect(w => w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr, branchGeoPtr, nBranches))
                 .IgnoreArguments()
                 .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -652,7 +652,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPtr = IntPtr.Zero;
             var branchesInfo = new GridWrapper.interop_charinfo[nBranches];
 
-            wrapper.Expect(w => w.write_1d_network_branches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr, branchGeoPtr, nBranches))
+            wrapper.Expect(w => w.Write1DNetworkBranches(id, nwid, sourceNodesPtr, targetNodesPtr, branchesInfo, branchLengthPtr, branchGeoPtr, nBranches))
                 .IgnoreArguments()
                 .OutRef(id, nwid, sourceNodesPtr, targetNodesPtr, branchLengthPtr, branchGeoPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -734,7 +734,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr geopointsXptr = IntPtr.Zero;
             IntPtr geopointsYptr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.write_1d_network_branches_geometry(id, nwid, geopointsXptr,
+            wrapper.Expect(w => w.Write1DNetworkBranchesGeometry(id, nwid, geopointsXptr,
                     geopointsYptr, nGeoPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, geopointsXptr, geopointsYptr, nGeoPoints)
@@ -778,7 +778,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr geopointsXptr = IntPtr.Zero;
             IntPtr geopointsYptr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.write_1d_network_branches_geometry(id, nwid, geopointsXptr,
+            wrapper.Expect(w => w.Write1DNetworkBranchesGeometry(id, nwid, geopointsXptr,
                     geopointsYptr, nGeoPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, geopointsXptr, geopointsYptr, nGeoPoints)
@@ -822,7 +822,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr geopointsXptr = IntPtr.Zero;
             IntPtr geopointsYptr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.write_1d_network_branches_geometry(id, nwid, geopointsXptr,
+            wrapper.Expect(w => w.Write1DNetworkBranchesGeometry(id, nwid, geopointsXptr,
                     geopointsYptr, nGeoPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, geopointsXptr, geopointsYptr, nGeoPoints)
@@ -942,7 +942,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 1;
             int nwid = 1;
             int nNetworkNodes = 8;
-            wrapper.Expect(w => w.get_1d_network_nodes_count(id, nwid, ref nNetworkNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.Get1DNetworkNodesCount(id, nwid, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(nNetworkNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
@@ -983,7 +983,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 1;
             int nwid = 1;
             int nNetworkNodes = 8;
-            wrapper.Expect(w => w.get_1d_network_nodes_count(id, nwid, ref nNetworkNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.Get1DNetworkNodesCount(id, nwid, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(id, nwid, nNetworkNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
@@ -1021,7 +1021,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 1;
             int nwid = 1;
             int nNetworkNodes = 8;
-            wrapper.Expect(w => w.get_1d_network_nodes_count(id, nwid, ref nNetworkNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.Get1DNetworkNodesCount(id, nwid, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(id, nwid, nNetworkNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
@@ -1086,7 +1086,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int nwid = 0;
             int nNetworkBranches = 6;
-            wrapper.Expect(w => w.get_1d_network_branches_count(id, nwid,
+            wrapper.Expect(w => w.Get1DNetworkBranchesCount(id, nwid,
                         ref nNetworkBranches))
                 .IgnoreArguments()
                 .OutRef(nNetworkBranches)
@@ -1127,7 +1127,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nNetworkBranches = 6;
             wrapper
                 .Expect(
-                    w => w.get_1d_network_branches_count(id, nwid,
+                    w => w.Get1DNetworkBranchesCount(id, nwid,
                         ref nNetworkBranches))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nNetworkBranches)
@@ -1169,7 +1169,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nNetworkBranches = 6;
             wrapper
                 .Expect(
-                    w => w.get_1d_network_branches_count(id, nwid,
+                    w => w.Get1DNetworkBranchesCount(id, nwid,
                         ref nNetworkBranches))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nNetworkBranches)
@@ -1241,7 +1241,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nGeometryPoints = 4;
             wrapper
                 .Expect(
-                    w => w.get_1d_network_branches_geometry_coordinate_count(id, nwid,
+                    w => w.Get1DNetworkBranchesGeometryCoordinateCount(id, nwid,
                         ref nGeometryPoints))
                 .IgnoreArguments()
                 .OutRef(nGeometryPoints)
@@ -1282,7 +1282,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nGeometryPoints = 4;
             wrapper
                 .Expect(
-                    w => w.get_1d_network_branches_geometry_coordinate_count(id, nwid,
+                    w => w.Get1DNetworkBranchesGeometryCoordinateCount(id, nwid,
                         ref nGeometryPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nGeometryPoints)
@@ -1322,7 +1322,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nGeometryPoints = 4;
             wrapper
                 .Expect(
-                    w => w.get_1d_network_branches_geometry_coordinate_count(id, nwid,
+                    w => w.Get1DNetworkBranchesGeometryCoordinateCount(id, nwid,
                         ref nGeometryPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, nGeometryPoints)
@@ -1399,7 +1399,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr nodesYPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
 
             GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[nNodes];
-            wrapper.Expect(w => w.read_1d_network_nodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
+            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
                     nNodes))
                 .OutRef(nodesXPtr, nodesYPtr)
                 .IgnoreArguments()
@@ -1445,7 +1445,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr nodesYPtr = IntPtr.Zero;
 
             GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[nNodes];
-            wrapper.Expect(w => w.read_1d_network_nodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
+            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
                     nNodes))
                 .OutRef(nodesXPtr, nodesYPtr)
                 .IgnoreArguments()
@@ -1491,7 +1491,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr nodesYPtr = IntPtr.Zero;
 
             GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[nNodes];
-            wrapper.Expect(w => w.read_1d_network_nodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
+            wrapper.Expect(w => w.Read1DNetworkNodes(id, nwid, ref nodesXPtr, ref nodesYPtr, nodesinfo,
                     nNodes))
                 .OutRef(id, nwid, nodesXPtr, nodesYPtr, nodesinfo, nNodes)
                 .IgnoreArguments()
@@ -1577,7 +1577,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPointsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
 
             GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
-            wrapper.Expect(w => w.read_1d_network_branches(id, nwid, ref sourceNodePtr,
+            wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
                     ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches)).IgnoreArguments()
                 .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, branchGeoPointsPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -1632,7 +1632,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPointsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
 
             GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
-            wrapper.Expect(w => w.read_1d_network_branches(id, nwid, ref sourceNodePtr,
+            wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
                     ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches)).IgnoreArguments()
                 .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, branchGeoPointsPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -1688,7 +1688,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPointsPtr = IntPtr.Zero;
 
             GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
-            wrapper.Expect(w => w.read_1d_network_branches(id, nwid, ref sourceNodePtr,
+            wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
                     ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches)).IgnoreArguments()
                 .OutRef(sourceNodePtr, targetNodePtr, branchLengthPtr, branchGeoPointsPtr)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -1754,7 +1754,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchGeoPointsPtr = IntPtr.Zero;
 
             GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[nBranches];
-            wrapper.Expect(w => w.read_1d_network_branches(id, nwid, ref sourceNodePtr,
+            wrapper.Expect(w => w.Read1DNetworkBranches(id, nwid, ref sourceNodePtr,
                     ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches)).IgnoreArguments()
                 .OutRef(id, nwid, sourceNodePtr, targetNodePtr, branchLengthPtr, branchinfo, branchGeoPointsPtr, nBranches)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -1835,7 +1835,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr geopointsXptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeoPoints);
             IntPtr geopointsYptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeoPoints);
 
-            wrapper.Expect(w => w.read_1d_network_branches_geometry(id, nwid, ref geopointsXptr,
+            wrapper.Expect(w => w.Read1DNetworkBranchesGeometry(id, nwid, ref geopointsXptr,
                     ref geopointsYptr, nGeoPoints)).IgnoreArguments()
                 .OutRef(geopointsXptr, geopointsYptr)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -1879,7 +1879,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr geopointsXptr = IntPtr.Zero;
             IntPtr geopointsYptr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.read_1d_network_branches_geometry(id, nwid, ref geopointsXptr,
+            wrapper.Expect(w => w.Read1DNetworkBranchesGeometry(id, nwid, ref geopointsXptr,
                     ref geopointsYptr, nGeoPoints)).IgnoreArguments()
                 .OutRef(geopointsXptr, geopointsYptr)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -1923,7 +1923,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr geopointsXptr = IntPtr.Zero;
             IntPtr geopointsYptr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.read_1d_network_branches_geometry(id, nwid, ref geopointsXptr,
+            wrapper.Expect(w => w.Read1DNetworkBranchesGeometry(id, nwid, ref geopointsXptr,
                     ref geopointsYptr, nGeoPoints)).IgnoreArguments()
                 .OutRef(id, nwid, geopointsXptr, geopointsYptr, nGeoPoints)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -2068,7 +2068,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
             TypeUtils.SetField(uGridNetworkDiscretisationApi, NumNetworkPointsVarName, -1);
 
-            wrapper.Expect(w => w.create_1d_mesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
+            wrapper.Expect(w => w.Create1DMesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
                 .OutRef(id, networkId, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
 
@@ -2103,7 +2103,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             // wrapper
-            wrapper.Expect(w => w.create_1d_mesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
+            wrapper.Expect(w => w.Create1DMesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
                 .OutRef(id, networkId, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
@@ -2139,7 +2139,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            wrapper.Expect(w => w.create_1d_mesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
+            wrapper.Expect(w => w.Create1DMesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
                 .OutRef(id, networkId, meshId, nmeshpts, nmeshedges).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
@@ -2243,7 +2243,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchIdxPtr = IntPtr.Zero;
             IntPtr offsetPtr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.write_1d_mesh_discretisation_points(id, nwid, branchIdxPtr,
+            wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(id, nwid, branchIdxPtr,
                     offsetPtr, nNetworkPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, branchIdxPtr, offsetPtr, nNetworkPoints)
@@ -2287,7 +2287,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchIdxPtr = IntPtr.Zero;
             IntPtr offsetPtr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.write_1d_mesh_discretisation_points(id, nwid, branchIdxPtr,
+            wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(id, nwid, branchIdxPtr,
                     offsetPtr, nNetworkPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, branchIdxPtr, offsetPtr, nNetworkPoints)
@@ -2334,7 +2334,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr branchIdxPtr = IntPtr.Zero;
             IntPtr offsetPtr = IntPtr.Zero;
 
-            wrapper.Expect(w => w.write_1d_mesh_discretisation_points(id, nwid, branchIdxPtr,
+            wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(id, nwid, branchIdxPtr,
                     offsetPtr, nNetworkPoints))
                 .IgnoreArguments()
                 .OutRef(id, nwid, branchIdxPtr, offsetPtr, nNetworkPoints)
@@ -2406,7 +2406,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int networkId = 1;
             int numberOfMeshPoints = 30;
             wrapper.Expect(
-                    w => w.get_1d_mesh_discretisation_points_count(ioncId, networkId, ref numberOfMeshPoints)).IgnoreArguments()
+                    w => w.Get1DMeshDiscretisationPointsCount(ioncId, networkId, ref numberOfMeshPoints)).IgnoreArguments()
                 .OutRef(numberOfMeshPoints).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
@@ -2443,7 +2443,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int networkId = 1;
             int numberOfMeshPoints = -1;
             wrapper.Expect(
-                    w => w.get_1d_mesh_discretisation_points_count(ioncId, networkId, ref numberOfMeshPoints))
+                    w => w.Get1DMeshDiscretisationPointsCount(ioncId, networkId, ref numberOfMeshPoints))
                 .OutRef(ioncId, networkId, numberOfMeshPoints).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
@@ -2477,7 +2477,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int networkId = 1;
             int numberOfMeshPoints = -1;
             wrapper.Expect(
-                    w => w.get_1d_mesh_discretisation_points_count(ioncId, networkId, ref numberOfMeshPoints))
+                    w => w.Get1DMeshDiscretisationPointsCount(ioncId, networkId, ref numberOfMeshPoints))
                 .OutRef(ioncId, networkId, numberOfMeshPoints).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))

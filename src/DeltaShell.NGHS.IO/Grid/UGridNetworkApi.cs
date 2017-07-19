@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.create_1d_network(ioncId, ref networkIdForWriting, name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
+                var ierr = wrapper.Create1DNetwork(ioncId, ref networkIdForWriting, name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
@@ -91,7 +91,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     nodesinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                var ierr = wrapper.write_1d_network_nodes(ioncId, networkIdForWriting, xPtr, yPtr,
+                var ierr = wrapper.Write1DNetworkNodes(ioncId, networkIdForWriting, xPtr, yPtr,
                     nodesinfo, numberOfNodes);
                 return ierr;
             }
@@ -163,12 +163,12 @@ namespace DeltaShell.NGHS.IO.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     branchinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                var ierr = wrapper.write_1d_network_branches(ioncId, networkIdForWriting, sourceIdPtr,
+                var ierr = wrapper.Write1DNetworkBranches(ioncId, networkIdForWriting, sourceIdPtr,
                     targetIdPtr, branchinfo, branchLengthsPtr, nrOfGeometryPointsInBranchPtr,
                     numberOfBranches);
                 if (ierr == GridApiDataSet.GridConstants.NOERR)
                 {
-                    ierr = wrapper.put_1d_network_branchorder(ioncId, networkIdForWriting, branchOrderNumbersPtr, numberOfBranches);
+                    ierr = wrapper.Put1DNetworkBranchorder(ioncId, networkIdForWriting, branchOrderNumbersPtr, numberOfBranches);
                 }
                 return ierr;
             }
@@ -218,7 +218,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 Marshal.Copy(geopointsX, 0, geopointsXPtr, numberOfGeometryPoints);
                 Marshal.Copy(geopointsY, 0, geopointsYPtr, numberOfGeometryPoints);
-                var ierr = wrapper.write_1d_network_branches_geometry(ioncId, networkIdForWriting,
+                var ierr = wrapper.Write1DNetworkBranchesGeometry(ioncId, networkIdForWriting,
                     geopointsXPtr, geopointsYPtr, numberOfGeometryPoints);
                 return ierr;
             }
@@ -251,7 +251,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             
             var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-            var ierr = wrapper.get_network_name(ioncId, networkId, name);
+            var ierr = wrapper.GetNetworkName(ioncId, networkId, name);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
@@ -272,7 +272,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int rnNodes = -1;
-                var ierr = wrapper.get_1d_network_nodes_count(ioncId, networkId, ref rnNodes);
+                var ierr = wrapper.Get1DNetworkNodesCount(ioncId, networkId, ref rnNodes);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -310,7 +310,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 var nodesinfo = new GridWrapper.interop_charinfo[nNodes];
 
-                var ierr = wrapper.read_1d_network_nodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, nodesinfo, nNodes);
+                var ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref nodesXPtr, ref nodesYPtr, nodesinfo, nNodes);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
@@ -361,7 +361,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int rnBranches = -1;
-                var ierr = wrapper.get_1d_network_branches_count(ioncId, networkId, ref rnBranches);
+                var ierr = wrapper.Get1DNetworkBranchesCount(ioncId, networkId, ref rnBranches);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -404,12 +404,12 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var branchinfo = new GridWrapper.interop_charinfo[nBranches];
-                var ierr = wrapper.read_1d_network_branches(ioncId, networkId, ref sourceNodePtr,
+                var ierr = wrapper.Read1DNetworkBranches(ioncId, networkId, ref sourceNodePtr,
                     ref targetNodePtr, ref branchLengthPtr, branchinfo, ref branchGeoPointsPtr, nBranches);
 
                 if (ierr == GridApiDataSet.GridConstants.NOERR)
                 {
-                    ierr = wrapper.get_1d_network_branchorder(ioncId, networkId, ref branchOrderNumbersPtr, nBranches);
+                    ierr = wrapper.Get1DNetworkBranchorder(ioncId, networkId, ref branchOrderNumbersPtr, nBranches);
                 }
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
@@ -473,7 +473,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int rnGeometryPoints = -1;
-                var ierr = wrapper.get_1d_network_branches_geometry_coordinate_count(ioncId, networkId, ref rnGeometryPoints);
+                var ierr = wrapper.Get1DNetworkBranchesGeometryCoordinateCount(ioncId, networkId, ref rnGeometryPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -507,7 +507,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.read_1d_network_branches_geometry(ioncId, networkId, ref geopointsXPtr, ref geopointsYPtr, nGeometryPoints);
+                var ierr = wrapper.Read1DNetworkBranchesGeometry(ioncId, networkId, ref geopointsXPtr, ref geopointsYPtr, nGeometryPoints);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {

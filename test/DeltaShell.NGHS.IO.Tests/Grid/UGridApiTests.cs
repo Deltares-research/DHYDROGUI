@@ -109,7 +109,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
             IntPtr yPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
             int nNodes = 0;
-            wrapper.Expect(w => w.put_node_coordinates(id, meshId, xPtr, yPtr, nNodes))
+            wrapper.Expect(w => w.PutNodeCoordinates(id, meshId, xPtr, yPtr, nNodes))
                 .IgnoreArguments()
                 .OutRef(id, meshId, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -144,7 +144,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
             IntPtr yPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
             int nNodes = 0;
-            wrapper.Expect(w => w.put_node_coordinates(id, meshId, xPtr, yPtr, nNodes))
+            wrapper.Expect(w => w.PutNodeCoordinates(id, meshId, xPtr, yPtr, nNodes))
                 .IgnoreArguments()
                 .OutRef(id, meshId, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -178,7 +178,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
             IntPtr yPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
             int nNodes = 0;
-            wrapper.Expect(w => w.put_node_coordinates(id, meshId, xPtr, yPtr, nNodes))
+            wrapper.Expect(w => w.PutNodeCoordinates(id, meshId, xPtr, yPtr, nNodes))
                 .IgnoreArguments()
                 .OutRef(id, meshId, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -227,7 +227,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nVal = 0;
             GridApiDataSet.LocationType locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             string varName = "";
-            wrapper.Expect(w => w.put_var(id, meshId, locationType, varName, zPtr, nVal))
+            wrapper.Expect(w => w.PutVariable(id, meshId, locationType, varName, zPtr, nVal))
                 .IgnoreArguments()
                 .OutRef(id, meshId, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -262,7 +262,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nVal = 0;
             GridApiDataSet.LocationType locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             string varName = "";
-            wrapper.Expect(w => w.put_var(ioncId, meshId, locationType, varName, zPtr, nVal))
+            wrapper.Expect(w => w.PutVariable(ioncId, meshId, locationType, varName, zPtr, nVal))
                 .IgnoreArguments()
                 .OutRef(ioncId, meshId, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
@@ -296,7 +296,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nVal = 0;
             GridApiDataSet.LocationType locationType = GridApiDataSet.LocationType.UG_LOC_NONE;
             string varName = "";
-            wrapper.Expect(w => w.put_var(id, meshId, locationType, varName, zPtr, nVal))
+            wrapper.Expect(w => w.PutVariable(id, meshId, locationType, varName, zPtr, nVal))
                 .IgnoreArguments()
                 .OutRef(id, meshId, locationType, zPtr, nVal)
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -344,7 +344,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             StringBuilder meshName = new StringBuilder("");
-            wrapper.Expect(w => w.get_mesh_name(id, meshId, meshName)).IgnoreArguments()
+            wrapper.Expect(w => w.GetMeshName(id, meshId, meshName)).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -374,7 +374,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             StringBuilder meshName = new StringBuilder("");
-            wrapper.Expect(w => w.get_mesh_name(id, meshId, meshName)).IgnoreArguments()
+            wrapper.Expect(w => w.GetMeshName(id, meshId, meshName)).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -404,7 +404,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             StringBuilder meshName = new StringBuilder("");
-            wrapper.Expect(w => w.get_mesh_name(id, meshId, meshName)).IgnoreArguments()
+            wrapper.Expect(w => w.GetMeshName(id, meshId, meshName)).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Throw(new Exception("testException")).Repeat.Twice();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -433,7 +433,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
-            wrapper.Expect(w => w.get_node_count(ioncId, networkId, ref nNetworkNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.GetNodeCount(ioncId, networkId, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(nNetworkNodes).Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
 
@@ -488,7 +488,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
-            wrapper.Expect(w => w.get_node_count(ioncId, networkId, ref nNetworkNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.GetNodeCount(ioncId, networkId, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(ioncId, networkId, nNetworkNodes)
                 .Throw(new Exception("testException")).Repeat.Twice();
 
@@ -539,7 +539,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
-            wrapper.Expect(w => w.get_edge_count(ioncId, networkId, ref numberOfMeshEdges)).IgnoreArguments()
+            wrapper.Expect(w => w.GetEdgeCount(ioncId, networkId, ref numberOfMeshEdges)).IgnoreArguments()
                 .OutRef(ioncId, networkId, numberOfMeshEdges)
                 .Throw(new Exception("testException")).Repeat.Twice();
 
@@ -578,7 +578,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int localMeshId = 0;
             int numberOfFaces = 5;
-            wrapper.Expect(w => w.get_face_count(id, localMeshId, ref numberOfFaces)).IgnoreArguments()
+            wrapper.Expect(w => w.GetFaceCount(id, localMeshId, ref numberOfFaces)).IgnoreArguments()
                 .OutRef(numberOfFaces)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
@@ -636,7 +636,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             int numberOfFaces = 8;
-            wrapper.Expect(w => w.get_face_count(id, meshId, ref numberOfFaces)).IgnoreArguments()
+            wrapper.Expect(w => w.GetFaceCount(id, meshId, ref numberOfFaces)).IgnoreArguments()
                 .OutRef(id, meshId, numberOfFaces)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
@@ -671,7 +671,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             int numberOfFaces = 8;
-            wrapper.Expect(w => w.get_face_count(id, meshId, ref numberOfFaces)).IgnoreArguments()
+            wrapper.Expect(w => w.GetFaceCount(id, meshId, ref numberOfFaces)).IgnoreArguments()
                 .OutRef(id, meshId, numberOfFaces)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("testException"))
@@ -712,7 +712,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int localMeshId = 0;
             int numberOfMaxFaceNodes = 8;
-            wrapper.Expect(w => w.get_max_face_nodes(id, localMeshId, ref numberOfMaxFaceNodes))
+            wrapper.Expect(w => w.GetMaxFaceNodes(id, localMeshId, ref numberOfMaxFaceNodes))
                 .IgnoreArguments().OutRef(numberOfMaxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
 
@@ -768,7 +768,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             int nMaxFaceNodes = 8;
-            wrapper.Expect(w => w.get_max_face_nodes(id, meshId, ref nMaxFaceNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.GetMaxFaceNodes(id, meshId, ref nMaxFaceNodes)).IgnoreArguments()
                 .OutRef(id, meshId, nMaxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
@@ -803,7 +803,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 0;
             int meshId = 0;
             int nMaxFaceNodes = 8;
-            wrapper.Expect(w => w.get_max_face_nodes(id, meshId, ref nMaxFaceNodes)).IgnoreArguments()
+            wrapper.Expect(w => w.GetMaxFaceNodes(id, meshId, ref nMaxFaceNodes)).IgnoreArguments()
                 .OutRef(id, meshId, nMaxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Throw(new Exception("testException"))
@@ -886,7 +886,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             nNodes = 3;
-            wrapper.Expect(w => w.get_node_coordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
+            wrapper.Expect(w => w.GetNodeCoordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
                 .IgnoreArguments().OutRef(xPtr, yPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
@@ -921,7 +921,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             nNodes = 3;
-            wrapper.Expect(w => w.get_node_coordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
+            wrapper.Expect(w => w.GetNodeCoordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
                 .IgnoreArguments().OutRef(xPtr, yPtr)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
@@ -955,7 +955,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             nNodes = 3;
-            wrapper.Expect(w => w.get_node_coordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
+            wrapper.Expect(w => w.GetNodeCoordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
                 .IgnoreArguments().OutRef(id, meshId, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("testException"))
@@ -1032,7 +1032,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             nNodes = 3;
-            wrapper.Expect(w => w.get_node_coordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
+            wrapper.Expect(w => w.GetNodeCoordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
                 .IgnoreArguments().OutRef(xPtr, yPtr)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
@@ -1066,7 +1066,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             nNodes = 3;
-            wrapper.Expect(w => w.get_node_coordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
+            wrapper.Expect(w => w.GetNodeCoordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
                 .IgnoreArguments().OutRef(xPtr, yPtr)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
@@ -1100,7 +1100,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             nNodes = 3;
-            wrapper.Expect(w => w.get_node_coordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
+            wrapper.Expect(w => w.GetNodeCoordinates(id, meshId, ref xPtr, ref yPtr, nNodes))
                 .IgnoreArguments().OutRef(id, meshId, xPtr, yPtr, nNodes)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("testException"))
@@ -1180,7 +1180,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int location = 0;
             string varName = "";
             double fillValue = 0;
-            wrapper.Expect(w => w.get_var(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
+            wrapper.Expect(w => w.GetVariable(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
                 .IgnoreArguments().OutRef(zPtr, fillValue)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
@@ -1216,11 +1216,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string varName = "";
             double fillValue = 0;
 
-            wrapper.Expect(w => w.get_var(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
+            wrapper.Expect(w => w.GetVariable(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
                 .IgnoreArguments().OutRef(zPtr, fillValue)
                 .Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR).Repeat.Once();
 
-            wrapper.Expect(w => w.get_var(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
+            wrapper.Expect(w => w.GetVariable(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
                 .IgnoreArguments().OutRef(zPtr, fillValue)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
@@ -1257,7 +1257,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string varName = "";
             double fillValue = 0;
 
-            wrapper.Expect(w => w.get_var(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
+            wrapper.Expect(w => w.GetVariable(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
                 .IgnoreArguments().OutRef(zPtr, fillValue)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
 
@@ -1294,7 +1294,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string varName = "";
             double fillValue = 0;
 
-            wrapper.Expect(w => w.get_var(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
+            wrapper.Expect(w => w.GetVariable(id, meshId, location, varName, ref zPtr, nNodes, ref fillValue))
                 .IgnoreArguments().OutRef(zPtr, fillValue)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("testException"))
@@ -1370,7 +1370,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int numberOfEdges = nEdges;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
 
-            wrapper.Expect(w => w.get_edge_nodes(id, meshId, ref ptr, numberOfEdges)).IgnoreArguments()
+            wrapper.Expect(w => w.GetEdgeNodes(id, meshId, ref ptr, numberOfEdges)).IgnoreArguments()
                 .OutRef(ptr).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -1406,7 +1406,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int numberOfEdges = nEdges;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
 
-            wrapper.Expect(w => w.get_edge_nodes(id, meshId, ref ptr, numberOfEdges)).IgnoreArguments()
+            wrapper.Expect(w => w.GetEdgeNodes(id, meshId, ref ptr, numberOfEdges)).IgnoreArguments()
                 .OutRef(ptr).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -1442,7 +1442,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int numberOfEdges = nEdges;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_AN_EDGE);
 
-            wrapper.Expect(w => w.get_edge_nodes(id, meshId, ref ptr, numberOfEdges)).IgnoreArguments()
+            wrapper.Expect(w => w.GetEdgeNodes(id, meshId, ref ptr, numberOfEdges)).IgnoreArguments()
                 .OutRef(id, meshId, ptr, numberOfEdges).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("testException"))
                 .Repeat.Once();
@@ -1550,7 +1550,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int meshId = 0;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * maxFaceNodes);
             int fillValue = 0;
-            wrapper.Expect(w => w.get_face_nodes(id, meshId, ref ptr, nFaces, maxFaceNodes,
+            wrapper.Expect(w => w.GetFaceNodes(id, meshId, ref ptr, nFaces, maxFaceNodes,
                     ref fillValue)).IgnoreArguments().OutRef(ptr, fillValue)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
@@ -1586,7 +1586,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int meshId = 0;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * maxFaceNodes);
             int fillValue = 0;
-            wrapper.Expect(w => w.get_face_nodes(id, meshId, ref ptr, nFaces, maxFaceNodes,
+            wrapper.Expect(w => w.GetFaceNodes(id, meshId, ref ptr, nFaces, maxFaceNodes,
                     ref fillValue)).IgnoreArguments().OutRef(ptr, fillValue)
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
@@ -1622,7 +1622,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int meshId = 0;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * maxFaceNodes);
             int fillValue = 0;
-            wrapper.Expect(w => w.get_face_nodes(id, meshId, ref ptr, nFaces, maxFaceNodes,
+            wrapper.Expect(w => w.GetFaceNodes(id, meshId, ref ptr, nFaces, maxFaceNodes,
                     ref fillValue)).IgnoreArguments().OutRef(id, meshId, ptr, nFaces, maxFaceNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Throw(new Exception("testException"))
@@ -1673,7 +1673,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            wrapper.Expect(w => w.get_var_count(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(ioncId, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
 
@@ -1703,7 +1703,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            wrapper.Expect(w => w.get_var_count(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(ioncId, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
 
@@ -1733,7 +1733,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // wrapper
             var wrapper = mocks.DynamicMock<IGridWrapper>();
-            wrapper.Expect(w => w.get_var_count(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(ioncId, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("TestException")).Repeat.Twice();
 
@@ -1788,7 +1788,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.get_var_count(id, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR).Repeat.Once();
             
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -1817,12 +1817,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.get_var_count(id, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(nCount).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
-            wrapper.Expect(w => w.inq_varids(id, meshId, locationType, ref ptr, nVar))
+            wrapper.Expect(w => w.InqueryVariableIds(id, meshId, locationType, ref ptr, nVar))
                 .IgnoreArguments().OutRef(ptr).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -1851,12 +1851,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.get_var_count(id, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(nCount).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
-            wrapper.Expect(w => w.inq_varids(id, meshId, locationType, ref ptr, nVar))
+            wrapper.Expect(w => w.InqueryVariableIds(id, meshId, locationType, ref ptr, nVar))
                 .IgnoreArguments().OutRef(ptr).Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Once();
 
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
@@ -1885,12 +1885,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.DynamicMock<IGridWrapper>();
             int id = 0;
             int nCount = 5;
-            wrapper.Expect(w => w.get_var_count(id, meshId, locationType, ref nCount)).IgnoreArguments()
+            wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(id, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nCount);
             int nVar = nCount;
-            wrapper.Expect(w => w.inq_varids(id, meshId, locationType, ref ptr, nVar))
+            wrapper.Expect(w => w.InqueryVariableIds(id, meshId, locationType, ref ptr, nVar))
                 .IgnoreArguments().OutRef(nVar)
                 .Throw(new Exception("testException"))
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();

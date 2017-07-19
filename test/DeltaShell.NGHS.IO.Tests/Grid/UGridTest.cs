@@ -283,7 +283,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 zValues = ncFile.GetValues1D<double>("mesh2d_face_z");
             }
 
-            Assert.NotNull(zValues); // variable should have been created by def_var
+            Assert.NotNull(zValues); // variable should have been created by DefineVariable
             Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
         }
 

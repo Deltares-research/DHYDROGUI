@@ -115,7 +115,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (!Initialized) return convtype == GridApiDataSet.DataSetConventions.CONV_NULL;
             var iconvtypeApi = (int)convtype;
-            return wrapper.adheresto_conventions(ioncId, iconvtypeApi);
+            return wrapper.AdherestoConventions(ioncId, iconvtypeApi);
         }
 
         public virtual int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
@@ -126,7 +126,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 filePath = string.Empty;
             var imode = (int)mode;
             var iconvtypeApi = 0;
-            var ierr = wrapper.open(filePath, imode, ref ioncId, ref iconvtypeApi, ref convversion);
+            var ierr = wrapper.Open(filePath, imode, ref ioncId, ref iconvtypeApi, ref convversion);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
@@ -152,7 +152,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             try
             {
-                var ierr = wrapper.close(ioncId);
+                var ierr = wrapper.Close(ioncId);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -173,7 +173,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.get_mesh_count(ioncId, ref numberOfMeshes);
+                var ierr = wrapper.GetMeshCount(ioncId, ref numberOfMeshes);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -195,7 +195,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int nNetworks = 0;
-                var ierr = wrapper.get_number_of_networks(ioncId, ref nNetworks);
+                var ierr = wrapper.GetNumberOfNetworks(ioncId, ref nNetworks);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -220,7 +220,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 var type = (int)meshType;
                 int nMesh = 0;
-                ierr = wrapper.get_number_of_meshes(ioncId, type, ref nMesh);
+                ierr = wrapper.GetNumberOfMeshes(ioncId, type, ref nMesh);
                 if(ierr == GridApiDataSet.GridConstants.NOERR) numberOfMesh = nMesh;
             }
             catch
@@ -252,7 +252,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.get_network_ids(ioncId, ref networkIdsPtr, numberOfNetworks);
+                ierr = wrapper.GetNetworkIds(ioncId, ref networkIdsPtr, numberOfNetworks);
                 if (ierr == GridApiDataSet.GridConstants.NOERR)
                 {
                     networkIds = new int[numberOfNetworks];
@@ -281,7 +281,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
-                ierr = wrapper.get_mesh_ids(ioncId, meshType, ref meshIdsPtr, numberOfMeshes);
+                ierr = wrapper.GetMeshIds(ioncId, meshType, ref meshIdsPtr, numberOfMeshes);
                 if (ierr == GridApiDataSet.GridConstants.NOERR)
                 {
                     meshIds = new int[numberOfMeshes];
@@ -307,7 +307,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             try
             {
-                var ierr = wrapper.get_coordinate_system(ioncId, ref epsg_code);
+                var ierr = wrapper.GetCoordinateSystem(ioncId, ref epsg_code);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -348,7 +348,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
             // close the file after creation
-            ierr = wrapper.close(netcdfId);
+            ierr = wrapper.Close(netcdfId);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
@@ -365,7 +365,7 @@ namespace DeltaShell.NGHS.IO.Grid
             metadata.version = ToDataSizeCharArray(globalMetaData.Version);
             metadata.modelname = ToDataSizeCharArray(globalMetaData.Modelname);
 
-            var ierr = wrapper.add_global_attributes(netcdfId, metadata);
+            var ierr = wrapper.AddGlobalAttributes(netcdfId, metadata);
             return ierr;
         }
 

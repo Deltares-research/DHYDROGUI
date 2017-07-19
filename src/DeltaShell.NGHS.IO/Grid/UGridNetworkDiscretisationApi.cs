@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.create_1d_mesh(ioncId, networkId, ref meshIdForWriting, name, numberOfNetworkPoints, numberOfMeshEdges);
+                ierr = wrapper.Create1DMesh(ioncId, networkId, ref meshIdForWriting, name, numberOfNetworkPoints, numberOfMeshEdges);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
                 nNetworkPoints = numberOfNetworkPoints;
@@ -70,7 +70,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, nNetworkPoints);
                 Marshal.Copy(offset, 0, offsetPtr, nNetworkPoints);
 
-                var ierr = wrapper.write_1d_mesh_discretisation_points(ioncId, meshIdForWriting, branchIdxPtr,
+                var ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
                     offsetPtr, nNetworkPoints);
                 return ierr;
             }
@@ -102,7 +102,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             try
             {
-                var ierr = wrapper.get_network_id_from_mesh_id(ioncId, meshId, ref networkId);
+                var ierr = wrapper.GetNetworkIdFromMeshId(ioncId, meshId, ref networkId);
                 return ierr;
             }
             catch
@@ -121,7 +121,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-                var ierr = wrapper.get_mesh_name(ioncId, meshId, name);
+                var ierr = wrapper.GetMeshName(ioncId, meshId, name);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -146,7 +146,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             try
             {
-                var ierr = wrapper.get_1d_mesh_discretisation_points_count(ioncId, meshId, ref numberOfDiscretisationPoints);
+                var ierr = wrapper.Get1DMeshDiscretisationPointsCount(ioncId, meshId, ref numberOfDiscretisationPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -179,7 +179,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.read_1d_mesh_discretisation_points(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, nNetworkPoints);
+                var ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, nNetworkPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

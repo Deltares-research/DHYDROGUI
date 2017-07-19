@@ -105,26 +105,26 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 //1. Get the node count
                 int rnNodes = -1;
-                int ierr = wrapper.get_1d_network_nodes_count(ioncId, networkId, ref rnNodes);
+                int ierr = wrapper.Get1DNetworkNodesCount(ioncId, networkId, ref rnNodes);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(rnNodes, Is.EqualTo(nNodes));
 
                 //2. Get the number of branches
                 int rnBranches = -1;
-                ierr = wrapper.get_1d_network_branches_count(ioncId, networkId, ref rnBranches);
+                ierr = wrapper.Get1DNetworkBranchesCount(ioncId, networkId, ref rnBranches);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(rnBranches, Is.EqualTo(nBranches));
 
                 //3. Get the number of geometry points
                 int rnGeometry = -1;
-                ierr = wrapper.get_1d_network_branches_geometry_coordinate_count(ioncId, networkId,
+                ierr = wrapper.Get1DNetworkBranchesGeometryCoordinateCount(ioncId, networkId,
                     ref rnGeometry);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(rnGeometry, Is.EqualTo(nGeometry));
 
                 //4. Get nodes info and coordinates
                 GridWrapper.interop_charinfo[] nodesinfo = new GridWrapper.interop_charinfo[4];
-                ierr = wrapper.read_1d_network_nodes(ioncId, networkId, ref c_nodesX, ref c_nodesY,
+                ierr = wrapper.Read1DNetworkNodes(ioncId, networkId, ref c_nodesX, ref c_nodesY,
                     nodesinfo, rnNodes);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -144,7 +144,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                 //5. Get the branch info and coordinates
                 GridWrapper.interop_charinfo[] branchinfo = new GridWrapper.interop_charinfo[3];
-                ierr = wrapper.read_1d_network_branches(ioncId, networkId, ref c_sourcenodeid,
+                ierr = wrapper.Read1DNetworkBranches(ioncId, networkId, ref c_sourcenodeid,
                     ref c_targetnodeid,
                     ref c_branchlengths, branchinfo, ref c_nbranchgeometrypoints, rnBranches);
                 Assert.That(ierr, Is.EqualTo(0));
@@ -171,7 +171,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 }
 
                 //6. Get the 1d branch geometry
-                ierr = wrapper.read_1d_network_branches_geometry(ioncId, networkId, ref c_geopointsX,
+                ierr = wrapper.Read1DNetworkBranchesGeometry(ioncId, networkId, ref c_geopointsX,
                     ref c_geopointsY, rnGeometry);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -187,20 +187,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                 //7. Get the mesh name
                 var rnetworkName = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-                ierr = wrapper.get_mesh_name(ioncId, networkId, rnetworkName);
+                ierr = wrapper.GetMeshName(ioncId, networkId, rnetworkName);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(rnetworkName.ToString().Trim(), Is.EqualTo(meshname));
 
                 //8. Get the number of mesh points
                 int rnmeshpoints = -1;
                 ierr =
-                    wrapper.get_1d_mesh_discretisation_points_count(ioncId, networkId,
+                    wrapper.Get1DMeshDiscretisationPointsCount(ioncId, networkId,
                         ref rnmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
                 Assert.That(rnmeshpoints, Is.EqualTo(nmeshpoints));
 
                 //9. Get the coordinates of the mesh points
-                ierr = wrapper.read_1d_mesh_discretisation_points(ioncId, networkId, ref c_branchidx,
+                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, networkId, ref c_branchidx,
                     ref c_offset, rnmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
                 int[] rc_branchidx = new int[rnmeshpoints];
@@ -265,27 +265,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
 
             int nnodes = -1;
-            int ierr = wrapper.get_node_count(ioncId, meshId, ref  nnodes);
+            int ierr = wrapper.GetNodeCount(ioncId, meshId, ref  nnodes);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(nnodes, Is.EqualTo(5));
 
             int nedge = -1;
-            ierr = wrapper.get_edge_count(ioncId, meshId, ref  nedge);
+            ierr = wrapper.GetEdgeCount(ioncId, meshId, ref  nedge);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(nedge, Is.EqualTo(6));
 
             int nface = -1;
-            ierr = wrapper.get_face_count(ioncId, meshId, ref  nface);
+            ierr = wrapper.GetFaceCount(ioncId, meshId, ref  nface);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(nface, Is.EqualTo(numberOfFaces));
 
             int maxfacenodes = -1;
-            ierr = wrapper.get_max_face_nodes(ioncId, meshId, ref  maxfacenodes);
+            ierr = wrapper.GetMaxFaceNodes(ioncId, meshId, ref  maxfacenodes);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(maxfacenodes, Is.EqualTo(numberOfMaxFaceNodes));
 
             //get all node coordinates
-            ierr = wrapper.get_node_coordinates(ioncId, meshId, ref c_nodesX, ref c_nodesY, nnodes);
+            ierr = wrapper.GetNodeCoordinates(ioncId, meshId, ref c_nodesX, ref c_nodesY, nnodes);
             Assert.That(ierr, Is.EqualTo(0));
 
             double[] rc_nodeX = new double[numberOf2DNodes];
@@ -300,7 +300,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
        
             //Check face nodes
             int fillvalue = -1;
-            ierr = wrapper.get_face_nodes(ioncId, meshId, ref c_face_nodes, nface,
+            ierr = wrapper.GetFaceNodes(ioncId, meshId, ref c_face_nodes, nface,
                     maxfacenodes, ref fillvalue);
             Assert.That(ierr, Is.EqualTo(0));
             int[] rc_face_nodes = new int[nface * maxfacenodes];
@@ -357,7 +357,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     nodesinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                ierr = wrapper.write_1d_network_nodes(ioncId, networkId, c_nodesX, c_nodesY,
+                ierr = wrapper.Write1DNetworkNodes(ioncId, networkId, c_nodesX, c_nodesY,
                     nodesinfo, nNodes);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -376,28 +376,28 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     branchinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                ierr = wrapper.write_1d_network_branches(ioncId, networkId, c_sourcenodeid,
+                ierr = wrapper.Write1DNetworkBranches(ioncId, networkId, c_sourcenodeid,
                     c_targetnodeid, branchinfo, c_branchlengths, c_nbranchgeometrypoints, nBranches);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //3. Write 1d network geometry
                 Marshal.Copy(geopointsX, 0, c_geopointsX, nGeometry);
                 Marshal.Copy(geopointsY, 0, c_geopointsY, nGeometry);
-                ierr = wrapper.write_1d_network_branches_geometry(ioncId, networkId, c_geopointsX,
+                ierr = wrapper.Write1DNetworkBranchesGeometry(ioncId, networkId, c_geopointsX,
                     c_geopointsY, nGeometry);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //4. Write the 1d mesh topology.
                 //Assume mesh and network are saved in the same table 
                 int meshId = networkId;
-                ierr = wrapper.create_1d_mesh(ioncId, networkId, ref meshId, meshname, nmeshpoints,
+                ierr = wrapper.Create1DMesh(ioncId, networkId, ref meshId, meshname, nmeshpoints,
                     nmeshedges);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //5. Write the 1d mesh geometry
                 Marshal.Copy(branchidx, 0, c_branchidx, nmeshpoints);
                 Marshal.Copy(offset, 0, c_offset, nmeshpoints);
-                ierr = wrapper.write_1d_mesh_discretisation_points(ioncId, meshId, c_branchidx,
+                ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshId, c_branchidx,
                     c_offset, nmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -461,7 +461,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             tmpstring = "Unknown";
             tmpstring = tmpstring.PadRight(GridWrapper.metadatasize, ' ');
             metadata.modelname = tmpstring.ToCharArray();
-            int ierr = wrapper.add_global_attributes(ioncId, metadata);
+            int ierr = wrapper.AddGlobalAttributes(ioncId, metadata);
             Assert.That(ierr, Is.EqualTo(0));
         }
 
@@ -492,12 +492,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.IsTrue(File.Exists(c_path));
 
                 //3. For reading the grid later on we need to add metadata to the netcdf file. 
-                //   The function add_global_attributes adds to the netCDF file the UGRID convention
+                //   The function AddGlobalAttributes adds to the netCDF file the UGRID convention
                 addglobalattributes(ioncId, ref wrapper);
 
                 //4. Create a 1d network
                 int networkId = -1;
-                ierr = wrapper.create_1d_network(ioncId, ref networkId, networkName, nNodes,
+                ierr = wrapper.Create1DNetwork(ioncId, ref networkId, networkName, nNodes,
                     nBranches, nGeometry);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -505,7 +505,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 write1dnetworkandmesh(ioncId, networkId, ref wrapper);
 
                 //6. Close the file
-                wrapper.close(ioncId);
+                wrapper.Close(ioncId);
         }
 
         ////// read the netcdf file created in the test above
@@ -521,16 +521,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int ioncId = 0; //file variable
             int mode = 0; //create in read mode
             var wrapper = new GridWrapper();
-            var ierr = wrapper.open(c_path, mode, ref ioncId, ref iconvtype, ref convversion);
+            var ierr = wrapper.Open(c_path, mode, ref ioncId, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
             //2. Get the 1D network and mesh ids
             int networkId = -1;
-            ierr = wrapper.get_1d_network_id(ioncId, ref networkId);
+            ierr = wrapper.Get1DNetworkId(ioncId, ref networkId);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(networkId, Is.EqualTo(1));
             int meshId = -1;
-            ierr = wrapper.get_1d_mesh_id(ioncId, ref meshId);
+            ierr = wrapper.Get1DMeshId(ioncId, ref meshId);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(meshId, Is.EqualTo(1));
 
@@ -538,7 +538,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             check1dmesh(ioncId, networkId, ref wrapper);
 
             //4. Close the file
-            ierr = wrapper.close(ioncId);
+            ierr = wrapper.Close(ioncId);
         }
 
         // Deltashell creates a new file to write the 1d geometry and mesh as in the first test create1dUGRIDNetcdf
@@ -556,7 +556,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(sourcetwod_path));
             int sourcetwodioncid = -1;   //file id 
             int sourcetwomode    =  0;   //read mode
-            int ierr = wrapper.open(sourcetwod_path, sourcetwomode, ref sourcetwodioncid, ref iconvtype, ref convversion);
+            int ierr = wrapper.Open(sourcetwod_path, sourcetwomode, ref sourcetwodioncid, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
             //2. Now we create a new empty file where to save 1d and 2d meshes
@@ -583,7 +583,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             //5. Create 1d geometry and mesh in the new file (target.nc)
             int networkId = -1;
-            ierr = wrapper.create_1d_network(targetioncid, ref networkId, networkName, nNodes,
+            ierr = wrapper.Create1DNetwork(targetioncid, ref networkId, networkName, nNodes,
                 nBranches, nGeometry);
             Assert.That(ierr, Is.EqualTo(0));
 
@@ -600,30 +600,30 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.That(ierr, Is.EqualTo(0));
 
             //9. Close all files 
-            ierr = wrapper.close(sourcetwodioncid);
+            ierr = wrapper.Close(sourcetwodioncid);
             Assert.That(ierr, Is.EqualTo(0));
-            ierr = wrapper.close(targetioncid);
+            ierr = wrapper.Close(targetioncid);
             Assert.That(ierr, Is.EqualTo(0));
 
             //10. Now open the file with cloned meshes and check if the data written there are correct
             targetioncid = -1;  //file id  
             targetmode = 0;     //open in write mode
-            ierr = wrapper.open(target_path, targetmode, ref targetioncid, ref iconvtype, ref convversion);
+            ierr = wrapper.Open(target_path, targetmode, ref targetioncid, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
             //11. Check 2 meshes are present
             int nmesh = -1;
-            ierr = wrapper.get_mesh_count(targetioncid, ref nmesh);
+            ierr = wrapper.GetMeshCount(targetioncid, ref nmesh);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(nmesh, Is.EqualTo(2));
 
             //12. Get the mesh ids
             int source1dnetwork = -1;
-            ierr = wrapper.get_1d_network_id(targetioncid, ref source1dnetwork);
+            ierr = wrapper.Get1DNetworkId(targetioncid, ref source1dnetwork);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(source1dnetwork, Is.EqualTo(1));
             int source1dmesh = -1;
-            ierr = wrapper.get_1d_mesh_id(targetioncid, ref source1dmesh);
+            ierr = wrapper.Get1DMeshId(targetioncid, ref source1dmesh);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(source1dmesh, Is.EqualTo(1));
             sourcemesh2d = -1;
@@ -636,7 +636,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             check2dmesh(targetioncid, sourcemesh2d, ref wrapper);
 
             //14. Close the file
-            ierr = wrapper.close(targetioncid);
+            ierr = wrapper.Close(targetioncid);
             Assert.That(ierr, Is.EqualTo(0));
         }
     }
