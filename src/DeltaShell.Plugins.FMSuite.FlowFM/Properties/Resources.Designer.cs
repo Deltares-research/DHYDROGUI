@@ -217,6 +217,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It was not possible to load from file: {0}. LogFilePath: {1}.
+        /// </summary>
+        public static string GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_ {
+            get {
+                return ResourceManager.GetString("GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_lo" +
+                        "ad_from_file___0___LogFilePath___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hurricane2 {
@@ -336,6 +346,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("unstrucModel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converting a non-double valued coverage component to a point cloud is not supported.
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_co" +
+                        "verage_component_to_a_point_cloud_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converting time dependent spatial data to samples is not supported.
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial" +
+                        "_data_to_samples_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatial data is not consistent: number of coordinate does not match number of values.
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__n" +
+                        "umber_of_coordinate_does_not_match_number_of_values", resourceCulture);
             }
         }
         

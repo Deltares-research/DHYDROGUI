@@ -576,5 +576,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.SetVar(new[] {true}, WaterFlowFMModel.DisableFlowNodeRenumberingPropertyName, null, null);
             Assert.IsTrue(model.DisableFlowNodeRenumbering);
         }
+
+        [Test]
+        public void StateInfoRetreivesTheSameNameAndZipPathTest()
+        {
+            try
+            {
+                var stateInfo = new StateInfo("StateName", "ZipPath");
+                Assert.AreEqual(stateInfo.Name, "StateName");
+                Assert.AreEqual(stateInfo.ZipPath, "ZipPath");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Creation of a StateInfo object should not fail. Exception thrown: {0}.", e.Message);
+            }
+        }
+
     }
 }

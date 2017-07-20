@@ -37,6 +37,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
@@ -84,6 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
             var mapFilePath = Path.Combine(flowFmOutputPath, tempModel.MapSavePath);
 
             // call model initialize
+            var logFilePath = Path.Combine(tempPath, "flowinit.dia");
             using (var api = new RemoteFlexibleMeshModelApi())
             {
                 try
@@ -92,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
 
                     if (!File.Exists(mapFilePath))
                     {
-                        var logFilePath = Path.Combine(tempPath, "flowinit.dia");
+                        
                         throw new InvalidOperationException(
                             "Kernel failed to initialize model, could not change grid from ugrid format to old netcdf format needed for 1d2d. See log file for information: " +
                             Environment.NewLine + Environment.NewLine +
@@ -105,7 +107,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
                 }
             }
 
-            return UnstructuredGridFileHelper.LoadFromFile(mapFilePath, true);
+            UnstructuredGrid unstructuredGrid;
+            try
+            {
+                unstructuredGrid = UnstructuredGridFileHelper.LoadFromFile(mapFilePath, true);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(String.Format(Resources.GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_, e.Message, logFilePath));
+            }
+
+            return unstructuredGrid;
         }
     }
 }
