@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             mocks.ReplayAll();
 
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = false;
+            model.ModelDefinition.UseMorphologySediment = false;
 
             // Controller should call BoundaryConditionEditor.RefreshAvailableCategories on 
             var controller = new FlowBoundaryConditionEditorController
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
                 Editor = editor
             };
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
 
             mocks.VerifyAll();
         }
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         public void SupportedProcessNamesForSediment()
         {
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
 
             var controller = new FlowBoundaryConditionEditorController
             {
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
 
             Assert.AreEqual(4, controller.SupportedProcessNames.Count());
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = false;
+            model.ModelDefinition.UseMorphologySediment = false;
 
             Assert.AreEqual(2, controller.SupportedProcessNames.Count());
         }
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         {
             // setup
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
 
             var controller = new FlowBoundaryConditionEditorController{ Model = model };
 

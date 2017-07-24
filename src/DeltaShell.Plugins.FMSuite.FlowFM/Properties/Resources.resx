@@ -229,4 +229,25 @@
   <data name="WaterFlowFMModelDefinitionValidator_Validate_" xml:space="preserve">
     <value>Conveyance2D type in Geometry should be set to 'R=HU' (-1), 'R=H' (0) or 'R=A/P' (1) when morphology is active.</value>
   </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_" xml:space="preserve">
+    <value>A morphology boundary condition cannot have more than one point with generated data.</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_" xml:space="preserve">
+    <value>Time series contains forbidden negative values for {0} at point {1}</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_" xml:space="preserve">
+    <value>Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}</value>
+  </data>
+  <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported" xml:space="preserve">
+    <value>Converting time dependent spatial data to samples is not supported</value>
+  </data>
+  <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported" xml:space="preserve">
+    <value>Converting a non-double valued coverage component to a point cloud is not supported</value>
+  </data>
+  <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values" xml:space="preserve">
+    <value>Spatial data is not consistent: number of coordinate does not match number of values</value>
+  </data>
+  <data name="GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_" xml:space="preserve">
+    <value>It was not possible to load from file: {0}. LogFilePath: {1}</value>
+  </data>
 </root>

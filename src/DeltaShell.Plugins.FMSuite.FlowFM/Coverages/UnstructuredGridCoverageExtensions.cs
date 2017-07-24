@@ -4,7 +4,8 @@
 ﻿using DelftTools.Functions;
 ﻿using DelftTools.Functions.Generic;
 ﻿using DelftTools.Utils.Editing;
-﻿using GeoAPI.Extensions.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 ﻿using NetTopologySuite.Extensions.Grids;
 ﻿using SharpMap.Api;
@@ -19,13 +20,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             var pointCloud = new PointCloud();
 
             if (coverage.IsTimeDependent)
-                throw new NotSupportedException("Converting time dependent spatial data to samples is not supported");
+                throw new NotSupportedException(Resources.UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported);
 
             var component = coverage.Components[componentIndex] as IVariable<double>;
             if (component == null)
             {
                 throw new NotSupportedException(
-                    "Converting a non-double valued coverage component to a point cloud is not supported");
+                    Resources.UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported);
             }
 
             var coordinates = coverage.Coordinates.ToList();
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
             if (coordinates.Count != values.Count)
                 throw new InvalidOperationException(
-                    "Spatial data is not consistent: number of coordinate does not match number of values");
+                    Resources.UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values);
 
             for (var i = 0; i < coordinates.Count; i++)
             {

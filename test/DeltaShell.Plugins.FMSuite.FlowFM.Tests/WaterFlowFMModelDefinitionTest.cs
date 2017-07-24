@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -31,6 +30,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class WaterFlowFMModelDefinitionTest
     {
+        [Test]
+        public void SetGuiTimePropertiesFromMduPropertiesTest()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            modelDefinition.GetModelProperty(KnownProperties.MapInterval).Value = new List<double>();
+            modelDefinition.GetModelProperty(KnownProperties.HisInterval).Value = new List<double>();
+            modelDefinition.GetModelProperty(KnownProperties.RstInterval).Value = new List<double>();
+            modelDefinition.GetModelProperty(KnownProperties.WaqInterval).Value = new List<double>();
+
+            modelDefinition.SetGuiTimePropertiesFromMduProperties();
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value);
+
+            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value);
+            Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value);
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void WriteMduFile_UpdatesCoordinateSystemInNetFileIfNecessary()

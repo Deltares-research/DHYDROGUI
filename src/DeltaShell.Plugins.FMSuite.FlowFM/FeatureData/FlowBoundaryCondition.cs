@@ -611,9 +611,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public void RemoveSedimentFractionFromFunction(IFunction loadTransport, string fraction)
         {
-            if (SedimentFractionNames.Contains(fraction))
+            if (SedimentFractionNames != null && SedimentFractionNames.Contains(fraction))
+            {
                 SedimentFractionNames.Remove(fraction);
-            loadTransport.Components.RemoveAllWhere(fc => fc.Name.Equals(fraction));
+            }
+            if (loadTransport != null)
+            {
+                loadTransport.Components.RemoveAllWhere(fc => fc.Name.Equals(fraction));
+            }
         }
 
         protected override void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)

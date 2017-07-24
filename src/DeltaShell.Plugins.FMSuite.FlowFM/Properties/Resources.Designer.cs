@@ -217,6 +217,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It was not possible to load from file: {0}. LogFilePath: {1}.
+        /// </summary>
+        public static string GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_ {
+            get {
+                return ResourceManager.GetString("GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_lo" +
+                        "ad_from_file___0___LogFilePath___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hurricane2 {
@@ -340,12 +350,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Converting a non-double valued coverage component to a point cloud is not supported.
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_co" +
+                        "verage_component_to_a_point_cloud_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converting time dependent spatial data to samples is not supported.
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial" +
+                        "_data_to_samples_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatial data is not consistent: number of coordinate does not match number of values.
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__n" +
+                        "umber_of_coordinate_does_not_match_number_of_values", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap unstrucWater {
             get {
                 object obj = ResourceManager.GetObject("unstrucWater", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time series contains forbidden negative values for {0} at point {1}.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_se" +
+                        "ries_contains_forbidden_negative_values_for__0__at_point__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A morphology boundary condition cannot have more than one point with generated data..
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology" +
+                        "_boundary_condition_cannot_have_more_than_one_point_with_generated_data_", resourceCulture);
             }
         }
         
@@ -367,6 +427,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
                 return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHy" +
                         "droBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_bounda" +
                         "ry_condition_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_po" +
+                        "int_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1" +
+                        "_", resourceCulture);
             }
         }
         

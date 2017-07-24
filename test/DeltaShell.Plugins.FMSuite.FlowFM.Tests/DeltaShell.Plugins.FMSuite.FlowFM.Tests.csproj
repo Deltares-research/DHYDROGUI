@@ -211,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
+    <Compile Include="Api\GridHelperTest.cs" />
     <Compile Include="Api\GridOperationApiTest.cs" />
     <Compile Include="Editors\EditTracersControlHelperTest.cs" />
     <Compile Include="Editors\SedimentFractionsEditorTest.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
+    <Compile Include="FeatureData\SourceAndSinkTest.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
     <Compile Include="Gui\AstroComponentSelectionTest.cs" />
@@ -297,13 +299,16 @@
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
-   <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
+    <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
-    <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />    <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
-    <Compile Include="WaterFlowFMImportExportTest.cs" />
-    <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
+    <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
+    <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
+    <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />    <Compile Include="WaterFlowFMImportExportTest.cs" />
+    <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
+    <Compile Include="WaterFlowFMModelRestartIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelTracersTest.cs" />
+    <Compile Include="WaterFlowFMResourcesTest.cs" />
     <Compile Include="WaterFlowFMRunCompareTest.cs" />
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
     <Compile Include="WaterFlowFMSaveLoadTest.cs" />

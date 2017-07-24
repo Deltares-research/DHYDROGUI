@@ -29,6 +29,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 };
         }
 
+        private static WaterFlowFMModel CreateValidMorphologyModel()
+        {
+            var model = CreateValidModel();
+            model.ModelDefinition.UseMorphologySediment = true;
+            model.SedimentFractions = new EventedList<ISedimentFraction>();
+            model.SedimentFractions.Add(new SedimentFraction() {Name = "testFrac"});
+            return model;
+        }
+
         [Test]
         public void TestEmptyBoundaryConditionSet()
         {
@@ -110,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = CreateValidModel();
 
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             model.SedimentFractions = new EventedList<ISedimentFraction>();
             model.SedimentFractions.Add(new SedimentFraction(){ Name = "testFrac"});
 
@@ -168,11 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
         public void TestMorphologyBoundaryConditionWithEmptyTimeSeriesIsValid(FlowBoundaryQuantityType quantityType)
         {
-            var model = CreateValidModel();
-
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            model.SedimentFractions = new EventedList<ISedimentFraction>();
-            model.SedimentFractions.Add(new SedimentFraction() { Name = "testFrac" });
+            var model = CreateValidMorphologyModel();
 
             var boundary = new Feature2D
             {
@@ -209,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
 
-            /* Now add a second data point and expect the validation to fail.*/
+            /* Now add a second data point and expect the validation not to fail.*/
             morphologyBoundary.AddPoint(0);
 
             Assert.AreEqual(2, morphologyBoundary.PointData.Count);
@@ -226,11 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
         public void TestMorphologyBoundaryConditionOnlyAllowsOneCondition(FlowBoundaryQuantityType quantityType)
         {
-            var model = CreateValidModel();
-
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            model.SedimentFractions = new EventedList<ISedimentFraction>();
-            model.SedimentFractions.Add(new SedimentFraction() { Name = "testFrac" });
+            var model = CreateValidMorphologyModel();
 
             var boundary = new Feature2D
             {
@@ -339,11 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void TestMorphologyBoundaryConditionWithoutHydroBoundaryConditionShouldCreateValidationError()
         {
-            var model = CreateValidModel();
-
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            model.SedimentFractions = new EventedList<ISedimentFraction>();
-            model.SedimentFractions.Add(new SedimentFraction() { Name = "testFrac" });
+            var model = CreateValidMorphologyModel();
 
             var boundary = new Feature2D
             {
@@ -365,6 +362,121 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.That(report.Issues.First(i => i.Severity == ValidationSeverity.Error).Message,
                 Is.EqualTo(Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_));
 
+        }
+
+        [Test]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLoadTransport)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
+        [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
+        public void MorphologyBoundaryConditionCannotHaveMoreThanOnePointWithGeneratedDataTest(FlowBoundaryQuantityType quantityType)
+        {
+            var model = CreateValidMorphologyModel();
+
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var bcSet = model.BoundaryConditionSets[0].BoundaryConditions;
+            var morBC = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionNames = new List<string>() { "testFrac" }
+            };
+            var flowBoundary = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+            };
+
+            bcSet.Add(morBC);
+            bcSet.Add(flowBoundary);
+
+            model.BoundaryConditions.First().AddPoint(0);
+            model.BoundaryConditions.First().AddPoint(1);
+            Assert.AreEqual(2, morBC.PointData.Count);
+
+            /* If we add values to a second point it should fail*/
+            var startDateTime = new DateTime(1981, 8, 30);
+            var endDateTime = new DateTime(1981, 8, 31);
+
+            /* Add values to the first and second point */
+            morBC.PointData[0].Arguments[0].SetValues(new[] { startDateTime, endDateTime });
+            morBC.PointData[0][startDateTime] = 0.5;
+            morBC.PointData[0][endDateTime] = 0.6;
+
+            morBC.PointData[1].Arguments[0].SetValues(new[] { startDateTime, endDateTime });
+            morBC.PointData[1][startDateTime] = 0.5;
+            morBC.PointData[1][endDateTime] = 0.6;
+
+            var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.That(report.Issues.First(i => i.Severity == ValidationSeverity.Error).Message,
+                Is.EqualTo(Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_));
+        }
+
+        [Test]
+        public void TimeSeriesCannotContainNegativeValuesForStrictlyPositiveBoundaryConditionsTest()
+        {
+            var model = CreateValidMorphologyModel();
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+            model.Boundaries.Add(boundary);
+
+            var bc = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries)
+            {
+                Feature = boundary,
+                SedimentFractionNames = new List<string>() { "testFrac" }
+            };
+
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(bc);
+            model.BoundaryConditions.First().AddPoint(1);
+
+            /* Set negative values for a 'strictly positive boundary' */
+            var timeSeries = model.BoundaryConditions.First().GetDataAtPoint(1);
+            timeSeries[model.StartTime] = -0.5;
+            timeSeries[model.StopTime] = -0.5;
+
+            var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.That(report.Issues.First(i => i.Severity == ValidationSeverity.Error).Message,
+                Is.EqualTo( String.Format(
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_,
+                    bc.VariableDescription, model.BoundaryConditionSets[0].SupportPointNames[1])));
+        }
+
+        [Test]
+        public void CustomSupportNamesNotSupportedByKernelTest()
+        {
+            var model = CreateValidModel();
+            var boundary = new Feature2D
+            {
+                Name = "boundary",
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+            };
+            model.Boundaries.Add(boundary);
+            model.BoundaryConditionSets[0].BoundaryConditions.Add(
+                FlowBoundaryConditionFactory.CreateBoundaryCondition(boundary));
+            
+            /* Replace the name of a given support point */
+            var expectedName = model.BoundaryConditionSets[0].SupportPointNames[0];
+            model.BoundaryConditionSets[0].SupportPointNames[0] = "ThisIsNotAValidName";
+
+            model.BoundaryConditions.First().AddPoint(0);
+            var timeSeries = model.BoundaryConditions.First().GetDataAtPoint(0);
+            timeSeries[model.StartTime] = 0.5;
+            timeSeries[model.StopTime] = 0.5;
+
+            var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.That(report.Issues.First(i => i.Severity == ValidationSeverity.Error).Message,
+                Is.EqualTo(String.Format(
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
+                    model.BoundaryConditionSets[0].SupportPointNames[0], expectedName)));
         }
     }
 }

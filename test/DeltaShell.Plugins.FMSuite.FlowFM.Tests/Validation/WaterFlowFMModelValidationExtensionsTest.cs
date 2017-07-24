@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
@@ -106,6 +107,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(1,
                 report.GetAllIssuesRecursive()
                     .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("parallel run")));
+        }
+
+        [Test]
+        public void ValidateRestartInputReportTestRestartIsEmpty()
+        {
+            var model = new WaterFlowFMModel();
+            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            model.UseRestart = true;
+
+            var report = model.Validate(model);
+            Assert.AreEqual(1, report.ErrorCount);
+            Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
+                Is.EqualTo("Input restart state is empty; cannot restart."));
+            
         }
     }
 }

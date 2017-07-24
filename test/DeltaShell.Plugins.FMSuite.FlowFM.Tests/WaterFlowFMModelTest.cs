@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CheckSedimentFormulaPropertyEventPropagatesToModel()
         {
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction
             {
                 Name = "testFrac",
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CheckSedimentPropertyEventPropagatesToModel()
         {
             var model = new WaterFlowFMModel();
-            model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
+            model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction { Name = "testFrac" };
             model.SedimentFractions.Add(sedFrac);
 
@@ -574,5 +574,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.SetVar(new[] {true}, WaterFlowFMModel.DisableFlowNodeRenumberingPropertyName, null, null);
             Assert.IsTrue(model.DisableFlowNodeRenumbering);
         }
+
+        [Test]
+        public void StateInfoRetreivesTheSameNameAndZipPathTest()
+        {
+            try
+            {
+                var stateInfo = new StateInfo("StateName", "ZipPath");
+                Assert.AreEqual(stateInfo.Name, "StateName");
+                Assert.AreEqual(stateInfo.ZipPath, "ZipPath");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Creation of a StateInfo object should not fail. Exception thrown: {0}.", e.Message);
+            }
+        }
+
     }
 }

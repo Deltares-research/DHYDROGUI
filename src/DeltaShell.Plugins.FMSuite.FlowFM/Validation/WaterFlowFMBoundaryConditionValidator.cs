@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         if (boundaryCondition.PointData.Count(pd => pd.GetValues().Count > 0) > 1)
                         {
                             issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                                "A morphology boundary condition cannot have more than one point with generated data.", boundaryCondition));
+                                Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_point_with_generated_data_, boundaryCondition));
                         }
                     }
                     else
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                     issues.Add(new ValidationIssue(boundaryConditionName,
                                         ValidationSeverity.Error,
                                         string.Format(
-                                            "Time series contains forbidden negative values for {0} at point {1}",
+                                            Resources.WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_,
                                             boundaryConditionName, supportPointName), boundaryCondition));
                                 }
                             }
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         yield return
                             new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
                                 string.Format(
-                                    "Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}",
+                                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
                                     boundaryConditionSet.SupportPointNames[i], expectedName),
                                 boundaryConditionSet);
                     }
