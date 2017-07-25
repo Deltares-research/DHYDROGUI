@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
@@ -39,45 +40,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         [Category(TestCategory.Slow)]
         public void ShowComputationalGridDialog()
         {
-            try
+            using (var gui = new DeltaShellGui())
             {
-                using (var gui = new DeltaShellGui())
-                {
-                    var app = gui.Application;
-                    app.UserSettings["autosaveWindowLayout"] = false;
-                    var networkEditorPlugin = new NetworkEditorApplicationPlugin();
-                    app.Plugins.Add(networkEditorPlugin);
-                
-                    gui.Run();
+                var app = gui.Application;
+                app.UserSettings["autosaveWindowLayout"] = false;
+                var networkEditorPlugin = new NetworkEditorApplicationPlugin();
+                app.Plugins.Add(networkEditorPlugin);
+            
+                gui.Run();
 
-                    IDiscretization defaultDiscretization = null;
-                    var network = new HydroNetwork();
-                    var channel = new Channel();
+                IDiscretization defaultDiscretization = null;
+                var network = new HydroNetwork();
+                var channel = new Channel();
 
-                    network.Branches.Add(channel);
+                network.Branches.Add(channel);
 
-                    app.Project.RootFolder.Add(network);
+                app.Project.RootFolder.Add(network);
 
-                    var calculationGridWizard = new ComputationalGridDialog
-                        {
-                            HydroNetworks = { network },
-                            UpdateDiscretization = defaultDiscretization,
-                            MinimumCellLength = CGWMinimumCellLength,
-                            GridAtStructure = CGWGridAtStructure,
-                            StructureDistance = CGWStructureDistance,
-                            GridAtCrossSection = CGWGridAtCrossSection,
-                            UseFixedLength = CGWUseFixedLength,
-                            FixedLength = CGWFixedLength,
-                            //Project = app.Project
-                        };
+                var calculationGridWizard = new ComputationalGridDialog
+                    {
+                        HydroNetworks = { network },
+                        UpdateDiscretization = defaultDiscretization,
+                        MinimumCellLength = CGWMinimumCellLength,
+                        GridAtStructure = CGWGridAtStructure,
+                        StructureDistance = CGWStructureDistance,
+                        GridAtCrossSection = CGWGridAtCrossSection,
+                        UseFixedLength = CGWUseFixedLength,
+                        FixedLength = CGWFixedLength,
 
-                    WindowsFormsTestHelper.ShowModal(calculationGridWizard);
-                }
-            }
-            catch (Exception e)
-            {
-                if (e.Message.Contains("The system cannot find message text for message number 0x%1"))
-                    Assert.Ignore("No clue..");
+                        // Don't use opacity during testing 
+                        // see https://stackoverflow.com/questions/31835378/the-system-cannot-find-message-text-for-message-number-0x1-in-the-message-file
+                        UseOpacity = false 
+                    };
+
+                WindowsFormsTestHelper.ShowModal(calculationGridWizard);
             }
         }
     }

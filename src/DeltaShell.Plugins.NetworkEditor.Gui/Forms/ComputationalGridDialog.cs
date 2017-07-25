@@ -9,6 +9,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 {
     public partial class ComputationalGridDialog : Form
     {
+        private bool useOpacity = true;
+
         public ComputationalGridDialog()
         {
             HydroNetworks = new List<IHydroNetwork>();
@@ -50,11 +52,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         public double MinimumCellLength { get; set; }
 
         public bool NewDiscretization { get; private set; }
+
         public IDiscretization UpdateDiscretization { get; set; }
+
         public IDiscretization SourceDiscretization { get; private set; }
-
-
+        
         public bool Erase { get; set; }
+
+        /// <summary>
+        /// Make dialog transparent when moving and when losing focus
+        /// </summary>
+        public bool UseOpacity
+        {
+            get { return useOpacity; }
+            set { useOpacity = value; }
+        }
 
         private void CalculationGridWizard_Load(object sender, EventArgs e)
         {
@@ -90,11 +102,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         private void CalculationGridWizard_Move(object sender, EventArgs e)
         {
+            if (!useOpacity) return;
             Opacity = Math.Max(0.4, Opacity - 0.01);
         }
 
         private void CalculationGridWizard_MouseCaptureChanged(object sender, EventArgs e)
         {
+            if (!useOpacity) return;
             Opacity = 0.99;
         }
 
