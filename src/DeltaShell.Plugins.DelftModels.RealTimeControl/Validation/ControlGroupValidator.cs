@@ -132,10 +132,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             const string validationString = "Series '{0}' time steps not multiple of model time step {1}.";
             
             var invalidTimeConditions = controlGroup.Conditions.OfType<TimeCondition>().Where(tc => !ValidateTimeSeries(tc.TimeSeries, startTime, timeStep));
-            invalidTimeConditions.ForEach(tc => issues.Add(new ValidationIssue(tc, ValidationSeverity.Warning,
+            invalidTimeConditions.ForEach(tc => issues.Add(new ValidationIssue(tc, ValidationSeverity.Error,
                                                                                String.Format(validationString,
                                                                                              tc.TimeSeries.Name,
-                                                                                             timeStep), controlGroup)));
+                                                                                             timeStep), tc.TimeSeries)));
 
             return issues;
         }
@@ -150,17 +150,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             var invalidPidRules = controlGroup.Rules.OfType<PIDRule>().Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries &&
                                                                             !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidPidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
-                                               String.Format(validationString, r.TimeSeries.Name, timeStep), controlGroup)));
+            invalidPidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
+                                               String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
 
             var invalidTimeRules = controlGroup.Rules.OfType<TimeRule>().Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidTimeRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
-                                                                        String.Format(validationString, r.TimeSeries.Name, timeStep), controlGroup)));
+            invalidTimeRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
+                                                                        String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
 
             var invalidIntervalRules = controlGroup.Rules.OfType<IntervalRule>().Where(r => r.IntervalType == IntervalRule.IntervalRuleIntervalType.Variable && 
                                                                                       !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidIntervalRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
-                                                                        String.Format(validationString, r.TimeSeries.Name, timeStep), controlGroup)));
+            invalidIntervalRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
+                                                                        String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
             
             return issues;
         }
