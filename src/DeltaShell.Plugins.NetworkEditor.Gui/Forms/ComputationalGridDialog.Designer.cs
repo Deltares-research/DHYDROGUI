@@ -329,7 +329,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ComputationalGridDialog";
-            this.Opacity = 0.99D;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;

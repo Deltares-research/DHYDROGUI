@@ -330,6 +330,7 @@ namespace SobekCompare.Tests
             RunTest(51);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest052()
         {
             RunTest(52);
@@ -350,6 +351,7 @@ namespace SobekCompare.Tests
             RunTest(55);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest056()
         {
             RunTest(56);
@@ -739,11 +741,13 @@ namespace SobekCompare.Tests
             RunTest(132);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest133()
         {
             RunTest(133);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest134()
         {
             RunTest(134);
@@ -1178,6 +1182,7 @@ namespace SobekCompare.Tests
             RunTest(219);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest220()
         {
             RunTest(220);
@@ -1190,6 +1195,7 @@ namespace SobekCompare.Tests
             RunTest(221);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest222()
         {
             RunTest(222);
@@ -1200,6 +1206,7 @@ namespace SobekCompare.Tests
             RunTest(223);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest224()
         {
             RunTest(224);
@@ -1235,6 +1242,7 @@ namespace SobekCompare.Tests
             RunTest(230);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest231()
         {
             RunTest(231);
@@ -1320,6 +1328,7 @@ namespace SobekCompare.Tests
             RunTest(247);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest248()
         {
             RunTest(248);
@@ -1440,11 +1449,13 @@ namespace SobekCompare.Tests
             RunTest(270);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest271()
         {
             RunTest(271);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest272()
         {
             RunTest(272);
@@ -2359,6 +2370,7 @@ namespace SobekCompare.Tests
             RunTest(445);
         }
         [Test]
+        [Category(TestCategory.WorkInProgress)] // At request of Jan N. (after changes to Boundary locations: SOBEK3-1035)
         public void RunTest446()
         {
             RunTest(446);
