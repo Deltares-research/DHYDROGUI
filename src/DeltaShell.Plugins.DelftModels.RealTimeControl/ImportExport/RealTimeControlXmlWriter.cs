@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var xDocument = GetTimeSeriesXDocument(xsdPath);
             if (xDocument.Root != null)
             {
-                GetXmlTimeSeriesFromControlGroups(xDocument.Root, controlGroups, timeDependentModel, rulesWithConstant);
+                GetXmlTimeSeriesFromControlGroups(xDocument.Root, controlGroups, timeDependentModel);
             }
             if (xDocument.Root.Nodes().Any())
             {
