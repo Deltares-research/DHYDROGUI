@@ -772,25 +772,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
             //Because it's constant and there are no more rules nothing should be written.
-            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
+            var controlGroupList = new List<ControlGroup> { controlGroup };
+            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
             Assert.IsNull(xDocument);
+
             //When changed to time series it should be valid, thus written.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
-            Assert.IsNotNull(xDocument);
+            var descendantsWithLocalName = GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
+            Assert.AreEqual( 1, descendantsWithLocalName.Count);
+            Assert.AreEqual(pidRule.Name, descendantsWithLocalName[0].Value);
         }
 
         [Test]
         public void GetSTimeSeriesReturnsDocumentWhenSetPointIsConstantOnlyInOneRuleTest()
         {
             SetUpGlobalPidRuleForGlobalControlGroup();
-            var secondControlGroup = GetNewControlGroupWithNewPidRule("PIDRule Test");
-            
+            var pidrule02TestName = "PIDRule02 Test";
+            var secondControlGroup = GetNewControlGroupWithNewPidRule(pidrule02TestName);
+            var controlGroupList = new List<ControlGroup>(){ controlGroup, secondControlGroup};
+
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            
             //Only one of the rules is constant, the document should still be written with the values of the second.
-            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup, secondControlGroup });
-            Assert.IsNotNull(xDocument);
+            var descendantsWithLocalName = GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
+            Assert.AreEqual(1, descendantsWithLocalName.Count);
+            Assert.AreEqual(pidrule02TestName, descendantsWithLocalName[0].Value); /* only the PidRule frome the second control group*/
+
+            /*Set both to time series, there should be two nodes now*/
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            descendantsWithLocalName = GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
+            Assert.AreEqual(2, descendantsWithLocalName.Count);
+
+            var valuesInNodes = descendantsWithLocalName.Select(d => d.Value).ToList();
+            Assert.IsTrue(valuesInNodes.Contains(pidRule.Name));
+            Assert.IsTrue(valuesInNodes.Contains(pidrule02TestName));
         }
 
         [Test]
@@ -798,9 +814,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             SetUpTwoPidRulesSameOutput();
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            var pidrule02 = controlGroup.Rules.FirstOrDefault(r => r != pidRule);
+            Assert.NotNull(pidrule02);
+            var pidrule02TestName = pidrule02.Name;
+
             //The document should be written but the constant one will be excluded
-            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
+            var controlGroupList = new List<ControlGroup> { controlGroup };
+            var descendantsWithLocalName = GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
+            Assert.AreEqual(1, descendantsWithLocalName.Count);
+            Assert.AreNotEqual(pidRule.Name, descendantsWithLocalName[0].Value);
+            Assert.AreEqual( controlGroup.Rules[1].Name, descendantsWithLocalName[0].Value);
+
+            /*Set both to time series, there should be two nodes now*/
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            descendantsWithLocalName = GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
+            Assert.AreEqual(2, descendantsWithLocalName.Count);
+
+            var valuesInNodes = descendantsWithLocalName.Select(d => d.Value).ToList();
+            Assert.IsTrue(valuesInNodes.Contains(pidRule.Name));
+            Assert.IsTrue(valuesInNodes.Contains(pidrule02TestName));
+
+        }
+
+        private List<XElement> GetxDocumentDescendantsForControlGroupListTimeSeries(string descendantsLocalName, List<ControlGroup> controlGroupList)
+        {
+            XDocument xDocument;
+            xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
             Assert.IsNotNull(xDocument);
+
+            var descendantsWithLocalName = xDocument.Descendants().Where(d => d.Name.LocalName == descendantsLocalName).ToList();
+            Assert.IsNotNull(descendantsWithLocalName);
+
+            return descendantsWithLocalName;
         }
 
         [Test]

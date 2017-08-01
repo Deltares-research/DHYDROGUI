@@ -5,13 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
-using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -205,7 +203,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 xmlValidator.Validate(xDocument);
                 return xDocument;
             }
-
 
             return null;
         }
