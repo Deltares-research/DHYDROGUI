@@ -5,9 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -23,6 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public const string PiTimeseriesxsd = "pi_timeseries.xsd";
         public const string RtcDataConfigXsd = "rtcDataConfig.xsd";
         public const string TreeVectorxsd = "treeVector.xsd";
+
+        private static ILog Log = LogManager.GetLogger(typeof(RealTimeControlXmlWriter));
 
         public static void CopyXsds(string copyToDirectory)
         {
@@ -187,10 +192,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static XDocument GetTimeSeriesXml(string xsdPath, ITimeDependentModel timeDependentModel, IList<ControlGroup> controlGroups)
         {
+            /* First exclude the groups which set point has been set to constant (SOBEK3-1074) */
+            var cgWithConstant = controlGroups.Where(cg => cg.Rules.OfType<PIDRule>()
+                .Any(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.Constant)).ToList();
+            if (cgWithConstant.Count > 0)
+            {
+                var cgWithConstantString = String.Join(", ", cgWithConstant.Select(cg => cg.Name).ToList());
+                controlGroups.RemoveAllWhere(cg => cgWithConstant.Contains(cg));
+                Log.WarnFormat(Resources.RealTimeControlModelExporter_WriteEngineXmlFiles_There_are_control_groups_with_Set_Point_set_to_constant_and_this_cannot_be_exported_into_the_DIMR_file__Groups___0_, cgWithConstantString);
+            }
+
             var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + PiTimeseriesxsd });
-
             var xDocument = GetTimeSeriesXDocument(xsdPath);
-
             if (xDocument.Root != null)
             {
                 GetXmlTimeSeriesFromControlGroups(xDocument.Root, controlGroups, timeDependentModel);
@@ -200,6 +213,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 xmlValidator.Validate(xDocument);
                 return xDocument;
             }
+
             return null;
         }
 

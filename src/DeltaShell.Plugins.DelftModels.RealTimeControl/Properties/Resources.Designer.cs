@@ -247,6 +247,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are control groups with Set Point set to constant and this cannot be exported into the DIMR file. Groups: {0}.
+        /// </summary>
+        public static string RealTimeControlModelExporter_WriteEngineXmlFiles_There_are_control_groups_with_Set_Point_set_to_constant_and_this_cannot_be_exported_into_the_DIMR_file__Groups___0_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelExporter_WriteEngineXmlFiles_There_are_control_groups_with_Se" +
+                        "t_Point_set_to_constant_and_this_cannot_be_exported_into_the_DIMR_file__Groups__" +
+                        "_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run parameters.
         /// </summary>
         public static string RealTimeControlModelProperties_Category_RunParameters {

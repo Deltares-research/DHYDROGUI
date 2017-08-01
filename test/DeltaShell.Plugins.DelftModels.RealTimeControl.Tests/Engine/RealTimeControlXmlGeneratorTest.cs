@@ -8,7 +8,6 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
@@ -211,7 +210,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
         }
-        
+
+        public ControlGroup SetUpTwoPidRulesForTwoControlGroups()
+        {
+            SetUpPidRule();
+
+            var newPidRule = new PIDRule("PIDRule Test");
+            var newInput = new Input();
+            var newOutput = new Output();
+            newPidRule.Inputs.Add(newInput);
+            newPidRule.Outputs.Add(newOutput);
+
+            newPidRule.Kd = 0.1;
+            newPidRule.Ki = 0.2;
+            newPidRule.Kp = 0.3;
+            newPidRule.Setting = new Setting { Min = 1.1, Max = 1.2, MaxSpeed = 1.3 };
+            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            newPidRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
+            newPidRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
+            newPidRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
+            newPidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+
+            var newCondition = new StandardCondition();
+            newCondition.TrueOutputs.Add(newPidRule);
+            newCondition.FalseOutputs.Add(newPidRule);
+
+            var newControlGroup = new ControlGroup();
+            newControlGroup.Rules.Add(newPidRule);
+            newControlGroup.Inputs.Add(newInput);
+            newControlGroup.Outputs.Add(newOutput);
+
+            return newControlGroup;
+        }
+
         public void SetUpIntervalRule()
         {
             intervalRule = new IntervalRule("Interval Test");
@@ -767,6 +798,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(piTimeSeries, xDocument.ToString(SaveOptions.DisableFormatting));
+        }
+
+        [Test]
+        public void GetSTimeSeriesReturnsNullWhenSetPointIsConstantTest()
+        {
+            SetUpPidRule();
+            //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            //Because it's constant and there are no more rules nothing should be written.
+            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
+            Assert.IsNull(xDocument);
+            //When changed to time series it should be valid, thus written.
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
+            Assert.IsNotNull(xDocument);
+        }
+
+        [Test]
+        public void GetSTimeSeriesReturnsDocumentWhenSetPointIsConstantOnlyInOneRuleTest()
+        {
+            var secondControlGroup = SetUpTwoPidRulesForTwoControlGroups();
+            
+            //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            
+            //Only one of the rules is constant, the document should still be written with the values of the second.
+            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup, secondControlGroup });
+            Assert.IsNotNull(xDocument);
         }
 
         [Test]
