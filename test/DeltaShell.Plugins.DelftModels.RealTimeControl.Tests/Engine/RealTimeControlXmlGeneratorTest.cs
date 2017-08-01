@@ -144,24 +144,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             };
         }
 
-        public void SetUpPidRule()
+        private void SetUpGlobalPidRuleForGlobalControlGroup()
         {
-            pidRule = new PIDRule("PIDRule Test");
-            pidRule.Inputs.Add(input);
-            pidRule.Outputs.Add(output);
-
-            pidRule.Kd = 0.1;
-            pidRule.Ki = 0.2;
-            pidRule.Kp = 0.3;
-            pidRule.Setting = new Setting { Min = 1.1, Max = 1.2, MaxSpeed = 1.3 };
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            pidRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
-            pidRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
-            pidRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
-            pidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+            pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
 
             controlGroup.Rules.Add(pidRule);
-
             condition.TrueOutputs.Add(pidRule);
             condition.FalseOutputs.Add(pidRule);
 
@@ -169,39 +156,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Outputs.Add(output);
         }
 
-        public void SetUpTwoPidRulesSameOutput()
+        private void SetUpTwoPidRulesSameOutput()
         {
-            pidRule = new PIDRule("PIDRule Test");
-            pidRule.Inputs.Add(input);
-            pidRule.Outputs.Add(output);
-
-            pidRule.Kd = 0.1;
-            pidRule.Ki = 0.2;
-            pidRule.Kp = 0.3;
-            pidRule.Setting = new Setting { Min = 1.1, Max = 1.2, MaxSpeed = 1.3 };
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            pidRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
-            pidRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
-            pidRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
-            pidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
-
+            pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
             controlGroup.Rules.Add(pidRule);
 
-
-            var pidRule2 = new PIDRule("PIDRule2 Test");
-            pidRule2.Inputs.Add(input);
-            pidRule2.Outputs.Add(output);
-
-            pidRule2.Kd = 0.1;
-            pidRule2.Ki = 0.2;
-            pidRule2.Kp = 0.3;
-            pidRule2.Setting = new Setting { Min = 1.1, Max = 1.2, MaxSpeed = 1.3 };
-            pidRule2.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            pidRule2.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
-            pidRule2.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
-            pidRule2.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
-            pidRule2.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
-
+            var pidRule2 = GetNewSetUpPIDRule("PIDRule2 Test", input, output);
             controlGroup.Rules.Add(pidRule2);
 
             condition.TrueOutputs.Add(pidRule);
@@ -211,39 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Outputs.Add(output);
         }
 
-        public ControlGroup SetUpTwoPidRulesForTwoControlGroups()
-        {
-            SetUpPidRule();
-
-            var newPidRule = new PIDRule("PIDRule Test");
-            var newInput = new Input();
-            var newOutput = new Output();
-            newPidRule.Inputs.Add(newInput);
-            newPidRule.Outputs.Add(newOutput);
-
-            newPidRule.Kd = 0.1;
-            newPidRule.Ki = 0.2;
-            newPidRule.Kp = 0.3;
-            newPidRule.Setting = new Setting { Min = 1.1, Max = 1.2, MaxSpeed = 1.3 };
-            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            newPidRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
-            newPidRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
-            newPidRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
-            newPidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
-
-            var newCondition = new StandardCondition();
-            newCondition.TrueOutputs.Add(newPidRule);
-            newCondition.FalseOutputs.Add(newPidRule);
-
-            var newControlGroup = new ControlGroup();
-            newControlGroup.Rules.Add(newPidRule);
-            newControlGroup.Inputs.Add(newInput);
-            newControlGroup.Outputs.Add(newOutput);
-
-            return newControlGroup;
-        }
-
-        public void SetUpIntervalRule()
+        private void SetUpIntervalRule()
         {
             intervalRule = new IntervalRule("Interval Test");
             intervalRule.Inputs.Add(input);
@@ -261,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Outputs.Add(output);
         }
 
-        public void SetUpLookupSignal()
+        private void SetUpLookupSignal()
         {
             var input2 = new Input
             {
@@ -282,10 +210,47 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Signals.Add(lookupSignal);
         }
 
+        private ControlGroup GetNewControlGroupWithNewPidRule(string pidRuleName)
+        {
+            var newInput = new Input();
+            var newOutput = new Output();
+            var newPidRule = GetNewSetUpPIDRule(pidRuleName, newInput, newOutput);
+
+            var newCondition = new StandardCondition();
+            newCondition.TrueOutputs.Add(newPidRule);
+            newCondition.FalseOutputs.Add(newPidRule);
+
+            var newControlGroup = new ControlGroup();
+            newControlGroup.Rules.Add(newPidRule);
+            newControlGroup.Inputs.Add(newInput);
+            newControlGroup.Outputs.Add(newOutput);
+
+            return newControlGroup;
+        }
+
+        private PIDRule GetNewSetUpPIDRule(String pidRuleName, Input inputForRule, Output outputForRule)
+        {
+            var newPidRule = new PIDRule(pidRuleName);
+            newPidRule.Inputs.Add(inputForRule);
+            newPidRule.Outputs.Add(outputForRule);
+
+            newPidRule.Kd = 0.1;
+            newPidRule.Ki = 0.2;
+            newPidRule.Kp = 0.3;
+            newPidRule.Setting = new Setting {Min = 1.1, Max = 1.2, MaxSpeed = 1.3};
+            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            newPidRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
+            newPidRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
+            newPidRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
+            newPidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+
+            return newPidRule;
+        }
+
         [Test]
         public void PidRuleToolsConfigGenerationTest()
         {
-            SetUpPidRule();
+            SetUpGlobalPidRuleForGlobalControlGroup();
             var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
             string strPid = header +
                           "<general>" +
@@ -652,7 +617,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetToolsDataXmlOnePIDRule()
         {
-            SetUpPidRule();
+            SetUpGlobalPidRuleForGlobalControlGroup();
             var strOutputXml = DataResultXml(input, output, false);
 
             var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup }, null);
@@ -773,7 +738,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetSTimeSeries()
         {
-            SetUpPidRule();
+            SetUpGlobalPidRuleForGlobalControlGroup();
             // preferred minimal coding in test string to avoid missing
             string piTimeSeries =
                 "<TimeSeries" + PiXmlheader + PiTimeSeriesxsd + " version=\"1.2\">" +
@@ -803,7 +768,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetSTimeSeriesReturnsNullWhenSetPointIsConstantTest()
         {
-            SetUpPidRule();
+            SetUpGlobalPidRuleForGlobalControlGroup();
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
             //Because it's constant and there are no more rules nothing should be written.
@@ -818,13 +783,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetSTimeSeriesReturnsDocumentWhenSetPointIsConstantOnlyInOneRuleTest()
         {
-            var secondControlGroup = SetUpTwoPidRulesForTwoControlGroups();
+            SetUpGlobalPidRuleForGlobalControlGroup();
+            var secondControlGroup = GetNewControlGroupWithNewPidRule("PIDRule Test");
             
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
-            
             //Only one of the rules is constant, the document should still be written with the values of the second.
             var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup, secondControlGroup });
+            Assert.IsNotNull(xDocument);
+        }
+
+        [Test]
+        public void GetSTimeSeriesReturnsDocumentWhenTwoRulesInAControlGroupAndOneSetPointIsConstantTest()
+        {
+            SetUpTwoPidRulesSameOutput();
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            //The document should be written but the constant one will be excluded
+            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, new List<ControlGroup> { controlGroup });
             Assert.IsNotNull(xDocument);
         }
 
@@ -1563,7 +1538,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</triggers>" +
                 "</rtcToolsConfig>";
 
-            SetUpPidRule();
+            SetUpGlobalPidRuleForGlobalControlGroup();
             SetUpLookupSignal();
 
             var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> { controlGroup });
@@ -1575,7 +1550,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetToolsDataXml_OnePIDRuleOneLookupSignal()
         {
-            SetUpPidRule();
+            SetUpGlobalPidRuleForGlobalControlGroup();
             SetUpLookupSignal();
 
             var strOutputXml = DataResultXml(input, output, true);

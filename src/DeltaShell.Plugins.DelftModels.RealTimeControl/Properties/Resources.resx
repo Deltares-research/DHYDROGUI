@@ -259,7 +259,7 @@
   <data name="RealTimeControlModelProperties_CoordinateSystem_DisplayName" xml:space="preserve">
     <value>Coordinate System</value>
   </data>
-  <data name="RealTimeControlModelExporter_WriteEngineXmlFiles_There_are_control_groups_with_Set_Point_set_to_constant_and_this_cannot_be_exported_into_the_DIMR_file__Groups___0_" xml:space="preserve">
-    <value>There are control groups with Set Point set to constant and this cannot be exported into the DIMR file. Groups: {0}</value>
+  <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant" xml:space="preserve">
+    <value>PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant</value>
   </data>
 </root>
