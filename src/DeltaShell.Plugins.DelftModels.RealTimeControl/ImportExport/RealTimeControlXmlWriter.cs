@@ -8,6 +8,8 @@ using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -23,6 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public const string PiTimeseriesxsd = "pi_timeseries.xsd";
         public const string RtcDataConfigXsd = "rtcDataConfig.xsd";
         public const string TreeVectorxsd = "treeVector.xsd";
+
+        private static ILog Log = LogManager.GetLogger(typeof(RealTimeControlXmlWriter));
 
         public static void CopyXsds(string copyToDirectory)
         {
@@ -187,10 +191,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public static XDocument GetTimeSeriesXml(string xsdPath, ITimeDependentModel timeDependentModel, IList<ControlGroup> controlGroups)
         {
-            var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + PiTimeseriesxsd });
-
+            var xmlValidator =
+                new Validator(new List<string> {xsdPath + Path.DirectorySeparatorChar + PiTimeseriesxsd});
             var xDocument = GetTimeSeriesXDocument(xsdPath);
-
             if (xDocument.Root != null)
             {
                 GetXmlTimeSeriesFromControlGroups(xDocument.Root, controlGroups, timeDependentModel);
@@ -200,6 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 xmlValidator.Validate(xDocument);
                 return xDocument;
             }
+
             return null;
         }
 
@@ -681,6 +685,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             {
                 foreach (var ruleBase in group.Rules)
                 {
+                    var ruleAsPid = ruleBase as PIDRule;
+                    if (ruleAsPid != null && ruleAsPid.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.Constant)
+                    {
+                        Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant, ruleAsPid.Name);
+                        continue;
+                    }
                     foreach (var timeSeries in ruleBase.XmlImportTimeSeries(@group.Name, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
                         var key = group.Name + "_" + timeSeries.LocationId + "_" + timeSeries.ParameterId;

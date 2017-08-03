@@ -436,6 +436,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant.
+        /// </summary>
+        public static string RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant {
+            get {
+                return ResourceManager.GetString("RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_serie" +
+                        "s_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap rtcmodel {

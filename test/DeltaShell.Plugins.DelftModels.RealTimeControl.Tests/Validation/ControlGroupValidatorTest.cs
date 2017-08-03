@@ -120,7 +120,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(0, validationResult.InfoCount);
         }
 
-        [Test] public void ValidationFailsForSetPointTimeStepSmallerThanModelTimeStep()
+        [Test]
+        public void ValidationFailsForSetPointTimeStepSmallerThanModelTimeStep()
         {
             var timeSeries = new TimeSeries()
             {
@@ -186,6 +187,112 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var validator = new ControlGroupValidator();
             Assert.AreEqual(0, validator.Validate(model, controlGroup).GetAllIssuesRecursive().Count(
                                 i => ReferenceEquals(i.Subject, PIDrule)), "The number of validation issues for the PID rule");
+        }
+
+        [Test]
+        public void ValidationFailsForIrregularNotMultipleTimeStepPidControllerTest()
+        {
+            DateTime startTime;
+            TimeSpan timeStep;
+            DateTime irregularTimeStep;
+            ControlGroup controlGroup;
+
+            var timeSeries = SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
+            var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = startTime };
+            var PIDrule = new PIDRule()
+                { TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries };
+            controlGroup.Rules.Add(PIDrule);
+            model.ControlGroups.Add(controlGroup);
+
+            var validator = new ControlGroupValidator();
+            var report = validator.Validate(model, controlGroup);
+            var validationIssues = report.GetAllIssuesRecursive();
+            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, PIDrule)).ToList();
+            Assert.AreEqual(1, foundIssues.Count,"The number of validation issues for the PID rule" );
+
+            var errorExpected = String.Format("Series '{0}' time steps not multiple of model time step {1}.", PIDrule.TimeSeries.Name, model.TimeStep,
+                irregularTimeStep);
+            Assert.AreEqual( errorExpected, foundIssues[0].Message );
+        }
+
+        [Test]
+        public void ValidationFailsForIrregularNotMultipleTimeStepTimeRuleControllerTest()
+        {
+            DateTime startTime;
+            TimeSpan timeStep;
+            DateTime irregularTimeStep;
+            ControlGroup controlGroup;
+            var timeSeries = SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
+
+            var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = startTime };
+
+            var timeRule = new TimeRule()
+                { TimeSeries = timeSeries};
+            controlGroup.Rules.Add(timeRule);
+            model.ControlGroups.Add(controlGroup);
+
+            var validator = new ControlGroupValidator();
+            var report = validator.Validate(model, controlGroup);
+            var validationIssues = report.GetAllIssuesRecursive();
+            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
+            Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the PID rule");
+
+            var errorExpected = String.Format("Series '{0}' time steps not multiple of model time step {1}.", timeRule.TimeSeries.Name, model.TimeStep,
+                irregularTimeStep);
+            Assert.AreEqual(errorExpected, foundIssues[0].Message);
+        }
+
+        [Test]
+        public void ValidationFailsForIrregularNotMultipleTimeStepIntervalRuleControllerTest()
+        {
+            DateTime startTime;
+            TimeSpan timeStep;
+            DateTime irregularTimeStep;
+            ControlGroup controlGroup;
+            var timeSeries = SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
+
+            var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = startTime };
+
+            var intervalRule = new IntervalRule()
+                { TimeSeries = timeSeries, IntervalType = IntervalRule.IntervalRuleIntervalType.Variable};
+
+            controlGroup.Rules.Add(intervalRule);
+            model.ControlGroups.Add(controlGroup);
+
+            var validator = new ControlGroupValidator();
+            var report = validator.Validate(model, controlGroup);
+            var validationIssues = report.GetAllIssuesRecursive();
+            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
+            Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the PID rule");
+
+            var errorExpected = String.Format("Series '{0}' time steps not multiple of model time step {1}.", intervalRule.TimeSeries.Name, model.TimeStep,
+                irregularTimeStep);
+            Assert.AreEqual(errorExpected, foundIssues[0].Message);
+        }
+
+        private static TimeSeries SetRealTimeControllerControlGroup(out DateTime startTime, out TimeSpan timeStep,
+            out DateTime irregularTimeStep, out ControlGroup controlGroup)
+        {
+            var timeSeries = new TimeSeries()
+            {
+                Components = {new Variable<double>("SetPoint")},
+                Name = "SetPoint"
+            };
+
+            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
+            timeSeries.Time.InterpolationType = InterpolationType.Linear;
+            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+
+            startTime = new DateTime(2012, 1, 1);
+            timeStep = new TimeSpan(0, 1, 0, 0);
+
+            timeSeries[startTime] = 3.0;
+            timeSeries[startTime.AddSeconds(timeStep.TotalSeconds)] = 3.5;
+            irregularTimeStep = startTime.AddSeconds(timeStep.TotalSeconds + 1);
+            timeSeries[irregularTimeStep] = 3.5; //Irregular time series, timestep not multiple.
+            controlGroup = new ControlGroup();
+            controlGroup.Outputs.Add(new Output());
+            return timeSeries;
         }
     }
 }
