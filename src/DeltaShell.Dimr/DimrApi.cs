@@ -93,7 +93,9 @@ namespace DeltaShell.Dimr
 
         public void set_feedback_logger()
         {
-            DimrApiWrapper.set_logger_callback(FeedbackLog);
+            // Disable logging callback (temporary)
+            //DimrApiWrapper.set_logger_callback(FeedbackLog);
+            DimrApiWrapper.set_logger_callback(null);
         }
 
         [ExcludeFromCodeCoverage]
@@ -371,6 +373,7 @@ namespace DeltaShell.Dimr
         public void Dispose()
         {
             //
+            DimrApiWrapper.set_logger_callback(null);
         }
 
         #endregion
