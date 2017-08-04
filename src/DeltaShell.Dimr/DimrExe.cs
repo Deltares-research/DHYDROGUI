@@ -211,7 +211,7 @@ namespace DeltaShell.Dimr
         {
         }
 
-        public void SetLoggingLevel(string logType, long level)
+        public void SetLoggingLevel(string logType, Level level)
         {
         }
     }
