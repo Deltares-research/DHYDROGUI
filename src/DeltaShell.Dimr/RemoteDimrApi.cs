@@ -20,8 +20,8 @@ namespace DeltaShell.Dimr
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
             api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(is64BitOperatingSystem);
-            api.SetLoggingLevel("feedbackLevel", (long)DimrApiDataSet.FeedbackLevel);
-            api.SetLoggingLevel("debugLevel", (long)DimrApiDataSet.LogFileLevel);
+            api.SetLoggingLevel("feedbackLevel", DimrApiDataSet.FeedbackLevel);
+            api.SetLoggingLevel("debugLevel", DimrApiDataSet.LogFileLevel);
         }
 
         #region Implementation of IDisposable
@@ -29,27 +29,31 @@ namespace DeltaShell.Dimr
         ~RemoteDimrApi()
         {
             // in case someone forgets to dispose..
-            DisposeInternal();
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            if (disposed)
-                return;
-
-            DisposeInternal();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void DisposeInternal()
+        protected virtual void Dispose(bool disposing)
         {
-            if (api != null)
+            if (!disposed)
             {
-                RemoteInstanceContainer.RemoveInstance(api);
+                if (disposing)
+                {
+                    if (api != null)
+                    {
+                        api.Dispose(); 
+                        RemoteInstanceContainer.RemoveInstance(api);
+                        Thread.Sleep(100); // wait for process to truly exit
+                    }
+                    api = null;
+                }
+                disposed = true;
             }
-            api = null;
-            disposed = true;
-            Thread.Sleep(100); // wait for process to truly exit
         }
 
         #endregion
@@ -161,7 +165,7 @@ namespace DeltaShell.Dimr
             if (api != null) api.SetValuesInt(variable, values);
         }
 
-        public void SetLoggingLevel(string logType, long level)
+        public void SetLoggingLevel(string logType, Level level)
         {
             if (api != null) api.SetLoggingLevel(logType, level);
         }

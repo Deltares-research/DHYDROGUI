@@ -8,7 +8,6 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
@@ -20,12 +19,10 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Geometries;
@@ -66,6 +63,54 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
+        public void VerifyExpectedOutputLinkCoverages()
+        {
+            var expectedOutputLinkCoverageNames = new List<string>
+            {
+                "1d2d_zeta",
+                "1d2d_crest_level",
+                "1d2d_b_2di",
+                "1d2d_b_2dv",
+                "1d2d_d_2dv",
+                "1d2d_qzeta",
+                "1d2d_q_lat",
+                "1d2d_cfl",
+                "1d2d_sb",
+                "1d2d_s0_2d",
+                "1d2d_s1_2d",
+            };
+
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            {
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+
+                app.Run();
+                Model1D2DBuilder.Create1d2dModel(app);
+
+                ICompositeActivity hydroModel = app.Project.RootFolder.Models.Cast<ICompositeActivity>().First();
+
+                ActivityRunner.RunActivity(hydroModel);
+
+                var coupler = hydroModel.CurrentWorkflow as Iterative1D2DCoupler;
+                Assert.NotNull(coupler);
+
+                Assert.AreEqual(expectedOutputLinkCoverageNames.Count, coupler.LinkCoverages.Count,
+                    "Expected number of 1D2D output link coverages differs from actual, is this an intentional change? Verify this with FM kernel");
+
+                foreach (var coverageName in expectedOutputLinkCoverageNames)
+                {
+                    Assert.IsTrue(coupler.LinkCoverages.Select(lc => lc.Name).Contains(coverageName),
+                        string.Format("Could not find expected 1D2D output link coverage: {0}, was this renamed? Verify this with FM kernel", coverageName));
+                }
+
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
         public void VerifyThatClearingOutputOfHydroModelWith1D2DModelRemovesOutputLinkCoverages()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
@@ -85,8 +130,8 @@ namespace Sobek.IntegrationTests
                 var coupler = hydroModel.CurrentWorkflow as Iterative1D2DCoupler;
                 Assert.NotNull(coupler);
 
-                Assert.AreEqual(9, coupler.LinkCoverages.Count);
-                Assert.AreEqual(9, coupler.Data.OutputDataItems.Count());
+                Assert.IsTrue(coupler.LinkCoverages.Any());
+                Assert.IsTrue(coupler.Data.OutputDataItems.Any());
 
                 coupler.ClearOutput();
 

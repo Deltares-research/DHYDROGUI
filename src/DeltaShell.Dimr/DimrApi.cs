@@ -22,7 +22,8 @@ namespace DeltaShell.Dimr
         private List<string> messages;
         private bool reduceLogging = false;
         public string KernelDirs { get; set; }
-
+        private DimrApiWrapper.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
+        
         static DimrApi()
         {
             DimrApiDataSet.SetSharedPath();
@@ -35,8 +36,9 @@ namespace DeltaShell.Dimr
             tStart = tEnd = tStep = tCurrent = 0;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, (long)DimrApiDataSet.FeedbackLevel);
-            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, (long)DimrApiDataSet.LogFileLevel);
+            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, Level.Debug);
+            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, Level.Debug);
+            cMessageCallback = FeedbackLog;
             set_feedback_logger();
             Logger = BMI_Logger_function;
         }
@@ -93,9 +95,7 @@ namespace DeltaShell.Dimr
 
         public void set_feedback_logger()
         {
-            // Disable logging callback (temporary)
-            //DimrApiWrapper.set_logger_callback(FeedbackLog);
-            DimrApiWrapper.set_logger_callback(null);
+            DimrApiWrapper.set_logger_callback(cMessageCallback);
         }
 
         [ExcludeFromCodeCoverage]
@@ -115,8 +115,13 @@ namespace DeltaShell.Dimr
             {
                 dateTimeString = time;
             }
+            Level debugLevel = Level.Info;
+            if (Enum.IsDefined(typeof(Level), (int)level))
+            {
+                debugLevel = (Level) level;
+            }
             
-            msg = string.Format("Dimr [{0}] {1} >> {2}", dateTimeString , Enum.GetName(typeof(DimrApiDataSet.DebugLevel), level), msg);
+            msg = string.Format("Dimr [{0}] {1} >> {2}", dateTimeString , Enum.GetName(typeof(Level), debugLevel), msg);
             if (useMessagesBuffering)
             {
                 messages.Add(msg);
@@ -214,12 +219,12 @@ namespace DeltaShell.Dimr
             return 0;
         }
 
-        public void SetLoggingLevel(string debugLevelType, long level)
+        public void SetLoggingLevel(string debugLevelType, Level level)
         {
             // Allocating memory for long
-            IntPtr intPointer = Marshal.AllocHGlobal(sizeof(long));
+            IntPtr intPointer = Marshal.AllocHGlobal(sizeof(int));
 
-            Marshal.WriteInt64(intPointer, level);
+            Marshal.WriteInt32(intPointer, (int)level);
 
             // sending intPointer to unmanaged code here
 
@@ -364,7 +369,6 @@ namespace DeltaShell.Dimr
                 }
             }
         }
-
         
         #endregion
 
@@ -372,7 +376,6 @@ namespace DeltaShell.Dimr
 
         public void Dispose()
         {
-            //
             DimrApiWrapper.set_logger_callback(null);
         }
 

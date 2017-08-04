@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Aop;
+using BasicModelInterface;
+
 
 namespace DeltaShell.Dimr.Gui.ViewModels
 {
@@ -13,23 +15,23 @@ namespace DeltaShell.Dimr.Gui.ViewModels
             
         }
 
-        public DimrApiDataSet.DimrLoggingLevel CurrentLogfileLevel
+        public Level CurrentLogfileLevel
         {
             get { return DimrApiDataSet.LogFileLevel; }
             set { DimrApiDataSet.LogFileLevel = value; }
         }
 
-        public DimrApiDataSet.DimrLoggingLevel CurrentFeedbackLevel
+        public Level CurrentFeedbackLevel
         {
             get { return DimrApiDataSet.FeedbackLevel; }
             set { DimrApiDataSet.FeedbackLevel = value; }
         }
 
-        public IEnumerable<DimrApiDataSet.DimrLoggingLevel> Levels
+        public IEnumerable<Level> Levels
         {
             get
             {
-                return Enum.GetValues(typeof(DimrApiDataSet.DimrLoggingLevel)).Cast<DimrApiDataSet.DimrLoggingLevel>(); 
+                return Enum.GetValues(typeof(Level)).Cast<Level>(); 
             }
         }
     }
