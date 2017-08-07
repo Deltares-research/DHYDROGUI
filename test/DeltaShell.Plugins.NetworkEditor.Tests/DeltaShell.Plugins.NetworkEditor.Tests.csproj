@@ -284,6 +284,7 @@
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewTest.cs" />
     <Compile Include="MapLayers\Editors\ChannelInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\CompositeStructureEditorTest.cs" />
+    <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\Snapping\HydroLinkSnapRuleTest.cs" />
     <Compile Include="MapLayers\Editors\StructureEditorTest.cs" />
