@@ -26,22 +26,27 @@ namespace DeltaShell.Dimr.Tests
         public void TestDimrApi()
         {
             var dimrRefDate = new DateTime(1981,8,31,0,0,0);
-            var api = new DimrApi {DimrRefDate = dimrRefDate};
-            Assert.AreEqual(dimrRefDate, api.StartTime);
-            Assert.AreEqual(dimrRefDate, api.StopTime);
-            Assert.AreEqual(TimeSpan.Zero, api.TimeStep);
-            Assert.AreEqual(dimrRefDate, api.CurrentTime);
-            Assert.AreEqual(1, api.Messages.Length);
-            var useMessagesBuffering = (bool)TypeUtils.GetField(api, "useMessagesBuffering");
-            Assert.True(useMessagesBuffering);
+            using (var api = new DimrApi {DimrRefDate = dimrRefDate})
+            {
+                Assert.AreEqual(dimrRefDate, api.StartTime);
+                Assert.AreEqual(dimrRefDate, api.StopTime);
+                Assert.AreEqual(TimeSpan.Zero, api.TimeStep);
+                Assert.AreEqual(dimrRefDate, api.CurrentTime);
+                Assert.AreEqual(1, api.Messages.Length);
+                var useMessagesBuffering = (bool) TypeUtils.GetField(api, "useMessagesBuffering");
+                Assert.True(useMessagesBuffering);
+            }
         }
 
         [Test()]
         public void TestDimrApiWithOutMessageBuffering()
         {
-            var api = new DimrApi(false);
-            var useMessagesBuffering = (bool)TypeUtils.GetField(api, "useMessagesBuffering");
-            Assert.False(useMessagesBuffering);
+            using (var api = new DimrApi(false))
+            {
+                var useMessagesBuffering = (bool)TypeUtils.GetField(api, "useMessagesBuffering");
+                Assert.False(useMessagesBuffering);    
+            }
+            
         }
 
         [Test()]
