@@ -147,20 +147,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void TestOutputIsNotEmptyForCompositeModelAfterRunActivity()
-        {
-            /*Sobek3-848*/
-            var hydroModel = new CompositeModel();
-            var simpleModel = new SimpleModel();
-            hydroModel.Activities.Add(simpleModel);
-            Assert.IsTrue(hydroModel.OutputIsEmpty);
-
-            ActivityRunner.RunActivity(hydroModel);
-            Assert.AreEqual(hydroModel.Status, ActivityStatus.Cleaned);
-            Assert.IsFalse(hydroModel.OutputIsEmpty);
-        }
-
-        [Test]
         public void RunUsingSimpleModel2()
         {
             var m1 = new SimpleModel { Input = 1 };
