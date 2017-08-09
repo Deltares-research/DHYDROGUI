@@ -23,7 +23,9 @@ namespace DeltaShell.Dimr
         private bool reduceLogging = false;
         public string KernelDirs { get; set; }
         private DimrApiWrapper.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
-        
+        private DateTime currentTime;
+        private DateTime dimrRefDate;
+
         static DimrApi()
         {
             DimrApiDataSet.SetSharedPath();
@@ -34,10 +36,11 @@ namespace DeltaShell.Dimr
         public DimrApi(bool useMessagesBuffering)
         {
             tStart = tEnd = tStep = tCurrent = 0;
+            dimrRefDate = DateTime.MinValue;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, Level.Debug);
-            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, Level.Debug);
+            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, DimrApiDataSet.LogFileLevel);
             cMessageCallback = FeedbackLog;
             set_feedback_logger();
             Logger = BMI_Logger_function;
@@ -65,7 +68,16 @@ namespace DeltaShell.Dimr
 
         #region Implementation of IDimrApi
 
-        public virtual DateTime DimrRefDate { get; set; }
+        public virtual DateTime DimrRefDate
+        {
+            get { return dimrRefDate; }
+            set
+            {
+                dimrRefDate = value;
+                currentTime = dimrRefDate.AddSeconds(tCurrent);
+            }
+        }
+
         public void SetValues(string variable, int[] index, Array values)
         {
         }
@@ -90,7 +102,7 @@ namespace DeltaShell.Dimr
 
         public DateTime CurrentTime
         {
-            get { return DimrRefDate.AddSeconds(tCurrent); }
+            get { return currentTime; }
         }
 
         public void set_feedback_logger()
@@ -248,6 +260,7 @@ namespace DeltaShell.Dimr
         {
             DimrApiWrapper.update(step);
             DimrApiWrapper.get_current_time(ref tCurrent);
+            currentTime = DimrRefDate.AddSeconds(tCurrent);
             return 0;
         }
 

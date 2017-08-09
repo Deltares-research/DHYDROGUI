@@ -84,6 +84,8 @@ namespace DeltaShell.Dimr
             {
                 throw new Exception("Couldn't initialize DIMR Api");
             }
+            timeStep = dimrApi.TimeStep.TotalSeconds;
+            stopTime = dimrApi.StopTime;
         }
 
         public void OnProgressChanged()
@@ -98,11 +100,11 @@ namespace DeltaShell.Dimr
             try
             {
                 if (dimrApi == null) return;
-                dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
+                dimrApi.Update(timeStep);
 
                 model.CurrentTime = dimrApi.CurrentTime;
                 OnProgressChanged();
-                if (dimrApi.StopTime.Subtract(dimrApi.CurrentTime).TotalSeconds <= 0)
+                if (stopTime.Subtract(model.CurrentTime).TotalSeconds <= 0)
                 {
                     model.Status = ActivityStatus.Done;
                 }
@@ -151,6 +153,9 @@ namespace DeltaShell.Dimr
             createdBy = createdBy,
             fileVersion = fileVersion
         };
+
+        private double timeStep;
+        private DateTime stopTime;
 
         public bool CanCommunicateWithDimrApi
         {
