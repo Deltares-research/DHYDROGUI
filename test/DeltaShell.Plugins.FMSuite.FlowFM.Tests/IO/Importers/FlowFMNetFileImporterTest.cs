@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     [TestFixture]
     public class FlowFMNetFileImporterTest
     {
-        private const string NonExistingFilePath = "NonExistingFile.nc";
         private FlowFMNetFileImporter importer;
 
         [SetUp]
