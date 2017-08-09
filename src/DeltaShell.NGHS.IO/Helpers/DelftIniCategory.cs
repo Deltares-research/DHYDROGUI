@@ -154,10 +154,6 @@ namespace DeltaShell.NGHS.IO.Helpers
 
     public class PropertyNotFoundInFileException : FileReadingException
     {
-        public PropertyNotFoundInFileException()
-        {
-        }
-
         public PropertyNotFoundInFileException(string message)
             : base(message)
         {

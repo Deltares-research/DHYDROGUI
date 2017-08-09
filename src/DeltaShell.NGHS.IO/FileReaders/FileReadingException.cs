@@ -4,10 +4,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
 {
     public class FileReadingException : Exception
     {
-        public FileReadingException()
-        {
-        }
-
         public FileReadingException(string message)
             : base(message)
         {
