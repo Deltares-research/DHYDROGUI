@@ -87,11 +87,4 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.IsEmpty(sourceTypes);
         }
     }
-
-
-
-    //[TestCase(BoundaryConditionDataType.AstroComponents)]
-    //[TestCase(BoundaryConditionDataType.AstroCorrection)]
-    //[TestCase(BoundaryConditionDataType.Harmonics)]
-    //[TestCase(BoundaryConditionDataType.HarmonicCorrection)]
 }
