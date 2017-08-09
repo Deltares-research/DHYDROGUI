@@ -267,6 +267,7 @@
     <Compile Include="IO\DelftIniCategoryExtensionTests.cs" />
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
     <Compile Include="IO\Exporters\GeometryZipExporterTest.cs" />
+    <Compile Include="IO\Exporters\ImportedNetFileXyzExporterTest.cs" />
     <Compile Include="IO\ExtForceFileHelperTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
