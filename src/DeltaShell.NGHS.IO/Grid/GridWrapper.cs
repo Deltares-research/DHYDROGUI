@@ -578,6 +578,16 @@ namespace DeltaShell.NGHS.IO.Grid
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_network_id_from_mesh_id", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_network_id_from_mesh_id_dll([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int networkid);
 
+        // Read/Write discretisation point ids
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_mesh_ids", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_def_mesh_ids_dll([In] ref int ioncid, [In] ref int meshid, [In] ref int iloctype);
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_var_chars", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_put_var_chars_dll([In] ref int ioncid, [In] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder varname, [In] interop_charinfo[] values, [In] ref int nvalues);
+
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_var_chars", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_var_chars_dll([In] ref int ioncid, [In] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder varname, [In, Out] interop_charinfo[] values, [In] ref int nvalues);
+
 
         #endregion
 
@@ -892,6 +902,22 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return ionc_get_1d_network_branchorder_dll(ref ioncId, ref networkId, ref pointerToBranchOrder, ref numberOfBranches);
         }
+
+        public int CreateNetworkDiscretisationPointIds(int ioncid, int meshid, int iconvtype)
+        {
+            return ionc_def_mesh_ids_dll(ref ioncid, ref meshid, ref iconvtype);
+        }
+
+        public int WriteNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, interop_charinfo[] values, int nvalues)
+        {
+            return ionc_put_var_chars_dll(ref ioncid, ref meshid, varname, values, ref nvalues);
+        }
+
+        public int ReadNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, interop_charinfo[] values, int nvalues)
+        {
+            return ionc_get_var_chars_dll(ref ioncid, ref meshid, varname, values, ref nvalues);
+        }
+
         #endregion
     }
 }

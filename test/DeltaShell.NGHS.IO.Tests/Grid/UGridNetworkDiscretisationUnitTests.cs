@@ -91,6 +91,29 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write the network discretisation point ids" + standardErrorMessage)]
+        public void WhenInvoking_WriteNetworkDiscretisationPointIds_AndApiReturnsAnErrorValueThenThrowException()
+        {
+            uGridNetworkDiscretisationApi.Expect(api => api.WriteNetworkDiscretisationPointsIds(Arg<int>.Is.Anything, Arg<string[]>.Is.Anything))
+                .Return(errorValue).Repeat.Once();
+
+            mocks.ReplayAll();
+            
+            gridNetworkDiscretisation.WriteNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<string[]>.Is.Anything);
+        }
+
+        [Test]
+        public void WhenInvoking_WriteNetworkDiscretisationPointIds_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
+        {
+            uGridNetworkDiscretisationApi.Expect(api => api.WriteNetworkDiscretisationPointsIds(Arg<int>.Is.Anything, Arg<string[]>.Is.Anything))
+                .Return(noErrorValue).Repeat.Once();
+
+            mocks.ReplayAll();
+
+            gridNetworkDiscretisation.WriteNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<string[]>.Is.Anything);
+        }
+        
+        [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the mesh discretisation name" + standardErrorMessage)]
         public void WhenInvoking_GetNetworkDiscretisationName_AndApiReturnsAnErrorValueThenThrowException()
         {
@@ -242,5 +265,30 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             gridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(Arg<int>.Is.Anything, out Arg<int[]>.Out(null).Dummy, out Arg<double[]>.Out(null).Dummy);
         }
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't read the network discretisation point ids" + standardErrorMessage)]
+        public void WhenInvoking_ReadNetworkDiscretisationPointsIds_AndApiReturnsAnErrorValueThenThrowException()
+        {
+            uGridNetworkDiscretisationApi.Expect(api => api.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(null).Dummy))
+                .Return(errorValue).Repeat.Once();
+
+            mocks.ReplayAll();
+
+            gridNetworkDiscretisation.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(null).Dummy);
+        }
+
+        [Test]
+        public void WhenInvoking_ReadNetworkDiscretisationPointIds_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
+        {
+            uGridNetworkDiscretisationApi.Expect(api => api.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(null).Dummy))
+                .Return(noErrorValue).Repeat.Once();
+
+            mocks.ReplayAll();
+
+            gridNetworkDiscretisation.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(null).Dummy);
+        }
+
+
     }
 }

@@ -13,17 +13,20 @@ namespace DeltaShell.Plugins.NetworkEditor
         public int NumberOfDiscretisationPoints;
         public int[] BranchIdx = new int[0];
         public double[] Offset = new double[0];
+        public string[] DiscretisationPointNames = new string[0];
+
         public NetworkDiscretisationUGridDataModel(IDiscretization discretisation)
         {
             SetNetworkDiscretisationData(discretisation);
         }
 
-        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offset, int networkId)
+        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offset, int networkId, string[] discretisationPointNames)
         {
             Name = name;
             BranchIdx = branchIndices;
             Offset = offset;
             NetworkId = networkId;
+            DiscretisationPointNames = discretisationPointNames;
         }
 
         private void SetNetworkDiscretisationData(IDiscretization discretisation)
@@ -48,9 +51,11 @@ namespace DeltaShell.Plugins.NetworkEditor
                 .ToArray();
 
             Offset = discretisationPoints.Select(l => l.Chainage).ToArray();
+
+            DiscretisationPointNames = discretisationPoints.Select(p => p.Name).ToArray();
         }
 
-        public static IDiscretization ReconstructNetworkDiscretisation(INetwork network, string name, int[] branchIndices, double[] offset)
+        public static IDiscretization ReconstructNetworkDiscretisation(INetwork network, string name, int[] branchIndices, double[] offset, string[] discretisationPointNames)
         {
             if (network == null)
             {
@@ -69,7 +74,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             };
 
             // check if size of branchindices and offsets are equal and > 0.
-            if (branchIndices.Length != offset.Length)
+            if (branchIndices.Length != offset.Length 
+                || branchIndices.Length != discretisationPointNames.Length)
             {
                 return null;// throw new Exception(string.Format("Can't reconstruct the network discretisation because the "));
             }
@@ -87,8 +93,9 @@ namespace DeltaShell.Plugins.NetworkEditor
             {
                 var branchIndex = branchIndices[i];
                 var branch = network.Branches[branchIndex];
+                var discretisationPointName = discretisationPointNames[i];
 
-                var networkLocation = new NetworkLocation(branch, offset[i]);
+                var networkLocation = new NetworkLocation(branch, offset[i]) { Name = discretisationPointName };
 
                 discretisation.Locations.Values.Add(networkLocation);
             }

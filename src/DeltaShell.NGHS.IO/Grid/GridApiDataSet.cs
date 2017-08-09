@@ -28,6 +28,7 @@ namespace DeltaShell.NGHS.IO.Grid
             public const string NetNodeZ = "NetNode_z";
             public const string FaceZ = "face_z";
             public const string M = "m";
+            public const string DiscretisationPointIds = "node_ids";
         }
         
         public class GridConstants

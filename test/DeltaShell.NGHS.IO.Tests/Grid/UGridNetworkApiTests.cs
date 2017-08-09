@@ -2209,6 +2209,30 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
         }
 
+        [Test]
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void WriteNetworkDiscretisationPointsIds_InvalidIntializationReturnErrorTest(bool isInitialized, bool isReady)
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(isInitialized).Repeat.Any();
+            uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(isReady).Repeat.Any();
+
+            mocks.ReplayAll();
+
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(Arg<int>.Is.Anything, Arg<string[]>.Is.Anything));
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_InvalidIntializationReturnErrorTest()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(false).Repeat.Any();
+
+            mocks.ReplayAll();
+
+            string[] ids = {"", "", "", ""};
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+        }
+
         #endregion
 
         #region Read network discretisation

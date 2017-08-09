@@ -53,16 +53,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             };
 
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0) {Name = "point_01"});
             // add calculation points
             var location1 = new NetworkLocation(branch1, 1);
             networkDiscretisation.Locations.Values.Add(location1);
-            var location2 = new NetworkLocation(branch1, 2);
+            var location2 = new NetworkLocation(branch1, 2) { Name = "point_03" };
             networkDiscretisation.Locations.Values.Add(location2);
-            var location3 = new NetworkLocation(branch1, 3);
+            var location3 = new NetworkLocation(branch1, 3) { Name = "point_04" };
             networkDiscretisation.Locations.Values.Add(location3);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5) { Name = "point_05" });
 
             return networkDiscretisation;
         }
@@ -80,6 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.AreEqual(4, dataModel.NumberOfMeshEdges);
             Assert.AreEqual(new[] {0, 0, 0, 0, 0}, dataModel.BranchIdx);
             Assert.AreEqual(new[] {0, 1, 2, 3, 5}, dataModel.Offset);
+            Assert.AreEqual(new[] { "point_01", "my Branch 1_1.000", "point_03", "point_04", "point_05" }, dataModel.DiscretisationPointNames);
         }
 
         [Test]
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var dataModel = new NetworkDiscretisationUGridDataModel(discretisation);
 
-            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset);
+            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset, dataModel.DiscretisationPointNames);
 
             Assert.AreEqual(discretisation.Name, reconstructedDiscretisation.Name);
 

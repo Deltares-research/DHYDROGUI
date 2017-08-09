@@ -401,6 +401,12 @@ namespace DeltaShell.NGHS.IO.Grid
         int Put1DNetworkBranchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches);
 
         int Get1DNetworkBranchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches);
+        
+        int CreateNetworkDiscretisationPointIds(int ioncid, int meshid, int iconvtype);
+
+        int WriteNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, GridWrapper.interop_charinfo[] values, int nvalues);
+
+        int ReadNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, GridWrapper.interop_charinfo[] values, int nvalues);
 
     }
 }

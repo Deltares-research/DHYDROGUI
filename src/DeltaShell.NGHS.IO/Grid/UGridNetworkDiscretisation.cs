@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.NGHS.IO.Properties;
+﻿using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -24,6 +23,13 @@ namespace DeltaShell.NGHS.IO.Grid
             DoWithValidGridApi<IUGridNetworkDiscretisationApi>(
                 uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset),
                 Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points);
+        }
+
+        public void WriteNetworkDiscretisationPointIds(int numberOfDiscretisationPoints, string[] discretisationPointIds)
+        {
+            DoWithValidGridApi<IUGridNetworkDiscretisationApi>(
+                ugridApi => ugridApi.WriteNetworkDiscretisationPointsIds(numberOfDiscretisationPoints, discretisationPointIds),
+                Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_discretisation_point_ids);
         }
 
         #endregion
@@ -82,11 +88,16 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset)
         {
-            branchIdx = new int[0];
-            offset = new double[0];
             var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points);
             var ierr = uGridApi.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset);
             ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points);
+        }
+
+        public void ReadNetworkDiscretisationPointIds(int meshId, out string[] ids)
+        {
+            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids);
+            var ierr = uGridApi.ReadNetworkDiscretisationPointIds(meshId, out ids);
+            ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids); 
         }
 
         #endregion

@@ -83,38 +83,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 
             // Branch 1
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0) {Name = "point_1"});
             // add calculation points
-            var location1 = new NetworkLocation(branch1, 500);
+            var location1 = new NetworkLocation(branch1, 500) { Name = "point_2" };
             networkDiscretisation.Locations.Values.Add(location1);
-            var location2 = new NetworkLocation(branch1, 1000);
+            var location2 = new NetworkLocation(branch1, 1000) { Name = "point_3" };
             networkDiscretisation.Locations.Values.Add(location2);
-            var location3 = new NetworkLocation(branch1, 1500);
+            var location3 = new NetworkLocation(branch1, 1500) { Name = "point_4" };
             networkDiscretisation.Locations.Values.Add(location3);
-            var location4 = new NetworkLocation(branch1, 2000);
+            var location4 = new NetworkLocation(branch1, 2000) { Name = "point_5" };
             networkDiscretisation.Locations.Values.Add(location4);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 2500));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 2500) { Name = "point_6" });
 
             // Branch3
             // add calculation points
-            var location5 = new NetworkLocation(branch3, 700);
+            var location5 = new NetworkLocation(branch3, 700) { Name = "point_7" };
             networkDiscretisation.Locations.Values.Add(location5);
-            var location6 = new NetworkLocation(branch3, 1400);
+            var location6 = new NetworkLocation(branch3, 1400) { Name = "point_8" };
             networkDiscretisation.Locations.Values.Add(location6);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch3, 2100));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch3, 2100) { Name = "point_9" });
 
             // Branch 2
             // add calculation points
-            var location7 = new NetworkLocation(branch2, 400);
+            var location7 = new NetworkLocation(branch2, 400) { Name = "point_10" };
             networkDiscretisation.Locations.Values.Add(location7);
-            var location8 = new NetworkLocation(branch2, 800);
+            var location8 = new NetworkLocation(branch2, 800) { Name = "point_11" };
             networkDiscretisation.Locations.Values.Add(location8);
-            var location9 = new NetworkLocation(branch2, 1200);
+            var location9 = new NetworkLocation(branch2, 1200) { Name = "point_12" };
             networkDiscretisation.Locations.Values.Add(location9);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch2, 1600));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch2, 1600) { Name = "point_13" });
 
             return networkDiscretisation;
         }
@@ -148,16 +148,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             };
 
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0) {Name = "point_1"});
             // add calculation points
-            var location1 = new NetworkLocation(branch1, 1);
+            var location1 = new NetworkLocation(branch1, 1) {Name = "point_2"};
             networkDiscretisation.Locations.Values.Add(location1);
-            var location2 = new NetworkLocation(branch1, 2.5);
+            var location2 = new NetworkLocation(branch1, 2.5) {Name = "point_3"};
             networkDiscretisation.Locations.Values.Add(location2);
-            var location3 = new NetworkLocation(branch1, 4);
+            var location3 = new NetworkLocation(branch1, 4) { Name = "point_4" };
             networkDiscretisation.Locations.Values.Add(location3);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5));
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5) { Name = "point_5" });
 
             return networkDiscretisation;
         }

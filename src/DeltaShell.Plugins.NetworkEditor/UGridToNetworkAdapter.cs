@@ -179,6 +179,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     
                     uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
+                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPointIds(discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.DiscretisationPointNames);
                 }
             }
             catch (Exception ex)
@@ -215,7 +216,10 @@ namespace DeltaShell.Plugins.NetworkEditor
                     double[] offset;
                     uGridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(meshId, out branchIndices, out offset);
                     
-                    var networkDiscretisationDataModel = new NetworkDiscretisationUGridDataModel(meshDiscretisationName, branchIndices, offset, networkId);
+                    string[] ids;
+                    uGridNetworkDiscretisation.ReadNetworkDiscretisationPointIds(meshId, out ids);
+                    
+                    var networkDiscretisationDataModel = new NetworkDiscretisationUGridDataModel(meshDiscretisationName, branchIndices, offset, networkId, ids);
 
                     return networkDiscretisationDataModel;
                 }
@@ -243,7 +247,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 return null;
             }
             
-            var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(loadedNetwork, discretisationDataModel.Name, discretisationDataModel.BranchIdx, discretisationDataModel.Offset);
+            var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(loadedNetwork, discretisationDataModel.Name, discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointNames);
             
             return networkDiscretisation;
         }

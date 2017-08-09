@@ -502,12 +502,32 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read the network discretisation point ids.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discre" +
+                        "tisation_point_ids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t read the network discretisation points.
         /// </summary>
         public static string UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points {
             get {
                 return ResourceManager.GetString("UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read" +
                         "_the_network_discretisation_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t write the network discretisation point ids.
+        /// </summary>
+        public static string UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_discretisation_point_ids {
+            get {
+                return ResourceManager.GetString("UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_disc" +
+                        "retisation_point_ids", resourceCulture);
             }
         }
         

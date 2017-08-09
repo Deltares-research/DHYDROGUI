@@ -267,4 +267,10 @@
   <data name="UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points" xml:space="preserve">
     <value>Couldn't read the network discretisation points</value>
   </data>
+  <data name="UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids" xml:space="preserve">
+    <value>Couldn't read the network discretisation point ids</value>
+  </data>
+  <data name="UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_discretisation_point_ids" xml:space="preserve">
+    <value>Couldn't write the network discretisation point ids</value>
+  </data>
 </root>

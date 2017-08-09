@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
                 var secondaryLocation = secondaryDiscretisation.Locations.Values[i];
                 
                 Assert.AreEqual(primaryLocation.Chainage, secondaryLocation.Chainage);
+                Assert.AreEqual(primaryLocation.Name, secondaryLocation.Name);
                 CompareAndAssertBranches(primaryLocation.Branch, secondaryLocation.Branch);
             }
         }

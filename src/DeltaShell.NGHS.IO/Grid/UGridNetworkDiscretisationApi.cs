@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -57,11 +58,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
             var numberOfDiscretisationPoints = branchIdx.Length;
 
-            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
-            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
-
+            IntPtr branchIdxPtr = IntPtr.Zero;
+            IntPtr offsetPtr = IntPtr.Zero;
+            
             try
             {
+                branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
+                offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
+
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
 
@@ -80,6 +84,41 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (offsetPtr != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(offsetPtr);
                 offsetPtr = IntPtr.Zero;
+            }
+        }
+
+        public int WriteNetworkDiscretisationPointsIds(int numberOfDiscretisationPoints, string[] discretisationPointIds)
+        {
+            if (!Initialized || !NetworkReadyForWriting)
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            discretisationPointIds = discretisationPointIds.ReplaceSpacesInString();
+
+            try
+            {
+                StringBuilder discretisationPointIdStorageName = new StringBuilder(GridApiDataSet.UGridApiConstants.DiscretisationPointIds);
+                GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
+                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
+                {
+                    string tmpString;
+                    tmpString = discretisationPointIds[i] ?? string.Empty;
+                    tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
+                    idInfo[i].ids = tmpString.ToCharArray();
+                }
+                var ierr = wrapper.CreateNetworkDiscretisationPointIds(ioncId, meshIdForWriting, (int)GridApiDataSet.LocationType.UG_LOC_NODE);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+
+                ierr = wrapper.WriteNetworkDiscretisationPointIds(ioncId, meshIdForWriting, discretisationPointIdStorageName, idInfo, numberOfDiscretisationPoints);
+                return ierr;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
@@ -194,6 +233,48 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (offsetPtr != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(offsetPtr);
                 offsetPtr = IntPtr.Zero;
+            }
+        }
+
+        public int ReadNetworkDiscretisationPointIds(int meshId, out string[] ids)
+        {
+            ids = new string[0];
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+
+            int numberOfDiscretisationPoints;
+
+            try
+            {
+                var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+                if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            try
+            {
+                StringBuilder discretisationPointIdStorageName = new StringBuilder(GridApiDataSet.UGridApiConstants.DiscretisationPointIds);
+                GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
+                var ierr = wrapper.ReadNetworkDiscretisationPointIds(ioncId, meshId, discretisationPointIdStorageName, idInfo, numberOfDiscretisationPoints);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+
+                ids = new string[numberOfDiscretisationPoints];
+                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
+                {
+                    ids[i] = new string(idInfo[i].ids).Trim();
+                }
+
+                return GridApiDataSet.GridConstants.NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
         }
 
