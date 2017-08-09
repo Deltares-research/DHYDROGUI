@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Shell.Core;
@@ -14,8 +15,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         #region IFileExporter
 
+        [ExcludeFromCodeCoverage]
         public string Name { get { return "Boundary data to .cmp file"; } }
 
+        [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }
 
         public bool Export(object item, string path)
@@ -44,12 +47,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             yield break;
         }
 
+        [ExcludeFromCodeCoverage]
         public string FileFilter
         {
             get { return "Harmonic series file|*.cmp"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get { return Properties.Resources.TextDocument; } }
+
+        [ExcludeFromCodeCoverage]
         public bool CanExportFor(object item)
         {
             return true;
