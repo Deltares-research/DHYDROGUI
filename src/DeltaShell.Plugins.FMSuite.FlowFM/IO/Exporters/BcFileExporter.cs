@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {
     public class BcFileExporter : IFileExporter
     {
+        [ExcludeFromCodeCoverage]
         public string Name
         {
             get { return "Boundary data to .bc file"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }
 
         public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }
@@ -106,16 +109,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             yield return typeof (BoundaryConditionSet);
         }
 
+        [ExcludeFromCodeCoverage]
         public string FileFilter
         {
             get { return "Boundary conditions file|*.bc"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon
         {
             get { return Properties.Resources.TextDocument; }
         }
 
+        [ExcludeFromCodeCoverage]
         public bool CanExportFor(object item)
         {
             return true;

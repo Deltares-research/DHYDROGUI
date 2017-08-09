@@ -230,9 +230,7 @@
       <DependentUpon>TracerDefinitionsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\WaterFlowFMGuiPropertyExtractor.cs" />
-    <Compile Include="Editors\WaterFlowFMFileStructureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Editors\WaterFlowFMFileStructureView.cs" />
     <Compile Include="Editors\WaterFlowFMFileStructureView.Designer.cs">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
     </Compile>

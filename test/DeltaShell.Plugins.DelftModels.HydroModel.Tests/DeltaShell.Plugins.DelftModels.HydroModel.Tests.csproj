@@ -231,6 +231,7 @@
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="Iterative1D2DCouplerLinkFeatureCollectionTest.cs" />
+    <Compile Include="Iterative1D2DCouplerLinkTest.cs" />
     <Compile Include="Iterative1D2DCouplerTest.cs" />
     <Compile Include="ModelExchangeInfoTest.cs" />
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />

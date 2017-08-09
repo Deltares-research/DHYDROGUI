@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.CoordinateSystems;
 
@@ -20,10 +20,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         #region IFileImporter 
 
+        [ExcludeFromCodeCoverage]
         public string Name { get { return "Unstructured Grid"; } }
 
+        [ExcludeFromCodeCoverage]
         public string Category { get { return "2D / 3D"; } }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Image { get { return Properties.Resources.unstruc; } }
 
         public IEnumerable<Type> SupportedItemTypes
@@ -47,8 +50,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return grid != null && GetModelForGrid != null && GetModelForGrid(grid) != null;
         }
 
+        [ExcludeFromCodeCoverage]
         public bool CanImportOnRootLevel { get { return true; }}
 
+        [ExcludeFromCodeCoverage]
         public string FileFilter { get { return "Net file|*.nc"; }}
         
         public string TargetDataDirectory { get; set; }
@@ -57,6 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
+        [ExcludeFromCodeCoverage]
         public bool OpenViewAfterImport
         {
             get { return true; }

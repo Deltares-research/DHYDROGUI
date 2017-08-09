@@ -272,6 +272,7 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
+    <Compile Include="IO\Importers\FlowFMNetFileImporterTest.cs" />
     <Compile Include="IO\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
