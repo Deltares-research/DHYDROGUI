@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
@@ -11,11 +12,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModelExporter));
         
+        [ExcludeFromCodeCoverage]
         public string Name
         {
             get { return "Rainfall Runoff Model exporter"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public string Category
         {
             get { return ""; }
@@ -26,12 +29,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             yield return typeof(RainfallRunoffModel);
         }
 
+        [ExcludeFromCodeCoverage]
         public string FileFilter
         {
             get { return "RR file folder name export|*."; }
         }
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get; private set; }
+
+        [ExcludeFromCodeCoverage]
         public bool CanExportFor(object item)
         {
             return true;
