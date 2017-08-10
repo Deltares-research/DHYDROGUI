@@ -28,8 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         {
             yield return typeof(RainfallRunoffModel);
         }
-
-        [ExcludeFromCodeCoverage]
+        
         public string FileFilter
         {
             get { return "RR file folder name export|*."; }

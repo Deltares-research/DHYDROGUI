@@ -69,5 +69,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             Assert.That(sourceTypes.Count, Is.EqualTo(1));
             Assert.That(sourceTypes[0], Is.EqualTo(typeof(RainfallRunoffModel)));
         }
+
+        [Test]
+        public void GivenRainfallRunoffModelExporterWhenRequestingFileFilterThenReturnStringThatEndsWithAPoint()
+        {
+            var filter = exporter.FileFilter;
+            Assert.That(filter.EndsWith("*."), Is.True);
+        }
     }
 }

@@ -86,5 +86,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var sourceTypes = exporter.SourceTypes().AsList();
             Assert.IsEmpty(sourceTypes);
         }
+
+        [Test]
+        public void GivenCmpFileExporterWhenRequestingFileFilterThenReturnStringThatEndsWithCmp()
+        {
+            var filter = exporter.FileFilter;
+            Assert.That(filter.EndsWith("*.cmp"), Is.True);
+        }
     }
 }

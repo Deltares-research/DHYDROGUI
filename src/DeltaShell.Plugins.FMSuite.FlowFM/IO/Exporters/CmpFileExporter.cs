@@ -46,8 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             yield break;
         }
-
-        [ExcludeFromCodeCoverage]
+        
         public string FileFilter
         {
             get { return "Harmonic series file|*.cmp"; }
