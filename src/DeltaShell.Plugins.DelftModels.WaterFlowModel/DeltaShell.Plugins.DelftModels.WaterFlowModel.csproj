@@ -308,6 +308,8 @@
     </None>
     <None Include="packages.config" />
     <None Include="Resources\HBoundary.png" />
+    <None Include="uml\ClassDiagram1.cd" />
+    <None Include="uml\WaterFlowModel1D.cd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\QBoundary.png" />

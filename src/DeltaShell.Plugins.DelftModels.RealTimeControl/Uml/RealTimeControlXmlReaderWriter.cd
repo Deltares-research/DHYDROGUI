@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.Xml.XmlTimeSeries">
+    <Position X="10.5" Y="5.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AgQYAAAAAgAAAAAACAAAAAQAIAAgAAAEAAAIBAAAABA=</HashCode>
+      <FileName>Xml\XmlTimeSeries.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ExtrapolationType" />
+      <Property Name="InterpolationType" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation.FileToObject">
+    <Position X="3.75" Y="6.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAABAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>XmlValidation\FileToObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation.Validator">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAgAAAAAAAgAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>XmlValidation\Validator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="xmlSchemaSet" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.RealTimeControlModelExporter">
+    <Position X="18" Y="2.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAABAAAAAAABAYAAAgAgAAAAAAEEAEACAA=</HashCode>
+      <FileName>ImportExport\RealTimeControlModelExporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.RealTimeControlModelImporter">
+    <Position X="3.75" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAEAgAAAAAAAAAQAABkCABAAAAAEAAAACAA=</HashCode>
+      <FileName>ImportExport\RealTimeControlModelImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.RealTimeControlModelReader">
+    <Position X="3.75" Y="9.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\RealTimeControlModelImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.RealTimeControlXmlWriter">
+    <Position X="18" Y="6.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>QGCAAAIIAABBATAAQQAGAGCAII4gACYgBAEAQQMACkA=</HashCode>
+      <FileName>ImportExport\RealTimeControlXmlWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.RealTimeControlXMLFiles">
+    <Position X="10.25" Y="10" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAACQAAAAAQgAAAAAAAAAAAAAAAAAAAAAAIAAAAQAAA=</HashCode>
+      <FileName>RealTimeControlXMLFiles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Xml.Schema.XmlSchemaSet">
+    <Position X="13.5" Y="1.75" Width="3" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+  </Class>
+  <Enum Name="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.ExtrapolationTimeSeriesType" Collapsed="true">
+    <Position X="15" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ExtrapolationTimeSeriesType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DelftTools.Functions.Generic.InterpolationType" Collapsed="true">
+    <Position X="15" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

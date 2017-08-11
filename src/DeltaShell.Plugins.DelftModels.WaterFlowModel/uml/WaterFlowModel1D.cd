@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1D">
+    <Position X="21.75" Y="3.5" Width="4" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1D.FakeParameterTimeSpan" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>WaterFlowModel1D.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>63u/RzyVlfPyD75P/dj/Xu61Lp7259n6e7CO5idk/rM=</HashCode>
+      <FileName>WaterFlowModel1D.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DispersionCoverage" />
+      <Property Name="DispersionF3Coverage" />
+      <Property Name="DispersionF4Coverage" />
+      <Property Name="InitialConditions" />
+      <Property Name="BoundaryConditionsDataItemSet" />
+      <Property Name="Network" />
+      <Property Name="Wind" />
+      <Property Name="MeteoData" />
+      <Property Name="OutputSettings" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="RoughnessSections" />
+      <Property Name="BoundaryConditions" />
+      <Property Name="LateralSourceData" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects.WaterFlowModel1DBoundaryNodeData">
+    <Position X="28.5" Y="15" Width="3" />
+    <Members>
+      <Property Name="DataType" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQAygMBIQIBEwAkiIAEwAQQJCkAADkAEUBISBFE6HE=</HashCode>
+      <FileName>DataObjects\WaterFlowModel1DBoundaryNodeData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DataType" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1DOutputSettingData">
+    <Position X="33.75" Y="10.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AoIAAABBQBCmRCAACAAACACgBCAhiQAAAABgCSCZAQE=</HashCode>
+      <FileName>WaterFlowModel1DOutputSettingData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects.WaterFlowModel1DLateralSourceData">
+    <Position X="27.5" Y="3.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQAggIAIAoEEQCgiIAAwAQQIAkAADEAUQBISAAE4DA=</HashCode>
+      <FileName>DataObjects\WaterFlowModel1DLateralSourceData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Feature" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters.MeteoFunction">
+    <Position X="11.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAgAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>PhysicalParameters\MeteoFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection">
+    <Position X="12.25" Y="15.75" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection.RoughnessTypeChangedHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Roughness\RoughnessSection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAiBCECxbBgQQCUIBYAFUBQAE6pwIICiBACABA1hAhU=</HashCode>
+      <FileName>Roughness\RoughnessSection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RoughnessNetworkCoverage" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage">
+    <Position X="18.25" Y="16.75" Width="3" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAIIAAQAoBAAAAAAAAQACAACgAAABABAAAAAAA=</HashCode>
+      <FileName>Roughness\RoughnessNetworkCoverage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WindFunction">
+    <Position X="11.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>WindFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DelftTools.Hydro.LateralSource">
+    <Position X="34.25" Y="4.75" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="GeoAPI.Extensions.Coverages.INetworkCoverage" Collapsed="true">
+    <Position X="14.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Hydro.IHydroNetwork" Collapsed="true">
+    <Position X="14.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Shell.Core.Workflow.DataItems.IDataItemSet" Collapsed="true">
+    <Position X="14.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
