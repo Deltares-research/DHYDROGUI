@@ -310,6 +310,7 @@
     <None Include="Resources\HBoundary.png" />
     <None Include="uml\ClassDiagram1.cd" />
     <None Include="uml\WaterFlowModel1D.cd" />
+    <None Include="uml\WaterFlowModel1DIO.cd" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\QBoundary.png" />
