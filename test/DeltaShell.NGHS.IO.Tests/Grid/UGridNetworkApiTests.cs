@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
+using Is = Rhino.Mocks.Constraints.Is;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
@@ -2223,14 +2225,118 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        public void ReadNetworkDiscretisationPointsIds_InvalidIntializationReturnErrorTest()
+        public void WriteNetworkDiscretisationPointsIds_WrapperThrowsErrorWhenCreatingAndReturnsFatalErrNr()
         {
-            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(false).Repeat.Any();
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Any();
+
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+            wrapper.Expect(w => w.CreateNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Throw(new Exception("myTest"))
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            int nrOfDiscretisationPoints = 2;
+            string[] discretisationPointIds = new [] { "point 1", "point 2" };
+
+            mocks.ReplayAll();
+            
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints,discretisationPointIds));
+            
+
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints, discretisationPointIds);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
+        }
+        [Test]
+        public void WriteNetworkDiscretisationPointsIds_WrapperWhenCreatingAndReturnsTestErrNr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Any();
+
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+            wrapper.Expect(w => w.CreateNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            int nrOfDiscretisationPoints = 2;
+            string[] discretisationPointIds = new [] { "point 1", "point 2" };
+
+            mocks.ReplayAll();
+            
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints,discretisationPointIds));
+            
+
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints, discretisationPointIds);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
+        }
+        [Test]
+        public void WriteNetworkDiscretisationPointsIds_WrapperThrowsErrorWhenWritingIdsAndReturnsFatalErrNr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Any();
+
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+            
+            wrapper.Expect(w => w.CreateNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            wrapper.Expect(w => w.WriteNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<StringBuilder>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Throw(new Exception("myTest"))
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            int nrOfDiscretisationPoints = 2;
+            string[] discretisationPointIds = new[] { "point 1", "point 2" };
 
             mocks.ReplayAll();
 
-            string[] ids = {"", "", "", ""};
-            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints, discretisationPointIds));
+
+
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints, discretisationPointIds);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
+        }
+        [Test]
+        public void WriteNetworkDiscretisationPointsIds_WrapperWhenWritingIdsAndReturnsTestingErrNr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Any();
+
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+            
+            wrapper.Expect(w => w.CreateNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            wrapper.Expect(w => w.WriteNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<StringBuilder>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            int nrOfDiscretisationPoints = 2;
+            string[] discretisationPointIds = new[] { "point 1", "point 2" };
+
+            mocks.ReplayAll();
+
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, uGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints, discretisationPointIds));
+
+
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.WriteNetworkDiscretisationPointsIds(nrOfDiscretisationPoints, discretisationPointIds);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
         }
 
         #endregion
@@ -2377,6 +2483,170 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
         }
 
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_InvalidIntializationReturnErrorTest()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(false).Repeat.Any();
+
+            mocks.ReplayAll();
+
+            string[] ids = { "", "", "", "" };
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_GetNumberOfNetworkDiscretisationPointsReturnsTestingErr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+
+            wrapper.Expect(w => w.Get1DMeshDiscretisationPointsCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Is.Anything(), 0).Dummy))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            mocks.ReplayAll();
+
+            string[] ids = { "", "", "", "" };
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_GetNumberOfNetworkDiscretisationPointsReturnsNoErrButNegativeNumberOfNetworkDiscretisationPointShouldReturnFatalErrNr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+
+            wrapper.Expect(w => w.Get1DMeshDiscretisationPointsCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Is.Anything(), -1).Dummy))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            mocks.ReplayAll();
+
+            string[] ids = { "", "", "", "" };
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_WrapperReadNetworkDiscretisationPointIdsThrowsExceptionShouldReturnFatalErrNr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+
+            wrapper.Expect(w => w.Get1DMeshDiscretisationPointsCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Is.Anything(), 1).Dummy))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            wrapper.Expect(w => w.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<StringBuilder>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Throw(new Exception())
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            mocks.ReplayAll();
+
+            string[] ids = { "", "", "", "" };
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy);
+            Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_WrapperReadNetworkDiscretisationPointIdsReturnsTestingErrNr()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+
+            wrapper.Expect(w => w.Get1DMeshDiscretisationPointsCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Is.Anything(), 1).Dummy))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            wrapper.Expect(w => w.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<StringBuilder>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            mocks.ReplayAll();
+
+            string[] ids = { "", "", "", "" };
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy);
+            Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_WrapperReadNetworkDiscretisationPointIds()
+        {
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+
+            wrapper.Expect(w => w.Get1DMeshDiscretisationPointsCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Is.Anything(), 0).Dummy))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            wrapper.Expect(w => w.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<StringBuilder>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            mocks.ReplayAll();
+
+            string[] ids = { "", "", "", "" };
+            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy));
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, out Arg<string[]>.Out(ids).Dummy);
+            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, remoteResult);
+        }
+
+        [Test]
+        public void ReadNetworkDiscretisationPointsIds_WrapperReadNetworkDiscretisationPointIdsWithReturnValues()
+        {
+            const string NAME = "point1";
+            uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
+            var wrapper = mocks.StrictMock<IGridWrapper>();
+
+            wrapper.Expect(w => w.Get1DMeshDiscretisationPointsCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Is.Anything(), 1).Dummy))
+                .IgnoreArguments()
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Twice();
+            wrapper.Expect(w => w.ReadNetworkDiscretisationPointIds(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<StringBuilder>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .WhenCalled(_ =>
+                {
+                    var interop_charinfo = (GridWrapper.interop_charinfo[])_.Arguments[3];
+                                        interop_charinfo[0].ids = NAME.ToCharArray();
+                })
+                .Repeat.Twice();
+
+            TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
+
+            mocks.ReplayAll();
+
+            string[] ids;
+            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, uGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(1, out ids));
+            Assert.AreEqual(NAME, ids[0]);
+            ids = null;
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.ReadNetworkDiscretisationPointIds(1, out ids);
+            Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, remoteResult);
+            Assert.AreEqual(NAME, ids[0]);
+        }
         #endregion
     }
 }

@@ -94,10 +94,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
-            discretisationPointIds = discretisationPointIds.ReplaceSpacesInString();
-
             try
             {
+                discretisationPointIds = discretisationPointIds.ReplaceSpacesInString();
+
                 StringBuilder discretisationPointIdStorageName = new StringBuilder(GridApiDataSet.UGridApiConstants.DiscretisationPointIds);
                 GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
                 for (int i = 0; i < numberOfDiscretisationPoints; ++i)
@@ -243,22 +243,16 @@ namespace DeltaShell.NGHS.IO.Grid
 
             int numberOfDiscretisationPoints;
 
-            try
-            {
-                var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
-                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
-                if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-            catch
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-
+            
+            var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
+            if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+            if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            
             try
             {
                 StringBuilder discretisationPointIdStorageName = new StringBuilder(GridApiDataSet.UGridApiConstants.DiscretisationPointIds);
                 GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                var ierr = wrapper.ReadNetworkDiscretisationPointIds(ioncId, meshId, discretisationPointIdStorageName, idInfo, numberOfDiscretisationPoints);
+                ierr = wrapper.ReadNetworkDiscretisationPointIds(ioncId, meshId, discretisationPointIdStorageName, idInfo, numberOfDiscretisationPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
