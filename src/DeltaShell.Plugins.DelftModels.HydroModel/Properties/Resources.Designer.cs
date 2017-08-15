@@ -99,6 +99,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The workflow &apos;{0}&apos; is currently not supported in DeltaShell.
+        /// </summary>
+        public static string HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell {
+            get {
+                return ResourceManager.GetString("HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_s" +
+                        "upported_in_DeltaShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provides functionality to create and run integrated models..
         /// </summary>
         public static string HydroModelApplicationPlugin_Description {
@@ -133,6 +143,53 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
             get {
                 return ResourceManager.GetString("HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minute" +
                         "s__3__seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workflow.
+        /// </summary>
+        public static string HydroModelValidator_ConstructCurrentWorkflowReport_Workflow {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_ConstructCurrentWorkflowReport_Workflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model structure.
+        /// </summary>
+        public static string HydroModelValidator_ConstructModelStructureReport_Model_structure {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_ConstructModelStructureReport_Model_structure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Workflow cannot be empty.
+        /// </summary>
+        public static string HydroModelValidator_Validate_Current_Workflow_cannot_be_empty {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_Validate_Current_Workflow_cannot_be_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HydroModel Specific.
+        /// </summary>
+        public static string HydroModelValidator_Validate_HydroModel_Specific {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_Validate_HydroModel_Specific", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two or more activities in the current workflow have the same name &apos;{0}&apos;. Please make sure that these activity names are uniquely named..
+        /// </summary>
+        public static string HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____Please_make_sure_that_these_activity_names_are_uniquely_named_ {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_c" +
+                        "urrent_workflow_have_the_same_name___0____Please_make_sure_that_these_activity_n" +
+                        "ames_are_uniquely_named_", resourceCulture);
             }
         }
     }

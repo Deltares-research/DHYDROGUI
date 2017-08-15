@@ -54,6 +54,7 @@
     <Compile Include="Export\Iterative1D2DCouplerFileWriter.cs" />
     <Compile Include="Iterative1D2DCouplerDataAccessListener.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Validation\HydroModelValidator.cs" />
     <Compile Include="Validation\IWorkFlowTypeValidator.cs" />
     <Compile Include="Validation\IWorkFlowTypeValidatorProvider.cs" />
     <Compile Include="Validation\WorkFlowTypeValidator.cs" />

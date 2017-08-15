@@ -22,6 +22,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -527,7 +528,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [InvokeRequired]
         private void LogInValidActivity()
         {
-            Log.ErrorFormat("RR sequential workflows are NOT supported, please choose another workflow for this integrated model");
+            Log.ErrorFormat(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, CurrentWorkflow.Name);
         }
 
         [EditAction]
@@ -748,42 +749,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual ValidationReport Validate()
         {
-            
-            if (CurrentWorkflow == null)
-            {   
-                return new ValidationReport(Name + " (Hydro Model)", new List<ValidationIssue>
-                {
-                    new ValidationIssue(CurrentWorkflow, ValidationSeverity.Error, "Current Workflow cannot be empty")
-                });
-            }
-
-            var validationReports = new List<ValidationReport>();
-            var nonSupportedValidationIssues = LogErrorsWhenUnsupportedWorkflow();
-
-            if (CurrentWorkflow != null)
-            {
-                var dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                    .Where(dm => dm != null && !(dm is Iterative1D2DCoupler)).ToList();
-                foreach (var dimrModel in dimrModels)
-                {
-                    validationReports.Add(dimrModel.Validate());
-                }
-            }
-            return new ValidationReport(Name + " (Hydro Model)", nonSupportedValidationIssues, validationReports);
-        }
-
-        private List<ValidationIssue> LogErrorsWhenUnsupportedWorkflow()
-        {
-            var validationIssues = new List<ValidationIssue>();
-
-            string[] nonSupportedWorkflowNames = {"RR + (RTC + Flow1D)"};
-            foreach (var nonSupportedWorkFlowName in nonSupportedWorkflowNames)
-            {
-                if (CurrentWorkflow.Name.Equals(nonSupportedWorkFlowName))
-                    validationIssues.Add(new ValidationIssue(this, ValidationSeverity.Error,
-                        "The workflow '" + nonSupportedWorkFlowName + "' is currently not supported in DeltaShell"));
-            }
-            return validationIssues;
+            return new HydroModelValidator().Validate(this);
         }
 
         public virtual bool Sobek2CompareTest { get; set; }
