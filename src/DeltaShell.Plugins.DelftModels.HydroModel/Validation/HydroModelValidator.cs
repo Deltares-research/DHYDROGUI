@@ -10,17 +10,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
 {
     public class HydroModelValidator : IValidator<HydroModel, HydroModel>
     {
-        private const string VALIDATION_REPORTPOSTFIX_TEXT = " (Hydro Model)";
-
         /// <summary>
         /// Performs the relevant checks for the HydroModel object and returns a resulting validation report.
         /// </summary>
         public ValidationReport Validate(HydroModel model, HydroModel targetModel = null)
         {
+            string validationReportName = model.Name + " (Hydro Model)";
+
             // null-check of current workflow
             if (model.CurrentWorkflow == null)
             {
-                return new ValidationReport(model.Name + VALIDATION_REPORTPOSTFIX_TEXT, new List<ValidationIssue>
+                return new ValidationReport(validationReportName, new List<ValidationIssue>
                 {
                     new ValidationIssue(model.CurrentWorkflow, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)
                 });
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             var reports = new List<ValidationReport> {hydroModelSpecificReports};
             reports.AddRange(subModelReports);
 
-            return new ValidationReport(model.Name + VALIDATION_REPORTPOSTFIX_TEXT, reports);
+            return new ValidationReport(validationReportName, reports);
         }
 
         private static IEnumerable<ValidationReport> ConstructSubmodelReports(ICompositeActivity model)

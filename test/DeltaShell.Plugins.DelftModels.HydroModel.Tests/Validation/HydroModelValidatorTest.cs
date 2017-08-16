@@ -15,13 +15,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
     {
         private MockRepository mocks;
         private HydroModelValidator validator;
+        private string hydroModelSpecificReportName;
 
         [SetUp]
         public void Setup()
         {
             mocks = new MockRepository();
             validator = new HydroModelValidator();
-
+            hydroModelSpecificReportName = Resources.HydroModelValidator_Validate_HydroModel_Specific;
         }
 
         [TearDown]
@@ -37,15 +38,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 
             var result = validator.Validate(model);
             Assert.That(result.ErrorCount, Is.EqualTo(1));
-            Assert.AreEqual("Integrated Model (Hydro Model)", result.Category);
+            Assert.AreEqual(model.Name + " (Hydro Model)", result.Category);
             
             var issue = result.AllErrors.ToArray().First();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
-            Assert.AreEqual("Current Workflow cannot be empty", issue.Message);
+            Assert.AreEqual(Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty, issue.Message);
         }
 
         [Test]
-        public void GivenIntegratedModelWithRainfallRunoffAsCurrentWorkflowWhenValidatingThenReturnHydroModelSpecificWorkflowValidationIssue()
+        public void GivenIntegratedModelWithRainfallRunoffAsSequentialCurrentWorkflowWhenValidatingThenReturnHydroModelSpecificWorkflowValidationIssue()
         {
             // Setup
             var workflowName = "RR as sequential activity";
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             hydroModel.CurrentWorkflow = workFlow;
 
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains("HydroModel Specific")).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             hydroModel.CurrentWorkflow = workFlow;
 
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains("HydroModel Specific")).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
@@ -113,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
                 CurrentWorkflow = workflow
             };
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains("HydroModel Specific")).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
                 CurrentWorkflow = workflow2
             };
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains("HydroModel Specific")).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
@@ -191,7 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
                 CurrentWorkflow = workflow2
             };
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains("HydroModel Specific")).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
