@@ -14,9 +14,6 @@
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
     <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
     <OutputType>Package</OutputType>
-    <WixToolPath>$(MSBuildProjectDirectory)\..\wix\v3</WixToolPath>
-    <WixTargetsPath>$(WixToolPath)\Wix.targets</WixTargetsPath>
-    <WixTasksPath>$(WixToolPath)\wixtasks.dll</WixTasksPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -29,7 +26,8 @@
     <IntermediateOutputPath>obj\FM_NOWAQ\$(Configuration)\</IntermediateOutputPath>
     <SuppressIces>ICE57</SuppressIces>
   </PropertyGroup>
-  <Import Project="$(WixTargetsPath)" />
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName);NOWAQ=true;</DefineConstants>
   </PropertyGroup>
