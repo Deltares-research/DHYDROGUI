@@ -183,13 +183,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Two or more activities in the current workflow have the same name &apos;{0}&apos;. Please make sure that these activity names are uniquely named..
+        ///   Looks up a localized string similar to Two or more activities in the current workflow have the same name &apos;{0}&apos;, possibly only differing by uppercase letters. Please make sure that these activity names are uniquely named..
         /// </summary>
-        public static string HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____Please_make_sure_that_these_activity_names_are_uniquely_named_ {
+        public static string HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_letters__Please_make_sure_that_these_activity_names_are_uniquely_named_ {
             get {
                 return ResourceManager.GetString("HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_c" +
-                        "urrent_workflow_have_the_same_name___0____Please_make_sure_that_these_activity_n" +
-                        "ames_are_uniquely_named_", resourceCulture);
+                        "urrent_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_l" +
+                        "etters__Please_make_sure_that_these_activity_names_are_uniquely_named_", resourceCulture);
             }
         }
     }

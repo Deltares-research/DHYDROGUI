@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -65,15 +66,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
         private static IEnumerable<ValidationIssue> ValidateIfModelNamesAreUnique(IEnumerable<IActivity> activities)
         {
             var modelStructureIssues = new List<ValidationIssue>();
-            var duplicateNames = activities.Select(a => a.Name).GroupBy(x => x)
+            var lowercaseNames = activities.Select(a => a.Name).Where(n => n != null).Select(n => n.ToLowerInvariant()).ToArray();
+            var duplicateNames = lowercaseNames.GroupBy(x => x)
                 .Where(group => group.Count() > 1)
                 .Select(group => group.Key);
-
+            
             foreach (var duplicateName in duplicateNames)
             {
-
                 modelStructureIssues.Add(new ValidationIssue(duplicateName, ValidationSeverity.Error,
-                    string.Format(Resources.HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____Please_make_sure_that_these_activity_names_are_uniquely_named_, duplicateName)));
+                    string.Format(Resources.HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_letters__Please_make_sure_that_these_activity_names_are_uniquely_named_, duplicateName.ToLower())));
 
             }
             return modelStructureIssues;
