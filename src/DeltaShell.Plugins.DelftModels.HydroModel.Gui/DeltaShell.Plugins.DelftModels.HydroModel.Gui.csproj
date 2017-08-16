@@ -49,6 +49,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38031\lib\net40\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38031\lib\net40\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38031\lib\net40\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
@@ -141,7 +145,6 @@
     <None Include="Uml\HydroModelGui.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Forms\ActivityShapes\ActivityShapeBase.cs" />
     <Compile Include="Forms\ActivityShapes\CompositeActivityShape.cs" />
     <Compile Include="Forms\ActivityShapes\ParallelActivityShape.cs" />
