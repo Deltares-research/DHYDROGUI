@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 {
@@ -15,8 +17,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         private RainfallRunoffModelExporter exporter;
         private RainfallRunoffModel rainfallRunoffModel;
 
-        [TestFixtureSetUp]
-        public void setup()
+        [SetUp]
+        public void Setup()
         {
             exporter = new RainfallRunoffModelExporter();
             rainfallRunoffModel = new RainfallRunoffModel();
@@ -51,6 +53,28 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 generatedInputFiles.Remove(fileName);
             }
             Console.WriteLine(string.Join(", ", generatedInputFiles));
+        }
+
+        [Test]
+        public void GivenRainfallRunoffModelExporterWhenExportingWithItemNotEqualToRainfallRunoffModelThenReturnsFalse()
+        {
+            var exportResult = exporter.Export("NotARainfallRunoffModel", Arg<string>.Is.Anything);
+            Assert.IsFalse(exportResult);
+        }
+
+        [Test]
+        public void GivenRainfallRunoffModelExporterWhenGettingSourceTypesThenReturnRainfallRunoffModel()
+        {
+            var sourceTypes = exporter.SourceTypes().AsList();
+            Assert.That(sourceTypes.Count, Is.EqualTo(1));
+            Assert.That(sourceTypes[0], Is.EqualTo(typeof(RainfallRunoffModel)));
+        }
+
+        [Test]
+        public void GivenRainfallRunoffModelExporterWhenRequestingFileFilterThenReturnStringThatEndsWithAPoint()
+        {
+            var filter = exporter.FileFilter;
+            Assert.That(filter.EndsWith("*."), Is.True);
         }
     }
 }

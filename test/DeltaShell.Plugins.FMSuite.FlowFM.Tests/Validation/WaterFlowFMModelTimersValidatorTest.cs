@@ -139,10 +139,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             using (var model = CreateWaterFlowFMModelWithValidTimers())
             {
                 var validator = new WaterFlowFMModelTimersValidator();
-                Assert.AreEqual(new TimeSpan(0, 0, 5 ,0), model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
+                Assert.AreEqual(new TimeSpan(0, 0, 5, 0), model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
                 Assert.AreEqual(new TimeSpan(0, 0, 20, 0), model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
                 Assert.AreEqual(new TimeSpan(1, 0, 0, 0), model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value);
-                
+
                 // set invalid user output timestep
                 model.TimeStep = new TimeSpan(0, 0, 7, 0);
 
@@ -163,6 +163,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
                 // assert
                 Assert.AreEqual(0, issues.Length);
+            }
+        }
+
+        [Test]
+        public void ValidatingWaterFlowFMModelStopTimeSmallerThanStartTimeTest()
+        {
+            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                // arrange
+                model.StopTime = new DateTime(2017, 8, 7);
+                model.StartTime = new DateTime(2017, 8, 8);
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // act
+                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                var issue = issues[0];
+
+                // assert
+                Assert.AreEqual(1, issues.Length);
+                Assert.AreEqual("The calculation period must be positive.", issue.Message);
+                Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
+            }
+        }
+
+        [Test]
+        public void ValidatingWaterFlowFMModelReferenceTimeGreaterThanStartTime()
+        {
+            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                // arrange
+                model.ReferenceTime = new DateTime(2027, 8, 7);
+                model.StartTime = new DateTime(2017, 8, 7);
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // act
+                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+
+                // assert
+                Assert.AreEqual(2, issues.Length);
+                Assert.AreEqual("The calculation period must be positive.", issues[0].Message);
+                Assert.AreEqual(ValidationSeverity.Error, issues[0].Severity);
+                Assert.AreEqual("Model start time precedes reference time", issues[1].Message);
+                Assert.AreEqual(ValidationSeverity.Error, issues[1].Severity);
+            }
+        }
+
+        [Test]
+        public void ValidatingWaterFlowFMModelRestartIntervalFailsTest()
+        {
+            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                // arrange
+                model.WriteRestart = true;
+                model.SaveStateTimeStep = TimeSpan.Zero;
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // act
+                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                var issue = issues[0];
+
+                // assert
+                Assert.AreEqual(1, issues.Length);
+                Assert.AreEqual("Restart time interval should be strictly positive if write restart is true", issue.Message);
+                Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             }
         }
 

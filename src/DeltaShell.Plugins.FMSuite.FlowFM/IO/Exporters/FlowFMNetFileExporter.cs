@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using DelftTools.Shell.Core;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -21,8 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
         #region IFileExporter
 
+        [ExcludeFromCodeCoverage]
         public string Name { get { return "Grid exporter"; } }
-        
+
+        [ExcludeFromCodeCoverage]
         public string Category { get { return "General"; } }
 
         public bool Export(object item, string path)
@@ -111,8 +112,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             yield return typeof (UnstructuredGridCoverage);
         }
 
+        [ExcludeFromCodeCoverage]
         public string FileFilter { get { return "Net file|*.nc"; } }
-        
+
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon { get { return Properties.Resources.unstruc; } }
 
         public bool CanExportFor(object item)

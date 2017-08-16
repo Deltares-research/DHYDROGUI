@@ -1,0 +1,502 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1D">
+    <Position X="7.5" Y="3.25" Width="4" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1D.FakeParameterTimeSpan" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>WaterFlowModel1D.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>63u/RzyVlfPyD75P/dj/Xu61Lp7259n6e7CO5idk/rM=</HashCode>
+      <FileName>WaterFlowModel1D.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DispersionCoverage" />
+      <Property Name="DispersionF3Coverage" />
+      <Property Name="DispersionF4Coverage" />
+      <Property Name="InitialConditions" />
+      <Property Name="BoundaryConditionsDataItemSet" />
+      <Property Name="Network" />
+      <Property Name="Wind" />
+      <Property Name="MeteoData" />
+      <Property Name="OutputSettings" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="RoughnessSections" />
+      <Property Name="BoundaryConditions" />
+      <Property Name="LateralSourceData" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects.WaterFlowModel1DBoundaryNodeData">
+    <Position X="18" Y="5.25" Width="3" />
+    <Members>
+      <Property Name="DataType" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQAygMBIQIBEwAkiIAEwAQQJCkAADkAEUBISBFE6HE=</HashCode>
+      <FileName>DataObjects\WaterFlowModel1DBoundaryNodeData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DataType" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WaterFlowModel1DOutputSettingData">
+    <Position X="13" Y="4" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AoIAAABBQBCmRCAACAAACACgBCAhiQAAAABgCSCZAQE=</HashCode>
+      <FileName>WaterFlowModel1DOutputSettingData.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DFileImporter">
+    <Position X="34.75" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAEAgAAAAAAAAAQAABECABAAAAAEAAAACAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DFileImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects.WaterFlowModel1DLateralSourceData">
+    <Position X="21.75" Y="2.75" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQAggIAIAoEEQCgiIAAwAQQIAkAADEAUQBISAAE4DA=</HashCode>
+      <FileName>DataObjects\WaterFlowModel1DLateralSourceData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Feature" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters.MeteoFunction">
+    <Position X="4.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAgAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>PhysicalParameters\MeteoFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection">
+    <Position X="13.25" Y="13.25" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessSection.RoughnessTypeChangedHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Roughness\RoughnessSection.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAiBCECxbBgQQCUIBYAFUBQAE6pwIICiBACABA1hAhU=</HashCode>
+      <FileName>Roughness\RoughnessSection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RoughnessNetworkCoverage" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness.RoughnessNetworkCoverage">
+    <Position X="19.25" Y="13.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAIIAAQAoBAAAAAAAAQACAACgAAABABAAAAAAA=</HashCode>
+      <FileName>Roughness\RoughnessNetworkCoverage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.WindFunction">
+    <Position X="4.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>WindFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DelftTools.Hydro.LateralSource" Collapsed="true">
+    <Position X="26.25" Y="3" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.BoundaryFileReader">
+    <Position X="34" Y="7" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.BoundaryFileReader.BoundaryConditionReadingException" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ImportExport\BoundaryFileReader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.BoundaryFileReader.LateralDischargeReadingException" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ImportExport\BoundaryFileReader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAQADAACAAABAACAAAAEAAACAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\BoundaryFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.BoundaryFileWriterHelper" Collapsed="true">
+    <Position X="68.5" Y="4.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\BoundaryFileWriterHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.BoundaryLocationFileWriter" Collapsed="true">
+    <Position X="68.5" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAACAAACAA=</HashCode>
+      <FileName>ImportExport\BoundaryLocationFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectionDefinitionFileWriter" Collapsed="true">
+    <Position X="68.5" Y="5.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAQAAAAAAAAAAAACAAAAAAAAAAECAAAAAA=</HashCode>
+      <FileName>ImportExport\CrossSectionDefinitionFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.CrossSectionFileReader">
+    <Position X="38.25" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\CrossSectionFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Flow1DParameterGenerator" Collapsed="true">
+    <Position X="52.75" Y="18.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAKIAAAIBAJAAAAACACAAACAAAgAAAAgBAAAAAA=</HashCode>
+      <FileName>ImportExport\Flow1DParameterGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.FlowDataCsvImporter" Collapsed="true">
+    <Position X="38" Y="7.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAQAAAgiAAAAABAAIAAACAA=</HashCode>
+      <FileName>ImportExport\FlowDataCsvImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.FlowTimeSeriesCsvFileImporter">
+    <Position X="43.75" Y="5.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAQIAgAATAIAAACAA=</HashCode>
+      <FileName>ImportExport\FlowTimeSeriesCsvFileImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinitionFileWriter" Collapsed="true">
+    <Position X="68.25" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAIAAgAAAACAAAAAA=</HashCode>
+      <FileName>ImportExport\ModelDefinitionFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelDefinitionsRegion" Collapsed="true">
+    <Position X="52.75" Y="19.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>UuZvJlO5GeasP95g2x4ewhI5rEaWTWdQASIplQD20RM=</HashCode>
+      <FileName>ImportExport\ModelDefinitionsRegion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.ModelFileNames" Collapsed="true">
+    <Position X="52" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>jQAQAEAEEAAARECAAglAQCAAEICgKIKIBAoAAAVQETQ=</HashCode>
+      <FileName>ImportExport\ModelFileNames.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.SobekToFMExporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="71" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAACAAAAAAAAAABAQAAAAAgEAAAAAEEAEACAA=</HashCode>
+      <FileName>ImportExport\SobekToFMExporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.StructureFileReader">
+    <Position X="41" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\StructureFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.StructureFileWriter" Collapsed="true">
+    <Position X="70" Y="11" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>ImportExport\StructureFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DBoundaryFileWriter" Collapsed="true">
+    <Position X="69.75" Y="11.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DBoundaryFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.F1DBoundaryFileWriter" Collapsed="true">
+    <Position X="68.25" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QwAAAAAAAAAAgAAAAAAAAAAAIACAAiAAACAACAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DBoundaryFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DExporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="70.5" Y="8.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAQAAAgAgAAAAAAEEAEACAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DExporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DImporterHelper" Collapsed="true">
+    <Position X="38.25" Y="10.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAQAAAAAAAAAQAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DImporterHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DMorphologyFile" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="54.75" Y="27.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAIAMAAAAAAgAQAAEAAAAAABAAAACAIBA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DMorphologyFile.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DNetCdfFunctionStore" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="54.5" Y="26" Width="3" />
+    <TypeIdentifier>
+      <HashCode>IAQSUAAAAAAhIBNACugKgoMQYEkFAGQAA1EcOAGA4Fg=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DNetCdfFunctionStore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.362" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DOutputCoverageMappings" Collapsed="true">
+    <Position X="54.5" Y="25.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAEABAAAAAAAAAIA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputCoverageMappings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.LookupTable" Collapsed="true">
+    <Position X="52.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputCoverageMappings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DOutputFileConstants" Collapsed="true">
+    <Position X="51.25" Y="25.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputFileConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DOutputFileMetaData" Collapsed="true">
+    <Position X="51.5" Y="27.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAIAAAAAAAAAEAIAAAAAQAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputFileMetaData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.LocationMetaData" Collapsed="true">
+    <Position X="54.25" Y="20.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQCAEAAAAAAAAAAAAIBAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputFileMetaData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.TimeDependentVariableMetaData" Collapsed="true">
+    <Position X="54.75" Y="24.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAIABAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputFileMetaData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DOutputFileReader" Collapsed="true">
+    <Position X="37.75" Y="12" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAkABAgAAAAAAASACgEAEAAAAAAAAAgAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DOutputFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DSalinityIniWriter" Collapsed="true">
+    <Position X="69.5" Y="12.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAIAAAAAAAIAAAAIAAAAAAAAAgACCAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModel1DSalinityIniWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DFileReader" Collapsed="true">
+    <Position X="37.25" Y="12.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModelFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.WaterFlowModel1DFileWriter" Collapsed="true">
+    <Position X="72.25" Y="12.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAACAAAAAAAAAAAAAAAoAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>ImportExport\WaterFlowModelFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.CalibratedRoughnessImporter" BaseTypeListCollapsed="true">
+    <Position X="41.25" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAEAgAAAAAAACAQAABECABAAAAAEAAAACAA=</HashCode>
+      <FileName>ImportExport\Roughness\CalibratedRoughnessImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughessCsvBranchData" Collapsed="true">
+    <Position X="53.75" Y="21.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAAgAEAAAAAAAAAAAAAAABAAAAAAEAACABAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughessCsvBranchData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessBranchDataCsvReader" Collapsed="true">
+    <Position X="38" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAQAAAAAAAAACgACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessBranchDataCsvReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessBranchDataMerger" Collapsed="true">
+    <Position X="51.75" Y="22" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAgAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessBranchDataMerger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessCsvRecord" Collapsed="true">
+    <Position X="68" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAgAEAAAAAAAAAAIAiAAAAIAAAAEAAAABIIACCAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessCsvRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessCSvSettings" Collapsed="true">
+    <Position X="55" Y="22" Width="3" />
+    <TypeIdentifier>
+      <HashCode>EAAAJgAAAAAAABgAQABAgAEAAAIAqAABAEAQogBAAAE=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessCsvSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessDataFileReader" Collapsed="true">
+    <Position X="39.5" Y="9.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAwAAAAAAAQAAAAAAAAAAAAAAIAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessDataFileReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessDataFileWriter" Collapsed="true">
+    <Position X="68.75" Y="9" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACIAAAAAAAAEAQAAABAAAAAAAAQAAACAEAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessDataFileWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessDataRegion" Collapsed="true">
+    <Position X="51.75" Y="22.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAIAAAAAAAAAAAAwAAAACAAQBABAgAAAQBIE=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessDataRegion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessFromCsvFileExporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="68.25" Y="9.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAADAQAAAAAgAAAgAAEEAEACAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessFromCsvFileExporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessFromCsvToSectionImporter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="37.75" Y="10" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAEAgAAAAAAAQAQAABECABAAAAAEAAAACAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessFromCsvToSectionImporter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessFunctionCsvConverter" Collapsed="true">
+    <Position X="54.25" Y="22.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessFunctionCsvConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessNegativeIsPositiveCsvConverter" Collapsed="true">
+    <Position X="51.75" Y="23.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessNegativeIsPositiveCsvConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessSectionToDataTableConverter" Collapsed="true">
+    <Position X="55.5" Y="23.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAABAAAAAAAAEAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessSectionToDataTableConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness.RoughnessTypeCsvConverter" Collapsed="true">
+    <Position X="51.5" Y="24.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportExport\Roughness\RoughnessTypeCsvConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="GeoAPI.Extensions.Coverages.INetworkCoverage" Collapsed="true">
+    <Position X="3.75" Y="18.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Hydro.IHydroNetwork" Collapsed="true">
+    <Position X="3.75" Y="15.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Shell.Core.Workflow.DataItems.IDataItemSet" Collapsed="true">
+    <Position X="3.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects.WaterFlowModel1DBoundaryNodeDataType" Collapsed="true">
+    <Position X="28.75" Y="17" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAQAAAAAAAAAAAAAAIAEAAAAAAIAEAAAA=</HashCode>
+      <FileName>DataObjects\WaterFlowModel1DBoundaryNodeDataType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.BoundaryRelationType" Collapsed="true">
+    <Position X="38.75" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAEAggEA=</HashCode>
+      <FileName>ImportExport\FlowTimeSeriesCsvFileImporter.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -162,4 +162,22 @@
   <data name="HydroModelTimeSettingsViewModel_DetermineErrorText_Time_step_must_be_positive" xml:space="preserve">
     <value>Time step must be positive</value>
   </data>
+  <data name="HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell" xml:space="preserve">
+    <value>The workflow '{0}' is currently not supported in DeltaShell</value>
+  </data>
+  <data name="HydroModelValidator_Validate_Current_Workflow_cannot_be_empty" xml:space="preserve">
+    <value>Current Workflow cannot be empty</value>
+  </data>
+  <data name="HydroModelValidator_Validate_HydroModel_Specific" xml:space="preserve">
+    <value>HydroModel Specific</value>
+  </data>
+  <data name="HydroModelValidator_ConstructModelStructureReport_Model_structure" xml:space="preserve">
+    <value>Model structure</value>
+  </data>
+  <data name="HydroModelValidator_ConstructCurrentWorkflowReport_Workflow" xml:space="preserve">
+    <value>Workflow</value>
+  </data>
+  <data name="HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____Please_make_sure_that_these_activity_names_are_uniquely_named_" xml:space="preserve">
+    <value>Two or more activities in the current workflow have the same name '{0}'. Please make sure that these activity names are uniquely named.</value>
+  </data>
 </root>

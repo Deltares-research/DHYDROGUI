@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using BasicModelInterface;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -50,6 +51,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void RunImportedModelShouldBeFast_039b()
         {
             LogHelper.ResetLogging();
+            Dimr.DimrApiDataSet.LogFileLevel = Level.Fatal;
+            Dimr.DimrApiDataSet.FeedbackLevel = Level.Fatal;
+
             // LogHelper.ConfigureLogging(Level.Info);
 
             var path = TestHelper.GetDataDir() + @"\039b_000.lit\1\network.tp";
