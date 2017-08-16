@@ -94,15 +94,15 @@
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
-      <HintPath>..\..\..\..\build\tools\wix\v3\WixUtilExtension.dll</HintPath>
+      <HintPath>$(WixToolPath)\WixUtilExtension.dll</HintPath>
       <Name>WixUtilExtension</Name>
     </WixExtension>
     <WixExtension Include="WixUIExtension">
-      <HintPath>..\..\..\..\build\tools\wix\v3\WixUIExtension.dll</HintPath>
+      <HintPath>$(WixToolPath)\WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
     </WixExtension>
     <WixExtension Include="WixNetFxExtension">
-      <HintPath>..\..\..\..\build\tools\wix\v3\WixNetFxExtension.dll</HintPath>
+      <HintPath>$(WixToolPath)\WixNetFxExtension.dll</HintPath>
       <Name>WixNetFxExtension</Name>
     </WixExtension>
   </ItemGroup>
