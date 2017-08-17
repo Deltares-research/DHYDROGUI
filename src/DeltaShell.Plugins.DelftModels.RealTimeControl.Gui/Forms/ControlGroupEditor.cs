@@ -27,7 +27,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
     {
         private readonly XNamespace fns = "http://www.wldelft.nl/fews";
         private object created, lastCreated;
-        
+
+        /*
+        DELFT3DFM -1165: 
+            We need to limit the amount of feature locations that can be added to the context menu 
+            (more than 4000 appears to lead to an out of memory exception in winforms)
+
+            Here we specificy an arbitary (but sensible) limit
+            Beware of setting this to anything higher than 4000! 
+        */
+        private const int MaxLocationsToDisplayIndividually = 900;
+
         public IGui Gui { get; set; } // selection and opening views
 
         private static readonly ILog Log = LogManager.GetLogger(typeof (ControlGroupEditor));
@@ -275,19 +285,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 if (selectedShapes[0].Tag is Input)
                 {
-                    // retrieve locations from controlled models where values are available
-                    SetLocationsToContextMenu("Input locations",
-                                              Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output),
-                                              InputLocationClick, selectedShapes[0]);
+                    var locations = Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+
+                    if (locations.Count <= MaxLocationsToDisplayIndividually) // DELFT3DFM-1165
+                    {
+                        // retrieve locations from controlled models where values are available
+                        SetLocationsToContextMenu("Input locations", locations, InputLocationClick, selectedShapes[0]);
+                    }
 
                     graphControl.ContextMenuItems.Add(new MenuItem("Choose input locations...", (s, ev) => OpenInputDialog(DataItemRole.Output, "Select Input")));
                 }
                 if (selectedShapes[0].Tag is Output)
                 {
-                    // retrieve locations from controlled models where values can be set
-                    SetLocationsToContextMenu("Output locations",
-                                              Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input),
-                                              OutputLocationClick, selectedShapes[0]);
+                    var locations = Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input).ToList();
+
+                    if (locations.Count <= MaxLocationsToDisplayIndividually) // DELFT3DFM-1165
+                    {
+                        // retrieve locations from controlled models where values can be set
+                        SetLocationsToContextMenu("Output locations", locations, OutputLocationClick, selectedShapes[0]);
+                    }
 
                     graphControl.ContextMenuItems.Add(new MenuItem("Choose output locations...", (s, ev) => OpenInputDialog(DataItemRole.Input, "Select Output")));
                 }
