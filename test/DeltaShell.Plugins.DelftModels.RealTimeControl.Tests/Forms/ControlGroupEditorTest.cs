@@ -21,6 +21,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using Netron.GraphLib;
+using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -73,6 +74,104 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                                     Feature = new RtcTestFeature { Name = "Element" }
                                 }
                 };
+        }
+
+        [Test]
+        [TestCase(true, -1)] // RTC Inputs less than limit
+        [TestCase(true, 0)] // RTC Inputs equal to limit
+        [TestCase(false, 1)] // RTC Inputs greater than limit
+        public void TestRtcInputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
+        {
+            var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
+
+            var controlGroupEditor = new ControlGroupEditor
+            {
+                Data = new ControlGroup(),
+                Model = rtcModel
+            };
+
+            var maxValues = (int)TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
+
+            rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
+               .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
+               .Repeat.Once();
+
+            rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
+               .Return(new List<DataItem> { new DataItem() {Role = DataItemRole.Output}})
+               .Repeat.Any();
+            
+            mocks.ReplayAll();
+
+            var shape = new InputItemShape()
+            {
+                Tag = new Input(),
+                IsSelected = true
+            };
+            controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
+
+            TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[] { null, null });
+
+            var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
+            controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+
+            var menuItemNames = menuItems.Select(b => b.Text).ToList();
+
+            Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
+                "Context menu differs from what was expected");
+
+            Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
+                "Users should always have the option to 'choose input location...' for RTC Outputs");
+            
+            mocks.VerifyAll();
+        }
+
+        [Test]
+        [TestCase(true, -1)] // RTC Outputs less than limit
+        [TestCase(true,  0)] // RTC Outputs equal to limit
+        [TestCase(false, 1)] // RTC Outputs greater than limit
+        public void TestRtcOutputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
+        {
+            var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
+
+            var controlGroupEditor = new ControlGroupEditor
+            {
+                Data = new ControlGroup(),
+                Model = rtcModel
+            };
+
+            var maxValues = (int)TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
+
+            rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input))
+               .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
+               .Repeat.Once();
+
+            rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
+               .Return(new List<DataItem> { new DataItem() { Role = DataItemRole.Input } })
+               .Repeat.Any();
+
+            mocks.ReplayAll();
+            
+            var shape = new OutputItemShape()
+            {
+                Tag = new Output(),
+                IsSelected = true
+            };
+            controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
+            
+            TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[] {null, null});
+            
+            var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
+            controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+
+            var menuItemNames = menuItems.Select(b => b.Text).ToList();
+            
+            Assert.AreEqual(expectedResult, menuItemNames.Contains("Output locations"), 
+                "Context menu differs from what was expected");
+
+            Assert.IsTrue(menuItemNames.Contains("Choose output locations..."),
+                "Users should always have the option to 'choose output location...' for RTC Outputs");
+
+            mocks.VerifyAll();
         }
 
         [Test]
