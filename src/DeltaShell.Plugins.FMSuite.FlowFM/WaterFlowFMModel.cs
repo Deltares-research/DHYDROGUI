@@ -2344,7 +2344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string InputFile
         {
-            get { return Path.GetFileName(MduFilePath); }
+            get { return Path.GetFileName(MduSavePath); }
         }
 
         public virtual string DirectoryName

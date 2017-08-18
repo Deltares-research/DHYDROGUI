@@ -54,10 +54,40 @@ namespace Sobek.IntegrationTests
                 ICompositeActivity hydroModel = app.Project.RootFolder.Models.Cast<ICompositeActivity>().First();
 
                 ActivityRunner.RunActivity(hydroModel);
+                Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);
 
                 // Waterlevel should decrease from 0.5 meter to a certain value. 
                 var waterlevel1d = hydroModel.Activities.OfType<WaterFlowModel1D>().First().OutputWaterLevel;
                 Assert.That((double)waterlevel1d.Components[0].MinValue < 0.2);  
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void VerifyThat1D2DModelRunsCorrectly_AfterRenamingModels()
+        {
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            {
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+
+                app.Run();
+                Model1D2DBuilder.Create1d2dModel(app);
+
+                ICompositeActivity hydroModel = app.Project.RootFolder.Models.Cast<ICompositeActivity>().First();
+
+                var flow1DModel = hydroModel.Activities.OfType<WaterFlowModel1D>().FirstOrDefault();
+                Assert.NotNull(flow1DModel);
+                flow1DModel.Name = flow1DModel.Name + "_renamed";
+
+                var flowFMModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.NotNull(flowFMModel);
+                flowFMModel.Name = flowFMModel.Name + "_renamed";
+
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);
             }
         }
 
