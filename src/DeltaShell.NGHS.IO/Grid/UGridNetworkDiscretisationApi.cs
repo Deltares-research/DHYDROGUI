@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset)
+        public int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, string[] discretisationPointIds, string[] discretisationPointLongnames)
         {
             if (!Initialized || !NetworkReadyForWriting)
             {
@@ -68,9 +68,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
+                GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
+                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
+                {
+                    string tmpString;
+                    tmpString = discretisationPointIds[i] ?? string.Empty;
+                    tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
+                    idInfo[i].ids = tmpString.ToCharArray();
+                }
 
                 return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
-                    offsetPtr, numberOfDiscretisationPoints);
+                    offsetPtr, idInfo, numberOfDiscretisationPoints);
             }
             catch
             {
@@ -86,42 +94,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 offsetPtr = IntPtr.Zero;
             }
         }
-
-        public int WriteNetworkDiscretisationPointsIds(int numberOfDiscretisationPoints, string[] discretisationPointIds)
-        {
-            if (!Initialized || !NetworkReadyForWriting)
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-
-            try
-            {
-                discretisationPointIds = discretisationPointIds.ReplaceSpacesInString();
-
-                StringBuilder discretisationPointIdStorageName = new StringBuilder(GridApiDataSet.UGridApiConstants.DiscretisationPointIds);
-                GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
-                {
-                    string tmpString;
-                    tmpString = discretisationPointIds[i] ?? string.Empty;
-                    tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
-                    idInfo[i].ids = tmpString.ToCharArray();
-                }
-                var ierr = wrapper.CreateNetworkDiscretisationPointIds(ioncId, meshIdForWriting, (int)GridApiDataSet.LocationType.UG_LOC_NODE);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                ierr = wrapper.WriteNetworkDiscretisationPointIds(ioncId, meshIdForWriting, discretisationPointIdStorageName, idInfo, numberOfDiscretisationPoints);
-                return ierr;
-            }
-            catch
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-        }
-
+        
         #endregion
 
         #region Read Network Discretisation
@@ -183,10 +156,13 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset)
+        public int ReadNetworkDiscretisationPoints(int meshId, out int[] branchIdx, out double[] offset, out string[] ids, out string[] names)
         {
             branchIdx = new int[0];
             offset = new double[0];
+            ids = new string[0];
+            names = new string[0];
+
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             int numberOfDiscretisationPoints;
@@ -207,7 +183,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, numberOfDiscretisationPoints);
+                var meshpointsinfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
+                var ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, meshpointsinfo, numberOfDiscretisationPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -218,6 +195,15 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 Marshal.Copy(branchIdxPtr, branchIdx, 0, numberOfDiscretisationPoints);
                 Marshal.Copy(offsetPtr, offset, 0, numberOfDiscretisationPoints);
+
+                ids = new string[numberOfDiscretisationPoints];
+                names = new string[numberOfDiscretisationPoints];
+
+                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
+                {
+                    ids[i] = new string(meshpointsinfo[i].ids).Trim();
+                    names[i] = new string(meshpointsinfo[i].longnames).Trim();
+                }
 
                 return GridApiDataSet.GridConstants.NOERR;
             }
@@ -235,43 +221,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 offsetPtr = IntPtr.Zero;
             }
         }
-
-        public int ReadNetworkDiscretisationPointIds(int meshId, out string[] ids)
-        {
-            ids = new string[0];
-            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-
-            int numberOfDiscretisationPoints;
-
-            
-            var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
-            if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
-            if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            
-            try
-            {
-                StringBuilder discretisationPointIdStorageName = new StringBuilder(GridApiDataSet.UGridApiConstants.DiscretisationPointIds);
-                GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                ierr = wrapper.ReadNetworkDiscretisationPointIds(ioncId, meshId, discretisationPointIdStorageName, idInfo, numberOfDiscretisationPoints);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                ids = new string[numberOfDiscretisationPoints];
-                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
-                {
-                    ids[i] = new string(idInfo[i].ids).Trim();
-                }
-
-                return GridApiDataSet.GridConstants.NOERR;
-            }
-            catch
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-        }
-
         #endregion
 
         #region Implementation of IDisposable

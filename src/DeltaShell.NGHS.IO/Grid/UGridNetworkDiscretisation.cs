@@ -18,20 +18,12 @@ namespace DeltaShell.NGHS.IO.Grid
                 Resources.UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_ + filename);
         }
 
-        public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset)
+        public void WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, string[] ids, string[] names)
         {
             DoWithValidGridApi<IUGridNetworkDiscretisationApi>(
-                uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset),
+                uGridApi => uGridApi.WriteNetworkDiscretisationPoints(branchIdx, offset, ids, names),
                 Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points);
         }
-
-        public void WriteNetworkDiscretisationPointIds(int numberOfDiscretisationPoints, string[] discretisationPointIds)
-        {
-            DoWithValidGridApi<IUGridNetworkDiscretisationApi>(
-                ugridApi => ugridApi.WriteNetworkDiscretisationPointsIds(numberOfDiscretisationPoints, discretisationPointIds),
-                Resources.UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_discretisation_point_ids);
-        }
-
         #endregion
 
         #region Read network discretisation
@@ -86,20 +78,12 @@ namespace DeltaShell.NGHS.IO.Grid
             return numberOfDiscretisationPoints;
         }
 
-        public void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset)
+        public void ReadNetworkDiscretisationPointsForMeshId(int meshId, out int[] branchIdx, out double[] offset, out string[] ids, out string[] names)
         {
             var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points);
-            var ierr = uGridApi.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset);
+            var ierr = uGridApi.ReadNetworkDiscretisationPoints(meshId, out branchIdx, out offset, out ids, out names);
             ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points);
         }
-
-        public void ReadNetworkDiscretisationPointIds(int meshId, out string[] ids)
-        {
-            var uGridApi = GetValidGridApi<IUGridNetworkDiscretisationApi>(Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids);
-            var ierr = uGridApi.ReadNetworkDiscretisationPointIds(meshId, out ids);
-            ThrowIfError(ierr, Resources.UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids); 
-        }
-
         #endregion
     }
 }

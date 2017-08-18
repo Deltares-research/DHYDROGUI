@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.AreEqual(4, dataModel.NumberOfMeshEdges);
             Assert.AreEqual(new[] {0, 0, 0, 0, 0}, dataModel.BranchIdx);
             Assert.AreEqual(new[] {0, 1, 2, 3, 5}, dataModel.Offset);
-            Assert.AreEqual(new[] { "point_01", "my Branch 1_1.000", "point_03", "point_04", "point_05" }, dataModel.DiscretisationPointNames);
+            Assert.AreEqual(new[] { "point_01", "my Branch 1_1.000", "point_03", "point_04", "point_05" }, dataModel.DiscretisationPointIds);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var dataModel = new NetworkDiscretisationUGridDataModel(discretisation);
 
-            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset, dataModel.DiscretisationPointNames);
+            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset, dataModel.DiscretisationPointIds, dataModel.DiscretisationPointNames);
 
             Assert.AreEqual(discretisation.Name, reconstructedDiscretisation.Name);
 

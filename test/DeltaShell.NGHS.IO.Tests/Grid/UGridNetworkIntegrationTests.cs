@@ -428,17 +428,22 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.AreEqual(expNrDiscrPoints, uGrid1DMesh.GetNumberOfNetworkDiscretisationPointsForMeshId(1));
 
                     // write 1D discretisation points
-                    int[] branchIdx = discretisationPoints.Select(l => l.Branch)
+                    int[] meshPointsIdx = discretisationPoints.Select(l => l.Branch)
                         .ToArray()
                         .Select(b => networkDiscretization.Network.Branches.IndexOf(b))
                         .ToArray();
-                    Assert.AreEqual(expNrDiscrPoints, branchIdx.Length);
+                    string[] meshPointsIds = discretisationPoints.Select(l => l.Name).ToArray();
+                    string[] meshPointsNames = discretisationPoints.Select(l => l.LongName).ToArray();
+
+                    Assert.AreEqual(expNrDiscrPoints, meshPointsIdx.Length);
 
                     double[] offset = discretisationPoints.Select(l => l.Chainage).ToArray();
 
                     uGrid1DMesh.WriteNetworkDiscretisationPoints(
-                        branchIdx,
-                        offset
+                        meshPointsIdx,
+                        offset,
+                        meshPointsIds,
+                        meshPointsNames
                     );
                     #endregion
 
@@ -446,14 +451,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     int[] loadedBranchIdx;
                     double[] loadedOffset;
-                    uGrid1DMesh.ReadNetworkDiscretisationPointsForMeshId(1, out loadedBranchIdx, out loadedOffset);
+                    string[] ids;
+                    string[] names;
+
+                    uGrid1DMesh.ReadNetworkDiscretisationPointsForMeshId(1, out loadedBranchIdx, out loadedOffset, out ids, out names);
                     
                     Assert.AreEqual(discretisationPoints.Length, loadedBranchIdx.Length);
                     Assert.AreEqual(discretisationPoints.Length, loadedOffset.Length);
 
                     for (int i = 0; i < discretisationPoints.Length; ++i)
                     {
-                        Assert.AreEqual(branchIdx[i], loadedBranchIdx[i]);
+                        Assert.AreEqual(meshPointsIdx[i], loadedBranchIdx[i]);
                         Assert.AreEqual(offset[i], loadedOffset[i]);
                     }
 

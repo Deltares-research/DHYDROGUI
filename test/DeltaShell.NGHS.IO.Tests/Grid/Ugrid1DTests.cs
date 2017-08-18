@@ -52,6 +52,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         //mesh dimension
         private int nmeshpoints = 10;
+        private string[] meshpointsids = { "meshpoint1", "meshpoint2", "meshpoint3", "meshpoint4", "meshpoint5", "meshpoint6", "meshpoint7", "meshpoint8", "meshpoint9", "meshpoint10" };
+        private string[] meshpointslongnames = { "meshpointlongname1", "meshpointlongname2", "meshpointlongname3", "meshpointlongname4", "meshpointlongname5", "meshpointlongname6", "meshpointlongname7", "meshpointlongname8", "meshpointlongname9", "meshpointlongname10" };
 
         private int nmeshedges = 14;
 
@@ -200,8 +202,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 Assert.That(rnmeshpoints, Is.EqualTo(nmeshpoints));
 
                 //9. Get the coordinates of the mesh points
+                GridWrapper.interop_charinfo[] meshpointsinfo = new GridWrapper.interop_charinfo[rnmeshpoints];
                 ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, networkId, ref c_branchidx,
-                    ref c_offset, rnmeshpoints);
+                    ref c_offset, meshpointsinfo, rnmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
                 int[] rc_branchidx = new int[rnmeshpoints];
                 double[] rc_offset = new double[rnmeshpoints];
@@ -397,8 +400,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 //5. Write the 1d mesh geometry
                 Marshal.Copy(branchidx, 0, c_branchidx, nmeshpoints);
                 Marshal.Copy(offset, 0, c_offset, nmeshpoints);
+                GridWrapper.interop_charinfo[] meshpointsinfo = new GridWrapper.interop_charinfo[nmeshpoints];
+                for (int i = 0; i < nmeshpoints; i++)
+                {
+                    tmpstring = meshpointsids[i];
+                    tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
+                    branchinfo[i].ids = tmpstring.ToCharArray();
+                    tmpstring = meshpointslongnames[i];
+                    tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
+                    meshpointsinfo[i].longnames = tmpstring.ToCharArray();
+                }
                 ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshId, c_branchidx,
-                    c_offset, nmeshpoints);
+                    c_offset, meshpointsinfo, nmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //6. Write links attributes
