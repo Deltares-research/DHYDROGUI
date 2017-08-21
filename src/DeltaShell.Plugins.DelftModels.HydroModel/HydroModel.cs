@@ -526,11 +526,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         [InvokeRequired]
-        private void LogInValidActivity()
+        private void LogInvalidWorkflow()
         {
             Log.ErrorFormat(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, CurrentWorkflow.Name);
         }
 
+        [InvokeRequired]
+        private void LogInvalidActivities()
+        {
+            Log.ErrorFormat(Resources.HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_, Name);
+        }
+        
         [EditAction]
         private void CurrentWorkflowOnStatusChanged(object sender,
             ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
@@ -671,7 +677,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             if (CurrentWorkflow == null) return;
             if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
             {
-                LogInValidActivity();
+                LogInvalidWorkflow();
+                Status = ActivityStatus.Failed;
+                return;
+            }
+
+            var validationReport = new HydroModelValidator().Validate(this);
+            if (validationReport.ErrorCount > 0)
+            {
+                LogInvalidActivities();
                 Status = ActivityStatus.Failed;
                 return;
             }

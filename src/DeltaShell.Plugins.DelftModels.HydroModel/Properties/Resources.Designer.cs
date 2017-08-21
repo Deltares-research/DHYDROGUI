@@ -109,6 +109,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The integrated model &apos;{0}&apos; could not initialize. Please check the validation report..
+        /// </summary>
+        public static string HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_ {
+            get {
+                return ResourceManager.GetString("HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__" +
+                        "Please_check_the_validation_report_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provides functionality to create and run integrated models..
         /// </summary>
         public static string HydroModelApplicationPlugin_Description {

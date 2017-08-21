@@ -140,10 +140,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void RunUsingSimpleModel2()
+        public void TestRunUsingSimpleModel2_FailsValidation()
         {
-            var m1 = new SimpleModel { Input = 1 };
-            var m2 = new SimpleModel { Input = 2 };
+            var sharedNameOfModels = "SimpleModel";
+
+            var m1 = new SimpleModel { Input = 1, Name = sharedNameOfModels };
+            var m2 = new SimpleModel { Input = 2, Name = sharedNameOfModels };
 
             var workflow = new ParallelActivity { Activities = { new ActivityWrapper { Activity = m1 }, new ActivityWrapper { Activity = m2 } } };
 
@@ -156,6 +158,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             // run
             hydroModel.Initialize();
+            Assert.AreEqual(ActivityStatus.Failed, hydroModel.Status);
+        }
+
+        [Test]
+        public void RunUsingSimpleModel2()
+        {
+            var m1 = new SimpleModel { Input = 1, Name = "SimpleModel1"};
+            var m2 = new SimpleModel { Input = 2, Name = "SimpleModel2"};
+
+            var workflow = new ParallelActivity { Activities = { new ActivityWrapper { Activity = m1 }, new ActivityWrapper { Activity = m2 } } };
+
+            var hydroModel = new HydroModel
+            {
+                Activities = { m1, m2 },
+                Workflows = { workflow },
+                CurrentWorkflow = workflow
+            };
+
+            // run
+            hydroModel.Initialize();
+            Assert.AreEqual(ActivityStatus.Initialized, hydroModel.Status);
             hydroModel.Execute();
             hydroModel.Finish();
             hydroModel.Cleanup();
