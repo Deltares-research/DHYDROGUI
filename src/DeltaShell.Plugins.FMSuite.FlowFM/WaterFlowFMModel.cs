@@ -1771,6 +1771,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private string GetMduPathFromDeltaShellPath(string path)
         {
             // dsproj_data/<model name>/<model name>.mdu
+            if (path == null) return Name + ".mdu";
             return Path.Combine(Path.GetDirectoryName(path), Path.Combine(Name, Name + ".mdu"));
         }
 
