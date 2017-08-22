@@ -405,7 +405,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     tmpstring = meshpointsids[i];
                     tmpstring = tmpstring.PadRight(GridWrapper.idssize, ' ');
-                    branchinfo[i].ids = tmpstring.ToCharArray();
+                    meshpointsinfo[i].ids = tmpstring.ToCharArray();
                     tmpstring = meshpointslongnames[i];
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     meshpointsinfo[i].longnames = tmpstring.ToCharArray();
