@@ -1799,8 +1799,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private string GetMduPathFromDeltaShellPath(string path)
         {
+            var directoryName = path != null
+                ? Path.GetDirectoryName(path) ?? ""
+                : "";
+
             // dsproj_data/<model name>/<model name>.mdu
-            return Path.Combine(Path.GetDirectoryName(path), Path.Combine(Name, Name + ".mdu"));
+            return Path.Combine(directoryName, Name, Name + ".mdu");
         }
 
         private void RenameSubFilesIfApplicable()
@@ -2373,7 +2377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string InputFile
         {
-            get { return Path.GetFileName(MduFilePath); }
+            get { return Path.GetFileName(MduSavePath); }
         }
 
         public virtual string DirectoryName
