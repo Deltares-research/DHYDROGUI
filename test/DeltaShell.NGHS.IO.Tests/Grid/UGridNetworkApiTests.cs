@@ -2094,8 +2094,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] { 1, 1, };
             double[] offset = new double[] { 0.5, 1.2, };
-            string[] ids = new[] { "point" };
-            string[] names = new[] { "pointname" };
+            string[] ids = new[] { "point", "point" };
+            string[] names = new[] { "pointname", "pointname" };
             
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
@@ -2129,8 +2129,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] { 1, 1, };
             double[] offset = new double[] { 0.5, 1.2, };
-            string[] ids = new[] { "point" };
-            string[] names = new[] { "pointname" };
+            string[] ids = new[] { "point", "point" };
+            string[] names = new[] { "pointname", "pointname" };
 
 
             // uGridNetworkApi
@@ -2167,8 +2167,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int[] branchIdx = new int[] { 1, 1, };
             double[] offset = new double[] { 0.5, 1.2, };
-            string[] ids = new[] { "point" };
-            string[] names = new[] { "pointname" };
+            string[] ids = new[] { "point", "point" };
+            string[] names = new[] { "pointname", "pointname" };
 
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);

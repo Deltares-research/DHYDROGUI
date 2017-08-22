@@ -69,12 +69,15 @@ namespace DeltaShell.NGHS.IO.Grid
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
                 GridWrapper.interop_charinfo[] idInfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                for (int i = 0; i < numberOfDiscretisationPoints; ++i)
+                for (int i = 0; i < numberOfDiscretisationPoints; i++)
                 {
                     string tmpString;
                     tmpString = discretisationPointIds[i] ?? string.Empty;
                     tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
                     idInfo[i].ids = tmpString.ToCharArray();
+                    tmpString = discretisationPointLongnames[i] ?? string.Empty;
+                    tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
+                    idInfo[i].longnames = tmpString.ToCharArray();
                 }
 
                 return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
