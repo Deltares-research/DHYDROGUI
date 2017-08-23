@@ -76,7 +76,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
                     idInfo[i].ids = tmpString.ToCharArray();
                     tmpString = discretisationPointLongnames[i] ?? string.Empty;
-                    tmpString = tmpString.PadRight(GridWrapper.idssize, ' ');
+                    tmpString = tmpString.PadRight(GridWrapper.longnamessize, ' ');
                     idInfo[i].longnames = tmpString.ToCharArray();
                 }
 

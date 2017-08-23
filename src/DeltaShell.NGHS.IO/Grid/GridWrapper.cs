@@ -449,7 +449,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_read_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_read_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshId, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, interop_charinfo[] value, [In] ref int nmeshpoints);
+        private static extern int ionc_read_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshId, [In, Out] ref IntPtr c_branchidx, [In, Out] ref IntPtr c_offset, [In, Out] interop_charinfo[] value, [In] ref int nmeshpoints);
 
         /// <summary>
         /// Defines the contacts structure.
