@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var networkId =  GetNetworkId(networkIds);
                     
                     uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
-                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointNames);
+                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }
             }
             catch (Exception ex)
@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 return null;
             }
             
-            var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(loadedNetwork, discretisationDataModel.Name, discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointNames);
+            var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(loadedNetwork, discretisationDataModel.Name, discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
             
             return networkDiscretisation;
         }

@@ -14,21 +14,21 @@ namespace DeltaShell.Plugins.NetworkEditor
         public int[] BranchIdx = new int[0];
         public double[] Offset = new double[0];
         public string[] DiscretisationPointIds = new string[0];
-        public string[] DiscretisationPointNames = new string[0];
+        public string[] DiscretisationPointDescriptions = new string[0];
 
         public NetworkDiscretisationUGridDataModel(IDiscretization discretisation)
         {
             SetNetworkDiscretisationData(discretisation);
         }
 
-        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offset, int networkId, string[] discretisationPointIds, string[] discretisationPointNames)
+        public NetworkDiscretisationUGridDataModel(string name, int[] branchIndices, double[] offset, int networkId, string[] discretisationPointIds, string[] discretisationPointDescriptions)
         {
             Name = name;
             BranchIdx = branchIndices;
             Offset = offset;
             NetworkId = networkId;
             DiscretisationPointIds = discretisationPointIds;
-            DiscretisationPointNames = discretisationPointNames;
+            DiscretisationPointDescriptions = discretisationPointDescriptions;
         }
 
         private void SetNetworkDiscretisationData(IDiscretization discretisation)
@@ -55,10 +55,10 @@ namespace DeltaShell.Plugins.NetworkEditor
             Offset = discretisationPoints.Select(l => l.Chainage).ToArray();
 
             DiscretisationPointIds = discretisationPoints.Select(p => p.Name).ToArray();
-            DiscretisationPointNames = discretisationPoints.Select(p => p.LongName).ToArray();
+            DiscretisationPointDescriptions = discretisationPoints.Select(p => p.LongName).ToArray();
         }
 
-        public static IDiscretization ReconstructNetworkDiscretisation(INetwork network, string name, int[] branchIndices, double[] offset, string[] discretisationPointIds, string[] discretisationPointNames)
+        public static IDiscretization ReconstructNetworkDiscretisation(INetwork network, string name, int[] branchIndices, double[] offset, string[] discretisationPointIds, string[] discretisationPointDescriptions)
         {
             if (network == null)
             {
@@ -97,9 +97,14 @@ namespace DeltaShell.Plugins.NetworkEditor
                 var branchIndex = branchIndices[i];
                 var branch = network.Branches[branchIndex];
                 var discretisationPointId = discretisationPointIds[i];
-                var discretisationPointName = discretisationPointNames[i];
+                var discretisationPointDescription = discretisationPointDescriptions[i];
 
-                var networkLocation = new NetworkLocation(branch, offset[i]) { Name = discretisationPointId,LongName = discretisationPointName};
+                var networkLocation =
+                    new NetworkLocation(branch, offset[i])
+                    {
+                        Name = discretisationPointId,
+                        LongName = discretisationPointDescription
+                    };
 
                 discretisation.Locations.Values.Add(networkLocation);
             }

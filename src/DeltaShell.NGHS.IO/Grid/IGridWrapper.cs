@@ -253,10 +253,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">The network id (in)</param>
         /// <param name="branchIndicesPtr">The branch id for each mesh point (in)</param>
         /// <param name="offsetPtr">The offset along the branch from the starting point (in)</param>
-        /// <param name="meshpointsinfo"></param>
-        /// <param name="numberOfMeshPoints">The number of mesh points (in)</param>
+        /// <param name="discretisationPointInfo"></param>
+        /// <param name="numberOfDiscretisationPoints">The number of mesh points (in)</param>
         /// <returns></returns>
-        int Write1DMeshDiscretisationPoints(int ioncId, int meshId, IntPtr branchIndicesPtr, IntPtr offsetPtr, GridWrapper.interop_charinfo[] meshpointsinfo, int numberOfMeshPoints);
+        int Write1DMeshDiscretisationPoints(int ioncId, int meshId, IntPtr branchIndicesPtr, IntPtr offsetPtr, GridWrapper.interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints);
 
         /// <summary>
         /// Get the number of network nodes
@@ -338,10 +338,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshId">The mesh id (in)</param>
         /// <param name="xBranchIndicesPtr">The branch id for each mesh point (out)</param>
         /// <param name="offsetPtr">The offset along the branch from the starting point (out)</param>
-        /// <param name="info"></param>
-        /// <param name="numberOfMeshPoints">The number of mesh points (in)</param>
+        /// <param name="discretisationPointInfo"></param>
+        /// <param name="numberOfDiscretisationPoints">The number of mesh points (in)</param>
         /// <returns></returns>
-        int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, GridWrapper.interop_charinfo[] info, int numberOfMeshPoints);
+        int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, GridWrapper.interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints);
 
         /// <summary>
         /// Reads the network id for the 1D network
@@ -403,12 +403,5 @@ namespace DeltaShell.NGHS.IO.Grid
         int Put1DNetworkBranchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches);
 
         int Get1DNetworkBranchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches);
-        
-        int CreateNetworkDiscretisationPointIds(int ioncid, int meshid, int iconvtype);
-
-        int WriteNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, GridWrapper.interop_charinfo[] values, int nvalues);
-
-        int ReadNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, GridWrapper.interop_charinfo[] values, int nvalues);
-
     }
 }

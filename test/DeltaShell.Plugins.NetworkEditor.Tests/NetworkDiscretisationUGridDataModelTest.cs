@@ -53,16 +53,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             };
 
             // add source node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0) {Name = "point_01"});
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 0)
+            {
+                Name = "point_01",
+                LongName = "point_01_description"
+            });
             // add calculation points
-            var location1 = new NetworkLocation(branch1, 1);
+            var location1 = new NetworkLocation(branch1, 1)
+            {
+                LongName = "branch_01_description"
+            };
             networkDiscretisation.Locations.Values.Add(location1);
-            var location2 = new NetworkLocation(branch1, 2) { Name = "point_03" };
+            var location2 = new NetworkLocation(branch1, 2)
+            {
+                Name = "point_03",
+                LongName = "point_03_description"
+            };
             networkDiscretisation.Locations.Values.Add(location2);
-            var location3 = new NetworkLocation(branch1, 3) { Name = "point_04" };
+            var location3 = new NetworkLocation(branch1, 3)
+            {
+                Name = "point_04",
+                LongName = "point_04_description"
+            };
             networkDiscretisation.Locations.Values.Add(location3);
             // add target node
-            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5) { Name = "point_05" });
+            networkDiscretisation.Locations.Values.Add(new NetworkLocation(branch1, 5)
+            {
+                Name = "point_05",
+                LongName = "point_05_description"
+            });
 
             return networkDiscretisation;
         }
@@ -81,6 +100,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.AreEqual(new[] {0, 0, 0, 0, 0}, dataModel.BranchIdx);
             Assert.AreEqual(new[] {0, 1, 2, 3, 5}, dataModel.Offset);
             Assert.AreEqual(new[] { "point_01", "my Branch 1_1.000", "point_03", "point_04", "point_05" }, dataModel.DiscretisationPointIds);
+            Assert.AreEqual(new[] { "point_01_description", "branch_01_description", "point_03_description", "point_04_description", "point_05_description" }, dataModel.DiscretisationPointDescriptions);
         }
 
         [Test]
@@ -91,7 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var dataModel = new NetworkDiscretisationUGridDataModel(discretisation);
 
-            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset, dataModel.DiscretisationPointIds, dataModel.DiscretisationPointNames);
+            var reconstructedDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(network, dataModel.Name, dataModel.BranchIdx, dataModel.Offset, dataModel.DiscretisationPointIds, dataModel.DiscretisationPointDescriptions);
 
             Assert.AreEqual(discretisation.Name, reconstructedDiscretisation.Name);
 

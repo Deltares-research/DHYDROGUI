@@ -789,9 +789,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_create_1d_mesh_dll(ref ioncId, ref networkId, ref meshId, meshname, ref numberOfMeshPoints, ref numberOfMeshEdges);
         }
 
-        public int Write1DMeshDiscretisationPoints(int ioncId, int meshId, IntPtr branchIndicesPtr, IntPtr offsetPtr, interop_charinfo[] value, int numberOfMeshPoints)
+        public int Write1DMeshDiscretisationPoints(int ioncId, int meshId, IntPtr branchIndicesPtr, IntPtr offsetPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
         {
-            return ionc_write_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref branchIndicesPtr, ref offsetPtr, value, ref numberOfMeshPoints);
+            return ionc_write_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref branchIndicesPtr, ref offsetPtr, discretisationPointInfo, ref numberOfDiscretisationPoints);
         }
 
         public int Get1DNetworkNodesCount(int ioncId, int networkId, ref int numberOfNodes)
@@ -833,9 +833,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_1d_mesh_discretisation_points_count_dll(ref ioncId, ref meshId, ref numberOfMeshPoints);
         }
 
-        public int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, interop_charinfo[] value, int numberOfMeshPoints)
+        public int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
         {
-            return ionc_read_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref xBranchIndicesPtr, ref offsetPtr, value, ref numberOfMeshPoints);
+            return ionc_read_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref xBranchIndicesPtr, ref offsetPtr, discretisationPointInfo, ref numberOfDiscretisationPoints);
         }
 
         public int def_mesh_contact(ref int ioncId, ref int contactsmesh, string contactsmeshname, ref int ncontacts, ref int mesh1, ref int mesh2, ref int locationType1Id, ref int locationType2Id)
@@ -903,22 +903,6 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return ionc_get_1d_network_branchorder_dll(ref ioncId, ref networkId, ref pointerToBranchOrder, ref numberOfBranches);
         }
-
-        public int CreateNetworkDiscretisationPointIds(int ioncid, int meshid, int iconvtype)
-        {
-            return ionc_def_mesh_ids_dll(ref ioncid, ref meshid, ref iconvtype);
-        }
-
-        public int WriteNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, interop_charinfo[] values, int nvalues)
-        {
-            return ionc_put_var_chars_dll(ref ioncid, ref meshid, varname, values, ref nvalues);
-        }
-
-        public int ReadNetworkDiscretisationPointIds(int ioncid, int meshid, StringBuilder varname, interop_charinfo[] values, int nvalues)
-        {
-            return ionc_get_var_chars_dll(ref ioncid, ref meshid, varname, values, ref nvalues);
-        }
-
         #endregion
     }
 }

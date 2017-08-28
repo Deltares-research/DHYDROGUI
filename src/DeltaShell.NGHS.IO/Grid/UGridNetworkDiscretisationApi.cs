@@ -63,6 +63,9 @@ namespace DeltaShell.NGHS.IO.Grid
             
             try
             {
+                discretisationPointIds.ReplaceSpacesInString();
+                discretisationPointLongnames.ReplaceSpacesInString();
+
                 branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
                 offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
 
@@ -169,25 +172,20 @@ namespace DeltaShell.NGHS.IO.Grid
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             int numberOfDiscretisationPoints;
+            var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
+            if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+            if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+
+            IntPtr branchIdxPtr = IntPtr.Zero;
+            IntPtr offsetPtr = IntPtr.Zero;
 
             try
             {
-                var ierr = GetNumberOfNetworkDiscretisationPoints(meshId, out numberOfDiscretisationPoints);
-                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
-                if (numberOfDiscretisationPoints < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-            catch
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
+                branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
+                offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
 
-            IntPtr branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
-            IntPtr offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
-
-            try
-            {
                 var meshpointsinfo = new GridWrapper.interop_charinfo[numberOfDiscretisationPoints];
-                var ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, meshpointsinfo, numberOfDiscretisationPoints);
+                ierr = wrapper.Read1DMeshDiscretisationPoints(ioncId, meshId, ref branchIdxPtr, ref offsetPtr, meshpointsinfo, numberOfDiscretisationPoints);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
