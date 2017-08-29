@@ -395,7 +395,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = GridWrapper.ionc_get_edge_nodes(ref ioncid, ref meshId, ref ptr, ref nEdges);
+                var startIndex = 0;
+                var ierr = GridWrapper.ionc_get_edge_nodes(ref ioncid, ref meshId, ref ptr, ref nEdges, ref startIndex);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
                 {
                     throw new Exception("Couldn't get edge nodes list");

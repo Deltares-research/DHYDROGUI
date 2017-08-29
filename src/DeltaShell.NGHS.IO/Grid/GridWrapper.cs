@@ -130,9 +130,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshid">The mesh id in the specified data set.</param>
         /// <param name="c_edge_nodes_ptr">Pointer to array for the edge-node connectivity table.</param>
         /// <param name="nedge">The number of edges in the mesh.</param>
+        /// <param name="startIndex"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_edge_nodes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_get_edge_nodes(ref int ioncid, ref int meshid, ref IntPtr c_edge_nodes_ptr, ref int nedge);
+        public static extern int ionc_get_edge_nodes(ref int ioncid, ref int meshid, ref IntPtr c_edge_nodes_ptr, ref int nedge, ref int startIndex);
 
         /// <summary>
         /// Gets the face-node connectvit table for all faces in the specified mesh.
