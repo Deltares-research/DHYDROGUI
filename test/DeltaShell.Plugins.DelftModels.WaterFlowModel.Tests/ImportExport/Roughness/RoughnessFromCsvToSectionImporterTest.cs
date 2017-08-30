@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using NUnit.Framework;
@@ -11,6 +14,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
     [TestFixture]
     public class RoughnessFromCsvToSectionImporterTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void RoughnessFromCsvToSectionImporterPropertiesTest()
+        {
+            var importer = new RoughnessFromCsvToSectionImporter();
+            var expectedSupportedItemTypes = new List<Type>{
+                typeof(RoughnessSection),
+                typeof(IList<RoughnessSection>)};
+            var importerSupportedItemTypes = importer.SupportedItemTypes;
+            Assert.IsFalse(expectedSupportedItemTypes.Any(e => !importerSupportedItemTypes.Contains(e)));
+            Assert.IsFalse(importerSupportedItemTypes.Any(e => !expectedSupportedItemTypes.Contains(e)));
+
+            Assert.IsFalse(expectedSupportedItemTypes.Any( s => !importer.CanImportOn(s)));
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]

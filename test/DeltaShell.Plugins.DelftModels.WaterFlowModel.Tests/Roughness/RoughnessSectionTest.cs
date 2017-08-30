@@ -110,115 +110,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
         }
 
         [Test]
-        public void ReverseRoughnessGoesBackToChezyIfNormalSectionHasNoRoughnessDefined()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-            var branch1 = network.Branches[0];
-            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
-            var section = new RoughnessSection(crossSectionSectionType, network);
-            var reverseSection = new ReverseRoughnessSection(section);
-
-            reverseSection.UseNormalRoughness = false;
-            
-            var locationOne = new NetworkLocation(branch1, 0);
-            reverseSection.RoughnessNetworkCoverage[locationOne] = new object[] { 70.0, RoughnessType.Chezy }; // initialize to chezy
-            section.RoughnessNetworkCoverage[locationOne] = new object[] { 70.0, RoughnessType.DeBosAndBijkerk };
-            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 50)] = new object[] { 100.0, RoughnessType.Chezy }; //not possible, changed to DeBosAndBijkerk
-
-            Assert.AreEqual(RoughnessType.DeBosAndBijkerk, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
-
-            section.RoughnessNetworkCoverage.Locations.Values.Remove(locationOne);
-
-            Assert.AreEqual(RoughnessType.Chezy, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
-        }
-
-        [Test, Category(TestCategory.Performance)]
-        public void ReverseRoughnessGoesBackToChezyEfficientlyIfNormalSectionHasNoRoughnessDefined()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-            var branch1 = network.Branches[0];
-            var crossSectionSectionType = new CrossSectionSectionType {Name = "main"};
-            var section = new RoughnessSection(crossSectionSectionType, network);
-            var reverseSection = new ReverseRoughnessSection(section) {UseNormalRoughness = false};
-
-            section.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
-            reverseSection.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
-
-            // initialize to chezy
-            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 0.0)] = new object[] {70.0, RoughnessType.Chezy};
-
-            const int numLocations = 10000;
-            var factor = numLocations/branch1.Length;
-            
-            for (int i = 0; i < numLocations; i++)
-            {
-                var loc = new NetworkLocation(branch1, i * factor);
-                section.RoughnessNetworkCoverage[loc] = new object[] {70.0, RoughnessType.DeBosAndBijkerk};
-            }
-
-            // expect it was changed to match normal branch
-            Assert.AreEqual(RoughnessType.DeBosAndBijkerk,
-                            reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(branch1, 0.0)));
-
-            TestHelper.AssertIsFasterThan(1000, () =>
-                {
-                    section.RoughnessNetworkCoverage.BeginEdit(new DefaultEditAction("Removing branch"));
-                    for (int i = 0; i < numLocations; i++)
-                    {
-                        var loc = new NetworkLocation(branch1, i * factor);
-                        section.RoughnessNetworkCoverage.Locations.Values.Remove(loc);
-                    }
-                    section.RoughnessNetworkCoverage.EndEdit();
-
-                    // expect it was reset back to chezy
-                    Assert.AreEqual(RoughnessType.Chezy,
-                                    reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(branch1, 0.0)));
-                });
-        }
-
-        [Test]
-        public void ReverseRoughnessSwitchesWithDefaultOfNormalSection()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-            var branch1 = network.Branches[0];
-            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
-            var section = new RoughnessSection(crossSectionSectionType, network);
-            var reverseSection = new ReverseRoughnessSection(section);
-
-            reverseSection.UseNormalRoughness = false;
-
-            var locationOne = new NetworkLocation(branch1, 0);
-            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 50)] = new object[] { 100.0, RoughnessType.Chezy };
-
-            Assert.AreEqual(RoughnessType.Chezy, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
-
-            section.SetDefaults(RoughnessType.DeBosAndBijkerk, 10.0);
-
-            Assert.AreEqual(RoughnessType.DeBosAndBijkerk, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
-            Assert.AreEqual(reverseSection.GetDefaultRoughnessType(), section.GetDefaultRoughnessType());
-            Assert.AreEqual(reverseSection.GetDefaultRoughnessValue(), section.GetDefaultRoughnessValue());
-        }
-
-        [Test]
-        public void ReverseRoughnessUsesDefaultOfNormalSectionOnAdd()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-            var branch1 = network.Branches[0];
-            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
-            var section = new RoughnessSection(crossSectionSectionType, network);
-            var reverseSection = new ReverseRoughnessSection(section);
-
-            reverseSection.UseNormalRoughness = false;
-
-            section.SetDefaults(RoughnessType.StricklerKs, 0.05);
-
-            var locationOne = new NetworkLocation(branch1, 0);
-            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 50)] = new object[] { 100.0, RoughnessType.DeBosAndBijkerk };
-
-            Assert.AreEqual(RoughnessType.StricklerKs, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
-        }
-
-        [Test]
         public void Clone()
         {
             var network = new Network();
@@ -511,5 +402,225 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Roughness
                 Assert.AreEqual(RoughnessFunction.FunctionOfH, roughnessSection.GetRoughnessFunctionType(branch));
             }
         }
+
+        [Test]
+        public void GetFirstRoughnessSectionByNameFromRoughnessSectionExtensionsTest()
+        {
+            var node1 = new HydroNode("1");
+            var node2 = new HydroNode("2");
+            var branch = new Channel(node1, node2);
+            var network = new Network();
+            network.Nodes.AddRange(new[] { node1, node2 });
+            network.Branches.Add(branch);
+
+            var roughnessSection1 = new RoughnessSection(new CrossSectionSectionType { Name = WaterFlowModel1DDataSet.MainChannelName }, network);
+            var roughnessSection2 = new RoughnessSection(new CrossSectionSectionType { Name = WaterFlowModel1DDataSet.Floodplain1Name }, network);
+            var roughnessSection3 = new RoughnessSection(new CrossSectionSectionType { Name = WaterFlowModel1DDataSet.Floodplain2Name }, network);
+
+            var roughnessSections = new List<RoughnessSection> {roughnessSection1, roughnessSection2, roughnessSection3};
+            Assert.AreEqual(roughnessSection1, roughnessSections.MainChannel());
+            Assert.AreEqual(roughnessSection2, roughnessSections.Floodplain1());
+            Assert.AreEqual(roughnessSection3, roughnessSections.Floodplain2());
+            Assert.AreEqual(roughnessSection1, roughnessSections.GetApplicableReverseRoughnessSection(roughnessSection1));
+        }
+
+        #region ReverseRoughnessSection
+
+        [Test]
+        public void ReverseRoughnessGoesBackToChezyIfNormalSectionHasNoRoughnessDefined()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var branch1 = network.Branches[0];
+            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
+            var section = new RoughnessSection(crossSectionSectionType, network);
+            var reverseSection = new ReverseRoughnessSection(section);
+
+            reverseSection.UseNormalRoughness = false;
+            
+            var locationOne = new NetworkLocation(branch1, 0);
+            reverseSection.RoughnessNetworkCoverage[locationOne] = new object[] { 70.0, RoughnessType.Chezy }; // initialize to chezy
+            section.RoughnessNetworkCoverage[locationOne] = new object[] { 70.0, RoughnessType.DeBosAndBijkerk };
+            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 50)] = new object[] { 100.0, RoughnessType.Chezy }; //not possible, changed to DeBosAndBijkerk
+
+            Assert.AreEqual(RoughnessType.DeBosAndBijkerk, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
+
+            section.RoughnessNetworkCoverage.Locations.Values.Remove(locationOne);
+
+            Assert.AreEqual(RoughnessType.Chezy, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
+        }
+
+        [Test, Category(TestCategory.Performance)]
+        public void ReverseRoughnessGoesBackToChezyEfficientlyIfNormalSectionHasNoRoughnessDefined()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var branch1 = network.Branches[0];
+            var crossSectionSectionType = new CrossSectionSectionType {Name = "main"};
+            var section = new RoughnessSection(crossSectionSectionType, network);
+            var reverseSection = new ReverseRoughnessSection(section) {UseNormalRoughness = false};
+
+            section.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
+            reverseSection.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
+
+            // initialize to chezy
+            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 0.0)] = new object[] {70.0, RoughnessType.Chezy};
+
+            const int numLocations = 10000;
+            var factor = numLocations/branch1.Length;
+            
+            for (int i = 0; i < numLocations; i++)
+            {
+                var loc = new NetworkLocation(branch1, i * factor);
+                section.RoughnessNetworkCoverage[loc] = new object[] {70.0, RoughnessType.DeBosAndBijkerk};
+            }
+
+            // expect it was changed to match normal branch
+            Assert.AreEqual(RoughnessType.DeBosAndBijkerk,
+                reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(branch1, 0.0)));
+
+            TestHelper.AssertIsFasterThan(1000, () =>
+            {
+                section.RoughnessNetworkCoverage.BeginEdit(new DefaultEditAction("Removing branch"));
+                for (int i = 0; i < numLocations; i++)
+                {
+                    var loc = new NetworkLocation(branch1, i * factor);
+                    section.RoughnessNetworkCoverage.Locations.Values.Remove(loc);
+                }
+                section.RoughnessNetworkCoverage.EndEdit();
+
+                // expect it was reset back to chezy
+                Assert.AreEqual(RoughnessType.Chezy,
+                    reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(branch1, 0.0)));
+            });
+        }
+
+        [Test]
+        public void ReverseRoughnessSwitchesWithDefaultOfNormalSection()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var branch1 = network.Branches[0];
+            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
+            var section = new RoughnessSection(crossSectionSectionType, network);
+            var reverseSection = new ReverseRoughnessSection(section);
+
+            reverseSection.UseNormalRoughness = false;
+
+            var locationOne = new NetworkLocation(branch1, 0);
+            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 50)] = new object[] { 100.0, RoughnessType.Chezy };
+
+            Assert.AreEqual(RoughnessType.Chezy, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
+
+            section.SetDefaults(RoughnessType.DeBosAndBijkerk, 10.0);
+
+            Assert.AreEqual(RoughnessType.DeBosAndBijkerk, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
+            Assert.AreEqual(reverseSection.GetDefaultRoughnessType(), section.GetDefaultRoughnessType());
+            Assert.AreEqual(reverseSection.GetDefaultRoughnessValue(), section.GetDefaultRoughnessValue());
+        }
+
+        [Test]
+        public void ReverseRoughnessUsesDefaultOfNormalSectionOnAdd()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var branch1 = network.Branches[0];
+            var crossSectionSectionType = new CrossSectionSectionType { Name = "main" };
+            var section = new RoughnessSection(crossSectionSectionType, network);
+            var reverseSection = new ReverseRoughnessSection(section);
+
+            reverseSection.UseNormalRoughness = false;
+
+            section.SetDefaults(RoughnessType.StricklerKs, 0.05);
+
+            var locationOne = new NetworkLocation(branch1, 0);
+            reverseSection.RoughnessNetworkCoverage[new NetworkLocation(branch1, 50)] = new object[] { 100.0, RoughnessType.DeBosAndBijkerk };
+
+            Assert.AreEqual(RoughnessType.StricklerKs, reverseSection.RoughnessNetworkCoverage.EvaluateRoughnessType(locationOne));
+        }
+
+        [Test]
+        public void ReverseRoughnessSectionSetDefaultsTest()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var reverseSection = new ReverseRoughnessSection()
+            {
+                NormalSection = new RoughnessSection(new CrossSectionSectionType(), network)
+            };
+            reverseSection.SetDefaults(RoughnessType.Manning, 4.0);
+
+            //If we set the defaults but then set the UseNormalRoughness to True set defauls will set it to false.
+            reverseSection.UseNormalRoughness = true;
+            reverseSection.SetDefaults(RoughnessType.Manning, 4.0);
+            Assert.IsFalse(reverseSection.UseNormalRoughness);
+            
+            //However, if the normal section shares the values of the reverse roughness section, the flag will still stay as True
+            reverseSection.NormalSection.SetDefaults(RoughnessType.Manning, 4.0);
+            reverseSection.UseNormalRoughness = true;
+            reverseSection.SetDefaults(RoughnessType.Manning, 4.0);
+            Assert.IsTrue(reverseSection.UseNormalRoughness);
+            Assert.AreEqual(reverseSection.GetDefaultRoughnessType(), reverseSection.NormalSection.GetDefaultRoughnessType());
+            Assert.AreEqual(reverseSection.GetDefaultRoughnessValue(), reverseSection.NormalSection.GetDefaultRoughnessValue());
+        }
+
+        [Test]
+        public void EvaluateRoughnessValueTest()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var reverseSection = new ReverseRoughnessSection()
+            {
+                NormalSection = new RoughnessSection(new CrossSectionSectionType(), network)
+            };
+            reverseSection.SetDefaults(RoughnessType.Manning, 4.0);
+            var locationA = new NetworkLocation(network.Branches.First(), 10);
+            var firstValue = reverseSection.EvaluateRoughnessValue(locationA);
+            Assert.NotNull(firstValue);
+            Assert.LessOrEqual(0, firstValue);
+
+            //With values in the network coverage the result should differ
+            reverseSection.RoughnessNetworkCoverage[locationA] = new object[]
+            {
+                100.0,
+                RoughnessType.StricklerKn
+            };
+            var secondValue = reverseSection.EvaluateRoughnessValue(locationA);
+            Assert.NotNull(secondValue);
+            Assert.AreEqual(100.0, secondValue);
+            Assert.AreNotEqual(firstValue, secondValue);
+        }
+
+        [Test]
+        public void GetFunctionOfHAndGetFunctionOfQForRoughnessSectionTest()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var reverseSection = new ReverseRoughnessSection()
+            {
+                NormalSection = new RoughnessSection(new CrossSectionSectionType(), network)
+            };
+
+            var branch = network.Branches.First();
+            reverseSection.NormalSection.AddHRoughnessFunctionToBranch(branch, new Function("TestFunction"));
+            reverseSection.NormalSection.AddQRoughnessFunctionToBranch(branch, new Function("TestFunction2"));
+            var locationA = new NetworkLocation(branch, 10);
+            var firstFunctionOfH = reverseSection.FunctionOfH(branch);
+            var firstFunctionOfQ = reverseSection.FunctionOfQ(branch);
+            Assert.NotNull(firstFunctionOfH);
+            Assert.NotNull(firstFunctionOfQ);
+
+            //With values in the network coverage the result should differ
+            reverseSection.RoughnessNetworkCoverage[locationA] = new object[]
+            {
+                100.0,
+                RoughnessType.StricklerKn
+            };
+            reverseSection.AddHRoughnessFunctionToBranch(branch, new Function("TestFunction"));
+            reverseSection.AddQRoughnessFunctionToBranch(branch, new Function("TestFunction2"));
+
+            var secondFunctionOfH = reverseSection.FunctionOfH(branch);
+            var secondFunctionOfQ = reverseSection.FunctionOfQ(branch);
+            Assert.NotNull(secondFunctionOfH);
+            Assert.NotNull(secondFunctionOfQ);
+
+            Assert.AreNotEqual(firstFunctionOfH, secondFunctionOfH);
+            Assert.AreNotEqual(firstFunctionOfQ, secondFunctionOfQ);
+        }
+
+        #endregion
     }
 }

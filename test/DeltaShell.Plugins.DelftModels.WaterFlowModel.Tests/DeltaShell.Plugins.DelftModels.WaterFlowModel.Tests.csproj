@@ -184,6 +184,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -227,6 +228,7 @@
     <Compile Include="ImportExport\IntegrationTests\WFM1DDsProjTest.cs" />
     <Compile Include="ImportExport\ModelDefinitionsFileWriterTest.cs" />
     <Compile Include="ImportExport\ModelFileNamesTest.cs" />
+    <Compile Include="ImportExport\Roughness\CalibrateRoughnessImporterTest.cs" />
     <Compile Include="ImportExport\Roughness\NegativeIsPositiveCsvConverterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessDataFileReaderTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessDataFileWriterTest.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="ImportExport\Roughness\RoughnessCsvConverterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessFromCsvFileExporterTest.cs" />
     <Compile Include="ImportExport\Roughness\RoughnessFunctionTypeCsvConverterTest.cs" />
+    <Compile Include="ModelApiControllers\ModelApiControllersTest.cs" />
     <Compile Include="Roughness\RoughnessNetworkCoverageTest.cs" />
     <Compile Include="Roughness\RoughnessNetworkCoverageUndoRedoIntegrationTest.cs" />
     <Compile Include="Roughness\RoughnessSectionTest.cs" />
@@ -282,6 +285,7 @@
     <Compile Include="WaterFlowModel1DWithWeirTest.cs" />
     <Compile Include="WaterFlowModel1DBranchFeatureValueConverterTest.cs" />
     <Compile Include="WaterFlowModelApiFactoryTest.cs" />
+    <Compile Include="WaterFlowModelResourcesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -390,7 +394,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Forms\ProjectExplorer\" />
-    <Folder Include="ModelApiControllers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
