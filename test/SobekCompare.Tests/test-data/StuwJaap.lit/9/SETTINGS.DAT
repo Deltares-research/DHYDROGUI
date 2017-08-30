@@ -135,7 +135,7 @@ YZProfile=-1
 RectangularProfileSlotWidth=-1
 
 [Flow Parameters]
-Iadvec1D=1
+Iadvec1D=2
 Option=1
 CourantNumber=1
 MaxDegree=6
