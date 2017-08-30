@@ -371,7 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void RunningFmModelShouldGiveVectorVelocityLayer()
+        public void RunningFMModelShouldGiveVectorVelocityLayer()
         {
             var mduPath =
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
