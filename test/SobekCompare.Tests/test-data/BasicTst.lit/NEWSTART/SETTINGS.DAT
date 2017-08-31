@@ -111,6 +111,7 @@ ThresholdValueFlooding=.01
 ThresholdValueFloodingFLS=.001
 Theta=1
 MinumumLength=10
+Iadvec1D=2
 
 [Overland Flow]
 InitialValueFromNetter=-1
