@@ -1,25 +1,12 @@
-﻿using DelftTools.Hydro;
-using DelftTools.Shell.Gui;
-using DeltaShell.Core;
-using DeltaShell.Gui;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
+﻿using DeltaShell.Core;
 using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.Fews.Export;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using Rhino.Mocks;
 

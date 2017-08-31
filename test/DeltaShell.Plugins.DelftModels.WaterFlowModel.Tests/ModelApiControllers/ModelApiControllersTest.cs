@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using NUnit.Framework;
@@ -11,9 +12,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiController
         [Test]
         public void GetRemoteModelApiWrapperTest()
         {
-            var PathValue = Environment.GetEnvironmentVariable("PATH");
+            var environmentVariable = Environment.GetEnvironmentVariable("PATH");
+            if (environmentVariable.Contains(DimrApiDataSet.SharedDllPath))
+            {
+                var newValue = environmentVariable.Replace(DimrApiDataSet.SharedDllPath, String.Empty);
+                Environment.SetEnvironmentVariable("PATH", newValue);
+            }
+            Assert.IsFalse(Environment.GetEnvironmentVariable("PATH").Contains(DimrApiDataSet.SharedDllPath));
             var remoteApiWrapper = new RemoteModelApiWrapper();
-            Assert.AreNotEqual(PathValue, Environment.GetEnvironmentVariable("PATH"));
+            Assert.IsTrue(Environment.GetEnvironmentVariable("PATH").Contains(DimrApiDataSet.SharedDllPath));
         }
         #endregion
 
@@ -21,9 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiController
         [Test]
         public void GetModelApiWrapperTest()
         {
-            var PathValue = Environment.GetEnvironmentVariable("PATH");
             var apiWrapper = new ModelApi();
-            Assert.AreNotEqual(PathValue, Environment.GetEnvironmentVariable("PATH"));
+            Assert.IsTrue(Environment.GetEnvironmentVariable("PATH").Contains(DimrApiDataSet.SharedDllPath));
         }
 
         [Test]
