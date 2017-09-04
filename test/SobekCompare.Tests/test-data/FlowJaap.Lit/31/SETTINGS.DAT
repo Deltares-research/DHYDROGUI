@@ -168,7 +168,7 @@ AccelerationTermFactor=1
 UseTimeStepReducerStructures=0
 MinumumTimeStepNegativeQlat=1
 Limtyphu1D=1
-Iadvec1D=2
+Iadvec1D=1
 Momdilution1D=1
 
 [Overland Flow]

@@ -161,7 +161,6 @@ AccelerationTermFactor=1
 UseTimeStepReducerStructures=0
 MinumumTimeStepNegativeQlat=1
 MinumumLength=1
-Iadvec1D=2
 
 [Overland Flow]
 InitialValueFromNetter=-1
