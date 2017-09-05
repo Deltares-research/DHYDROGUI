@@ -45,8 +45,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string LongNameAttribute = "long_name";
         private const string UnitAttribute = "units";
 
-        private const string EastwardSeaWaterVelocityStandardName = "sea_water_x_velocity";
-        private const string NorthwardSeaWaterVelocityStandardName = "sea_water_y_velocity";
+        private const string EastwardSeaWaterVelocityStandardName = "eastward_sea_water_velocity";
+        private const string NorthwardSeaWaterVelocityStandardName = "northward_sea_water_velocity";
+        
+        // For Backwards compatibility: since the fm kernel keeps changing between the two
+        private const string SeaWaterXVelocityStandardName = "sea_water_x_velocity";
+        private const string SeaWaterYVelocityStandardName = "sea_water_y_velocity";
+        
         private const string SedindexAttributeName = "SedIndex";
         #endregion
 
@@ -136,6 +141,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 functions.Add(AddCustomVelocityCoverage(velocityCoverages[EastwardSeaWaterVelocityStandardName], velocityCoverages[NorthwardSeaWaterVelocityStandardName]));
             }
+
+            // Backwards compatibility...
+            if (velocityCoverages.ContainsKey(SeaWaterXVelocityStandardName) &&
+                velocityCoverages.ContainsKey(SeaWaterYVelocityStandardName))
+            {
+                functions.Add(AddCustomVelocityCoverage(velocityCoverages[SeaWaterXVelocityStandardName], velocityCoverages[SeaWaterYVelocityStandardName]));
+            }
+
             return functions;
         }
         
@@ -468,8 +481,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var standardName = netCdfFile.GetAttributeValue(timeDependentVariable.NetCdfDataVariable, StandardNameAttribute);
 
-            if (standardName == EastwardSeaWaterVelocityStandardName ||
-                standardName == NorthwardSeaWaterVelocityStandardName)
+            if (standardName == EastwardSeaWaterVelocityStandardName || standardName == NorthwardSeaWaterVelocityStandardName ||
+                standardName == SeaWaterXVelocityStandardName || standardName == SeaWaterYVelocityStandardName) // Backwards compatibility *ugh*
             {
                 velocityCoverages[standardName] = coverage;
             }
