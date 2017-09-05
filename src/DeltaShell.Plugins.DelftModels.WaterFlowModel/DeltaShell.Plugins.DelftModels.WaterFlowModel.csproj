@@ -225,7 +225,6 @@
     <Compile Include="ModelApiControllers\ModelApi\ModelApiParameter.cs" />
     <Compile Include="ModelApiControllers\ModelApi\ModelApiParameters.cs" />
     <Compile Include="ModelApiControllers\ModelApi\WaterFlowModelParametersReader.cs" />
-    <Compile Include="ModelApiControllers\NetworkModelApiController.cs" />
     <Compile Include="ModelApiControllers\LocalModelApiWrapper.cs" />
     <Compile Include="ModelApiControllers\WaterFlowModelApiFactory.cs" />
     <Compile Include="ModelApiControllers\ModelApiParameterTypeConverter.cs" />

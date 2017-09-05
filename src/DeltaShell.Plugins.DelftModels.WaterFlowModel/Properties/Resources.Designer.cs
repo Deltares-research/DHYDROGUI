@@ -688,7 +688,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Morphology file does not exist..
         /// </summary>
-        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_file_does_not_exist__ {
+        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Morphology_file_does_not_exist
+        {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_fil" +
                         "e_does_not_exist__", resourceCulture);
@@ -698,7 +699,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sediment file does not exist..
         /// </summary>
-        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_does_not_exist__ {
+        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Sediment_file_does_not_exist
+        {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_" +
                         "does_not_exist__", resourceCulture);

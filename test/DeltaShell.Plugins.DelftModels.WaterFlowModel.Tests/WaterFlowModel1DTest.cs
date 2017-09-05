@@ -21,6 +21,7 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
@@ -35,7 +36,6 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpTestsEx;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 using Point = NetTopologySuite.Geometries.Point;
@@ -46,7 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
     public class WaterFlowModel1DTest
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WaterFlowModel1DTest));
-        private static readonly MockRepository mocks = new MockRepository();
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
@@ -18,11 +22,13 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 using Point = NetTopologySuite.Geometries.Point;
@@ -1206,6 +1212,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             var validationReport = WaterFlowModel1DTemperatureValidator.Validate(model);
 
             Assert.That(validationReport.ErrorCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ModelValidateInitialTemperatureWaterFlowModel1DFailsWithWrongTemperatureTest()
+        {
+            /* Basic model */
+            var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+            model.UseTemperature = true;
+            var destinationChannel = model.Network.Channels.First();
+            model.InitialTemperature[new NetworkLocation(destinationChannel, 0.0)] = 85.0;
+            var validationReport = WaterFlowModel1DTemperatureValidator.Validate(model);
+
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
         }
 
         [Test]

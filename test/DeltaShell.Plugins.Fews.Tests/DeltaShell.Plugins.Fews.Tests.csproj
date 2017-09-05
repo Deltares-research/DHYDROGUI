@@ -45,6 +45,7 @@
     <Compile Include="FewsAdapterHKTGTest.cs" />
     <Compile Include="FewsAdapterMaasTest.cs" />
     <Compile Include="FewsAdapterTestBase.cs" />
+    <Compile Include="ModelExchangeItemExporterTest.cs" />
     <Compile Include="ModelStateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\DataItemTimeSeriesAggregatorTest.cs" />
