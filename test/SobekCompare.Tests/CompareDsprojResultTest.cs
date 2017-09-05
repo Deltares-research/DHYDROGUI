@@ -83,7 +83,22 @@ namespace SobekCompare.Tests
             compareHisFile(resultPath, referencePath, "calcpnt.his");
             compareHisFile(resultPath, referencePath, "reachseg.his");
             compareHisFile(resultPath, referencePath, "struc.his");
+        }
 
+
+        [Test]
+        public void TestYZChannelsFlat()
+        {
+            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestYZChannelsFlat");
+            var dsProjPath = Path.Combine(testPath, "TestYZChannelsFlat.dsproj");
+
+            RunDsProjInWaterFlow1D(dsProjPath);
+
+            var resultPath = Path.Combine(dsProjPath + "_data", @"Integrated_Model_output\dflow1d\output");
+            var referencePath = Path.Combine(testPath, @"ReferenceData");
+
+            compareHisFile(resultPath, referencePath, "calcpnt.his");
+            compareHisFile(resultPath, referencePath, "reachseg.his");
         }
 
         private IEnumerable<IFileExporter> GetFileExporters()
