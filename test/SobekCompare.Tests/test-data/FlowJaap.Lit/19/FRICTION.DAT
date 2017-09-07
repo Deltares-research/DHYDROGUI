@@ -8,16 +8,3 @@ TBLE
 10 .000001 <
 15 .000001 <
 tble xrst
-CRFR id '2' nm 'Friction' cs '2'
-lt ys
-TBLE
--160 160 <
-tble
-ft ys
-TBLE
-0 45 <
-tble
-fr ys
-TBLE
-0 45 <
-tble crfr

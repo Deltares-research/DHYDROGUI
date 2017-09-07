@@ -1,4 +1,4 @@
-Sobek Parser V2.07.001.46474
+Sobek Parser V2.07.004.50272
 file_top_ntw = \SOBEK216\FLOWJAAP.LIT\1\NETWORK.NTW                                            
 file_top_net = \SOBEK216\FLOWJAAP.LIT\1\NETWORK.TP                                             
 file_top_obi = \SOBEK216\FLOWJAAP.LIT\1\NETWORK.OBI                                            
@@ -186,8 +186,6 @@ Opening File: \SOBEK216\FLOWJAAP.LIT\1\NETWORK.CP
 File Opened
  2D-Connections
 Opening File: \SOBEK216\FLOWJAAP.LIT\1\NETWORK.D12
-File Opened
-Opening File: \SOBEK216\FLOWJAAP.LIT\1\NETWORK.GR
 File Opened
  Initial conditions layer ......
 Opening File: \SOBEK216\FLOWJAAP.LIT\WORK\INITIAL.DAT

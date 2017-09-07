@@ -1,9 +1,9 @@
-** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.035.46968, Aug  3 2016, 15:14:45
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.038.51843, Jul 26 2017, 15:18:04
 ** WARNING: Upstream Link Level Higher than Invert Level at Culvert 'Culvert, id = 5'
             Link Level Decreased from    0.000 to   -1.000
 ** WARNING: Downstream Link Level Higher than Invert Level at Culvert 'Culvert, id = 5'
             Link Level Decreased from    0.000 to   -1.000
-** INFO   : cpu computation =       0.031200
+** INFO   : cpu computation =       0.062400
 
 ****************************************
 Info Messages :     2
