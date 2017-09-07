@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
 
             iniCategory.AddProperty(DefinitionRegion.SectionCount.Key, sectionCount, DefinitionRegion.SectionCount.Description);
-            iniCategory.AddProperty(DefinitionRegion.RoughnessNames.Key, string.Join(" ", frictionNames), DefinitionRegion.RoughnessNames.Description);
+            iniCategory.AddProperty(DefinitionRegion.RoughnessNames.Key, string.Join(";", frictionNames), DefinitionRegion.RoughnessNames.Description);
             iniCategory.AddProperty(DefinitionRegion.RoughnessPositions.Key, roughnessPositions, DefinitionRegion.RoughnessPositions.Description, DefinitionRegion.RoughnessPositions.Format);
             iniCategory.AddProperty(DefinitionRegion.RoughnessTypesPos.Key, frictionTypePositive, DefinitionRegion.RoughnessTypesPos.Description);
             iniCategory.AddProperty(DefinitionRegion.RoughnessValuesPos.Key, frictionValuePositive, DefinitionRegion.RoughnessValuesPos.Description, DefinitionRegion.RoughnessValuesPos.Format);

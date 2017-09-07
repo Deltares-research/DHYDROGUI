@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.YZ || readCrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key);
+                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key,true,';');
                 if (roughnessNames.Count < 0 )
                     throw new FileReadingException("reading error");
 
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, true);
+                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, true,';');
                 if (roughnessNames == null ) return;
                 
                 if (roughnessNames.Count != 1)
