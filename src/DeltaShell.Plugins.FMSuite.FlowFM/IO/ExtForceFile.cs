@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         warnMsg = String.Format(
                             Resources
-                                .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_,
+                                .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
                             spatiallyVaryingSedimentPropertyName);
                     }
 

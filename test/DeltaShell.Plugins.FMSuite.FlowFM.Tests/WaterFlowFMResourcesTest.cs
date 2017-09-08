@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TryRetreivingMessage(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData);
                 TryRetreivingMessage(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_NetcdfVariableHasBeenIgnored);
                 TryRetreivingMessage(Resources.MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_);
-                TryRetreivingMessage(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_);
+                TryRetreivingMessage(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or);
                 TryRetreivingMessage(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_);
                 TryRetreivingMessage(Resources.SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_path__0_);
                 TryRetreivingMessage(Resources.WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_);

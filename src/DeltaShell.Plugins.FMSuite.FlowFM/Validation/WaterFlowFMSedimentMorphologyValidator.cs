@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -13,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (!regex.IsMatch(name) || string.IsNullOrEmpty(name))
             {
                 return new ValidationIssue(name, ValidationSeverity.Error,
-                    "Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-) and it cannot start only with a '#', it NEEDS a closing '#' ");
+                    Resources.WaterFlowFMSedimentMorphologyValidator_ValidateSedimentName_Value_cannot_be_coverted_to_valid_sediment_fraction_name__You_can_only_use_characters__numbers__underscore_____and_hyphen_____and_it_cannot_start_only_with_a______it_NEEDS_a_closing_____);
             }
             return null;
         }
@@ -24,18 +29,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             if (model.UseMorSed)
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    string.Format("********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!", Environment.NewLine)));
+                issues.AddRange(model.SedimentFractions.Select(sedimentFraction => ValidateSedimentName(sedimentFraction.Name)).Where(issue => issue != null));
+                
+                issues.AddRange(ValidateSedimentFraction(model));
 
-                foreach (var sedimentFraction in model.SedimentFractions)
-                {
-                    var issue = ValidateSedimentName(sedimentFraction.Name);
-                    if(issue != null)
-                        issues.Add(issue);
-                }
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
+                    string.Format(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_, Environment.NewLine)));
             }
-            
-            return new ValidationReport("Morphology / Sediment Beta warning", issues);
+
+            return new ValidationReport(Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning, issues);
+        }
+
+        /// <summary>
+        /// Validates if the spatial operations of the FM model are interpolated, such that an xyz-file can be written.
+        /// </summary>
+        /// <param name="model">The WaterFlowFMModel that is being </param>
+        /// <returns></returns>
+        private static IEnumerable<ValidationIssue> ValidateSedimentFraction(IWaterFlowFMModel model)
+        {
+            var spaceVarNames = model.SedimentFractions
+                .SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where(n => !n.EndsWith("SedConc"))
+                .ToList();
+            var dataItemsFound = spaceVarNames
+                .SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.Equals(spaceVarName)))
+                .ToArray();
+            var dataItemsWithConverter = dataItemsFound
+                .Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
+
+            var spatialOperations = SedimentFile.GetSpatialOperations(dataItemsWithConverter);
+
+            // If spatial operation is ValueOperationBase, then add a new ValidationIssue
+            var issues = new List<ValidationIssue>();
+            foreach (var operations in spatialOperations)
+            {
+                issues.AddRange(operations.Value.OfType<ValueOperationBase>().Select(
+                    vo => new ValidationIssue(model, ValidationSeverity.Warning,
+                        string.Format(
+                            Resources
+                                .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                            operations.Key))));
+            }
+            return issues;
         }
     }
 }

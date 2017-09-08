@@ -1,8 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NUnit.Framework;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
@@ -38,5 +43,153 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             Assert.That(betaWarningIssue.Message, Is.StringContaining("Morphology is beta version"));
         }
+
+        [Test]
+        public void GivenAProjectWithNonInterpolatedInitialThicknessSediment_WhenValidating_ThenWarningMessageAppears()
+        {
+            var spatiallyVaryingNames = new List<string>
+            {
+                "Sediment_sand_IniSedThick"
+            };
+
+            var sedimentProperties = new EventedList<ISedimentProperty>()
+            {
+                new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", true, false)
+                {
+                    SpatiallyVaryingName = spatiallyVaryingNames[0]
+                }
+            };
+            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
+
+            var messages = spatiallyVaryingNames.Select(n => string.Format(
+                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                n)).ToList();
+            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            Assert.That(issues.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GivenAProjectWithSedimentConcentrationSedimentFraction_WhenValidating_ThenNoWarningMessageAppears()
+        {
+            var spatiallyVaryingNames = new List<string>
+            {
+                "Sediment_sand_SedConc"
+            };
+
+            var sedimentProperties = new EventedList<ISedimentProperty>()
+            {
+                new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true, "kg/m³",
+                    "Initial Concentration", true, false, sediments => false)
+                {
+                    SpatiallyVaryingName = spatiallyVaryingNames[0]
+                }
+            };
+            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
+
+            var messages = spatiallyVaryingNames.Select(n => string.Format(
+                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                n)).ToList();
+            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            Assert.That(issues.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenAProjectWithnOSpatiallyVaryingSedimentProperties_WhenValidating_ThenWarningMessageAppears()
+        {
+            var spatiallyVaryingNames = new List<string>
+            {
+                "Sediment_sand_IniSedThick"
+            };
+
+            var sedimentProperties = new EventedList<ISedimentProperty>()
+            {
+                new SedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", false)
+            };
+            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
+
+            var messages = spatiallyVaryingNames.Select(n => string.Format(
+                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                n)).ToList();
+            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            Assert.That(issues.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenAProjectWithTwoSpatiallyVaryingSedimentProperties_WhenValidating_ThenTwoWarningMessagesAppears()
+        {
+            var spatiallyVaryingNames = new List<string>
+            {
+                "Sediment_sand_IniSedThick",
+                "Sediment_sand_IniSedThick2"
+            };
+
+            var sedimentProperties = new EventedList<ISedimentProperty>()
+            {
+                new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", true, false)
+                {
+                    SpatiallyVaryingName = spatiallyVaryingNames[0]
+                },
+                new SpatiallyVaryingSedimentProperty<double>("IniSedThick2", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", true, false)
+                {
+                    SpatiallyVaryingName = spatiallyVaryingNames[1]
+                }
+            };
+            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
+
+            var messages = spatiallyVaryingNames.Select(n => string.Format(
+                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                n)).ToList();
+            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            Assert.That(issues.Count(), Is.EqualTo(2));
+        }
+
+        #region Test helper methods
+        private static WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
+        {
+            var fmModel = new WaterFlowFMModel("MyFmModel") {ModelDefinition = {UseMorphologySediment = true}};
+            var sedimentFraction = new SedimentFraction
+            {
+                Name = "Sand",
+                CurrentSedimentType = new SedimentType
+                {
+                    Properties = sedimentProperties
+                }
+            };
+            fmModel.SedimentFractions.Add(sedimentFraction);
+            return fmModel;
+        }
+
+        private static void SetDataItemValueConverters(WaterFlowFMModel fmModel, List<string> spatiallyVaryingNames)
+        {
+            var iniSedThickDataItems = fmModel.AllDataItems.Where(d => spatiallyVaryingNames.Contains(d.Name));
+            foreach (var iniSedThickDataItem in iniSedThickDataItems)
+            {
+                var valueConverter =
+                    SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(iniSedThickDataItem);
+                valueConverter.SpatialOperationSet.AddOperation(new SetValueOperation());
+            }
+        }
+
+        private static IEnumerable<ValidationIssue> GetValidationIssuesWithMessages(WaterFlowFMModel fmModel, List<string> messages)
+        {
+            var validationReport = fmModel.Validate();
+            var morSedValidationReport =
+                validationReport.SubReports.FirstOrDefault(r => r.Category == Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning);
+            Assert.NotNull(morSedValidationReport);
+
+            var issues = new List<ValidationIssue>();
+            foreach (var message in messages)
+            {
+                issues.AddRange(morSedValidationReport.Issues.Where(i => i.Message.Equals(message)));
+            }
+            
+            return issues;
+        }
+        #endregion
+        
     }
 }

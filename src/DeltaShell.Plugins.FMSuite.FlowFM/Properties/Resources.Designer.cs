@@ -267,13 +267,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid to generate the xyz file..
+        ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the &quot;Copy to spatial data&quot;-button to generate the xyz file..
         /// </summary>
-        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_ {
+        public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or {
             get {
                 return ResourceManager.GetString("SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file" +
                         "_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operati" +
-                        "on__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_", resourceCulture);
+                        "on__please_interpolate_the_operation_to_the_grid_or", resourceCulture);
             }
         }
         
@@ -488,6 +488,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModelDefinitionValidator_Validate_ {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!.
+        /// </summary>
+        public static string WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morp" +
+                        "hology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_mod" +
+                        "el__Please_be_aware_this_feature_is_in_beta_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Morphology / Sediment Beta warning.
+        /// </summary>
+        public static string WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning {
+            get {
+                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology__" +
+                        "_Sediment_Beta_warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-) and it cannot start only with a &apos;#&apos;, it NEEDS a closing &apos;#&apos; .
+        /// </summary>
+        public static string WaterFlowFMSedimentMorphologyValidator_ValidateSedimentName_Value_cannot_be_coverted_to_valid_sediment_fraction_name__You_can_only_use_characters__numbers__underscore_____and_hyphen_____and_it_cannot_start_only_with_a______it_NEEDS_a_closing_____ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMSedimentMorphologyValidator_ValidateSedimentName_Value_cannot_be_cover" +
+                        "ted_to_valid_sediment_fraction_name__You_can_only_use_characters__numbers__under" +
+                        "score_____and_hyphen_____and_it_cannot_start_only_with_a______it_NEEDS_a_closing" +
+                        "_____", resourceCulture);
             }
         }
         
