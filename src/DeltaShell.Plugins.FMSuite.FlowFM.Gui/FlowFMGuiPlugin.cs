@@ -42,7 +42,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using Mono.Addins;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.CoordinateSystems;
@@ -220,70 +219,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         paths.Add(landBoundariesFilePath);
                     }
 
-                    RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
-
-                    // reload grid..
-                    try
+                    DialogResult userFeedback = DialogResult.OK;
+                    if (model.Grid != null && !model.Grid.IsEmpty)
                     {
-                        if (SharpMapGisGuiPlugin.Instance != null)
+                        userFeedback = MessageBox.Show("Editing the 2D grid will possibly remove the 1D2D links.", "Are you certain to continue?" , MessageBoxButtons.OKCancel);
+                    }
+                    if (userFeedback == DialogResult.OK)
+                    {
+                        RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
+                        // reload grid..
+                        try
                         {
-                            SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
-                        }
-                        if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
-                        {
-                            throw new FileFormatException(new Uri(model.NetFilePath),
-                                "invalid empty file detected. Please save your project after editing in RGFGrid.");
-                        }
-                        if (!File.Exists(model.NetFilePath))
-                        {
-                            model.RemoveGrid();
-                            return;
-                        }
-
-                        if (model.CoordinateSystem != null)
-                        {
-                            var netfile = new ImportedFMNetFile(model.NetFilePath);
-                            var coordinates = netfile.Grid.Vertices;
-                            if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
+                            if (SharpMapGisGuiPlugin.Instance != null)
                             {
-                                throw new Exception("Grid coordinates are incompatible with current model coordinate system");
+                                SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
+                            }
+                            if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
+                            {
+                                throw new FileFormatException(new Uri(model.NetFilePath),
+                                    "invalid empty file detected. Please save your project after editing in RGFGrid.");
+                            }
+                            if (!File.Exists(model.NetFilePath))
+                            {
+                                model.RemoveGrid();
+                                return;
+                            }
+
+                            if (model.CoordinateSystem != null)
+                            {
+                                var netfile = new ImportedFMNetFile(model.NetFilePath);
+                                var coordinates = netfile.Grid.Vertices;
+                                if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
+                                {
+                                    throw new Exception("Grid coordinates are incompatible with current model coordinate system");
+                                }
+                            }
+                            model.ReloadGrid(false);
+                        }
+                        catch (Exception exception)
+                        {
+                            var dialogResult =
+                                MessageBox.Show(
+                                    "Failed to reload grid after RGFGrid edits: " + exception.Message +
+                                    Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
+                                    MessageBoxButtons.YesNo);
+                            if (dialogResult == DialogResult.Yes)
+                            {
+                                model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
+                            }
+                            else
+                            {
+                                if (File.Exists(model.NetFilePath))
+                                {
+                                    File.Delete(model.NetFilePath);
+                                }
+                                model.WriteNetFile(model.NetFilePath);
                             }
                         }
-                        model.ReloadGrid(false);
-                    }
-                    catch (Exception exception)
-                    {
-                        var dialogResult =
-                            MessageBox.Show(
-                                "Failed to reload grid after RGFGrid edits: " + exception.Message +
-                                Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
-                                MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
+                        finally
                         {
-                            model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
-                        }
-                        else
-                        {
-                            if (File.Exists(model.NetFilePath))
+                            if (SharpMapGisGuiPlugin.Instance != null)
                             {
-                                File.Delete(model.NetFilePath);
+                                SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
                             }
-                            model.WriteNetFile(model.NetFilePath);
-                        }
-                    }
-                    finally
-                    {
-                        if (SharpMapGisGuiPlugin.Instance != null)
-                        {
-                            SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
                         }
                     }
                 }
             };
             yield return gridViewInfo;
             yield return ViewInfoWrapper<FlowFMTreeShortcut>.Create(gridViewInfo, o => o.TargetData, o => o.TargetData is UnstructuredGrid);
-
-            
 
             // Boundary conditions
             var boundaryConditionSetViewInfo = new ViewInfo<BoundaryConditionSet, BoundaryConditionEditor>
