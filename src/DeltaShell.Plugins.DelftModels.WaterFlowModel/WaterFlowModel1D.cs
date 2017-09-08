@@ -11,6 +11,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -1802,6 +1803,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
             }
+            if (sender == Network && e.PropertyName == "CoordinateSystem")
+            {
+                UpdateCoordinateSystemInOutputFeatureCoverages();
+            }
         }
 
         /// <summary>
@@ -3504,8 +3509,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
 
             }
-
+            UpdateCoordinateSystemInOutputFeatureCoverages();
             OutputIsEmpty = false;
+        }
+
+        private void UpdateCoordinateSystemInOutputFeatureCoverages()
+        {
+            // update coordinatesystem in output feature coverages
+            DataItems
+                .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output && di.Value is FeatureCoverage)
+                .Select(di => di.Value)
+                .Cast<FeatureCoverage>()
+                .ForEach(c => c.CoordinateSystem = Network.CoordinateSystem);
         }
 
         private void SetFeaturesOnCoverage(string netFile, FeatureCoverage coverage)

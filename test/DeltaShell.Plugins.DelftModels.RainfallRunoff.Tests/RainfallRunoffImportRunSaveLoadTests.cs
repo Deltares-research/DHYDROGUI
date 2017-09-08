@@ -61,6 +61,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 ((HydroModel.HydroModel)compositeActivity).ExplicitWorkingDirectory = Path.Combine(tempDir, "Integrated Model");
                 gui.Application.Project.RootFolder.Add(compositeActivity);
 
+                // need to show the MainWindow otherwise we get the following error when running activity:
+                // Cannot set Owner property to a Window that has not been shown previously.
+                gui.MainWindow.Show();
+
                 gui.Application.RunActivity(compositeActivity);
 
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);

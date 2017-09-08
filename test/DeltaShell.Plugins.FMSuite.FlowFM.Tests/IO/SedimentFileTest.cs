@@ -548,7 +548,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // New Warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => SedimentFile.Save(sedFile, fmModel),
-                    String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_, randomSVProp.SpatiallyVaryingName));
+                    String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or, randomSVProp.SpatiallyVaryingName));
             }
             finally
             {

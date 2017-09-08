@@ -199,8 +199,8 @@
   <data name="WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model" xml:space="preserve">
     <value>FM Model {0} is part of a 1D2D model and can't have morphology properties and / or sediments. Removing these properties from the model</value>
   </data>
-  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_" xml:space="preserve">
-    <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation, please interpolate the operation to the grid to generate the xyz file.</value>
+  <data name="SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or" xml:space="preserve">
+    <value>Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the "Copy to spatial data"-button to generate the xyz file.</value>
   </data>
   <data name="ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_" xml:space="preserve">
     <value>The model may not run. Spatial varying quantity {0} could not be imported because the prefix does not match {1} for Tracers or {2} for Spatial Varying Sediments.</value>
@@ -249,5 +249,14 @@
   </data>
   <data name="GridHelper_CreateUnstructuredGridFromNetCdfFor1D2DLinks_It_was_not_possible_to_load_from_file___0___LogFilePath___1_" xml:space="preserve">
     <value>It was not possible to load from file: {0}. LogFilePath: {1}</value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_Morphology___Sediment_Beta_warning" xml:space="preserve">
+    <value>Morphology / Sediment Beta warning</value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateSedimentName_Value_cannot_be_coverted_to_valid_sediment_fraction_name__You_can_only_use_characters__numbers__underscore_____and_hyphen_____and_it_cannot_start_only_with_a______it_NEEDS_a_closing_____" xml:space="preserve">
+    <value>Value cannot be coverted to valid sediment fraction name. You can only use characters, numbers, underscore (_) and hyphen (-) and it cannot start only with a '#', it NEEDS a closing '#' </value>
+  </data>
+  <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_" xml:space="preserve">
+    <value>********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!</value>
   </data>
 </root>

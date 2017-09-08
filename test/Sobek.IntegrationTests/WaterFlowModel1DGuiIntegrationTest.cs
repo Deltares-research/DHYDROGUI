@@ -794,6 +794,10 @@ namespace Sobek.IntegrationTests
 
         private void RunModelAndWaitToFinish(IModel model)
         {
+            // need to show the MainWindow otherwise we get the following error when running activity:
+            // Cannot set Owner property to a Window that has not been shown previously.
+            gui.MainWindow.Show();
+
             gui.Application.RunActivityInBackground(model);
             while (gui.Application.ActivityRunner.IsRunning)
             {

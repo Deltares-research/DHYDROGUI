@@ -88,11 +88,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var spaceVarNames = model.SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames()).Where( n => !n.EndsWith("SedConc")).ToList();
 
-
-            var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.StartsWith(spaceVarName))).ToArray();
+            var dataItemsFound = spaceVarNames.SelectMany(spaceVarName => model.DataItems.Where(di => di.Name.Equals(spaceVarName))).ToArray();
             var dataItemsWithConverter = dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
             var dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter).ToList();
-            var spatialOperations = SpatialOperations(dataItemsWithConverter);
+            var spatialOperations = GetSpatialOperations(dataItemsWithConverter);
 
             var coverageByType = dataItemsWithOutConverter.Select(di => di.Value)
                                     .OfType<UnstructuredGridCoverage>()
@@ -182,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var valueOperation = spatialOperation as ValueOperationBase;
                     if (valueOperation != null)
                     {
-                        Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_to_generate_the_xyz_file_, operations.Key);
+                        Log.WarnFormat(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or, operations.Key);
                     }
                 }
             }
@@ -424,7 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #endregion
 
-        private static Dictionary<string, IList<ISpatialOperation>> SpatialOperations(List<IDataItem> dataItemsWithConverter)
+        public static Dictionary<string, IList<ISpatialOperation>> GetSpatialOperations(List<IDataItem> dataItemsWithConverter)
         {
             var spatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             foreach (var dataItem in dataItemsWithConverter)

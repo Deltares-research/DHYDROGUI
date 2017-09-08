@@ -21,7 +21,6 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
@@ -36,6 +35,7 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 using Point = NetTopologySuite.Geometries.Point;
@@ -884,6 +884,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 //};
 
                 //mapTestHelper.ShowMap(map);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RunModelWithObservationPointShouldSetCoordinateSystemOnOutputWaterLevel()
+        {
+            using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
+            {
+                var networkCoordinateSystemRDNew = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+                waterFlowModel1D.Network.CoordinateSystem = networkCoordinateSystemRDNew;
+                waterFlowModel1D.Network.Branches.First().BranchFeatures.Add(new ObservationPoint() {Name = "myObservationPoint"});
+                RunModel(waterFlowModel1D);
+
+                Assert.AreEqual(ActivityStatus.Cleaned, waterFlowModel1D.Status);
+
+                var outputWaterLevelDataItem = waterFlowModel1D.DataItems.FirstOrDefault(
+                    di => di.Name == "Water level (op)"
+                          && (di.Role & DataItemRole.Output) == DataItemRole.Output
+                          && di.Value is IFunction
+                          && ((IFunction) di.Value).Store is WaterFlowModel1DNetCdfFunctionStore);
+                Assert.IsNotNull(outputWaterLevelDataItem);
+                var outputWaterLevelFeatureCoverage = outputWaterLevelDataItem.Value as FeatureCoverage;
+                Assert.IsNotNull(outputWaterLevelFeatureCoverage);
+                Assert.IsTrue(outputWaterLevelFeatureCoverage.CoordinateSystem.EqualsTo(networkCoordinateSystemRDNew));
+                var networkCoordinateSystemRDOld = new OgrCoordinateSystemFactory().CreateFromEPSG(28991);
+                waterFlowModel1D.Network.CoordinateSystem = networkCoordinateSystemRDOld;
+                Assert.IsTrue(outputWaterLevelFeatureCoverage.CoordinateSystem.EqualsTo(networkCoordinateSystemRDOld));
             }
         }
 
