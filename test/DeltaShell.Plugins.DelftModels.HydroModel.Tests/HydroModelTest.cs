@@ -162,6 +162,32 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        public void TestOutputIsNotEmptyForSimpleModel()
+        {
+            /*Sobek3-848*/
+            var simpleModel = new SimpleModel();
+            Assert.IsTrue(simpleModel.OutputIsEmpty, "No models, so no output");
+
+            simpleModel.Initialize();
+            simpleModel.Execute();
+            simpleModel.Finish();
+
+            Assert.IsFalse(simpleModel.OutputIsEmpty, "1 empty model and 1 model with output, so Simple model has output");
+        }
+
+        [Test]
+        public void TestOutputIsNotEmptyForHydroModel()
+        {
+            /*Sobek3-848*/
+            var hydroModel = new SimpleModel();
+            Assert.IsTrue(hydroModel.OutputIsEmpty, "No models, so no output");
+
+            ActivityRunner.RunActivity(hydroModel);
+            Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+            Assert.IsFalse(hydroModel.OutputIsEmpty, "Integrated model with output");
+        }
+
+        [Test]
         public void RunUsingSimpleModel2()
         {
             var m1 = new SimpleModel { Input = 1, Name = "SimpleModel1"};
