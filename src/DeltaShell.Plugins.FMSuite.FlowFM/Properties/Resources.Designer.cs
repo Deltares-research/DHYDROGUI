@@ -442,12 +442,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid is empty.
+        /// </summary>
+        public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
+            get {
+                return ResourceManager.GetString("WaterFlowFMGridValidator_Validate_Grid_is_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>
         public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morph" +
                         "ology_properties_and___or_sediments__Removing_these_properties_from_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original discretization is invalid: structure {0} is on a grid point.
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPo" +
+                        "ints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No computational grid cells defined for branch {0}; can not start calculation..
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_d" +
+                        "efined_for_branch__0___can_not_start_calculation_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No computational grid defined. Either a Flow1D or a 2D grid need to be created..
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined" +
+                        "_", resourceCulture);
             }
         }
         
@@ -488,6 +527,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModelDefinitionValidator_Validate_ {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No CrossSection defined, all channels will be using the default values..
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_defined__all_channels_will_be_using_the_default_values_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_" +
+                        "defined__all_channels_will_be_using_the_default_values_", resourceCulture);
             }
         }
         

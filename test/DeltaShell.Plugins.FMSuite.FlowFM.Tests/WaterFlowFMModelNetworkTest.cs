@@ -50,10 +50,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreateNewModelCheckNetworkDiscretization()
         {
             var model = new WaterFlowFMModel(); // empty model
-            Assert.IsNotNull(model.NetworkDiscretisation);
-            Assert.That(model.NetworkDiscretisation.Network, Is.EqualTo(model.Network));
-            Assert.That(model.NetworkDiscretisation.Locations.Values.Count, Is.EqualTo(0));
-            Assert.That(model.NetworkDiscretisation.Name, Is.EqualTo("Computational 1D Grid"));
+            Assert.IsNotNull(model.NetworkDiscretization);
+            Assert.That(model.NetworkDiscretization.Network, Is.EqualTo(model.Network));
+            Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(0));
+            Assert.That(model.NetworkDiscretization.Name, Is.EqualTo(WaterFlowFMModel.DiscretizationObjectName));
         }
 
         [Test]

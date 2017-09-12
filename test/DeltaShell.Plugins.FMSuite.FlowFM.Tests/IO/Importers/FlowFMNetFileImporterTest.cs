@@ -1,12 +1,7 @@
-﻿using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+﻿using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {

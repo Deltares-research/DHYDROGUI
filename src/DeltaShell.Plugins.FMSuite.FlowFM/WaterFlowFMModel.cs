@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // network
             Network = new HydroNetwork { Name = "Network" };
             // Computational Grid For network
-            NetworkDiscretisation = new Discretization { Network = network, Name = "Computational 1D Grid" };
+            NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
 
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
@@ -1699,7 +1699,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     SaveNetwork();
 
-                    if (NetworkDiscretisation != null && NetworkDiscretisation.Locations.Values.Count > 0)
+                    if (NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Count > 0)
                     {
                         SaveNetworkDiscretisation();
                     }

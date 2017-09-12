@@ -14,6 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var validationReports = new[]
             {
                 ValidateCoordinateSystem(model),
+                WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
+                WaterFlowFMModelNetworkValidator.Validate(model.Network),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
                 ValidateInitialConditions(model),

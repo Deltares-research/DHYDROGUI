@@ -25,9 +25,7 @@ using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
-using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
-using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests

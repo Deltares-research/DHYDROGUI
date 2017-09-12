@@ -230,11 +230,13 @@
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />
     <Compile Include="Validation\WaterFlowFMEmbankmentValidator.cs" />
     <Compile Include="Validation\WaterFlowFMGridValidator.cs" />
+    <Compile Include="Validation\WaterFlowFMModelNetworkValidator.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidator.cs" />
     <Compile Include="Validation\WaterFlowFmModelValidationExtensions.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidator.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidator.cs" />
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
+    <Compile Include="Validation\WaterFlowFMModelComputationalGridValidator.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="WaterFlowFMFeatureValueConverter.cs" />
     <Compile Include="WaterFlowFMModel.Restart.cs" />

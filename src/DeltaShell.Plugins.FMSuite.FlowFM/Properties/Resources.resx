@@ -259,4 +259,19 @@
   <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_" xml:space="preserve">
     <value>********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!</value>
   </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_" xml:space="preserve">
+    <value>No computational grid defined. Either a Flow1D or a 2D grid need to be created.</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_" xml:space="preserve">
+    <value>No computational grid cells defined for branch {0}; can not start calculation.</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point" xml:space="preserve">
+    <value>Original discretization is invalid: structure {0} is on a grid point</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_defined__all_channels_will_be_using_the_default_values_" xml:space="preserve">
+    <value>No CrossSection defined, all channels will be using the default values.</value>
+  </data>
+  <data name="WaterFlowFMGridValidator_Validate_Grid_is_empty" xml:space="preserve">
+    <value>Grid is empty</value>
+  </data>
 </root>

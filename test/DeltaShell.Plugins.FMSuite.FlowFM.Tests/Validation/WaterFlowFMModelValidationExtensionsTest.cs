@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMapTestUtils;
@@ -13,6 +16,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     [TestFixture]
     public class WaterFlowFmModelValidationExtensionsTest
     {
+        [Test]
+        public void CheckModelValidatesIfNoGridDefinedButNetworkIsValid()
+        {
+            var model = new WaterFlowFMModel();
+            var reportErrors = WaterFlowFMGridValidator.Validate(model);
+
+            Assert.AreEqual(1, reportErrors.ErrorCount);
+
+            string expectedErrorMessage = Resources.WaterFlowFMGridValidator_Validate_Grid_is_empty;
+            var errorFound = reportErrors.AllErrors.First();
+
+            Assert.AreEqual(ValidationSeverity.Error, errorFound.Severity);
+            Assert.AreEqual(expectedErrorMessage, errorFound.Message);
+
+            WaterFlowFMTestHelper.ConfigureDemoNetwork(model.Network);
+            var firstChannel = model.Network.Channels.First();
+            model.NetworkDiscretization[new NetworkLocation(firstChannel, 0.2)] = 0.0;
+
+            reportErrors = WaterFlowFMGridValidator.Validate(model);
+            Assert.AreEqual(0, reportErrors.ErrorCount);
+
+            model.Network = new HydroNetwork();
+            reportErrors = WaterFlowFMGridValidator.Validate(model);
+            Assert.AreEqual(1, reportErrors.ErrorCount);
+
+            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            reportErrors = WaterFlowFMGridValidator.Validate(model);
+            Assert.AreEqual(0, reportErrors.ErrorCount);
+        }
+
+        [Test]
+        public void Check1D2DValidationCategoriesAreCreated()
+        {
+            var model = new WaterFlowFMModel();
+            var report = model.Validate();
+
+            Assert.NotNull(report.SubReports.First(r => r.Category.Equals(WaterFlowFMModelComputationalGridValidator.CategoryName)));
+            Assert.NotNull(report.SubReports.First(r => r.Category.Equals(WaterFlowFMModelNetworkValidator.CategoryName)));
+        }
+
         [Test]
         public void CheckCoordinateSystemInfoMessageIsGivenIfNoCoordinateSystemIsSpecified()
         {

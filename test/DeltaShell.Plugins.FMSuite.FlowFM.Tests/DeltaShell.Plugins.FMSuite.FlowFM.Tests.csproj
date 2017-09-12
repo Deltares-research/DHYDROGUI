@@ -300,10 +300,13 @@
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEmbankmentValidatorTest.cs" />
+    <Compile Include="Validation\WaterFlowFMModelComputationalGridValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
+    <Compile Include="Validation\WaterFlowFMModelNetworkValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
+    <Compile Include="WaterFlowFMTestHelper.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />

@@ -42,7 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public IDiscretization NetworkDiscretisation { get; set; }
+        public const string DiscretizationObjectName = "Computational 1D Grid";
+        public IDiscretization NetworkDiscretization { get; set; }
 
         private void SubscribeToNetwork()
         {
@@ -161,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             if (sender == Network && e.PropertyName == "IsEditing" && Network.CurrentEditAction is BranchSplitAction &&
-                !Network.IsEditing && NetworkDiscretisation != null && NetworkDiscretisation.Locations.Values.Any())
+                !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
             {
                 OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
             }
@@ -174,12 +175,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshNetworkRelatedData()
         {
             ClearOutput();
-            if (NetworkDiscretisation != null && NetworkDiscretisation.Network != Network)
+            if (NetworkDiscretization != null && NetworkDiscretization.Network != Network)
             {
-                NetworkDiscretisation.Network = Network;
-                NetworkDiscretisation.Clear();
-                if (string.IsNullOrEmpty(NetworkDiscretisation.Name))
-                    NetworkDiscretisation.Name = "Computational 1D Grid";
+                NetworkDiscretization.Network = Network;
+                NetworkDiscretization.Clear();
+                if (string.IsNullOrEmpty(NetworkDiscretization.Name))
+                    NetworkDiscretization.Name = DiscretizationObjectName;
             }
 
             // update network in output coverages
@@ -206,9 +207,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (locations != null)
             {
-                NetworkDiscretisation.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
-                NetworkDiscretisation.Locations.AddValues(locations.Except(NetworkDiscretisation.Locations.GetValues()));
-                NetworkDiscretisation.EndEdit();
+                NetworkDiscretization.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
+                NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
+                NetworkDiscretization.EndEdit();
             }
         }
 
@@ -226,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath);
             if (loadedNetworkDiscretisation != null)
             {
-                NetworkDiscretisation = loadedNetworkDiscretisation;
+                NetworkDiscretization = loadedNetworkDiscretisation;
                 Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
                 return;
             }
@@ -244,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveNetworkDiscretisation()
         {
-            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretisation, NetFilePath);
+            UGridToNetworkAdapter.SaveNetworkDiscretisation(NetworkDiscretization, NetFilePath);
         }
     }
 }
