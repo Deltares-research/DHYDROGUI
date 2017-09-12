@@ -86,20 +86,35 @@ namespace SobekCompare.Tests
         }
 
 
-        [Test]
-        public void TestYZChannelsFlat()
-        {
-            var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestYZChannelsFlat");
-            var dsProjPath = Path.Combine(testPath, "TestYZChannelsFlat.dsproj");
+       [Test]
+       public void TestYZChannelsNoShared()
+       {
+          var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestYZChannelsNoShared");
+          var dsProjPath = Path.Combine(testPath, "TestYZChannelsNoShared.dsproj");
 
-            RunDsProjInWaterFlow1D(dsProjPath);
+          RunDsProjInWaterFlow1D(dsProjPath);
 
-            var resultPath = Path.Combine(dsProjPath + "_data", @"Integrated_Model_output\dflow1d\output");
-            var referencePath = Path.Combine(testPath, @"ReferenceData");
+          var resultPath = Path.Combine(dsProjPath + "_data", @"Integrated_Model_output\dflow1d\output");
+          var referencePath = Path.Combine(testPath, @"ReferenceData");
 
-            compareHisFile(resultPath, referencePath, "calcpnt.his");
-            compareHisFile(resultPath, referencePath, "reachseg.his");
-        }
+          compareHisFile(resultPath, referencePath, "calcpnt.his");
+          compareHisFile(resultPath, referencePath, "reachseg.his");
+       }
+
+       [Test]
+       public void TestYZChannelsWithShared()
+       {
+          var testPath = Path.Combine(TestHelper.GetDataDir(), @"dsprojTests\TestYZChannelsWithShared");
+          var dsProjPath = Path.Combine(testPath, "TestYZChannelsWithShared.dsproj");
+
+          RunDsProjInWaterFlow1D(dsProjPath);
+
+          var resultPath = Path.Combine(dsProjPath + "_data", @"Integrated_Model_output\dflow1d\output");
+          var referencePath = Path.Combine(testPath, @"ReferenceData");
+
+          compareHisFile(resultPath, referencePath, "calcpnt.his");
+          compareHisFile(resultPath, referencePath, "reachseg.his");
+       }
 
         private IEnumerable<IFileExporter> GetFileExporters()
         {
