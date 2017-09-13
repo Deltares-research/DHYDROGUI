@@ -17,53 +17,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             WaterFlowFMModel flowFmModel = null)
         {
             var issues = new List<ValidationIssue>();
-            var invalidGrid = flowFmModel != null && (flowFmModel.Grid == null || flowFmModel.Grid.IsEmpty);
-            if (flowFmModel != null && networkDiscretization.Locations.Values.Count == 0 && invalidGrid)
+            
+            if (!NetworkDiscretizationIsValid(networkDiscretization))
             {
-                issues.Add(new ValidationIssue(networkDiscretization, ValidationSeverity.Error,
-                    Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_));
-            }
-            else
-            {
-                var branchesWithoutGridSegments = GetBranchesWithoutGridSegments(networkDiscretization).ToList();
-                var branchLocationsLookup =
-                    networkDiscretization.Locations.Values.GroupBy(l => l.Branch).ToDictionary(g => g.Key, g => g);
-
-                foreach (var branch in networkDiscretization.Network.Branches)
+                var invalidGrid = flowFmModel != null && (flowFmModel.Grid == null || flowFmModel.Grid.IsEmpty);
+                //We only show the invalid network error if the grid is also invalid.
+                if (invalidGrid)
                 {
-                    if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
-                    {
-                        var message =
-                            string.Format(
-                                Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_,
-                                branch.Name);
-                        issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization));
-
-                        continue; //no computational grid, so no sense reporting additional errors
-                    }
-
-                    var branchLocations = branchLocationsLookup[branch].ToList();
-
-                    issues.AddRange(CheckBranchLocations(networkDiscretization, branch, branchLocations));
-
-                    issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, branchLocations));
-
-                    /* QBoundaries and Resistances tests removed as we do not need them now. 
-                     * Once snapped features are available for the 1D they will be required, needed validations
-                     * can be found on the WaterFlow1D Validation.
-                    */
+                    issues.Add(new ValidationIssue(networkDiscretization, ValidationSeverity.Error,
+                        Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_));
                 }
+
+                return new ValidationReport(CategoryName, issues);
+            }
+
+            var branchesWithoutGridSegments = GetBranchesWithoutGridSegments(networkDiscretization).ToList();
+            var branchLocationsLookup =
+                networkDiscretization.Locations.Values.GroupBy(l => l.Branch).ToDictionary(g => g.Key, g => g);
+
+            foreach (var branch in networkDiscretization.Network.Branches)
+            {
+                if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
+                {
+                    var message =
+                        string.Format(
+                            Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_,
+                            branch.Name);
+                    issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization));
+
+                    continue; //no computational grid, so no sense reporting additional errors
+                }
+
+                var branchLocations = branchLocationsLookup[branch].ToList();
+
+                issues.AddRange(CheckBranchLocations(networkDiscretization, branch, branchLocations));
+
+                issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, branchLocations));
+
+                /* QBoundaries and Resistances tests removed as we do not need them now. 
+                    * Once snapped features are available for the 1D they will be required, needed validations
+                    * can be found on the WaterFlow1D Validation.
+                */
             }
 
             var subReports = ValidateIds(networkDiscretization);
-
-                var finiteVolumeIssues = FiniteVolumeCheckStructuresNotOnGridPoints(networkDiscretization);
-                if (finiteVolumeIssues.Count > 0)
-                {
-                    subReports = subReports.Concat(new[] { new ValidationReport("Finite volume", finiteVolumeIssues) });
-                }
+            var finiteVolumeIssues = FiniteVolumeCheckStructuresNotOnGridPoints(networkDiscretization);
+            if (finiteVolumeIssues.Count > 0)
+            {
+                subReports = subReports.Concat(new[] { new ValidationReport("Finite volume", finiteVolumeIssues) });
+            }
 
             return new ValidationReport(CategoryName, issues, subReports);
+        }
+
+        private static bool NetworkDiscretizationIsValid(IDiscretization networkDiscretization)
+        {
+            if (networkDiscretization == null 
+                || networkDiscretization.Locations == null
+                || networkDiscretization.Locations.Values.Count == 0)
+                return false;
+            return true;
         }
 
         private static IList<ValidationIssue> FiniteVolumeCheckStructuresNotOnGridPoints(IDiscretization networkDiscretization)

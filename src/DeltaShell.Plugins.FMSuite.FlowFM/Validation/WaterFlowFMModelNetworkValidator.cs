@@ -16,14 +16,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static string CategoryName = "Network";
         public static ValidationReport Validate(IHydroNetwork target)
         {
-            return new ValidationReport(CategoryName, new List<ValidationIssue>(),
-                new[]
+            var subReports = new List<ValidationReport>();
+            if (target != null)
+            {
+                subReports.AddRange( new []
                 {
                     ValidateCoordinateSystem(target),
                     ValidateIds(target),
                     ValidateBranches(target),
                     ValidateCrossSections(target)
                 });
+            }
+            return new ValidationReport(CategoryName, new List<ValidationIssue>(), subReports);
         }
 
        private static ValidationReport ValidateCoordinateSystem(IHydroNetwork target)
