@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -19,8 +20,10 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Api.Layers;
+using SharpMap.Layers;
 using SharpMap.UI.Forms;
 using Control = System.Windows.Controls.Control;
 
@@ -30,6 +33,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [Category(TestCategory.WindowsForms)]
     public class FlowFMMapLayerProviderTest
     {
+        private FlowFMMapLayerProvider mapLayerProvider;
+        private MockRepository mocks;
+
+        [SetUp]
+        public void Setip()
+        {
+            mocks = new MockRepository();
+            mapLayerProvider = new FlowFMMapLayerProvider();
+        }
+
         [Test]
         public void ShowLayersForFMModel()
         {
@@ -113,6 +126,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
+        [Test]
+        public void FlowFmMapLayerProviderCanCreateLayerForListOfWaterFlowFm1D2DLinks()
+        {
+            var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new List<WaterFlowFM1D2DLink>(), new WaterFlowFMModel());
+            Assert.IsTrue(canCreateLayerFor);
+        }
+
+        [Test]
+        public void GivenWaterFlowFmModel_WhenGettingChildLayerObjects_ThenIncludesModelLinks()
+        {
+            var fmModel = new WaterFlowFMModel()
+            {
+                Links = new List<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>("MyLink") }
+            };
+            var childObjects = mapLayerProvider.ChildLayerObjects(fmModel);
+
+            Assert.IsNotEmpty(childObjects.Where(c => c is List<WaterFlowFM1D2DLink>));
+        }
+
+        [Test]
+        public void GivenWaterFlowFmModelLinks_WhenCreatingLayer_ThenReturnVectorLayer()
+        {
+            var fmModel = new WaterFlowFMModel()
+            {
+                Links = new List<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>("MyLink") }
+            };
+            var layer = mapLayerProvider.CreateLayer(fmModel.Links, fmModel);
+
+            Assert.That(layer.GetType(), Is.EqualTo(typeof(VectorLayer)));
+            Assert.That(layer.Name, Is.EqualTo("1D/2D links"));
+            Assert.NotNull(layer.DataSource);
+        }
+
+        #region Test helper methods
+        
         private static void ShowModelLayers(WaterFlowFMModel model)
         {
             var providers = new IMapLayerProvider[] { new FlowFMMapLayerProvider(), new SharpMapLayerProvider() };
@@ -128,5 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }
+        
+        #endregion
     }
 }

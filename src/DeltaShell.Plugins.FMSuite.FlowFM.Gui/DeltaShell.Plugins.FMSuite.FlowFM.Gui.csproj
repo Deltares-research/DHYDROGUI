@@ -356,6 +356,7 @@
     <Compile Include="Editors\WindFieldListView.Designer.cs">
       <DependentUpon>WindFieldListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="WaterFlowFM1D2DLinkFeatureCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">

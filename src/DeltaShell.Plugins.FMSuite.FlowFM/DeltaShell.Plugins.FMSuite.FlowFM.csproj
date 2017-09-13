@@ -237,6 +237,7 @@
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidator.cs" />
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
     <Compile Include="Validation\WaterFlowFMModelComputationalGridValidator.cs" />
+    <Compile Include="WaterFlowFM1D2DLink.cs" />
     <Compile Include="WaterFlowFMDataAccessListener.cs" />
     <Compile Include="WaterFlowFMFeatureValueConverter.cs" />
     <Compile Include="WaterFlowFMModel.Restart.cs" />

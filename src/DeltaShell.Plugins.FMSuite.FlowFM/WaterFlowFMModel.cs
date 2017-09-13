@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Network = new HydroNetwork { Name = "Network" };
             // Computational Grid For network
             NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
+            Links = new List<WaterFlowFM1D2DLink>();
 
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
@@ -146,7 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
-        
+
+        public List<WaterFlowFM1D2DLink> Links { get; set; }
+
         public override IBasicModelInterface BMIEngine
         {
             get { return runner.Api; }

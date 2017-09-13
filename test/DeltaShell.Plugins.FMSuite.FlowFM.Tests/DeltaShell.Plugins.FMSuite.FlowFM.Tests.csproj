@@ -246,6 +246,7 @@
     <Compile Include="Gui\BoundaryConditionEditorTest.cs" />
     <Compile Include="Gui\DepthLayerControlTest.cs" />
     <Compile Include="Gui\DepthLayerDialogTest.cs" />
+    <Compile Include="Gui\WaterFlowFM1D2DLinkFeatureCollectionTest.cs" />
     <Compile Include="Gui\WaterFlowFMGuiPropertyExtractorTest.cs" />
     <Compile Include="Gui\MultipleFunctionChartTest.cs" />
     <Compile Include="Gui\RgfGrid\RgfGridEditorTest.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
@@ -101,6 +102,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                 new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}}
                         };
                 }
+            }
+
+            var links = data as List<WaterFlowFM1D2DLink>;
+            if (links != null && parent is WaterFlowFMModel)
+            {
+                var fmModel = (WaterFlowFMModel)parent;
+                var linkEndCap = new AdjustableArrowCap(4, 4, true) { BaseCap = LineCap.Triangle };
+
+                return new VectorLayer("1D/2D links")
+                {
+                    DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
+                    CanBeRemovedByUser = false,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    Opacity = 0.7f,
+                    Style = new VectorStyle
+                    {
+                        Line = new Pen(Color.DarkViolet, 3)
+                        {
+                            CustomEndCap = linkEndCap,
+                            CustomStartCap = linkEndCap
+                        }
+                    },
+                    Selectable = true,
+                    NameIsReadOnly = true
+                };
             }
 
             var allBoundaryConditionSets = data as IEventedList<BoundaryConditionSet>;
@@ -207,11 +233,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return true;
 
             return data is WaterFlowFMModel
+                   || data is List<WaterFlowFM1D2DLink> && parentObject is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
                    || data is ImportedFMNetFile
-                   || (data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel)
+                   || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
                    || data is IEventedList<Feature2D>;  // Boundaries and sources&sinks
@@ -238,6 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
                 yield return model.Network;
                 yield return model.NetworkDiscretization;
+                yield return model.Links;
 
                 yield return model.BoundaryConditionSets;
                 yield return model.Boundaries;
