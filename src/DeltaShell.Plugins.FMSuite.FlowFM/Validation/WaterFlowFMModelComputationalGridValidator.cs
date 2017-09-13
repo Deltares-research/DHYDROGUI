@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         l => l.Chainage >= branchStructureFirst.Chainage && l.Chainage <= branchStructureSecond.Chainage))
                     continue;
 
-                var message = string.Format("No grid points defined between structure {0} and {1}",
+                var message = string.Format(Resources.WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_,
                                             branchStructureFirst.Name, branchStructureSecond.Name);
                 yield return
                     new ValidationIssue(branchStructureSecond.GetStructureType(), ValidationSeverity.Error, message, branchStructureFirst.Chainage);
@@ -137,8 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
                 !branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
             {
-                var message = string.Format("Not enough grid points defined for branch {0}. " +
-                                            "Make sure you have at least gridpoints at start and end of branch.",
+                var message = string.Format(Resources.WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_,
                                             branch.Name);
 
                 yield return new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization);

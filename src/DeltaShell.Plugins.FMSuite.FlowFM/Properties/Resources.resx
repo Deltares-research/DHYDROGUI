@@ -274,4 +274,22 @@
   <data name="WaterFlowFMGridValidator_Validate_Grid_is_empty" xml:space="preserve">
     <value>Grid is empty</value>
   </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branches_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calculation_" xml:space="preserve">
+    <value>More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node_of_branch___0___have_the_same_id____1____Circular_branch_" xml:space="preserve">
+    <value>Target and source node of branch '{0}' have the same id, '{1}'. Circular branch?</value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_order_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_greater_than_or_equal_to_0_" xml:space="preserve">
+    <value>Branch '{0}' has an order number of '{1}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 </value>
+  </data>
+  <data name="WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_cross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_supported___0__" xml:space="preserve">
+    <value>Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_" xml:space="preserve">
+    <value>No grid points defined between structure {0} and {1}</value>
+  </data>
+  <data name="WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_" xml:space="preserve">
+    <value>Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch.</value>
+  </data>
 </root>

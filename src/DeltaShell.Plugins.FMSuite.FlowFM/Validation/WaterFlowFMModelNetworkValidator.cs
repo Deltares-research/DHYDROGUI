@@ -21,27 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 subReports.AddRange( new []
                 {
-                    ValidateCoordinateSystem(target),
                     ValidateIds(target),
                     ValidateBranches(target),
                     ValidateCrossSections(target)
                 });
             }
             return new ValidationReport(CategoryName, new List<ValidationIssue>(), subReports);
-        }
-
-       private static ValidationReport ValidateCoordinateSystem(IHydroNetwork target)
-        {
-            if (target.CoordinateSystem != null && target.CoordinateSystem.IsGeographic)
-            {
-                var issue = new ValidationIssue(target.CoordinateSystem, ValidationSeverity.Error,
-                    string.Format(
-                        "Cannot perform calculation in geographical coordinate system {0}",
-                        target.CoordinateSystem.Name), target.CoordinateSystem);
-
-                return new ValidationReport("Coordinate system", new[] { issue });
-            }
-            return new ValidationReport("Coordinate system", Enumerable.Empty<ValidationIssue>());
         }
 
         private static ValidationReport ValidateBranches(IHydroNetwork network)
@@ -65,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (orderNumberGroup.OrderNumber > 0 && orderNumberGroup.Count > 2)
                 {
-                    var message = string.Format("More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.", orderNumberGroup.OrderNumber, node.Name);
+                    var message = string.Format(Resources.WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branches_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calculation_, orderNumberGroup.OrderNumber, node.Name);
                     yield return new ValidationIssue(node, ValidationSeverity.Error, message, network);
                 }
             }
@@ -75,13 +60,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             if (channel.Source.Name == channel.Target.Name)
             {
-                var message = string.Format("Target and source node of branch '{0}' have the same id, '{1}'. Circular branch?", channel.Name, channel.Source.Name);
+                var message = string.Format(Resources.WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node_of_branch___0___have_the_same_id____1____Circular_branch_, channel.Name, channel.Source.Name);
                 yield return new ValidationIssue(channel, ValidationSeverity.Error, message, network);
             }
 
             if (channel.OrderNumber != -1 && channel.OrderNumber < 0)
             {
-                var message = string.Format("Branch '{0}' has an order number of '{1}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 ",
+                var message = string.Format(Resources.WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_order_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_greater_than_or_equal_to_0_,
                     channel.Name, channel.OrderNumber);
                 yield return new ValidationIssue(channel, ValidationSeverity.Error, message, network);
             }
@@ -183,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if ((crossSectionTypes.Contains(CrossSectionType.GeometryBased) || crossSectionTypes.Contains(CrossSectionType.YZ)) &&
                 (crossSectionTypes.Contains(CrossSectionType.Standard) || crossSectionTypes.Contains(CrossSectionType.ZW)))
             {
-                var msg = string.Format("Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})", string.Join(",", chainOfChannels.Select(c => c.Name).ToArray()));
+                var msg = string.Format(Resources.WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_cross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_supported___0__, string.Join(",", chainOfChannels.Select(c => c.Name).ToArray()));
                 yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, msg, network);
             }
         }

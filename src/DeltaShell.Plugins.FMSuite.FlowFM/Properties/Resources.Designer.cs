@@ -461,6 +461,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch..
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_p" +
+                        "oints_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_an" +
+                        "d_end_of_branch_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_" +
+                        "points_defined_between_structure__0__and__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Original discretization is invalid: structure {0} is on a grid point.
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point {
@@ -527,6 +548,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModelDefinitionValidator_Validate_ {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than two branches with the same ordernumber &apos;{0}&apos; are connected to node {1}; can not start calculation..
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branches_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calculation_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branch" +
+                        "es_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calc" +
+                        "ulation_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Branch &apos;{0}&apos; has an order number of &apos;{1}&apos;. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 .
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_order_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_or" +
+                        "der_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_great" +
+                        "er_than_or_equal_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target and source node of branch &apos;{0}&apos; have the same id, &apos;{1}&apos;. Circular branch?.
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node_of_branch___0___have_the_same_id____1____Circular_branch_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node" +
+                        "_of_branch___0___have_the_same_id____1____Circular_branch_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0}).
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_cross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_supported___0__ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_c" +
+                        "ross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_suppo" +
+                        "rted___0__", resourceCulture);
             }
         }
         
