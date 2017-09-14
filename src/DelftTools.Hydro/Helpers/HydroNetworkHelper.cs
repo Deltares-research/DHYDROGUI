@@ -532,10 +532,10 @@ namespace DelftTools.Hydro.Helpers
             structure.Branch.BranchFeatures.Add(structure);
         }
 
-        public static void AddStructureToExistingCompositeStructureOrToANewOne(IStructure structure, IBranch branch)
+        public static ICompositeBranchStructure AddStructureToExistingCompositeStructureOrToANewOne(IStructure structure, IBranch branch)
         {
 
-            var compositeBranchStructure = branch.BranchFeatures.OfType<ICompositeBranchStructure>().FirstOrDefault(f => Math.Abs(f.Chainage - structure.Chainage) < 0.01);
+            var compositeBranchStructure = GetCompositeBranchStructure(structure, branch);
 
             if(compositeBranchStructure == null)
             {
@@ -546,6 +546,12 @@ namespace DelftTools.Hydro.Helpers
             }
 
             AddStructureToComposite(compositeBranchStructure, structure);
+            return compositeBranchStructure;
+        }
+
+        private static ICompositeBranchStructure GetCompositeBranchStructure(IStructure structure, IBranch branch)
+        {
+            return branch.BranchFeatures.OfType<ICompositeBranchStructure>().FirstOrDefault(f => Math.Abs(f.Chainage - structure.Chainage) < 0.01);
         }
 
         ///<summary>

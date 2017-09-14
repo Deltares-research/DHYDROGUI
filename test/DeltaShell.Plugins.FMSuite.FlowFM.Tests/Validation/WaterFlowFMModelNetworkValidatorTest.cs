@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void WaterFlowFMModelNetworkValidatesIfNoCSIsPresent()
+        public void WaterFlowFMModelNetworkValidatesIfNoCrossSectionIsPresent()
         {
             var model = new WaterFlowFMModel();
             var network = model.Network;
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void BranchesWithTheSameOrderNumberWithOnlyZWCSShouldBeValid()
+        public void BranchesWithTheSameOrderNumberWithOnlyZWCrossSectionShouldBeValid()
         {
             var network = new HydroNetwork();
             WaterFlowFMTestHelper.ConfigureDemoNetwork(network);
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void MultiTypeOfCS_OnBranchesWithTheSameOrderNumber_Should_Not_Be_Valid()
+        public void MultiTypeOfCrossSection_OnBranchesWithTheSameOrderNumber_Should_Not_Be_Valid()
         {
             var network = new HydroNetwork();
             WaterFlowFMTestHelper.ConfigureDemoNetwork(network);
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var network = new HydroNetwork();
             WaterFlowFMTestHelper.ConfigureDemoNetwork(network);
 
-            #region remove all CS and add one ZW cross-section at both branches
+            #region remove all CrossSection and add one ZW cross-section at both branches
 
             foreach (var cs in network.CrossSections.ToList())
             {

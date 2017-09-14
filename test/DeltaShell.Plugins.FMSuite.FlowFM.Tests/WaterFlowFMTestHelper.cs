@@ -60,26 +60,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.SaveStateStopTime = model.StopTime;
             model.SaveStateTimeStep = model.OutputTimeStep;
 
-            /*            model.OutputSettings.LocationWaterDepth = AggregationOptions.Current;
-                        model.OutputSettings.GetEngineParameter(QuantityType.WaterLevel, ElementSet.Observations).AggregationOptions =
-                            AggregationOptions.Current;
-                        model.OutputSettings.GetEngineParameter(QuantityType.Discharge, ElementSet.Observations).AggregationOptions =
-                            AggregationOptions.Current;
-                        model.OutputSettings.StructureOutputTimeStep = model.TimeStep;*/
-
-            // set initial conditions
-            /*            model.InitialFlow.DefaultValue = 0.1; // .SetValues(new[] {0.1});
-                        model.InitialConditions.DefaultValue = 0.1; //.SetValues(new[] {0.1});
-                        // make sure it is in sync with initial conditions
-                        model.DefaultInitialWaterLevel = 0.1;*/
-
             // set boundary conditions
 
             var boundaryInFlow = new Feature2D { Name = "left", Geometry = new LineString(new[] { new Coordinate(0, 5), new Coordinate(0, 0) }) };
             var boundaryConditionInflow = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
                     BoundaryConditionDataType.TimeSeries)
                 { Feature = boundaryInFlow };
-            //var boundaryConditionInflow = model.BoundaryConditions.First(bc => bc.Feature.Equals(network.Nodes[0]));
+
             boundaryConditionInflow.DataType = BoundaryConditionDataType.TimeSeries;
             boundaryConditionInflow.AddPoint(0);
             boundaryConditionInflow.PointData[0][t] = 0.5;
@@ -94,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var boundaryConditionOutflow = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
                     BoundaryConditionDataType.TimeSeries)
                 { Feature = boundaryOutFlow };
-            //var boundaryConditionOutflow = model.BoundaryConditions.First(bc => bc.Feature.Equals(network.Nodes[2]));
+
             boundaryConditionOutflow.DataType = BoundaryConditionDataType.TimeSeries;
             boundaryConditionOutflow.AddPoint(0);
             boundaryConditionOutflow.PointData[0][t] = 0.1;
