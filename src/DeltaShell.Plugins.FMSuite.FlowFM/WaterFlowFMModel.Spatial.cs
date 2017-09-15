@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
@@ -56,6 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 bool linksEqual;
 
                 var gridsAreEqual = UnstructuredGridHelper.CompareGrids(grid, value, out verticesEqual, out cellsEqual, out linksEqual);
+                ((INotifyPropertyChanged)this).PropertyChanged -= OnGridChanged;
 
                 grid = value;
 
@@ -80,7 +82,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     UpdateSpatialDataAfterGridSet(grid, false, false, false);
                 }
+                ((INotifyPropertyChanged)this).PropertyChanged += OnGridChanged;
             }
+        }
+
+        private void OnGridChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName != GridPropertyName) return;
+            RefreshMappings();
         }
 
         public void SaveGrid()

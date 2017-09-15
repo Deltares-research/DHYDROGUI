@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             SynchronizeModelDefinitions();
 
-
             Grid = new UnstructuredGrid();
             InitializeUnstructuredGridCoverages();
 
@@ -124,7 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
-            
         }
 
         public WaterFlowFMModelDefinition ModelDefinition
@@ -149,6 +147,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public List<WaterFlowFM1D2DLink> Links { get; set; }
+
+        private void RefreshMappings()
+        {
+            if (networkDiscretization == null || !networkDiscretization.Locations.AllValues.Any()) return;
+            var discretisationPoints = networkDiscretization.Locations.AllValues.Select(v => v.Geometry.Coordinate);
+            
+            // Talk to the api!
+            throw new NotImplementedException();
+        }
 
         public override IBasicModelInterface BMIEngine
         {
