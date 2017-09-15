@@ -502,7 +502,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No computational grid defined. Either a Flow1D or a 2D grid need to be created..
+        ///   Looks up a localized string similar to No computational grid defined. Either a Flow1D or a 2D grid needs to be created..
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_ {
             get {

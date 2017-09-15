@@ -260,7 +260,7 @@
     <value>********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!</value>
   </data>
   <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_" xml:space="preserve">
-    <value>No computational grid defined. Either a Flow1D or a 2D grid need to be created.</value>
+    <value>No computational grid defined. Either a Flow1D or a 2D grid needs to be created.</value>
   </data>
   <data name="WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_" xml:space="preserve">
     <value>No computational grid cells defined for branch {0}; can not start calculation.</value>
