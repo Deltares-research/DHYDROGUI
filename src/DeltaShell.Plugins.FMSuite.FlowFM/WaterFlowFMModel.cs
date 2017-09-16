@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var discretisationPoints = networkDiscretization.Locations.AllValues.Select(v => v.Geometry.Coordinate);
             
             // Talk to the api!
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public override IBasicModelInterface BMIEngine
