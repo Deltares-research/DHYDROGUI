@@ -14,10 +14,6 @@
     sectionCount          = 3                   
     roughnessNames        = Main;FloodPlain1;FloodPlain2
     roughnessPositions    = 0.000 25.000 75.000 100.000
-    roughnessTypesPos     = 1 4 9               
-    roughnessValuesPos    = 45.000 40.000 35.000
-    roughnessTypesNeg     = 1 4 9               
-    roughnessValuesNeg    = 45.000 40.000 35.000
 
 [Definition]
     id                    = CrossSection2       
@@ -33,10 +29,6 @@
     sectionCount          = 3                   
     roughnessNames        = Main;FloodPlain1;FloodPlain2
     roughnessPositions    = 0.000 25.000 75.000 100.000
-    roughnessTypesPos     = 1 4 9               
-    roughnessValuesPos    = 45.000 40.000 35.000
-    roughnessTypesNeg     = 1 4 9               
-    roughnessValuesNeg    = 45.000 40.000 35.000
 
 [Definition]
     id                    = CrossSection3       
