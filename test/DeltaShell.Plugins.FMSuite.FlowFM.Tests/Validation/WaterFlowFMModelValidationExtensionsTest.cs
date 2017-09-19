@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             Assert.AreEqual(1, reportErrors.ErrorCount);
 
-            string expectedErrorMessage = Resources.WaterFlowFMGridValidator_Validate_Grid_is_empty;
+            string expectedErrorMessage = Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_;
             var errorFound = reportErrors.AllErrors.First();
 
             Assert.AreEqual(ValidationSeverity.Error, errorFound.Severity);

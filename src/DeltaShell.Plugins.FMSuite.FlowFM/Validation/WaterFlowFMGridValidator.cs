@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (!ModelNetworkDiscretizationIsValid(model))
                 {
-                    issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaterFlowFMGridValidator_Validate_Grid_is_empty));
+                    issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_));
                 }
             }
             return new ValidationReport("Domain", issues);
