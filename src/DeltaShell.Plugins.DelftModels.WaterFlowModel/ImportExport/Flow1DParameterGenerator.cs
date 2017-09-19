@@ -258,8 +258,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             //TODO: Add QDrestart ???
 
-            var readNetworkInUGridFormat = false; // always false - not currently configurable in the GUI
-            if (readNetworkInUGridFormat != null)
+            var readNetworkInUGridFormat = false; // so far always false - not currently configurable in the GUI
+            //var readNetworkInUGridFormat = true; // Must be true when start using the UGRID-Reader
+            if (readNetworkInUGridFormat)
             {
                 simulationOptionsValues.AddProperty(ModelDefinitionsRegion.ReadNetworkFromUGrid.Key, Convert.ToBoolean(readNetworkInUGridFormat) ? 1 : 0, ModelDefinitionsRegion.ReadNetworkFromUGrid.Description);
             }
