@@ -1,19 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-
 using DelftTools.Shell.Core.Dao;
-using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
@@ -102,8 +94,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             // assert
             Assert.IsFalse(returnResult, "Should not veto.");
-            Assert.AreEqual(@"$data$.\test\foo\bar", waqModel.ModelDataDirectory);
-            Assert.AreEqual(@"$data$.\test\foo\bar", stateArray[1]);
+            Assert.AreEqual(@"$data$test\foo\bar", waqModel.ModelDataDirectory);
+            Assert.AreEqual(@"$data$test\foo\bar", stateArray[1]);
         }
 
         [Test]
@@ -150,8 +142,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             // assert
             Assert.IsFalse(returnResult, "Should not veto.");
-            Assert.AreEqual(@"$data$.\foo\bar", manager.FolderPath);
-            Assert.AreEqual(@"$data$.\foo\bar", stateArray[1]);
+            Assert.AreEqual(@"$data$foo\bar", manager.FolderPath);
+            Assert.AreEqual(@"$data$foo\bar", stateArray[1]);
         }
 
         private static bool CallPrePersistMethod(PrePersistMethod methodToCall, WaterQualityModelDataAccessListener listener, 
@@ -214,8 +206,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             // assert
             Assert.IsFalse(returnResult, "Should not veto.");
-            Assert.AreEqual(@"$data$.\foo\bar", settings.OutputDirectory);
-            Assert.AreEqual(@"$data$.\foo\bar", stateArray[0]);
+            Assert.AreEqual(@"$data$foo\bar", settings.OutputDirectory);
+            Assert.AreEqual(@"$data$foo\bar", stateArray[0]);
         }
 
         private static WaterQualityModelDataAccessListener CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(
