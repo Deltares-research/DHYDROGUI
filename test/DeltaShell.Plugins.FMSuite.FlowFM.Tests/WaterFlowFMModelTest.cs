@@ -2,9 +2,12 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -15,6 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Coverages;
@@ -24,6 +28,7 @@ using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -590,5 +595,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
+        [NUnit.Framework.Category(TestCategory.WorkInProgress)]
+        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1D2DGrids()
+        {
+            //create model with 1D and 2D grids
+            var model = new WaterFlowFMModel();
+            //1D Grid
+            WaterFlowFMTestHelper.ConfigureDemoNetwork(model.Network);
+            var offSet = new double[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
+            HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)model.Network.Branches[1], offSet);
+            Assert.IsFalse(model.NetworkDiscretization == null || !model.NetworkDiscretization.Locations.AllValues.Any());
+            //2D Grid
+            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            
+            //Links should be generated.
+            Assert.IsNotEmpty(model.Links);
+            Assert.AreNotEqual(0, model.Links.Count);
+        }
     }
 }

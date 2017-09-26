@@ -173,7 +173,9 @@
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
     <Compile Include="Grid\GridApi.cs" />
+    <Compile Include="Grid\GridGeomWrapper.cs" />
     <Compile Include="Grid\IGridApi.cs" />
+    <Compile Include="Grid\IGridGeomWrapper.cs" />
     <Compile Include="Grid\IGridWrapper.cs" />
     <Compile Include="Grid\IUGridNetwork.cs" />
     <Compile Include="Grid\IUGridNetworkDiscretisation.cs" />

@@ -15,6 +15,7 @@ namespace DeltaShell.NGHS.IO.Grid
         protected double convversion;
         protected GridApiDataSet.DataSetConventions iconvtype;
         protected IGridWrapper wrapper;
+        protected IGridGeomWrapper geomWrapper;
 
         static GridApi()
         {

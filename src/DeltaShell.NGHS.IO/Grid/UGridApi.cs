@@ -425,9 +425,107 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
-        #region Implementation of IDisposable
+        #region 1d2dlinks logic
 
-        public void Dispose()
+        int Convert(ref GridGeomWrapper.meshgeom c_meshgeom, ref GridGeomWrapper.meshgeomdim c_meshgeomdim)
+        {
+            try
+            {
+                var ierr = geomWrapper.Convert(ref c_meshgeom, ref c_meshgeomdim);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+
+        int Make1d2dInternalnetlinks()
+        {
+            try
+            {
+                var ierr = geomWrapper.Make1d2dInternalnetlinks();
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+
+        int Convert1dArray(int meshId, int numberOfNodes, int nBranches)
+        {
+            IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
+            IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
+            IntPtr c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNodes);
+            IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            try
+            {
+                var ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref numberOfNodes);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+
+        int GetLinkCount(ref int nbranches)
+        {
+            try
+            {
+                var ierr = geomWrapper.GetLinkCount(ref nbranches);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+
+        int Get1d2dLinks(ref IntPtr arrayfrom, ref IntPtr arrayto, ref int nlinks)
+        {
+            try
+            {
+                var ierr = geomWrapper.Get1d2dLinks(ref arrayfrom, ref arrayto, ref nlinks);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+        #endregion
+
+    #region Implementation of IDisposable
+
+    public void Dispose()
         {
             Close();
         }

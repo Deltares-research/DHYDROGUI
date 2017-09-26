@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         private MockRepository mocks;
 
         [SetUp]
-        public void Setip()
+        public void Setup()
         {
             mocks = new MockRepository();
             mapLayerProvider = new FlowFMMapLayerProvider();
