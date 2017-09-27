@@ -422,6 +422,10 @@ namespace Sobek.IntegrationTests
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
             gui.Application.Project.RootFolder.Add(model);
 
+            // need to show the MainWindow otherwise we get the following error when running activity:
+            // Cannot set Owner property to a Window that has not been shown previously.
+            gui.MainWindow.Show();
+
             // run flow model
             gui.Application.RunActivity(model);
             
