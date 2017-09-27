@@ -14,10 +14,6 @@
     sectionCount          = 1                   
     roughnessNames        = Main                
     roughnessPositions    = 0.000 1.000         
-    roughnessTypesPos     = 1                   
-    roughnessValuesPos    = 45.000              
-    roughnessTypesNeg     = 1                   
-    roughnessValuesNeg    = 45.000              
 
 [Definition]
     id                    = CrossSection2       
