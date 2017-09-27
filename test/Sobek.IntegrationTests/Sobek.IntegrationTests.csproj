@@ -237,6 +237,7 @@
     <Compile Include="SobekFunctionsScriptingLibraryTest.cs" />
     <Compile Include="WaterFlowModel1DBMIIntegrationTest.cs" />
     <Compile Include="WaterFlowModel1DMergeGuiIntegrationTest.cs" />
+    <Compile Include="WaterFlowModel1DMergeIntegrationTest.cs" />
     <Compile Include="WaterFlowRainfallRunoffCouplingIntegrationTest.cs" />
     <Compile Include="WaterFlowRainfallRunoffCouplingTest.cs" />
     <Compile Include="HydroModelBuilderIntegrationTest.cs" />

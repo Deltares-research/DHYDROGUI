@@ -30,7 +30,6 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.PhysicalParameters;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Plugins.NetCDF;
@@ -55,34 +54,6 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace Sobek.IntegrationTests
 {
-    [TestFixture]
-    public class WaterFlowModel1DMergeIntegrationTest
-    {
-        [Test]
-        public void GivenSourceWFM1DAndDestinationWFM1DAreTestedIfTheyCanBeMergedWhenCanMergeThenTrue()
-        {
-            var sourceWFM1D = new WaterFlowModel1D();
-            var destinationWFM1D = new WaterFlowModel1D();
-            Assert.That(destinationWFM1D.CanMerge(sourceWFM1D), Is.True);
-        }
-
-        [Test]
-        public void GivenSourceFMModelAndDestinationWFM1DAreTestedIfTheyCanBeMergedWhenCanMergeThenFalse()
-        {
-            var fmModel = new WaterFlowFMModel();
-            var flowModel1D = new WaterFlowModel1D();
-            Assert.That(flowModel1D.CanMerge(fmModel), Is.False);
-        }
-        
-        [Test]
-        public void GivenSourceHydroModelAndDestinationWFM1DAreTestedIfTheyCanBeMergedWhenCanMergeThenFalse()
-        {
-            var hydroModel = new HydroModel();
-            var flowModel1D = new WaterFlowModel1D();
-            Assert.That(flowModel1D.CanMerge(hydroModel), Is.False);
-        }
-    }
-
     [TestFixture]
     public class WaterFlowModel1DIntegrationTest
     {
