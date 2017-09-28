@@ -11,5 +11,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public string Name { get; set; }
+
+        public int linksCount { get; set; }
+
+        public int linkId { get; set; }
+
+        public int cell2dlink { get; set; }
+
+        public int flow1dLink { get; set; }
     }
 }

@@ -2072,6 +2072,7 @@ test/DeltaShell.NGHS.IO.Tests/FileWriters/*.user
 test/DeltaShell.NGHS.IO.Tests/FileWriters/bin
 test/DeltaShell.NGHS.IO.Tests/FileWriters/obj
 test/DeltaShell.NGHS.IO.Tests/FileWriters/packages
+test/DeltaShell.NGHS.IO.Tests/Grid/UGrid1D2DTests.cs
 test/DeltaShell.NGHS.IO.Tests/Properties/*.suo
 test/DeltaShell.NGHS.IO.Tests/Properties/*.user
 test/DeltaShell.NGHS.IO.Tests/Properties/AssemblyInfo.cs

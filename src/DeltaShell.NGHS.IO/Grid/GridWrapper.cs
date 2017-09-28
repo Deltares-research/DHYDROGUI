@@ -230,6 +230,76 @@ namespace DeltaShell.NGHS.IO.Grid
         private static extern int ionc_put_node_coordinates_dll(ref int ioncid, ref int meshId, ref IntPtr c_xvalues_ptr, ref IntPtr c_yvalues_ptr, ref int nNode);
 
         #endregion
+        #region 1d2d Links
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ioncid"></param>
+        /// <param name="meshId"></param>
+        /// <param name="meshgeom"></param>
+        /// <param name="includeArrays"></param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom",
+            CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In, Out] ref meshgeom meshgeom, ref bool includeArrays);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ioncid"></param>
+        /// <param name="meshId"></param>
+        /// <param name="meshgeomdim"></param>
+        /// <returns></returns>
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In, Out] ref meshgeomdim meshgeomdim);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct meshgeom
+        {
+            public IntPtr edge_nodes;
+            public IntPtr face_nodes;
+            public IntPtr edge_faces;
+            public IntPtr face_edges;
+            public IntPtr face_links;
+
+            public IntPtr branchids;
+            public IntPtr nbranchgeometrynodes;
+
+            public IntPtr nodex;
+            public IntPtr nodey;
+            public IntPtr nodez;
+            public IntPtr edgex;
+            public IntPtr edgey;
+            public IntPtr edgez;
+            public IntPtr facex;
+            public IntPtr facey;
+            public IntPtr facez;
+
+            public IntPtr branchoffsets;
+            public IntPtr geopointsX;
+            public IntPtr geopointsY;
+            public IntPtr branchlengths;
+
+            public IntPtr layer_zs;
+            public IntPtr interface_zs;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct meshgeomdim
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+            public char[] meshname;
+            public int dim;
+            public int numnode;
+            public int numedge;
+            public int numface;
+            public int maxnumfacenodes;
+            public int numlayer;
+            public int layertype;
+            public int nt_nbranches;
+            public int nt_ngeometry;
+        }
+        #endregion
         #region UGRID 1D Specifics
 
         /// <summary>
@@ -644,7 +714,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_1d_mesh_id_dll(ref ioncId, ref meshId);
         }
 
-        public int get_2d_mesh_id(int ioncId, ref int meshId)
+        public int get_2d_mesh_id(ref int ioncId, ref int meshId)
         {
             return ionc_get_2d_mesh_id_dll(ref ioncId, ref meshId);
         }
@@ -916,6 +986,16 @@ namespace DeltaShell.NGHS.IO.Grid
         public int Get1DNetworkBranchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches)
         {
             return ionc_get_1d_network_branchorder_dll(ref ioncId, ref networkId, ref pointerToBranchOrder, ref numberOfBranches);
+        }
+
+        public int get_meshgeom(ref int ioncid, ref int meshId, ref meshgeom meshgeom, bool includeArrays)
+        {
+            return ionc_get_meshgeom_dll(ref ioncid, ref meshId, ref meshgeom, ref includeArrays);
+        }
+
+        public int get_meshgeom_dim(ref int ioncid, ref int meshId, ref meshgeomdim meshgeomdim)
+        {
+            return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref meshgeomdim);
         }
         #endregion
     }

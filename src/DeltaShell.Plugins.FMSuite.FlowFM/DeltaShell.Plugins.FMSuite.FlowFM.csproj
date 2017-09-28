@@ -125,7 +125,10 @@
     <Compile Include="Api\FlexibleMeshBasicModelInterface.cs" />
     <Compile Include="Api\FlexibleMeshModelApi.cs" />
     <Compile Include="Api\FlexibleMeshModelDll.cs" />
+    <Compile Include="Api\GridGeomApi.cs" />
+    <Compile Include="Api\GridGeomWrapper.cs" />
     <Compile Include="Api\IFlexibleMeshModelApi.cs" />
+    <Compile Include="Api\IGridGeomWrapper.cs" />
     <Compile Include="Api\RemoteFlexibleMeshModelApi.cs" />
     <Compile Include="Api\TempImpl\GridHelper.cs" />
     <Compile Include="Api\UnstrucGridOperationApi.cs" />

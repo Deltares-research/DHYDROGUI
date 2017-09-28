@@ -88,7 +88,6 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         public const string GRIDDLL_NAME = "io_netcdf.dll";
-        public const string LIB_DLL_NAME = "gridgeom.dll";
 
         public static string DllDirectory
         {

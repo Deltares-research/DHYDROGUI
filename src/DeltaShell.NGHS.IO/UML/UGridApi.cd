@@ -26,12 +26,11 @@
   <Class Name="DeltaShell.NGHS.IO.Grid.GridApi" Collapsed="true">
     <Position X="10.75" Y="12" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAAEAAAAABAYRECKAwRASAAAEAAIAAAAAAAEBDAAAA=</HashCode>
+      <HashCode>QAAAEAAAAABAYQECKAwRASAAAEAAIAAAAAAAEBDAAAA=</HashCode>
       <FileName>Grid\GridApi.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="wrapper" />
-      <Field Name="geomWrapper" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
@@ -88,7 +87,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgABAAgAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgABAAAAAAA=</HashCode>
       <FileName>Grid\GridApiDataSet.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -137,7 +136,7 @@
   <Class Name="DeltaShell.NGHS.IO.Grid.UGridApi" Collapsed="true">
     <Position X="8.75" Y="14.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AKAAQAAIACgSAAIAkISAAEAAABAQAACAAGEAQAACAQQ=</HashCode>
+      <HashCode>AKAAQAAIACgCAAIAkASAAEAAABAQAAAAAEAAQAACAQQ=</HashCode>
       <FileName>Grid\UGridApi.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -194,26 +193,6 @@
     <TypeIdentifier>
       <HashCode>AAAAAggAgAAAAAAQEAAAAAAICACAAABAAIAAQAAAAAA=</HashCode>
       <FileName>Grid\UGridNetwork.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.GridGeomWrapper" Collapsed="true">
-    <Position X="15.25" Y="11" Width="1.75" />
-    <NestedTypes>
-      <Struct Name="DeltaShell.NGHS.IO.Grid.GridGeomWrapper.meshgeom" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Grid\GridGeomWrapper.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-      <Struct Name="DeltaShell.NGHS.IO.Grid.GridGeomWrapper.meshgeomdim" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Grid\GridGeomWrapper.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-    </NestedTypes>
-    <TypeIdentifier>
-      <HashCode>AAAAAMBAAKAQAAAEAIAAAAAAAAAAAAiAQCUAAAAAAAA=</HashCode>
-      <FileName>Grid\GridGeomWrapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -292,13 +271,6 @@
     <TypeIdentifier>
       <HashCode>AAAAAggAgAAAAAAQEAAAAAAICACAAABAAIAAAAAAAAA=</HashCode>
       <FileName>Grid\IUGridNetwork.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="DeltaShell.NGHS.IO.Grid.IGridGeomWrapper" Collapsed="true">
-    <Position X="13.5" Y="11" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQAAAAAIAAAAAAAAAAAACAACEAAAAAAAA=</HashCode>
-      <FileName>Grid\IGridGeomWrapper.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

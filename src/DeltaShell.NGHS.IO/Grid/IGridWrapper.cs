@@ -403,5 +403,10 @@ namespace DeltaShell.NGHS.IO.Grid
         int Put1DNetworkBranchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches);
 
         int Get1DNetworkBranchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches);
+
+//        1d2d links functions
+        int get_meshgeom(ref int ioncid, ref int meshId, ref GridWrapper.meshgeom meshgeom, bool includeArrays);
+
+        int get_meshgeom_dim(ref int ioncid, ref int meshId, ref GridWrapper.meshgeomdim meshgeomdim);
     }
 }
