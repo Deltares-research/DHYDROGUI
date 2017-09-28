@@ -13,6 +13,8 @@ using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
+using System.Windows.Forms;
+using DelftTools.Utils.Reflection;
 
 namespace Sobek.IntegrationTests
 {
@@ -60,33 +62,97 @@ namespace Sobek.IntegrationTests
 
                 var destinationWFM1D = WaterFlowModel1DModelMergeTestHelper.SetupWFM1D(0, 100);
                 destinationWFM1D.Name = "Destination";
+
                 var channel = destinationWFM1D.Network.Channels.LastOrDefault();
                 Assert.IsNotNull(channel);
 
                 var weir = new Weir() {Name = "weir"};
                 channel.BranchFeatures.Add(weir);
-                var weirFormula = new GeneralStructureWeirFormula() {Id = 1};
+                var weirFormula = new GeneralStructureWeirFormula();
                 weir.WeirFormula = weirFormula;
                 weirFormula.GateOpening = 15;
+                weir = new Weir() { Name = "weir1" };
+                channel.BranchFeatures.Add(weir);
+                weirFormula = new GeneralStructureWeirFormula();
+                weir.WeirFormula = weirFormula;
+                weirFormula.GateOpening = 10;
 
-
+                app.Project.RootFolder.Add(destinationWFM1D);
+                Assert.DoesNotThrow(() => app.SaveProjectAs("test.dsproj"));
+                
                 var sourceWFM1D = WaterFlowModel1DModelMergeTestHelper.SetupWFM1D(100, 250);
                 sourceWFM1D.Name = "Source";
                 channel = sourceWFM1D.Network.Channels.LastOrDefault();
                 Assert.IsNotNull(channel);
-                weir = new Weir() {Name = "weir"};
+                weir = new Weir
+                {
+                    Name = "weir",
+                    WeirFormula = new GeneralStructureWeirFormula {GateOpening = 15}
+                };
+
                 channel.BranchFeatures.Add(weir);
-                weirFormula = new GeneralStructureWeirFormula() {Id = 1 };
-                weir.WeirFormula = weirFormula;
-                weirFormula.GateOpening = 15;
 
+                weir = new Weir
+                {
+                    Name = "weir1",
+                    WeirFormula = new GeneralStructureWeirFormula {GateOpening = 10}
+                };
 
+                channel.BranchFeatures.Add(weir);
+
+                app.Project.RootFolder.Add(sourceWFM1D);
+                Assert.DoesNotThrow(() => app.SaveProject());
+                
                 destinationWFM1D.Merge(sourceWFM1D, null);
+                
                 weir = (Weir) destinationWFM1D.Network.Weirs.LastOrDefault();
                 Assert.That(weir, Is.Not.Null);
-                Assert.That(weir.Name, Is.EqualTo("Source0_weir"));
+                Assert.That(weir.Name, Is.EqualTo("Source0_weir1"));
+                
+                Assert.DoesNotThrow(() =>  app.SaveProject(), "Cannot save because weirformulas have same nhibernate ids");
+            }
+        }
+        [Test]
+        public void GivenSourceWFM1DAndDestinationWFM1DAreMergedWhenMergedThenDuringSaveNoExceptionShouldThrow()
+        {
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            {
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Run();
+
+                var destinationWFM1D = WaterFlowModel1DModelMergeTestHelper.SetupWFM1D(0, 100);
+                destinationWFM1D.Name = "Destination";
+                var channel = destinationWFM1D.Network.Channels.LastOrDefault();
+                Assert.IsNotNull(channel);
+
                 app.Project.RootFolder.Add(destinationWFM1D);
-                Assert.DoesNotThrow(() =>  app.SaveProjectAs("mick.dsproj"), "Cannot save because weirformulas have same nhibernate ids");
+                Assert.DoesNotThrow(() => app.SaveProjectAs("ralph.dsproj"));
+                Assert.AreEqual(3,channel.Id);
+
+               //MessageBox.Show("Before second model");
+                var sourceWFM1D = WaterFlowModel1DModelMergeTestHelper.SetupWFM1D(100, 250);
+                sourceWFM1D.Name = "Source";
+                channel = sourceWFM1D.Network.Channels.LastOrDefault();
+                Assert.IsNotNull(channel);
+                channel.Id = 3;
+                //MessageBox.Show("after second model");
+
+                destinationWFM1D.Merge(sourceWFM1D, null);
+
+                //MessageBox.Show("after clone");
+                sourceWFM1D.Dispose();
+                GC.Collect();
+                //MessageBox.Show("after dispose");
+
+                //app.Project.RootFolder.Add(destinationWFM1D);
+                Assert.DoesNotThrow(() => app.SaveProject());
             }
         }
     }
