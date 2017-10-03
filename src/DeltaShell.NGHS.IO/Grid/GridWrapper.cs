@@ -287,7 +287,7 @@ namespace DeltaShell.NGHS.IO.Grid
         [StructLayout(LayoutKind.Sequential)]
         public struct meshgeomdim
         {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+            //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
             public char[] meshname;
             public int dim;
             public int numnode;

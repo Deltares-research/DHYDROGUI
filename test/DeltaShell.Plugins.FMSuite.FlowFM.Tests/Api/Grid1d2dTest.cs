@@ -20,7 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category(TestCategory.WorkInProgress)]
         public void CreateLinksFrom2dFile()
         {
             /* This is a 'copy' of the original test in the FlowFM kernel made by Luca. It should work here as long as it works in the kernel. */
