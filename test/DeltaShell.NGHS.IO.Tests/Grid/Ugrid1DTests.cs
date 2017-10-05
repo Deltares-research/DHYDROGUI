@@ -590,7 +590,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             //4. Get the id of the 2d mesh in the RGF grid file (Custom_Ugrid.nc)
             int sourcemesh2d = -1;
-            ierr = wrapper.get_2d_mesh_id(ref sourcetwodioncid, ref  sourcemesh2d);
+            ierr = wrapper.Get2DMeshId(ref sourcetwodioncid, ref  sourcemesh2d);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(sourcemesh2d, Is.EqualTo(1));
 
@@ -640,7 +640,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(source1dmesh, Is.EqualTo(1));
             sourcemesh2d = -1;
-            ierr = wrapper.get_2d_mesh_id(ref targetioncid, ref  sourcemesh2d);
+            ierr = wrapper.Get2DMeshId(ref targetioncid, ref  sourcemesh2d);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(sourcemesh2d, Is.EqualTo(2));
 

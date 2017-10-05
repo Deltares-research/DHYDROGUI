@@ -181,6 +181,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
+        public static void ConfigureDemoNetworkAtGivenCoordinates(IHydroNetwork network)
+        {
+            // add nodes and branches
+            INode node1 = new HydroNode { Name = "Node1", Network = network };
+            INode node2 = new HydroNode { Name = "Node2", Network = network };
+            INode node3 = new HydroNode { Name = "Node3", Network = network };
+
+            // create simplest network
+            node1.Geometry = new Point(0.0, 0.0);
+            node2.Geometry = new Point(100.0, 0.0);
+            node3.Geometry = new Point(100.0, 150.0);
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+            network.Nodes.Add(node3);
+
+            var branch1 = new Channel("branch1", node1, node2, 100.0);
+
+            branch1.Geometry = new LineString(new[]
+            {
+                new Coordinate(-6.0, 22.0),
+                new Coordinate(5.0, 16.0),
+                new Coordinate(23.0, 16.0),
+                new Coordinate(34.0, 7.0)
+            });
+
+            network.Branches.Add(branch1);
+        }
+
         private static IGeometry CreateGeometryForCs1(ICrossSection crossSection)
         {
             IList<Coordinate> yzCoordinates = new List<Coordinate>

@@ -151,11 +151,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshMappings()
         {
             if (networkDiscretization == null || !networkDiscretization.Locations.AllValues.Any()) return;
-            var discretisationPoints = networkDiscretization.Locations.AllValues.Select(v => v.Geometry.Coordinate);
-            
             // Talk to the api!
-            
-            //throw new NotImplementedException();
+            var gGeomApi = new GridGeomApi();
+            var linksFrom = new List<int>();
+            var linksTo = new List<int>();
+            int linksCount = 0;
+            Links.Clear();
+
+            gGeomApi.Get1d2dLinksFromGridAndNetwork(NetFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
+            for (int i = 0; i < linksCount; i++)
+            {
+                Links.Add(new WaterFlowFM1D2DLink(linksFrom[i], linksTo[i]));
+            }
         }
 
         public override IBasicModelInterface BMIEngine

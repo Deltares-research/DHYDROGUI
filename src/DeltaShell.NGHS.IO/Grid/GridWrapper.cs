@@ -287,7 +287,6 @@ namespace DeltaShell.NGHS.IO.Grid
         [StructLayout(LayoutKind.Sequential)]
         public struct meshgeomdim
         {
-            //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
             public char[] meshname;
             public int dim;
             public int numnode;
@@ -714,12 +713,12 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_1d_mesh_id_dll(ref ioncId, ref meshId);
         }
 
-        public int get_2d_mesh_id(ref int ioncId, ref int meshId)
+        public int Get2DMeshId(ref int ioncId, ref int meshId)
         {
             return ionc_get_2d_mesh_id_dll(ref ioncId, ref meshId);
         }
 
-        public int get_3d_mesh_id(int ioncId, ref int meshId)
+        public int Get3DMeshId(int ioncId, ref int meshId)
         {
             return ionc_get_3d_mesh_id_dll(ref ioncId, ref meshId);
         }

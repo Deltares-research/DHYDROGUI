@@ -5,16 +5,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class WaterFlowFM1D2DLink : Feature, INameable
     {
-        public WaterFlowFM1D2DLink(string name)
+        public WaterFlowFM1D2DLink(int fromCell, int toNode )
         {
-            Name = name;
+            cell2dlink = fromCell;
+            flow1dLink = toNode;
         }
 
         public string Name { get; set; }
-
-        public int linksCount { get; set; }
-
-        public int linkId { get; set; }
 
         public int cell2dlink { get; set; }
 

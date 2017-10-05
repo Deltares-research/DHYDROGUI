@@ -613,5 +613,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotEmpty(model.Links);
             Assert.AreNotEqual(0, model.Links.Count);
         }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.WorkInProgress)]
+        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1D2DGridsFromFile()
+        {
+            //create model with 1D and 2D grids
+            var model = new WaterFlowFMModel();
+            //1D Grid
+            WaterFlowFMTestHelper.ConfigureDemoNetworkAtGivenCoordinates(model.Network);
+            var offSet = new double[] { 0, 5, 10, 20};
+            HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)model.Network.Branches[0], offSet);
+            Assert.IsFalse(model.NetworkDiscretization == null || !model.NetworkDiscretization.Locations.AllValues.Any());
+
+            //2D Grid
+            string gridPath = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
+            gridPath = TestHelper.CreateLocalCopy(gridPath);
+            Assert.IsTrue(File.Exists(gridPath));
+            model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
+                .SetValueAsString(gridPath);
+            Assert.AreEqual(model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).GetValueAsString(), gridPath);
+            model.Grid = UnstructuredGridFileHelper.LoadFromFile(gridPath);
+
+            //Links should be generated.
+            Assert.IsNotEmpty(model.Links);
+            Assert.AreNotEqual(0, model.Links.Count);
+        }
     }
 }

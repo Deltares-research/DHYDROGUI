@@ -417,5 +417,60 @@ namespace DeltaShell.NGHS.IO.Grid
                 throw new Exception();
             }
         }
+
+        public int GetMeshGeom(ref int ioncid, ref int meshId, ref GridWrapper.meshgeom mesh, int nodes2D, bool includeArrays, ref double[] rc_twodnodex, ref double[] rc_twodnodey, ref double[] rc_twodnodez)
+        {
+            mesh.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
+            mesh.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
+            mesh.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
+            mesh.edge_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nodes2D * 2);
+
+            try
+            {
+                var ierr = wrapper.get_meshgeom(ref ioncid, ref meshId, ref mesh, includeArrays);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            Marshal.Copy(mesh.nodex, rc_twodnodex, 0, nodes2D);
+            Marshal.Copy(mesh.nodey, rc_twodnodey, 0, nodes2D);
+            Marshal.Copy(mesh.nodez, rc_twodnodez, 0, nodes2D);
+
+            //Free memory
+//            Marshal.FreeCoTaskMem(mesh.nodex);
+//            Marshal.FreeCoTaskMem(mesh.nodey);
+//            Marshal.FreeCoTaskMem(mesh.nodez);
+//            Marshal.FreeCoTaskMem(mesh.edge_nodes);
+//
+//            mesh.nodex = IntPtr.Zero;
+//            mesh.nodey = IntPtr.Zero;
+//            mesh.nodez = IntPtr.Zero;
+//            mesh.edge_nodes = IntPtr.Zero;
+
+            return GridApiDataSet.GridConstants.NOERR;
+        }
+
+        public int GetMeshGeomDim(ref int ioncid, ref int meshId, ref GridWrapper.meshgeomdim meshgeomdim)
+        {
+            try
+            {
+                var ierr = wrapper.get_meshgeom_dim(ref ioncid, ref meshId, ref meshgeomdim);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            return GridApiDataSet.GridConstants.NOERR;
+        }
     }
 }
