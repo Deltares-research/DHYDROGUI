@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.YZ || readCrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key);
+                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionRegion.RoughnessNames.Key, separator: ';');
                 if (roughnessNames.Count < 0 )
                     throw new FileReadingException("reading error");
 
