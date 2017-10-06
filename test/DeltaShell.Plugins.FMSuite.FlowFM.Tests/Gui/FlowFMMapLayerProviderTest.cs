@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var fmModel = new WaterFlowFMModel()
             {
-                Links = new List<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>("MyLink") }
+                Links = new EventedList<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>("MyLink") }
             };
             var childObjects = mapLayerProvider.ChildLayerObjects(fmModel);
 
@@ -150,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var fmModel = new WaterFlowFMModel()
             {
-                Links = new List<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>("MyLink") }
+                Links = new EventedList<WaterFlowFM1D2DLink>() { mocks.Stub<WaterFlowFM1D2DLink>("MyLink") }
             };
             var layer = mapLayerProvider.CreateLayer(fmModel.Links, fmModel);
 

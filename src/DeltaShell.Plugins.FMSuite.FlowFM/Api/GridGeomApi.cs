@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
@@ -114,22 +115,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Marshal.Copy(meshtwod.nodez, rc_twodnodez, 0, num2dNodes);
 
             //6. allocate the 1d arrays for storing the 1d coordinates and edge_nodes
-            int nMeshPoints = 0;
-            int nBranches = 0;
+            var discretisationPoints = networkDiscretization.Locations.AllValues.Select(v => v.Geometry.Coordinate)
+                .ToList();
+
+            int nBranches = networkDiscretization.Network.Branches.Count;
+            int[] branchIds = networkDiscretization.Locations.AllValues.Select( dp => networkDiscretization.Network.Branches.IndexOf(dp.Branch) ).ToArray();
+
+            int nMeshPoints = discretisationPoints.Count;
+
+            double[] meshXCoords = discretisationPoints.Select(dPoints => dPoints.X).ToArray();
+            double[] meshYCoords = discretisationPoints.Select(dPoints => dPoints.Y).ToArray();
+
+            int[] sourceNodeId = networkDiscretization.Network.Branches.Select(b => b.Network.Nodes.IndexOf(b.Source)).ToArray();
+            int[] targetNodeId = networkDiscretization.Network.Branches.Select(b => b.Network.Nodes.IndexOf(b.Target)).ToArray();
+
             IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
             IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
             IntPtr c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nMeshPoints);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
-
-            var discretisationPoints = networkDiscretization.Locations.AllValues.Select(v => v.Geometry.Coordinate)
-                .ToList();
-
-            double[] meshXCoords = discretisationPoints.Select(dPoints => dPoints.X).ToArray();
-            double[] meshYCoords = discretisationPoints.Select(dPoints => dPoints.Y).ToArray();
-            int[] branchIds = networkDiscretization.Network.Branches.Select(b => unchecked((int) b.Id)).ToArray();
-            int[] sourceNodeId = networkDiscretization.Network.Branches.Select(b => unchecked((int)b.Source.Id)).ToArray();
-            int[] targetNodeId = networkDiscretization.Network.Branches.Select(b => unchecked((int)b.Target.Id)).ToArray();
 
             Marshal.Copy(branchIds, 0, c_branchids, nMeshPoints);
             Marshal.Copy(meshXCoords, 0, c_meshXCoords, nMeshPoints);
@@ -159,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             //10. get the number of links
             linksCount = 0;
             ierr = geomWrapper.GetLinkCount(ref linksCount);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
+             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
             }
@@ -192,12 +196,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Marshal.FreeCoTaskMem(c_meshXCoords);
             Marshal.FreeCoTaskMem(c_meshYCoords);
             Marshal.FreeCoTaskMem(c_branchids);
+            Marshal.FreeCoTaskMem(c_sourcenodeid);
+            Marshal.FreeCoTaskMem(c_targetnodeid);
 
             //Free from and to arrays describing the links 
             Marshal.FreeCoTaskMem(c_arrayfrom);
             Marshal.FreeCoTaskMem(c_arrayto);
 
-            return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            //Close file
+            ierr = gridWrapper.Close(ioncId);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                return ierr;
+            }
+
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
 

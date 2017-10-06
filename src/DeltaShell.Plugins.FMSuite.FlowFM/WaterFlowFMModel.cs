@@ -43,6 +43,7 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Api;
 using SharpMap.SpatialOperations;
@@ -74,7 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Network = new HydroNetwork { Name = "Network" };
             // Computational Grid For network
             NetworkDiscretization = new Discretization { Network = network, Name = DiscretizationObjectName };
-            Links = new List<WaterFlowFM1D2DLink>();
+
+            Links = new EventedList<WaterFlowFM1D2DLink>();
 
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
@@ -132,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (modelDefinition != null)
                 {
-                    ((INotifyPropertyChange) (modelDefinition.Properties)).PropertyChanged -= OnModelDefinitionPropertyChanged;
+                    ((INotifyPropertyChanged) (modelDefinition.Properties)).PropertyChanged -= OnModelDefinitionPropertyChanged;
                 }
 
                 modelDefinition = value;
@@ -146,22 +148,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public List<WaterFlowFM1D2DLink> Links { get; set; }
+        public IEventedList<WaterFlowFM1D2DLink> Links { get; set; }
 
         private void RefreshMappings()
         {
-            if (networkDiscretization == null || !networkDiscretization.Locations.AllValues.Any()) return;
+            Links = new EventedList<WaterFlowFM1D2DLink>();
+            if (grid == null || networkDiscretization == null || !networkDiscretization.Locations.AllValues.Any()) return;
+
             // Talk to the api!
             var gGeomApi = new GridGeomApi();
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
             int linksCount = 0;
-            Links.Clear();
 
-            gGeomApi.Get1d2dLinksFromGridAndNetwork(NetFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
+            try
+            {
+                var ierr = gGeomApi.Get1d2dLinksFromGridAndNetwork(NetFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    Log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
+                    return;
+                }
+
+                Creates1d2dLinks(linksCount, linksFrom, linksTo);
+            }
+            catch (Exception e)
+            {
+                Log.DebugFormat("Unexpected exception thrown while generating 1D2D links: {0}", e.Message);
+                Log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
+                throw;
+            }
+        }
+
+        private void Creates1d2dLinks(int linksCount, List<int> linksFrom, List<int> linksTo)
+        {
             for (int i = 0; i < linksCount; i++)
             {
-                Links.Add(new WaterFlowFM1D2DLink(linksFrom[i], linksTo[i]));
+                var fromCell = grid.Cells[linksFrom[i]];
+                var toNode = networkDiscretization.Locations.Values[linksTo[i]];
+                var link = new WaterFlowFM1D2DLink(linksFrom[i], linksTo[i])
+                {
+                    Geometry = new LineString(new[] {fromCell.Center, toNode.Geometry.Coordinate})
+                };
+                Links.Add(link);
             }
         }
 

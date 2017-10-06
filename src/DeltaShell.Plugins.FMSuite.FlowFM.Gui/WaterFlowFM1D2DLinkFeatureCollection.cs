@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Linq;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
@@ -9,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     public class WaterFlowFM1D2DLinkFeatureCollection : FeatureCollection
     {
         private WaterFlowFMModel model;
-        public WaterFlowFM1D2DLinkFeatureCollection(WaterFlowFMModel fmModel) : base(fmModel.Links, typeof(WaterFlowFM1D2DLink))
+        public WaterFlowFM1D2DLinkFeatureCollection(WaterFlowFMModel fmModel) : base(fmModel.Links.ToList(), typeof(WaterFlowFM1D2DLink))
         {
             FmModel = fmModel;
         }

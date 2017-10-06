@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            var links = data as List<WaterFlowFM1D2DLink>;
+            var links = data as IEventedList<WaterFlowFM1D2DLink>;
             if (links != null && parent is WaterFlowFMModel)
             {
                 var fmModel = (WaterFlowFMModel)parent;
@@ -112,7 +112,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                 return new VectorLayer("1D/2D links")
                 {
-                    DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
+                    //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
+                    DataSource = new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),
                     CanBeRemovedByUser = false,
                     SmoothingMode = SmoothingMode.AntiAlias,
                     Opacity = 0.7f,
@@ -233,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return true;
 
             return data is WaterFlowFMModel
-                   || data is List<WaterFlowFM1D2DLink> && parentObject is WaterFlowFMModel
+                   || data is IEventedList<WaterFlowFM1D2DLink> && parentObject is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
