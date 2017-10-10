@@ -7,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -401,23 +402,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void Add2D3DIntegratedModelAddFMModelRemoveIntegratedModel()
         {
             var mainWindow = (MainWindow) gui.MainWindow;
-            mainWindow.Loaded += delegate
+            Action mainWindowShown = delegate
             {
                 var hydroModelBuilder = new HydroModelBuilder();
-                var integratedModel2D3D = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
-                gui.CommandHandler.AddItemToProject(integratedModel2D3D);
-                var waterFlowFMModel = new WaterFlowFMModel();
-                gui.Selection = integratedModel2D3D;
-                gui.CommandHandler.OpenViewForSelection();
-                gui.CommandHandler.AddItemToProject(waterFlowFMModel);
-                gui.Selection = waterFlowFMModel;
-                gui.CommandHandler.OpenViewForSelection();
-                gui.Application.Project.RootFolder.Items.Remove(integratedModel2D3D);
-                Assert.IsTrue(
-                    gui.Application.ModelService.GetAllModels(gui.Application.Project.RootFolder)
-                        .SequenceEqual(new[] {waterFlowFMModel}));
+                using (var integratedModel2D3D = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
+                {
+                    using (var waterFlowFMModel = new WaterFlowFMModel())
+                    {
+                        gui.CommandHandler.AddItemToProject(integratedModel2D3D);
+                        gui.Selection = integratedModel2D3D;
+                        gui.CommandHandler.OpenViewForSelection();
+                        gui.CommandHandler.AddItemToProject(waterFlowFMModel);
+                        gui.Selection = waterFlowFMModel;
+                        gui.CommandHandler.OpenViewForSelection();
+                        gui.Application.Project.RootFolder.Items.Remove(integratedModel2D3D);
+                        Assert.IsTrue(gui.Application.Project.RootFolder.GetAllModelsRecursive().SequenceEqual(new[] {waterFlowFMModel}));
+                    }
+                }
             };
-            WpfTestHelper.ShowModal(mainWindow);
+            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
         private static HydroModel CreateFMRTCModel(out RealTimeControlModel rtc, out WaterFlowFMModel flow, IApplication application)
@@ -488,15 +491,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             inputDataItem.LinkTo(rtc.GetDataItemByValue(controlGroup.Outputs[0]));
 
             return hydroModel;
-        }
-
-        private static IEnumerable<IFileExporter> GetFactoryFileExportersForDimr()
-        {
-            var exporters = new FlowFMApplicationPlugin().GetFileExporters().ToList();
-            exporters.AddRange(new RealTimeControlApplicationPlugin().GetFileExporters());
-            exporters.AddRange(new HydroModelApplicationPlugin().GetFileExporters());
-            exporters.Add(new Iterative1D2DCouplerExporter());
-            return exporters;
         }
         
         [Test]
