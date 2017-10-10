@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using DelftTools.Hydro;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
@@ -107,6 +104,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 return ierr;
             }
 
+            //Close file
+            ierr = gridWrapper.Close(ioncId);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                return ierr;
+            }
+
             double[] rc_twodnodex = new double[num2dNodes];
             double[] rc_twodnodey = new double[num2dNodes];
             double[] rc_twodnodez = new double[num2dNodes];
@@ -115,16 +119,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Marshal.Copy(meshtwod.nodez, rc_twodnodez, 0, num2dNodes);
 
             //6. allocate the 1d arrays for storing the 1d coordinates and edge_nodes
-            var discretisationPoints = networkDiscretization.Locations.AllValues.Select(v => v.Geometry.Coordinate)
-                .ToList();
+            var discretisationPoints = networkDiscretization.Locations.AllValues.ToList();
 
             int nBranches = networkDiscretization.Network.Branches.Count;
             int[] branchIds = networkDiscretization.Locations.AllValues.Select( dp => networkDiscretization.Network.Branches.IndexOf(dp.Branch) ).ToArray();
 
             int nMeshPoints = discretisationPoints.Count;
 
-            double[] meshXCoords = discretisationPoints.Select(dPoints => dPoints.X).ToArray();
-            double[] meshYCoords = discretisationPoints.Select(dPoints => dPoints.Y).ToArray();
+            double[] meshXCoords = discretisationPoints.Select(dPoint => dPoint.Geometry.Coordinate.X).ToArray();
+            double[] meshYCoords = discretisationPoints.Select(dPoint => dPoint.Geometry.Coordinate.Y).ToArray();
+            double[] branchOffset = discretisationPoints.Select(dPoint => dPoint.Chainage).ToArray();
+            double[] branchLength = networkDiscretization.Network.Branches.Select(b => b.Length).ToArray();
 
             int[] sourceNodeId = networkDiscretization.Network.Branches.Select(b => b.Network.Nodes.IndexOf(b.Source)).ToArray();
             int[] targetNodeId = networkDiscretization.Network.Branches.Select(b => b.Network.Nodes.IndexOf(b.Target)).ToArray();
@@ -132,17 +137,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
             IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
             IntPtr c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nMeshPoints);
+            IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
 
             Marshal.Copy(branchIds, 0, c_branchids, nMeshPoints);
             Marshal.Copy(meshXCoords, 0, c_meshXCoords, nMeshPoints);
             Marshal.Copy(meshYCoords, 0, c_meshYCoords, nMeshPoints);
             Marshal.Copy(sourceNodeId, 0, c_sourcenodeid, nBranches);
             Marshal.Copy(targetNodeId, 0, c_targetnodeid, nBranches);
+            Marshal.Copy(branchOffset, 0, c_branchoffset, nMeshPoints);
+            Marshal.Copy(branchLength, 0, c_branchlength, nBranches);
 
             //7. fill kn (Herman datastructure) for creating the links
-            ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref nMeshPoints);
+            ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref nMeshPoints);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
@@ -198,17 +207,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Marshal.FreeCoTaskMem(c_branchids);
             Marshal.FreeCoTaskMem(c_sourcenodeid);
             Marshal.FreeCoTaskMem(c_targetnodeid);
+            Marshal.FreeCoTaskMem(c_branchlength);
+            Marshal.FreeCoTaskMem(c_branchoffset);
 
             //Free from and to arrays describing the links 
             Marshal.FreeCoTaskMem(c_arrayfrom);
             Marshal.FreeCoTaskMem(c_arrayto);
-
-            //Close file
-            ierr = gridWrapper.Close(ioncId);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
-            {
-                return ierr;
-            }
 
             return GridApiDataSet.GridConstants.NOERR;
         }
@@ -255,12 +259,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             IntPtr c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNodes);
+            IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
 
             try
             {
-                var ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref numberOfNodes);
+                var ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref numberOfNodes);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -278,16 +284,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 Marshal.FreeCoTaskMem(c_meshYCoords);
             if (c_branchids != IntPtr.Zero)
                 Marshal.FreeCoTaskMem(c_branchids);
+            if (c_branchoffset != IntPtr.Zero)
+                Marshal.FreeCoTaskMem(c_branchoffset);
             if (c_sourcenodeid != IntPtr.Zero)
                 Marshal.FreeCoTaskMem(c_sourcenodeid);
             if (c_targetnodeid != IntPtr.Zero)
                 Marshal.FreeCoTaskMem(c_targetnodeid);
+            if (c_branchlength != IntPtr.Zero)
+                Marshal.FreeCoTaskMem(c_branchlength);
 
             c_meshXCoords = IntPtr.Zero;
             c_meshYCoords = IntPtr.Zero;
             c_branchids = IntPtr.Zero;
+            c_branchoffset = IntPtr.Zero;
             c_sourcenodeid = IntPtr.Zero;
             c_targetnodeid = IntPtr.Zero;
+            c_branchlength = IntPtr.Zero;
 
             return GridApiDataSet.GridConstants.NOERR;
         }

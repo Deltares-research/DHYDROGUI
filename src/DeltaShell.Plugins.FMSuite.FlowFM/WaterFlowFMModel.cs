@@ -184,9 +184,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             for (int i = 0; i < linksCount; i++)
             {
-                var fromCell = grid.Cells[linksFrom[i]];
-                var toNode = networkDiscretization.Locations.Values[linksTo[i]];
-                var link = new WaterFlowFM1D2DLink(linksFrom[i], linksTo[i])
+                var cellFrom = linksFrom[i] - 1; //Apparently the kernel indexes are from 1 to N, whereas we do 0 to N-1
+                var branchTo = linksTo[i] - 1;
+
+                var fromCell = grid.Cells[cellFrom];
+                var toNode = networkDiscretization.Locations.Values[branchTo];
+                var link = new WaterFlowFM1D2DLink(cellFrom, branchTo)
                 {
                     Geometry = new LineString(new[] {fromCell.Center, toNode.Geometry.Coordinate})
                 };

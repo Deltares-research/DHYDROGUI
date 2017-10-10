@@ -45,13 +45,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             //mesh1d
             //discretization points information
-            int nmeshpoints = 4;
-            int nbranches = 1;
-            int[] branchids = { 1, 1, 1, 1 };
-            double[] meshXCoords = { -6, 5, 23, 34 };
-            double[] meshYCoords = { 22, 16, 16, 7 };
-            int[] sourcenodeid = { 1 };
-            int[] targetnodeid = { 2 };
+            int nmeshpoints = 9;
+            int nbranches = 3;
+            int[] branchids = { 1, 1, 1, 1, 2, 2, 2, 3, 3 };
+            double[] meshXCoords = { 7.5, 12.5, 17.5, 22.5, 22.5, 22.5, 22.5, 17.5, 12.5 };
+            double[] meshYCoords = { 22.5, 22.5, 22.5, 22.5, 17.5, 12.5, 7.5, 12.5, 17.5 };
+            double[] branchoffset = { 0, 1, 2, 10, 1, 2, 10, 1, 2 }; /// the actual values of the offset are not important 
+            double[] branchlength = { 10, 10, 10 };
+
+            int[] sourcenodeid = { 1, 2, 3 };
+            int[] targetnodeid = { 2, 3, 1 };
 
             //links
             int[] arrayfrom = { 2, 8 };
@@ -112,17 +115,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
             IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
             IntPtr c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
+            IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nbranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nbranches);
+            IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nbranches);
 
             Marshal.Copy(branchids, 0, c_branchids, nmeshpoints);
             Marshal.Copy(meshXCoords, 0, c_meshXCoords, nmeshpoints);
             Marshal.Copy(meshYCoords, 0, c_meshYCoords, nmeshpoints);
             Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nbranches);
             Marshal.Copy(targetnodeid, 0, c_targetnodeid, nbranches);
+            Marshal.Copy(branchoffset, 0, c_branchoffset, nmeshpoints);
+            Marshal.Copy(branchlength, 0, c_branchlength, nbranches);
 
             //7. fill kn (Herman datastructure) for creating the links
-            ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints);
+            ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints);
             Assert.That(ierr, Is.EqualTo(0));
             ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim);
             Assert.That(ierr, Is.EqualTo(0));
@@ -164,6 +171,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Marshal.FreeCoTaskMem(c_meshXCoords);
             Marshal.FreeCoTaskMem(c_meshYCoords);
             Marshal.FreeCoTaskMem(c_branchids);
+            Marshal.FreeCoTaskMem(c_sourcenodeid);
+            Marshal.FreeCoTaskMem(c_targetnodeid);
+            Marshal.FreeCoTaskMem(c_branchlength);
+            Marshal.FreeCoTaskMem(c_branchoffset);
 
             //Free from and to arrays describing the links 
             Marshal.FreeCoTaskMem(c_arrayfrom);
