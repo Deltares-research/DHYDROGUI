@@ -16,15 +16,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim);
 
         /// <summary>
-        /// 
+        /// Makes the 1d/2d links (results are stored in memory)
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ggeo_make1D2Dinternalnetlinks_dll();
 
         /// <summary>
-        /// 
+        /// Use 1d array to fill kn matrix
         /// </summary>
+        /// <param name="c_meshXCoords">The x coordinates of the mesh points</param>
+        /// <param name="c_meshYCoords">The y coordinates of the mesh points</param>
+        /// <param name="c_branchids">The branch ids</param>
+        /// <param name="nbranches">The number of branches</param>
+        /// <param name="nmeshnodes">The number of mesh nodes</param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_convert_1d_arrays", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ggeo_convert_1d_arrays_dll([In] ref IntPtr c_meshXCoords, [In] ref IntPtr c_meshYCoords, [In] ref IntPtr c_branchoffset, [In] ref IntPtr c_branchlength, [In] ref IntPtr c_branchids, [In] ref IntPtr c_sourcenodeid, [In] ref IntPtr c_targetnodeid, [In] ref int nbranches, [In] ref int nmeshnodes);

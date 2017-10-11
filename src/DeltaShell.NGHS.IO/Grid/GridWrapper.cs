@@ -264,6 +264,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public IntPtr branchids;
             public IntPtr nbranchgeometrynodes;
+//            public IntPtr nedge_nodes; /* Needs io_netcdf library update */
 
             public IntPtr nodex;
             public IntPtr nodey;
