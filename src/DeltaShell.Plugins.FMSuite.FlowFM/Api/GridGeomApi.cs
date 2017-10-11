@@ -151,7 +151,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Marshal.Copy(branchLength, 0, c_branchlength, nBranches);
 
             //7. fill kn (Herman datastructure) for creating the links
-            ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref nMeshPoints);
+            int start_index = 0;
+            ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref nMeshPoints, ref start_index);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;
@@ -254,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             return GridApiDataSet.GridConstants.NOERR;
         }
 
-        public int Convert1dArray(int meshId, int numberOfNodes, int nBranches)
+        public int Convert1dArray(int meshId, int numberOfNodes, int nBranches, int start_index)
         {
             IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
             IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
@@ -266,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             try
             {
-                var ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref numberOfNodes);
+                var ierr = geomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nBranches, ref numberOfNodes, ref start_index);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
