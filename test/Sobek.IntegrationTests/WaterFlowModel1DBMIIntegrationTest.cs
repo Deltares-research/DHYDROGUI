@@ -101,7 +101,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.ObservationPoints,
                                                     OBSERVATION_POINT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
-                                                    14991.86));
+                                                    14993.34));
 
         }
 
@@ -1917,7 +1917,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
-                                                    4.147));
+                                                    4.0425));
 
         }
 
@@ -1946,7 +1946,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Culverts,
                                                     StructureFileWriterTestHelper.CULVERT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterVelocity,
-                                                    1.326));
+                                                    1.292));
 
         }
 
@@ -2618,7 +2618,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterVolume,
-                                                    7468.58));
+                                                    7467.546));
         }
         
         [Test]
@@ -2684,7 +2684,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterVolume,
-                                                    7468.58));
+                                                    7467.546));
         }
 
         #endregion
