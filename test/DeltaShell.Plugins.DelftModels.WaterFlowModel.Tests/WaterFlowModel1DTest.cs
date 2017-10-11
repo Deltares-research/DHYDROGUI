@@ -3295,235 +3295,363 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             Assert.That(newDataItemsCount >= dataItemsCount + 2);  // At least two extra data items, so the test is robust against kernel changes. 
         }
 
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void ObservationPointsLinearOrNearest_Jira_Tools_8102()
-        {
-            var network = new HydroNetwork();
+       [Test]
+       [Category(TestCategory.Integration)]
+       public void ObservationPointsLinear_Jira_Tools_8102()
+       {
+          var network = new HydroNetwork();
 
-            var startCoordinate = new Coordinate(0, 0);
-            var endCoordinate = new Coordinate(4550, 0);
+          var startCoordinate = new Coordinate(0, 0);
+          var endCoordinate = new Coordinate(4550, 0);
 
-            // add nodes and branches
-            IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(startCoordinate) };
-            IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(endCoordinate) };
+          // add nodes and branches
+          IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(startCoordinate) };
+          IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(endCoordinate) };
 
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
+          network.Nodes.Add(node1);
+          network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2, 4550.0);
-            var vertices = new List<Coordinate>
-                               {
-                                   startCoordinate,
-                                   endCoordinate
-                               };
-            branch1.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
+          var branch1 = new Channel("branch1", node1, node2, 4550.0);
+          var vertices = new List<Coordinate>
+          {
+             startCoordinate,
+             endCoordinate
+          };
+          branch1.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
 
-            network.Branches.Add(branch1);
+          network.Branches.Add(branch1);
 
-            // add cross-section
-            var definitionYZ = new CrossSectionDefinitionYZ();
-            definitionYZ.YZDataTable.Clear();
-            definitionYZ.YZDataTable.AddCrossSectionYZRow(0, 1.0, 0);
-            definitionYZ.YZDataTable.AddCrossSectionYZRow(10, 1.0, 0);
-            definitionYZ.YZDataTable.AddCrossSectionYZRow(11, -1.0, 0);
-            definitionYZ.YZDataTable.AddCrossSectionYZRow(15, -1.0, 0);
-            definitionYZ.YZDataTable.AddCrossSectionYZRow(16, 1.0, 0);
-            definitionYZ.YZDataTable.AddCrossSectionYZRow(26, 1.0, 0);
-            var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, definitionYZ, 105.0d);
-            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(network, crossSection);
+          // add cross-section
+          var definitionYZ = new CrossSectionDefinitionYZ();
+          definitionYZ.YZDataTable.Clear();
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(0, 1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(10, 1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(11, -1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(15, -1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(16, 1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(26, 1.0, 0);
+          var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, definitionYZ, 105.0d);
+          crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(network, crossSection);
 
-            // add weir
-            var weir = new Weir { CrestWidth = 5, CrestLevel = 1, FlowDirection = FlowDirection.Both };
-            ((SimpleWeirFormula) weir.WeirFormula).DischargeCoefficient = 0.8;
-            var compositeStructure = new CompositeBranchStructure { Chainage = 2518.0 };
-            NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch1, compositeStructure.Chainage);
-            HydroNetworkHelper.AddStructureToComposite(compositeStructure, weir);
+          // add weir
+          var weir = new Weir { CrestWidth = 5, CrestLevel = 1, FlowDirection = FlowDirection.Both };
+          ((SimpleWeirFormula)weir.WeirFormula).DischargeCoefficient = 0.8;
+          var compositeStructure = new CompositeBranchStructure { Chainage = 2518.0 };
+          NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch1, compositeStructure.Chainage);
+          HydroNetworkHelper.AddStructureToComposite(compositeStructure, weir);
 
-            //add lateral
-            var lateral = new LateralSource { Chainage = 1218.0, Name = "myLateral" };
-            branch1.BranchFeatures.Add(lateral);
+          //add lateral
+          var lateral = new LateralSource { Chainage = 1218.0, Name = "myLateral" };
+          branch1.BranchFeatures.Add(lateral);
 
-            //add observation points
-            var observationPoint = ObservationPoint.CreateDefault(branch1);
-            observationPoint.Name = "VoorLateral";
-            observationPoint.Chainage = 1111.0;
-            branch1.BranchFeatures.Add(observationPoint);
+          //add observation points
+          var observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "VoorLateral";
+          observationPoint.Chainage = 1111.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            observationPoint = ObservationPoint.CreateDefault(branch1);
-            observationPoint.Name = "NaLateral";
-            observationPoint.Chainage = 1332.0;
-            branch1.BranchFeatures.Add(observationPoint);
+          observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "NaLateral";
+          observationPoint.Chainage = 1332.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            observationPoint = ObservationPoint.CreateDefault(branch1);
-            observationPoint.Name = "VoorStructure";
-            observationPoint.Chainage = 2400.0;
-            branch1.BranchFeatures.Add(observationPoint);
+          observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "VoorStructure";
+          observationPoint.Chainage = 2400.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            observationPoint = ObservationPoint.CreateDefault(branch1);
-            observationPoint.Name = "NaStructure";
-            observationPoint.Chainage = 2615.0;
-            branch1.BranchFeatures.Add(observationPoint);
+          observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "NaStructure";
+          observationPoint.Chainage = 2615.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            // add discretization
-            var networkDiscretization = new Discretization { Network = network };
+          // add discretization
+          var networkDiscretization = new Discretization { Network = network };
 
-            networkDiscretization[new NetworkLocation(branch1, 0.0)] = 0.0;
-            networkDiscretization[new NetworkLocation(branch1, 909.0)] = 0.0;
-            networkDiscretization[new NetworkLocation(branch1, 1818.0)] = 0.0;
-            networkDiscretization[new NetworkLocation(branch1, 2727.0)] = 0.0;
-            networkDiscretization[new NetworkLocation(branch1, 3636.0)] = 0.0;
-            networkDiscretization[new NetworkLocation(branch1, 4550.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 0.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 909.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 1818.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 2727.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 3636.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 4550.0)] = 0.0;
 
-            // setup 1d flow model
-            var t = new DateTime(2012, 12, 13);
-            var flowModel1D = new WaterFlowModel1D
-                                  {
-                                      Network = network,
-                                      NetworkDiscretization = networkDiscretization,
-                                      StartTime = t,
-                                      StopTime = t.AddDays(1),
-                                      TimeStep = new TimeSpan(1, 0, 0),
-                                      OutputTimeStep = new TimeSpan(1, 0, 0),
-                                  };
-            flowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(1, 0, 0);
-            flowModel1D.OutputSettings.BranchVelocity = AggregationOptions.Current;
+          // setup 1d flow model
+          var t = new DateTime(2012, 12, 13);
+          var flowModel1D = new WaterFlowModel1D
+          {
+             Network = network,
+             NetworkDiscretization = networkDiscretization,
+             StartTime = t,
+             StopTime = t.AddDays(1),
+             TimeStep = new TimeSpan(1, 0, 0),
+             OutputTimeStep = new TimeSpan(1, 0, 0),
+          };
+          flowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(1, 0, 0);
+          flowModel1D.OutputSettings.BranchVelocity = AggregationOptions.Current;
 
-            //Lateral : constant Q = 5
-            var lateralSourceData = flowModel1D.LateralSourceData.First();
-            lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
-            lateralSourceData.Flow = 5.0;
+          //Lateral : constant Q = 5
+          var lateralSourceData = flowModel1D.LateralSourceData.First();
+          lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+          lateralSourceData.Flow = 5.0;
 
-            // set initial conditions
-            flowModel1D.InitialFlow.DefaultValue = 0.0;
-            flowModel1D.InitialConditions.DefaultValue = 0.0;
+          // set initial conditions
+          flowModel1D.InitialFlow.DefaultValue = 0.0;
+          flowModel1D.InitialConditions.DefaultValue = 0.0;
 
-            // set boundary conditions
-            var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
-            boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
-            boundaryConditionInflow.Flow = 10.0;
+          // set boundary conditions
+          var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
+          boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+          boundaryConditionInflow.Flow = 10.0;
 
-            var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
-            boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
-            boundaryConditionOutflow.WaterLevel = -0.5;
+          var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
+          boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+          boundaryConditionOutflow.WaterLevel = -0.5;
 
-            // set output coverages
-            var paramWaterLevelObservation = flowModel1D.OutputSettings.GetEngineParameter(QuantityType.WaterLevel,
-                                                                                           ElementSet.Observations);
-            paramWaterLevelObservation.AggregationOptions = AggregationOptions.Current;
-            var paramVelocityObservation = flowModel1D.OutputSettings.GetEngineParameter(QuantityType.Velocity,
-                                                                                         ElementSet.Observations);
-            paramVelocityObservation.AggregationOptions = AggregationOptions.Current;
+          // set output coverages
+          var paramWaterLevelObservation = flowModel1D.OutputSettings.GetEngineParameter(QuantityType.WaterLevel,
+             ElementSet.Observations);
+          paramWaterLevelObservation.AggregationOptions = AggregationOptions.Current;
+          var paramVelocityObservation = flowModel1D.OutputSettings.GetEngineParameter(QuantityType.Velocity,
+             ElementSet.Observations);
+          paramVelocityObservation.AggregationOptions = AggregationOptions.Current;
 
-            //----------------------------------------------------------------
-            //
-            // LINEAR
-            //
-            //----------------------------------------------------------------
+          //----------------------------------------------------------------
+          //
+          // LINEAR
+          //
+          //----------------------------------------------------------------
 
-            var settingObervationPointsInterpolation = flowModel1D.ParameterSettings.First(p => p.Category == ParameterCategory.ObservationPoints && p.Name == "InterpolationType");
-            settingObervationPointsInterpolation.Value = "Linear";
+          var settingObervationPointsInterpolation = flowModel1D.ParameterSettings.First(p => p.Category == ParameterCategory.ObservationPoints && p.Name == "InterpolationType");
+          settingObervationPointsInterpolation.Value = "Linear";
 
-            var iadvec1D = flowModel1D.ParameterSettings.FirstOrDefault(s => s.Name == "Iadvec1D");
-            if (iadvec1D != null)
-            {
-                iadvec1D.Value = "1";
-            }
+          var iadvec1D = flowModel1D.ParameterSettings.FirstOrDefault(s => s.Name == "Iadvec1D");
+          if (iadvec1D != null)
+          {
+             iadvec1D.Value = "1";
+          }
 
-            RunModel(flowModel1D);
+          RunModel(flowModel1D);
 
-            var waterLevelValues = flowModel1D.OutputWaterLevel.GetValues<double>();
-            var velocityValues = flowModel1D.OutputVelocity.GetValues<double>();
-            var waterLevelObservationPointValues =
-                flowModel1D.OutputFunctions.First(oc => oc.Name == paramWaterLevelObservation.Name).GetValues<double>();
-            var velocityObservationPointValues =
-                flowModel1D.OutputFunctions.First(oc => oc.Name == paramVelocityObservation.Name).GetValues<double>();
+          var waterLevelValues = flowModel1D.OutputWaterLevel.GetValues<double>();
+          var velocityValues = flowModel1D.OutputVelocity.GetValues<double>();
+          var waterLevelObservationPointValues =
+             flowModel1D.OutputFunctions.First(oc => oc.Name == paramWaterLevelObservation.Name).GetValues<double>();
+          var velocityObservationPointValues =
+             flowModel1D.OutputFunctions.First(oc => oc.Name == paramVelocityObservation.Name).GetValues<double>();
 
-            //Last TimeStep
+          //Last TimeStep
 
-            //waterlevel
+          //waterlevel
 
-            Assert.AreEqual(2.76884568681302, waterLevelValues[144], 0.001);
-            Assert.AreEqual(2.76884568682635, waterLevelValues[145], 0.001);
-            Assert.AreEqual(2.69130691516849, waterLevelValues[146], 0.001);
-            Assert.AreEqual(1.1615069310477515, waterLevelValues[147], 0.001);
-            Assert.AreEqual(0.68635862385070334, waterLevelValues[148], 0.001);
-            Assert.AreEqual(-0.5, waterLevelValues[149], 0.001);
+          Assert.AreEqual(2.76882247, waterLevelValues[144], 0.001);
+          Assert.AreEqual(2.76882247, waterLevelValues[145], 0.001);
+          Assert.AreEqual(2.69130693, waterLevelValues[146], 0.001);
+          Assert.AreEqual(1.15763152, waterLevelValues[147], 0.001);
+          Assert.AreEqual(0.67965247, waterLevelValues[148], 0.001);
+          Assert.AreEqual(-0.5, waterLevelValues[149], 0.001);
 
-            //velocity 
+          //velocity 
 
-            Assert.AreEqual(0.178648989765459, velocityValues[120], 0.001);
-            Assert.AreEqual(0.267973472659453, velocityValues[121], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityValues[122], 0.001);
-            Assert.AreEqual(1.0574639625581106, velocityValues[123], 0.001);
-            Assert.AreEqual(1.8372874145576001, velocityValues[124], 0.001);
+          Assert.AreEqual(0.17865091, velocityValues[120], 0.001);
+          Assert.AreEqual(0.26797636, velocityValues[121], 0.001);
+          Assert.AreEqual(3.32583028, velocityValues[122], 0.001);
+          Assert.AreEqual(1.06502926, velocityValues[123], 0.001);
+          Assert.AreEqual(1.84590337, velocityValues[124], 0.001);
 
-            //waterlevel (op)
+          //waterlevel (op)
 
-            Assert.AreEqual(2.75163871173981, waterLevelObservationPointValues[96], 0.001);
-            Assert.AreEqual(2.73278915296518, waterLevelObservationPointValues[97], 0.001);
-            Assert.AreEqual(2.69130691516849, waterLevelObservationPointValues[98], 0.001);
-            Assert.AreEqual(1.1615069310477515, waterLevelObservationPointValues[99], 0.001);
+          Assert.AreEqual(2.75159680, waterLevelObservationPointValues[96], 0.001);
+          Assert.AreEqual(2.73275089, waterLevelObservationPointValues[97], 0.001);
+          Assert.AreEqual(2.69130693, waterLevelObservationPointValues[98], 0.001);
+          Assert.AreEqual(1.15763152, waterLevelObservationPointValues[99], 0.001);
 
-            //velocity(op)
+          //velocity(op)
 
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[96], 0.001);
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[97], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[98], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[99], 0.001);
+          Assert.AreEqual(0.26797636, velocityObservationPointValues[96], 0.001);
+          Assert.AreEqual(0.26797636, velocityObservationPointValues[97], 0.001);
+          Assert.AreEqual(3.32583028, velocityObservationPointValues[98], 0.001);
+          Assert.AreEqual(3.32583028, velocityObservationPointValues[99], 0.001);
+         
+       }
 
+       [Test]
+       [Category(TestCategory.Integration)]
+       public void ObservationPointsNearest_Jira_Tools_8102()
+       {
+          var network = new HydroNetwork();
 
-            //----------------------------------------------------------------
-            //
-            // NEAREST
-            //
-            //----------------------------------------------------------------
+          var startCoordinate = new Coordinate(0, 0);
+          var endCoordinate = new Coordinate(4550, 0);
 
-            settingObervationPointsInterpolation.Value = "Nearest";
+          // add nodes and branches
+          IHydroNode node1 = new HydroNode { Name = "node1", Network = network, Geometry = new Point(startCoordinate) };
+          IHydroNode node2 = new HydroNode { Name = "node2", Network = network, Geometry = new Point(endCoordinate) };
 
-            RunModel(flowModel1D,false);
+          network.Nodes.Add(node1);
+          network.Nodes.Add(node2);
 
-            waterLevelValues = flowModel1D.OutputWaterLevel.GetValues<double>();
-            velocityValues = flowModel1D.OutputVelocity.GetValues<double>();
-            waterLevelObservationPointValues =
-                flowModel1D.OutputFunctions.First(oc => oc.Name == paramWaterLevelObservation.Name).GetValues<double>();
-            velocityObservationPointValues =
-                flowModel1D.OutputFunctions.First(oc => oc.Name == paramVelocityObservation.Name).GetValues<double>();
+          var branch1 = new Channel("branch1", node1, node2, 4550.0);
+          var vertices = new List<Coordinate>
+          {
+             startCoordinate,
+             endCoordinate
+          };
+          branch1.Geometry = GeometryFactory.CreateLineString(vertices.ToArray());
 
-            //Last TimeStep
+          network.Branches.Add(branch1);
 
-            //waterlevel
+          // add cross-section
+          var definitionYZ = new CrossSectionDefinitionYZ();
+          definitionYZ.YZDataTable.Clear();
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(0, 1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(10, 1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(11, -1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(15, -1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(16, 1.0, 0);
+          definitionYZ.YZDataTable.AddCrossSectionYZRow(26, 1.0, 0);
+          var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, definitionYZ, 105.0d);
+          crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(network, crossSection);
 
-            Assert.AreEqual(2.76884568681302, waterLevelValues[144], 0.001);
-            Assert.AreEqual(2.76884568682635, waterLevelValues[145], 0.001);
-            Assert.AreEqual(2.69130691516849, waterLevelValues[146], 0.001);
-            Assert.AreEqual(1.1615069310477515, waterLevelValues[147], 0.001);
-            Assert.AreEqual(0.68635862385070334, waterLevelValues[148], 0.001);
-            Assert.AreEqual(-0.5, waterLevelValues[149], 0.001);
+          // add weir
+          var weir = new Weir { CrestWidth = 5, CrestLevel = 1, FlowDirection = FlowDirection.Both };
+          ((SimpleWeirFormula)weir.WeirFormula).DischargeCoefficient = 0.8;
+          var compositeStructure = new CompositeBranchStructure { Chainage = 2518.0 };
+          NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch1, compositeStructure.Chainage);
+          HydroNetworkHelper.AddStructureToComposite(compositeStructure, weir);
 
-            //velocity 
+          //add lateral
+          var lateral = new LateralSource { Chainage = 1218.0, Name = "myLateral" };
+          branch1.BranchFeatures.Add(lateral);
 
-            Assert.AreEqual(0.178648989765459, velocityValues[120], 0.001);
-            Assert.AreEqual(0.267973472659453, velocityValues[121], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityValues[122], 0.001);
-            Assert.AreEqual(1.0574639625581106, velocityValues[123], 0.001);
-            Assert.AreEqual(1.8372874145576001, velocityValues[124], 0.001);
+          //add observation points
+          var observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "VoorLateral";
+          observationPoint.Chainage = 1111.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            //waterlevel (op)
+          observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "NaLateral";
+          observationPoint.Chainage = 1332.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            Assert.AreEqual(2.7688224534952375, waterLevelObservationPointValues[96], 0.001); //diff a little bit from linear
-            Assert.AreEqual(2.7688224534952375, waterLevelObservationPointValues[97], 0.001); //diff a little bit from linear
-            Assert.AreEqual(2.69130691516849, waterLevelObservationPointValues[98], 0.001);
-            Assert.AreEqual(1.16150693104775, waterLevelObservationPointValues[99], 0.001);
+          observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "VoorStructure";
+          observationPoint.Chainage = 2400.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            //velocity(op)
+          observationPoint = ObservationPoint.CreateDefault(branch1);
+          observationPoint.Name = "NaStructure";
+          observationPoint.Chainage = 2615.0;
+          branch1.BranchFeatures.Add(observationPoint);
 
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[96], 0.001);
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[97], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[98], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[99], 0.001);
+          // add discretization
+          var networkDiscretization = new Discretization { Network = network };
 
-        }
+          networkDiscretization[new NetworkLocation(branch1, 0.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 909.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 1818.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 2727.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 3636.0)] = 0.0;
+          networkDiscretization[new NetworkLocation(branch1, 4550.0)] = 0.0;
+
+          // setup 1d flow model
+          var t = new DateTime(2012, 12, 13);
+          var flowModel1D = new WaterFlowModel1D
+          {
+             Network = network,
+             NetworkDiscretization = networkDiscretization,
+             StartTime = t,
+             StopTime = t.AddDays(1),
+             TimeStep = new TimeSpan(1, 0, 0),
+             OutputTimeStep = new TimeSpan(1, 0, 0),
+          };
+          flowModel1D.OutputSettings.StructureOutputTimeStep = new TimeSpan(1, 0, 0);
+          flowModel1D.OutputSettings.BranchVelocity = AggregationOptions.Current;
+
+          //Lateral : constant Q = 5
+          var lateralSourceData = flowModel1D.LateralSourceData.First();
+          lateralSourceData.DataType = WaterFlowModel1DLateralDataType.FlowConstant;
+          lateralSourceData.Flow = 5.0;
+
+          // set initial conditions
+          flowModel1D.InitialFlow.DefaultValue = 0.0;
+          flowModel1D.InitialConditions.DefaultValue = 0.0;
+
+          // set boundary conditions
+          var boundaryConditionInflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node1);
+          boundaryConditionInflow.DataType = WaterFlowModel1DBoundaryNodeDataType.FlowConstant;
+          boundaryConditionInflow.Flow = 10.0;
+
+          var boundaryConditionOutflow = flowModel1D.BoundaryConditions.First(bc => bc.Feature == node2);
+          boundaryConditionOutflow.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelConstant;
+          boundaryConditionOutflow.WaterLevel = -0.5;
+
+          // set output coverages
+          var paramWaterLevelObservation = flowModel1D.OutputSettings.GetEngineParameter(QuantityType.WaterLevel,
+             ElementSet.Observations);
+          paramWaterLevelObservation.AggregationOptions = AggregationOptions.Current;
+          var paramVelocityObservation = flowModel1D.OutputSettings.GetEngineParameter(QuantityType.Velocity,
+             ElementSet.Observations);
+          paramVelocityObservation.AggregationOptions = AggregationOptions.Current;
+
+         //----------------------------------------------------------------
+         //
+         // NEAREST
+         //
+         //----------------------------------------------------------------
+
+         var settingObervationPointsInterpolation = flowModel1D.ParameterSettings.First(p => p.Category == ParameterCategory.ObservationPoints && p.Name == "InterpolationType");
+          settingObervationPointsInterpolation.Value = "Nearest";
+
+          var iadvec1D = flowModel1D.ParameterSettings.FirstOrDefault(s => s.Name == "Iadvec1D");
+          if (iadvec1D != null)
+          {
+             iadvec1D.Value = "1";
+          }
+
+          RunModel(flowModel1D);
+
+          var waterLevelValues = flowModel1D.OutputWaterLevel.GetValues<double>();
+          var velocityValues = flowModel1D.OutputVelocity.GetValues<double>();
+          var waterLevelObservationPointValues =
+             flowModel1D.OutputFunctions.First(oc => oc.Name == paramWaterLevelObservation.Name).GetValues<double>();
+          var velocityObservationPointValues =
+             flowModel1D.OutputFunctions.First(oc => oc.Name == paramVelocityObservation.Name).GetValues<double>();
+
+          //Last TimeStep
+
+          //waterlevel
+
+          Assert.AreEqual(2.76882247, waterLevelValues[144], 0.001);
+          Assert.AreEqual(2.76882247, waterLevelValues[145], 0.001);
+          Assert.AreEqual(2.69130693, waterLevelValues[146], 0.001);
+          Assert.AreEqual(1.15763152, waterLevelValues[147], 0.001);
+          Assert.AreEqual(0.67965247, waterLevelValues[148], 0.001);
+          Assert.AreEqual(-0.5, waterLevelValues[149], 0.001);
+
+          //velocity 
+
+          Assert.AreEqual(0.17865091, velocityValues[120], 0.001);
+          Assert.AreEqual(0.26797636, velocityValues[121], 0.001);
+          Assert.AreEqual(3.32583028, velocityValues[122], 0.001);
+          Assert.AreEqual(1.06502926, velocityValues[123], 0.001);
+          Assert.AreEqual(1.84590337, velocityValues[124], 0.001);
+
+          //waterlevel (op)
+
+          Assert.AreEqual(2.76882247, waterLevelObservationPointValues[96], 0.001); //diff a little bit from linear
+          Assert.AreEqual(2.76882247, waterLevelObservationPointValues[97], 0.001); //diff a little bit from linear
+          Assert.AreEqual(2.69130693, waterLevelObservationPointValues[98], 0.001);
+          Assert.AreEqual(1.15763152, waterLevelObservationPointValues[99], 0.001);
+
+          //velocity(op)
+
+          Assert.AreEqual(0.26797636, velocityObservationPointValues[96], 0.001);
+          Assert.AreEqual(0.26797636, velocityObservationPointValues[97], 0.001);
+          Assert.AreEqual(3.32583028, velocityObservationPointValues[98], 0.001);
+          Assert.AreEqual(3.32583028, velocityObservationPointValues[99], 0.001);
+
+       }
 
         [Test]
         [Category(TestCategory.Integration)]

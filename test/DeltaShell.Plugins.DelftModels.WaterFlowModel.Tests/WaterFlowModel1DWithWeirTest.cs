@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var depthValue = flowModel1D.OutputDepth.AddTimeFilter(flowModel1D.CurrentTime).Evaluate(location);
             var velocityValue = flowModel1D.OutputVelocity.AddTimeFilter(flowModel1D.CurrentTime).Evaluate(location);
 
-            Assert.AreEqual(5.2172189065512287, depthValue, delta);
+            Assert.AreEqual(5.23097961, depthValue, delta);
             Assert.AreEqual(0.0, velocityValue, delta);
         }
 
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var depthValue = flowModel1D.OutputDepth.AddTimeFilter(flowModel1D.CurrentTime).Evaluate(location);
             var velocityValue = flowModel1D.OutputVelocity.AddTimeFilter(flowModel1D.CurrentTime).Evaluate(location);
 
-            Assert.AreEqual(5.2350062931159584, depthValue, delta);
+            Assert.AreEqual(5.25163094, depthValue, delta);
             Assert.AreEqual(0.0, velocityValue, delta);
         }
 
