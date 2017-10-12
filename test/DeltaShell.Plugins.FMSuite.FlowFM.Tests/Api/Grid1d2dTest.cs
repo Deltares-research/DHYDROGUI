@@ -9,7 +9,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -45,16 +44,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             //mesh1d
             //discretization points information
-            int nmeshpoints = 9;
-            int nbranches = 3;
-            int[] branchids = { 1, 1, 1, 1, 2, 2, 2, 3, 3 };
-            double[] meshXCoords = { 7.5, 12.5, 17.5, 22.5, 22.5, 22.5, 22.5, 17.5, 12.5 };
-            double[] meshYCoords = { 22.5, 22.5, 22.5, 22.5, 17.5, 12.5, 7.5, 12.5, 17.5 };
-            double[] branchoffset = { 0, 1, 2, 10, 1, 2, 10, 1, 2 }; /// the actual values of the offset are not important 
-            double[] branchlength = { 10, 10, 10 };
+            int nmeshpoints = 4;
+            int nbranches = 1;
+            int[] branchids = { 1, 1, 1, 1 };
+            double[] meshXCoords = { -6, 5, 23, 34 };
+            double[] meshYCoords = { 22, 16, 16, 7 };
+            double[] branchoffset = { 0, 10, 20, 100 }; /// important are the first and last offset
+            double[] branchlength = { 100 };
 
-            int[] sourcenodeid = { 1, 2, 3 };
-            int[] targetnodeid = { 2, 3, 1 };
+            int[] sourcenodeid = { 1 };
+            int[] targetnodeid = { 2 };
 
             //links
             int[] arrayfrom = { 2, 8 };
@@ -242,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             };
             Assert.NotNull(testNetworkDiscretization);
 
-            var offSet = new double[] { 0, 5, 10, 20 };
+            var offSet = new double[] { 0, 5, 10, 36.8337027874097 };
             HydroNetworkHelper.GenerateDiscretization(testNetworkDiscretization, (IChannel)testNetwork.Branches[0], offSet);
 
             var geomWrapper = new GridGeomApi();

@@ -83,8 +83,10 @@ namespace DeltaShell.NGHS.IO.Grid
                     idInfo[i].longnames = tmpString.ToCharArray();
                 }
 
-                return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
-                    offsetPtr, idInfo, numberOfDiscretisationPoints);
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                /* The call below needs to be adapted to the new dll. */
+                //return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
+                //    offsetPtr, idInfo, numberOfDiscretisationPoints);
             }
             catch
             {

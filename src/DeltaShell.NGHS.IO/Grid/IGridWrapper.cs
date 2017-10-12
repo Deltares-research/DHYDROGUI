@@ -250,13 +250,18 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Writes the mesh coordinates points 
         /// </summary>
         /// <param name="ioncId">The netCDF file id (in)</param>
-        /// <param name="meshId">The network id (in)</param>
-        /// <param name="branchIndicesPtr">The branch id for each mesh point (in)</param>
-        /// <param name="offsetPtr">The offset along the branch from the starting point (in)</param>
-        /// <param name="discretisationPointInfo"></param>
-        /// <param name="numberOfDiscretisationPoints">The number of mesh points (in)</param>
+        /// <param name="networkid">The network id (in)</param>
+        /// <param name="c_branchidx">The branches id array (in)</param>
+        /// <param name="c_offset">Thebranch offset array (in)</param>
+        /// <param name="c_edgenodes">The edge nodes array (in)</param>
+        /// <param name="nodeinfo"></param>
+        /// <param name="edgenodes">The number of edge nodes(in)</param>
+        /// <param name="nmeshpoints">The number of mesh points(in)</param>
+        /// <param name="startIndex">The start index(in)</param>
         /// <returns></returns>
-        int Write1DMeshDiscretisationPoints(int ioncId, int meshId, IntPtr branchIndicesPtr, IntPtr offsetPtr, GridWrapper.interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints);
+        int Write1DMeshDiscretisationPoints(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
+            ref IntPtr c_offset, ref IntPtr c_edgenodes, GridWrapper.interop_charinfo[] nodeinfo,
+            [In] ref int edgenodes, ref int nmeshpoints, ref int startIndex);
 
         /// <summary>
         /// Get the number of network nodes

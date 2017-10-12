@@ -19,10 +19,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         //dimension info
         private int nNodes = 4;
-
         private int nBranches = 3;
-
         private int nGeometry = 7;
+        private int startIndex = 1;
 
         //node info
         private double[] nodesX = {1.0, 5.0, 5.0, 8.0};
@@ -52,6 +51,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         //mesh dimension
         private int nmeshpoints = 10;
+        private int nedgenodes = 9;
         private string[] meshpointsids = { "meshpoint1", "meshpoint2", "meshpoint3", "meshpoint4", "meshpoint5", "meshpoint6", "meshpoint7", "meshpoint8", "meshpoint9", "meshpoint10" };
         private string[] meshpointslongnames = { "meshpointlongname1", "meshpointlongname2", "meshpointlongname3", "meshpointlongname4", "meshpointlongname5", "meshpointlongname6", "meshpointlongname7", "meshpointlongname8", "meshpointlongname9", "meshpointlongname10" };
 
@@ -333,6 +333,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             IntPtr c_nodesY = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
             IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
+            IntPtr c_edgenodes = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * nedgenodes);
+            IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
+            IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_branchlengths = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nBranches);
             IntPtr c_nbranchgeometrypoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nBranches);
             IntPtr c_geopointsX = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nGeometry);
@@ -383,6 +386,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     c_targetnodeid, branchinfo, c_branchlengths, c_nbranchgeometrypoints, nBranches);
                 Assert.That(ierr, Is.EqualTo(0));
 
+                //2b. Create the edge nodes (the algorithm is in gridgeom.dll, not in ionetcdf.dll)
+                Marshal.Copy(branchidx, 0, c_branchidx, nmeshpoints);
+                Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nBranches);
+                Marshal.Copy(targetnodeid, 0, c_targetnodeid, nBranches);
+                Marshal.Copy(offset, 0, c_branchoffset, nmeshpoints);
+                Marshal.Copy(branchlengths, 0, c_branchlength, nBranches);
+
+
+                var gridwrapper = new GridGeomWrapper();
+
+                ierr = gridwrapper.CreateEdgeNodes(ref c_branchoffset, ref c_branchlength, ref c_branchidx, ref c_sourcenodeid, ref c_targetnodeid, ref c_edgenodes, ref nBranches, ref nNodes, ref nedgenodes);
+                Assert.That(ierr, Is.EqualTo(0));
+
                 //3. Write 1d network geometry
                 Marshal.Copy(geopointsX, 0, c_geopointsX, nGeometry);
                 Marshal.Copy(geopointsY, 0, c_geopointsY, nGeometry);
@@ -410,8 +426,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     tmpstring = tmpstring.PadRight(GridWrapper.longnamessize, ' ');
                     meshpointsinfo[i].longnames = tmpstring.ToCharArray();
                 }
-                ierr = wrapper.Write1DMeshDiscretisationPoints(ioncId, meshId, c_branchidx,
-                    c_offset, meshpointsinfo, nmeshpoints);
+                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR; /* Call below needs to be fixed and updated to new kernel.*/
+                //ierr = wrapper.Write1DMeshDiscretisationPoints(ref ioncId, ref meshId, ref c_branchidx,
+                //    ref c_offset, ref c_edgenodes, meshpointsinfo, ref edgenodes, ref nmeshpoints, 0);
+                //(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref c_edgenodes, nodeinfo, ref edgenodes, ref nmeshpoints, ref startIndex)
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //6. Write links attributes
@@ -481,6 +499,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         static Ugrid1DTests()
         {
             NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
+            NativeLibrary.LoadNativeDll(GridGeomApi.LIB_DLL_NAME, DimrApiDataSet.SharedDllPath);
         }
 
         //////create the netcdf files

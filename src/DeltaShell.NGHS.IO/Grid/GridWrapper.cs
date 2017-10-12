@@ -264,7 +264,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public IntPtr branchids;
             public IntPtr nbranchgeometrynodes;
-//            public IntPtr nedge_nodes; /* Needs io_netcdf library update */
+            public IntPtr nedge_nodes; /* Needs io_netcdf library update */
 
             public IntPtr nodex;
             public IntPtr nodey;
@@ -425,12 +425,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="networkid">The network id (in)</param>
         /// <param name="c_branchidx">The branch id for each mesh point (in)</param>
         /// <param name="c_offset">The offset along the branch from the starting point (in)</param>
-        /// <param name="value"></param>
+        /// <param name="nodeinfo">The node info (in)</param>
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
-        /// <param name="startIndex"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_put_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int networkid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, interop_charinfo[] value, [In] ref int nmeshpoints, [In] ref int startIndex);
+        private static extern int ionc_put_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, [In] ref IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] ref int edgenodes, [In] ref int nmeshpoints, [In] ref int startIndex);
 
         /// <summary>
         /// Get the number of network nodes
@@ -868,10 +867,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_create_1d_mesh_dll(ref ioncId, ref networkId, ref meshId, meshname, ref numberOfMeshPoints, ref numberOfMeshEdges);
         }
 
-        public int Write1DMeshDiscretisationPoints(int ioncId, int meshId, IntPtr branchIndicesPtr, IntPtr offsetPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
+        public int Write1DMeshDiscretisationPoints(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
+            ref IntPtr c_offset, ref IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] ref int edgenodes, ref int nmeshpoints, ref int startIndex)
         {
-            int startIndex = 0;
-            return ionc_put_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref branchIndicesPtr, ref offsetPtr, discretisationPointInfo, ref numberOfDiscretisationPoints, ref startIndex);
+            return ionc_put_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref c_edgenodes, nodeinfo, ref edgenodes, ref nmeshpoints, ref startIndex);
         }
 
         public int Get1DNetworkNodesCount(int ioncId, int networkId, ref int numberOfNodes)

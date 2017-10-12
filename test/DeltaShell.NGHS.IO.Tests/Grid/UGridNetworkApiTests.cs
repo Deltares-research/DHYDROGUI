@@ -2101,13 +2101,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Times(2);
             var wrapper = mocks.StrictMock<IGridWrapper>();
-
-          
-            wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
-                .IgnoreArguments()
-                .Return(GridApiDataSet.GridConstants.NOERR)
-                .Repeat.Twice();
-
+            Assert.Fail("Not possible to mock discretisation points");
+            /*
+              wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+                  .IgnoreArguments()
+                  .Return(GridApiDataSet.GridConstants.NOERR)
+                  .Repeat.Twice();
+                  */
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
 
             // uRemoteGridNetworkApi
@@ -2137,12 +2137,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Times(2);
             var wrapper = mocks.StrictMock<IGridWrapper>();
-
+            Assert.Fail("Not possible to mock discretisation points");
+            /*
             wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
-
+*/
 
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
 
@@ -2174,13 +2175,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Times(2);
             var wrapper = mocks.StrictMock<IGridWrapper>();
-
-            wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything))
+            Assert.Fail("Not possible to mock discretisation points");
+            /*
+            wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();
-
+                */
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
 
             // uRemoteGridNetworkApi
