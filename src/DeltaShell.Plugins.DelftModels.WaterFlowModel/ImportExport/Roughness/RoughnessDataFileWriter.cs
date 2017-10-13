@@ -96,23 +96,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
 
         private static DelftIniCategory GenerateContent(RoughnessSection roughnessSection, INetworkCoverage networkCoverage)
         {
+            var reversedRoughnessSection = roughnessSection as ReverseRoughnessSection;
+
             var content = new DelftIniCategory(RoughnessDataRegion.ContentIniHeader);
-            content.AddProperty(RoughnessDataRegion.SectionId.Key, roughnessSection.Name); //todo use Name for ID's in the ini files!!
+
+            var roughnessSectionId = reversedRoughnessSection?.NormalSection.Name ?? roughnessSection.Name;
+
+            content.AddProperty(RoughnessDataRegion.SectionId.Key, roughnessSectionId);
             content.AddProperty(RoughnessDataRegion.FlowDirection.Key, roughnessSection.Reversed.ToString(), RoughnessDataRegion.FlowDirection.Description);
             var interpolationIsLinear = networkCoverage != null && (networkCoverage.Arguments.FirstOrDefault() != null && networkCoverage.Arguments.First().InterpolationType == InterpolationType.Linear) ? 1 : 0;
             content.AddProperty(RoughnessDataRegion.Interpolate.Key, interpolationIsLinear, RoughnessDataRegion.Interpolate.Description);
 
             var globalType = (int)FrictionTypeConverter.ConvertFrictionType(roughnessSection.GetDefaultRoughnessType());
             var globalValue = roughnessSection.GetDefaultRoughnessValue();
-            
-            var revRoughnessSection = roughnessSection as ReverseRoughnessSection;
-            if (revRoughnessSection != null)
-                content.AddProperty(RoughnessDataRegion.NormalSection.Key, revRoughnessSection.NormalSection.Name);
-            else
+
+            if (reversedRoughnessSection == null || !reversedRoughnessSection.UseNormalRoughness)
             {
                 content.AddProperty(RoughnessDataRegion.GlobalType.Key, globalType, RoughnessDataRegion.GlobalType.Description);
                 content.AddProperty(RoughnessDataRegion.GlobalValue.Key, globalValue, RoughnessDataRegion.GlobalValue.Description, RoughnessDataRegion.GlobalValue.Format);
             }
+
             return content;
         }
 

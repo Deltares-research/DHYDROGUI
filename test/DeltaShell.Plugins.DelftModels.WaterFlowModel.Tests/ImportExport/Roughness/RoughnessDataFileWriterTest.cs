@@ -1,14 +1,22 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Roughness
 {
@@ -115,6 +123,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             constantRoughnessSection.UpdateCoverageForFunction(network.Branches[0], roughnessFunction, RoughnessType.Chezy);
 
             RoughnessDataFileWriter.WriteFile(Path.Combine(targetPath,"roughness-constant.ini"), constantRoughnessSection);
+        }
+
+        [Test]
+        [TestCase("Test", RoughnessType.StricklerKn,25.2, InterpolationType.None)]
+        [TestCase("Test2", RoughnessType.Manning, 2.2, InterpolationType.Linear)]
+        [TestCase("Test3", RoughnessType.WhiteColebrook, 2.45, InterpolationType.Constant)]
+        public void ReverseRoughnessFileContentShouldBeCorrect(string orginalSectionName, RoughnessType type, double defaultValue, InterpolationType interpolationType)
+        {
+            var network = (INetwork) MockRepository.GenerateStrictMock(typeof(INetwork), new []{typeof(INotifyPropertyChanged), typeof(INotifyCollectionChanged) });
+
+            network.Expect(n => n.Branches).Return(new EventedList<IBranch>()).Repeat.Any();
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Any();
+            ((INotifyCollectionChanged) network).Expect(n => n.CollectionChanged += null).IgnoreArguments().Repeat.Twice();
+
+            network.Replay();
+
+            var roughnessSection = new RoughnessSection(new CrossSectionSectionType{Name = orginalSectionName}, network);
+            var reverseRoughnessSection = new ReverseRoughnessSection(roughnessSection){ UseNormalRoughness = false};
+            var coverage = reverseRoughnessSection.RoughnessNetworkCoverage;
+
+            // values to check
+            coverage.DefaultRoughnessType = type;
+            coverage.DefaultValue = defaultValue;
+            coverage.Arguments[0].InterpolationType = interpolationType;
+
+            var expectedFile = Path.Combine(Environment.CurrentDirectory,"FileWriters", TestHelper.GetCurrentMethodName() + ".txt");
+            
+            try
+            {
+                RoughnessDataFileWriter.WriteFile(expectedFile, reverseRoughnessSection);
+
+                Assert.IsTrue(File.Exists(expectedFile));
+
+                var data = File.ReadAllLines(expectedFile);
+
+                Assert.AreEqual("[Content]", data[5]);
+                Assert.AreEqual("sectionId             = " + orginalSectionName, data[6].Trim());
+                Assert.AreEqual("flowDirection         = True", data[7].Trim());
+                Assert.AreEqual("interpolate           = " + (interpolationType == InterpolationType.Linear? 1 :0), data[8].Trim());
+                Assert.AreEqual("globalType            = " + (int)FrictionTypeConverter.ConvertFrictionType(type), data[9].Trim());
+                Assert.AreEqual("globalValue           = " + defaultValue.ToString("F3", CultureInfo.InvariantCulture), data[10].Trim());
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(expectedFile);
+            }
         }
 
         [Test]

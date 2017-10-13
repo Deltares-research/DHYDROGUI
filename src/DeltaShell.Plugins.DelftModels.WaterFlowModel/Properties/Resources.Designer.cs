@@ -707,7 +707,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Numerical Parameter Iadvec1D must be 1 - 5. Given Value is: {0}.
+        ///   Looks up a localized string similar to Numerical Parameter Iadvec1D must be 1,2 or 5. Given Value is: {0}.
         /// </summary>
         public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Iadvec1D_must_be_1___5__Given_Value_is___0_ {
             get {

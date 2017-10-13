@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             if (numericalParameter != null)
             {
                 var parameterValue = Convert.ToInt32(numericalParameter.Value);
-                if (parameterValue < 1 || parameterValue > 5)
+                if (parameterValue != 1 && parameterValue != 2 && parameterValue != 5)
                 {
                     issues.Add(new ValidationIssue("Iadvec1D", ValidationSeverity.Error, string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Iadvec1D_must_be_1___5__Given_Value_is___0_, parameterValue)));
                 }
@@ -233,17 +233,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 if (parameterValue < 1 || parameterValue > 3)
                 {
                     issues.Add(new ValidationIssue("Limtyphu1D", ValidationSeverity.Error, string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Limtyphu1D_must_be_1___3__Given_Value_is___0_, parameterValue)));
-                }
-            }
-
-            //Numerical Parameter Momdilution1D
-            numericalParameter = model.ParameterSettings.FirstOrDefault(p => p.Name == "Momdilution1D");
-            if (numericalParameter != null)
-            {
-                var parameterValue = Convert.ToInt32(numericalParameter.Value);
-                if (parameterValue < 1 || parameterValue > 3)
-                {
-                    issues.Add(new ValidationIssue("Momdilution1D", ValidationSeverity.Error, string.Format(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Numerical_Parameter_Momdilution1D_must_be_1___3__Given_Value_is___0_, parameterValue)));
                 }
             }
 

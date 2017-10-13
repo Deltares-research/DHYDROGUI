@@ -9,7 +9,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
         
         public static readonly ConfigurationSetting FlowDirection = new ConfigurationSetting(key: "flowDirection",defaultValue: "0", 
             description: "Type of flow direction, possible values: Normal = 0 (false), Reverse = 1 (true)");
-        public static readonly ConfigurationSetting NormalSection = new ConfigurationSetting(key: "normalSection", description: "The name of the roughness section the reversed section should link to");
         
         public static readonly ConfigurationSetting Interpolate = new ConfigurationSetting(key: "interpolate", description: "0=false, 1=true");
 

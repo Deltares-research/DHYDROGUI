@@ -1053,27 +1053,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
-        public void ModelParameterIadvec1DTest()
-        {
-            var network = new HydroNetwork();
-
-            var node1 = new HydroNode { Name = "node1", Network = network };
-            var node2 = new HydroNode { Name = "node2", Network = network };
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var branch = new Channel("branch", node1, node2, 100.0);
-            network.Branches.Add(branch);
-
-            var model = new WaterFlowModel1D { Network = network };
-
-            model.ParameterSettings.First(p => p.Name == "Iadvec1D").Value = "10";
-
-            Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
-                                        "Numerical Parameter Iadvec1D must be 1 - 5. Given Value is: 10"));
-        }
-
-        [Test]
         public void ModelParameterLimtyphu1DTest()
         {
             var network = new HydroNetwork();
@@ -1092,27 +1071,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
                                         "Numerical Parameter Limtyphu1D must be 1 - 3. Given Value is: 21"));
-        }
-
-        [Test]
-        public void ModelParameterMomdilution1DTest()
-        {
-            var network = new HydroNetwork();
-
-            var node1 = new HydroNode { Name = "node1", Network = network };
-            var node2 = new HydroNode { Name = "node2", Network = network };
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var branch = new Channel("branch", node1, node2, 100.0);
-            network.Branches.Add(branch);
-
-            var model = new WaterFlowModel1D { Network = network };
-
-            model.ParameterSettings.First(p => p.Name == "Momdilution1D").Value = "33";
-
-            Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(model),
-                                        "Numerical Parameter Momdilution1D must be 1 - 3. Given Value is: 33"));
         }
 
         [Test]

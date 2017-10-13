@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             }
         }
 
-        [Test]
+        [Test, Category(TestCategory.Integration)]
         public void TestFileWriterCrossSectionDefinitions()
         {
             using (var waterFlowModel1D = new WaterFlowModel1D()

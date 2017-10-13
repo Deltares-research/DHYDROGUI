@@ -148,12 +148,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness
 
         public override double GetDefaultRoughnessValue()
         {
-            return normalSection.RoughnessNetworkCoverage.DefaultValue;
+            return UseNormalRoughness
+                ? normalSection.RoughnessNetworkCoverage.DefaultValue
+                : base.GetDefaultRoughnessValue();
         }
 
         public override RoughnessType GetDefaultRoughnessType()
         {
-            return normalSection.RoughnessNetworkCoverage.DefaultRoughnessType;
+            return UseNormalRoughness
+                ? normalSection.RoughnessNetworkCoverage.DefaultRoughnessType
+                : base.GetDefaultRoughnessType();
         }
 
         public override RoughnessNetworkCoverage RoughnessNetworkCoverage

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Validation;
 using log4net;
@@ -25,11 +24,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             if (validationReport.Severity() == ValidationSeverity.Error)
             {
-                var errorMessage = string.Format("Validation errors: {0}",
-                                string.Join("\n",
-                                            validationReport.GetAllIssuesRecursive().Where(
-                                                i => i.Severity == ValidationSeverity.Error).Select(
-                                                    i => string.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
+                var validationErrorMessages = validationReport.GetAllIssuesRecursive()
+                    .Where(i => i.Severity == ValidationSeverity.Error)
+                    .Select(i => string.Format("\t{0}: {1}", i.Subject, i.Message))
+                    .ToArray();
+
+                var errorMessage = string.Format("Validation errors: {0}", string.Join("\n", validationErrorMessages));
                 Log.Error("Model validation failed. Please review the validation report.\n\r" + errorMessage);
                 return false;
             }
