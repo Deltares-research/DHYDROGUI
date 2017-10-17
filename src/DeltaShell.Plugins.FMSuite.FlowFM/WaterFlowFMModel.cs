@@ -2196,13 +2196,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public double GetValueFromModelApi(IFeature feature, string parameterName)
         {
-            if (runner.Api == null)
+            string featureCategory = GetFeatureCategory(feature);
+            if (featureCategory == null)
             {
                 return Double.NaN;
             }
 
-            string featureCategory = GetFeatureCategory(feature);
-            if (featureCategory == null)
+            // temporary fix for DELFT3DFM-1302 (this should be done in Dimr)
+            if (featureCategory == "weirs" && parameterName == "crest_level")
+            {
+                var weir = (Weir)feature;
+                if (!weir.UseCrestLevelTimeSeries)
+                {
+                    return weir.CrestLevel;
+                }
+
+                if (weir.CrestLevelTimeSeries.GetValues<double>().Any())
+                {
+                    return weir.CrestLevelTimeSeries.GetValues<double>().FirstOrDefault();
+                }
+            }
+
+            if (runner.Api == null)
             {
                 return Double.NaN;
             }
