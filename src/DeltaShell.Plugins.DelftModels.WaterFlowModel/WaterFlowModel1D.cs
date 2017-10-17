@@ -3171,6 +3171,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                     .AggregationOptions = (AggregationOptions)(int)(value ? FiniteVolumeDiscretizationType.OnGridPoints : FiniteVolumeDiscretizationType.None);
             }
         }
+
         #region State Aware Model
 
         private ModelFileBasedStateHandler modelStateHandler;
@@ -3334,6 +3335,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public virtual IEnumerable<IModelMerge> DependendModels { get { yield break; } }
 
         #endregion
+
         #region IDimrModel
 
         public virtual string LibraryName
@@ -3585,35 +3587,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
         }
 
-        /*werkt niet!
-        public double GetApiVar(IFeature feature, string parameter)
-        {
-            double value = default(double);
-            var namedFeature = feature as INameable;
-            if (feature == null || string.IsNullOrEmpty(parameter) || namedFeature == null) return value;
-
-            var key = Name + "/" + feature.GetFeatureCategory() + "/" + namedFeature.Name + "/" + parameter;
-
-            
-            try
-            {
-                value = GetVar(key);
-
-                if (Math.Abs(value + 999.999) < 0.001)
-                {
-                    value = GetInitialValue(feature, parameter);
-                }
-            }
-            catch
-            {
-                value = GetInitialValue(feature, parameter);
-            }
-            
-            value = GetInitialValue(feature, parameter);
-            return value;
-        }
-        */
         #endregion
+
         #region TimeDependentModelBase
         public override void Initialize()
         {
@@ -3651,8 +3626,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         protected override void OnInitialize()
         {
             SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "UseRestart", UseRestart ? "true" : "false");
-            SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "WriteSamples",
-                WriteRestart ? "true" : "false");
+            SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "WriteSamples",WriteRestart ? "true" : "false");
 
             boundaryConditionDataList = BoundaryConditions.ToList();
 
@@ -3733,6 +3707,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             runner.OnFinish();
         }
         #endregion
+
         #region TimeDependentModelBase Helper    
         protected override void OnClearOutput()
         {
@@ -3837,6 +3812,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                    || elementSet == ElementSet.Pumps;
         }
         #endregion
+
         #region Implementation of IDimrStateAwareModel
 
         public virtual void PrepareRestart()
@@ -3865,6 +3841,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         #endregion
+
         // Return true when a salinity.ini file needs to be added to the computation. 
         public virtual bool SalinityValidNonConstantFormulation
         {

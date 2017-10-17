@@ -41,11 +41,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 var i = 1;
                 if(totalRoughnessFiles > 0)
                     model.RoughnessSections.Clear();
+
                 foreach (var roughnessFile in fileName.RoughnessFiles)
                 {
                     reportProgress(String.Format("Reading roughness section from {0} file. (reading roughness file {1} of {2})", roughnessFile, i, totalRoughnessFiles), 6, totalSteps);
                     i++;
-                    RoughnessDataFileReader.ReadFile(roughnessFile, model.Network, model.RoughnessSections);    
+                    RoughnessDataFileReader.ReadFile(roughnessFile, model.Network, model.RoughnessSections);
                 }
                 reportProgress(String.Format("Reading cross sections from {0} file and {1}.", fileName.CrossSectionLocations, fileName.CrossSectionDefinitions), 7, totalSteps);
                 CrossSectionFileReader.ReadFile(fileName.CrossSectionLocations, fileName.CrossSectionDefinitions, model);

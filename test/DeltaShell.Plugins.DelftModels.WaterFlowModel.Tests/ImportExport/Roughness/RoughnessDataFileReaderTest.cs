@@ -1,13 +1,20 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Roughness;
+using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Roughness
 {
@@ -46,7 +53,71 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
             //re-read file & check to see if no duplicates are created
             RoughnessDataFileReader.ReadFile(roughnessFile, network, new[] { roughnessSection }, true);
             CheckResults(roughnessSection, network);
-            
+        }
+
+        [Test]
+        public void ReadReverseRoughnessFile()
+        {
+            var network = (INetwork)MockRepository.GenerateStrictMock(typeof(INetwork), new[] { typeof(INotifyPropertyChanged), typeof(INotifyCollectionChanged) });
+
+            var branches = new EventedList<IBranch>{ new Branch{Name = "branch1"}};
+            network.Expect(n => n.Branches).Return(branches).Repeat.Any();
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Any();
+            ((INotifyCollectionChanged)network).Expect(n => n.CollectionChanged += null).IgnoreArguments().Repeat.Twice();
+
+            network.Replay();
+
+            var path = TestHelper.GetTestFilePath(@"FileReaders\ReverseRoughness.ini");
+
+            var orginalSection = new RoughnessSection(new CrossSectionSectionType{Name = "Test"}, network);
+
+            var roughnessSections = new List<RoughnessSection> {orginalSection};
+
+            RoughnessDataFileReader.ReadFile(path, network, roughnessSections);
+
+            Assert.AreEqual(2,roughnessSections.Count);
+            var reversedSection = roughnessSections[1] as ReverseRoughnessSection;
+            Assert.NotNull(reversedSection);
+
+            Assert.AreEqual("Test (Reversed)", reversedSection.Name);
+            Assert.AreEqual(true, reversedSection.Reversed);
+            Assert.AreEqual(false, reversedSection.UseNormalRoughness);
+            Assert.AreEqual(RoughnessType.Manning, reversedSection.GetDefaultRoughnessType());
+            Assert.AreEqual(41, reversedSection.GetDefaultRoughnessValue());
+
+            var coverage = reversedSection.RoughnessNetworkCoverage;
+            Assert.AreEqual(InterpolationType.Linear, coverage.Arguments[0].InterpolationType);
+            Assert.AreEqual(1, coverage.Locations.Values.Count);
+        }
+
+        [Test]
+        public void ReadReverseRoughnessFileWithUseNormalRoughness()
+        {
+            var network = (INetwork)MockRepository.GenerateStrictMock(typeof(INetwork), new[] { typeof(INotifyPropertyChanged), typeof(INotifyCollectionChanged) });
+
+            network.Expect(n => n.Branches).Return(new EventedList<IBranch>()).Repeat.Any();
+            network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Any();
+            ((INotifyCollectionChanged)network).Expect(n => n.CollectionChanged += null).IgnoreArguments().Repeat.Twice();
+
+            network.Replay();
+
+            var path = TestHelper.GetTestFilePath(@"FileReaders\ReverseRoughnessUseNormalRoughness.ini");
+
+            var orginalSection = new RoughnessSection(new CrossSectionSectionType { Name = "Test" }, network);
+            orginalSection.SetDefaults(RoughnessType.WhiteColebrook, 2.2);
+            var roughnessSections = new List<RoughnessSection> { orginalSection };
+
+            RoughnessDataFileReader.ReadFile(path, network, roughnessSections);
+
+            Assert.AreEqual(2, roughnessSections.Count);
+            var reversedSection = roughnessSections[1] as ReverseRoughnessSection;
+            Assert.NotNull(reversedSection);
+
+            Assert.AreEqual("Test (Reversed)", reversedSection.Name);
+            Assert.AreEqual(true, reversedSection.Reversed);
+            Assert.AreEqual(true, reversedSection.UseNormalRoughness);
+            Assert.AreEqual(RoughnessType.WhiteColebrook, reversedSection.GetDefaultRoughnessType());
+            Assert.AreEqual(2.2, reversedSection.GetDefaultRoughnessValue());
         }
 
         private static void CheckResults(RoughnessSection roughnessSection, IHydroNetwork network)

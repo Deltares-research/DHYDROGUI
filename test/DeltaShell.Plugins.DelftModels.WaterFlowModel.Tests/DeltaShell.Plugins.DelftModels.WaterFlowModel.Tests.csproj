@@ -249,6 +249,7 @@
     <Compile Include="Roughness\RoughnessNetworkCoverageTest.cs" />
     <Compile Include="Roughness\RoughnessNetworkCoverageUndoRedoIntegrationTest.cs" />
     <Compile Include="Roughness\RoughnessSectionTest.cs" />
+    <Compile Include="Validation\WaterFlowModel1DModelDataValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeHelperTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeTest.cs" />
     <Compile Include="Validation\WaterFlowModel1DModelMergeValidatorTest.cs" />

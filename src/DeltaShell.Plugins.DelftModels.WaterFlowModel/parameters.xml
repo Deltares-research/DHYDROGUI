@@ -42,7 +42,6 @@
   <ModelApiParameter Id="DiffusionAtBoundaries"             Description="Calculate Diffusion at Boundaries"                                       Value="true"    Type="typeof(bool)"     Visible="true"  Category="Salinity" />
   <ModelApiParameter Id="Iadvec1D"                          Description="Advection Type in 1D Flow"                                               Value="2"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
   <ModelApiParameter Id="Limtyphu1D"                        Description="Limiter Type for Estimating Flow Area at Velocity Point in 1D Flow"      Value="1"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
-  <ModelApiParameter Id="Momdilution1D"                     Description="Advection Control Volume Based on Flow- or Total Area in 1D Links"       Value="1"       Type="typeof(int)"      Visible="true"  Category="SimulationOptions" />
   <!--DispMaxFactor=0.45-->
   <ModelApiParameter Id="DispMaxFactor"                     Description="Factor For Maximum Dispersion"                                           Value="0.45"    Type="typeof(double)"   Visible="true"  Category="SimulationOptions" />
   <!--Initial Conditions-->

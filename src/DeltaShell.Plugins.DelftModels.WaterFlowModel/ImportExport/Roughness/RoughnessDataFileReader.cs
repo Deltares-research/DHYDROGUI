@@ -190,6 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
                     var branch = network.Branches.FirstOrDefault(b => b.Name == branchid);
                     if (branch == null)
                         throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model,branchid));
+
                     var chainage = definitionCategory.ReadProperty<double>(SpatialDataRegion.Chainage.Key);
                     var roughnessBranchData = branchData.FirstOrDefault(bd => bd.Branch == branch);
                     if (roughnessBranchData == null)
@@ -236,20 +237,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
         private static RoughnessSection ReadRoughnessSection(INetwork network, IList<RoughnessSection> roughnessSections, IDelftIniCategory contentSection, bool isCalibratedRoughness)
         {
             var sectionId = contentSection.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
-            var flowDirection = contentSection.ReadProperty<bool>(RoughnessDataRegion.FlowDirection.Key);
+            var isReversed = contentSection.ReadProperty<bool>(RoughnessDataRegion.FlowDirection.Key);
             var interpolationType = (InterpolationType)contentSection.ReadProperty<int>(RoughnessDataRegion.Interpolate.Key);
+
             RoughnessType globalType = RoughnessType.Chezy; 
             double? globalValue = null;
             
             RoughnessSection roughnessSection;
             if (isCalibratedRoughness)
             {
-                roughnessSection = roughnessSections.FirstOrDefault(rs => rs.Name == sectionId);
+                roughnessSection = !isReversed 
+                    ? roughnessSections.FirstOrDefault(rs => rs.Name == sectionId)
+                    : roughnessSections.OfType<ReverseRoughnessSection>().FirstOrDefault(rs => rs.NormalSection.Name == sectionId);
+
                 if (roughnessSection == null)
-                    throw new FileReadingException(
-                        string.Format(
-                            Resources.RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model,
-                            sectionId));
+                    throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model,sectionId));
 
                 //cleanup old roughnessdata
                 foreach (var branch in roughnessSection.Network.Branches)
@@ -258,61 +260,57 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport.Roughness
                 }
                 roughnessSection.RoughnessNetworkCoverage.Clear();
 
-
-                if (!(roughnessSection is ReverseRoughnessSection))
-                {
-                    globalType =
-                        FrictionTypeConverter.ConvertToRoughnessFrictionType(
-                            contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
-                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
-                }
+                globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
+                globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
             }
             else
             {
+                var hasGlobalType = contentSection.Properties.Any(p => p.Name == RoughnessDataRegion.GlobalType.Key);
 
-                var crossSectionSection = new CrossSectionSectionType {Name = sectionId};
-                if (flowDirection)
+                if (isReversed)
                 {
-                    var normalName = contentSection.ReadProperty<string>(RoughnessDataRegion.NormalSection.Key);
-                    var normalSectionExists = roughnessSections.FirstOrDefault(rs => rs.Name == normalName);
+                    var normalSectionExists = roughnessSections.FirstOrDefault(rs => rs.Name == sectionId);
                     if (normalSectionExists != null)
                     {
-                        roughnessSection = new ReverseRoughnessSection(normalSectionExists);
+                        roughnessSection = new ReverseRoughnessSection(normalSectionExists){UseNormalRoughness = !hasGlobalType};
                     }
                     else
                     {
-                        throw new FileReadingException(
-                            string.Format(
-                                Resources.RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_,
-                                sectionId, normalName));
+                        var message = Resources.RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_;
+                        throw new FileReadingException(string.Format(message,sectionId + " (Reversed)", sectionId));
                     }
                 }
                 else
                 {
+                    var crossSectionSection = new CrossSectionSectionType { Name = sectionId };
                     roughnessSection = new RoughnessSection(crossSectionSection, network);
-                    globalType =
-                        FrictionTypeConverter.ConvertToRoughnessFrictionType(
-                            contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
-                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
                 }
 
+                if (!isReversed || hasGlobalType)
+                {
+                    globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
+                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
+                }
+                
                 roughnessSection.Name = sectionId;
             }
+
             if (roughnessSection.RoughnessNetworkCoverage == null)
-                throw new FileReadingException(
-                    Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created);
+                throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created);
+
             var roughnessNetworkCoverage = roughnessSection.RoughnessNetworkCoverage;
             var firstNWCArgument = roughnessNetworkCoverage.Arguments.FirstOrDefault();
             
             if (firstNWCArgument == null)
-                throw new FileReadingException(
-                    Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
+                throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
             
             firstNWCArgument.InterpolationType = interpolationType;
             if (globalValue.HasValue)
                 roughnessSection.SetDefaults(globalType, globalValue.Value);
+
             return roughnessSection;
         }
+
         private class RoughnessBranchData
         {
             public IBranch Branch { get; set; }
