@@ -851,9 +851,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int Write1DNetworkBranches(int ioncId, int networkId, IntPtr sourceNodeIdsPtr,
             IntPtr targetNodeIdsPtr, interop_charinfo[] branchinfo, IntPtr branchLengthsPtr,
-            IntPtr numberOfBranchGeometryPointsPtr, int numberOfBranches)
+            IntPtr numberOfBranchGeometryPointsPtr, int numberOfBranches, int startIndex = 0)
         {
-            int startIndex = 0;
             return ionc_put_1d_network_branches_dll(ref ioncId, ref networkId, ref sourceNodeIdsPtr, ref targetNodeIdsPtr, branchinfo, ref branchLengthsPtr, ref numberOfBranchGeometryPointsPtr, ref numberOfBranches, ref startIndex);
         }
 
@@ -867,8 +866,8 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_create_1d_mesh_dll(ref ioncId, ref networkId, ref meshId, meshname, ref numberOfMeshPoints, ref numberOfMeshEdges);
         }
 
-        public int Write1DMeshDiscretisationPoints(ref int ioncid, ref int networkid, ref IntPtr c_branchidx,
-            ref IntPtr c_offset, ref IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] ref int edgenodes, ref int nmeshpoints, ref int startIndex)
+        public int Write1DMeshDiscretisationPoints(int ioncid, int networkid, IntPtr c_branchidx,
+            IntPtr c_offset, IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] int edgenodes, int nmeshpoints, int startIndex)
         {
             return ionc_put_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref c_edgenodes, nodeinfo, ref edgenodes, ref nmeshpoints, ref startIndex);
         }

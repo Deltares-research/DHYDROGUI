@@ -13,6 +13,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
         int CreateEdgeNodes(ref IntPtr c_branchoffset, ref IntPtr c_branchlength, ref IntPtr c_branchids,
             ref IntPtr c_sourceNodeId, ref IntPtr c_targetNodeId, ref IntPtr c_edgenodes, ref int nBranches,
-            ref int nNodes, ref int nEdgeNodes);
+            ref int nNodes, ref int nEdgeNodes, ref int startIndex);
     }
 }
