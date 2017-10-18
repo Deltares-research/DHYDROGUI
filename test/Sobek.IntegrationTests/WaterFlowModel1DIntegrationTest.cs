@@ -286,7 +286,7 @@ namespace Sobek.IntegrationTests
                 app.OpenProject(dsProjDir);
                 var waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().First();
                 
-                Assert.IsTrue(waterFlowModel1D.DispersionFormulationType == DispersionFormulationType.ThatcherHarleman);
+                Assert.IsTrue(waterFlowModel1D.DispersionFormulationType == DispersionFormulationType.Constant);
 
                 // Legacy F1 coverage and component names should be updated
                 var f1CoverageDataItem = waterFlowModel1D.DataItems.FirstOrDefault(di => di.Tag == WaterFlowModel1DDataSet.InputDispersionCoverageTag);
@@ -305,30 +305,12 @@ namespace Sobek.IntegrationTests
                 var f3Component = f1Coverage.Components.FirstOrDefault(c => c.Name == "F3");
                 Assert.IsNull(f3Component);
 
-                // F3 and F4 coverages and dataitems should exist
+                // F3 and F4 coverages and dataitems should not exist => it should be set to constant
                 var f3CoverageDataItem = waterFlowModel1D.DataItems.FirstOrDefault(di => di.Tag == WaterFlowModel1DDataSet.InputDispersionF3CoverageTag);
-                Assert.NotNull(f3CoverageDataItem);
-
-                var f3Coverage = f3CoverageDataItem.Value as INetworkCoverage;
-                Assert.NotNull(f3Coverage);
+                Assert.IsNull(f3CoverageDataItem);
 
                 var f4CoverageDataItem = waterFlowModel1D.DataItems.FirstOrDefault(di => di.Tag == WaterFlowModel1DDataSet.InputDispersionF4CoverageTag);
-                Assert.NotNull(f4CoverageDataItem);
-
-                var f4Coverage = f4CoverageDataItem.Value as INetworkCoverage;
-                Assert.NotNull(f4Coverage);
-
-                // F3 component values should have been copied over from legacy F1 coverage
-                var branch = waterFlowModel1D.Network.Branches.FirstOrDefault();
-                Assert.NotNull(branch);
-                var networkLocation1 = new NetworkLocation(branch, 0.0);
-                var networkLocation2 = new NetworkLocation(branch, 100.0);
-
-                Assert.AreEqual(networkLocation1, (NetworkLocation)f3Coverage.Arguments[0].Values[0]);
-                Assert.AreEqual(networkLocation2, (NetworkLocation)f3Coverage.Arguments[0].Values[1]);
-
-                Assert.AreEqual(0.5, (double)f3Coverage.Components[0].Values[0], 0.00001);
-                Assert.AreEqual(1.5, (double)f3Coverage.Components[0].Values[1], 0.00001);
+                Assert.IsNull(f4CoverageDataItem);
 
                 app.CloseProject();
             }
@@ -366,7 +348,7 @@ namespace Sobek.IntegrationTests
                     app.Project.RootFolder.Add(waterFlowModel1D);
 
                     waterFlowModel1D.UseSalt = true;
-                    waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.ThatcherHarleman;
+                    waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
 
                     var networkLocation = new NetworkLocation(waterFlowModel1D.Network.Branches[0], 0.0);
 
@@ -406,7 +388,7 @@ namespace Sobek.IntegrationTests
 
                 // Toggle ThatcherHarleman (this should cache the existing F3 and F4 values)
                 reopenedWaterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;
-                reopenedWaterFlowModel1D.DispersionFormulationType = DispersionFormulationType.ThatcherHarleman;
+                reopenedWaterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
 
                 var reopenedNetworkLocation = new NetworkLocation(reopenedWaterFlowModel1D.Network.Branches[0], 0.0);
 

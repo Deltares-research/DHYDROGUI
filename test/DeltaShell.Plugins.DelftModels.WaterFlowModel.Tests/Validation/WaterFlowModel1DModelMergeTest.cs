@@ -568,8 +568,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         public void TestMergeCopiesSourceModelSalinityCoveragesToDestinationModel()
         {
             sourceWFM1D.UseSalt = true;
-            sourceWFM1D.DispersionFormulationType = DispersionFormulationType.ThatcherHarleman; // Needed for F3 and F4 DispersionCoverages
-            sourceWFM1D.SalinityPath = "Salinity.ini";
+            sourceWFM1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic; // Needed for F3 and F4 DispersionCoverages
+            
             WaterFlowModel1DModelMergeTestHelper.SetupCoverageLocations(sourceWFM1D.InitialSaltConcentration, 2);
             var sourceModelInitialSaltConcentrationValues = sourceWFM1D.InitialSaltConcentration.Components[0].Values;
             sourceModelInitialSaltConcentrationValues[0] = 5.55;
@@ -591,9 +591,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             destinationWFM1D.Merge(sourceWFM1D, null);
             
             Assert.IsTrue(destinationWFM1D.UseSalt);
-            Assert.AreEqual(DispersionFormulationType.ThatcherHarleman, destinationWFM1D.DispersionFormulationType);
-            Assert.AreEqual("Salinity.ini", destinationWFM1D.SalinityPath);
-
+            Assert.AreEqual(DispersionFormulationType.KuijperVanRijnPrismatic, destinationWFM1D.DispersionFormulationType);
+            
             var destinationModelInitialSaltConcentrationLocations = destinationWFM1D.InitialSaltConcentration.Arguments[0].Values;
             var destinationModelInitialSaltConcentrationValues = destinationWFM1D.InitialSaltConcentration.Components[0].Values;
             var destinationModelDispersionCoverageLocations = destinationWFM1D.DispersionCoverage.Arguments[0].Values;

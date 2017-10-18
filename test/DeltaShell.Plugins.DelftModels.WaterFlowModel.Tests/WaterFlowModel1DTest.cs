@@ -15,6 +15,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -92,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             using (var waterFlowModel1D = new WaterFlowModel1D {Network = network, NetworkDiscretization = networkDiscretization})
             {
                 waterFlowModel1D.UseSalt = true;
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.ThatcherHarleman;
+                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
                 var startOfBranch = new NetworkLocation(branch, 0.0);
                 var endOfBranch = new NetworkLocation(branch, 100.0);
 
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.That(waterFlowModel1D.DispersionF4Coverage, Is.Null);
 
                 // Action: Set dispersion to Savenije
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Savenije;
+                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
                 
                 // Verify: F1 is still there, F3 and F4 contain cached values. 
                 f1Values = waterFlowModel1D.DispersionCoverage.Components.FirstOrDefault();
@@ -2321,6 +2322,61 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        public void SalinityEstuaryMouthNodeIdIsSynchronizedWithRenaming()
+        {
+            var model = new WaterFlowModel1D();
+            var hydroNode = new HydroNode("test");
+
+            model.Network.Nodes.Add(hydroNode);
+            model.SalinityEstuaryMouthNodeId = "test";
+
+            hydroNode.Name = "Test 2";
+
+            Assert.AreEqual("Test 2", model.SalinityEstuaryMouthNodeId);
+        }
+
+        [Test]
+        public void SalinityEstuaryMouthNodeIsRemovedIfNodeIsRemovedFromNetwork()
+        {
+            var model = new WaterFlowModel1D();
+            var hydroNode = new HydroNode("test");
+
+            var network = model.Network;
+
+            network.Nodes.Add(hydroNode);
+            model.SalinityEstuaryMouthNodeId = "test";
+
+            network.BeginEdit(new DefaultEditAction("removing node"));
+            network.Nodes.Remove(hydroNode);
+            network.EndEdit();
+
+            Assert.IsNullOrEmpty(model.SalinityEstuaryMouthNodeId);
+        }
+
+        [Test]
+        public void SalinityEstuaryMouthNodeIsRemovedIfNodeIsNoLongerValid()
+        {
+            var model = new WaterFlowModel1D();
+            var hydroNode1 = new HydroNode("test");
+            var hydroNode2 = new HydroNode("test2");
+            var branch= new Channel(hydroNode1, hydroNode2);
+
+            var network = model.Network;
+
+            network.Nodes.Add(hydroNode1);
+            network.Nodes.Add(hydroNode2);
+            network.Branches.Add(branch);
+
+            model.SalinityEstuaryMouthNodeId = "test";
+
+            network.BeginEdit(new DefaultEditAction("removing branch"));
+            network.Branches.Remove(branch);
+            network.EndEdit();
+
+            Assert.IsNullOrEmpty(model.SalinityEstuaryMouthNodeId);
+        }
+
+        [Test]
         [Category(TestCategory.Integration)]
         public void RunModelWithStructureOutputTwice()
         {
@@ -2379,7 +2435,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                            // 30 min
                                            OutputTimeStep = new TimeSpan(0, 0, 30),
                                            UseSalt = true,
-                                           DispersionFormulationType = DispersionFormulationType.ThatcherHarleman
+                                           DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic
                                        })
             {
                 // set initial conditions
@@ -2423,17 +2479,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var networkDiscretization = new Discretization
             {
                 Network = network,
-                SegmentGenerationMethod =
-                    SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
             };
 
             foreach (IChannel channel in network.Channels)
             {
-                HydroNetworkHelper.GenerateDiscretization(networkDiscretization, channel, 0, false, 0.5, false, false, true,
-                                                            channel.Length / 2.0);
+                HydroNetworkHelper.GenerateDiscretization(networkDiscretization, channel, 0, false, 0.5, false, false, true, channel.Length / 2.0);
             }
 
-            
             // setup 1d flow waterFlowModel1D
             using (var waterFlowModel1D = new WaterFlowModel1D
             {
@@ -2445,7 +2498,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // 30 min
                 OutputTimeStep = new TimeSpan(0, 0, 30),
                 UseSalt = true,
-                DispersionFormulationType = DispersionFormulationType.ThatcherHarleman,
+                DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic,
+                SalinityEstuaryMouthNodeId = network.HydroNodes.First().Name,
                 UseSaltInCalculation = true
             })
             {
@@ -2453,16 +2507,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 waterFlowModel1D.InitialFlow.DefaultValue = 0.1;
                 waterFlowModel1D.InitialConditions.DefaultValue = 0.1;
 
-
                 var branch = waterFlowModel1D.Network.Channels.First();
                 CrossSectionHelper.AddCrossSection(branch, 10, -10);
                 
-                var salinityPath = TestHelper.GetTestFilePath(Path.Combine(@"FileWriters\salinity\ThatcherHarleman\salinity.ini"));
-                    
                 if (f4HasValues)
                 {
-                    waterFlowModel1D.SalinityPath = salinityPath;
-            
                     var startOfBranch = new NetworkLocation(branch, 0.0);
                     var endOfBranch = new NetworkLocation(branch, 100.0);
                     var dispersionF4Coverage = waterFlowModel1D.DispersionF4Coverage;
@@ -2472,30 +2521,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 waterFlowModel1D.Initialize();
 
-                var md1dPath = waterFlowModel1D.GetExporterPath(Path.Combine(waterFlowModel1D.ExplicitWorkingDirectory,waterFlowModel1D.DirectoryName));
+                var md1dPath = waterFlowModel1D.GetExporterPath(Path.Combine(waterFlowModel1D.WorkingDirectory ,waterFlowModel1D.DirectoryName));
                 
                 var categories = new DelftIniReader().ReadDelftIniFile(md1dPath);
                 if (categories.Count == 0)
-                    throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty",
-                        md1dPath));
-                var fileSection =
-                    categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToList();
-                if (fileSection.Count() > 1 && fileSection.Any())
+                    throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty", md1dPath));
+
+                var fileSection = categories.Where(category => category.Name == ModelDefinitionsRegion.FilesIniHeader).ToList();
+                if (fileSection.Count > 1 && fileSection.Any())
                     throw new FileReadingException(String.Format("Could not read files section {0} properly", md1dPath));
+
                 string generatedSalinityPath = String.Empty;
+
                 if (f4HasValues)
                 {
-                    var salinityFile =
-                        fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.SalinityParametersFile.Key);
-
+                    var salinityFile = fileSection[0].ReadProperty<string>(ModelDefinitionsRegion.SalinityParametersFile.Key);
                     generatedSalinityPath = Path.Combine(Path.GetDirectoryName(md1dPath), salinityFile);
-
-                    Assert.That(Path.GetFileName(salinityPath), Is.EqualTo(salinityFile));
                 }
-                
+
                 Assert.True(waterFlowModel1D.UseSalt);
                 Assert.True(waterFlowModel1D.UseSaltInCalculation);
-                Assert.True(waterFlowModel1D.DispersionFormulationType == DispersionFormulationType.ThatcherHarleman);
+                Assert.True(waterFlowModel1D.DispersionFormulationType == DispersionFormulationType.KuijperVanRijnPrismatic);
 
                 Assert.True(File.Exists(md1dPath));
                 Assert.That(File.Exists(generatedSalinityPath), Is.EqualTo(f4HasValues));

@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
-using System.Drawing.Design;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
@@ -60,14 +62,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
         }
 
         [PropertyOrder(4)]
-        [DynamicReadOnly]
-        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SalinityPath_DisplayName")]
-        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SalinityPath_Description")]
-        [Editor(typeof(PathEditor), typeof(UITypeEditor))]
-        public string SalinityPath
+        [DynamicVisible]
+        [ResourcesDisplayName(typeof(Resources), "WaterFlowModel1DProperties_SalinityNode_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "WaterFlowModel1DProperties_SalinityNode_Description")]
+        [TypeConverter(typeof(SelectSalinityEstuaryMouthNodeIdTypeConverter))]
+        public string SalinityEstuaryMouthNodeId
         {
-            get { return data.SalinityPath; }
-            set { if (value != null) data.SalinityPath = value; }
+            get { return data.SalinityEstuaryMouthNodeId; }
+            set { data.SalinityEstuaryMouthNodeId = value; }
         }
 
         [DynamicReadOnlyValidationMethod]
@@ -83,12 +85,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.PropertyGrid
                 return data.DispersionCoverage == null || !data.UseSalt;
             }
 
-            if (propertyName.Equals("SalinityPath"))
+            return false;
+        }
+
+        [DynamicVisibleValidationMethod]
+        public bool ValidateDynamicVisibleAttributes(string propertyName)
+        {
+            if (propertyName == nameof(this.SalinityEstuaryMouthNodeId))
             {
-                return data.DispersionFormulationType == DispersionFormulationType.Constant;
+                return DispersionFormulationType == DispersionFormulationType.KuijperVanRijnPrismatic;
             }
 
             return false;
+        }
+
+        public IEnumerable<string> GetSalinityEstuaryMouthNodeIds()
+        {
+            return data.Network.HydroNodes
+                .Where(n => n.IsValidSalinityEstuaryMouthNodeId())
+                .Select(c => c.Name);
         }
 
         /* Override needed to avoid displaying the whole class name in the property grid */

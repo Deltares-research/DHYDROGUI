@@ -20,7 +20,7 @@
     <property name="UseMorphology" />
     <property name="AdditionalMorphologyOutput" />
 
-    <property name="SalinityPath"/>
+    <property name="SalinityEstuaryMouthNodeId"/>
 
     <property name="BackgroundTemperature"/>
     <property name="SurfaceArea"/>

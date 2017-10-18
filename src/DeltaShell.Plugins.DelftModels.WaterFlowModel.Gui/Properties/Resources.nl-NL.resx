@@ -213,8 +213,8 @@
   <data name="WaterFlowModel1DProperties_DispersionFormulationsType_DisplayName" xml:space="preserve">
     <value>#Dispersion formulation</value>
   </data>
-  <data name="WaterFlowModel1DProperties_SalinityPath_DisplayName" xml:space="preserve">
-    <value>#Path of .ini file</value>
+  <data name="WaterFlowModel1DProperties_SalinityNode_DisplayName" xml:space="preserve">
+    <value>Zeemonding</value>
   </data>
   <data name="WaterFlowModel1DProperties_UseTemperature_DisplayName" xml:space="preserve">
     <value>#Gebruik temperature</value>
@@ -336,8 +336,8 @@
   <data name="WaterFlowModel1DProperties_DispersionFormulationsType_Description" xml:space="preserve">
     <value>#Determines which dispersion formulation to use</value>
   </data>
-  <data name="WaterFlowModel1DProperties_SalinityPath_Description" xml:space="preserve">
-    <value>#Path of salinity.ini file. This path is relative to the *.dsproj_data directory of the project.</value>
+  <data name="WaterFlowModel1DProperties_SalinityNode_Description" xml:space="preserve">
+    <value>Zeemonding</value>
   </data>
   <data name="WaterFlowModel1DProperties_UseSalt_Description" xml:space="preserve">
     <value>#Hiermee bepaalt u of of niet het model zoutgehalte dient gerelateerde gegevens.</value>
