@@ -391,15 +391,6 @@
   <data name="WaterFlowModel1DTemperatureValidator_ValidateModelParameters_Values_should_be_in_double_format_" xml:space="preserve">
     <value>Values should be in double format.</value>
   </data>
-  <data name="SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButNoSalinityIniFileHasBeenSpecified" xml:space="preserve">
-    <value>Non-zero spatial data for Dispersion F4 Coefficient exists, but no Salinity.ini file has been specified.</value>
-  </data>
-  <data name="SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButSalinityIniFileWasNotFound" xml:space="preserve">
-    <value>Non-zero spatial data for Dispersion F4 Coefficient exists, but Salinity.ini file was not found at {0}. Either add a reference to the Salinity.ini file or remove the spatial data.</value>
-  </data>
-  <data name="SalinityValidator_SalinityIniFileFoundButNoSpatialDataForDispersionF4CoefficientExists" xml:space="preserve">
-    <value>Salinity.ini file found at {0}, but no non-zero spatial data for Dispersion F4 Coefficient exists. Either add spatial data or remove the Salinity.ini file reference.</value>
-  </data>
   <data name="WaterFlowModel1DTemperatureValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_a_temperature_type_of_None__All_open_boundaries_must_specify_temperature_values_" xml:space="preserve">
     <value>The boundary condition {0} has a temperature type of None. All open boundaries must specify temperature values.</value>
   </data>

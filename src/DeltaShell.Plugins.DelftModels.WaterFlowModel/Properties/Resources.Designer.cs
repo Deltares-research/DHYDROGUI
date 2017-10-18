@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -449,36 +449,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
             get {
                 object obj = ResourceManager.GetObject("RoughnessSection", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Salinity.ini file found at {0}, but no non-zero spatial data for Dispersion F4 Coefficient exists. Either add spatial data or remove the Salinity.ini file reference..
-        /// </summary>
-        public static string SalinityValidator_SalinityIniFileFoundButNoSpatialDataForDispersionF4CoefficientExists {
-            get {
-                return ResourceManager.GetString("SalinityValidator_SalinityIniFileFoundButNoSpatialDataForDispersionF4CoefficientE" +
-                        "xists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Non-zero spatial data for Dispersion F4 Coefficient exists, but no Salinity.ini file has been specified..
-        /// </summary>
-        public static string SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButNoSalinityIniFileHasBeenSpecified {
-            get {
-                return ResourceManager.GetString("SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButNoSalinityIniFile" +
-                        "HasBeenSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Non-zero spatial data for Dispersion F4 Coefficient exists, but Salinity.ini file was not found at {0}. Either add a reference to the Salinity.ini file or remove the spatial data..
-        /// </summary>
-        public static string SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButSalinityIniFileWasNotFound {
-            get {
-                return ResourceManager.GetString("SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButSalinityIniFileWa" +
-                        "sNotFound", resourceCulture);
             }
         }
         

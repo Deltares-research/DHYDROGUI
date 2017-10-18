@@ -1215,20 +1215,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Path of salinity.ini file. This path is relative to the *.dsproj_data directory of the project..
+        ///   Looks up a localized string similar to Reference node.
         /// </summary>
-        internal static string WaterFlowModel1DProperties_SalinityPath_Description {
+        internal static string WaterFlowModel1DProperties_SalinityNode_Description {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DProperties_SalinityPath_Description", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DProperties_SalinityNode_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Path of .ini file.
+        ///   Looks up a localized string similar to Reference node.
         /// </summary>
-        internal static string WaterFlowModel1DProperties_SalinityPath_DisplayName {
+        internal static string WaterFlowModel1DProperties_SalinityNode_DisplayName {
             get {
-                return ResourceManager.GetString("WaterFlowModel1DProperties_SalinityPath_DisplayName", resourceCulture);
+                return ResourceManager.GetString("WaterFlowModel1DProperties_SalinityNode_DisplayName", resourceCulture);
             }
         }
         

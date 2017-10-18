@@ -3,11 +3,6 @@
     public enum DispersionFormulationType
     {
         Constant,
-        ThatcherHarleman,
-        Gisen,
-        KuijperVanRijnConvergent, 
         KuijperVanRijnPrismatic, 
-        Savenije, 
-        Zhang
     }
 }

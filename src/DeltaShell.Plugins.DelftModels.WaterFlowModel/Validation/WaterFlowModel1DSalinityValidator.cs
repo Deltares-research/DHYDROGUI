@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             return new ValidationReport("Salinity", new[]
             {
                 ValidateSalinityBoundaryConditions(model),
-                ValidateSalinityPathForThatcherHarlemanValid(model)
+                ValidateSalinityForKuijperVanRijnPrismaticIsValid(model)
             });
         }
 
@@ -37,36 +37,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             return new ValidationReport(Resources.WaterFlowModel1DModelDataValidator_ValidateBoundaryConditions_Boundary_conditions, issues);
         }
        
-        private static ValidationReport ValidateSalinityPathForThatcherHarlemanValid(WaterFlowModel1D flowModel1D)
+        private static ValidationReport ValidateSalinityForKuijperVanRijnPrismaticIsValid(WaterFlowModel1D flowModel1D)
         {
-            if (flowModel1D.DispersionFormulationType == DispersionFormulationType.Constant)
+            if (!flowModel1D.SalinityValidNonConstantFormulation || flowModel1D.DispersionFormulationType != DispersionFormulationType.KuijperVanRijnPrismatic)
                 return new ValidationReport(Resources.WaterFlowModel1DModelDataValidator_ValidateSalinity_Salinity, Enumerable.Empty<ValidationIssue>());
 
             var issues = new List<ValidationIssue>();
             
-            if (flowModel1D.SalinityValidNonConstantFormulation)
+            if (string.IsNullOrEmpty(flowModel1D.SalinityEstuaryMouthNodeId))
             {
-                if (string.IsNullOrEmpty(flowModel1D.SalinityPath))
-                {
-                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error,
-                        Resources.SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButNoSalinityIniFileHasBeenSpecified));
-                }
-                else if (!File.Exists(flowModel1D.SalinityPath))
-                {
-                    var error = string.Format(Resources.SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButSalinityIniFileWasNotFound, flowModel1D.SalinityPath);
-                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, error));
-                }
+                issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, "No Estuary mouth node specified."));
             }
             else
             {
-                if (File.Exists(flowModel1D.SalinityPath))
+                var node = flowModel1D.Network?.HydroNodes.FirstOrDefault(n => n.Name == flowModel1D.SalinityEstuaryMouthNodeId);
+                if (node == null)
                 {
-                    var error = string.Format(Resources.SalinityValidator_SalinityIniFileFoundButNoSpatialDataForDispersionF4CoefficientExists, flowModel1D.SalinityPath);
-                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, error));
+                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, $"Can not find specified estuary mouth node {flowModel1D.SalinityEstuaryMouthNodeId}."));
+                }
+                else if (!node.IsValidSalinityEstuaryMouthNodeId())
+                {
+                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, $"Estuary mouth node \"{flowModel1D.SalinityEstuaryMouthNodeId}\" is not a boundary node."));
                 }
             }
-            
+
             return new ValidationReport(Resources.WaterFlowModel1DModelDataValidator_ValidateSalinity_Salinity, issues);
+        }
+
+        public static bool IsValidSalinityEstuaryMouthNodeId(this IHydroNode node)
+        {
+            return node.IncomingBranches.Concat(node.OutgoingBranches).Count() == 1;
         }
     }
 }

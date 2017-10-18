@@ -2,7 +2,6 @@
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGrid

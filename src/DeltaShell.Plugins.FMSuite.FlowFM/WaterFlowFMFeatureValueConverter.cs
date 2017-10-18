@@ -33,14 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                if (Model.BMIEngine == null)
-                {
-                    return double.NaN;
-                }
-
-                var result = Model.GetValueFromModelApi(Location, ParameterName);
-
-                return result;
+                return Model.GetValueFromModelApi(Location, ParameterName);
             }
             set
             {

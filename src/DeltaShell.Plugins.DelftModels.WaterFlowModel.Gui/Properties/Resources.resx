@@ -529,8 +529,8 @@
   <data name="WaterFlowModel1DProperties_DispersionFormulationsType_DisplayName" xml:space="preserve">
     <value>Dispersion formulation</value>
   </data>
-  <data name="WaterFlowModel1DProperties_SalinityPath_DisplayName" xml:space="preserve">
-    <value>Path of .ini file</value>
+  <data name="WaterFlowModel1DProperties_SalinityNode_DisplayName" xml:space="preserve">
+    <value>Estuary mouth</value>
   </data>
   <data name="WaterFlowModel1DProperties_UseTemperature_DisplayName" xml:space="preserve">
     <value>Use temperature</value>
@@ -601,8 +601,8 @@
   <data name="WaterFlowModel1DProperties_DispersionFormulationsType_Description" xml:space="preserve">
     <value>Determines which dispersion formulation to use</value>
   </data>
-  <data name="WaterFlowModel1DProperties_SalinityPath_Description" xml:space="preserve">
-    <value>Path of salinity.ini file. This path is relative to the *.dsproj_data directory of the project.</value>
+  <data name="WaterFlowModel1DProperties_SalinityNode_Description" xml:space="preserve">
+    <value>Estuary mouth node id (must be a node that is connected to only one channel)</value>
   </data>
   <data name="ReverseRoughnessSectionProperties_DisplayName" xml:space="preserve">
     <value>Reverse roughness section</value>

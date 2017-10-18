@@ -35,12 +35,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [TestCase(true)]
         [TestCase(false)]
-        public void EnableDisableEnableSaltChangesModelCoverages(bool useThatcherHarleman)
+        public void EnableDisableEnableSaltChangesModelCoverages(bool useKuijperVanRijnPrismatic)
         {
             using (var waterFlowModel1D = new WaterFlowModel1D())
             {
-                waterFlowModel1D.DispersionFormulationType = useThatcherHarleman
-                    ? DispersionFormulationType.ThatcherHarleman
+                waterFlowModel1D.DispersionFormulationType = useKuijperVanRijnPrismatic
+                    ? DispersionFormulationType.KuijperVanRijnPrismatic
                     : DispersionFormulationType.Constant; 
 
                 Assert.IsNull(waterFlowModel1D.InitialSaltConcentration);
@@ -51,8 +51,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 Assert.IsNotNull(waterFlowModel1D.InitialSaltConcentration);
                 Assert.IsNotNull(waterFlowModel1D.DispersionCoverage);
-                Assert.AreEqual(useThatcherHarleman, waterFlowModel1D.DispersionF3Coverage != null);
-                Assert.AreEqual(useThatcherHarleman, waterFlowModel1D.DispersionF4Coverage != null);
+                Assert.AreEqual(useKuijperVanRijnPrismatic, waterFlowModel1D.DispersionF3Coverage != null);
+                Assert.AreEqual(useKuijperVanRijnPrismatic, waterFlowModel1D.DispersionF4Coverage != null);
 
                 // disable salt
                 waterFlowModel1D.UseSalt = false;
@@ -68,8 +68,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 Assert.IsNotNull(waterFlowModel1D.InitialSaltConcentration);
                 Assert.IsNotNull(waterFlowModel1D.DispersionCoverage);
-                Assert.AreEqual(useThatcherHarleman, waterFlowModel1D.DispersionF3Coverage != null);
-                Assert.AreEqual(useThatcherHarleman, waterFlowModel1D.DispersionF4Coverage != null);
+                Assert.AreEqual(useKuijperVanRijnPrismatic, waterFlowModel1D.DispersionF3Coverage != null);
+                Assert.AreEqual(useKuijperVanRijnPrismatic, waterFlowModel1D.DispersionF4Coverage != null);
             }
         }
 
@@ -92,19 +92,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.That(waterFlowModel1D.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.Constant));
 
                 // Set to ThatcherHarleman
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.ThatcherHarleman;
+                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic;
                 Assert.IsNotNull(waterFlowModel1D.DispersionF3Coverage);
                 Assert.IsNotNull(waterFlowModel1D.DispersionF4Coverage);
 
                 // Disable and enable salt does not change existing formulation
                 waterFlowModel1D.UseSalt = false;
                 waterFlowModel1D.UseSalt = true;
-                Assert.That(waterFlowModel1D.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.ThatcherHarleman));
-
-                // Set to Savenije, F3 and F4 coverage should remain. 
-                waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Savenije;
-                Assert.IsNotNull(waterFlowModel1D.DispersionF3Coverage);
-                Assert.IsNotNull(waterFlowModel1D.DispersionF4Coverage);
+                Assert.That(waterFlowModel1D.DispersionFormulationType, Is.EqualTo(DispersionFormulationType.KuijperVanRijnPrismatic));
 
                 // Set to Constant
                 waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;

@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 {
                     destinationModel.UseSalt = true;
                     destinationModel.DispersionFormulationType = sourceModel.DispersionFormulationType;
-                    destinationModel.SalinityPath = sourceModel.SalinityPath;
+                    destinationModel.SalinityEstuaryMouthNodeId = sourceModel.SalinityEstuaryMouthNodeId;
 
                     destinationModel.InitialSaltConcentration.Name = sourceModel.InitialSaltConcentration.Name;
                     destinationModel.InitialSaltConcentration.DefaultValue = sourceModel.InitialSaltConcentration.DefaultValue;

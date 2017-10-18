@@ -54,6 +54,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
     public class WaterFlowModel1D : TimeDependentModelBase, IDisposable, ICloneable, IHydroModel, IDimrStateAwareModel, IHydFileModel, IModelMerge, IDimrModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1D));
+        internal static readonly string SalinityFileName = "Salinity.ini";
+
         private readonly DimrRunner runner;
         /// <summary>
         /// Data structure to hold the output settings which can be changed through the property grid in the gui 
@@ -96,8 +98,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         private bool useMorphology;
         private bool additionalMorphologyOutput;
 
-        private string salinityPath;
-        
         private readonly bool created;
         private InitialConditionsType initialConditionsType;
 
@@ -1026,11 +1026,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-        public virtual string SalinityPath
-        {
-            get { return string.IsNullOrEmpty(salinityPath) ? string.Empty : salinityPath; }
-            set { salinityPath = value; }
-        }
+        public virtual string SalinityEstuaryMouthNodeId { get; set; }
 
         public virtual DispersionFormulationType DispersionFormulationType
         {
@@ -1418,6 +1414,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 ((INotifyCollectionChange) networkValue).CollectionChanged += NetworkCollectionChanged;
                 ((INotifyPropertyChanged) networkValue).PropertyChanged += NetworkPropertyChanged;
+                ((INotifyPropertyChanging)networkValue).PropertyChanging += NetworkPropertyChanging;
             }
             observedNetwork = (IHydroNetwork)networkValue;
         }
@@ -1499,6 +1496,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             {
                 ((INotifyCollectionChange)observedNetwork).CollectionChanged -= NetworkCollectionChanged;
                 ((INotifyPropertyChanged)observedNetwork).PropertyChanged -= NetworkPropertyChanged;
+                ((INotifyPropertyChanging)observedNetwork).PropertyChanging -= NetworkPropertyChanging;
             }
         }
 
@@ -1657,6 +1655,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 if (cachedDispersionF4Coverage != null) cachedDispersionF4Coverage.Network = Network;
             }
 
+            SynchronizeSalinityEstuaryMouthNodeId();
+
             if (UseTemperature)
             {
                 InitialTemperature.Network = Network;
@@ -1684,6 +1684,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             // update cross section sections 
             UpdateRoughnessSections();
+        }
+
+        private void SynchronizeSalinityEstuaryMouthNodeId()
+        {
+            if (string.IsNullOrEmpty(SalinityEstuaryMouthNodeId)) return;
+
+            var node = Network.HydroNodes.FirstOrDefault(n => n.Name == SalinityEstuaryMouthNodeId);
+            if (node == null)
+            {
+                Log.WarnFormat("Removed {0} as estuary mouth from model {1} because it is not present in current network", SalinityEstuaryMouthNodeId, Name);
+                SalinityEstuaryMouthNodeId = null;
+            }
+            else
+            {
+                if (!node.IsValidSalinityEstuaryMouthNodeId())
+                {
+                    Log.WarnFormat("Removed {0} as estuary mouth from model {1} because it is no longer a valid boundary node", SalinityEstuaryMouthNodeId, Name);
+                    SalinityEstuaryMouthNodeId = null;
+                }
+            }
         }
 
         public virtual void UpdateRoughnessSections()
@@ -1776,6 +1796,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             return dispersionCoverage;
         }
 
+        private bool changingSalinityEstuaryMouthNodeId;
+
+        private void NetworkPropertyChanging(object sender, PropertyChangingEventArgs e)
+        {
+            var node = sender as IHydroNode;
+            if (node != null && e.PropertyName == "Name" && SalinityEstuaryMouthNodeId == node.Name)
+            {
+                changingSalinityEstuaryMouthNodeId = true;
+            }
+        }
+
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes
         /// </summary>
@@ -1798,11 +1829,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
             }
 
-            if (sender == Network && e.PropertyName == "IsEditing" && Network.CurrentEditAction is BranchSplitAction && 
-                !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
+            if (changingSalinityEstuaryMouthNodeId)
             {
-                OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
+                var node = (IHydroNode)sender;
+
+                SalinityEstuaryMouthNodeId = node.Name;
+                changingSalinityEstuaryMouthNodeId = false;
             }
+
+            var endedEditingNetwork = sender == Network && e.PropertyName == "IsEditing" && !Network.IsEditing;
+
+            if (endedEditingNetwork)
+            {
+                SynchronizeSalinityEstuaryMouthNodeId();
+
+                if (Network.CurrentEditAction is BranchSplitAction && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
+                {
+                    OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
+                }
+            }
+
             if (sender == Network && e.PropertyName == "CoordinateSystem")
             {
                 UpdateCoordinateSystemInOutputFeatureCoverages();
@@ -2609,7 +2655,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
             //make sure the salty dataitem are created first
             clonedModel.UseSalt = UseSalt;
-            clonedModel.SalinityPath = SalinityPath;
+            clonedModel.SalinityEstuaryMouthNodeId = SalinityEstuaryMouthNodeId;
 
             CloneTemperatureRelatedModelData(clonedModel);
             clonedModel.Name = Name;
@@ -3842,7 +3888,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         #endregion
 
-        // Return true when a salinity.ini file needs to be added to the computation. 
+        /// <summary>
+        /// Return true when a salinity.ini file needs to be added to the computation. 
+        /// </summary> 
         public virtual bool SalinityValidNonConstantFormulation
         {
             get

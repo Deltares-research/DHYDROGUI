@@ -66,14 +66,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             if (waterFlowModel1D.SalinityValidNonConstantFormulation)
             {
-                var salinityFilename = Path.GetFileName(waterFlowModel1D.SalinityPath);
-                if (!File.Exists(waterFlowModel1D.SalinityPath) || string.IsNullOrEmpty(salinityFilename))
-                    throw new FileWritingException(string.Format("{0} is not at location {1}.", salinityFilename, waterFlowModel1D.SalinityPath));
+                fileName.Salinity = WaterFlowModel1D.SalinityFileName;
 
-                fileName.Salinity = salinityFilename;
-
-                ThrowIfFileNotExists(waterFlowModel1D.SalinityPath, waterFlowModel1D.SalinityPath,
-                    p => WaterFlowModel1DSalinityIniWriter.WriteFile(p, fileName.Salinity,waterFlowModel1D.DispersionFormulationType));
+                ThrowIfFileNotExists(fileName.Salinity, fileName.TargetPath,
+                    p => WaterFlowModel1DSalinityIniWriter.WriteFile(p, waterFlowModel1D.DispersionFormulationType, waterFlowModel1D.SalinityEstuaryMouthNodeId));
             }
 
             if (waterFlowModel1D.UseMorphology)

@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         public void ValidateSalinity_ReturnsWarningWhenF3AndF4CoverageDatasWillBeLostInMerge()
         {
             var destinationModel = new WaterFlowModel1D() { UseSalt = true, DispersionFormulationType = DispersionFormulationType.Constant};
-            var sourceModel = new WaterFlowModel1D() { UseSalt = true, DispersionFormulationType = DispersionFormulationType.ThatcherHarleman};
+            var sourceModel = new WaterFlowModel1D() { UseSalt = true, DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic};
             var validationReport = WaterFlowModel1DModelMergeValidator.ValidateSalility(destinationModel, sourceModel);
             Assert.That(validationReport.IsEmpty, Is.False);
 

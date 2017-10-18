@@ -70,8 +70,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         {
             try
             {
-                TryRetreivingMessage(Resources.SalinityValidator_SalinityIniFileFoundButNoSpatialDataForDispersionF4CoefficientExists);
-                TryRetreivingMessage(Resources.SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButNoSalinityIniFileHasBeenSpecified);
                 TryRetreivingMessage(Resources.WaterFlowModel1D_AddDispersionF3CoverageDataItem_Dispersion_F3_coefficient);
                 TryRetreivingMessage(Resources.WaterFlowModel1D_AddDispersionF4CoverageDataItem_Dispersion_F4_coefficient);
                 TryRetreivingMessage(Resources.WaterFlowModel1D_EnableSalt_Dispersion_F1_coefficient);
@@ -136,7 +134,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadRoughnessSection_When_reading_reverse_roughness_section___0___the_referring__linked___normal__roughness_section___1___is_not_found__The_normal_section___1___should_be_imported_first_);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created);
-                TryRetreivingMessage(Resources.SalinityValidator_SpatialDataForDispersionF4CoefficientExistsButSalinityIniFileWasNotFound);
                 TryRetreivingMessage(Resources.WaterFlowModel1DApplicationPlugin_Description);
                 TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Morphology_file_does_not_exist);
                 TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Sediment_file_does_not_exist);

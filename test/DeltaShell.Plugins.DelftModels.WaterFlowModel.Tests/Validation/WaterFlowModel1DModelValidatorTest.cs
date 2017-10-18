@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -1079,37 +1078,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             Assert.IsFalse(validationReport.AllErrors.Any());
         }
 
-        [TestCase(false, DispersionFormulationType.Constant, -0.1, false, false)]
-        [TestCase(false, DispersionFormulationType.Constant, -0.1, true, false)]
-        [TestCase(true, DispersionFormulationType.Constant, -0.1, true, false)]
-        [TestCase(true, DispersionFormulationType.Constant, -0.1, false, false)]
-
-        [TestCase(false, DispersionFormulationType.Constant, 0.0, false, false)]
-        [TestCase(false, DispersionFormulationType.Constant, 0.0, true, false)]
-        [TestCase(true, DispersionFormulationType.Constant, 0.0, true, false)]
-        [TestCase(true, DispersionFormulationType.Constant, 0.0, false, false)]
-
-        [TestCase(false, DispersionFormulationType.Constant, 0.1, false, false)]
-        [TestCase(false, DispersionFormulationType.Constant, 0.1, true, false)]
-        [TestCase(true, DispersionFormulationType.Constant, 0.1, true, false)]
-        [TestCase(true, DispersionFormulationType.Constant, 0.1, false, false)]
-
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, -0.1, false, false)]
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, -0.1, true, true)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, -0.1, true, false)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, -0.1, false, true)]
-
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, 0.0, false, false)]
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, 0.0, true, true)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, 0.0, true, true)]   // Different from non-zero values
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, 0.0, false, false)] // Different from non-zero values
-
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, 0.1, false, false)]
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, 0.1, true, true)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, 0.1, true, false)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, 0.1, false, true)]
-        
-        public void ModelSalinityIniFileExist1DTest(bool salinityInComputation, DispersionFormulationType dispersionFormulationType, double value, bool fileExists, bool shouldThrowSalinityIniError)
+        [Test]
+        public void SaltKuijperVanRijnPrismaticValidationShouldCheckForValidSalinityEstuaryMouthNodeId()
         {
             var network = new HydroNetwork();
 
@@ -1125,24 +1095,82 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             {
                 Network = network,
                 UseSalt = true,
-                UseSaltInCalculation = salinityInComputation,
+                DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic,
+                UseSaltInCalculation = true
+            };
+
+            model.DispersionF4Coverage.Locations.AddValues(new[] { new NetworkLocation(branch, 0) });
+            model.DispersionF4Coverage.SetValues(new[] { -0.1 });
+
+            model.SalinityEstuaryMouthNodeId = node1.Name;
+
+            var validationReport = WaterFlowModel1DSalinityValidator.Validate(model);
+            Assert.AreEqual(0, validationReport.AllErrors.Count());
+
+            model.SalinityEstuaryMouthNodeId = "test";
+
+            validationReport = WaterFlowModel1DSalinityValidator.Validate(model);
+            Assert.AreEqual(1, validationReport.AllErrors.Count());
+
+            model.SalinityEstuaryMouthNodeId = node1.Name;
+            var node3 = new HydroNode("node3");
+
+            var channel2 = new Channel(node1, node3);
+            network.Nodes.Add(node3);
+            network.Branches.Add(channel2);
+
+            validationReport = WaterFlowModel1DSalinityValidator.Validate(model);
+            Assert.AreEqual(1, validationReport.AllErrors.Count());
+        }
+
+        [TestCase(false, DispersionFormulationType.Constant, false, false)]
+        [TestCase(false, DispersionFormulationType.Constant, true, false)]
+        [TestCase(false, DispersionFormulationType.KuijperVanRijnPrismatic, false, false)]
+        [TestCase(false, DispersionFormulationType.KuijperVanRijnPrismatic, true, false)]
+
+        [TestCase(true, DispersionFormulationType.Constant, false, false)]
+        [TestCase(true, DispersionFormulationType.Constant, true, false)]
+        [TestCase(true, DispersionFormulationType.KuijperVanRijnPrismatic, false, true)]
+        [TestCase(true, DispersionFormulationType.KuijperVanRijnPrismatic, true, false)]
+        public void ModelSalinityIniFileExist1DTest(bool salinityValidNonConstantFormulation, DispersionFormulationType dispersionFormulationType, bool hasNode, bool shouldThrowSalinityIniError)
+        {
+            var network = new HydroNetwork();
+
+            var node1 = new HydroNode { Name = "node1", Network = network };
+            var node2 = new HydroNode { Name = "node2", Network = network };
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var branch = new Channel("branch", node1, node2, 100.0);
+            network.Branches.Add(branch);
+
+            var model = new WaterFlowModel1D
+            {
+                Network = network,
+                UseSalt = true,
                 DispersionFormulationType = dispersionFormulationType
             };
 
-            if (salinityInComputation && dispersionFormulationType == DispersionFormulationType.ThatcherHarleman)
+            if (salinityValidNonConstantFormulation)
             {
-                model.DispersionF4Coverage.Locations.AddValues(new [] { new NetworkLocation(branch,0) });
-                model.DispersionF4Coverage.SetValues(new[] { value }); 
+                model.UseSaltInCalculation = true;
+
+                if (dispersionFormulationType == DispersionFormulationType.KuijperVanRijnPrismatic)
+                {
+                    model.DispersionF4Coverage.Locations.AddValues(new[] { new NetworkLocation(branch, 0) });
+                    model.DispersionF4Coverage.SetValues(new[] { -0.1 });
+                }
             }
-            if (fileExists)
+
+            if (hasNode)
             {
-                model.SalinityPath = Path.GetTempFileName();
+                model.SalinityEstuaryMouthNodeId = node1.Name;
             }
 
             var validationReport = WaterFlowModel1DSalinityValidator.Validate(model);
             Assert.AreEqual(shouldThrowSalinityIniError, validationReport.AllErrors.Any());
         }
-        
+
         [Test]
         public void ModelValidationSalinityTest()
         {

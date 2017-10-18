@@ -20,8 +20,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             var useSalt = waterFlowModel1D != null && waterFlowModel1D.UseSalt;
             var useThatcherHarleman = waterFlowModel1D != null && waterFlowModel1D.DispersionFormulationType != DispersionFormulationType.Constant;
+
             var salinityPath = waterFlowModel1D != null && waterFlowModel1D.SalinityValidNonConstantFormulation 
-                ? Path.GetFileName(waterFlowModel1D.SalinityPath) 
+                ? WaterFlowModel1D.SalinityFileName
                 : null;
 
             var categories = new List<DelftIniCategory>

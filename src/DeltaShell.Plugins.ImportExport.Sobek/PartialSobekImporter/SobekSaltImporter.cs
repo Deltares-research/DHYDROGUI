@@ -305,10 +305,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             switch (globalDispersion.DispersionOptionType)
             {
                 case DispersionOptionType.Option1:
-                    waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;
-                    break;
                 case DispersionOptionType.ThatcherHarlemann:
-                    waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.ThatcherHarleman;
+                    waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;
                     break;
                 case DispersionOptionType.Option2:
                 case DispersionOptionType.Empirical:
@@ -358,7 +356,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     case DispersionType.Constant:
                         dispersion[new NetworkLocation(branch, branch.Geometry.Length / 2)] = sobekSaltLocalDispersion.F1;
-                        if (waterFlowModel1D.DispersionFormulationType == DispersionFormulationType.ThatcherHarleman)
+                        if (waterFlowModel1D.DispersionFormulationType != DispersionFormulationType.Constant)
                         {
                             dispersionF3[new NetworkLocation(branch, branch.Geometry.Length / 2)] = sobekSaltLocalDispersion.F3;
                         }
@@ -370,7 +368,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                             var value_f1 = (double)row[1];
                             dispersion[new NetworkLocation(branch, offset)] = value_f1;
                             
-                            if (waterFlowModel1D.DispersionFormulationType == DispersionFormulationType.ThatcherHarleman)
+                            if (waterFlowModel1D.DispersionFormulationType != DispersionFormulationType.Constant)
                             {
                                 var value_f3 = (double) row[2];
                                 dispersion[new NetworkLocation(branch, offset)] = new[] {value_f3};

@@ -17,15 +17,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [TestCase(false, DispersionFormulationType.Constant, 0)]
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, 0)]
-        [TestCase(true, DispersionFormulationType.Constant, 0)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, 0)]
-        [TestCase(false, DispersionFormulationType.Constant, 23)]
-        [TestCase(false, DispersionFormulationType.ThatcherHarleman, 23)]
-        [TestCase(true, DispersionFormulationType.Constant, 23)]
-        [TestCase(true, DispersionFormulationType.ThatcherHarleman, 23)]
-        public void ValidateDynamicAttributesForSalinityProperties(bool useSalinity, DispersionFormulationType dispFormulationType, int dispCovValue)
+        [TestCase(false, 0)]
+        [TestCase(true, 0)]
+        [TestCase(false, 23)]
+        [TestCase(true, 23)]
+        public void ValidateDynamicAttributesForSalinityProperties(bool useSalinity, int dispCovValue)
         {
             var model = new WaterFlowModel1D();
             var saltProperties = new WaterFlowModel1DSalinityProperties(model);
@@ -35,7 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
             Assert.That(model.UseSalt, Is.EqualTo(useSalinity));
             Assert.That(model.UseSaltInCalculation, Is.EqualTo(useSalinity));
 
-            model.DispersionFormulationType = dispFormulationType;
             if (useSalinity)
             {
                 model.DispersionCoverage.DefaultValue = dispCovValue;
@@ -43,8 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms.PropertyGrid
             }
 
             Assert.That(saltProperties.ValidateDynamicAttributes("UseSaltInCalculation"), Is.EqualTo(!useSalinity));
-
-            Assert.That(saltProperties.ValidateDynamicAttributes("SalinityPath"), Is.EqualTo(model.DispersionFormulationType == DispersionFormulationType.Constant));
 
             Assert.That(saltProperties.ValidateDynamicAttributes("DispersionFormulationType"), Is.EqualTo(model.DispersionCoverage == null || !useSalinity));
 

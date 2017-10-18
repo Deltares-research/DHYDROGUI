@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.IsTrue(waterFlowModel1DModel.UseSalt);
             Assert.IsTrue(waterFlowModel1DModel.UseSaltInCalculation);
 
-            Assert.IsTrue(waterFlowModel1DModel.DispersionFormulationType == DispersionFormulationType.ThatcherHarleman);
+            Assert.IsTrue(waterFlowModel1DModel.DispersionFormulationType == DispersionFormulationType.Constant);
         }
 
         [Test]
@@ -48,23 +48,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             Assert.IsTrue(waterFlowModel1DModel.UseSalt);
             Assert.IsTrue(waterFlowModel1DModel.UseSaltInCalculation);
-            Assert.IsTrue(waterFlowModel1DModel.DispersionFormulationType == DispersionFormulationType.ThatcherHarleman);
+            Assert.IsTrue(waterFlowModel1DModel.DispersionFormulationType == DispersionFormulationType.Constant);
 
             var dispersion = waterFlowModel1DModel.DispersionCoverage;
             var dispersionF3 = waterFlowModel1DModel.DispersionF3Coverage;
-            Assert.AreEqual(87, dispersionF3.Locations.Values.Count);
-
-            var nl1 = dispersionF3.Locations.Values.First(l => l.Branch.Name == "R_10");
-            var nl2 = dispersionF3.Locations.Values.First(l => l.Branch.Name == "R_47");
-            var nl3 = dispersionF3.Locations.Values.First(l => l.Branch.Name == "R_87");
+            Assert.IsNull(dispersionF3);
+            
+            var nl1 = dispersion.Locations.Values.First(l => l.Branch.Name == "R_10");
+            var nl2 = dispersion.Locations.Values.First(l => l.Branch.Name == "R_47");
+            var nl3 = dispersion.Locations.Values.First(l => l.Branch.Name == "R_87");
 
             Assert.AreEqual(new[] { 2500.0 }, dispersion.GetAllComponentValues(nl1));
             Assert.AreEqual(new[] { 100.0 }, dispersion.GetAllComponentValues(nl2));
             Assert.AreEqual(new[] { 50.0 }, dispersion.GetAllComponentValues(nl3));
-
-            Assert.AreEqual(new[] { 0.0 }, dispersionF3.GetAllComponentValues(nl1));
-            Assert.AreEqual(new[] { 1.0 }, dispersionF3.GetAllComponentValues(nl2));
-            Assert.AreEqual(new[] { 0.0 }, dispersionF3.GetAllComponentValues(nl3));
         }
 
         [Test]
