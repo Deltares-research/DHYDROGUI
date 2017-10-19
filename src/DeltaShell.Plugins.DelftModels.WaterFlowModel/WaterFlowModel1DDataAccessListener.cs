@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -16,6 +17,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         public override object Clone()
         {
             return new WaterFlowModel1DDataAccessListener {ProjectRepository = ProjectRepository};
+        }
+
+        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        {
+            var waterFlowModel1D = entity as WaterFlowModel1D;
+            if (waterFlowModel1D != null)
+            {
+                // Check if name is still valid (for backwards compatibility)
+                var name = waterFlowModel1D.DispersionFormulationTypeParameter.Value;
+                if (Enum.GetNames(typeof(DispersionFormulationType)).All(n => n != name))
+                {
+                    waterFlowModel1D.DispersionFormulationType = DispersionFormulationType.Constant;
+                }
+            }
+                
+            base.OnPostLoad(entity, state, propertyNames);
         }
 
         public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
