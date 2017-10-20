@@ -22,6 +22,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
             uGrid.GetEdgeNodesForMeshId(meshId);
             uGrid.GetFaceNodesForMeshId(meshId);
 
+            // TODO: We would like to set oneBased to false here, we can't do this currently since the Faces are always returned as 1 based by the GridApi (DELFT3DFM-1308)
             var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(uGrid.NodeCoordinatesByMeshId[meshId-1].ToList(), uGrid.EdgeNodesByMeshId[meshId-1], uGrid.FaceNodesByMeshId[meshId-1]);
             if (grid != null) grid.CoordinateSystem = uGrid.CoordinateSystem;
             return grid;

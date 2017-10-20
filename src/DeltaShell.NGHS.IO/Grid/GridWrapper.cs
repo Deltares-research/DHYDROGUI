@@ -760,12 +760,21 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetEdgeNodes(int ioncId, int meshId, ref IntPtr edgeNodesPtr, int numberOfEdges)
         {
-            int startIndex = 0;
+            /*
+                    Set startIndex to 1 (we would prefer to use zero here)
+                    However GridWrapper.ionc_get_face_nodes in GetFaceNodesForMesh (below) does not allow for a specified startIndex
+                    and UnstructuredGridFactory.CreateFromVertexAndEdgeList (framework) uses the same start index for constructing both Edges and Cells
+
+                    TODO: this should be changed to zero with DELFT3DFM-1308
+                 */
+            var startIndex = 1;
             return ionc_get_edge_nodes_dll(ref ioncId, ref meshId, ref edgeNodesPtr, ref numberOfEdges, ref startIndex);
         }
 
         public int GetFaceNodes(int ioncId, int meshId, ref IntPtr faceNodesPtr, int numberOfFaces, int numberOfMaxFaceNodes, ref int fillvalue)
         {
+            // TODO: after ionc_get_face_nodes has been updated to accept a startIndex, use startIndex = 0 here (DELFT3DFM-1308)
+            // TODO: also change ionc_get_edge_nodes (above) to use startIndex = 0    
             return ionc_get_face_nodes_dll(ref ioncId, ref meshId, ref faceNodesPtr, ref numberOfFaces, ref numberOfMaxFaceNodes, ref fillvalue);
         }
 
