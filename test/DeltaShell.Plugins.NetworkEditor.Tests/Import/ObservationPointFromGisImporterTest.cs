@@ -11,6 +11,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class ObservationPointFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;
@@ -32,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportObservationPointFromShape()
         {
             var pathChannels = TestHelper.GetTestFilePath("HydroBaseCF_ShapeFiles/Channels.shp");
@@ -77,7 +77,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportObservationPointFromGeodatabase()
         {
             var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");

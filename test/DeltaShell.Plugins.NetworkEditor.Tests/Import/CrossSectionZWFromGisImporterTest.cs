@@ -12,6 +12,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class CrossSectionZWFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;
@@ -53,7 +54,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportCrossSectionsZWFromShapeFile()
         {
             var pathChannel = TestHelper.GetTestFilePath("HydroBaseCF_ShapeFiles/Channels.shp");
@@ -110,7 +110,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportCrossSectionsZWFromGeodatabase()
          {
              var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
@@ -191,7 +190,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportCrossSectionsZWFromGeodatabaseManyLocations()
         {
             var path = TestHelper.GetTestFilePath("testdatabase_CF.mdb");
