@@ -10,9 +10,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel
 {
     public static class RealTimeControlModelDll
     {
-        public const string RTCTOOLS_FOLDER_NAME = "dfbc";
+        public const string RTCTOOLS_FOLDER_NAME = "drtc";
         public const string RTCTOOLS_BINFOLDER_NAME = "bin";
-        public const string RTCTOOLS_DLL_NAME = "RTCTools_BMI.dll";
+        public const string RTCTOOLS_DLL_NAME = "FBCTools_BMI.dll";
 
         public static string DllPath
         {

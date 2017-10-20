@@ -261,7 +261,7 @@ namespace Sobek.IntegrationTests
                 //Check component nodes
                 var componentValuesList = new List<List<string>>
                     {
-                        new List<string> {"RTC Model", "RTCTools_BMI", "0", "rtc", "."},
+                        new List<string> {"RTC Model", "FBCTools_BMI", "0", "rtc", "."},
                         new List<string> {"Flow1D", "cf_dll", "0", "dflow1d", "Flow1D.md1d"}
                     };
 
@@ -369,7 +369,7 @@ namespace Sobek.IntegrationTests
                 //Check component nodes
                 XmlDimrCheckComponents(rootElement, new List<List<string>>
                     {
-                        new List<string> {"RTC Model", "RTCTools_BMI", "0", "rtc", "."},
+                        new List<string> {"RTC Model", "FBCTools_BMI", "0", "rtc", "."},
                         new List<string> {"FlowFM", "dflowfm", "0", "dflowfm", "FlowFM.mdu"}
                     });
 
@@ -502,7 +502,7 @@ namespace Sobek.IntegrationTests
                 //Check component nodes
                 var componentValuesList = new List<List<string>>
                     {
-                        new List<string> {"RTC Model", "RTCTools_BMI", "0", "rtc", "."},
+                        new List<string> {"RTC Model", "FBCTools_BMI", "0", "rtc", "."},
                         new List<string> {"1d2d", "flow1d2d", "0", "1d2dcoupler", "1d2d.ini"}
                     };
                 XmlDimrCheckComponents(rootElement, componentValuesList);
