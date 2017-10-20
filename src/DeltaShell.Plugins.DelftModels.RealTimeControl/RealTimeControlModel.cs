@@ -405,7 +405,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual string LibraryName
         {
-            get { return "RTCTools_BMI"; }
+            get { return "FBCTools_BMI"; }
         }
 
         public virtual string InputFile

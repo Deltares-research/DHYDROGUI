@@ -439,7 +439,7 @@ namespace Sobek.IntegrationTests
                 var componentNodes = rootElement.Elements(nameSpace + "component").ToList();
                 Assert.That(componentNodes.Count(), Is.EqualTo(2));
                 XElement firstComponent = componentNodes.First();
-                xmlDimrCheckComponentChildren(firstComponent, nameSpace, "RTC Model", "RTCTools_BMI", "0", "rtc", ".");
+                xmlDimrCheckComponentChildren(firstComponent, nameSpace, "RTC Model", "FBCTools_BMI", "0", "rtc", ".");
                 XElement secondComponent = componentNodes.Last();
                 xmlDimrCheckComponentChildren(secondComponent, nameSpace, "1d2d", "flow1d2d", "0", "1d2dcoupler", "1d2d.ini");
                 //Fetch coupler node
