@@ -1,4 +1,4 @@
-** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.035.46968, Aug  3 2016, 15:14:45
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.038.51843, Jul 26 2017, 15:18:04
 ** INFO   : Balance Error in          4 Discharge down:        0.981601 Discharge up:        1.131601 error      -7.098231
 ** INFO   : Balance Error in          5 Discharge down:        1.100398 Discharge up:        1.200398 error      -4.346322
 ** INFO   : Balance Error in          6 Discharge down:        1.176476 Discharge up:        1.276476 error      -4.076720
@@ -5759,7 +5759,7 @@
 ** INFO   : Balance Error in         14 Discharge down:        0.900000 Discharge up:        0.950000 error      -2.702703
 ** INFO   : Balance Error in         18 Discharge down:        0.866667 Discharge up:        0.900000 error      -1.886793
 ** INFO   : Balance Error in         19 Discharge down:        0.900000 Discharge up:        0.950000 error      -2.702703
-** INFO   : cpu computation =       0.140401
+** INFO   : cpu computation =       0.249602
 
 ****************************************
 Info Messages :  5762

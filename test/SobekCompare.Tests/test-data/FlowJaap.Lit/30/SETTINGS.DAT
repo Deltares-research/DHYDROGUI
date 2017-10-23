@@ -19,7 +19,7 @@ NrOfTasks=1
 TaskDescription=Run 1DFLOW (Rural) module stand-alone
 QuantityAndQualityParallel=0
 QuantityResultsPresentFromCase=TestDiffuseForkFlat
-QuantityResultsTime=42696.6952199074
+QuantityResultsTime=42985.678900463
 
 [Restart]
 RES_SELECTED=
