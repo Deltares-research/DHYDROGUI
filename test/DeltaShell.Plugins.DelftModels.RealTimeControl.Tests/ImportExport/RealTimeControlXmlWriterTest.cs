@@ -18,8 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [Test]
         public void CheckIfXsdFileAreAtCorrectLocation()
         {
-            Assert.AreEqual(13, Directory.GetFiles(RealTimeControlModelDll.DllPath.Replace("x86", "x64")).Count(f => f.EndsWith("xsd"))); // check x64
-            //Assert.AreEqual(13, Directory.GetFiles(RealTimeControlModelDll.DllPath.Replace("x64", "x86")).Count(f => f.EndsWith("xsd"))); // check x86
+            Assert.AreEqual(13, Directory.GetFiles(RealTimeControlModelDll.DllPath).Count(f => f.EndsWith("xsd"))); // check x64
         }
 
 

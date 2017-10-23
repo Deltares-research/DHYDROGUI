@@ -31,19 +31,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // for the occurance of 'GetTickCount64' in the dll imports. This method is only available on Vista
             // and above.
 
-            foreach (
-                var dllVersion in
-                new[]
-                {
-                    Path.Combine(DimrApiDataSet.SharedDllPath, "io_netcdf.dll"),
-                    Path.Combine(DimrApiDataSet.SharedDllPath.Contains("x86") ? DimrApiDataSet.SharedDllPath.Replace("x86","x64"): DimrApiDataSet.SharedDllPath, "io_netcdf.dll")
-                })
+            var dllVersion = Path.Combine(DimrApiDataSet.SharedDllPath, "io_netcdf.dll");
+
+            foreach (var line in File.ReadLines(dllVersion))
             {
-                foreach (var line in File.ReadLines(dllVersion))
-                {
-                    if (line.Contains("GetTickCount64"))
-                        Assert.Fail("Current dflowfm.dll is not compatible with XP: " + dllVersion);
-                }
+                if (line.Contains("GetTickCount64"))
+                    Assert.Fail("Current dflowfm.dll is not compatible with XP: " + dllVersion);
             }
         }
 
@@ -526,12 +519,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.That(uGrid.EdgeNodes, Is.Not.Null);
                     //cast from int[,] (2d int array) to int[][] (2 1d int arrays)
                     var edgeNodesForThisMesh = uGrid.EdgeNodes[meshNr - 1].ConvertToTwoOneDimensionalArrays();
-                    Assert.That(edgeNodesForThisMesh[0], Is.EqualTo(new[] { 5, 2 }));
-                    Assert.That(edgeNodesForThisMesh[1], Is.EqualTo(new[] { 2, 1 }));
-                    Assert.That(edgeNodesForThisMesh[2], Is.EqualTo(new[] { 1, 5 }));
-                    Assert.That(edgeNodesForThisMesh[3], Is.EqualTo(new[] { 5, 4 }));
-                    Assert.That(edgeNodesForThisMesh[4], Is.EqualTo(new[] { 4, 3 }));
-                    Assert.That(edgeNodesForThisMesh[5], Is.EqualTo(new[] { 3, 2 }));
+
+                    /*
+                        We are currently using startIndex = 1 (we would prefer to use zero here)
+                        TODO: this should be changed to zero with DELFT3DFM-1308
+                        TODO: remove const isOneBased
+                    */
+
+                    const bool isOneBased = true;
+
+                    Assert.That(edgeNodesForThisMesh[0], Is.EqualTo(new[] { 5 + (isOneBased ? 1 : 0), 2 + (isOneBased ? 1 : 0) }));
+                    Assert.That(edgeNodesForThisMesh[1], Is.EqualTo(new[] { 2 + (isOneBased ? 1 : 0), 1 + (isOneBased ? 1 : 0) }));
+                    Assert.That(edgeNodesForThisMesh[2], Is.EqualTo(new[] { 1 + (isOneBased ? 1 : 0), 5 + (isOneBased ? 1 : 0) }));
+                    Assert.That(edgeNodesForThisMesh[3], Is.EqualTo(new[] { 5 + (isOneBased ? 1 : 0), 4 + (isOneBased ? 1 : 0) }));
+                    Assert.That(edgeNodesForThisMesh[4], Is.EqualTo(new[] { 4 + (isOneBased ? 1 : 0), 3 + (isOneBased ? 1 : 0) }));
+                    Assert.That(edgeNodesForThisMesh[5], Is.EqualTo(new[] { 3 + (isOneBased ? 1 : 0), 2 + (isOneBased ? 1 : 0) }));
                 }
             }
             finally
