@@ -219,8 +219,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 .Cast<char[]>().Select(CharArrayToString).ToArray();
 
             // TODO: xs and yx are now time dependent, evetually we will need to re-think this... for now, just take the 1st dimension
-            var xs = netCdfFile.Read(netCdfFile.GetVariableByName("station_x_coordinate"), new[] { 0, 0 }, new[] { 1, ids.Length });
-            var ys = netCdfFile.Read(netCdfFile.GetVariableByName("station_y_coordinate"), new[] { 0, 0 }, new[] { 1, ids.Length });
+
+            var xs = netCdfFile.Read(netCdfFile.GetVariableByName("station_x_coordinate"));
+            var ys = netCdfFile.Read(netCdfFile.GetVariableByName("station_y_coordinate"));
             
             for (int i = 0; i < ids.Length; i++)
             {
