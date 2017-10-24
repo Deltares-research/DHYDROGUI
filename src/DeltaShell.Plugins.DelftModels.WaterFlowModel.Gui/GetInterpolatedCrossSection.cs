@@ -150,7 +150,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 if (cs1.Second.CrossSectionType == CrossSectionType.ZW ||
                     cs1.Second.CrossSectionType == CrossSectionType.Standard)
                 {
-                    cs = getInterpolatedZWCrossSection(channel, chainage, cs1.Second, cs2.Second, distanceBetweenCrossSections, distanceToCrossSectionNr1);
+                    // TODO: ModelApi functions were removed, this needs to be re-implemented at some point
+                    Log.Error("Get Interpolated ZW CrossSection feature has been disabled");
+                    return null;
                 }
                 else
                 {
@@ -159,7 +161,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                         Log.Error("There's no model available for a conveyance table calculation");
                         return null;
                     }
-                    cs = getInterpolatedYZCrossSection(channel, chainage, cs1.Second, cs2.Second, distanceBetweenCrossSections, distanceToCrossSectionNr1, WaterFlowModel1D);
+                    // TODO: ModelApi functions were removed, this needs to be re-implemented at some point
+                    Log.Error("Get Interpolated YZ CrossSection feature has been disabled");
+                    return null;
                 }
             }
 
@@ -240,96 +244,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
             btnAdd.Enabled = false;
 
             return form;
-        }
-
-        public static ICrossSection getInterpolatedZWCrossSection(Channel c, double chainage, ICrossSection cs1, ICrossSection cs2, double distanceBetweenCrossSections, double distanceToCrossSectionNr1)
-        {
-            var crossSectionModelApiController = new CrossSectionModelApiController(ModelApi, null); // roughness not needed for following calls
-
-            int csDefinition1 = crossSectionModelApiController.SetProfileInModelApi(cs1, cs1.Definition, false);
-            int crossSectionNr1 = ModelApi.NetworkSetCS(0, 0.0, csDefinition1, 0.0);                
-
-            int csDefinition2 = crossSectionModelApiController.SetProfileInModelApi(cs2, cs2.Definition, false);
-            int crossSectionNr2 = ModelApi.NetworkSetCS(0, 0.0, csDefinition2, 0.0);
-
-            // create arrays to hold the resulting interpolated cross section
-            double[] levels_r = new double[0];
-            double[] flowWidth_r = new double[0];
-            double[] totalWidth_r = new double[0];
-            double[] plains_r = new double[0];
-            double[] levelCrest_r = new double[0];
-            double[] bedLevel_r = new double[0];
-            double[] flowArea_r = new double[0];
-            double[] totalArea_r = new double[0];
-            double[] groundlayer_r = new double[0];
-            bool groundlayerUsed_r = false;
-
-            int levelCount;
-            double[] bedLevelShift = new double[0];
-
-            ModelApi.GetInterpolatedZWCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections, distanceToCrossSectionNr1,
-                                                    out levelCount, out bedLevelShift, out levels_r,
-                                                    out flowWidth_r, out totalWidth_r, out plains_r, out levelCrest_r,
-                                                    out bedLevel_r, out flowArea_r, out totalArea_r,
-                                                    out groundlayerUsed_r, out groundlayer_r);
-
-            var newcs = CrossSection.CreateDefault(CrossSectionType.ZW, c, chainage);
-
-            // fill in newcs values
-            var newcsdef = (CrossSectionDefinitionZW)newcs.Definition;
-            newcsdef.ZWDataTable.Clear();
-            for (int i = 0; i < levelCount; i++)
-            {
-                newcsdef.ZWDataTable.AddCrossSectionZWRow(levels_r[i] + bedLevelShift[0], totalWidth_r[i],
-                                                            totalWidth_r[i] - flowWidth_r[i]);
-            }
-            newcsdef.SummerDike.Active = levelCrest_r[0] > 0d;
-            newcsdef.SummerDike.CrestLevel = levelCrest_r[0];
-            newcsdef.SummerDike.FloodPlainLevel = bedLevel_r[0];
-            newcsdef.SummerDike.FloodSurface = flowArea_r[0];
-
-            ModelApi.Finalize();
-
-            return newcs;
-        }
-
-        public static ICrossSection getInterpolatedYZCrossSection(Channel c, double chainage, ICrossSection cs1, ICrossSection cs2, double distanceBetweenCrossSections, double distanceToCrossSectionNr1, WaterFlowModel1D waterFlowModel1D)
-        {
-            var crossSectionModelApiController = new CrossSectionModelApiController(ModelApi, waterFlowModel1D.RoughnessSections);
-
-            var firstCrossSection = cs1;
-            int csDefinition1 = crossSectionModelApiController.SetProfileInModelApi(firstCrossSection,
-                                                                                    cs1.Definition,
-                                                                                    false);
-            int crossSectionNr1 = ModelApi.NetworkSetCS(0, 0.0, csDefinition1, 0.0);
-
-            var secondCrossSection = cs2;
-            int csDefinition2 = crossSectionModelApiController.SetProfileInModelApi(secondCrossSection,
-                                                                                    cs2.Definition,
-                                                                                    false);
-            int crossSectionNr2 = ModelApi.NetworkSetCS(0, 0.0, csDefinition2, 0.0);
-
-            // create arrays to hold the resulting interpolated cross section
-            double[] y = new double[0];
-            double[] z = new double[0];
-
-            ModelApi.GetInterpolatedYZCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections,
-                                                   distanceToCrossSectionNr1, ref y, ref z);
-
-            var newcs = CrossSection.CreateDefault(CrossSectionType.YZ, c, chainage);
-
-            // fill in newcs values
-
-            var newcsdef = (CrossSectionDefinitionYZ)newcs.Definition;
-            newcsdef.YZDataTable.Clear();
-            for (var i = 0; i < y.Count(); i++)
-            {
-                newcsdef.YZDataTable.AddCrossSectionYZRow(y[i], z[i], 0d);
-            }
-
-            ModelApi.Finalize();
-
-            return newcs;
         }
 
         private static bool ValidateNearestCrossSections(DelftTools.Utils.Tuple<double, ICrossSection> cs1, DelftTools.Utils.Tuple<double, ICrossSection> cs2)

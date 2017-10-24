@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -734,21 +733,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
                 frictionSectionTo,
                 frictionTypePos, frictionValuePos, frictionTypeNeg, frictionValueNeg, ref levelsCount,
                 storageLevels, storage);
-            LogMessages();
-            return res;
-        }
-        
-        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "NetworkSetCS", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int NetworkSetCS([In] ref int branch, [In] ref double location,
-            [In] ref int iref, [In] ref double bottomLevel);
-
-        public int NetworkSetCS(int branch, double location, int iref, double bottomLevel)
-        {
-            int branch_ = branch;
-            double location_ = location;
-            int iref_ = iref;
-            double bottomLevel_ = bottomLevel;
-            int res = NetworkSetCS(ref branch_, ref location_, ref iref_, ref bottomLevel_);
             LogMessages();
             return res;
         }
@@ -1641,110 +1625,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         }
 
         #endregion
-
-
         
-
-
-        #region Conveyance tables and interpolation
-
-        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetInterpolatedZWCrossSection", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int GetInterpolatedZWCrossSection_(
-            [In] ref int crossSectionNr,
-            [In, Out] ref int levelCount, [Out] out double bottomLevelShift, [In, Out] double[] levels,
-            [In, Out] double[] flowWidth, [In, Out] double[] totalWidth, [In, Out] double[] plains,
-            [In, Out] ref double levelCrest, [In, Out] ref double levelBottom,
-            [In, Out] ref double flowArea, [In, Out] ref double totalArea,
-            [In, Out] ref bool groundlayerUsed, [In, Out] ref double groundlayer);
-
-        public int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2,
-            double distanceBetweenCrossSections, double distanceToCrossSectionNr1, out int levelsCount,
-            out double[] bottomLevelShift, out double[] levels, out double[] flowWidth, out double[] totalWidth,
-            out double[] plains, out double[] levelCrest, out double[] levelBottom,
-            out double[] flowArea, out double[] totalArea, out bool groundlayerUsed,
-            out double[] groundlayer)
-        {
-            int crossSectionNr1_ = crossSectionNr1;
-            int crossSectionNr2_ = crossSectionNr2;
-            double distanceBetweenCrossSections_ = distanceBetweenCrossSections;
-            double distanceToCrossSectionNr1_ = distanceToCrossSectionNr1;
-
-            int iref = InterpolateCrossSections(ref crossSectionNr1_, ref crossSectionNr2_,
-                ref distanceBetweenCrossSections_, ref distanceToCrossSectionNr1_);
-
-            levelsCount = GetNumberOfLevelsInCrossSection(ref iref);
-            levels = new double[levelsCount];
-            flowWidth = new double[levelsCount];
-            totalWidth = new double[levelsCount];
-            plains = new double[3];
-
-            var bottomLevelShiftref = 0.0d;
-            var levelCrestref = 0.0d;
-            var levelBottomref = 0.0d;
-            var flowArearef = 1.0d;
-            var totalArearef = 1.0d;
-            var groundlayerUsedref = false;
-            var groundlayerref = 1.0d;
-
-            int result = GetInterpolatedZWCrossSection_(ref iref, ref levelsCount, out bottomLevelShiftref,
-                levels, flowWidth, totalWidth, plains, ref levelCrestref, ref levelBottomref,
-                ref flowArearef, ref totalArearef, ref groundlayerUsedref, ref groundlayerref);
-
-            bottomLevelShift = new double[1];
-            bottomLevelShift[0] = bottomLevelShiftref;
-
-            levelCrest = new double[1];
-            levelCrest[0] = levelCrestref;
-
-            levelBottom = new double[1];
-            levelBottom[0] = levelBottomref;
-
-            flowArea = new double[1];
-            flowArea[0] = flowArearef;
-            
-            totalArea = new double[1];
-            totalArea[0] = totalArearef;
-
-            groundlayerUsed = groundlayerUsedref;
-
-            groundlayer = new double[1];
-            groundlayer[0] = groundlayerref;
-
-
-            
-            return result;
-        }
-
-        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetNumberOfLevelsInCrossSection", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int GetNumberOfLevelsInCrossSection([In] ref int csInterpolated);
-
-        [DllImport(Flow1DApiDll.CF_DLL_NAME, EntryPoint = "GetInterpolatedYZCrossSection", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int GetInterpolatedYZCrossSection_([In] ref int crossSectionNr, [In, Out] double[] y,
-            [In, Out] double[] z, [In] ref int length);
-
-        public int GetInterpolatedYZCrossSection(int crossSectionNr1, int crossSectionNr2,
-            double distanceBetweenCrossSections, double distanceToCrossSectionNr1, ref double[] y, ref double[] z)
-        {
-            int crossSectionNr1_ = crossSectionNr1;
-            int crossSectionNr2_ = crossSectionNr2;
-            double distanceBetweenCrossSections_ = distanceBetweenCrossSections;
-            double distanceToCrossSectionNr1_ = distanceToCrossSectionNr1;
-
-            int iref = InterpolateCrossSections(ref crossSectionNr1_, ref crossSectionNr2_,
-                ref distanceBetweenCrossSections_, ref distanceToCrossSectionNr1_);
-
-            int levelsCount = GetNumberOfLevelsInCrossSection(ref iref);
-            y = new double[levelsCount];
-            z = new double[levelsCount];
-            GetInterpolatedYZCrossSection_(ref iref, y, z, ref levelsCount);
-
-            return iref;
-        }
-
-        #endregion
-
-        
-
-
     }
 }

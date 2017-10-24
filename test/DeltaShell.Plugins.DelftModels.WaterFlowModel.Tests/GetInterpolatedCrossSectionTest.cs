@@ -2,13 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
-using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Converters.Geometries;
 
@@ -163,31 +159,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
-        public void TestGetInterpolatedCrossSection()
-        {
-            AddCrossSections(CrossSectionType.ZW);
-
-            var channel = network.Branches.First(c => c.Name == "branch2") as Channel;
-
-            var cs1 = GetInterpolatedCrossSection.FindNearestCrossSectionOnConnectedBranchWithSameOrderNumber(channel, 33.3, true);
-            var cs2 = GetInterpolatedCrossSection.FindNearestCrossSectionOnConnectedBranchWithSameOrderNumber(channel, 33.3, false);
-            var distanceBetweenCrossSections = cs1.First + cs2.First;
-            var distanceToCrossSectionNr1 = cs1.First;
-
-            var newcs =
-                GetInterpolatedCrossSection.getInterpolatedZWCrossSection(channel, 33.3, cs1.Second, cs2.Second,
-                                                                          distanceBetweenCrossSections,
-                                                                          distanceToCrossSectionNr1);
-
-            var zwdatatable = ((CrossSectionDefinitionZW) newcs.Definition).ZWDataTable;
-
-            Assert.AreEqual(-5d, zwdatatable.Rows[1].Z, 1e-5);
-            Assert.AreEqual(5d, zwdatatable.Rows[0].Z, 1e-5);
-            Assert.AreEqual(25d, zwdatatable.Rows[1].Width, 1e-5);
-            Assert.AreEqual(75d, zwdatatable.Rows[0].Width, 1e-5);
-        }
-
-        [Test]
         public void GetDistancesToNearestCrossSections()
         {
             //local setup for this test
@@ -235,62 +206,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             Assert.AreEqual(50d, foundcs1.First);
             Assert.AreEqual(50d, foundcs2.First);
         }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowInterpolatedZW()
-        {
-            AddCrossSections(CrossSectionType.ZW);
-
-            var channel = network.Branches.First(c => c.Name == "branch2") as Channel;
-
-            var cs1 = GetInterpolatedCrossSection.FindNearestCrossSectionOnConnectedBranchWithSameOrderNumber(channel, 33.3, true);
-            var cs2 = GetInterpolatedCrossSection.FindNearestCrossSectionOnConnectedBranchWithSameOrderNumber(channel, 33.3, false);
-            var distanceBetweenCrossSections = cs1.First + cs2.First;
-            var distanceToCrossSectionNr1 = cs1.First;
-
-            var newcs =
-                GetInterpolatedCrossSection.getInterpolatedZWCrossSection(channel, 33.3, cs1.Second, cs2.Second,
-                                                                          distanceBetweenCrossSections,
-                                                                          distanceToCrossSectionNr1);
-
-            var form = GetInterpolatedCrossSection.GetCrossSectionForm(newcs, network);
-
-            WindowsFormsTestHelper.ShowModal(form);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowInterpolatedYZ()
-        {
-            AddCrossSections(CrossSectionType.YZ);
-
-            var channel = network.Branches.First(c => c.Name == "branch2") as Channel;
-
-            var cs1 = GetInterpolatedCrossSection.FindNearestCrossSectionOnConnectedBranchWithSameOrderNumber(channel, 33.3, true);
-            var cs2 = GetInterpolatedCrossSection.FindNearestCrossSectionOnConnectedBranchWithSameOrderNumber(channel, 33.3, false);
-            var distanceBetweenCrossSections = cs1.First + cs2.First;
-            var distanceToCrossSectionNr1 = cs1.First;
-
-            var model = new WaterFlowModel1D("model")
-            {
-                NetworkDiscretization = new Discretization
-                {
-                    Name = WaterFlowModel1DDataSet.DiscretizationDataObjectName,
-                    Network = network,
-                    SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
-                }
-            };
-
-            var newcs =
-                GetInterpolatedCrossSection.getInterpolatedYZCrossSection(channel, 33.3, cs1.Second, cs2.Second,
-                                                                          distanceBetweenCrossSections,
-                                                                          distanceToCrossSectionNr1, model);
-
-            var form = GetInterpolatedCrossSection.GetConveyanceForm(newcs, model);
-
-            WindowsFormsTestHelper.ShowModal(form);
-        }
-
     }
 }
