@@ -12,6 +12,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class HydroRegionFromGisImporterTest
     {
         private HydroRegionFromGisImporter importer;
@@ -25,7 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
          [Test]
-        [Category(TestCategory.DataAccess)]
          public void OgrAndSQL()
          {
              var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
          [Test]
-         [Category(TestCategory.DataAccess)]
          public void OgrAndSQLWithRelatedTable()
          {
              var path = TestHelper.GetTestFilePath("testdatabase_CF.mdb");
@@ -49,7 +48,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
          [Test]
-         [Category(TestCategory.DataAccess)]
          public void OgrFeatureProviderOpenWithSQLTest()
          {
              var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
@@ -64,8 +62,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
          [Test]
-         [Category(TestCategory.DataAccess)]
-         [Category(TestCategory.Slow)]
          public void SerializeAndDeserialize()
          {
              HydroRegionFromGisImporter hydroRegionFromGisImporter = new HydroRegionFromGisImporter();

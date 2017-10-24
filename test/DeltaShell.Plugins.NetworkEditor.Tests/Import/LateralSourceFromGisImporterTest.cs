@@ -11,6 +11,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class LateralSourceFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;
@@ -32,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportLateralSourceFromGeodatabase()
         {
             var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");

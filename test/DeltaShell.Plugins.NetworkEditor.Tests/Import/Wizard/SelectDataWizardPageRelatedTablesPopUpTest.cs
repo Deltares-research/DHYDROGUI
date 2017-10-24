@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import.Wizard
 {
     [TestFixture]
+    [Category("OleDbSchema_x86")]
     public class SelectDataWizardPageRelatedTablesPopUpTest
     {
         private SelectDataWizardPageRelatedTablesPopUp page;
@@ -21,7 +22,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import.Wizard
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
         public void ShowSelectDataWizardPageRelatedTablesPopUp()
         {
             var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");

@@ -11,8 +11,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
-    [Category(TestCategory.Slow)]
+    [Category("Geodatabase_x86")]
     public class CulvertFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;

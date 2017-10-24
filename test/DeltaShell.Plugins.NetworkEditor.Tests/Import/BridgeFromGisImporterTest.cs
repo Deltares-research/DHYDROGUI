@@ -11,6 +11,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class BridgeFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;
@@ -32,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportBridgeFromGeodatabase()
         {
             var path = TestHelper.GetTestFilePath("testdataBase_CF.mdb");

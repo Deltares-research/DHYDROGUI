@@ -4,7 +4,6 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api;
 using SharpMap.Data.Providers;
@@ -13,6 +12,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class CrossSectionYZFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;
@@ -35,8 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
                 };
          }
 
-         [Test]
-        [Category(TestCategory.DataAccess)]
+        [Test]
         public void ImportYZCrossSectionFromGeodatabase()
          {
              var path = TestHelper.GetTestFilePath("testdataBase_CF.mdb");
@@ -111,8 +110,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
          }
 
          [Test]
-         [Category(TestCategory.DataAccess)]
-         [Category(TestCategory.Slow)]
          public void ImportYZCrossSectionFromGeodatabase_NelenSchuurmans()
          {
              var path = TestHelper.GetTestFilePath("HydroBaseCF_GIOV_1DFlow.mdb");

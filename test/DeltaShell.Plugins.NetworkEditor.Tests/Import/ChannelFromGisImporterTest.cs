@@ -21,6 +21,7 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class ChannelFromGisImporterTest
     {
         private readonly MockRepository mocks = new MockRepository();
@@ -78,7 +79,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportChannelsFromShape()
         {
             var path = TestHelper.GetTestFilePath("1-watergangen-WGS.shp");
@@ -101,7 +101,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportChannelsFromGeodatabase()
         {
             var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
@@ -127,7 +126,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportChannelsFromShapeWithNodeNames()
         {
             var path = TestHelper.GetTestFilePath("Reach.shp");
@@ -157,7 +155,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportChannelsFromShapeWithCustomLength()
         {
             var path = TestHelper.GetTestFilePath("shapefiles_customlength\\ReachesCustomLengthImportShape.shp");
@@ -186,7 +183,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportChannelsFromBaseLineCovergaConvertedToShapeFile()
         {
             var path = TestHelper.GetTestFilePath("rivieras_arc.shp");
@@ -207,7 +203,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportChannelsFromShapeFileRelocateExistingCrossSections()
         {
             var network = new HydroNetwork();
@@ -325,7 +320,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportWrongShapeGeometryShouldNotThrow_Jira9548()
         {
             var path = TestHelper.GetTestFilePath("Duikers.shp");

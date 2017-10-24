@@ -14,7 +14,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
+    [Category("Geodatabase_x86")]
     public class SimpleWeirFromGisImporterTest
     {
         private ChannelFromGisImporter channelImporter;
@@ -104,7 +104,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.Jira)]
         public void ImportingWithDuplicatesShouldPreventDuplicatesGettingIntoNetworkTools9784()
         {
             var shapefilesFolderPath = TestHelper.GetTestFilePath("shapefile_Tools9784");

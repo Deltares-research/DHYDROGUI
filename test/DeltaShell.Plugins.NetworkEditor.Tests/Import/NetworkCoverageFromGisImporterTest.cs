@@ -16,10 +16,10 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
+    [Category("Geodatabase_x86")]
     public class NetworkCoverageFromGisImporterTest
     {
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportPumpCapacityToNetworkCoverageFromShapeFile()
         {
             // shapefile with 5 pumps on branch from 0,0 to 1000,1000
@@ -68,7 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportBranchesFromGeodatabaseAndSnapWeirCrestLevelToCoverage()
         {
             var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
