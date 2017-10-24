@@ -9,6 +9,10 @@ using SharpMap;
 using SharpMap.Layers;
 using System;
 using System.Drawing;
+using GeoAPI.CoordinateSystems.Transformations;
+using Rhino.Mocks;
+using SharpMap.Api;
+using SharpMap.Api.Layers;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.CustomRenderers
@@ -89,6 +93,43 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.CustomRenderers
             
             Assert.IsFalse(boundaryRenderer.Render(feature, graphics, layer),
                 "BoundaryRenderer should not render symbol for features with more than 2 coordinates");
+        }
+
+        [Test]
+        public void BoundaryRendererShouldCheckForCoordinateTransformation()
+        {
+            var layer = MockRepository.GenerateStrictMock<ILayer>();
+            var graphics = MockRepository.GenerateStub<Graphics>();
+            var map = MockRepository.GenerateStub<IMap>();
+            var transformation = MockRepository.GenerateStub<ICoordinateTransformation>();
+            var mathTransform = MockRepository.GenerateStub<IMathTransform>();
+
+            // expect the transformation calls to be done
+            mathTransform.Expect(m => m.Transform(new[] { 0.1, 0.1 })).Return(new []{10.0,10.0});
+            transformation.Expect(t => t.MathTransform).Return(mathTransform);
+            layer.Expect(l => l.CoordinateTransformation).Return(transformation).Repeat.Twice();
+
+            layer.Expect(l => l.Map).Return(map).Repeat.Any();
+
+            layer.Replay();
+            graphics.Replay();
+            map.Replay();
+            transformation.Replay();
+            mathTransform.Replay();
+
+            var boundaryRenderer = new BoundaryRenderer();
+
+            var feature = (IFeature)new WaterQualityBoundary
+            {
+                Name = "PointFeature",
+                Geometry = new Point(0.1, 0.1, Double.NaN)
+            };
+
+            Assert.IsTrue(boundaryRenderer.Render(feature, graphics, layer), "BoundaryRenderer should render symbol for features with 1 coordinate");
+
+            layer.VerifyAllExpectations();
+            transformation.VerifyAllExpectations();
+            mathTransform.VerifyAllExpectations();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Api
         
         public static string DllPath
         {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", ITERATIVE1D2D_FOLDER_NAME, ITERATIVE1D2D_BINFOLDER_NAME); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", ITERATIVE1D2D_FOLDER_NAME, ITERATIVE1D2D_BINFOLDER_NAME); }
         }
 
         static Iterative1d2dApi()

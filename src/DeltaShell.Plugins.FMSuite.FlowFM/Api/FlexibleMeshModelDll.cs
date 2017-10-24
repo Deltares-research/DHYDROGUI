@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public static string DllPath
         {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DFLOWFM_FOLDER_NAME, DFLOWFM_BINFOLDER_NAME); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", DFLOWFM_FOLDER_NAME, DFLOWFM_BINFOLDER_NAME); }
         }
 
         static FlexibleMeshModelDll()

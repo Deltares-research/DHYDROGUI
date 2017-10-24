@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Parallel.ForEach(File.ReadAllLines(Path.Combine(workingDir, "bendprof.dia")),
                 (line, loopstate) =>
                 {
-                    if (line.Contains("** INFO   : Computation started  at: "))
+                    if (line.Contains("** INFO   :"))
                     {
                         statisticsWritten = true;
                         loopstate.Stop();

@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 
         public static string DllPath
         {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", CF_FOLDER_NAME, CF_BINFOLDER_NAME); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", CF_FOLDER_NAME, CF_BINFOLDER_NAME); }
         }
 
         static Flow1DApiDll()

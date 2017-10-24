@@ -22,17 +22,17 @@ namespace DeltaShell.Dimr
 
         public static string SharedDllPath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", SHARED_FOLDER_NAME); }
+            get { return Path.Combine(DllDirectory, "x64", SHARED_FOLDER_NAME); }
         }
 
         public static string DllPath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DIMR_FOLDER_NAME, DIMR_BINFOLDER_NAME); }
+            get { return Path.Combine(DllDirectory, "x64", DIMR_FOLDER_NAME, DIMR_BINFOLDER_NAME); }
         }
 
         public static string ExePath
         {
-            get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DIMR_FOLDER_NAME, DIMR_BINFOLDER_NAME); }
+            get { return Path.Combine(DllDirectory, "x64", DIMR_FOLDER_NAME, DIMR_BINFOLDER_NAME); }
         }
 
         public static void SetSharedPath()

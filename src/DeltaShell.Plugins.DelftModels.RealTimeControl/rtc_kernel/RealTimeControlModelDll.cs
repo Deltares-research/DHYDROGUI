@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel
 
         public static string DllPath
         {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", RTCTOOLS_FOLDER_NAME, RTCTOOLS_BINFOLDER_NAME); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", RTCTOOLS_FOLDER_NAME, RTCTOOLS_BINFOLDER_NAME); }
         }
 
         static RealTimeControlModelDll()

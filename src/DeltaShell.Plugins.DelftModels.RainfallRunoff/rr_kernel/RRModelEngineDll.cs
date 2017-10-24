@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel
 
         public static string DllPath
         {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", RR_FOLDER_NAME, RR_BINFOLDER_NAME); }
+            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", RR_FOLDER_NAME, RR_BINFOLDER_NAME); }
         }
 
         static RRModelEngineDll()

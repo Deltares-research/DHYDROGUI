@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import.Wizard
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowSelectDataWizardPageRelatedTablesPopUp()
         {
             var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
