@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         {
             return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
                     "<pid id=\"" + RuleName + "\">" +
-                    "<mode>SOBEK2</mode>" +
+                    "<mode>PIDVEL</mode>" +
                     "<settingMin>" + SMin.ToString(CultureInfo.InvariantCulture) + "</settingMin>" +
                     "<settingMax>" + SMax.ToString(CultureInfo.InvariantCulture) + "</settingMax>" +
                     "<settingMaxSpeed>" + SMaxSpeed.ToString(CultureInfo.InvariantCulture) + "</settingMaxSpeed>" +

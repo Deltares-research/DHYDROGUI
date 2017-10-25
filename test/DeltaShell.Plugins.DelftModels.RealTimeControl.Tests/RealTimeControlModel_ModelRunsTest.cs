@@ -1617,7 +1617,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 "</rule>" +
                 "<rule>" +
                 "<pid id='Control grouppid'>" +
-                "<mode>SOBEK2</mode>" +
+                "<mode>PIDVEL</mode>" +
                 "<settingMin>0</settingMin>" +
                 "<settingMax>10</settingMax>" +
                 "<settingMaxSpeed>0.002</settingMaxSpeed>" +
