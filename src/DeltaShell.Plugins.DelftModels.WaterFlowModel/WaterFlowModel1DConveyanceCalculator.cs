@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             // TODO: ModelApi functions were removed, this needs to be re-implemented at some point
             Log.Error("Get Conveyance feature has been disabled");
-            return GetEmptyConveyanceFunction();
+            return null;
         }
     }
 }
