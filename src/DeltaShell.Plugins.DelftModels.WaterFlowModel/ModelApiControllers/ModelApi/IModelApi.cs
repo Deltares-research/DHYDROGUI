@@ -47,8 +47,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
  
         int NetworkAddObservationPoint(string id, int branchId, double offset);
        
-        int NetworkSetCS(int branch, double location, int iref, double bottomLevel);
-
         int NetworkSetBoundary(int nodeId, int interpolationType, BoundaryType type, double value);
         int NetworkSetBoundary(int nodeId, int interpolationType, BoundaryType type, double value, double returnTime);
         int NetworkSetBoundary(int nodeId, double[] discharge, double[] waterLevel);
@@ -259,21 +257,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
         void SetStrucControlValue([In] int istru, [In] QuantityType type, [In] double numValue);
 
         void InitialiseStrucMappingArray([In] int count);
-
-        #endregion
-
-        #region Conveyance tables and interpolation
-
-        void GetConveyanceTable(int crossSectionNr, ref double[] levels, ref double[] flowArea, ref double[] flowWidth, ref double[] perimeter, ref double[] hydraulicRadius, ref double[] totalWidth, ref double[] conveyancePos, ref double[] conveyanceNeg);
-
-        int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections,
-            double distanceToCrossSectionNr1, out int levelsCount, out double[] bottomLevelShift, out double[] levels,
-            out double[] flowWidth, out double[] totalWidth, out double[] plains, out double[] levelCrest,
-            out double[] levelBottom, out double[] flowArea, out double[] totalArea,
-            out bool groundlayerUsed, out double[] groundlayer);
-
-        int GetInterpolatedYZCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections,
-            double distanceToCrossSectionNr1, ref double[] y, ref double[] z);
 
         #endregion
 

@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
             result.Add(new XElement(xNamespace + "pid",
                                     new XAttribute("id", prefix + Name),
-                                    new XElement(xNamespace + "mode", "SOBEK2"), // always use SOBEK2 implementation of PID-controller
+                                    new XElement(xNamespace + "mode", "PIDVEL"),
                                     new XElement(xNamespace + "settingMin", Setting.Min),
                                     new XElement(xNamespace + "settingMax", Setting.Max),
                                     new XElement(xNamespace + "settingMaxSpeed", Math.Abs(Setting.MaxSpeed)),

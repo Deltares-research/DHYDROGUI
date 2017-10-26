@@ -145,11 +145,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
         
         #region Delegating members
 
-        public int GetInterpolatedYZCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections, double distanceToCrossSectionNr1, ref double[] y, ref double[] z)
-        {
-            return remoteApi.GetInterpolatedYZCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections, distanceToCrossSectionNr1, ref y, ref z);
-        }
-
         public void get_var(string variable, ref Array array)
         {
             remoteApi.get_var(variable, ref array);
@@ -180,11 +175,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
             remoteApi.initialize(path); 
         }
 
-        public int GetInterpolatedZWCrossSection(int crossSectionNr1, int crossSectionNr2, double distanceBetweenCrossSections, double distanceToCrossSectionNr1, out int levelsCount, out double[] bottomLevelShift, out double[] levels, out double[] flowWidth, out double[] totalWidth, out double[] plains, out double[] levelCrest, out double[] levelBottom, out double[] flowArea, out double[] totalArea, out bool groundlayerUsed, out double[] groundlayer)
-        {
-            return remoteApi.GetInterpolatedZWCrossSection(crossSectionNr1, crossSectionNr2, distanceBetweenCrossSections, distanceToCrossSectionNr1, out levelsCount, out bottomLevelShift, out levels, out flowWidth, out totalWidth, out plains, out levelCrest, out levelBottom, out flowArea, out totalArea, out groundlayerUsed, out groundlayer);
-        }
-
         public int NetworkSetBoundary(int nodeId, double[] discharge, double[] waterLevel)
         {
             return remoteApi.NetworkSetBoundary(nodeId, discharge, waterLevel);
@@ -198,11 +188,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
         public string GetMessage(int messageId, out ErrorLevels errorLevel)
         {
             return remoteApi.GetMessage(messageId, out errorLevel);
-        }
-
-        public void GetConveyanceTable(int crossSectionNr, ref double[] levels, ref double[] flowArea, ref double[] flowWidth, ref double[] perimeter, ref double[] hydraulicRadius, ref double[] totalWidth, ref double[] conveyancePos, ref double[] conveyanceNeg)
-        {
-            remoteApi.GetConveyanceTable(crossSectionNr, ref levels, ref flowArea, ref flowWidth, ref perimeter, ref hydraulicRadius, ref totalWidth, ref conveyancePos, ref conveyanceNeg);
         }
 
         public void InitialiseStrucMappingArray(int count)
@@ -350,11 +335,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
         public int NetworkSetBoundary(int nodeId, int interpolationType, BoundaryType type, double value)
         {
             return remoteApi.NetworkSetBoundary(nodeId, interpolationType, type, value);
-        }
-
-        public int NetworkSetCS(int branch, double location, int iref, double bottomLevel)
-        {
-            return remoteApi.NetworkSetCS(branch, location, iref, bottomLevel);
         }
 
         public int NetworkAddObservationPoint(string id, int branchId, double offset)

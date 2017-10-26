@@ -315,6 +315,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 return;
             }
 
+            if(conveyanceTable == null) return;
+
             var functionView = new FunctionView
                 {
                     Data = conveyanceTable,

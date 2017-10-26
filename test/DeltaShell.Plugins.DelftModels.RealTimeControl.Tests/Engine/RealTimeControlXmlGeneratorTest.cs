@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                           "</rule>" +
                           "<rule>" +
                           "<pid id=\"PIDRule Test\">" +
-                          "<mode>SOBEK2</mode>" +
+                          "<mode>PIDVEL</mode>" +
                           "<settingMin>1.1</settingMin>" +
                           "<settingMax>1.2</settingMax>" +
                           "<settingMaxSpeed>1.3</settingMaxSpeed>" +
@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "</rule>" +
                             "<rule>" +
                             "<pid id=\"PIDRule Test\">" +
-                            "<mode>SOBEK2</mode>" +
+                            "<mode>PIDVEL</mode>" +
                             "<settingMin>1.1</settingMin>" +
                             "<settingMax>1.2</settingMax>" +
                             "<settingMaxSpeed>1.3</settingMaxSpeed>" +
@@ -364,7 +364,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "</rule>" +
                             "<rule>" +
                             "<pid id=\"PIDRule2 Test\">" +
-                            "<mode>SOBEK2</mode>" +
+                            "<mode>PIDVEL</mode>" +
                             "<settingMin>1.1</settingMin>" +
                             "<settingMax>1.2</settingMax>" +
                             "<settingMaxSpeed>1.3</settingMaxSpeed>" +
@@ -1538,7 +1538,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rule>" +
                 "<rule>" +
                 "<pid id=\"PIDRule Test\">" +
-                "<mode>SOBEK2</mode>" +
+                "<mode>PIDVEL</mode>" +
                 "<settingMin>1.1</settingMin>" +
                 "<settingMax>1.2</settingMax>" +
                 "<settingMaxSpeed>1.3</settingMaxSpeed>" +
