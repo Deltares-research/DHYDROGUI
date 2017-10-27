@@ -2480,6 +2480,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             CreateDataItemsNotAvailableInPreviousVersion();
             CreateBoundaryConditionsNotAvailableInPreviousVersion();
             UpdateInputCoverageAttributeFromPreviousVersion();
+            UpdateDispersionFormulationTypeParameterFromPreviousVersion();
+        }
+
+        /// <summary>
+        /// backwards compatibility
+        /// </summary>
+        private void UpdateDispersionFormulationTypeParameterFromPreviousVersion()
+        {
+            var name = DispersionFormulationTypeParameter.Value;
+            if (Enum.GetNames(typeof(DispersionFormulationType)).All(n => n != name))
+            {
+                DispersionFormulationTypeParameter.Value = DispersionFormulationType.Constant.ToString();
+                // A bit odd, but we set the value first (above) so that eventing can call get successfully when setting (below)
+                DispersionFormulationType = DispersionFormulationType.Constant;
+            }
         }
 
         /// <summary>
