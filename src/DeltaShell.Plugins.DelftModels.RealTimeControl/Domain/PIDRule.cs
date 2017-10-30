@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
@@ -155,17 +156,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             yield break;
         }
 
-        //To be removed : Disk Schwanenberg: It is probably better to let RTCTools always determine the start values.
-        //public override IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        //{
-        //    yield return (new XElement(xNamespace + "treeVectorLeaf",
-        //                               new XAttribute("id", IntegralPart),
-        //                               new XElement(xNamespace + "vector", 0.0)));
-        //    yield return (new XElement(xNamespace + "treeVectorLeaf",
-        //                               new XAttribute("id", DifferentialPart),
-        //                               new XElement(xNamespace + "vector", -1.0)));
-        //}
-
         private IXmlTimeSeries GetImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
             var startTime = start;
@@ -191,15 +181,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
             if (TimeSeries.Time.Values.Count > 0)
             {
-                xmlTimeSeries.StartTime = TimeSeries.Time.Values.First();
-                xmlTimeSeries.EndTime = TimeSeries.Time.Values.Last();
-                xmlTimeSeries.TimeStep = xmlTimeSeries.EndTime - xmlTimeSeries.StartTime;
+                XmlTimeSeriesTruncater.Truncate(xmlTimeSeries, startTime, endTime);
             }
             else
             {
-                xmlTimeSeries.StartTime = start;
-                xmlTimeSeries.EndTime = stop;
-                xmlTimeSeries.TimeStep = step;
+                xmlTimeSeries.StartTime = startTime;
+                xmlTimeSeries.EndTime = endTime;
+                xmlTimeSeries.TimeStep = timeStep;
                 xmlTimeSeries.TimeSeries.Time.AddValues(new[] { start, stop });
             }
 

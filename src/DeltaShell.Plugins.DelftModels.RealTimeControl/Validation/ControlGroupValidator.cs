@@ -145,12 +145,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var issues = new List<ValidationIssue>();
 
             var startTime = rootObject.StartTime;
+            var stopTime = rootObject.StopTime;
             var timeStep = rootObject.TimeStep;
-            const string validationString = "Series '{0}' time steps not multiple of model time step {1}.";
+            string validationString = "Series '{0}' time steps not multiple of model time step {1}.";
 
             var invalidPidRules = controlGroup.Rules.OfType<PIDRule>().Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries &&
                                                                             !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidPidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
+            invalidPidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning, /*Error,*/
                                                String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
 
             var invalidTimeRules = controlGroup.Rules.OfType<TimeRule>().Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
@@ -161,7 +162,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                                                                                       !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
             invalidIntervalRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
                                                                         String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
-            
+
+            validationString = "Series '{0}' has one or more timesteps that precede the model start time {1}.";
+
+            var pidRules = controlGroup.Rules.OfType<PIDRule>().Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries &&
+                                                                                  TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
+            pidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
+                String.Format(validationString, r.TimeSeries.Name, startTime), r.TimeSeries)));
+
+            // etc
+
+            validationString = "Series '{0}' has one or more timesteps that exceed the model stop time {1}.";
+
+            pidRules = controlGroup.Rules.OfType<PIDRule>().Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries &&
+                                                                           TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
+            pidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
+                String.Format(validationString, r.TimeSeries.Name, stopTime), r.TimeSeries)));
+
+            // etc
+
             return issues;
         }
 
@@ -169,5 +188,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         {
             return timeSeries.Time.Values.All(t => (t - startTime).Ticks%timeStep.Ticks == 0);
         }
+
+        private static bool TimeSeriesEntriesPrecedeModelStartTime(ITimeSeries timeSeries, DateTime startTime)
+        {
+            return startTime > timeSeries.Time.Values.First();
+        }
+
+        private static bool TimeSeriesEntriesExceedModelStopTime(ITimeSeries timeSeries, DateTime stopTime)
+        {
+            return stopTime < timeSeries.Time.Values.Last();
+        }
+
     }
 }

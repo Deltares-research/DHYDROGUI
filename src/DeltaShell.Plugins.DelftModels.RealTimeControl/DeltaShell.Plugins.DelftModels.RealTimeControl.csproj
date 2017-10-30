@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="ControlGroupHelper.cs" />
     <Compile Include="Converters\DirectionalOperationConverter.cs" />
+    <Compile Include="Converters\XmlTimeSeriesTruncater.cs" />
     <Compile Include="Domain\ConditionProvider.cs" />
     <Compile Include="Domain\ConnectionType.cs" />
     <Compile Include="Domain\DirectionalCondition.cs" />

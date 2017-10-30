@@ -239,9 +239,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             newPidRule.Kp = 0.3;
             newPidRule.Setting = new Setting {Min = 1.1, Max = 1.2, MaxSpeed = 1.3};
             newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            newPidRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
-            newPidRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
-            newPidRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
+            newPidRule.TimeSeries[new DateTime(2000, 1, 1, 0, 15, 30)] = 3.0;
+            newPidRule.TimeSeries[new DateTime(2001, 2, 3, 4, 15, 45)] = 4.0;
+            newPidRule.TimeSeries[new DateTime(2002, 3, 4, 5, 16, 0)] = 5.0;
             newPidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
 
             return newPidRule;
@@ -748,15 +748,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "<locationId>PIDRule Test</locationId>" +
                 "<parameterId>SP</parameterId>" +
                 "<timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" />" +
-                "<startDate date=\"2010-01-19\" time=\"12:00:00\" />" +
-                "<endDate date=\"2010-01-21\" time=\"12:00:00\" />" +
+                "<startDate date=\"2000-01-01\" time=\"00:15:30\" />" +
+                "<endDate date=\"2001-02-03\" time=\"04:15:45\" />" +
                 "<missVal>-999.0</missVal>" +
                 "<stationName />" +
                 "<units />" +
                 "</header>" +
-                "<event date=\"2010-01-19\" time=\"12:00:00\" value=\"3\" />" +
-                "<event date=\"2010-01-20\" time=\"12:00:00\" value=\"4\" />" +
-                "<event date=\"2010-01-21\" time=\"12:00:00\" value=\"5\" />" +
+                "<event date=\"2000-01-01\" time=\"00:15:30\" value=\"3\" />" +
+                "<event date=\"2001-02-03\" time=\"04:15:45\" value=\"4\" />" + // time series gets truncated
                 "</series>" +
                 "</TimeSeries>";
 

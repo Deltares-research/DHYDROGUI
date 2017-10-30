@@ -204,6 +204,7 @@
     <Compile Include="ControlGroupEditorViewContextTests.cs" />
     <Compile Include="ControlGroupFeatureCollectionTest.cs" />
     <Compile Include="ControlGroupHelperTest.cs" />
+    <Compile Include="Converters\XmlTimeSeriesTruncaterTest.cs" />
     <Compile Include="Domain\ConnectionPointTest.cs" />
     <Compile Include="Domain\DirectionalConditionTest.cs" />
     <Compile Include="Domain\ControlGroupTest.cs" />
