@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
@@ -224,24 +226,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 
             //Both FM and Wave models have spherical grids -OK!
             var fmIsSpherical = true;
+            var waveIsSpherical = true;
             SetFmGridCoordinateType(fmModel, fmIsSpherical);
-            SetWaveGridCoordinateType(waveModel, WaveModel.CoordinateSystemType.Spherical);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical);
             ValidateUnconsistentGridTypeErrorInReport(hydroModel, 0);
 
             //Both FM and Wave models have cartesian grids - OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
-            SetWaveGridCoordinateType(waveModel, WaveModel.CoordinateSystemType.Cartesian);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
             ValidateUnconsistentGridTypeErrorInReport(hydroModel, 0);
 
             //FM model has spherical grid and Wave model has cartesian grid -NOT OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = true);
-            SetWaveGridCoordinateType(waveModel, WaveModel.CoordinateSystemType.Cartesian);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
             ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
 
 
             //FM model has cartesian grid and Wave model has spherical grid -NOT OK!
             SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
-            SetWaveGridCoordinateType(waveModel, WaveModel.CoordinateSystemType.Spherical);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical = true);
             ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
         }
 
@@ -253,8 +256,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 
             var expectedCategory = Resources.HydroModelValidator_Validate_HydroModel_Specific;
             var expectedReportName = Resources.HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type;
-            var expectedMsg = Resources
-                .HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__;
+            var expectedMsg = Resources.HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__;
 
             var generalReport = report.SubReports.FirstOrDefault(sr => sr.Category == expectedCategory && sr.ErrorCount > 0);
             Assert.NotNull(generalReport);
@@ -266,16 +268,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             Assert.NotNull(errorFound);
         }
 
-        private static void SetWaveGridCoordinateType(WaveModel waveModel, string coordinateSystemType)
+        private static void SetWaveGridCoordinateType(WaveModel waveModel, bool isSpherical = false)
         {
+            waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(isSpherical ? 4326 : 28992); //4326 = WGS84, Spherical system.
+
             var waveGrid = waveModel.OuterDomain.Grid;
             Assert.NotNull(waveGrid);
-
-//            waveGrid.Attributes[CurvilinearGrid.CoordinateSystemKey] = coordinateSystemType;
-//            Assert.AreEqual(coordinateSystemType, waveGrid.Attributes[CurvilinearGrid.CoordinateSystemKey]);
-
-            var isSpherical = coordinateSystemType == WaveModel.CoordinateSystemType.Spherical;
-            waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(isSpherical ? 4326 : 28992); //4326 = WGS84, Spherical system.
+            Assert.AreEqual(waveModel.CoordinateSystem, waveGrid.CoordinateSystem);
+            Assert.AreEqual(isSpherical, waveGrid.CoordinateSystem.IsGeographic);
         }
 
         private static void SetFmGridCoordinateType(WaterFlowFMModel fmModel, bool isSpherical = false)

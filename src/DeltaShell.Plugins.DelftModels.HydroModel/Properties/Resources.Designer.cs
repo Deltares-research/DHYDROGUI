@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wave and WaterFlowFM grids&apos; Coordinate System need to be of the same type (Spherical or Cartesian)..
+        ///   Looks up a localized string similar to Wave model and FlowFM model, have grids with a different coordinate system . These coordinate systems have to be of the same type (Cartesian or spherical) to run the integrated model.
         /// </summary>
         public static string HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__ {
             get {

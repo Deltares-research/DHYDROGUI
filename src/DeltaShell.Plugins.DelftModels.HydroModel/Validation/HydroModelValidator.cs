@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
         {
             var gridCoordinatesIssues = new List<ValidationIssue>();
             var activitiesWithCoordSyst = model.CurrentWorkflow.Activities.GetActivitiesOfType<IHasCoordinateSystem>().Where( act => act.CoordinateSystem != null).ToList();
-            
 
             if (activitiesWithCoordSyst.Count > 1 && activitiesWithCoordSyst.GroupBy( act => act.CoordinateSystem.IsGeographic ).Count() > 1)
             {
