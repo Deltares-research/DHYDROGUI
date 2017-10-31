@@ -183,4 +183,10 @@
   <data name="HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_" xml:space="preserve">
     <value>The integrated model '{0}' could not initialize. Please check the validation report.</value>
   </data>
+  <data name="HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type" xml:space="preserve">
+    <value>Grid Coordinate System type</value>
+  </data>
+  <data name="HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__" xml:space="preserve">
+    <value>Wave and WaterFlowFM grids' Coordinate System need to be of the same type (Spherical or Cartesian).</value>
+  </data>
 </root>
