@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Feature2DEditors
                 get { return fixedWeir.Geometry.Coordinates[row].Y; }
             }
 
-            [DisplayName("Crest level")]
+            [DisplayName("Crest level (m AD)")]
             public double CrestLevel
             {
                 get { return fixedWeir.CrestLevels[row]; }
@@ -48,14 +48,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Feature2DEditors
                 }
             }
 
-            [DisplayName("Left sill depth")]
+            [DisplayName("Left sill depth (m)")]
             public double LeftGroundDistance
             {
                 get { return fixedWeir.GroundLevelsLeft[row]; }
                 set { fixedWeir.GroundLevelsLeft[row] = value; }
             }
 
-            [DisplayName("Right sill depth")]
+            [DisplayName("Right sill depth (m)")]
             public double RightGroundDistance
             {
                 get { return fixedWeir.GroundLevelsRight[row]; }
