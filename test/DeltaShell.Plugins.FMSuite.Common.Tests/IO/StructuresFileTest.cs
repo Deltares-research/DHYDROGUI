@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO;
@@ -14,34 +15,47 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
+using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.StructureType;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
     [TestFixture]
     public class StructuresFileTest
     {
+        private StructureSchema<ModelPropertyDefinition> schema;
+
+        [SetUp]
+        public void Setup()
+        {
+            schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadStructuresUsingExampleFile()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structureFile = new StructuresFile {StructureSchema = schema};
             var structures = structureFile.ReadStructures2D(path).ToList();
 
-            Assert.AreEqual(6, structures.Count);
-            Assert.AreEqual(2, structures.Count(s => s.StructureType == "weir"));
-            Assert.AreEqual(3, structures.Count(s => s.StructureType == "pump"));
-            Assert.AreEqual(1, structures.Count(s => s.StructureType == "gate"));
+            Assert.AreEqual(7, structures.Count);
+            Assert.AreEqual(2, structures.Count(s => s.StructureType == StructureType.Weir));
+            Assert.AreEqual(3, structures.Count(s => s.StructureType == StructureType.Pump));
+            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.Gate));
+            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.GeneralStructure));
 
             var weirDown = structures.First(s => s.Name == "Weir_down");
             Assert.AreEqual(6, weirDown.Properties.Count);
             Assert.AreEqual("680", weirDown.GetProperty(KnownStructureProperties.X).GetValueAsString());
             Assert.AreEqual("360", weirDown.GetProperty(KnownStructureProperties.Y).GetValueAsString());
-
             Assert.AreEqual("2", weirDown.GetProperty(KnownStructureProperties.CrestLevel).GetValueAsString());
             Assert.AreEqual("1", weirDown.GetProperty(KnownStructureProperties.LateralContractionCoefficient).GetValueAsString());
+
+            var generalStructure = structures.First(s => s.Name == "gs_01");
+            Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
+            Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
+            Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.WidthCenter).GetValueAsString(), Is.EqualTo("2.3"));
         }
 
         [Test]
@@ -49,7 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadStructuresInvalidFileFormat()
         {
             var path = TestHelper.GetTestFilePath(@"structures\invalidFormat.imp");
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
             var structuresFile = new StructuresFile {StructureSchema = schema};
             var structures = structuresFile.ReadStructures2D(path);
             Assert.AreEqual(0, structures.Count(), "Nothing should have been read.");
@@ -137,7 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // lat_dis_coeff    = 1
             // allowed_flow_dir = 0
             var path = TestHelper.GetTestFilePath(@"structures\missingTypeProperty.imp");
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             IList<Structure2D> structures = null;
             var structuresFile = new StructuresFile {StructureSchema = schema};
@@ -186,7 +198,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void CanRepeatedlyReadAndWrite()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structureFile = new StructuresFile {StructureSchema = schema};
             var structures = structureFile.ReadStructures2D(path).ToList();
@@ -205,6 +216,106 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenGeneralStructureWhenWritingToFileAndReadingFromThatFileThenResultingStructuresAreTheSame()
+        {
+            var iniFilePath = TestHelper.GetTestFilePath(@"structures\temp_file.ini");
+            var pliFilePath = TestHelper.GetTestFilePath(@"structures\gs01.pli");
+            if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+            if (File.Exists(pliFilePath)) File.Delete(pliFilePath);
+
+            var initialFormula = new GeneralStructureWeirFormula
+            {
+                PositiveFreeGateFlow = 1,
+                PositiveDrownedGateFlow = 2,
+                PositiveFreeWeirFlow = 3,
+                PositiveDrownedWeirFlow = 4,
+                PositiveContractionCoefficient = 5,
+                NegativeFreeGateFlow = 6,
+                NegativeDrownedGateFlow = 7,
+                NegativeFreeWeirFlow = 8,
+                NegativeDrownedWeirFlow = 9,
+                NegativeContractionCoefficient = 10,
+                WidthLeftSideOfStructure = 11,
+                WidthStructureLeftSide = 12,
+                WidthStructureCentre = 13,
+                WidthStructureRightSide = 14,
+                WidthRightSideOfStructure = 15,
+                BedLevelLeftSideOfStructure = 16,
+                BedLevelLeftSideStructure = 17,
+                BedLevelStructureCentre = 18,
+                BedLevelRightSideStructure = 19,
+                BedLevelRightSideOfStructure = 20,
+                UseExtraResistance = true,
+                ExtraResistance = 40,
+                GateOpening = 60
+            };
+            var initialGeneralStructure = new Weir("gs01")
+            {
+                Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) }),
+                WeirFormula = initialFormula
+            };
+            var structures = new IStructure[] { initialGeneralStructure };
+            var structuresFile = new StructuresFile
+            {
+                StructureSchema = schema,
+                ReferenceDate = new DateTime(2013, 1, 1, 0, 0, 0)
+            };
+
+            structuresFile.Write(iniFilePath, structures);
+            var readResult = structuresFile.Read(iniFilePath);
+            Assert.That(readResult.Count, Is.EqualTo(1));
+            
+            var resultingGeneralStructure = readResult.FirstOrDefault() as Weir;
+            Assert.IsNotNull(resultingGeneralStructure);
+            var resultingFormula = resultingGeneralStructure.WeirFormula as GeneralStructureWeirFormula;
+            Assert.IsNotNull(resultingFormula);
+
+            var weirPropertiesAreEqual = initialGeneralStructure.CanBeTimedependent == resultingGeneralStructure.CanBeTimedependent &&
+                                         initialGeneralStructure.IsGated == resultingGeneralStructure.IsGated &&
+                                         initialGeneralStructure.AllowNegativeFlow == resultingGeneralStructure.AllowNegativeFlow &&
+                                         initialGeneralStructure.AllowPositiveFlow == resultingGeneralStructure.AllowPositiveFlow &&
+                                         initialGeneralStructure.IsRectangle == resultingGeneralStructure.IsRectangle &&
+                                         initialGeneralStructure.SpecifyCrestLevelAndWidthOnWeir == resultingGeneralStructure.SpecifyCrestLevelAndWidthOnWeir &&
+                                         initialGeneralStructure.FormulaName == resultingGeneralStructure.FormulaName;
+
+            var formulasAreEqual = (initialFormula.Name == resultingFormula.Name &&
+                                    initialFormula.PositiveContractionCoefficient == resultingFormula.PositiveContractionCoefficient &&
+                                    initialFormula.PositiveContractionCoefficient == resultingFormula.PositiveContractionCoefficient &&
+                                    initialFormula.PositiveDrownedGateFlow == resultingFormula.PositiveDrownedGateFlow &&
+                                    initialFormula.PositiveDrownedWeirFlow == resultingFormula.PositiveDrownedWeirFlow &&
+                                    initialFormula.PositiveFreeWeirFlow == resultingFormula.PositiveFreeWeirFlow &&
+
+                                    initialFormula.NegativeContractionCoefficient == resultingFormula.NegativeContractionCoefficient &&
+                                    initialFormula.NegativeDrownedGateFlow == resultingFormula.NegativeDrownedGateFlow &&
+                                    initialFormula.NegativeDrownedWeirFlow == resultingFormula.NegativeDrownedWeirFlow &&
+                                    initialFormula.NegativeFreeGateFlow == resultingFormula.NegativeFreeGateFlow &&
+                                    initialFormula.NegativeFreeWeirFlow == resultingFormula.NegativeFreeWeirFlow &&
+
+                                    initialFormula.BedLevelLeftSideOfStructure == resultingFormula.BedLevelLeftSideOfStructure &&
+                                    initialFormula.BedLevelLeftSideStructure == resultingFormula.BedLevelLeftSideStructure &&
+                                    initialFormula.BedLevelStructureCentre == resultingFormula.BedLevelStructureCentre &&
+                                    initialFormula.BedLevelRightSideStructure == resultingFormula.BedLevelRightSideStructure &&
+                                    initialFormula.BedLevelRightSideOfStructure == resultingFormula.BedLevelRightSideOfStructure &&
+
+                                    initialFormula.WidthLeftSideOfStructure == resultingFormula.WidthLeftSideOfStructure &&
+                                    initialFormula.WidthStructureLeftSide == resultingFormula.WidthStructureLeftSide &&
+                                    initialFormula.WidthStructureCentre == resultingFormula.WidthStructureCentre &&
+                                    initialFormula.WidthStructureRightSide == resultingFormula.WidthStructureRightSide &&
+                                    initialFormula.WidthRightSideOfStructure == resultingFormula.WidthRightSideOfStructure &&
+
+                                    initialFormula.UseExtraResistance == resultingFormula.UseExtraResistance &&
+                                    initialFormula.ExtraResistance == resultingFormula.ExtraResistance &&
+                                    initialFormula.GateOpening == resultingFormula.GateOpening);
+
+            Assert.IsTrue(weirPropertiesAreEqual && formulasAreEqual);
+
+            //cleanup
+            if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+            if (File.Exists(pliFilePath)) File.Delete(pliFilePath);
+        }
+
+        [Test]
         public void ReadThrowsForInvalidFilePath()
         {
             var structureFile = new StructuresFile() {StructureSchema = new StructureSchema<ModelPropertyDefinition>()};
@@ -218,9 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadAsSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures-sobek.imp");
-
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-
+            
             var structureFile = new StructuresFile {StructureSchema = schema, ReferenceDate = new DateTime()};
 
             var structures = structureFile.Read(path).ToList();
@@ -243,7 +352,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadTimeDependentSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\time_dependent_structures.ini");
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structureFile = new StructuresFile {StructureSchema = schema, ReferenceDate = new DateTime(2013, 1, 1)};
 
@@ -297,9 +405,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
 
             #endregion
-
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-
+            
             var pump = new Pump("pump1", true)
                 {
                     Branch = null,
@@ -414,9 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
 
             #endregion
-
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-
+            
             var pump = new Pump("pump1", true)
             {
                 Branch = null,

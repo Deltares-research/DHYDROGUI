@@ -47,3 +47,9 @@ opening_width    = 1
 lower_edge_level = 2.8
 door_height      = 5
 horizontal_opening_direction= symmetric
+
+[structure]
+type             = generalstructure
+id               = gs_01
+polylinefile     = gs_01.pli
+widthcenter      = 2.3

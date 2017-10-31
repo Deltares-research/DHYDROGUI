@@ -5,6 +5,8 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
@@ -28,13 +30,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// </summary>
         private T ToPolyline(T f)
         {
+            var fixedWeir = f as FixedWeir;
+            if (fixedWeir != null) return f;
+
+            if (f.Geometry == null)
+            {
+                throw new NotSupportedException("Cannot write *.pliz because no geometry is defined");
+            }
             var zValues = f.Geometry.Coordinates.Select(c => c.Z).ToList();
+            if (Double.IsNaN(zValues[0])) return f;
             if (f.Attributes == null)
             {
                 f.Attributes = new DictionaryFeatureAttributeCollection();
             }
-
-            var maxAttributesInPliz = numericColumnAttributes.Length - 1;
+            
+            var maxAttributesInPliz = NumericColumnAttributesKeys.Length + StringColumnAttributesKeys.Length;
             if (f.Attributes.Count > maxAttributesInPliz)
             {
                 throw new NotSupportedException(string.Format("Cannot write *.pliz with more than {0} attributes", maxAttributesInPliz));
@@ -44,10 +54,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             newFeature.Attributes = new DictionaryFeatureAttributeCollection();
 
             var attributeEnumerator =
-                new object[] {zValues}.Concat(
-                    f.Attributes.Where(a => numericColumnAttributes.Contains(a.Key)).Select(a => a.Value))
+                new object[] {zValues}
+                    .Concat(f.Attributes.Where(a => NumericColumnAttributesKeys.Contains(a.Key)).Select(a => a.Value))
+                    .Concat(f.Attributes.Where(a => StringColumnAttributesKeys.Contains(a.Key)).Select(a => a.Value))
                     .GetEnumerator();
-            foreach (var columnKey in numericColumnAttributes)
+            attributeEnumerator.MoveNext();
+            foreach (var columnKey in NumericColumnAttributesKeys.Concat(StringColumnAttributesKeys))
             {
                 newFeature.Attributes[columnKey] = attributeEnumerator.Current;
                 if (!attributeEnumerator.MoveNext()) break;
@@ -61,20 +73,51 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// </summary>
         private T FromPolyline(T f)
         {
+            if (f.Attributes == null) return f;
             var newFeature = (T) f.Clone();
-            var zValues = (IList<double>)f.Attributes[numericColumnAttributes[0]];
+            newFeature.Attributes.Clear();
 
-            var attributeCount = f.Attributes.Count - 1;
-            newFeature.Attributes = new DictionaryFeatureAttributeCollection();
-
-            for (int i = 0; i < attributeCount; ++i)
+            // Re-link the attribute names with the Level attributes of FixedWeir
+            var fixedWeirSwitchConstant = 1; // Ugly switch between Fixed Weirs and other IFeature objects. Please remove when possible
+            var fixedWeir = newFeature as FixedWeir;
+            if (fixedWeir != null)
             {
-                newFeature.Attributes[numericColumnAttributes[i]] = f.Attributes[numericColumnAttributes[i + 1]];
+                fixedWeirSwitchConstant = 0;
+                fixedWeir.SetupAttributeToPropertyLinks();
             }
 
+            var numericAttributeCount = f.Attributes.Count(a => a.Value is GeometryPointsSyncedList<double>) - fixedWeirSwitchConstant;
+            var stringAttributeCount = f.Attributes.Count(a => a.Value is GeometryPointsSyncedList<string>);
+            
+            var zValues = (IList<double>)f.Attributes[NumericColumnAttributesKeys[0]];
             newFeature.Geometry.Coordinates.ForEach((c,i) => c.Z = zValues[i]);
+            for (var i = 0; i < numericAttributeCount; i++)
+            {
+                var columnValues = (IList<double>)f.Attributes[NumericColumnAttributesKeys[i + fixedWeirSwitchConstant]];
+                AssignDoubleValuesToAttribute(columnValues, newFeature, NumericColumnAttributesKeys[i]);
+            }
+            for (var i = 0; i < stringAttributeCount; i++)
+            {
+                var columnValues = (IList<string>)f.Attributes[StringColumnAttributesKeys[i]];
+                AssignStringValuesToAttribute(columnValues, newFeature, StringColumnAttributesKeys[i]);
+            }
 
             return newFeature;
+        }
+
+        private List<double> RetrieveColumn3Values(T f)
+        {
+            List<double> column3;
+            try
+            {
+                column3 = ((GeometryPointsSyncedList<double>) f.Attributes[NumericColumnAttributesKeys[0]])
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                column3 = (List<double>) f.Attributes[NumericColumnAttributesKeys[0]];
+            }
+            return column3;
         }
     }
 }

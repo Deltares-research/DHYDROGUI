@@ -7,6 +7,8 @@ using System.Linq;
 using BasicModelInterface;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
@@ -65,6 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private DepthLayerDefinition depthLayerDefinition;
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
+        private bool updatingGroupName;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
 
@@ -109,6 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
 
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
+            ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
             ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
 
@@ -217,7 +221,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public bool UseMorSed
         {
-            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value; }
+            get { return ModelDefinition.UseMorphologySediment; }
+            private set
+            {
+                // empty, but just used for event bubbling                
+            }
+        }
+
+        public bool WriteSnappedFeatures
+        {
+            get { return ModelDefinition.WriteSnappedFeatures; }
             private set
             {
                 // empty, but just used for event bubbling                
@@ -261,6 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (areaDataItem != null)
             {
                 ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
         }
 
@@ -272,6 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (areaDataItem != null)
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
             }
         }
 
@@ -282,6 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Equals(e.Target, areaDataItem) && !e.Relinking)
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
 
             base.OnDataItemLinked(sender, e);
@@ -294,6 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Equals(e.Target, areaDataItem))
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
             }
 
             base.OnDataItemUnlinking(sender, e);
@@ -806,6 +823,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     UseMorSed = UseMorSed;
                     EndEdit();
                 }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteSnappedFeatures,
+                    StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching write snapped features options"));
+                    WriteSnappedFeatures = WriteSnappedFeatures;
+                    EndEdit();
+                }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -1185,7 +1209,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputMapFileStore.CoordinateSystem = value;
                 }
-
                 // coverages are handled via the feature collections.
 
                 InvalidateSnapping();
@@ -1228,6 +1251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (areaItem.Value != null) 
                 {
                     ((INotifyCollectionChanged)areaItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                    ((INotifyPropertyChanged)value).PropertyChanged -= HydroAreaPropertyChanged;
                 }
 
                 areaItem.Value = value;
@@ -1235,10 +1259,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (value != null)
                 {
                     ((INotifyCollectionChanged)value).CollectionChanged += HydroAreaCollectionChanged;
+                    ((INotifyPropertyChanged) value).PropertyChanged += HydroAreaPropertyChanged;
                 }
             }
         }
-
+        
         public IEventedList<Feature2D> Boundaries { get; private set; }
         public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
         public IEventedList<Feature2D> Pipes { get; private set; }
@@ -1918,6 +1943,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Output
 
+        public string OutputSnappedFeaturesPath
+        {
+            get
+            {
+                var outputDirectory = ExplicitWorkingDirectory;
+                if (outputDirectory == null)
+                {
+                    //We might still be working in the temp folder.
+                    outputDirectory = WorkingDirectory;
+                }
+
+                return Path.Combine(outputDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
+            }
+        }
+
         public TimeSpan OutputTimeStep
         {
             get { return (TimeSpan)ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value; }
@@ -2050,7 +2090,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem,
                         Area.ObservationPoints,
-                        Area.ObservationCrossSections);
+                        Area.ObservationCrossSections,
+                        Area.Weirs.Where( w => w.WeirFormula is GeneralStructureWeirFormula));
                 }
             }
 
@@ -2088,6 +2129,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
+            var groupableFeature = e.Item as IGroupableFeature;
+            if (!Area.IsEditing && e.Action != NotifyCollectionChangeAction.Remove && groupableFeature != null)
+            {
+                groupableFeature.UpdateGroupName(this);
+            }
+
             var inputSender = InputFeatureCollections.Contains(sender);
             var outputSender = OutputFeatureCollections.Contains(sender);
 
@@ -2110,7 +2157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         }
                         areaDataItems.Clear();
                         break;
-                        case NotifyCollectionChangeAction.Replace:
+                    case NotifyCollectionChangeAction.Replace:
                         RemoveAreaFeature(oldFeature);
                         AddAreaItem(feature, inputSender);
                         break;
@@ -2118,6 +2165,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         throw new NotImplementedException(
                             String.Format("Action {0} on feature collection not supported", e.Action));
                 }
+            }
+        }
+
+        private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var weir = sender as IWeir;
+            if (weir != null)
+            {
+                if (e.PropertyName == TypeUtils.GetMemberName<Weir>(w => w.WeirFormula))
+                {
+                    var isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
+                    UpdateAreaDataItems(weir, isInputSender);
+                }
+            }
+
+            var groupableFeature = sender as IGroupableFeature;
+            if (!updatingGroupName && !Area.IsEditing && groupableFeature != null && e.PropertyName == TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName))
+            {
+                updatingGroupName = true;// prevent recursive calls
+
+                groupableFeature.UpdateGroupName(this);
+
+                if (groupableFeature.IsDefaultGroup)
+                {
+                    groupableFeature.IsDefaultGroup = false;
+                }
+
+                updatingGroupName = false;
             }
         }
 
@@ -2137,19 +2212,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void AddAreaItem(IFeature feature, bool isInputSender)
         {
-            var listToAdd = new List<IDataItem>();
+            var listToAdd = GetDataItemListForFeature(feature, isInputSender);
             areaDataItems.Add(feature, listToAdd);
+        }
 
-            listToAdd.AddRange(
-                GetQuantitiesForLocation(feature).Select(quantity => new DataItem(feature)
-                {
-                    Name = feature.ToString(),
-                    Tag = quantity,
-                    Role = isInputSender ? DataItemRole.Input : DataItemRole.Output,
-                    ValueType = typeof (double),
-                    ValueConverter =
-                        new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty) // TODO: insert unit
-                }));
+        private void UpdateAreaDataItems(IFeature feature, bool isInputSender)
+        {
+            if(areaDataItems.ContainsKey(feature))
+            {
+                var listToReplace = GetDataItemListForFeature(feature, isInputSender);               
+                areaDataItems[feature] = listToReplace;
+            }
+        }
+
+        private List<IDataItem> GetDataItemListForFeature(IFeature feature, bool isInputSender)
+        {
+            return GetQuantitiesForLocation(feature).Select(quantity => new DataItem(feature)
+            {
+                Name = feature.ToString(),
+                Tag = quantity,
+                Role = isInputSender ? DataItemRole.Input : DataItemRole.Output,
+                ValueType = typeof(double),
+                ValueConverter = new WaterFlowFMFeatureValueConverter(this, feature, quantity, String.Empty) // TODO: insert unit
+            }).OfType<IDataItem>().ToList();
         }
 
         private IEnumerable<string> GetQuantitiesForLocation(IFeature location)
@@ -2172,6 +2257,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (weir != null)
             {
                 yield return KnownStructureProperties.CrestLevel;
+
+                var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+                if (weirFormula != null)
+                {
+                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight);
+                    yield return KnownStructureProperties.GateLowerEdgeLevel;
+                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter);
+                    yield return EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter);
+                }
             }
 
             if (Area.ObservationPoints.Contains(location))
@@ -2371,6 +2465,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return "dflowfm"; }
         }
 
+        public virtual string SnappedFeaturesDirectoryName
+        {
+            get { return "snapped"; }
+        }
+
         public virtual bool IsMasterTimeStep { get { return true; } }
 
         public virtual string ShortName
@@ -2441,7 +2540,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 EndEdit();
             }
-
         }
 
 
@@ -2501,7 +2599,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
                         if (isPartOf1D2DModel && UseMorSed)
                         {
-                            ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = false;
+                            ModelDefinition.UseMorphologySediment = false;
                             Log.InfoFormat(
                                 Resources
                                     .WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model,

@@ -1,19 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using NetTopologySuite.Extensions.Features;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using NetTopologySuite.Extensions.Geometries;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
     [TestFixture]
     public class PliFileTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadGroupableFeaturePliFileAssignsGroupName()
+        {
+            var groupName = "CrsGroup1_crs.pli";
+            var filePath = TestHelper.GetTestFilePath(Path.Combine(@"HydroAreaCollection", groupName));
+            Assert.IsTrue(File.Exists(filePath));
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            try
+            {
+                var pliFile = new PliFile<ObservationCrossSection2D>();
+                var readObjects = pliFile.Read(filePath);
+                var groups = readObjects.GroupBy(g => g.GroupName).ToList();
+                Assert.That(groups.Count, Is.EqualTo(1));
+                Assert.That(groups.First().Key, Is.EqualTo(filePath.Replace(@"\", "/")));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(filePath);
+            }
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void WriteReadFeatureWithColumnsAndLocationNames()
@@ -37,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var features = file.Read("feature.pli");
 
-            Assert.AreEqual(1, features.Count());
+            Assert.AreEqual(1, features.Count);
 
             var featureCopy = features[0];
 
@@ -177,6 +203,128 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             {
                 File.Delete(fileName);
             }
+        }
+
+        [Test]
+        public void GivenSimplePliFile_WhenReadingFile_ThenAllDataIsReadAndStoredAsFeatureAttributes()
+        {
+            var testFileName = "OneSimpleFixedWeir_fxw.pli";
+            var testDir = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection"));
+            var filePath = Path.Combine(testDir, testFileName);
+
+            var fileReader = new PliFile<Feature2D>();
+            var fixedWeirs = fileReader.Read(filePath);
+            Assert.That(fixedWeirs.Count, Is.EqualTo(1));
+
+            var fixedWeir = fixedWeirs.FirstOrDefault();
+            var attributes = fixedWeir.Attributes;
+            Assert.That(attributes.Count, Is.EqualTo(8));
+            
+            attributes.CheckDoubleValuesForColumn("Column3", 10.96, 10.89);
+            attributes.CheckDoubleValuesForColumn("Column4", 3.5, 3.0);
+            attributes.CheckDoubleValuesForColumn("Column5", 3.2, 3.3);
+            attributes.CheckDoubleValuesForColumn("Column6", 4.0, 3.8);
+            attributes.CheckDoubleValuesForColumn("Column7", 4.0, 4.0);
+            attributes.CheckDoubleValuesForColumn("Column8", 4.0, 4.0);
+            attributes.CheckDoubleValuesForColumn("Column9", 0.0, 0.0);
+            attributes.CheckStringValuesForColumn("WeirType", "V", "V");
+        }
+
+        [Test]
+        public void GivenSimpleFixedWeir_WhenWritingToPlizFile_ThenAllAttributeValuesAreWritten()
+        {
+            var filePath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection/OneSimpleFixedWeir_fxw.pli"));
+            var writeToFilePath = Path.Combine(Path.GetDirectoryName(filePath), "WrittenFixedWeirs_fxw.pli");
+            try
+            {
+                var fileReaderWriter = new PliFile<Feature2D>();
+                var fixedWeirs = fileReaderWriter.Read(filePath);
+                fileReaderWriter.Write(writeToFilePath, fixedWeirs);
+
+                var originalContent = File.ReadAllLines(filePath);
+                var resultingContent = File.ReadAllLines(writeToFilePath);
+
+                // Check if values in the resulting file are equal to the values in the original file.
+                Assert.That(originalContent.Length, Is.EqualTo(resultingContent.Length));
+                for (var i = 0; i < originalContent.Length; i++)
+                {
+                    var originalSeparator = '\t';
+                    if (i == 1) originalSeparator = ' ';
+                    var resultingSeparator = ' ';
+
+                    var originalLineContent = originalContent[i].Split(originalSeparator).Where(s => s != string.Empty).ToArray();
+                    var resultingLineContent = resultingContent[i].Split(resultingSeparator).Where(s => s != string.Empty).ToArray();
+                    Assert.That(originalLineContent.Length == resultingLineContent.Length);
+                    for (var n = 0; n < resultingLineContent.Length; n++)
+                    {
+                        var equalValues = false;
+                        if (i < 2) equalValues = originalLineContent[n].Trim() == resultingLineContent[n].Trim();
+                        else if (n < resultingLineContent.Length - 1)
+                        {
+                            var originalValue = Double.Parse(originalLineContent[n], CultureInfo.InvariantCulture);
+                            var resultingValue = Double.Parse(resultingLineContent[n], CultureInfo.InvariantCulture);
+                            equalValues = (originalValue == resultingValue);
+                        }
+                        else if(n == resultingLineContent.Length - 1)
+                        {
+                            equalValues = originalLineContent[n].Trim() == resultingLineContent[n].Trim();
+                        }
+
+                        Assert.That(equalValues, string.Format("Values in line " + (i + 1) + " in written file differs from the original value.\nOriginal: {0}\nResult: {1}", originalContent[i], resultingContent[i]));
+                    }
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(filePath));
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(FormatException), ExpectedMessage = "Invalid placement of string value 'V' on line 3 in file", MatchType = MessageMatch.StartsWith)]
+        public void GivenPliFileWithStringValueInTheWrongColumn_WhenReading_ThenExceptionIsThrown()
+        {
+            ReadPliFile("HydroAreaCollection/IncorrectFormatForFixedWeir_fxw.pli");
+        }
+
+        [Test]
+        [ExpectedException(typeof(FormatException), ExpectedMessage = "Invalid point row (expected 9 columns, but was 11) on line 3 in file", MatchType = MessageMatch.StartsWith)]
+        public void GivenFeature2DWithLowerColumnCountInPliFile_WhenReading_ThenExceptionIsThrown()
+        {
+            ReadPliFile("HydroAreaCollection/WrongColumnCountDefinedForWeir_fxw.pli");
+        }
+
+        [Test]
+        public void GivenValidPliFileWithLocationNamesOnPoints_WhenReading_ThenLocationNamesAreStoredInFeatureAttributes()
+        {
+            var features = ReadPliFile("HydroAreaCollection/FeatureWithLocationNamesOnPoints_fxw.pli");
+            Assert.That(features.Count, Is.EqualTo(1));
+            var feature = features.FirstOrDefault();
+            Assert.NotNull(feature);
+
+            var attributes = feature.Attributes;
+            Assert.That(attributes.Keys.Contains(Feature2D.LocationKey));
+            var locationNames = (GeometryPointsSyncedList<string>)attributes[Feature2D.LocationKey];
+            Assert.That(locationNames[0], Is.EqualTo("point1"));
+            Assert.That(locationNames[1], Is.EqualTo("point2"));
+        }
+
+        private static IList<Feature2D> ReadPliFile(string relativeFilePath)
+        {
+            var filePath =
+                TestHelper.CreateLocalCopy(
+                    TestHelper.GetTestFilePath(relativeFilePath));
+            IList<Feature2D> features = new List<Feature2D>();
+            try
+            {
+                var fileReader = new PliFile<Feature2D>();
+                features = fileReader.Read(filePath); // Should throw exception
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(filePath));
+            }
+            return features;
         }
     }
 }

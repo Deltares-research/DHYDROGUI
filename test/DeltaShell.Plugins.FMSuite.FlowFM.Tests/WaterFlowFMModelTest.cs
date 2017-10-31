@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -17,19 +25,37 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
     public class WaterFlowFMModelTest
     {
+        private MockRepository mocks;
+
+        [SetUp]
+        public void Setup()
+        {
+            mocks = new MockRepository();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            mocks.VerifyAll();
+        }
+
         [Test]
         public void CheckDefaultPropertiesOfFMModel()
         {
@@ -41,6 +67,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // DELFT3DFM-371: Disable Model Inspection
             // Assert.IsTrue(model.ModelInspection);
 
+        }
+
+        [Test]
+        public void CheckWeirFormulaPropertyChangeEventPropagatesToModel()
+        {
+            var model = new WaterFlowFMModel();
+
+            var weir = new Weir2D()
+            {
+                Name = "weir01",
+                WeirFormula = new SimpleWeirFormula()
+            };
+
+            var collectionChangedCount = 0;
+            ((INotifyCollectionChanged) model).CollectionChanged += (s, e) =>
+            {
+                if (e.Item != weir) return;
+                collectionChangedCount++;
+            };
+
+            var weirFormulaChangeCount = 0;
+            ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName != TypeUtils.GetMemberName<Weir>(w => w.WeirFormula)) return;
+                weirFormulaChangeCount++;
+            };
+            // add weir to model
+            model.Area.Weirs.Add(weir);
+            Assert.AreEqual(1, collectionChangedCount);
+            
+            // change weirformula
+            weir.WeirFormula = new GeneralStructureWeirFormula();
+            Assert.AreEqual(1, weirFormulaChangeCount);
+        }
+
+        [Test]
+        public void CheckDataItemsAfterChangeOfWeirFormula()
+        {
+            var model = new WaterFlowFMModel();
+
+            var weir = new Weir2D()
+            {
+                Name = "weir01",
+                WeirFormula = new SimpleWeirFormula()
+            };
+            model.Area.Weirs.Add(weir);
+            
+            var dataItems = model.GetChildDataItems(weir).ToList();
+            
+            Assert.AreEqual(1, dataItems.Count);
+
+            Assert.AreEqual(weir.Name, dataItems[0].Name);
+            Assert.AreEqual(KnownStructureProperties.CrestLevel, dataItems[0].Tag);
+            Assert.AreEqual(DataItemRole.Input, dataItems[0].Role);
+            Assert.AreEqual(weir, ((WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter).Location);
+            Assert.AreEqual(model, ((WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter).Model);
+            Assert.AreEqual(KnownStructureProperties.CrestLevel, ((WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter).ParameterName);
+
+            // change weir formula
+            weir.WeirFormula = new GeneralStructureWeirFormula();
+            dataItems = model.GetChildDataItems(weir).ToList();
+            Assert.AreEqual(5, dataItems.Count);
+
+            var generalStructureDataItems = new List<string>
+            {
+                KnownStructureProperties.CrestLevel,
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight),
+                KnownStructureProperties.GateLowerEdgeLevel,
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter),
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter)
+            };
+            Assert.That(generalStructureDataItems.Count == dataItems.Count);
+
+            for (int i = 0; i < dataItems.Count; ++i)
+            {
+                Assert.AreEqual(weir.Name, dataItems[i].Name);
+                Assert.AreEqual(generalStructureDataItems[i], dataItems[i].Tag);
+                Assert.AreEqual(DataItemRole.Input, dataItems[i].Role);
+                Assert.AreEqual(weir, ((WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter).Location);
+                Assert.AreEqual(model, ((WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter).Model);
+                Assert.AreEqual(generalStructureDataItems[i], ((WaterFlowFMFeatureValueConverter)dataItems[i].ValueConverter).ParameterName);
+            }
         }
 
         [Test]
@@ -590,5 +698,345 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [Test]
+        public void WriteSnappedFeaturesTest()
+        {
+            var model = new WaterFlowFMModel();
+
+            /* Default is false */
+            Assert.IsFalse(model.WriteSnappedFeatures);
+            Assert.AreEqual( model.WriteSnappedFeatures, model.ModelDefinition.WriteSnappedFeatures);
+
+            /* Value is the same in the model definition */
+            model.ModelDefinition.WriteSnappedFeatures = true;
+            Assert.IsTrue(model.WriteSnappedFeatures);
+            Assert.AreEqual(model.WriteSnappedFeatures, model.ModelDefinition.WriteSnappedFeatures);
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsAlwaysRelative()
+        {
+            // Make local copy of project
+            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
+            var filePath = Path.Combine(baseFolderPath, "FlowFM.mdu");
+            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+            
+            // Import dry points
+            
+            fmModel.Area.DryPoints.Add(new GroupablePointFeature()
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"SubFolder/MyDryPoints_dry.xyz")
+            });
+            fmModel.Area.LandBoundaries.Add(new DelftTools.Hydro.LandBoundary2D()
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"SubFolder/MyLandBoundaries.ldb")
+            });
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.DryPoints.FirstOrDefault().GroupName, Is.EqualTo(@"SubFolder/MyDryPoints_dry.xyz"));
+            Assert.That(fmModel.Area.LandBoundaries.FirstOrDefault().GroupName, Is.EqualTo(@"SubFolder/MyLandBoundaries.ldb"));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsPointingToItsReferencingStructureFile()
+        {
+            // Make local copy of project
+            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
+            var filePath = Path.Combine(baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+
+            // Import dry points
+            fmModel.Area.Gates.Add(new Gate2D
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
+            });
+            fmModel.Area.Pumps.Add(new Pump2D
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
+            });
+            fmModel.Area.Weirs.Add(new Weir2D
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
+            });
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameEqualToPathThatIsNotReferencedByAStructureFile_ThenGroupNameIsEqualToDefaultStructuresFileNameInTheSameFolder()
+        {
+            // Make local copy of project
+            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
+            var filePath = Path.Combine(baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+
+            // Import dry points
+            fmModel.Area.Gates.Add(new Gate2D
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")
+            });
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.Gates.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
+        }
+
+        [Test]
+        public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameToPathThatIsPointingToNotASubFolderOfMduFolder_ThenGroupNameIsEqualToFileName()
+        {
+            // Make local copy of project
+            const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
+            var filePath = Path.Combine(baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+
+            // Make FM model from Mdu file
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+
+            // Import dry points
+            fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon()
+            {
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MyDryAreas_dry.pol")
+            });
+
+            // Check that group name gives a relative path from the mdu folder
+            Assert.That(fmModel.Area.DryAreas.FirstOrDefault().GroupName, Is.EqualTo(@"MyDryAreas_dry.pol"));
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void RunModelWithGeneralStructuresAcceptanceTest()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM.mdu");
+            Assert.IsTrue( File.Exists(filePath) );
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            Assert.IsTrue(File.Exists(filePath));
+
+            using (var model = new WaterFlowFMModel(filePath))
+            {
+                Assert.AreEqual( 2, model.Boundaries.Count);
+                Assert.AreEqual( 1, model.Area.Weirs.Count );
+                Assert.AreEqual( 3, model.Area.ObservationPoints.Count);
+
+                /* Verify the OP exist and OP1.X < OP2.X < OP2.X and the Y is the same */
+                var op1 = model.Area.ObservationPoints[0];
+                var op2 = model.Area.ObservationPoints[1];
+                var op3 = model.Area.ObservationPoints[2];
+
+                Assert.NotNull(op1);
+                Assert.NotNull(op2);
+                Assert.NotNull(op3);
+
+                Assert.AreEqual(op1.Geometry.Coordinate.Y, op2.Geometry.Coordinate.Y);
+                Assert.AreEqual(op1.Geometry.Coordinate.Y, op3.Geometry.Coordinate.Y);
+                Assert.Less(op1.Geometry.Coordinate.X, op2.Geometry.Coordinate.X);
+                Assert.Less(op2.Geometry.Coordinate.X, op3.Geometry.Coordinate.X);
+
+                /* Check the Weir currently is a General Structure */
+                var weir2D = model.Area.Weirs.First();
+                Assert.IsTrue( weir2D.WeirFormula is GeneralStructureWeirFormula);
+
+                //Storing results for the General Structure
+                var op1WLResults = new List<double>();
+                var op2WLResults = new List<double>();
+                var op3WLResults = new List<double>();
+                
+                var op1VelResults = new List<double>();
+                var op2VelResults = new List<double>();
+                var op3VelResults = new List<double>();
+
+                try
+                {
+                    ActivityRunner.RunActivity(model);
+                    /*Water Level*/
+                    op1WLResults = GetWaterLevelValuesAtPoint(model, op1.Geometry.Coordinate);
+                    op2WLResults = GetWaterLevelValuesAtPoint(model, op2.Geometry.Coordinate);
+                    op3WLResults = GetWaterLevelValuesAtPoint(model, op3.Geometry.Coordinate);
+                    Assert.IsNotEmpty(op1WLResults);
+                    Assert.IsNotEmpty(op2WLResults);
+                    Assert.IsNotEmpty(op3WLResults);
+
+                    /*Velocity*/
+                    op1VelResults = GetVelocityValuesAtPoint(model, op1.Geometry.Coordinate);
+                    op2VelResults = GetVelocityValuesAtPoint(model, op2.Geometry.Coordinate);
+                    op3VelResults = GetVelocityValuesAtPoint(model, op3.Geometry.Coordinate);
+
+                    Assert.IsNotEmpty(op1VelResults);
+                    Assert.IsNotEmpty(op2VelResults);
+                    Assert.IsNotEmpty(op3VelResults);
+                }
+                catch (Exception e)
+                {
+                    Assert.Fail("Fail to run model: {0}", e.Message);
+                }
+
+                #region Check Water Level
+                /* OP2TN < OP1TN && OP2TN < OP3TN */
+                Assert.AreEqual(op1WLResults.Count, op2WLResults.Count);
+                Assert.AreEqual(op1WLResults.Count, op3WLResults.Count);
+
+                var nResults = op1WLResults.Count;
+                var lastResult = nResults - 1;
+
+                /* Ensure the LAST time recorded on the OP2 has some water level. */
+                var op2ValidValues = op2WLResults.Where(val => val > 0.0).ToList();
+                var op3ValidValues = op3WLResults.Where(val => val > 0.0).ToList();
+
+                Assert.IsNotEmpty(op2ValidValues);
+                Assert.IsNotEmpty(op3ValidValues);
+                
+                /* Check at any time the OP2 or OP3 are less than at the same time at OP1
+                  and that OP2 results are always Greater Or Equal than OP3 */
+                for (int i = 1; i < nResults; i++)
+                {
+                    Assert.Less(op2WLResults[i], op1WLResults[i]);
+                    Assert.Less(op3WLResults[i], op1WLResults[i]);
+                    Assert.GreaterOrEqual(op2WLResults[i], op3WLResults[i]);
+                }
+                #endregion
+
+                #region Check Velocity
+
+                /* OP2TN > OP1TN && OP2TN > OP3TN */
+                Assert.AreEqual(op1WLResults.Count, op1VelResults.Count);
+                Assert.AreEqual(op1VelResults.Count, op2VelResults.Count);
+                Assert.AreEqual(op1VelResults.Count, op3VelResults.Count);
+
+                Assert.Greater(op2VelResults[lastResult], op1VelResults[lastResult]);
+                #endregion
+            }
+
+            FileUtils.DeleteIfExists(filePath);
+        }
+
+        [Test]
+        public void ResultsFromWeirGeneralStructuresShouldDifferFromSimpleWeirAcceptanceTest()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM.mdu");
+            Assert.IsTrue(File.Exists(filePath));
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            Assert.IsTrue(File.Exists(filePath));
+
+            using (var model = new WaterFlowFMModel(filePath))
+            {
+                Assert.AreEqual(2, model.Boundaries.Count);
+                Assert.AreEqual(1, model.Area.Weirs.Count);
+                Assert.AreEqual(3, model.Area.ObservationPoints.Count);
+
+                /* Verify the OP exist and OP1.X < OP2.X < OP2.X and the Y is the same */
+                var op1 = model.Area.ObservationPoints[0];
+                var op2 = model.Area.ObservationPoints[1];
+                var op3 = model.Area.ObservationPoints[2];
+
+                Assert.NotNull(op1);
+                Assert.NotNull(op2);
+                Assert.NotNull(op3);
+
+                Assert.AreEqual(op1.Geometry.Coordinate.Y, op2.Geometry.Coordinate.Y);
+                Assert.AreEqual(op2.Geometry.Coordinate.Y, op3.Geometry.Coordinate.Y);
+
+                Assert.Less(op1.Geometry.Coordinate.X, op2.Geometry.Coordinate.X);
+                Assert.Less(op2.Geometry.Coordinate.X, op3.Geometry.Coordinate.X);
+
+                /* Check the Weir currently is a General Structure */
+                var weir2D = model.Area.Weirs.First();
+                Assert.IsTrue(weir2D.WeirFormula is GeneralStructureWeirFormula);
+
+                //Storing results for the General Structure
+                var op1GSResults = new List<double>();
+                var op2GSResults = new List<double>();
+                var op3GSResults = new List<double>();
+
+               //Storing results for the Simple Weir
+                var op1SWResults = new List<double>();
+                var op2SWResults = new List<double>();
+                var op3SWResults = new List<double>();
+
+                try
+                {
+                    ActivityRunner.RunActivity(model);
+                    /*Water Level*/
+                    op1GSResults = GetWaterLevelValuesAtPoint(model, op1.Geometry.Coordinate);
+                    op2GSResults = GetWaterLevelValuesAtPoint(model, op2.Geometry.Coordinate);
+                    op3GSResults = GetWaterLevelValuesAtPoint(model, op3.Geometry.Coordinate);
+                    Assert.IsNotEmpty(op1GSResults);
+                    Assert.IsNotEmpty(op2GSResults);
+                    Assert.IsNotEmpty(op3GSResults);
+
+                    //Change weir to another kind of formula.
+                    weir2D.WeirFormula = new SimpleWeirFormula();
+                    Assert.IsFalse(weir2D.WeirFormula is GeneralStructureWeirFormula);
+
+                    ActivityRunner.RunActivity(model);
+                    op1SWResults = GetWaterLevelValuesAtPoint(model, op1.Geometry.Coordinate);
+                    op2SWResults = GetWaterLevelValuesAtPoint(model, op2.Geometry.Coordinate);
+                    op3SWResults = GetWaterLevelValuesAtPoint(model, op3.Geometry.Coordinate);
+                    Assert.IsNotEmpty(op1SWResults);
+                    Assert.IsNotEmpty(op2SWResults);
+                    Assert.IsNotEmpty(op3SWResults);
+                }
+                catch (Exception e)
+                {
+                    Assert.Fail("Fail to run model: {0}", e.Message);
+                }
+
+                /* Make sure the results are not the same when being a General Structure or Plain Weir*/
+                Assert.AreNotEqual(op1GSResults, op1SWResults);
+                Assert.AreNotEqual(op2GSResults, op2SWResults);
+                Assert.AreNotEqual(op3GSResults, op3SWResults);
+            }
+
+            FileUtils.DeleteIfExists(filePath);
+        }
+
+        /* Clone of function from WaterFlowFMModel */
+        private static List<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
+        {
+            var result = new List<double>();
+            if (model == null || model.OutputWaterLevel == null || model.OutputWaterLevel.Time == null)
+            {
+                Assert.Fail("Water level coverage not found.");
+            }
+
+            foreach (var time in model.OutputWaterLevel.Time.Values)
+                result.Add((double)model.OutputWaterLevel.Evaluate(measureLocation, time));
+
+            return result;
+        }
+        /* Custom made function to retreive velocity */
+        private static List<double> GetVelocityValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
+        {
+            var result = new List<double>();
+            if (model == null || model.OutputMapFileStore == null ||
+                model.OutputMapFileStore.CustomVelocityCoverage == null)
+            {
+                Assert.Fail("Velocity coverage not found.");
+            }
+
+            var velocity = model.OutputMapFileStore.CustomVelocityCoverage as UnstructuredGridCellCoverage;
+            if (velocity == null || velocity.Time == null)
+            {
+                Assert.Fail("Velocity coverage not found.");
+            }
+
+            foreach (var time in velocity.Time.Values)
+                result.Add((double)velocity.Evaluate(measureLocation, time));
+
+            return result;
+        }
     }
 }

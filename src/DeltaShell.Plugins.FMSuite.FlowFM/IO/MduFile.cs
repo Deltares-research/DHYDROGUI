@@ -2,21 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -30,12 +37,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string MduExtension = ".mdu";
         public const string LandBoundariesExtension = ".ldb";
         public const string ThinDamExtension = "_thd.pli";
-        public const string FixedWeirExtension = "_fxw.pli";
+        public const string ThinDamAlternativeExtension = "_thd.pliz";
+        public const string FixedWeirExtension = "_fxw.pliz";
+        public const string FixedWeirAlternativeExtension = "_fxw.pli";
         public const string StructuresExtension = "_structures.ini"; // TODO: Might not want to require a specific extension
         public const string ObsExtension = "_obs.xyn";
-        public const string ObsCrossExtension = "crs.pli";
+        public const string ObsCrossExtension = "_crs.pli";
+        public const string ObsCrossAlternativeExtension = "_crs.pliz";
         public const string DryAreaExtension = "_dry.pol";
         public const string DryPointExtension = "_dry.xyz";
+        public const string EnclosureExtension = "_enc.pol";
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
 
@@ -43,11 +54,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private LdbFile landBoundariesFile;
         private PliFile<ThinDam2D> thinDamFile;
-        private PliFile<FixedWeir> fixedWeirFile;
+        private PlizFile<FixedWeir> fixedWeirFile;
         private StructuresFile structuresFile;
-        private ObsFile obsFile;
+        private ObsFile<GroupableFeature2DPoint> obsFile;
         private PliFile<ObservationCrossSection2D> obsCrsFile;
-        private PolFile dryAreaFile;
+        private PolFile<GroupableFeature2DPolygon> dryAreaFile;
+        private PolFile<GroupableFeature2DPolygon> enclosureFile;
         private XyzFile dryPointFile;
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
@@ -59,6 +71,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             KnownProperties.HisFile__Obsolete, KnownProperties.ThinDamFile, KnownProperties.FixedWeirFile,
             KnownProperties.ObsFile, KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile,
             KnownProperties.DryPointsFile, KnownProperties.RestartFile, KnownProperties.StructuresFile
+        };
+
+        private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary = new Dictionary<string, string>
+        {
+            { KnownProperties.DryPointsFile, "DryPointsFile" },
+            { KnownProperties.EnclosureFile, "EnclosureFile" },
+            { KnownProperties.LandBoundaryFile, "LandBoundaryFile" },
+            { KnownProperties.ThinDamFile, "ThinDamFile" },
+            { KnownProperties.FixedWeirFile, "FixedWeirFile" },
+            { KnownProperties.StructuresFile, "StructureFile" },
+            { KnownProperties.ObsFile, "ObsFile" },
+            { KnownProperties.ObsCrsFile, "CrsFile" },
         };
 
         public MduFile()
@@ -246,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else if (!modelDefinition.BoundaryConditions.Any())
                 {
-                    modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString("");
+                    modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
                 }
             }
 
@@ -274,8 +298,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 WriteLine("# Generated on " + DateTime.Now);
                 WriteLine("# Deltares, FM-Suite DFlowFM Model Version " + FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion);
-                modelDefinition.First(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Version, StringComparison.InvariantCultureIgnoreCase)).Value = FMDllVersion;
-                modelDefinition.First(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.GuiVersion, StringComparison.InvariantCultureIgnoreCase)).Value = FMSuiteFlowModelVersion;
+                SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
+                SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
                 var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
                                                                     && p.PropertyDefinition.FileCategoryName != MorphologyFile.MorphologyUnknownProperty /*Remove morphology unknown properties*/
                                                                     && p.PropertyDefinition.FileCategoryName != SedimentFile.SedimentUnknownProperty)/*Remove sediment unknown properties that should be located on the sediment file*/
@@ -307,13 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         else
                         {
                             var mduPropertyValue = GetPropertyValue(prop, writeExtForcings, writeFeatures);
-
-                            var mduLine = String.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName,
-                                mduPropertyValue,
-                                mduComments.ContainsKey(prop.PropertyDefinition.MduPropertyName)
-                                    ? mduComments[prop.PropertyDefinition.MduPropertyName]
-                                    : "");
-                            WriteLine(mduLine.Trim());
+                            WriteMduLine(prop, mduPropertyValue);
                         }
                     }
                 }
@@ -324,10 +342,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
+        private void WriteMduLine(WaterFlowFMProperty prop, string pathValue)
+        {
+            var mduLine = String.Format("{0,-18}= {1,-20}{2}", prop.PropertyDefinition.MduPropertyName,
+                pathValue,
+                mduComments.ContainsKey(prop.PropertyDefinition.MduPropertyName)
+                    ? mduComments[prop.PropertyDefinition.MduPropertyName]
+                    : string.Empty);
+            WriteLine(mduLine.Trim());
+        }
+
         private static IEnumerable<IGrouping<string, WaterFlowFMProperty>> RemoveMorAndSedPropertiesIfNeeded(IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup, IEnumerable<WaterFlowFMProperty> modelDefinition, bool writeExtForcings, bool writeFeatures)
         {
             /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
-
             propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
             var useMorSedProp = modelDefinition.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
             if (useMorSedProp != null)
@@ -362,9 +389,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var morFilePath = ReplaceMduExtension(mduFilePath, MorphologyExtension);
             var sedFilePath = ReplaceMduExtension(mduFilePath, SedimentExtension);
-            
-            modelDefinition.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile)).Value = System.IO.Path.GetFileName(morFilePath);
-            modelDefinition.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile)).Value = System.IO.Path.GetFileName(sedFilePath);
+
+            SetValueToPropertyIfExists(modelDefinition, KnownProperties.MorFile, System.IO.Path.GetFileName(morFilePath));
+            SetValueToPropertyIfExists(modelDefinition, KnownProperties.SedFile, System.IO.Path.GetFileName(sedFilePath));
+        }
+
+        private static void SetValueToPropertyIfExists(IEnumerable<WaterFlowFMProperty> modelDefinition, string name, string value)
+        {
+            if (modelDefinition == null) return;
+            var waterFlowFmProperty = modelDefinition.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (waterFlowFmProperty != null)
+            {
+                waterFlowFmProperty.SetValueAsString(value);
+            }
         }
 
         private static string GetPropertyValue(WaterFlowFMProperty prop, bool writeExtForcings, bool writeFeatures)
@@ -387,62 +424,89 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private static void WriteFeatures<TFeat, TFile>(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
-            string propertyKey,IList<TFeat> features, ref TFile fileWriter, string extension)
+            string propertyKey,IList<TFeat> features, ref TFile fileWriter, string extension, params string[] alternativeExtensions)
             where TFile : IFeature2DFileBase<TFeat>, new()
         {
             var waterFlowFMProperty = modelDefinition.GetModelProperty(propertyKey);
             if (features.Any())
             {
-                string filePath;
-                if (fileWriter == null || string.IsNullOrEmpty(waterFlowFMProperty.GetValueAsString()))
-                {
-                    filePath = ReplaceMduExtension(targetMduFilePath, extension);
-                    waterFlowFMProperty.Value = System.IO.Path.GetFileName(filePath);
-                }
-                else
-                {
-                    filePath = MduFileHelper.GetSubfilePath(targetMduFilePath, waterFlowFMProperty);
-                }
-                var path = filePath;
+                List<IGrouping<string, IGroupableFeature>> grouping;
+                InitializeFeatureWriter(targetMduFilePath, features, extension, waterFlowFMProperty, out grouping, alternativeExtensions);
+                var featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
+                featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
 
                 if (fileWriter == null)
                 {
                     fileWriter = CreateFeatureFile<TFeat, TFile>(modelDefinition);
                 }
-                fileWriter.Write(path, features);
+
+                foreach (var filePath in featuresFilePaths)
+                {
+                    var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), filePath, true);
+                    var fileNameWithoutExtension = fileName.Replace(extension, string.Empty);
+                    var groupFeatures = grouping.FirstOrDefault(g => g.Key.ToLowerInvariant().Equals(fileName.ToLowerInvariant()) 
+                        || g.Key.ToLowerInvariant().Equals(fileNameWithoutExtension.ToLowerInvariant())
+                        || g.Key.ToLowerInvariant().Replace(System.IO.Path.GetExtension(extension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
+                    var featuresToWrite = grouping.Count > 0 && groupFeatures != null
+                        ? groupFeatures.Cast<TFeat>().ToList()
+                        : features;
+                    fileWriter.Write(filePath, featuresToWrite);
+                }
             }
             else
             {
-                waterFlowFMProperty.Value = "";
+                waterFlowFMProperty.SetValueAsString(string.Empty);
             }
         }
 
-        private void WriteDryPoints(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IList<PointFeature> dryPoints)
+        private static void InitializeFeatureWriter<TFeat>(string targetMduFilePath, IList<TFeat> features, string extension,
+            WaterFlowFMProperty waterFlowFMProperty, out List<IGrouping<string, IGroupableFeature>> grouping, params string[] alternativeExtensions)
+        {
+            var defaultGroup = System.IO.Path.GetFileNameWithoutExtension(targetMduFilePath);
+            MduFileHelper.UpdateFeatures(features, extension, defaultGroup);
+            var writeToRelativeFilePaths = MduFileHelper.GetUniqueFilePathsForWindows(targetMduFilePath, features, extension, alternativeExtensions).Where(fp => MduFileHelper.IsValidFilePath(fp, targetMduFilePath));
+
+            grouping = features.OfType<IGroupableFeature>().GroupBy(f => f.GroupName, StringComparer.InvariantCultureIgnoreCase).ToList();
+            
+            waterFlowFMProperty.SetValueAsString(string.Join(" ", writeToRelativeFilePaths.Select(f => System.IO.Path.HasExtension(f) ? f : string.Concat(f, extension))));
+        }
+
+        private void WriteDryPoints(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IList<GroupablePointFeature> dryPoints)
         {
             var waterFlowFMProperty = modelDefinition.GetModelProperty(KnownProperties.DryPointsFile);
             if (dryPoints.Any())
             {
-                string filePath;
-                if (dryPointFile == null || string.IsNullOrEmpty(waterFlowFMProperty.GetValueAsString()) ||
-                    !waterFlowFMProperty.GetValueAsString().EndsWith(DryPointExtension))
-                {
-                    filePath = ReplaceMduExtension(targetMduFilePath, DryPointExtension);
-                    waterFlowFMProperty.Value = System.IO.Path.GetFileName(filePath);
-                }
-                else
-                {
-                    filePath = MduFileHelper.GetSubfilePath(targetMduFilePath, waterFlowFMProperty);
-                }
-                var path = filePath;
+                List<IGrouping<string, IGroupableFeature>> grouping;
+                InitializeFeatureWriter(targetMduFilePath, dryPoints, DryPointExtension, waterFlowFMProperty, out grouping);
+                var featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
+                featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
+                
                 if (dryPointFile == null)
                 {
                     dryPointFile = new XyzFile();
                 }
-                dryPointFile.Write(path, dryPoints.Select(p => new PointValue {X = p.X, Y = p.Y, Value = 0}));
+
+                foreach (var filePath in featuresFilePaths)
+                {
+                    // Create the directory to which the file is being written, because XyzFile class does not handle this.
+                    var writeDirectory = System.IO.Path.GetDirectoryName(filePath);
+                    if (!string.IsNullOrEmpty(writeDirectory) && !Directory.Exists(writeDirectory))
+                    {
+                        Directory.CreateDirectory(writeDirectory);
+                    }
+
+                    var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), filePath, true);
+                    var fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
+                    var groupFeatures = grouping.FirstOrDefault(g => g.Key.Equals(fileName) || g.Key.Equals(fileNameWithoutExtension));
+                    var featuresToWrite = dryPoints.Count > 0 && groupFeatures != null
+                        ? groupFeatures.Cast<GroupablePointFeature>().ToList()
+                        : dryPoints;
+                    dryPointFile.Write(filePath, featuresToWrite.Select(p => new PointValue { X = p.X, Y = p.Y, Value = 0 }));
+                }
             }
             else
             {
-                waterFlowFMProperty.Value = "";
+                waterFlowFMProperty.SetValueAsString(string.Empty);
             }
         }
 
@@ -450,12 +514,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             where TFile : IFeature2DFileBase<TFeat>, new()
         {
             var fileWriter = new TFile();
-            var fixedWeirFile = fileWriter as PliFile<FixedWeir>;
+            var fixedWeirFile = fileWriter as PlizFile<FixedWeir>;
             if (fixedWeirFile != null)
             {
                 fixedWeirFile.CreateDelegate = delegate(List<Coordinate> points, string name)
                 {
-                    var feature = new FixedWeir {Name = name, Geometry = PliFile<FixedWeir>.CreatePolyLine(points)};
+                    var feature = new FixedWeir {Name = name, Geometry = PlizFile<FixedWeir>.CreatePolyLine(points)};
                     feature.InitializeAttributes();
                     return feature;
                 };
@@ -477,16 +541,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 hydroArea.LandBoundaries, ref landBoundariesFile, LandBoundariesExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams.ToList(),
-                ref thinDamFile, ThinDamExtension);
+                ref thinDamFile, ThinDamExtension, ThinDamAlternativeExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs.ToList(),
-                ref fixedWeirFile, FixedWeirExtension);
+                ref fixedWeirFile, FixedWeirExtension, FixedWeirAlternativeExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints,
                 ref obsFile, ObsExtension);
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections.ToList(),
-                ref obsCrsFile, ObsCrossExtension);
+                ref obsCrsFile, ObsCrossExtension, ObsCrossAlternativeExtension);
 
             var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).ToList();
 
@@ -507,6 +571,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 WriteDryPoints(targetMduFilePath, modelDefinition, hydroArea.DryPoints);
             }
+
+            WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
+                ref enclosureFile, EnclosureExtension);
         }
 
         public void WriteLandBoundaries(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
@@ -577,6 +644,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 string currentGroupName = null;
                 string line = GetNextLine();
+                bool readNextLine = true;
                 while (line != null)
                 {
                     line = line.Trim().Replace("\0", " ");  // some mdu files contain null characters (generated by interactor GUI)
@@ -600,10 +668,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     else
                     {
                         // property line
-                        string[] fields = line.Split(new[] {'=', '#'});
-                        string mduPropertyName = fields[0].Trim();
-
-                        string mduPropertyLowerCase = mduPropertyName.ToLower();
+                        string mduPropertyName;
+                        string mduPropertyLowerCase;
+                        var fields = GetPropertyLine(line, out mduPropertyName, out mduPropertyLowerCase);
 
                         // some backwards compatibility issues (properties have been renamed
                         if (mduPropertyLowerCase.Equals("botlevuni"))
@@ -622,14 +689,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         mduPropertyLowerCase = mduPropertyName.ToLower();
 
                         string mduPropertyValue = fields[1].Trim();
-                        if (fields.Length > 2)
-                        {
-                            int commentStart = line.IndexOf('#');
-                            if (commentStart > 0)
-                            {
-                                mduComments[mduPropertyName] = line.Substring(commentStart);
-                            }
-                        }
+                        GetPropertyComment(line, mduPropertyName, fields.Length > 2, false);
 
                         if (!definition.ContainsProperty(mduPropertyLowerCase))
                         {
@@ -647,10 +707,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                         if (!string.IsNullOrEmpty(mduPropertyValue))
                         {
-                            definition.GetModelProperty(mduPropertyLowerCase).SetValueAsString(mduPropertyValue);
+                            var property = definition.GetModelProperty(mduPropertyLowerCase);
+                            if (mduPropertyValue.EndsWith(@"\"))
+                            {
+                                mduPropertyValue = GetMduPropertyMultipleLineValueRecursive(mduPropertyName, mduPropertyValue, ref line, ref readNextLine);
+                            }
+
+                            property.SetValueAsString(mduPropertyValue);
                         }
                     }
-                    line = GetNextLine();
+
+                    if (readNextLine)
+                    {
+                        line = GetNextLine();
+                    }
+
+                    readNextLine = true; //Reset it if needed.
+                    
                 }
             }
             finally
@@ -665,61 +738,146 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             // update the heat flux model in the definition, because the event of KnownProperties.Temperature is not bubbled during loading of an mdu file.
             definition.UpdateHeatFluxModel();
+
+            // update the write shape file properties as they are not visible in the gui.
+            definition.UpdateWriteOutputSnappedFeatures();
+        }
+
+        private void GetPropertyComment(string line, string mduPropertyName, bool condition, bool isMultipleLine)
+        {
+            if (condition)
+            {
+                int commentStart = line.IndexOf('#');
+                if (commentStart > 0)
+                {
+
+                    mduComments[mduPropertyName] = isMultipleLine 
+                        ? (mduComments.ContainsKey(mduPropertyName)
+                            ? mduComments[mduPropertyName] 
+                            : "#")
+                            + line.Substring(commentStart + 1) 
+                        : line.Substring(commentStart);
+                }
+            }
+        }
+
+        private static string[] GetPropertyLine(string line, out string mduPropertyName, out string mduPropertyLowerCase)
+        {
+            string[] fields = line.Split(new[] {'=', '#'});
+            mduPropertyName = fields[0].Trim();
+
+            mduPropertyLowerCase = mduPropertyName.ToLower();
+            return fields;
+        }
+
+        private string GetMduPropertyMultipleLineValueRecursive(string mduPropertyName, string mduPropertyValue, ref string line, ref bool readNextLine)
+        {
+            line = GetNextLine();
+            if (line == null || !mduPropertyValue.EndsWith(@"\"))
+            {
+                readNextLine = false;
+                return mduPropertyValue;
+            }
+
+            mduPropertyValue = mduPropertyValue.Replace('\\', ' ');
+
+            /* Check if it's a new property or a new line value */
+            var lineValueWithComment = line.Split('#');
+            var lineValue = lineValueWithComment[0];
+            if (lineValue.Contains("="))
+            {
+                //It actually read a new property display a log warning / error and keep on reading the mdu file.
+                Log.WarnFormat("Found a new property while the mdu expected a new multiple line value {0}", line);
+                readNextLine = false;
+                return mduPropertyValue;
+            }
+
+            GetPropertyComment(line, mduPropertyName, line.Split('#').Length == 2, true);
+
+            if (!string.IsNullOrEmpty(lineValue))
+            {
+                var multipleLineValues = GetMduPropertyMultipleLineValueRecursive(mduPropertyName, lineValue.Trim(), ref line, ref readNextLine);
+                mduPropertyValue += multipleLineValues;
+            }
+            
+            return mduPropertyValue;
         }
 
         private static void ReadFeatures<TFeat, TFile>(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,
-            string propertyKey, IList<TFeat> features, ref TFile fileReader) where TFile: IFeature2DFileBase<TFeat>, new()
+            string propertyKey, IList<TFeat> features, ref TFile fileReader, string extension) where TFile: IFeature2DFileBase<TFeat>, new()
         {
-            var featuresFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(propertyKey));
+            var replacedFilePaths = new Dictionary<string, string>();
+            var modelProperty = modelDefinition.GetModelProperty(propertyKey);
+            var featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
+            RemoveBadFilePaths(ref featuresFilePaths, mduFilePath, modelDefinition, propertyKey);
+            CopyFilesToProjectFolderIfNeeded(featuresFilePaths, mduFilePath, modelDefinition, propertyKey, ref replacedFilePaths);
 
-            if (featuresFilePath == null) return;
+            if (featuresFilePaths == null || featuresFilePaths.Count == 0) return;
 
             fileReader = CreateFeatureFile<TFeat, TFile>(modelDefinition);
 
-            var readFeatures = fileReader.Read(featuresFilePath);
+            var readFeatures = new List<TFeat>();
+            foreach (var featuresFilePath in featuresFilePaths)
+            {
+                IList<TFeat> featuresToAdd;
+                if (fileReader is StructuresFile)
+                {
+                    var structuresFile = fileReader as StructuresFile;
+                    featuresToAdd = (IList<TFeat>) structuresFile.CopyFileAndRead(featuresFilePath, replacedFilePaths[featuresFilePath]);
+                }
+                else
+                {
+                    featuresToAdd = fileReader.Read(featuresFilePath);
+                }
+                
+                if (modelProperty.PropertyDefinition.IsMultipleFile)
+                {
+                    //make sure the features have the right group name.
+                    var asGroupable = featuresToAdd.OfType<IGroupableFeature>().ToList();
+                    var featurePathName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featuresFilePath, true);
+                    var mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
+                    asGroupable.ForEach(f =>
+                    {
+                        f.GroupName = featurePathName;
+                        f.IsDefaultGroup = featurePathName != null &&
+                                           featurePathName.Replace(extension, String.Empty).Trim().Equals(mduPathName);
+                    });
+                }
+                readFeatures.AddRange(featuresToAdd);
+            }
 
             NamingHelper.MakeNamesUnique(readFeatures.Cast<INameable>().ToList());
 
             features.AddRange(readFeatures);
         }
 
-        private void ReadDryPoints(HydroArea hydroArea, string dryPointsFilePath)
-        {
-            if (dryPointsFilePath == null || !dryPointsFilePath.EndsWith(XyzFile.Extension)) return;
-
-            dryPointFile = new XyzFile();
-            var points = dryPointFile.Read(dryPointsFilePath);
-            hydroArea.DryPoints.Clear();
-            hydroArea.DryPoints.AddRange(points.Select(p => new PointFeature() { Geometry = p.Geometry }));
-        }
-
         private void ReadAreaFeatures(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
         {
             ReadFeatures(filePath, modelDefinition, KnownProperties.LandBoundaryFile, hydroArea.LandBoundaries,
-                ref landBoundariesFile);
+                ref landBoundariesFile, LandBoundariesExtension);
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, ref thinDamFile);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs, ref fixedWeirFile);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections, ref obsCrsFile);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, ref thinDamFile, ThinDamExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs, ref fixedWeirFile, FixedWeirExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, ObsExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections, ref obsCrsFile, ObsCrossExtension);
 
             var structures = new List<IStructure>();
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, ref structuresFile);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, ref structuresFile, StructuresExtension);
 
             foreach (var structure in structures)
             {
-                if (structure is IPump)
+                if (structure is Pump2D)
                 {
-                    hydroArea.Pumps.Add((IPump) structure);
+                    hydroArea.Pumps.Add((Pump2D) structure);
                 }
-                else if (structure is IWeir)
+                else if (structure is Weir2D)
                 {
-                    hydroArea.Weirs.Add((IWeir) structure);
+                    hydroArea.Weirs.Add((Weir2D) structure);
                 }
-                else if (structure is IGate)
+                else if (structure is Gate2D)
                 {
-                    hydroArea.Gates.Add((IGate) structure);
+                    hydroArea.Gates.Add((Gate2D) structure);
                 }
                 else
                 {
@@ -727,17 +885,195 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
 
-            var dryPointsFilePath = MduFileHelper.GetSubfilePath(filePath,
-                modelDefinition.GetModelProperty(KnownProperties.DryPointsFile));
+            ReadFeaturesDryPoints(filePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea);
 
-            if (dryPointsFilePath != null && dryPointsFilePath.EndsWith(PolFile.Extension))
+            var enclosureMultipleFilePath = MduFileHelper.GetMultipleSubfilePath(filePath,
+                modelDefinition.GetModelProperty(KnownProperties.EnclosureFile));
+
+            var enclosuresToRemove = enclosureMultipleFilePath.Where(efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension)).ToList();
+            if (enclosuresToRemove.Count > 0)
             {
-                ReadFeatures(filePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea.DryAreas, ref dryAreaFile);
+                Log.WarnFormat("The following enclosure files do not contain the correct extension and will not be read. {0}", enclosuresToRemove);
+                enclosureMultipleFilePath.RemoveAllWhere(efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension));
             }
-            else
+
+            if (enclosureMultipleFilePath.Count > 0)
             {
-                ReadDryPoints(hydroArea, dryPointsFilePath);                
+                ReadFeatures(filePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures, ref enclosureFile, EnclosureExtension);
+
+                if (hydroArea.Enclosures.Count > 1)
+                {
+                    /*We do not support more than one enclosure, but the user should still be able to import everything. */
+                    Log.WarnFormat(Resources.MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_);
+                }
             }
+        }
+
+        private void ReadFeaturesDryPoints(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey, HydroArea hydroArea)
+        {
+            Dictionary<string, string> replacedFilePaths = new Dictionary<string, string>();
+            var modelProperty = modelDefinition.GetModelProperty(propertyKey);
+            var dryPointsFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
+            if (dryPointsFilePaths.GroupBy(fp => System.IO.Path.GetExtension(fp)).ToList().Count > 1)
+            {
+                Log.WarnFormat(
+                    Resources.MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_,
+                    string.Join(", ", dryPointsFilePaths.Select( fp => System.IO.Path.GetFileName(fp))));
+            }
+            else if (dryPointsFilePaths.Count > 0)
+            {
+                RemoveBadFilePaths(ref dryPointsFilePaths, mduFilePath, modelDefinition, propertyKey);
+                CopyFilesToProjectFolderIfNeeded(dryPointsFilePaths, mduFilePath, modelDefinition, propertyKey, ref replacedFilePaths);
+                if(!dryPointsFilePaths.Any()) return;
+
+                var groupName = System.IO.Path.GetExtension(dryPointsFilePaths.First());
+                if (groupName.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension))
+                {
+                    ReadFeatures(mduFilePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea.DryAreas, ref dryAreaFile,
+                        DryAreaExtension);
+                }
+                else if (groupName.EndsWith(XyzFile.Extension))
+                {
+                    dryPointFile = new XyzFile();
+                    hydroArea.DryPoints.Clear();
+                    dryPointsFilePaths.ForEach(
+                        fp =>
+                        {
+                            var dryPointGroupName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), fp, true);
+                            var mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
+                            hydroArea.DryPoints.AddRange(
+                                dryPointFile.Read(fp).Select(p => new GroupablePointFeature()
+                                {
+                                    Geometry = p.Geometry,
+                                    GroupName = dryPointGroupName,
+                                    IsDefaultGroup = dryPointGroupName != null &&
+                                                     dryPointGroupName.Replace(DryPointExtension, string.Empty).Trim().Equals(mduPathName)
+                                }));
+                        });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes file paths from featureGroupNames List, whenever they do not exist or whenever the files contain references to files that do not exist. 
+        /// Filtering out all these file paths is important for importing an mdu file, because it will just skip over the invalid file paths and will read
+        /// the existing ones. The corresponding ModelDefinition property is updated for all changes.
+        /// </summary>
+        /// <param name="featureFilePaths">The group names of all features, retrieved from the mdu file of the FM Model.</param>
+        /// <param name="mduFilePath">The file path of the mdu file.</param>
+        /// <param name="modelDefinition">The model definition of the FM Model.</param>
+        /// <param name="propertyKey">The key that corresponds to the type of file that is being read.</param>
+        private static void RemoveBadFilePaths(ref IList<string> featureFilePaths, string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey)
+        {
+            if(featureFilePaths.Count == 0) return;
+            featureFilePaths = featureFilePaths.Select(fp =>
+            {
+                while (fp.StartsWith(@"\") || fp.StartsWith("/")) fp = fp.Remove(0, 1);
+                return fp;
+            }).ToList();
+
+            RemoveAllNonExistentFilePaths(featureFilePaths, mduFilePath, modelDefinition, propertyKey);
+            RemoveAllStructuresFilesWithBadReferences(featureFilePaths, modelDefinition);
+            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureFilePaths));
+        }
+
+        /// <summary>
+        /// Removes all file paths that point to a file location that does not exist.
+        /// </summary>
+        /// <param name="featureFilePaths">The group names of all features, retrieved from the mdu file of the FM Model.</param>
+        /// <param name="mduFilePath">The file path of the mdu file.</param>
+        /// <param name="modelDefinition">The model definition of the FM Model.</param>
+        /// <param name="propertyKey">The key that corresponds to the type of file that is being read.</param>
+        private static void RemoveAllNonExistentFilePaths(ICollection<string> featureFilePaths, string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey)
+        {
+            var nonExistentFilePaths = featureFilePaths.Where(fp => fp != null && !File.Exists(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(mduFilePath), fp)));
+            foreach (var filePath in nonExistentFilePaths)
+            {
+                Log.WarnFormat(Resources.MduFile_RemoveNonExistentFilePaths_, filePath, mduFilePath,
+                    MduFilePropertyDescriptionDictionary[propertyKey], modelDefinition.ModelName);
+            }
+            featureFilePaths.RemoveAllWhere(gn => gn == null || nonExistentFilePaths.Contains(gn));
+        }
+
+        /// <summary>
+        /// Removes all structures files that contain references to feature files that do not exist.
+        /// </summary>
+        /// <param name="featureFilePaths">The group names of all features, retrieved from the mdu file of the FM Model.</param>
+        /// <param name="modelDefinition">The model definition of the FM Model.</param>
+        private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var structureFilesWithBadReferences = new List<string>();
+            foreach (var filePath in featureFilePaths.Where(fp => fp.EndsWith(StructuresExtension)))
+            {
+                var structureFilePath = System.IO.Path.GetFullPath(filePath);
+                var fileReader = new StructuresFile
+                {
+                    StructureSchema = modelDefinition.StructureSchema,
+                    ReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                };
+                var featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
+                var referencesToNonExistentFilesExist = false;
+                featuresToAdd.ForEach(f =>
+                {
+                    var featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
+                    var featureFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structureFilePath), featureFileName);
+                    if (!File.Exists(featureFilePath))
+                    {
+                        referencesToNonExistentFilesExist = true;
+                        Log.ErrorFormat(Resources.MduFile_RemoveAllStructuresFilesWithBadReferences_, featureFilePath, structureFilePath);
+                    }
+                });
+                if (referencesToNonExistentFilesExist) structureFilesWithBadReferences.Add(structureFilePath);
+            }
+            featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
+        }
+
+        /// <summary>
+        /// This method copies feature files at the given featureGroupNames to locations in the mdu folder if the file paths point to a location
+        /// outside of the mdu folder. In case a file path has '../' in its path, the path is replaced by its absolute path. The corresponding ModelProperty
+        /// is updated for every file path change.
+        /// </summary>
+        /// <param name="featureGroupNames">The group names of all features, retrieved from the mdu file of the FM Model.</param>
+        /// <param name="mduFilePath">The file path of the mdu file.</param>
+        /// <param name="modelDefinition">The model definition of the FM Model.</param>
+        /// <param name="propertyKey">The key that corresponds to the type of file that is being read.</param>
+        /// <param name="oldFilePaths">Dictionary that relates the resulting file paths to their original file paths.</param>
+        private static void CopyFilesToProjectFolderIfNeeded(IList<string> featureGroupNames, string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey, ref Dictionary<string, string> oldFilePaths)
+        {
+            var mduDirectory = System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(mduFilePath));
+            for (var i = 0; i < featureGroupNames.Count; i++)
+            {
+                var filePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(mduDirectory, featureGroupNames[i]));
+                var absolutePath = new Uri(filePath).AbsolutePath;
+                
+                var isOutsideMduFolderMatch = new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, absolutePath, true));
+                if (!isOutsideMduFolderMatch.Success) // File is situated inside mdu-folder or in a subfolder
+                {
+                    featureGroupNames[i] = absolutePath;
+                    oldFilePaths.Add(absolutePath, absolutePath);
+                }
+                else // File is situated outside of mdu-folder
+                {
+                    var newFilePath = System.IO.Path.Combine(mduDirectory, System.IO.Path.GetFileName(filePath));
+                    if (File.Exists(newFilePath))
+                    {
+                        Log.ErrorFormat(
+                            Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists,
+                            filePath, newFilePath);
+                        featureGroupNames[i] = null;
+                        continue;
+                    }
+
+                    File.Copy(absolutePath, newFilePath);
+                    oldFilePaths.Add(newFilePath, absolutePath);
+                    Log.InfoFormat(
+                        Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
+                        filePath, newFilePath, modelDefinition.ModelName);
+                    featureGroupNames[i] = newFilePath;
+                }
+            }
+            featureGroupNames.RemoveAllWhere(fp => fp == null);
+            modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true))));
         }
 
         #endregion

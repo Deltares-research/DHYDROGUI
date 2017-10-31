@@ -37,7 +37,7 @@ FILENAME=versie2_01.pli
 FILETYPE=9
 METHOD=3
 OPERAND=O
- 
+
 !
 * this comment block should still be there
 #
@@ -46,7 +46,7 @@ FILENAME=versie2_02.pli
 FILETYPE=9
 METHOD=3
 OPERAND=O
- 
+
 #
 # this one too
 #
@@ -65,12 +65,12 @@ FILENAME=river_comoe_wet.pli
 FILETYPE=9
 METHOD=3
 OPERAND=O
+
 * and finally this one
 
 QUANTITY=dischargebnd
 FILENAME=river_agneby_wet.pli
 FILETYPE=9
-! this comment inside the block will not be kept
 METHOD=3
 OPERAND=O
 

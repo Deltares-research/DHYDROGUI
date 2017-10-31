@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
@@ -133,7 +132,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             DefaultValueAsString = defaultField,
                             MinValueAsString = minField,
                             MaxValueAsString = maxField,
-                            IsFile = typeField.ToLower().Equals("filename"),
+                            IsMultipleFile = typeField.ToLower().Equals("multipleentriesfilename"),
+                            IsFile = typeField.ToLower().Equals("filename") || typeField.ToLower().Equals("multipleentriesfilename"),
                             ModelFileOnly = isReadOnly.ToLower().Equals("true"),
                             Description = description,
                             DocumentationSection = docSection,

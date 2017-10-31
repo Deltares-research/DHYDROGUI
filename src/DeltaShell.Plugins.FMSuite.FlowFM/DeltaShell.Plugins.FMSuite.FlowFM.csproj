@@ -152,6 +152,7 @@
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporter.cs" />
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
     <Compile Include="IO\Importers\BcmFileImporter.cs" />
+    <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />
     <Compile Include="IO\Importers\FMRstFileImporter.cs" />
@@ -200,6 +201,8 @@
     <Compile Include="IO\StructuresListType.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
+    <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
+    <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="FeatureData\SourceAndSink.cs" />
@@ -228,6 +231,7 @@
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />
     <Compile Include="Validation\WaterFlowFMEmbankmentValidator.cs" />
+    <Compile Include="Validation\WaterFlowFMEnclosureValidator.cs" />
     <Compile Include="Validation\WaterFlowFMGridValidator.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidator.cs" />
     <Compile Include="Validation\WaterFlowFmModelValidationExtensions.cs" />
@@ -295,6 +299,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="WaterFlowFMModel.Spatial.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />

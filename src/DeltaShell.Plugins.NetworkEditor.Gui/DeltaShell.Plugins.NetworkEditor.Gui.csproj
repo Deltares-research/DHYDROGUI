@@ -187,6 +187,7 @@
     <Compile Include="Commands\NetworkEditorCommand.cs" />
     <Compile Include="Commands\NetworkEditorHelper.cs" />
     <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\ShowCrossSectionHistoryCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Commands\ShowSideViewCommand.cs" />
@@ -610,10 +611,12 @@
     <Compile Include="MapTools\PasteBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\PasteIntoBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />
+    <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
+    <Compile Include="ProjectExplorer\Feature2DPolygonTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroNetworkProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroRegionProjectTreeViewNodePresenter.cs" />
@@ -670,10 +673,24 @@
     <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.Designer.cs">
       <DependentUpon>SelectDataWizardPageRelatedTablesPopUp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToVisibleHiddenConverter.cs" />
+    <Compile Include="Converters\EnumToDescriptionConverter.cs" />
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml.cs">
+      <DependentUpon>GeneralStructureWeirFormulaViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\SelectableWeirFormulaType.cs" />
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml.cs">
+      <DependentUpon>SimpleWeirFormulaViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirViewWpf.xaml.cs">
+      <DependentUpon>WeirViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AreaStructureView.resx">
       <DependentUpon>AreaStructureView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CaseAnalysis\CoverageAnalysisView.resx">
       <DependentUpon>CoverageAnalysisView.cs</DependentUpon>
@@ -1073,6 +1090,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\WeirViewWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\hbv.png" />
@@ -1134,6 +1163,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

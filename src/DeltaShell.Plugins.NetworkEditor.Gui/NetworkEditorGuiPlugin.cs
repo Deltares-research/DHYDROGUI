@@ -19,6 +19,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
@@ -51,7 +52,11 @@ using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -59,6 +64,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     [Extension(typeof(IPlugin))]
     public class NetworkEditorGuiPlugin : GuiPlugin
     {
+        private const string AddGroupToolStripMenuKey = "AddGroup";
+        private const string RemoveGroupToolStripMenuKey = "RemoveGroup";
+        private const string RemoveUngroupedToolStripMenuKey = "RemoveUngrouped";
+        private const string SeparatorToolStripMenuKey = "Separator";
         private HydroRegionTreeView hydroRegionTreeView;
         private bool settingGuiSelection;
         private ClonableToolStripMenuItem generateCalculationGridLocationsToolStripMenuItem;
@@ -183,7 +192,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 AdditionalDataCheck = o => o != null && o.Branch != null,
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,
-            }; ;
+            };
             yield return new ViewInfo<IBridge, BridgeView>
             {
                 CompositeViewType = typeof(CompositeStructureView),
@@ -345,9 +354,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network),
             };
 
-            yield return CreateAreaStructureCollectionViewInfo<IPump>(HydroArea.PumpsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<IWeir>(HydroArea.WeirsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<IGate>(HydroArea.GatesPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroArea.PumpsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroArea.WeirsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Gate2D>(HydroArea.GatesPluralName);
             
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
@@ -357,9 +366,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationCrossSections);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Embankments);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
         }
 
-        private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEnumerable<TFeature>> getCollection)
+        private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEventedList<TFeature>> getCollection)
         {
             var viewInfo1 = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
 
@@ -369,6 +379,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 viewInfo1.AfterCreate(view, features);
                 view.CanAddDeleteAttributes = false;
                 view.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
+
+                if (typeof(TFeature).Implements(typeof(IGroupableFeature)))
+                {
+                    CreateAddRemoveContextMenu(features, view.TableView.RowContextMenu.Items);
+                    view.TableView.RowContextMenu.Opening += (f, v) => UpdateContextMenu(features, view.TableView.RowContextMenu.Items);
+                }
             };
 
             return viewInfo;
@@ -379,7 +395,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return new ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView>
             {
                 Description = name,
-                AdditionalDataCheck = o => o != null && o.All(structure => structure.Branch == null),
+                AdditionalDataCheck = o => o != null && o.All<T>(structure => structure.Branch == null),
                 GetViewData = o =>
                 {
                     var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
@@ -387,19 +403,129 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => Gui.Application.ModelService.GetModelsByData(Gui.Application.Project, o).FirstOrDefault(),
-                AfterCreate = (v, o) =>
+                AfterCreate = (view, features) =>
                 {
-                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
+                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(features) != null);
                     if (centralMap == null) return;
 
-                    v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
-                    v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
-                    v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    v.CanAddDeleteAttributes = false;
-                    ConfigureAreaFeatureRowCreation<T>(v);
+                    view.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
+                    view.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
+                    view.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
+                    view.CanAddDeleteAttributes = false;
+                    ConfigureAreaFeatureRowCreation<T>(view);
+
+                    if (typeof(T).Implements(typeof(IGroupableFeature)))
+                    {
+                        CreateAddRemoveContextMenu(features, view.TableView.RowContextMenu.Items);
+                        view.TableView.RowContextMenu.Opening += (f, v) => UpdateContextMenu(features, view.TableView.RowContextMenu.Items);
+                    }
                 }
             };
         }
+
+        private void CreateAddRemoveContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection stripItemCollection) //where TFeature : IGroupableFeature
+        {
+            var eventedList = (IEventedList<TFeature>) features;
+
+            // add separator
+            var separator = new ToolStripSeparator()
+            {
+                Name = SeparatorToolStripMenuKey
+            };
+            stripItemCollection.Add(separator);
+
+            // add addgroup
+            var addAreaItemsGroup = new ToolStripMenuItem
+            {
+                Name = AddGroupToolStripMenuKey,
+                Text = Properties.Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group,
+                Enabled = Gui.CommandHandler.CanImportOn(eventedList), 
+            };
+            addAreaItemsGroup.Click += (s, e) => { Gui.CommandHandler.ImportOn(eventedList); };
+            stripItemCollection.Add(addAreaItemsGroup);
+            
+            // add remove by group
+            var removeAreaItemsGroup = new ToolStripMenuItem
+            {
+                Name = RemoveGroupToolStripMenuKey,
+                Text = Properties.Resources.NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group,
+                Visible = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Any(name => !string.IsNullOrWhiteSpace(name))
+            };
+            
+            removeAreaItemsGroup.DropDownOpening += (sender, args) =>
+            {
+                removeAreaItemsGroup.DropDownItems.Clear();
+
+                var groupableList = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Where(name => !string.IsNullOrWhiteSpace(name));
+                var groups = groupableList.Distinct().ToList();
+                foreach (var groupName in groups)
+                {
+                    var groupMenuItem = new ToolStripMenuItem
+                    {
+                        Text = groupName,
+                    };
+
+                    groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);
+                    removeAreaItemsGroup.DropDownItems.Add(groupMenuItem);
+                }
+            };
+            stripItemCollection.Add(removeAreaItemsGroup);
+            
+            // add remove ungrouped
+            var removeUngroupedItems = new ToolStripMenuItem()
+            {
+                Name = RemoveUngroupedToolStripMenuKey,
+                Text = Properties.Resources.NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped,
+                Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any()
+            };
+            removeUngroupedItems.Click += (s, e) => eventedList.RemoveUngroupedItems();
+            stripItemCollection.Add(removeUngroupedItems);
+        }
+
+        private void UpdateContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection items)
+        {
+            var eventedList = (IEventedList<TFeature>)features;
+
+            if (items.ContainsKey(AddGroupToolStripMenuKey))
+            {
+                var item = items[AddGroupToolStripMenuKey];
+                item.Enabled = Gui.CommandHandler.CanImportOn(eventedList);
+            }
+
+            if (items.ContainsKey(RemoveGroupToolStripMenuKey))
+            {
+                var item = items[RemoveGroupToolStripMenuKey];
+                item.Visible = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Any(name => !string.IsNullOrWhiteSpace(name));
+            }
+
+            if (items.ContainsKey(RemoveUngroupedToolStripMenuKey))
+            {
+                var item = items[RemoveUngroupedToolStripMenuKey];
+                item.Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any();
+            }
+        }
+        
+        /*        private static void RemoveUngroupedItems<TFeature>(IEventedList<TFeature> eventedList)
+        {
+            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
+                .Where(g => string.IsNullOrWhiteSpace(g.GroupName))
+                .OfType<TFeature>()
+                .ToList();
+
+            itemsToRemove.ForEach(f => eventedList.Remove(f));
+        }
+
+        private static void RemoveGroup<TFeature>(IEventedList<TFeature> eventedList, string group)
+        {
+            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
+                .Where(g => g.GroupName == group)
+                .OfType<TFeature>()
+                .ToList();
+
+            itemsToRemove.ForEach(f => eventedList.Remove(f));
+        }
+        
+             */
 
         private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure
         {
@@ -590,18 +716,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new HydroNetworkProjectTreeViewNodePresenter { GuiPlugin = this };
             yield return new DrainageBasinProjectTreeViewNodePresenter { GuiPlugin = this };
             yield return new HydroAreaProjectTreeViewNodePresenter { GuiPlugin = this };
-
+            yield return new Feature2DPolygonTreeViewNodePresenter {GuiPlugin = this};
 
             yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroArea.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<PointFeature>(HydroArea.DryPointsPluralName, Properties.Resources.dry_point) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Feature2DPolygon>(HydroArea.DryAreasPluralName, Properties.Resources.dry_area) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroArea.DryPointsPluralName, Properties.Resources.dry_point) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroArea.ThinDamsPluralName, Properties.Resources.thindam) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroArea.FixedWeirsPluralName, Properties.Resources.fixedweir) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Feature2DPoint>(HydroArea.ObservationPointsPluralName, Properties.Resources.Observation) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.ObservationPointsPluralName, Properties.Resources.Observation) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroArea.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<IPump>(HydroArea.PumpsPluralName, Properties.Resources.pump) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<IWeir>(HydroArea.WeirsPluralName, Properties.Resources.Weir) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<IGate>(HydroArea.GatesPluralName, Properties.Resources.Gate) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroArea.PumpsPluralName, Properties.Resources.pump) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroArea.WeirsPluralName, Properties.Resources.Weir) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Gate2D>(HydroArea.GatesPluralName, Properties.Resources.Gate) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
         }
 

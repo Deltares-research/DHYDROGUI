@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -16,6 +18,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public static class StructureFactory
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StructureFactory));
+
+        private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>> CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>>
+        {
+            { StructureType.Pump, CreatePumpCore },
+            { StructureType.Gate, CreateGateCore },
+            { StructureType.Weir, CreateSimpleWeirCore },
+            { StructureType.GeneralStructure, CreateGeneralStructureCore }
+        };
+
         /// <summary>
         /// Constructs a <see cref="IStructure"/> for the following supported types:
         /// Pump, Weir, Gate
@@ -24,28 +36,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
         /// <param name="refDate">Reference date for the model, required for time dependent data.</param>
         /// <returns>Returns the constructed structure.</returns>
-        public static IStructure CreateStructure(Structure2D structure2D, string path, DateTime refDate)
+        public static IStructure CreateStructure(Structure2D structure2D, string path, DateTime refDate, string oldPath = null)
         {
             StructureFactoryValidator.ThrowIfInvalidType(structure2D, StructureFactoryValidator.SupportedTypes);
 
             IStructure structure = null;
+            structure = CreateStructureType[structure2D.StructureType](structure2D, path, refDate);
+            SetCommonStructureData(structure, structure2D, path);
 
-            if (structure2D.StructureType == "pump")
-            {
-                structure = CreatePumpCore(structure2D, path, refDate);
-            }
-
-            if (structure2D.StructureType == "weir")
-            {
-                structure = CreateSimpleWeirCore(structure2D, path, refDate);
-            }
-
-            if (structure2D.StructureType == "gate")
-            {
-                structure = CreateGateCore(structure2D, path, refDate);
-            }
-
-            SetGeneralStructureData(structure, structure2D, path);
             return structure;
         }
 
@@ -55,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <param name="structure">Structure to be updated.</param>
         /// <param name="structure2D">Source of data to update <paramref name="structure"/>.</param>
         /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
-        private static void SetGeneralStructureData(IStructure structure, Structure2D structure2D, string path)
+        private static void SetCommonStructureData(IStructure structure, Structure2D structure2D, string path)
         {
             var property = structure2D.GetProperty(KnownStructureProperties.Name);
             if (property != null)
@@ -118,10 +116,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <returns>The created pump.</returns>
         public static IPump CreatePump(Structure2D structure, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure, new[] { "pump" });
+            StructureFactoryValidator.ThrowIfInvalidType(structure, new[] { StructureType.Pump });
 
             var pump = CreatePumpCore(structure, path, refDate);
-            SetGeneralStructureData(pump, structure, path);
+            SetCommonStructureData(pump, structure, path);
 
             return pump;
         }
@@ -133,11 +131,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
         /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
         /// <returns>The created pump.</returns>
-        private static Pump CreatePumpCore(Structure2D structure, string path, DateTime refDate)
+        private static Pump2D CreatePumpCore(Structure2D structure, string path, DateTime refDate)
         {
-            var pump = Pump.CreateDefault();
-            pump.CanBeTimedependent = true;
-
+            var pump = new Pump2D(true);
+            
             var property = structure.GetProperty(KnownStructureProperties.Capacity);
             if (property != null)
             {
@@ -150,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         break;
                     case SteerableMode.TimeSeries:
                         pump.UseCapacityTimeSeries = true;
-                        var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
+                        var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
                         var timFile = new TimFile();
                         timFile.Read(filePath, pump.CapacityTimeSeries, refDate);
                         break;
@@ -159,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 }
             }
 
-            if (Pump.SupportSobekPumpPropertiesInFM)
+            if (false)
             {
                 AddPumpSobekProperties(structure, pump);
             }
@@ -167,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return pump;
         }
 
-        private static void AddPumpSobekProperties(Structure2D structure, Pump pump)
+        private static void AddPumpSobekProperties(Structure2D structure, Pump2D pump)
         {
             var hasSuctionSideLevels = false;
             var property = structure.GetProperty(KnownStructureProperties.StartSuctionSide);
@@ -253,14 +250,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         /// <returns>The created weir.</returns>
         public static IWeir CreateWeir(Structure2D structure2D, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { "weir" });
+            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { StructureType.Weir });
 
             IWeir structure = null;
-            if (structure2D.StructureType == "weir")
+            if (structure2D.StructureType == StructureType.Weir)
             {
                 structure = CreateSimpleWeirCore(structure2D, path, refDate);
             }
-            SetGeneralStructureData(structure, structure2D, path);
+            SetCommonStructureData(structure, structure2D, path);
 
             return structure;
         }
@@ -299,15 +296,48 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         }
 
         /// <summary>
+        /// Create a weir that has a General Structure formula.
+        /// </summary>
+        /// <param name="structure2D">Source of data to create structure with.</param>
+        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
+        /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
+        /// <returns>The created simple weir.</returns>
+        private static IWeir CreateGeneralStructureCore(Structure2D structure2D, string path, DateTime refDate)
+        {
+            var weir = new Weir2D();
+            weir.WeirFormula = CreateGeneralStructureWeirFormula(structure2D);
+            
+            return weir;
+        }
+
+        private static IWeirFormula CreateGeneralStructureWeirFormula(Structure2D structure2D)
+        {
+            var gsWeirFormula = new GeneralStructureWeirFormula();
+
+            foreach (var property in Enum.GetValues(typeof(KnownGeneralStructureProperties)).Cast<KnownGeneralStructureProperties>())
+            {
+                var structureproperty = structure2D.GetProperty(property);
+                if (structureproperty == null)
+                    Log.WarnFormat("Property [{0}] is not supported and is skipped.", property);
+                else
+                {
+                    gsWeirFormula.SetPropertyValue(property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
+                }
+            } 
+
+            return gsWeirFormula;
+        }
+
+        /// <summary>
         /// Create a weir.
         /// </summary>
         /// <param name="structure2D">Source of data to create structure with.</param>
         /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
         /// <param name="refDate">Reference data used for <see cref="TimFile"/>s.</param>
         /// <returns>The created weir.</returns>
-        private static Weir CreateWeirCore(Structure2D structure2D, string path, DateTime refDate)
+        private static Weir2D CreateWeirCore(Structure2D structure2D, string path, DateTime refDate)
         {
-            var weir = Weir.CreateDefault(true);
+            var weir = new Weir2D(true);
             var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
             var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
@@ -326,21 +356,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static IGate CreateGate(Structure2D structure2D, string path, DateTime refDate)
         {
-            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { "gate" });
+            StructureFactoryValidator.ThrowIfInvalidType(structure2D, new[] { StructureType.Gate });
 
             IGate structure = null;
-            if (structure2D.StructureType == "gate")
+            if (structure2D.StructureType == StructureType.Gate)
             {
                 structure = CreateGateCore(structure2D, path, refDate);
             }
-            SetGeneralStructureData(structure, structure2D, path);
+            SetCommonStructureData(structure, structure2D, path);
 
             return structure;
         }
 
         private static IGate CreateGateCore(Structure2D structure2D, string path, DateTime refDate)
         {
-            var gate = Gate.CreateDefault();
+            var gate = new Gate2D();
 
             var sillWidthProperty = structure2D.GetProperty(KnownStructureProperties.GateSillWidth);
             var sillWidthString = sillWidthProperty == null ? null : sillWidthProperty.GetValueAsString();

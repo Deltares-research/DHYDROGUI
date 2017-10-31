@@ -21,7 +21,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features; 
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Model1D2DBuilder = DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels.Model1D2DBuilder;
@@ -50,7 +49,7 @@ namespace Sobek.IntegrationTests
                 var fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
                 var f1DModel = hydroModel.Activities.OfType<WaterFlowModel1D>().First();
 
-                var observationPointFm = new Feature2DPoint { Name = "ObservationFM" };
+                var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
                 fmModel.Area.ObservationPoints.Add(observationPointFm);
 
                 var firstBranch = f1DModel.Network.Branches[0];
@@ -301,8 +300,8 @@ namespace Sobek.IntegrationTests
                 var hydroModel = app.GetAllModelsInProject().OfType<HydroModel>().First();
                 var fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
 
-                var observationPointFm = new Feature2DPoint { Name = "ObservationFM" };
-                var weirFm = new Weir { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+                var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
+                var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
 
                 fmModel.Area.ObservationPoints.Add(observationPointFm);
                 fmModel.Area.Weirs.Add(weirFm);
@@ -401,7 +400,7 @@ namespace Sobek.IntegrationTests
                 ICompositeActivity hydroModel = app.Project.RootFolder.Models.Cast<ICompositeActivity>().First();
 
                 var fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
-                var observationPointFm = new Feature2DPoint { Name = "ObservationFM" }; 
+                var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" }; 
                 fmModel.Area.ObservationPoints.Add(observationPointFm);
 
                 var f1DModel = hydroModel.Activities.OfType<WaterFlowModel1D>().First();

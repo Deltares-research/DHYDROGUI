@@ -189,7 +189,7 @@ namespace DeltaShell.NGHS.IO
 
         private const char MergeCharacter = '\'';
 
-        protected IEnumerable<string> SplitLine(string inputLine)
+        protected static IEnumerable<string> SplitLine(string inputLine)
         {
             if (inputLine == null) throw new ArgumentNullException("inputLine");
 

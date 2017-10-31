@@ -103,12 +103,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (allItems.Count > 0)
             {
                 WriteBndExtForceFile(allItems);
-                modelProperty.Value = Path.GetFileName(FilePath);
+                modelProperty.SetValueAsString(Path.GetFileName(FilePath));
             }
             else
             {
                 FileUtils.DeleteIfExists(FilePath);
-                modelProperty.Value = "";
+                modelProperty.SetValueAsString(string.Empty);
             }
         }
 

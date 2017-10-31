@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     locationFileName = modelName + ".loc";
                     outputCategory.SetProperty(KnownWaveProperties.LocationFile, locationFileName);
                 }
-                new ObsFile().Write(Path.Combine(targetDir, locationFileName), modelDefinition.ObservationPoints, false);
+                new ObsFile<Feature2DPoint>().Write(Path.Combine(targetDir, locationFileName), modelDefinition.ObservationPoints, false);
             }
             
             var curvesFileName = outputCategory.GetPropertyValue(KnownWaveProperties.CurveFile);
@@ -529,7 +529,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                        .GetPropertyValue(KnownWaveProperties.LocationFile);
             if (locFile != null)
             {
-                modelDefinition.ObservationPoints = new ObsFile().Read(Path.Combine(mdwDir, locFile), false);
+                modelDefinition.ObservationPoints = new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
             }
 
             var curveFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)

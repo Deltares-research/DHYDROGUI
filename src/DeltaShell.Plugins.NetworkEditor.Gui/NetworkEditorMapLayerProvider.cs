@@ -25,6 +25,10 @@ using SharpMap.Editors.Interactors;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
 using SharpMap.Rendering;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -42,6 +46,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<Catchment>
                    || data is IEnumerable<IHydroNode>
                    || data is IEnumerable<IChannel>
+                   || (data is IEventedList<Pump2D> && parentObject is HydroArea)
+                   || (data is IEventedList<Weir2D> && parentObject is HydroArea)
+                   || (data is IEventedList<Gate2D> && parentObject is HydroArea)
                    || data is IEnumerable<IPump>
                    || data is IEnumerable<ILateralSource>
                    || data is IEnumerable<IRetention>
@@ -54,16 +61,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<ICrossSection>
                    || data is IEventedList<Route>
                    || data is IEventedList<Feature2D> //area2d features & boundaries
+                   || data is IEventedList<GroupableFeature2D> //area2d features & boundaries
                    || data is IEventedList<LandBoundary2D>
                    || data is IEventedList<ThinDam2D>
                    || data is IEventedList<ObservationCrossSection2D> 
                    || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points
-                   || (data is IEventedList<Feature2DPolygon> && parentObject is HydroArea) // dry areas
-                   || (data is IEventedList<PointFeature> && parentObject is HydroArea) // dry points
+                   || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
+                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas & enclosures
+                   || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
-                   || (data is IEventedList<IPump> && parentObject is HydroArea)
-                   || (data is IEventedList<IWeir> && parentObject is HydroArea)
-                   || (data is IEventedList<IGate> && parentObject is HydroArea)
                    || (data is IEventedList<Embankment> && parentObject is HydroArea);
         }
 
@@ -125,6 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.DryPoints;
                     yield return area2D.DryAreas;
                     yield return area2D.Embankments;
+                    yield return area2D.Enclosures;
                 }
 
             }
@@ -402,7 +409,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             if (geometry.Coordinates.Count() < 4) return null;
                             geometry = new Polygon(new LinearRing(geometry.Coordinates));
                         }
-                        var newFeature = new Feature2DPolygon { Geometry = geometry };
+                        var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
                         ds.Features.Add(newFeature);
 
                         return newFeature;
@@ -433,12 +440,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            var pumps2d = data as IEventedList<IPump>;
+            var pumps2d = data as IEventedList<Pump2D>;
             if (pumps2d != null && area2DParent != null && Equals(pumps2d, area2DParent.Pumps))
             {
                 var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "pump", modelName,
                     area2DParent.CoordinateSystem);
-                areaFeature2DCollection.FeatureType = typeof(Pump); // Override so we can use FeatureAttributes!
+                areaFeature2DCollection.FeatureType = typeof(Pump2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.PumpsPluralName)
                 {
                     NameIsReadOnly = true,
@@ -446,18 +453,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     DataSource = areaFeature2DCollection,
                     FeatureEditor = new Feature2DEditor(area2DParent)
                     {
-                        CreateNewFeature = layer => Pump.CreateDefault(true)
+                        CreateNewFeature = layer => new Pump2D(true)
                     },
                     CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
                 };
             }
 
-            var weirs2d = data as IEventedList<IWeir>;
+            var weirs2d = data as IEventedList<Weir2D>;
             if (weirs2d != null && area2DParent != null && Equals(weirs2d, area2DParent.Weirs))
             {
                 var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "weir", modelName,
                                                                          area2DParent.CoordinateSystem);
-                feature2DCollection.FeatureType = typeof(Weir); // Override so we can use FeatureAttributes!
+                feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.WeirsPluralName)
                 {
                     NameIsReadOnly = true,
@@ -467,7 +474,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         CreateNewFeature = layer =>
                         {
-                            var weir = Weir.CreateDefault(true);
+                            var weir = new Weir2D(true);
                             weir.CrestWidth = 0.0;
                             return weir;
                         }
@@ -476,12 +483,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            var gates2d = data as IEventedList<IGate>;
+            var gates2d = data as IEventedList<Gate2D>;
             if (gates2d != null && area2DParent != null && Equals(gates2d, area2DParent.Gates))
             {
                 var feature2DCollection = new HydroAreaFeature2DCollection (area2DParent).Init(gates2d, "gate", modelName,
                     area2DParent.CoordinateSystem);
-                feature2DCollection.FeatureType = typeof(Gate); // Override so we can use FeatureAttributes!
+                feature2DCollection.FeatureType = typeof(Gate2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.GatesPluralName)
                 {
                     NameIsReadOnly = true,
@@ -489,7 +496,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     DataSource = feature2DCollection,
                     FeatureEditor = new Feature2DEditor(area2DParent)
                     {
-                        CreateNewFeature = layer => Gate.CreateDefault()
+                        CreateNewFeature = layer => new Gate2D()
                     },
                     CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
                 };
@@ -536,6 +543,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments, "Embankment", modelName,
                             area2DParent.CoordinateSystem),
                     CustomRenderers = new List<IFeatureRenderer>(new [] {new EmbankmentRenderer()})
+                };
+            }
+
+            if (Equals(features, area2DParent.Enclosures))
+            {
+                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures, "Enclosure", modelName, area2DParent.CoordinateSystem);
+                ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                {
+                    if (!(geometry is IPolygon))
+                    {
+                        if (geometry.Coordinates.Count() < 4) return null;
+                        geometry = new Polygon(new LinearRing(geometry.Coordinates));
+                    }
+                    var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
+                    ds.Features.Add(newFeature);
+
+                    return newFeature;
+                };
+
+                return new VectorLayer(HydroArea.EnclosureName)
+                {
+                    NameIsReadOnly = true,
+                    FeatureEditor = new Feature2DEditor(area2DParent),
+                    Style = AreaLayerStyles.EnclosureStyle,                  
+                    DataSource = ds,
+                    CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })
                 };
             }
 
@@ -721,12 +754,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (type == typeof(Pump))
             {
-                return l => Pump.CreateDefault();
+                return l => new Pump(false);
             }
 
             if (type == typeof(Weir))
             {
-                return l => Weir.CreateDefault();
+                return l => new Weir(true);
             }
 
             if (type == typeof(Culvert))

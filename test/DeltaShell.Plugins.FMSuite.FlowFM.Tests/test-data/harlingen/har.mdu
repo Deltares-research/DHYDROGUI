@@ -78,6 +78,16 @@ RestartDateTime      = 20080109000000      # Restart time (YYYYMMDDHHMMSS)
 ExtForceFile         = 001.ext             # *.ext
 
 [output]
+Wrishp_crs        = 1
+Wrishp_weir       = 1
+Wrishp_gate       = 1
+Wrishp_fxw        = 1
+Wrishp_thd        = 1
+Wrishp_obs        = 1
+Wrishp_emb        = 1
+Wrishp_dryarea    = 1
+Wrishp_enc        = 1
+Wrishp_src        = 1
 ObsFile              = har_fine_V3_obs.xyn # *.xyn Coords+name of observation stations.
 CrsFile              = har_crs_V2.pli      # *_crs.pli Polyline(s) definining cross section(s).
 HisFile              = 001_his.nc          # *_his.nc History file in NetCDF format.

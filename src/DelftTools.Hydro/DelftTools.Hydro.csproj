@@ -183,6 +183,15 @@
     <Compile Include="CulvertFrictionType.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
+    <Compile Include="GroupableFeature2D.cs" />
+    <Compile Include="GroupableFeature2DPoint.cs" />
+    <Compile Include="GroupableFeature2DPolygon.cs" />
+    <Compile Include="GroupableFeatureComparer.cs" />
+    <Compile Include="GroupableFeatureExtensions.cs" />
+    <Compile Include="GroupablePointFeature.cs" />
+    <Compile Include="IGroupableFeature.cs" />
+    <Compile Include="NameableFeatureComparer.cs" />
+    <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
     <Compile Include="FrictionTypeConverter.cs" />
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
@@ -205,7 +214,9 @@
     <Compile Include="IModelMerge.cs" />
     <Compile Include="IObservationPoint.cs" />
     <Compile Include="IRetention.cs" />
+    <Compile Include="LandBoundary2D.cs" />
     <Compile Include="LateralSourceGridCell.cs" />
+    <Compile Include="ObservationCrossSection2D.cs" />
     <Compile Include="ObservationPoint.cs" />
     <Compile Include="CrossSections\CrossSectionDefinition.cs" />
     <Compile Include="CrossSections\CrossSectionSection.cs" />
@@ -243,6 +254,8 @@
     <Compile Include="Structures\Culvert350LegacyLoader.cs" />
     <Compile Include="Structures\ExtraResistance.cs" />
     <Compile Include="Structures\Gate.cs" />
+    <Compile Include="Structures\Gate2D.cs" />
+    <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\IBridge.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
     <Compile Include="Structures\ICulvert.cs" />
@@ -255,12 +268,15 @@
     <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
     <Compile Include="Structures\IWeirFormula.cs" />
-    <Compile Include="Structures\KnownStructureProperties.cs" />
+    <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
+    <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="Structures\MonitoringStation.cs" />
     <Compile Include="Structures\Pump.cs" />
+    <Compile Include="Structures\Pump2D.cs" />
     <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\Weir.cs" />
+    <Compile Include="Structures\Weir2D.cs" />
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
@@ -272,6 +288,7 @@
     <Compile Include="CrossSections\SummerDike.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="StructureType.cs" />
+    <Compile Include="Structures\ThinDam2D.cs" />
     <Compile Include="WasteWaterTreatmentPlant.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -476,6 +493,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Structures\Culvert.3.5.0.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

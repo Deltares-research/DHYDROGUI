@@ -1,8 +1,5 @@
-using System;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
-using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -15,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         public void IsFeature2DCollectionCoordinateSystemUpdatedWhenAreaCoordinateSystemIsUpdated()
         {
             var hydroArea = new HydroArea();
-            hydroArea.ObservationPoints.Add(new Feature2DPoint { Name = "ob1" });
+            hydroArea.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "ob1" });
             var feature2DCollection = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.ObservationPoints, "ObservationPoint", "Not important", hydroArea.CoordinateSystem);
             Assert.That(hydroArea.CoordinateSystem, Is.Null);
             Assert.That(feature2DCollection.CoordinateSystem, Is.Null);

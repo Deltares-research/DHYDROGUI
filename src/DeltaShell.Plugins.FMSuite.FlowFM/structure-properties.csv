@@ -1,5 +1,5 @@
 StructureType,attributeName,Caption,Type,Default,Min,Max,StructureFileOnly,Description
-structure,type,Type:Weir|Pump|Gate,weir|pump|gate,,,,TRUE,Type of structure
+structure,type,Type:Weir|Pump|Gate|GeneralStructure,weir|pump|gate|generalstructure,,,,TRUE,Type of structure
 structure,id,Name,String,,,,FALSE,Name of the structure
 structure,x,X,Double,,,,FALSE,X coordinate for a 1D structure
 structure,y,Y,Double,,,,FALSE,Y coordinate for a 1D structure
@@ -14,3 +14,36 @@ gate,opening_width,Opening width,Steerable,,,,FALSE,Gate opening width (in [m])
 gate,door_height,Door height,Double,1,,,FALSE,Gate door height (in [m])
 gate,horizontal_opening_direction,Horizontal opening direction:Symmetric|From Left|From Right,symmetric|from_left|from_right,symmetric,,,FALSE,Horizontal direction of the opening doors
 gate,sill_width,Sill width,Double,,,,FALSE,Gate sill width (in [m])
+generalstructure,widthleftW1,Width left 1,Double,,,,FALSE,Width left side of structure (m)
+generalstructure,widthleftWsdl,Width left 2,Double,,,,FALSE,Width structure left side (m)
+generalstructure,widthcenter,Width center,Double,,,,FALSE,Width structure centre (m)
+generalstructure,widthrightWsdr,Width right 1,Double,,,,FALSE,Width structure right side (m)
+generalstructure,widthrightW2,Width right 2,Double,,,,FALSE,Width right side of structure (m)
+generalstructure,levelleftZb1,Bed level left of structure,Double,,,,False,Bed level left side of structure (m AD)
+generalstructure,levelleftZbsl,Bed level left,Double,,,,FALSE,Bed level left side structure (m AD)
+generalstructure,levelcenter,Bed level center,Double,,,,FALSE,Bed level at centre of structure (m AD)
+generalstructure,levelrightZbsr,Bed level right,Double,,,,FALSE,Bed level right side structure (m AD)
+generalstructure,levelrightZb2,Bed level right of structure,Double,,,,FALSE,Bed level right side of structure (m AD)
+generalstructure,gateheight,Gate height,Double,,,,FALSE,Gate lower edge level (m AD)
+generalstructure,pos_freegateflowcoeff,Postive free gate flow,Double,,,,FALSE,Positive free gate flow (-)
+generalstructure,pos_drowngateflowcoeff,Postive drown gate flow,Double,,,,FALSE,Positive drowned gate flow (-)
+generalstructure,pos_freeweirflowcoeff,Positive free weir flow,Double,,,,FALSE,Positive free weir flow (-)
+generalstructure,pos_drownweirflowcoeff,Positive drown weir flow,Double,,,,FALSE,Positive drowned weir flow (-)
+generalstructure,pos_contrcoeffreegate,Positvie flow contraction,Double,,,,FALSE,Positive flow contraction coefficient (-)
+generalstructure,neg_freegateflowcoeff,Negative free gate flow,Double,,,,FALSE,Negative free gate flow (-)
+generalstructure,neg_drowngateflowcoeff,Negative drown gate flow,Double,,,,FALSE,Negative drowned gate flow (-)
+generalstructure,neg_freeweirflowcoeff,Negative free weir flow,Double,,,,FALSE,Negative free weir flow (-)
+generalstructure,neg_drownweirflowcoeff,Negative drown weir flow,Double,,,,FALSE,Negative drowned weir flow (-)
+generalstructure,neg_contrcoeffreegate,Negative flow contraction,Double,,,,FALSE,Negative flow contraction coefficient (-)
+generalstructure,extraresistance,Extra resistance,Double,,,,FALSE,Extra resistance (-)
+generalstructure,gatedoorheight,Gate door height,Double,,,,FALSE,Gate opening height (m)
+
+
+
+
+
+
+
+
+
+

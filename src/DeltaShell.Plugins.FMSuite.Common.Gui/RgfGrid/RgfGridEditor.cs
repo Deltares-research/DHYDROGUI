@@ -372,7 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
         {
             // write polygons file
             var features = polygons.Select((p, i) => new Feature2D {Geometry = p, Name = "polyline" + i.ToString()}).ToList();
-            var polFile = new PolFile {IncludeClosingCoordinate = true};
+            var polFile = new PolFile<Feature2DPolygon> { IncludeClosingCoordinate = true};
 
             polFile.Write(Path.Combine(targetDir, fileName), features);
         }

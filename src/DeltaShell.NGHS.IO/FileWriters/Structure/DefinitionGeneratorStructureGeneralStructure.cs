@@ -7,14 +7,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureGeneralStructure(int compoundStructureId)
+        public DefinitionGeneratorStructureGeneralStructure(int compoundStructureId = 0)
             : base(compoundStructureId)
         {
         }
 
         public override DelftIniCategory CreateStructureRegion(IStructure structure)
-        {
-            AddCommonRegionElements(structure, StructureRegion.StructureTypeName.GeneralStructure);
+        { 
+            if (structure.Branch != null)
+                AddCommonRegionElements(structure, StructureRegion.StructureTypeName.GeneralStructure);
 
             var weir = structure as Weir;
             if (weir == null) return IniCategory;
@@ -35,7 +36,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.LevelRightZb2.Key, formula.BedLevelRightSideOfStructure, StructureRegion.LevelRightZb2.Description, StructureRegion.LevelRightZb2.Format);
 
             IniCategory.AddProperty(StructureRegion.GateHeight.Key, (weir.CrestLevel + formula.GateOpening), StructureRegion.GateHeight.Description, StructureRegion.GateHeight.Format);
-    
+
             IniCategory.AddProperty(StructureRegion.PosFreeGateFlowCoeff.Key, formula.PositiveFreeGateFlow, StructureRegion.PosFreeGateFlowCoeff.Description, StructureRegion.PosFreeGateFlowCoeff.Format);
             IniCategory.AddProperty(StructureRegion.PosDrownGateFlowCoeff.Key, formula.PositiveDrownedGateFlow, StructureRegion.PosDrownGateFlowCoeff.Description, StructureRegion.PosDrownGateFlowCoeff.Format);
             IniCategory.AddProperty(StructureRegion.PosFreeWeirFlowCoeff.Key, formula.PositiveFreeWeirFlow, StructureRegion.PosFreeWeirFlowCoeff.Description, StructureRegion.PosFreeWeirFlowCoeff.Format);
@@ -47,10 +48,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.NegFreeWeirFlowCoeff.Key, formula.NegativeFreeWeirFlow, StructureRegion.NegFreeWeirFlowCoeff.Description, StructureRegion.NegFreeWeirFlowCoeff.Format);
             IniCategory.AddProperty(StructureRegion.NegDrownWeirFlowCoeff.Key, formula.NegativeDrownedWeirFlow, StructureRegion.NegDrownWeirFlowCoeff.Description, StructureRegion.NegDrownWeirFlowCoeff.Format);
             IniCategory.AddProperty(StructureRegion.NegContrCoefFreeGate.Key, formula.NegativeContractionCoefficient, StructureRegion.NegContrCoefFreeGate.Description, StructureRegion.NegContrCoefFreeGate.Format);
-
+            
             var extraResistance = formula.UseExtraResistance ? formula.ExtraResistance : 0.0;
             IniCategory.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
-            
+
+            if (structure.Branch == null)
+            {
+                /* for FM, add the GateDoorHeight for a general structure. 
+                 * Checking if it is 1D or 2D by checking the structure branch == null is not the most awesome way to do this.
+                 * Refactoring and splitting 1D/2D functionality is recommended.*/
+                IniCategory.AddProperty(StructureRegion.GateDoorHeight.Key, formula.GateOpening, StructureRegion.GateDoorHeight.Description , StructureRegion.GateDoorHeight.Format);
+            }
+
             return IniCategory;
         }
     }

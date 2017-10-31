@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using System.Collections.Generic;
 using System.Threading;
+using log4net;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using Point = NetTopologySuite.Geometries.Point;
@@ -30,7 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private readonly string tempPath;
         private IFlexibleMeshModelApi api;
+        private readonly string mduFilePath;
         private const double MissingValue = -999.0;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UnstrucGridOperationApi));
 
         private static readonly string[] propertiesToClear =
         {
@@ -55,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // gather paths            
             var mduName = model.Name + MduFile.MduExtension;
-            var mduFilePath = Path.Combine(tempPath, mduName);
+            mduFilePath = Path.Combine(tempPath, mduName);
 
             // make sure we initialize without: ext, thin dams, cross sections, etc..
             var adjustedMduProperties = model.ModelDefinition.Properties.ToList();
@@ -63,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 var existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
                 var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
-                clonedProperty.Value = ""; //clear
+                clonedProperty.SetValueAsString(string.Empty); //clear
 
                 int adjustedIndex = adjustedMduProperties.FindIndex(p => p.PropertyDefinition.MduPropertyName.Equals(propertyToClear, StringComparison.InvariantCultureIgnoreCase));
                 adjustedMduProperties[adjustedIndex] = clonedProperty;
@@ -82,16 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             model.ExportTo(mduFilePath, false);
             model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
             
-            api = new RemoteFlexibleMeshModelApi();
-            try
-            {
-                api.Initialize(mduFilePath);
-            }
-            catch (Exception)
-            {
-                api.Dispose(); // cleanup remote instance on crash!
-                throw;
-            }
+            TryInitializeApi();
         }
         
         public bool SnapsToGrid(IGeometry geometry)
@@ -128,6 +123,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e) // for now don't bother the users with our bugs:
             {
+                DisposeApiIfNotReachable(featureType);
+
                 Console.WriteLine(e);
                 return geometries;
             }
@@ -240,6 +237,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                         outGeometries[i] = GeometryCollection.Empty;
             }
             return outGeometries;
+        }
+
+        private void DisposeApiIfNotReachable(string featureType)
+        {
+            if (api != null)
+            {
+                try
+                {
+                    //Check whether the api is still available, if so just go on normally.
+                    api.GetVersionString();
+                    return;
+                }
+                catch
+                {
+                    api.Dispose(); //cleanup previous instance
+                    Log.ErrorFormat("API failed to generate snapped feature {0}. Try reopening the project if the problem persists.", featureType);
+                }
+            }
+
+            TryInitializeApi();
+        }
+
+        private void TryInitializeApi()
+        {
+            api = new RemoteFlexibleMeshModelApi();
+            try
+            {
+                api.Initialize(mduFilePath);
+            }
+            catch (Exception)
+            {
+                api.Dispose(); // cleanup remote instance on crash!
+                throw;
+            }
         }
 
         private static bool IsMissingValue(double val)

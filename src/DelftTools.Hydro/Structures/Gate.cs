@@ -78,16 +78,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        /// <summary>
-        /// Creates a default gate for use in HydroNetwork
-        /// </summary>
-        /// <returns></returns>
-        public static Gate CreateDefault()
-        {
-            //put here the gate defaults you want when you create it in network editor or network treeview
-            return new Gate("Gate");
-        }
-
         public override StructureType GetStructureType()
         {
             return StructureType.Gate;

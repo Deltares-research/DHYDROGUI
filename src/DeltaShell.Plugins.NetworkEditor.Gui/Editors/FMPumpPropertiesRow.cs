@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;

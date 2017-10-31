@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -17,15 +16,6 @@ namespace DelftTools.Hydro.Structures
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class Pump : BranchStructure, IPump
     {
-        //TODO: switch to true and inline after FM supports suction thresholds and reduction tables...
-        public static bool SupportSobekPumpPropertiesInFM
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         private bool canBeTimedependent;
         private bool useCapacityTimeSeries;
 
@@ -139,20 +129,7 @@ namespace DelftTools.Hydro.Structures
         /// reduction table
         /// </summary>
         public virtual IFunction ReductionTable { get; set; }
-
-        public static Pump CreateDefault(bool canBeTimeDependent = false)
-        {
-            //put here the default stuff you don't want in the constructor
-            return new Pump(canBeTimeDependent);
-        }
-
-        public static Pump CreateDefault(IBranch branch, bool canBeTimeDependent = false)
-        {
-            var pump = CreateDefault(canBeTimeDependent);
-            AddStructureToNetwork(pump,branch);
-            return pump;
-        }
-
+        
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);

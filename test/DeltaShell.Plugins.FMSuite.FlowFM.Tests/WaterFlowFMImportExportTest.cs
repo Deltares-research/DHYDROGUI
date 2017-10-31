@@ -51,6 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.WorkInProgress)] 
+        /* 
+            moving this test to WIP since we already have a good coverage of tests on the Harlingen model 
+            see WaterFlowFMModelDefinitionTest.ReadAndWriteModelDefinitionHarlingenModel
+            (as the comment above says, these tests need to be reworked...)
+        */
         public void ModelImportExportTestHarlingen()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

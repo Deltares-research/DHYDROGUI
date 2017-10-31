@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
@@ -28,7 +34,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         Feature2DImportExportMode Mode { get; }
 
-        Func<object, bool> ShouldReplaceFeature { set; }
+        IEqualityComparer EqualityComparer { get; set; }
+
+        Func<object, object, bool> ShouldReplace { get; set; }
     }
 
 
@@ -42,9 +50,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         
         public Feature2DImportExportMode Mode { get; set; }
 
-        public Func<object,bool> ShouldReplaceFeature { private get; set; }
+        /// <summary>
+        /// Comparer used to determine if items are equal (most generate valid HashCodes)
+        /// </summary>
+        public IEqualityComparer EqualityComparer { get; set; } 
 
         public ICoordinateTransformation CoordinateTransformation { private get; set; }
+
+        /// <summary>
+        /// Gets the editable object associated with the import action
+        /// </summary>
+        public Func<object, IEditableObject> GetEditableObject { get; set; }
+
+        /// <summary>
+        /// Action to perform after creating the <see cref="TFeat"/> feature 
+        /// (before adding features to the target)
+        /// </summary>
+        public Action<object, TFeat> AfterCreateAction { get; set; }
+
+        /// <summary>
+        /// Optional check for replacing duplicate features (return false to cancel)
+        /// (object1 = current feature, object 2 = new feature to replace with)
+        /// </summary>
+        public Func<object, object, bool> ShouldReplace { get; set; }
 
         protected abstract IEnumerable<TFeat> Import(string path);
 
@@ -89,22 +117,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             if (target != null && !(target is IList<TFeat>)) return target;
 
-            var featureList = target != null ? (IList<TFeat>) target : new List<TFeat>();
+            var featureList = target != null ? (IList<TFeat>)target : new List<TFeat>();
 
             if (files == null) return featureList;
 
-            foreach (var file in files)
+            for (var index = 0; index < files.Length; index++)
             {
+                var file = files[index];
+
+                ProgressChanged?.Invoke($"Reading file \"{Path.GetFileName(file)}\"", index, files.Length);
+
                 var featuresToImport = Import(file).ToList();
+
+                ProgressChanged?.Invoke("Transforming coordinates", 0, 0);
+
                 if (CoordinateTransformation != null)
                 {
                     foreach (var feature2D in featuresToImport)
                     {
                         feature2D.Geometry = GeometryTransform.TransformGeometry(feature2D.Geometry,
-                                                                                 CoordinateTransformation.MathTransform);
+                            CoordinateTransformation.MathTransform);
                     }
                 }
-                AddOrReplace(featureList, featuresToImport);
+                AddOrReplace(featureList, featuresToImport, EqualityComparer);
             }
 
             return featureList;
@@ -159,31 +194,52 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             yield return typeof (IList<TFeat>);
         }
 
+
+
         #endregion
 
         [InvokeRequired]
-        protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd) where T : INameable
+        protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer) where T : INameable
         {
-            var count = featureList.Count;
-            foreach (var feature in featuresToAdd)
-            {
-                var replaced = false;
-                for (var i = 0; i < count; ++i)
-                {
-                    if (featureList[i].Name != feature.Name) continue;
+            var featuresToAddList = featuresToAdd.ToList();
+            featuresToAddList.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
-                    if (ShouldReplaceFeature == null || ShouldReplaceFeature(featureList[i]))
-                    {
-                        featureList[i] = feature;
-                    }
-                    replaced = true;
-                    break;
-                }
-                if (!replaced)
+            GetEditableObject?.Invoke(featureList).BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
+
+            var equalityComparer = comparer != null
+                ? (IEqualityComparer<T>)comparer
+                : new NameableFeatureComparer<T>();
+
+            var hashListIndexLookup = featureList
+                    .Select((f, i) => new System.Tuple<int, int>(equalityComparer.GetHashCode(f), i))
+                    .ToDictionary(t => t.Item1, t => t.Item2);
+
+            var hashSet = new HashSet<T>(featureList, equalityComparer);
+            var newItems = new List<T>();
+            
+            for (int i = 0; i < featuresToAddList.Count; i++)
+            {
+                ProgressChanged?.Invoke("Adding features", i, featuresToAddList.Count);
+
+                var item = featuresToAddList[i];
+                if (hashSet.Contains(item))
                 {
-                    featureList.Add(feature);
+                    var hash = equalityComparer.GetHashCode(item);
+                    var index = hashListIndexLookup[hash];
+
+                    if (ShouldReplace != null && !ShouldReplace(featureList[index], item)) continue;
+                    
+                    featureList[index] = item;
+                }
+                else
+                {
+                    newItems.Add(item);
                 }
             }
+
+            featureList.AddRange(newItems);
+
+            GetEditableObject?.Invoke(featureList).EndEdit();
         }
     }
 }

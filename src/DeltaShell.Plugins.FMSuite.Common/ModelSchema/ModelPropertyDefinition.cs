@@ -82,6 +82,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public bool IsFile { get; set; }
 
         /// <summary>
+        /// Indicated if this property should be hidden (true) or shown (false) in the UI.
+        /// </summary>
+        public bool IsMultipleFile { get; set; }
+
+        /// <summary>
         /// Indicated if this property can or cannot be changed.
         /// </summary>
         public bool ModelFileOnly { get; set; }

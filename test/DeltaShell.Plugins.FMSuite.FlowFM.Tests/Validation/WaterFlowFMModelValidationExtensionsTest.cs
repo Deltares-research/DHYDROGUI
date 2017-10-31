@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckPumpCapacityIsNotNegative()
         {
             var model = new WaterFlowFMModel();
-            model.Area.Pumps.Add(new Pump("A", true){ Capacity = -1.2, Branch = null});
+            model.Area.Pumps.Add(new Pump2D("A", true){ Capacity = -1.2, Branch = null});
 
             var report = model.Validate(model);
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckPumpCapacityTimeSeriesIsNotNegative()
         {
             var model = new WaterFlowFMModel();
-            var pump = new Pump("A", true) {Branch = null, UseCapacityTimeSeries = true};
+            var pump = new Pump2D("A", true) {Branch = null, UseCapacityTimeSeries = true};
             pump.CapacityTimeSeries[new DateTime(2000, 1, 2)] = -1.2;
             model.Area.Pumps.Add(pump);
 
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckPumpSuctionAndDeliverySideControl()
         {
             var model = new WaterFlowFMModel();
-            var pump = new Pump("A", true) { 
+            var pump = new Pump2D("A", true) { 
                 Branch = null, ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl,
                 StartDelivery = 1.2, StopDelivery = -1.2,
                 StartSuction = -1.2, StopSuction = 1.2

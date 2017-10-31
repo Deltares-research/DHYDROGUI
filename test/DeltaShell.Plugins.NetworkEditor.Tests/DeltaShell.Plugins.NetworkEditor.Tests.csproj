@@ -241,6 +241,7 @@
     <Compile Include="Export\HydroRegionToShapeFileExporterTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
+    <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
@@ -358,6 +359,9 @@
     <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MapLayers\Tools\MapToolTest.cs" />
+    <Compile Include="WeirViewWpfTest.cs" />
+    <Compile Include="WpfConverters\BooleanToVisibleHiddenConverterTest.cs" />
+    <Compile Include="WpfConverters\EnumToDescriptionConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

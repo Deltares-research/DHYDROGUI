@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMArea2DValidator.Validate(model),
                 ValidateRestartInput(model),
                 WaterFlowFMEmbankmentValidator.Validate(model),
+                WaterFlowFMEnclosureValidator.Validate(model),
             };
 
             var subReports = model.UseMorSed

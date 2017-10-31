@@ -60,7 +60,7 @@ namespace DelftTools.Hydro
         }
 
         //TODO: get this out..this is not something a branchstructure has to do.
-        protected static void AddStructureToNetwork(IBranchFeature branchFeature, IBranch branch)
+        public static void AddStructureToNetwork(IBranchFeature branchFeature, IBranch branch)
         {
             branchFeature.Branch = branch;
             branchFeature.Network = branch.Network;
@@ -68,7 +68,6 @@ namespace DelftTools.Hydro
 
             branchFeature.Geometry = new Point(branch.Geometry.Coordinates[0]);
             branchFeature.Name = HydroNetworkHelper.GetUniqueFeatureName(branchFeature.Network as HydroNetwork, branchFeature);
-            
         }
 
         public virtual int CompareTo(BranchStructure other)

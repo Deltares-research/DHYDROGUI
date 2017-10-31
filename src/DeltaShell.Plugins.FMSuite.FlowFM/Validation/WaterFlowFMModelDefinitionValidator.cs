@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (bedLevelTypeProperty != null && waterFlowFmProperty == bedLevelTypeProperty)
                     {
                         int bedLevelTypeNumber;
-                        var useMorSed = (bool) modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
+                        var useMorSed = modelDefinition.UseMorphologySediment;
                         if (useMorSed
                             && int.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber) &&
                             !bedLevelTypeNumber.Equals((int) UnstructuredGridFileHelper.BedLevelLocation.Faces))
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (conveyanceTypeProperty != null && waterFlowFmProperty == conveyanceTypeProperty)
                     {
                         Conveyance2DType currentConveyanceType;
-                        var useMorSed = (bool)modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value;
+                        var useMorSed = modelDefinition.UseMorphologySediment;
                         if (useMorSed && Enum.TryParse(waterFlowFmProperty.GetValueAsString(),
                                 out currentConveyanceType))
                             if (currentConveyanceType != Conveyance2DType.RisHU

@@ -102,6 +102,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38510\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -117,10 +120,16 @@
     <Compile Include="FeatureData\Structure2DTest.cs" />
     <Compile Include="FeatureData\WindFieldTest.cs" />
     <Compile Include="FileBasedWindDefinitionTest.cs" />
+    <Compile Include="FMSuiteCommonTestHelper.cs" />
     <Compile Include="Gui\FileBasedWindDefinitionViewTest.cs" />
     <Compile Include="Gui\SupportPointListBoxTest.cs" />
+    <Compile Include="IO\Feature2DAttributesTestHelper.cs" />
+    <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
+    <Compile Include="IO\LdbFileTest.cs" />
+    <Compile Include="IO\ObsFileTest.cs" />
     <Compile Include="IO\PliFileTest.cs" />
     <Compile Include="IO\PlizFileTest.cs" />
+    <Compile Include="IO\PolFileTest.cs" />
     <Compile Include="IO\StructureFactoryValidatorTest.cs" />
     <Compile Include="IO\T3DFileTest.cs" />
     <Compile Include="IO\TimFileTest.cs" />
@@ -180,6 +189,10 @@
       <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
       <Name>DeltaShell.Plugins.FMSuite.Common</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
+      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

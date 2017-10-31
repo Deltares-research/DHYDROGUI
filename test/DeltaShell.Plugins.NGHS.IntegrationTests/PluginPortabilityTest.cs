@@ -46,8 +46,11 @@ using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using PointwiseOperationType = SharpMap.SpatialOperations.PointwiseOperationType;
 using Point = NetTopologySuite.Geometries.Point;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.NGHS.IntegrationTests
 {
@@ -1063,14 +1066,14 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         {
             var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 100, 100);
             var area = new HydroArea();
-            area.Pumps.Add(new Pump("Pump1")
+            area.Pumps.Add(new Pump2D("Pump1")
             {
                 Geometry = new LineString(new [] {new Coordinate(20, 20), new Coordinate(30, 30)}),
                 UseCapacityTimeSeries = false,
                 Capacity = 100.0
                
             });
-            var pump2 = new Pump("Pump2", true)
+            var pump2 = new Pump2D("Pump2", true)
             {
                 Geometry = new LineString(new [] { new Coordinate(20, 30), new Coordinate(30, 40) }),
                 UseCapacityTimeSeries = true
@@ -1082,9 +1085,9 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             area.Pumps.Add(pump2);
             
 
-            area.ObservationPoints.Add(new Feature2DPoint(){Name = "ObservationPoint1" , Geometry = new Point(15, 15)});
-            area.ObservationPoints.Add(new Feature2DPoint(){Name = "ObservationPoint2", Geometry = new Point(40, 40)});
-            area.Weirs.Add(new Weir("weir1"){
+            area.ObservationPoints.Add(new GroupableFeature2DPoint(){Name = "ObservationPoint1" , Geometry = new Point(15, 15)});
+            area.ObservationPoints.Add(new GroupableFeature2DPoint(){Name = "ObservationPoint2", Geometry = new Point(40, 40)});
+            area.Weirs.Add(new Weir2D("weir1"){
                 Geometry = new LineString(new [] { new Coordinate(25, 20), new Coordinate(30, 30) }),
                 OffsetY = 150,
                 CrestWidth = 10.0,
@@ -1097,11 +1100,11 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 }
             });
             var lineString = new LineString(new []{new Coordinate(0,0), new Coordinate(1,1)});            
-            area.Gates.Add(new Gate(){Name = "gate", Geometry = lineString});
+            area.Gates.Add(new Gate2D(){Name = "gate", Geometry = lineString});
             area.ThinDams.Add(new ThinDam2D(){Name = "thin", Geometry = lineString});
             area.FixedWeirs.Add(new FixedWeir(){Name ="fixedweir", Geometry = lineString});
             area.ObservationCrossSections.Add(new ObservationCrossSection2D(){Name="ObsCS", Geometry = lineString});
-            area.DryAreas.Add(new Feature2DPolygon { Name="dryarea", Geometry = new Polygon(new LinearRing(coordinates)) });
+            area.DryAreas.Add(new GroupableFeature2DPolygon { Name="dryarea", Geometry = new Polygon(new LinearRing(coordinates)) });
 
             //Can't check drypoints and dryareas at the same time.... info is saved in same file, is a feature of comp core
             //area.DryPoints.Add(new PointFeature() { Geometry = new Point(5, 5) });

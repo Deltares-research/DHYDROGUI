@@ -48,12 +48,13 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
 using SharpMapTestUtils;
 using ComboBox = System.Windows.Controls.ComboBox;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -465,12 +466,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             flow.Area.FixedWeirs[0].CrestLevels[0] = 10.0;
             flow.Area.FixedWeirs[0].CrestLevels[1] = 10.0;
 
-            flow.Area.Weirs.Add(new Weir("weir")
+            flow.Area.Weirs.Add(new Weir2D("weir")
             {
                 Geometry = new LineString(new[] { new Coordinate(99, 90), new Coordinate(99, 110) }),
                 CrestLevel = 2.5
             });
-            flow.Area.ObservationPoints.Add(new Feature2DPoint { Name = "obs", Geometry = new Point(50, 50) });
+            flow.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs", Geometry = new Point(50, 50) });
 
             var controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
             rtc.ControlGroups.Add(controlGroup);

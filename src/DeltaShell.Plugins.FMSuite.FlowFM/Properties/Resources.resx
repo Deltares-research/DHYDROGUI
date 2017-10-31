@@ -259,4 +259,46 @@
   <data name="WaterFlowFMSedimentMorphologyValidator_ValidateMorphologyBetaWarning_________Morphology_is_beta_version_________0_You_are_using_morphology___sediment_in_this_model__Please_be_aware_this_feature_is_in_beta_" xml:space="preserve">
     <value>********Morphology is beta version********{0}You are using morphology / sediment in this model. Please be aware this feature is in beta!</value>
   </data>
+  <data name="WaterFlowFMEnclosureValidator_Validate_Only_one_enclosure_per_model_is_allowed__Enclosures_in_model___0_" xml:space="preserve">
+    <value>Only one enclosure per FM model is allowed. Enclosures found in model: {0}</value>
+  </data>
+  <data name="WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid" xml:space="preserve">
+    <value>The drawn polygon {0} is not valid to create an enclosure. Verify it is not self-intersected.</value>
+  </data>
+  <data name="MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_" xml:space="preserve">
+    <value>Multiple enclosures added to the model. Validate or run will fail if more than one enclosure is present.</value>
+  </data>
+  <data name="WaterFlowFMEnclosureValidator_Validate_GeometryNotValid" xml:space="preserve">
+    <value>Geometry not valid for {0}. It must be a closed polygon.</value>
+  </data>
+  <data name="MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_" xml:space="preserve">
+    <value>DryPoints parameter contains more than one file format. Only one format (Area or Points) is allowed. {0}</value>
+  </data>
+  <data name="MduFile_RemoveNonExistentFilePaths_" xml:space="preserve">
+    <value>File at location '{0}' does not exist, but is defined in MDU file at '{1}'
+at property '{2}'. Model information may have been lost while loading model '{3}'.</value>
+  </data>
+  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists" xml:space="preserve">
+    <value>Copying file at location '{0}' to location '{1}' did not succeed,
+because the file already exists. File import of feature file '{0}' has failed.</value>
+  </data>
+  <data name="MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder" xml:space="preserve">
+    <value>Copied file at location '{0}' to location '{1}',
+because the file existed outside of the project folder of model '{2}'.</value>
+  </data>
+  <data name="MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists" xml:space="preserve">
+    <value>A file '{0}' already exists in the project folder. Features in group '{1}' are written to this file.
+Change this group name and save the project again to write these features to a separate file.</value>
+  </data>
+  <data name="MduFileHelper_GetUniqueFilePathsForWindows_Features_With_Group_Name___Are_Written_To_File___" xml:space="preserve">
+    <value>Features with group name '{0}' are written to file '{1}'.
+Change this group name and save the project again to write these features to a separate file.</value>
+  </data>
+  <data name="FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_" xml:space="preserve">
+    <value>Output snapped feature layers location not found at: {0}</value>
+  </data>
+  <data name="MduFile_RemoveAllStructuresFilesWithBadReferences_" xml:space="preserve">
+    <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
+File import of structures file '{1}' has failed.</value>
+  </data>
 </root>

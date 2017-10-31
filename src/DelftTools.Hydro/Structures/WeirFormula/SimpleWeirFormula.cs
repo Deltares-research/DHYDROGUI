@@ -9,6 +9,17 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     [Entity(FireOnCollectionChange=false)]
     public class SimpleWeirFormula : Unique<long>, IWeirFormula
     {
+        public SimpleWeirFormula()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            DischargeCoefficient = 1.0;
+            LateralContraction = 1.0;
+        }
+
         #region IWeirFormula Members
 
         public virtual string Name { get { return "Simple weir (Weir)"; } }

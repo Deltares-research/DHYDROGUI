@@ -174,11 +174,11 @@
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="Grid" Type="NetTopologySuite.Extensions.Grids.UnstructuredGrid" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="SourcesAndSinks" Type="DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourceAndSink" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="13" Y="4.812" />
-        <Point X="11.656" Y="4.812" />
-        <Point X="11.656" Y="4.441" />
+        <Point X="16.25" Y="5.875" />
+        <Point X="22.938" Y="5.875" />
+        <Point X="22.938" Y="6.25" />
       </Path>
     </AssociationLine>
     <AssociationLine Name="SedimentFractions" Type="DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition.ISedimentFraction" FixedFromPoint="true" FixedToPoint="true">
@@ -188,51 +188,51 @@
         <Point X="9.188" Y="20.812" />
       </Path>
     </AssociationLine>
-    <AssociationLine Name="SourcesAndSinks" Type="DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourceAndSink" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Grid" Type="NetTopologySuite.Extensions.Grids.UnstructuredGrid" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="16.25" Y="5.875" />
-        <Point X="22.938" Y="5.875" />
-        <Point X="22.938" Y="6.25" />
+        <Point X="13" Y="4.812" />
+        <Point X="11.656" Y="4.812" />
+        <Point X="11.656" Y="4.441" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>97de5rD/vrPM/a0H3Jv/otS7KZ+uM/P9wZw1p6903jU=</HashCode>
+      <HashCode>97de5rD/vrPM/a0H3Jv/otS7KZ+uM/P9wZ0156903jU=</HashCode>
       <FileName>WaterFlowFMModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="ModelDefinition" />
-      <Property Name="HeatFluxModelType" />
       <Property Name="BMIEngine" />
       <Property Name="DepthLayerDefinition" />
-      <Property Name="Diffusivity" />
-      <Property Name="Grid" />
-      <Property Name="gridOperationApi" />
+      <Property Name="HeatFluxModelType" />
+      <Property Name="Area" />
+      <Property Name="MduFile" />
+      <Property Name="OutputWaterLevel" />
+      <Property Name="OutputMapFileStore" />
+      <Property Name="OutputHisFileStore" />
+      <Property Name="Region" />
+      <Property Name="ModelStateHandler" />
+      <Property Name="Bathymetry" />
+      <Property Name="InitialWaterLevel" />
       <Property Name="InitialSalinity" />
       <Property Name="InitialTemperature" />
-      <Property Name="InitialWaterLevel" />
-      <Property Name="MduFile" />
-      <Property Name="ModelStateHandler" />
-      <Property Name="OutputHisFileStore" />
-      <Property Name="OutputMapFileStore" />
-      <Property Name="OutputWaterLevel" />
-      <Property Name="Region" />
       <Property Name="Roughness" />
-      <Property Name="runTimeGridOperationApi" />
       <Property Name="Viscosity" />
-      <Property Name="Bathymetry" />
-      <Property Name="Area" />
+      <Property Name="Diffusivity" />
+      <Property Name="gridOperationApi" />
+      <Property Name="runTimeGridOperationApi" />
+      <Property Name="Grid" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="Boundaries" />
-      <Property Name="BoundaryConditions" />
-      <Property Name="BoundaryConditionSets" />
-      <Property Name="InitialFractions" />
-      <Property Name="InitialTracers" />
-      <Property Name="Pipes" />
-      <Property Name="SedimentFractions" />
-      <Property Name="SedimentOverallProperties" />
-      <Property Name="SourcesAndSinks" />
       <Property Name="WindFields" />
+      <Property Name="Boundaries" />
+      <Property Name="BoundaryConditionSets" />
+      <Property Name="Pipes" />
+      <Property Name="SourcesAndSinks" />
+      <Property Name="BoundaryConditions" />
+      <Property Name="SedimentOverallProperties" />
+      <Property Name="SedimentFractions" />
+      <Property Name="InitialTracers" />
+      <Property Name="InitialFractions" />
       <Property Name="SpatialData" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
@@ -279,8 +279,8 @@
       <FileName>FeatureData\SourceAndSink.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Feature" />
       <Property Name="Function" />
+      <Property Name="Feature" />
     </ShowAsAssociation>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SupportedVerticalProfileTypes" Collapsed="true">
@@ -314,14 +314,14 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.BcFileFlowBoundaryDataBuilder" Collapsed="true">
     <Position X="38.5" Y="18.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAFBAgABQAgAAAgASACUCAiQKBAJhIIEAkCAAAA=</HashCode>
+      <HashCode>BAAAAAFBAgABRAgAAAgASACUCAiQKBAJjKIEAkCAAAA=</HashCode>
       <FileName>IO\BcFileFlowBoundaryDataBuilder.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.BcmBlockData" Collapsed="true">
     <Position X="38.25" Y="17.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IO\BcmFileFlowBoundaryDataBuilder.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -335,14 +335,14 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.BcmFileFlowBoundaryDataBuilder" Collapsed="true">
     <Position X="38.5" Y="19.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAACAAAABhAIAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAABAAAACAAAABpAIAAAAAAAE=</HashCode>
       <FileName>IO\BcmFileFlowBoundaryDataBuilder.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.BndExtForceFile" Collapsed="true">
     <Position X="22.5" Y="25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAQAAAAAIAACQBAAggAgAAkAAogACAQAEFQIQEAAAk=</HashCode>
+      <HashCode>ACAQAAAAAIAACQBAAggAgAAkAAogAGAQAEFQIQEAAAk=</HashCode>
       <FileName>IO\BndExtForceFile.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -399,7 +399,7 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.ExtForceQuantNames" Collapsed="true">
     <Position X="60.75" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AOKIRAAAgARIGgAAAgCQYBgAxKIRoJACKJoACgAQEHE=</HashCode>
+      <HashCode>AOKIRAAAgARIGgAAAgCQYAgAxKIRoJACAJoACgAQEHA=</HashCode>
       <FileName>IO\ExtForceQuantNames.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -453,26 +453,20 @@
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="BoundaryExternalForcingsFile" Type="DeltaShell.Plugins.FMSuite.FlowFM.IO.BndExtForceFile" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="19.438" Y="23.328" />
-        <Point X="19.438" Y="25.346" />
-        <Point X="22.5" Y="25.346" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAQCCAEAEFAASAcCAACAAqAkUImgkAAxEEUMIoEBAEA=</HashCode>
+      <HashCode>AAQCCAEAAFAASAcCAACAAqAkUImgkCAxEEUMKgEBAEA=</HashCode>
       <FileName>IO\MduFile.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Field Name="landBoundariesFile" />
+      <Field Name="thinDamFile" />
+      <Field Name="fixedWeirFile" />
+      <Field Name="structuresFile" />
+      <Field Name="obsFile" />
+      <Field Name="obsCrsFile" />
       <Field Name="dryAreaFile" />
       <Field Name="dryPointFile" />
-      <Field Name="fixedWeirFile" />
-      <Field Name="obsCrsFile" />
-      <Field Name="landBoundariesFile" />
-      <Field Name="obsFile" />
-      <Field Name="structuresFile" />
-      <Field Name="thinDamFile" />
+      <Field Name="enclosureFile" />
       <Property Name="ExternalForcingsFile" />
       <Property Name="BoundaryExternalForcingsFile" />
     </ShowAsAssociation>
@@ -487,7 +481,7 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.MorphologyFile" Collapsed="true">
     <Position X="56" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAIAAAAAAAAAAAAAAAAAAAAkAAAAAAEAAAAAAAAA=</HashCode>
+      <HashCode>FQAAAIAAAAAAAAAgAAAAAEAgAAkAABAAAMAAAYAAAAA=</HashCode>
       <FileName>IO\MorphologyFile.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -508,7 +502,7 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.SedimentFile" Collapsed="true">
     <Position X="55.75" Y="9.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAICIAAAAAAAAQQAAAiQAAAgAASAkAGgBQCAQCAA=</HashCode>
+      <HashCode>BAAAAICIEAAAAAAAQQAAAiQAAAgAASAkAGgBQCAQCAA=</HashCode>
       <FileName>IO\SedimentFile.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -536,7 +530,7 @@
   <Class Name="DeltaShell.NGHS.IO.BcmFile" Collapsed="true">
     <Position X="41.75" Y="19.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BACQAAAAAAFQQAAAAAEAAAAgkAAIAQgBAEAQBABBAFE=</HashCode>
+      <HashCode>hACQAAAAAAFQQAAAAAEAAAEgkAAIgQgAAEAQBAFBAFE=</HashCode>
       <FileName>IO\BcmFile.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -665,7 +659,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers.Area2DStructuresImporter" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="62.75" Y="23.75" Width="2.5" />
+    <Position X="57.25" Y="27.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAAIAAEAgAAIAAAAAAQAABkCABAAAAAEAAAACAA=</HashCode>
       <FileName>IO\Importers\Area2DStructuresImporter.cs</FileName>
@@ -878,12 +872,12 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>QZIIBACMMAAADQIQB5ggJEChVEjoqwC8EVAQgciCASA=</HashCode>
+      <HashCode>QZIIBACMMAAADQIQB5ggJEChV0joqwC8EVEQgciCASA=</HashCode>
       <FileName>ModelDefinition\WaterFlowFMModelDefinition.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="MapFormat" />
       <Property Name="HeatFluxModel" />
+      <Property Name="MapFormat" />
     </ShowAsAssociation>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition.WaterFlowFMProperty" Collapsed="true">
@@ -903,21 +897,21 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition.KnownProperties" Collapsed="true">
     <Position X="56.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>pDCIIBCEAiAAEAAAkQkhAQBICEIAKSDjFAAckGDmvgw=</HashCode>
+      <HashCode>pDCoIBCEAiAAkAAAmQkhAQBIKEKAKSDjFAAclGDmvgw=</HashCode>
       <FileName>ModelDefinition\WaterFlowFMPropertyDefinition.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition.GuiProperties" Collapsed="true">
     <Position X="60.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>wABAAAQAABgIIAQCAAQQApAJoCCKYAABAAAQAAAgRAA=</HashCode>
+      <HashCode>wABAAAQAABgIIAQCAAQQApAJoCCKYAABAAEQAAAgRAA=</HashCode>
       <FileName>ModelDefinition\WaterFlowFMPropertyDefinition.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources" Collapsed="true">
     <Position X="38.25" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AUAAABQEAAACAAAAHGAREAgQAZAAIAoBJAAgACAhAIA=</HashCode>
+      <HashCode>gUAAABQEYAACAAAFHGARkAgaBZAAAAoHJhBiACghQIA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.Validation.VerticalProfileValidator" Collapsed="true">
@@ -937,7 +931,7 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.Validation.WaterFlowFMBoundaryConditionValidator" Collapsed="true">
     <Position X="62.25" Y="10.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAACAAAAAAAAAAAAAAAAAIAIAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAEAAACAAAAAAAAAAAAgAIAAIAIAAAAAAAAAAAA=</HashCode>
       <FileName>Validation\WaterFlowFMBoundaryConditionValidator.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -1160,8 +1154,8 @@
       <Property Name="CurrentFormulaType" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="SupportedFormulaTypes" />
       <Property Name="AvailableSedimentTypes" />
+      <Property Name="SupportedFormulaTypes" />
     </ShowAsCollectionAssociation>
   </Interface>
   <Interface Name="DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition.ISedimentProperty">
@@ -1240,6 +1234,10 @@
     <Position X="27.25" Y="8.25" Width="1.5" />
     <TypeIdentifier />
   </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Common.IO.IFeature2DFileBase&lt;TFeat&gt;">
+    <Position X="25.75" Y="19.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
   <Enum Name="DeltaShell.Plugins.FMSuite.FlowFM.Api.ElementType">
     <Position X="48.75" Y="3" Width="1.5" />
     <TypeIdentifier>
@@ -1250,7 +1248,7 @@
   <Enum Name="DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.FlowBoundaryQuantityType">
     <Position X="52.75" Y="3.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAAJAAAAAICBCAAAAAAAAQAAgAgABAAAAAAAIAECgA=</HashCode>
+      <HashCode>gAAAJCAAAAACJCAAAAAAAAQAAgAgABBAAAAAAIAECgA=</HashCode>
       <FileName>FeatureData\FlowBoundaryCondition.cs</FileName>
     </TypeIdentifier>
   </Enum>

@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         protected void AddCommonRegionElements(IStructure structure, string definitionType)
         {
-            if (structure.Branch == null) throw new FileWritingException("Structure does not have a valid Branch property");
+            if (structure.Branch == null) return;
             string nameWithoutHashSigns = structure.Name.Replace("##", "~~");
             IniCategory.AddProperty(StructureRegion.Id.Key, nameWithoutHashSigns, StructureRegion.Id.Description);
             IniCategory.AddProperty(StructureRegion.Name.Key, structure.LongName, StructureRegion.Name.Description);

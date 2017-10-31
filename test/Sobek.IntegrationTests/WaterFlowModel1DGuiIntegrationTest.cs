@@ -427,6 +427,7 @@ namespace Sobek.IntegrationTests
             gui.MainWindow.Show();
 
             // run flow model
+            gui.MainWindow.Show();
             gui.Application.RunActivity(model);
             
             // change something in network to cause flow to clear output

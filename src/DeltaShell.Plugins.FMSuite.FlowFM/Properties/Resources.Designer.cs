@@ -197,6 +197,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output snapped feature layers location not found at: {0}.
+        /// </summary>
+        public static string FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_ {
+            get {
+                return ResourceManager.GetString("FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_featu" +
+                        "re_layers_location_not_found_at___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap FunctionGrid2D {
@@ -237,12 +247,95 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
+        ///because the file existed outside of the project folder of model &apos;{2}&apos;..
+        /// </summary>
+        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder {
+            get {
+                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExis" +
+                        "tedOutsideOfTheProjectFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copying file at location &apos;{0}&apos; to location &apos;{1}&apos; did not succeed,
+        ///because the file already exists. File import of feature file &apos;{0}&apos; has failed..
+        /// </summary>
+        public static string MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlreadyExists {
+            get {
+                return ResourceManager.GetString("MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileDidNotSucceedBecauseFileAlrea" +
+                        "dyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple enclosures added to the model. Validate or run will fail if more than one enclosure is present..
+        /// </summary>
+        public static string MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_will_fail_if_more_than_one_enclosure_is_present_ {
+            get {
+                return ResourceManager.GetString("MduFile_ReadAreaFeatures_Multiple_enclosures_added_to_the_model__Validate_or_run_" +
+                        "will_fail_if_more_than_one_enclosure_is_present_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DryPoints parameter contains more than one file format. Only one format (Area or Points) is allowed. {0}.
+        /// </summary>
+        public static string MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_ {
+            get {
+                return ResourceManager.GetString("MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_for" +
+                        "mat__Only_one_format__Area_or_Points__is_allowed___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot read ibedcond because this is not an integer (number) in file {0}.
         /// </summary>
         public static string MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_integer__number__in_file__0_ {
             get {
                 return ResourceManager.GetString("MduFile_ReadMorphologyProperties_Cannot_read_ibedcond_because_this_is_not_an_inte" +
                         "ger__number__in_file__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist.
+        ///File import of structures file &apos;{1}&apos; has failed..
+        /// </summary>
+        public static string MduFile_RemoveAllStructuresFilesWithBadReferences_ {
+            get {
+                return ResourceManager.GetString("MduFile_RemoveAllStructuresFilesWithBadReferences_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in MDU file at &apos;{1}&apos;
+        ///at property &apos;{2}&apos;. Model information may have been lost while loading model &apos;{3}&apos;..
+        /// </summary>
+        public static string MduFile_RemoveNonExistentFilePaths_ {
+            get {
+                return ResourceManager.GetString("MduFile_RemoveNonExistentFilePaths_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Features with group name &apos;{0}&apos; are written to file &apos;{1}&apos;.
+        ///Change this group name and save the project again to write these features to a separate file..
+        /// </summary>
+        public static string MduFileHelper_GetUniqueFilePathsForWindows_Features_With_Group_Name___Are_Written_To_File___ {
+            get {
+                return ResourceManager.GetString("MduFileHelper_GetUniqueFilePathsForWindows_Features_With_Group_Name___Are_Written" +
+                        "_To_File___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A file &apos;{0}&apos; already exists in the project folder. Features in group &apos;{1}&apos; are written to this file.
+        ///Change this group name and save the project again to write these features to a separate file..
+        /// </summary>
+        public static string MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists {
+            get {
+                return ResourceManager.GetString("MduFileHelper_GetUniqueFilePathsForWindows_File_Already_Exists", resourceCulture);
             }
         }
         
@@ -438,6 +531,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
                 return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_po" +
                         "int_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1" +
                         "_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The drawn polygon {0} is not valid to create an enclosure. Verify it is not self-intersected..
+        /// </summary>
+        public static string WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid {
+            get {
+                return ResourceManager.GetString("WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry not valid for {0}. It must be a closed polygon..
+        /// </summary>
+        public static string WaterFlowFMEnclosureValidator_Validate_GeometryNotValid {
+            get {
+                return ResourceManager.GetString("WaterFlowFMEnclosureValidator_Validate_GeometryNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only one enclosure per FM model is allowed. Enclosures found in model: {0}.
+        /// </summary>
+        public static string WaterFlowFMEnclosureValidator_Validate_Only_one_enclosure_per_model_is_allowed__Enclosures_in_model___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMEnclosureValidator_Validate_Only_one_enclosure_per_model_is_allowed__E" +
+                        "nclosures_in_model___0_", resourceCulture);
             }
         }
         

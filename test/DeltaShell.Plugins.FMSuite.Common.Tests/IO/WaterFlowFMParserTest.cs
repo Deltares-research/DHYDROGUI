@@ -19,6 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(typeof(DateTime), FMParser.GetClrType(null, "DateTime", ref captionField, null, 0));
             Assert.AreEqual(typeof(string), FMParser.GetClrType(null, "String", ref captionField, null, 0));
             Assert.AreEqual(typeof(string), FMParser.GetClrType(null, "FileName", ref captionField, null, 0));
+            Assert.AreEqual(typeof(IList<string>), FMParser.GetClrType(null, "MultipleEntriesFileName", ref captionField, null, 0));
             Assert.AreEqual(typeof(bool), FMParser.GetClrType(null, "0|1", ref captionField, null, 0));
             Assert.AreEqual(typeof(bool), FMParser.GetClrType(null, "1|0", ref captionField, null, 0));
             Assert.AreEqual(typeof(Steerable), FMParser.GetClrType(null, "Steerable", ref captionField, null, 0));
@@ -32,6 +33,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             captionField = "Syntax error: Number of '|' characters should be the same as in typefield";
             Assert.Throws<FormatException>(() => FMParser.GetClrType(null, "T|e|s|t", ref captionField, null, 0), "");
             Assert.Throws<ArgumentException>(() => FMParser.GetClrType(null, "I am not defined", ref captionField, null, 0), "");
+        }
+
+        [Test]
+        public void GetStringArrayTest()
+        {
+            var list = FMParser.FromString<IList<string>>("");
+            Assert.AreEqual(0, list.Count);
+
+            #region FromString
+            // Can deal with space separated:
+            list = FMParser.FromString<IList<string>>("alpha beta gamma delta epsilon");
+            Assert.AreEqual(5, list.Count);
+            Assert.AreEqual(new[] {"alpha", "beta", "gamma", "delta", "epsilon"}, list);
+
+            // Can deal with tab separated:
+            list = FMParser.FromString<IList<string>>("alpha\tbeta\tgamma\tdelta\tepsilon");
+            Assert.AreEqual(5, list.Count);
+            Assert.AreEqual(new[] { "alpha", "beta", "gamma", "delta", "epsilon" }, list);
+            #endregion
+
+            #region ToString
+            // Can deal with space separated:
+            var stringList = new List<string>(new[] {"alpha", "beta", "gamma", "delta", "epsilon"});
+            var newList = FMParser.ToString(stringList, typeof(IList<string>));
+            Assert.AreEqual("alpha beta gamma delta epsilon", newList);
+            #endregion
+
         }
 
         [Test]

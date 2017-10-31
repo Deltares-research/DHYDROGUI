@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class PolFileImporterExporter: Feature2DImportExportBase<Feature2DPolygon>
+    public class PolFileImporterExporter: Feature2DImportExportBase<GroupableFeature2DPolygon>
     {
         protected override string ExporterName
         {
@@ -17,15 +17,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Features from .pol file"; }
         }
 
-        protected override IEnumerable<Feature2DPolygon> Import(string path)
+        protected override IEnumerable<GroupableFeature2DPolygon> Import(string path)
         {
-            var reader = new PolFile();
+            var reader = new PolFile<GroupableFeature2DPolygon>();
             return reader.Read(path);
         }
 
-        protected override void Export(IEnumerable<Feature2DPolygon> features, string path)
+        protected override void Export(IEnumerable<GroupableFeature2DPolygon> features, string path)
         {
-            var writer = new PolFile();
+            var writer = new PolFile<GroupableFeature2DPolygon>();
             writer.Write(path, features);
         }
 

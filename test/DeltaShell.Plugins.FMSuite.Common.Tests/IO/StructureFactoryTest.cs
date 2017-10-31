@@ -1,12 +1,17 @@
 using System;
+using System.Collections.Generic;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
@@ -14,6 +19,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
     [TestFixture]
     public class StructureFactoryTest
     {
+        private MockRepository mocks;
+
+        [SetUp]
+        public void Setup()
+        {
+            mocks = new MockRepository();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            mocks.VerifyAll();
+        }
+
         #region Pump
 
         [Test]
@@ -75,6 +94,99 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         #endregion
+
+        #region General Structure
+
+        [Test]
+        public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenTypeIsWeir()
+        {
+            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
+            var result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            Assert.IsTrue(result is IWeir);
+        }
+
+        [Test]
+        public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenWeirFormulaIsAGeneralStructureWeirFormula()
+        {
+            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
+            var result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            Assert.IsTrue(result is IWeir);
+
+            var weir = (Weir) result;
+            Assert.That(weir.WeirFormula is GeneralStructureWeirFormula); 
+        }
+
+        [Test]
+        public void GivenGeneralStructureAsStructure2DWithKnownPropertyUnequalToZero_WhenCreatingStructure_ThenWeirAdaptsProperty()
+        {
+            var knownProperties = Enum.GetValues(typeof(KnownGeneralStructureProperties));
+            foreach (var knownProperty in knownProperties)
+            {
+                var property = (KnownGeneralStructureProperties) knownProperty;
+                if (property == KnownGeneralStructureProperties.GateHeight) continue;
+
+                var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
+                generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(property), typeof(double), "12.34");
+
+                var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+                var weir = resultingStructure as Weir;
+                Assert.NotNull(weir);
+            
+                var weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
+                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), EnumDescriptionAttributeTypeConverter.GetEnumDescription(property));
+            }
+        }
+
+        [Test]
+        public void GivenGeneralStructureAsStructure2DWithExtraResistanceEqualToZero_WhenCreatingStructure_ThenUseExtraResistanceIsFalse()
+        {
+            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
+            generalStructure.AddProperty(EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance), typeof(double), "0.0");
+
+            var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            var weir = resultingStructure as Weir;
+            Assert.NotNull(weir);
+
+            var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            Assert.NotNull(weirFormula);
+            Assert.IsFalse(weirFormula.UseExtraResistance);
+        }
+
+        private static Dictionary<KnownGeneralStructureProperties, object> ConstructWeirFormulaValueDictionary(IWeir weir)
+        {
+            var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            Assert.NotNull(weirFormula);
+
+            var dictionary = new Dictionary<KnownGeneralStructureProperties, object>
+            {
+                {KnownGeneralStructureProperties.WidthLeftW1, weirFormula.WidthLeftSideOfStructure},
+                {KnownGeneralStructureProperties.WidthLeftWsdl, weirFormula.WidthStructureLeftSide},
+                {KnownGeneralStructureProperties.WidthCenter, weirFormula.WidthStructureCentre },
+                {KnownGeneralStructureProperties.WidthRightWsdr, weirFormula.WidthStructureRightSide},
+                {KnownGeneralStructureProperties.WidthRightW2, weirFormula.WidthRightSideOfStructure},
+                {KnownGeneralStructureProperties.LevelLeftZb1, weirFormula.BedLevelLeftSideOfStructure},
+                {KnownGeneralStructureProperties.LevelLeftZbsl, weirFormula.BedLevelLeftSideStructure },
+                {KnownGeneralStructureProperties.LevelCenter, weirFormula.BedLevelStructureCentre },
+                {KnownGeneralStructureProperties.LevelRightZbsr, weirFormula.BedLevelRightSideStructure },
+                {KnownGeneralStructureProperties.LevelRightZb2, weirFormula.BedLevelRightSideOfStructure },
+                {KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, weirFormula.GateOpening},
+                {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, weirFormula.PositiveFreeGateFlow},
+                {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, weirFormula.PositiveDrownedGateFlow},
+                {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, weirFormula.PositiveFreeWeirFlow},
+                {KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient, weirFormula.PositiveDrownedWeirFlow},
+                {KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate, weirFormula.PositiveContractionCoefficient},
+                {KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient, weirFormula.NegativeFreeGateFlow},
+                {KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient, weirFormula.NegativeDrownedGateFlow},
+                {KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient, weirFormula.NegativeFreeWeirFlow},
+                {KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, weirFormula.NegativeDrownedWeirFlow},
+                {KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, weirFormula.NegativeContractionCoefficient},
+                {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance}
+            };
+            return dictionary;
+        }
+
+        #endregion
+
         #region Weir
 
         [Test]

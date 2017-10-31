@@ -112,7 +112,7 @@
     branchId              = branch              
     chainage              = 3.500               
     compound              = 6                   
-    type                  = generalStructure    
+    type                  = generalstructure    
     widthleftW1           = 1.000               
     widthleftWsdl         = 0.500               
     widthcenter           = 1.000               
@@ -124,16 +124,16 @@
     levelrightZbsr        = 0.600               
     levelrightZb2         = 1.100               
     gateheight            = 2.600               
-    posfreegateflowcoeff  = 1.200               
-    posdrowngateflowcoeff = 0.700               
-    posfreeweirflowcoeff  = 1.200               
-    posdrownweirflowcoeff = 0.700               
-    poscontrcoeffreegate  = 1.200               
-    negfreegateflowcoeff  = 1.300               
-    negdrowngateflowcoeff = 0.800               
-    negfreeweirflowcoeff  = 1.300               
-    negdrownweirflowcoeff = 0.800               
-    negcontrcoeffreegate  = 1.300               
+    pos_freegateflowcoeff = 1.200               
+    pos_drowngateflowcoeff= 0.700               
+    pos_freeweirflowcoeff = 1.200               
+    pos_drownweirflowcoeff= 0.700               
+    pos_contrcoeffreegate = 1.200               
+    neg_freegateflowcoeff = 1.300               
+    neg_drowngateflowcoeff= 0.800               
+    neg_freeweirflowcoeff = 1.300               
+    neg_drownweirflowcoeff= 0.800               
+    neg_contrcoeffreegate = 1.300               
     extraresistance       = 0.000               
 
 [Structure]
@@ -248,7 +248,7 @@
     branchId              = branch              
     chainage              = 6.000               
     compound              = 12                  
-    type                  = extraResistance     
+    type                  = extraresistance     
     numValues             = 9                   
     levels                = 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900
     ksi                   = 0.13 0.23 0.33 0.43 0.53 0.63 0.73 0.83 0.93

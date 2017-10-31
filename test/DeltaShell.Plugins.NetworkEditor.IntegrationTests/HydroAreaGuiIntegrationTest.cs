@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
                 HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(networkWeir, network.Branches[0]);
 
-                area.Weirs.Add(new Weir("fmweir"));
+                area.Weirs.Add(new Weir2D("fmweir"));
 
                 gui.Selection = network.Weirs.First();
                 gui.CommandHandler.OpenDefaultViewForSelection();
@@ -86,8 +87,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.CommandHandler.OpenDefaultViewForSelection();
 
                 Assert.IsTrue(gui.DocumentViews.OfType<AreaStructureView>().Any());
-                Assert.IsTrue(
-                    gui.DocumentViews.OfType<AreaStructureView>().First().StructureControl is FMWeirView);
+                var view = gui.DocumentViews.OfType<AreaStructureView>().First().StructureControl as ElementHost;
+                Assert.IsNotNull(view);
+                Assert.IsTrue(view.Child is WeirViewWpf);
             }
         }
 
@@ -130,7 +132,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
                 HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(networkPump, network.Branches[0]);
 
-                area.Pumps.Add(new Pump("fmpump"));
+                area.Pumps.Add(new Pump2D("fmpump"));
 
                 gui.Selection = network.Pumps.First();
                 gui.CommandHandler.OpenDefaultViewForSelection();

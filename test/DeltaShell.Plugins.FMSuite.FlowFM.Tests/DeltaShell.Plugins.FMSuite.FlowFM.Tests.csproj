@@ -229,15 +229,18 @@
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="FeatureData\SourceAndSinkTest.cs" />
+    <Compile Include="FlowFMTestHelper.cs" />
     <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
     <Compile Include="Gui\AstroComponentSelectionTest.cs" />
     <Compile Include="Gui\BcFileExportDialogTest.cs" />
     <Compile Include="Gui\BcFileImportDialogTest.cs" />
+    <Compile Include="Gui\CustomRenderers\EnclosureRendererTest.cs" />
     <Compile Include="Gui\DataImportPointsListBoxTest.cs" />
     <Compile Include="Gui\Editors\BoundaryConditionExtensionsTest.cs" />
     <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
+    <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
     <Compile Include="Gui\SupportPointSelectionFormTest.cs" />
@@ -274,7 +277,11 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
-    <Compile Include="IO\Importers\FlowFMNetFileImporterTest.cs" />
+    <Compile Include="IO\MduFileHelperTest.cs" />
+    <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
+    <Compile Include="IO\ObsFileImporterExporterTest.cs" />
+    <Compile Include="IO\PolFileImporterExporterTest.cs" />
+    <Compile Include="IO\StructureFileWriteTest.cs" />
     <Compile Include="IO\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
@@ -282,6 +289,8 @@
     <Compile Include="IO\PliFileImporterExporterTest.cs" />
     <Compile Include="IO\StructureFMPropertiesFileTest.cs" />
     <Compile Include="IO\FMModelSchemaCsvFileTest.cs" />
+    <Compile Include="IO\WaterFlowFMMduFileTest.cs" />
+    <Compile Include="IO\WaterFlowFMModelHydroAreaExtensionsTest.cs" />
     <Compile Include="IO\WindExtForceTest.cs" />
     <Compile Include="Layers\UnstructuredGridCellCoverageLayerTest.cs" />
     <Compile Include="Layers\UnstructuredGridCellVectorCoverageLayerTest.cs" />
@@ -300,6 +309,7 @@
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEmbankmentValidatorTest.cs" />
+    <Compile Include="Validation\WaterFlowFMEnclosureValidationTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
@@ -333,6 +343,10 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
+      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj">
       <Project>{A2D91FEB-C4D5-401A-AF97-ED0072899423}</Project>
