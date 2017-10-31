@@ -262,4 +262,10 @@
   <data name="RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Constant" xml:space="preserve">
     <value>PIDRule {0} time series will not be included in the DIMR XML as Set Point Type is Constant</value>
   </data>
+  <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime" xml:space="preserve">
+    <value>Series '{0}' has one or more timesteps that exceed the model stop time {1}.</value>
+  </data>
+  <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime" xml:space="preserve">
+    <value>Series '{0}' has one or more timesteps that precede the model start time {1}.</value>
+  </data>
 </root>

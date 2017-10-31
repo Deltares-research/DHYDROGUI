@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using NUnit.Framework;
 

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;

@@ -5,6 +5,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
 using NUnit.Framework;
@@ -245,7 +246,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
             var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
-            Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the PID rule");
+           Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the time rule");
 
             var errorExpected =
                 $"Series '{timeRule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
@@ -274,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
             var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
-            Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the PID rule");
+            Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the interval rule");
 
             var errorExpected =
                 $"Series '{intervalRule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
@@ -343,12 +344,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
 
-            var errorExpected =
-                $"Series '{PIDrule.TimeSeries.Name}' has one or more timesteps that precede the model start time {model.StartTime}.";
-            Assert.AreEqual(errorExpected, foundIssues[0].Message);
-            errorExpected =
-                $"Series '{PIDrule.TimeSeries.Name}' has one or more timesteps that exceed the model stop time {model.StopTime}.";
-            Assert.AreEqual(errorExpected, foundIssues[1].Message);
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, PIDrule.TimeSeries.Name, model.StartTime), 
+                            foundIssues[0].Message);
+
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, PIDrule.TimeSeries.Name, model.StopTime),
+                            foundIssues[1].Message);
 
             // check values at start and stop time of model
             Assert.AreEqual(2.0, timeSeries.Evaluate<double>(modelStartTime), 1e-5);

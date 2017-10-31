@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
@@ -25,33 +26,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
                 var startValue = xmlTimeSeries.TimeSeries.Evaluate<double>(startTime);
                 var endValue = xmlTimeSeries.TimeSeries.Evaluate<double>(endTime);
 
-                // filter out any values before startTime
-                bool proceed = true;
-                while (proceed)
-                {
-                    if (!xmlTimeSeries.TimeSeries.Time.Values.Any()) proceed = false;
-                    else
-                    {
-                        if (xmlTimeSeries.TimeSeries.Time.Values.First() < startTime)
-                            xmlTimeSeries.TimeSeries.Time.Values.RemoveAt(0);
-                        else proceed = false;
-                    }
-                }
-                // filter out any values after endTime
-                proceed = true;
-                while (proceed)
-                {
-                    if (!xmlTimeSeries.TimeSeries.Time.Values.Any()) proceed = false;
-                    else
-                    {
-                        if (xmlTimeSeries.TimeSeries.Time.Values.Last() > endTime)
-                        {
-                            int len = xmlTimeSeries.TimeSeries.Time.Values.Count;
-                            xmlTimeSeries.TimeSeries.Time.Values.RemoveAt(len - 1);
-                        }
-                        else proceed = false;
-                    }
-                }
+                // filter out any values before startTime and/or after endTime
+                xmlTimeSeries.TimeSeries.Time.Values.RemoveAllWhere(v => v < startTime || v > endTime);
+
                 // (re)set values at startTime and endTime
                 xmlTimeSeries.TimeSeries[startTime] = startValue;
                 xmlTimeSeries.TimeSeries[endTime] = endValue;
