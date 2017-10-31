@@ -2724,7 +2724,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Output water level should remain -2m as the net volume of water should not change.
                 foreach (var timeValue in timeValues)
                 {
-                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-6);
+                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-5);
                 }
             }
         }
@@ -2761,7 +2761,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Output water level should remain -2m as the net volume of water should not change.
                 foreach (var timeValue in timeValues)
                 {
-                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-6);
+                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-5);
                 }
             }
         }
@@ -2798,7 +2798,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Output water level should remain -2m as the net volume of water should not change.
                 foreach (var timeValue in timeValues)
                 {
-                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-6);
+                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-5);
                 }
             }
         }
@@ -2835,7 +2835,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Output water level should remain -2m as the net volume of water should not change.
                 foreach (var timeValue in timeValues)
                 {
-                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-6);
+                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-5);
                 }
             }
         }
@@ -2872,7 +2872,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Output water level should remain -2m as the net volume of water should not change.
                 foreach (var timeValue in timeValues)
                 {
-                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-6);
+                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-5);
                 }
             }
         }
@@ -2909,7 +2909,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 // Output water level should remain -2m as the net volume of water should not change.
                 foreach (var timeValue in timeValues)
                 {
-                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-6);
+                    Assert.AreEqual(-2.0, (double)waterFlowModel1D.OutputWaterLevel[timeValue, location], 1e-5);
                 }
             }
         }
