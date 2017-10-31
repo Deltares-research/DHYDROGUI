@@ -32,7 +32,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
                     if (!xmlTimeSeries.TimeSeries.Time.Values.Any()) proceed = false;
                     else
                     {
-                        if (xmlTimeSeries.TimeSeries.Time.Values.First() < startTime) xmlTimeSeries.TimeSeries.Time.Values.RemoveAt(0);
+                        if (xmlTimeSeries.TimeSeries.Time.Values.First() < startTime)
+                            xmlTimeSeries.TimeSeries.Time.Values.RemoveAt(0);
                         else proceed = false;
                     }
                 }
@@ -54,6 +55,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
                 // (re)set values at startTime and endTime
                 xmlTimeSeries.TimeSeries[startTime] = startValue;
                 xmlTimeSeries.TimeSeries[endTime] = endValue;
+            }
+            else
+            {
+                xmlTimeSeries.StartTime = xmlTimeSeries.TimeSeries.Time.Values.First();
+                xmlTimeSeries.EndTime = xmlTimeSeries.TimeSeries.Time.Values.Last();
             }
 
             xmlTimeSeries.TimeStep = xmlTimeSeries.TimeSeries.Time.Values.Last() - xmlTimeSeries.TimeSeries.Time.Values.First();
