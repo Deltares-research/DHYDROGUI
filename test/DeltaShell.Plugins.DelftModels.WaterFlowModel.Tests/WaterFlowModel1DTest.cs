@@ -3489,34 +3489,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             //waterlevel
 
-            Assert.AreEqual(2.76884568681302, waterLevelValues[144], 0.001);
-            Assert.AreEqual(2.76884568682635, waterLevelValues[145], 0.001);
-            Assert.AreEqual(2.69130691516849, waterLevelValues[146], 0.001);
-            Assert.AreEqual(1.1615069310477515, waterLevelValues[147], 0.001);
-            Assert.AreEqual(0.68635862385070334, waterLevelValues[148], 0.001);
+            Assert.AreEqual(2.7699851, waterLevelValues[144], 0.001);
+            Assert.AreEqual(2.7699851, waterLevelValues[145], 0.001);
+            Assert.AreEqual(2.6913069, waterLevelValues[146], 0.001);
+            Assert.AreEqual(1.1576315, waterLevelValues[147], 0.001);
+            Assert.AreEqual(0.6796524, waterLevelValues[148], 0.001);
             Assert.AreEqual(-0.5, waterLevelValues[149], 0.001);
 
             //velocity 
 
-            Assert.AreEqual(0.178648989765459, velocityValues[120], 0.001);
-            Assert.AreEqual(0.267973472659453, velocityValues[121], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityValues[122], 0.001);
-            Assert.AreEqual(1.0574639625581106, velocityValues[123], 0.001);
-            Assert.AreEqual(1.8372874145576001, velocityValues[124], 0.001);
+            Assert.AreEqual(0.1785544, velocityValues[120], 0.001);
+            Assert.AreEqual(0.2678317, velocityValues[121], 0.001);
+            Assert.AreEqual(3.3258302, velocityValues[122], 0.001);
+            Assert.AreEqual(1.0650292, velocityValues[123], 0.001);
+            Assert.AreEqual(1.8459033, velocityValues[124], 0.001);
 
             //waterlevel (op)
 
-            Assert.AreEqual(2.75163871173981, waterLevelObservationPointValues[96], 0.001);
-            Assert.AreEqual(2.73278915296518, waterLevelObservationPointValues[97], 0.001);
-            Assert.AreEqual(2.69130691516849, waterLevelObservationPointValues[98], 0.001);
-            Assert.AreEqual(1.1615069310477515, waterLevelObservationPointValues[99], 0.001);
+            Assert.AreEqual(2.7525011, waterLevelObservationPointValues[96], 0.001);
+            Assert.AreEqual(2.7333725, waterLevelObservationPointValues[97], 0.001);
+            Assert.AreEqual(2.6913069, waterLevelObservationPointValues[98], 0.001);
+            Assert.AreEqual(1.1576315, waterLevelObservationPointValues[99], 0.001);
 
             //velocity(op)
 
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[96], 0.001);
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[97], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[98], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[99], 0.001);
+            Assert.AreEqual(0.2678317, velocityObservationPointValues[96], 0.001);
+            Assert.AreEqual(0.2678317, velocityObservationPointValues[97], 0.001);
+            Assert.AreEqual(3.3258302, velocityObservationPointValues[98], 0.001);
+            Assert.AreEqual(3.3258302, velocityObservationPointValues[99], 0.001);
 
 
             //----------------------------------------------------------------
@@ -3526,6 +3526,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             //----------------------------------------------------------------
 
             settingObervationPointsInterpolation.Value = "Nearest";
+
 
             RunModel(flowModel1D,false);
 
@@ -3540,34 +3541,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             //waterlevel
 
-            Assert.AreEqual(2.76884568681302, waterLevelValues[144], 0.001);
-            Assert.AreEqual(2.76884568682635, waterLevelValues[145], 0.001);
-            Assert.AreEqual(2.69130691516849, waterLevelValues[146], 0.001);
-            Assert.AreEqual(1.1615069310477515, waterLevelValues[147], 0.001);
-            Assert.AreEqual(0.68635862385070334, waterLevelValues[148], 0.001);
+            Assert.AreEqual(2.7699851, waterLevelValues[144], 0.001);
+            Assert.AreEqual(2.7699851, waterLevelValues[145], 0.001);
+            Assert.AreEqual(2.6913069, waterLevelValues[146], 0.001);
+            Assert.AreEqual(1.1576315, waterLevelValues[147], 0.001);
+            Assert.AreEqual(0.6796524, waterLevelValues[148], 0.001);
             Assert.AreEqual(-0.5, waterLevelValues[149], 0.001);
 
             //velocity 
 
-            Assert.AreEqual(0.178648989765459, velocityValues[120], 0.001);
-            Assert.AreEqual(0.267973472659453, velocityValues[121], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityValues[122], 0.001);
-            Assert.AreEqual(1.0574639625581106, velocityValues[123], 0.001);
-            Assert.AreEqual(1.8372874145576001, velocityValues[124], 0.001);
+            Assert.AreEqual(0.1785544, velocityValues[120], 0.001);
+            Assert.AreEqual(0.2678317, velocityValues[121], 0.001);
+            Assert.AreEqual(3.3258302, velocityValues[122], 0.001);
+            Assert.AreEqual(1.0650292, velocityValues[123], 0.001);
+            Assert.AreEqual(1.8459033, velocityValues[124], 0.001);
 
             //waterlevel (op)
 
-            Assert.AreEqual(2.7688224534952375, waterLevelObservationPointValues[96], 0.001); //diff a little bit from linear
-            Assert.AreEqual(2.7688224534952375, waterLevelObservationPointValues[97], 0.001); //diff a little bit from linear
-            Assert.AreEqual(2.69130691516849, waterLevelObservationPointValues[98], 0.001);
-            Assert.AreEqual(1.16150693104775, waterLevelObservationPointValues[99], 0.001);
+            Assert.AreEqual(2.7699851, waterLevelObservationPointValues[96], 0.001); //diff a little bit from linear
+            Assert.AreEqual(2.7699851, waterLevelObservationPointValues[97], 0.001); //diff a little bit from linear
+            Assert.AreEqual(2.6913069, waterLevelObservationPointValues[98], 0.001);
+            Assert.AreEqual(1.1576315, waterLevelObservationPointValues[99], 0.001);
 
             //velocity(op)
 
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[96], 0.001);
-            Assert.AreEqual(0.26797636455021201, velocityObservationPointValues[97], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[98], 0.001);
-            Assert.AreEqual(3.32583032772203, velocityObservationPointValues[99], 0.001);
+            Assert.AreEqual(0.2678317, velocityObservationPointValues[96], 0.001);
+            Assert.AreEqual(0.2678317, velocityObservationPointValues[97], 0.001);
+            Assert.AreEqual(3.3258302, velocityObservationPointValues[98], 0.001);
+            Assert.AreEqual(3.3258302, velocityObservationPointValues[99], 0.001);
 
         }
 
