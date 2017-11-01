@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             timeRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
                 String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, r.TimeSeries.Name, startTime), r.TimeSeries)));
 
-            var intervalRules = controlGroup.Rules.OfType<IntervalRule>().Where(r => r.IntervalType == IntervalRule.IntervalRuleIntervalType.Variable &&
+            var intervalRules = controlGroup.Rules.OfType<IntervalRule>().Where(r => r.TimeSeries.Time.Values.Any() &&
                                                                            TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
             intervalRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
                 String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, r.TimeSeries.Name, startTime), r.TimeSeries)));
@@ -185,32 +185,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             pidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
                 String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, r.TimeSeries.Name, stopTime), r.TimeSeries)));
 
-            timeRules = controlGroup.Rules.OfType<TimeRule>().Where(r => TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, startTime));
+            timeRules = controlGroup.Rules.OfType<TimeRule>().Where(r => TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
             timeRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
-                String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, r.TimeSeries.Name, startTime), r.TimeSeries)));
+                String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, r.TimeSeries.Name, stopTime), r.TimeSeries)));
 
             intervalRules = controlGroup.Rules.OfType<IntervalRule>().Where(r => r.IntervalType == IntervalRule.IntervalRuleIntervalType.Variable &&
-                                                                                 TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, startTime));
+                                                                                 TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
             intervalRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Warning,
-                String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, r.TimeSeries.Name, startTime), r.TimeSeries)));
+                String.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, r.TimeSeries.Name, stopTime), r.TimeSeries)));
 
             return issues;
         }
 
         private static bool ValidateTimeSeries(ITimeSeries timeSeries, DateTime startTime, TimeSpan timeStep)
         {
+            if (timeSeries.Time.Values.Count == 0) return true;
             return timeSeries.Time.Values.All(t => (t - startTime).Ticks%timeStep.Ticks == 0);
         }
 
         private static bool TimeSeriesEntriesPrecedeModelStartTime(ITimeSeries timeSeries, DateTime startTime)
         {
+            if (timeSeries.Time.Values.Count == 0) return false;
             return startTime > timeSeries.Time.Values.First();
         }
 
         private static bool TimeSeriesEntriesExceedModelStopTime(ITimeSeries timeSeries, DateTime stopTime)
         {
+            if (timeSeries.Time.Values.Count == 0) return false;
             return stopTime < timeSeries.Time.Values.Last();
         }
-
     }
 }
