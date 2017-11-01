@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -26,7 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             return validControlGroup;
         }
-
         private static HydraulicRule CreateValidHydraulicRule()
         {
             var tableFunction = HydraulicRule.DefineFunction();
@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
             var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
-           Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the time rule");
+           Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the time rule");
 
             var errorExpected =
                 $"Series '{timeRule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
             var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
-            Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the interval rule");
+            Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the interval rule");
 
             var errorExpected =
                 $"Series '{intervalRule.TimeSeries.Name}' time steps not multiple of model time step {model.TimeStep}.";
@@ -330,13 +330,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var modelStartTime = startTime.AddDays(1);
             var modelStopTime = stopTime.AddDays(-1);
             var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
-            var PIDrule = new PIDRule()
-                { TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries };
+            var validator = new ControlGroupValidator();
             var controlGroup = new ControlGroup();
-            controlGroup.Rules.Add(PIDrule);
             model.ControlGroups.Add(controlGroup);
 
-            var validator = new ControlGroupValidator();
+            // check PIDrule
+            var PIDrule = new PIDRule()
+                { TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries };
+            controlGroup.Rules.Add(PIDrule);
+
             var report = validator.Validate(model, controlGroup);
             var validationIssues = report.GetAllIssuesRecursive();
             var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, PIDrule)).ToList();
@@ -344,15 +346,118 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
             Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, PIDrule.TimeSeries.Name, model.StartTime), 
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, PIDrule.TimeSeries.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)), 
                             foundIssues[0].Message);
 
-            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, PIDrule.TimeSeries.Name, model.StopTime),
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, PIDrule.TimeSeries.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
                             foundIssues[1].Message);
+
+            // check time rule
+            var timeRule = new TimeRule()
+                { TimeSeries = timeSeries };
+            controlGroup.Rules.Clear();
+            controlGroup.Rules.Add(timeRule);
+
+            report = validator.Validate(model, controlGroup);
+            validationIssues = report.GetAllIssuesRecursive();
+            foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
+            Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the time rule");
+            Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
+            Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
+
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, timeRule.TimeSeries.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
+                foundIssues[0].Message);
+
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, timeRule.TimeSeries.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
+                foundIssues[1].Message);
+
+            // check interval rule
+            var intervalRule = new IntervalRule()
+                { TimeSeries = timeSeries };
+            controlGroup.Rules.Clear();
+            controlGroup.Rules.Add(intervalRule);
+
+            report = validator.Validate(model, controlGroup);
+            validationIssues = report.GetAllIssuesRecursive();
+            foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
+            Assert.AreEqual(2, foundIssues.Count, "The number of validation issues for the interval rule");
+            Assert.AreEqual(ValidationSeverity.Warning, foundIssues[0].Severity, "Time series bound checking should raise warnings, not errors.");
+            Assert.AreEqual(ValidationSeverity.Warning, foundIssues[1].Severity, "Time series bound checking should raise warnings, not errors.");
+
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime, intervalRule.TimeSeries.Name, model.StartTime.ToString(CultureInfo.InvariantCulture)),
+                foundIssues[0].Message);
+
+            Assert.AreEqual(string.Format(Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime, intervalRule.TimeSeries.Name, model.StopTime.ToString(CultureInfo.InvariantCulture)),
+                foundIssues[1].Message);
 
             // check values at start and stop time of model
             Assert.AreEqual(2.0, timeSeries.Evaluate<double>(modelStartTime), 1e-5);
             Assert.AreEqual(30.0, timeSeries.Evaluate<double>(modelStopTime), 1e-5);
+        }
+
+        [Test]
+        public void ValidationDoesNotHaveWarningsIfTimeSeriesBoundsDoNotExceedModelTimes()
+        {
+            // setup model and controlgroup
+            var startTime = new DateTime(2012, 1, 2);
+            var stopTime = new DateTime(2012, 1, 30);
+            var timeStep = new TimeSpan(0, 1, 0, 0);
+
+            var timeSeries = new TimeSeries()
+            {
+                Components = { new Variable<double>("SetPoint") },
+                Name = "SetPoint"
+            };
+
+            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
+            timeSeries.Time.InterpolationType = InterpolationType.Linear;
+            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+
+            timeSeries[startTime] = 1.0;
+            timeSeries[stopTime] = 31.0;
+
+            var modelStartTime = startTime.AddDays(-1);
+            var modelStopTime = stopTime.AddDays(1);
+            var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
+
+            var controlGroup = new ControlGroup();
+            model.ControlGroups.Add(controlGroup);
+
+            var validator = new ControlGroupValidator();
+
+            // check PIDrule
+            var PIDrule = new PIDRule()
+                { TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries };
+            controlGroup.Rules.Add(PIDrule);
+
+            var report = validator.Validate(model, controlGroup);
+            var validationIssues = report.GetAllIssuesRecursive();
+            var foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, PIDrule)).ToList();
+            Assert.AreEqual(0, foundIssues.Count, "The number of validation issues for the PIDrule");
+
+            // check time rule
+            var timeRule = new TimeRule()
+            { TimeSeries = timeSeries };
+            controlGroup.Rules.Clear();
+            controlGroup.Rules.Add(timeRule);
+
+            report = validator.Validate(model, controlGroup);
+            validationIssues = report.GetAllIssuesRecursive();
+            foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
+            Assert.AreEqual(0, foundIssues.Count, "The number of validation issues for the time rule");
+
+
+            // check interval rule
+            var intervalRule = new IntervalRule()
+                { TimeSeries = timeSeries };
+            controlGroup.Rules.Clear();
+            controlGroup.Rules.Add(intervalRule);
+
+            report = validator.Validate(model, controlGroup);
+            validationIssues = report.GetAllIssuesRecursive();
+            foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
+            Assert.AreEqual(0, foundIssues.Count, "The number of validation issues for the interval rule");
+
         }
     }
 }

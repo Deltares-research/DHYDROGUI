@@ -268,4 +268,7 @@
   <data name="RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime" xml:space="preserve">
     <value>Series '{0}' has one or more timesteps that precede the model start time {1}.</value>
   </data>
+  <data name="RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep" xml:space="preserve">
+    <value>Series '{0}' time steps not multiple of model time step {1}.</value>
+  </data>
 </root>
