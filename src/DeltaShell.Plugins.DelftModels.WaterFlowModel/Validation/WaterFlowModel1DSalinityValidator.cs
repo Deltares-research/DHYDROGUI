@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
 
                 //Check if F4 Dispersion values are all 0.
                 var f4CoverageValues = flowModel1D.DispersionF4Coverage.GetValues<double>().ToList();
-                if (f4CoverageValues.Any() && !f4CoverageValues.Any(v => v > 0 || v < 0))
+                if (f4CoverageValues.Any() && f4CoverageValues.All(v => v.Equals(0)))
                 {
                     issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_) );
                 }

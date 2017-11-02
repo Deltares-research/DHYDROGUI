@@ -914,7 +914,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to F4 Coverage valuescannot all be set to 0. Either remove them or assign at least one value different from 0..
+        ///   Looks up a localized string similar to F4 Coverage values cannot all be set to 0. Either remove them or assign at least one value different from 0..
         /// </summary>
         public static string WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_ {
             get {

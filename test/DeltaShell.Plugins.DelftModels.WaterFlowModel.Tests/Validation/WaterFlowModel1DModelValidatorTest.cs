@@ -1079,35 +1079,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
-        public void SaltKuijperVanRijnPrismaticMouthNodeIdValidationTest()
+        public void SaltKuijperVanRijnPrismaticMouthNodeIdValidationTestFailsWhenNoSpecifiedNode()
         {
-            var network = new HydroNetwork();
-
-            var node1 = new HydroNode { Name = "node1", Network = network };
-            var node2 = new HydroNode { Name = "node2", Network = network };
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var branch = new Channel("branch", node1, node2, 100.0);
-            network.Branches.Add(branch);
-
-            var model = new WaterFlowModel1D
-            {
-                Network = network,
-                UseSalt = true,
-                DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic,
-                UseSaltInCalculation = true
-            };
-
-            #region Validate Mouth has a valid nodeId
-            
+            var model = GetFlow1DSalinityKuijperModel();
             var expectedErrors = 0;
-            //No specified noude, should fail
+            
+            //No specified node, should fail
             CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 1, Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_No_Estuary_mouth_node_specified_);
 
-            //Valid node, should not fail.
+            //Turn off salinity -> no errors.
+            model.UseSalt = false;
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+        }
+
+        [Test]
+        public void SaltKuijperVanRijnPrismaticMouthNodeIdValidationTestWithValidNodeId()
+        {
+            var model = GetFlow1DSalinityKuijperModel();
+            var expectedErrors = 0;
+
+            Assert.NotNull(model.Network);
+            Assert.NotNull(model.Network.Nodes);
+            var node1 = model.Network.Nodes.FirstOrDefault();
+            Assert.NotNull(node1);
+            
+            //Valid node, should not fail.        
             model.SalinityEstuaryMouthNodeId = node1.Name;
             CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+
+            //Turn off salinity -> no errors.
+            model.UseSalt = false;
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+        }
+
+        [Test]
+        public void SaltKuijperVanRijnPrismaticMouthNodeIdValidationTestFailsWhenNodeDoesNotExist()
+        {
+            var model = GetFlow1DSalinityKuijperModel();
+            var expectedErrors = 0;
+
+            var network = model.Network;
+            Assert.NotNull(network);
+            Assert.NotNull(network.Nodes);
+            var node1 = network.Nodes.FirstOrDefault();
+            Assert.NotNull(node1);
 
             //Node does not exist, should fail.
             model.SalinityEstuaryMouthNodeId = "test";
@@ -1117,7 +1132,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                 model.SalinityEstuaryMouthNodeId);
             CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 1, expectedErrorMessage);
 
-                
+            //Turn off salinity -> no errors.
+            model.UseSalt = false;
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+        }
+
+        [Test]
+        public void SaltKuijperVanRijnPrismaticMouthNodeIdValidationTestFailsWhenNodeExistsButIsNotValid()
+        {
+            var model = GetFlow1DSalinityKuijperModel();
+            var expectedErrors = 0;
+
+            var network = model.Network;
+            Assert.NotNull(network);
+            Assert.NotNull(network.Nodes);
+            var node1 = network.Nodes.FirstOrDefault();
+            Assert.NotNull(node1);
+
             //Node exists, but it's not valid, should fail.
             model.SalinityEstuaryMouthNodeId = node1.Name;
             var node3 = new HydroNode("node3");
@@ -1125,12 +1156,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             network.Nodes.Add(node3);
             network.Branches.Add(channel2);
 
-            expectedErrorMessage = string.Format(
+            var expectedErrorMessage = string.Format(
                 Resources
                     .WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Estuary_mouth_node__0__is_not_a_boundary_node_,
                 model.SalinityEstuaryMouthNodeId);
             CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 1, expectedErrorMessage);
-            #endregion
 
             //Turn off salinity -> no errors.
             model.UseSalt = false;
@@ -1138,12 +1168,100 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
-        public void SaltKuijperVanRijnPrismaticDispersionF4CoverageValidationTest()
+        public void SaltKuijperVanRijnPrismaticDispersionF4CoverageValidationTestPassesWhenNoF4CoverageValues()
+        {
+            var model = GetFlow1DSalinityKuijperModel();
+            var expectedErrors = 0;
+
+            var network = model.Network;
+            Assert.NotNull(network);
+            Assert.NotNull(network.Nodes);
+            var node1 = network.Nodes.FirstOrDefault();
+            Assert.NotNull(node1);
+
+            var branch = network.Branches.FirstOrDefault();
+            Assert.NotNull(branch);
+            
+            //Valid node, should not fail (dedicated test above)
+            model.SalinityEstuaryMouthNodeId = node1.Name;
+
+            //Wihout F4 Coverages it should be valid
+            model.DispersionF4Coverage.Clear();
+            Assert.IsFalse(model.DispersionF4Coverage.GetValues<double>().Any());
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+
+            //Turn off salinity -> no errors.
+            model.UseSalt = false;
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+        }
+
+        [Test]
+        public void SaltKuijperVanRijnPrismaticDispersionF4CoverageValidationTestPassesWithValidValues()
+        {
+            var model = GetFlow1DSalinityKuijperModel();
+            var expectedErrors = 0;
+
+            var network = model.Network;
+            Assert.NotNull(network);
+            Assert.NotNull(network.Nodes);
+            var node1 = network.Nodes.FirstOrDefault();
+            Assert.NotNull(node1);
+
+            var branch = network.Branches.FirstOrDefault();
+            Assert.NotNull(branch);
+
+            //Valid node, should not fail (dedicated test above)
+            model.SalinityEstuaryMouthNodeId = node1.Name;
+
+            //If the values are different from 0, it should be valid.
+            model.DispersionF4Coverage.Locations.AddValues(new[] { new NetworkLocation(branch, 0) });
+            model.DispersionF4Coverage.SetValues(new[] { -0.1 }); /* Not all values can be 0 validation.*/
+            Assert.IsTrue(model.DispersionF4Coverage.GetValues<double>().Any());
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+
+            //Turn off salinity -> no errors.
+            model.UseSalt = false;
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+        }
+
+        [Test]
+        public void SaltKuijperVanRijnPrismaticDispersionF4CoverageValidationTestFailsWithAllValuesSetToZero()
+        {
+            var model = GetFlow1DSalinityKuijperModel();
+            var expectedErrors = 0;
+
+            var network = model.Network;
+            Assert.NotNull(network);
+            Assert.NotNull(network.Nodes);
+            var node1 = network.Nodes.FirstOrDefault();
+            Assert.NotNull(node1);
+
+            var branch = network.Branches.FirstOrDefault();
+            Assert.NotNull(branch);
+
+            //Valid node, should not fail (dedicated test above)
+            model.SalinityEstuaryMouthNodeId = node1.Name;
+
+            //If all the values are 0, then it should fail.
+            model.DispersionF4Coverage.Clear();
+            Assert.IsFalse(model.DispersionF4Coverage.GetValues<double>().Any());
+
+            model.DispersionF4Coverage.Locations.AddValues(new[] { new NetworkLocation(branch, 0) });
+            model.DispersionF4Coverage.SetValues(new[] { 0.0 });
+            Assert.IsTrue(model.DispersionF4Coverage.GetValues<double>().Any());
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 1, Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_);
+
+            //Turn off salinity -> no errors.
+            model.UseSalt = false;
+            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+        }
+
+        private static WaterFlowModel1D GetFlow1DSalinityKuijperModel()
         {
             var network = new HydroNetwork();
 
-            var node1 = new HydroNode { Name = "node1", Network = network };
-            var node2 = new HydroNode { Name = "node2", Network = network };
+            var node1 = new HydroNode {Name = "node1", Network = network};
+            var node2 = new HydroNode {Name = "node2", Network = network};
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
@@ -1157,40 +1275,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                 DispersionFormulationType = DispersionFormulationType.KuijperVanRijnPrismatic,
                 UseSaltInCalculation = true
             };
-
-            #region Validate Mouth has a valid nodeId
-            //Valid node, should not fail (dedicated test above)
-            model.SalinityEstuaryMouthNodeId = node1.Name;
-            CheckSalinityValidationErrorsAsExpected(model, 0);
-            #endregion
-
-            #region F4 Dispersion Coverage validation
-
-            var expectedErrors = 0;
-            //Wihout F4 Coverages it should be valid
-            model.DispersionF4Coverage.Clear();
-            Assert.IsFalse(model.DispersionF4Coverage.GetValues<double>().Any());
-            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
-
-            //If the values are different from 0, it should be valid.
-            model.DispersionF4Coverage.Locations.AddValues(new[] { new NetworkLocation(branch, 0) });
-            model.DispersionF4Coverage.SetValues(new[] { -0.1 });
-            Assert.IsTrue(model.DispersionF4Coverage.GetValues<double>().Any());
-            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
-
-            //If all the values are 0, then it should fail.
-            model.DispersionF4Coverage.Clear();
-            Assert.IsFalse(model.DispersionF4Coverage.GetValues<double>().Any());
-
-            model.DispersionF4Coverage.Locations.AddValues(new[] { new NetworkLocation(branch, 0) });
-            model.DispersionF4Coverage.SetValues(new[] { 0.0 });
-            Assert.IsTrue(model.DispersionF4Coverage.GetValues<double>().Any());
-            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 1, Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_);
-            #endregion
-
-            //Turn off salinity -> no errors.
-            model.UseSalt = false;
-            CheckSalinityValidationErrorsAsExpected(model, expectedErrors = 0);
+            return model;
         }
 
         private static void CheckSalinityValidationErrorsAsExpected(WaterFlowModel1D model, int expectedErrors, string expectedErrorMessage = null)
