@@ -4,7 +4,6 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -21,6 +20,8 @@ namespace DelftTools.Hydro.Structures
         public Weir() : this("Weir")
         {
         }
+
+        public Weir(bool allowTimeVaryingData = false) :this("Weir", allowTimeVaryingData) { }
 
         public Weir(string name, bool allowTimeVaryingData = false)
         {
@@ -243,26 +244,6 @@ namespace DelftTools.Hydro.Structures
             return allowPositiveFlow
                        ? (allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive)
                        : (allowNegativeFlow ? FlowDirection.Negative : FlowDirection.None);
-        }
-
-        /// <summary>
-        /// Creates a default weir for use in HydroNetwork
-        /// </summary>
-        /// <returns></returns>
-        public static Weir CreateDefault(bool canBeTimeDependent = false)
-        {
-            //put here the weir defaults you want when you create it in network editor or network treeview
-            return new Weir("Weir", canBeTimeDependent);
-        }
-        /// <summary>
-        /// Creates a default weir and adds it to the branch 
-        /// </summary>
-        public static Weir CreateDefault(IBranch branch, bool canBeTimeDependent = false)
-        {
-            //a lot of defaults are defined in the constructor
-            var weir = CreateDefault(canBeTimeDependent);
-            AddStructureToNetwork(weir, branch);
-            return weir;
         }
 
         public virtual bool SpecifyCrestLevelAndWidthOnWeir

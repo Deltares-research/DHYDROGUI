@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -38,11 +38,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public IList<LandBoundary2D> Read(string polFilePath)
+        public IList<LandBoundary2D> Read(string ldbFilePath)
         {
             var features = new EventedList<LandBoundary2D>();
 
-            OpenInputFile(polFilePath);
+            OpenInputFile(ldbFilePath);
             try
             {
                 string line = GetNextLine();
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     
                     if (lineFields.Count < 2)
                     {
-                        throw new Exception(String.Format("Invalid numpoints/numcolums {0} in file {1}", LineNumber, polFilePath));
+                        throw new Exception(String.Format("Invalid numpoints/numcolums {0} in file {1}", LineNumber, ldbFilePath));
                     }
                     
                     var numPoints = GetInt(lineFields[0], "value for nr of points");
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     
                     if (numColumns < 2)
                     {
-                        throw new Exception(String.Format("Number of colums must be at least 2. (line: {0}) in file {1}", LineNumber, polFilePath));
+                        throw new Exception(String.Format("Number of colums must be at least 2. (line: {0}) in file {1}", LineNumber, ldbFilePath));
                     }
 
                     var points = new List<Coordinate>();
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         lineFields = SplitLine(line).ToList();
                         if (lineFields.Count < numColumns)
                         {
-                            throw new Exception(String.Format("Invalid point row on line {0} in file {1}", LineNumber, polFilePath));
+                            throw new Exception(String.Format("Invalid point row on line {0} in file {1}", LineNumber, ldbFilePath));
                         }
 
                         var x = GetDouble(lineFields[0]);
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                                   ? baseName + (counter++)
                                                   : firstName + "_" + (counter++);
 
-                            AddNewFeature(featureName, points, features);
+                            AddNewFeature(featureName, points, features, ldbFilePath);
                             points.Clear();
                         }
                         else
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
                     var lastFeatureName = counter == 1? firstName: (baseName != null? baseName + counter: firstName + "_" + counter);
-                    AddNewFeature(lastFeatureName, points, features);
+                    AddNewFeature(lastFeatureName, points, features, ldbFilePath);
                     line = GetNextLine();
                 }
             }
@@ -112,16 +112,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return features;
         }
 
-        private static void AddNewFeature(string name, List<Coordinate> points, ICollection<LandBoundary2D> features)
+        private static void AddNewFeature(string name, List<Coordinate> points, ICollection<LandBoundary2D> features, string ldbFilePath)
         {
             if (!points.Any()) return;
             var feature = new LandBoundary2D()
-                {
-                    Name = name,
-                    Geometry = points.Count == 1
-                                   ? new LineString(new[] {points[0], points[0]})
-                                   : new LineString(points.ToArray())
-                };
+            {
+                Name = name,
+                Geometry = points.Count == 1
+                                ? new LineString(new[] {points[0], points[0]})
+                                : new LineString(points.ToArray())
+            };
             features.Add(feature);
         }
     }

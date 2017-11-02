@@ -1,9 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Utils;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -14,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         protected override string ImporterName
         {
-            get { return "Features from .pli file"; }
+            get { return "Features from .pli(z) file"; }
         }
 
         protected override string ExporterName
@@ -56,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     CreateDelegate = CreateDelegate,
                 };
-                return reader.Read(path);
+                return reader.Read(path, (s,c,t)=> ProgressChanged?.Invoke(s,c,t));
             }
             if (Path.GetExtension(path) == ".pliz")
             {
@@ -64,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     CreateDelegate = CreateDelegate,
                 };
-                return reader.Read(path);                
+                return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
             }
             return Enumerable.Empty<TFeat>();
         }
@@ -134,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 var featureList = new List<TFeat>();
                 base.OnImportItem(path, featureList);
-                AddOrReplace((IList<TParent>) target, featureList.Select(CreateParentFromFeature));
+                AddOrReplace((IList<TParent>) target, featureList.Select(CreateParentFromFeature), EqualityComparer);
             }
             return target;
         }

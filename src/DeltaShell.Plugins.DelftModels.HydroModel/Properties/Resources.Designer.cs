@@ -166,6 +166,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid Coordinate System type.
+        /// </summary>
+        public static string HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wave model and FlowFM model, have grids with a different coordinate system . These coordinate systems have to be of the same type (Cartesian or spherical) to run the integrated model.
+        /// </summary>
+        public static string HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__ {
+            get {
+                return ResourceManager.GetString("HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_b" +
+                        "e_of_the_same_type__either_Spherical_or_Cartesian__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model structure.
         /// </summary>
         public static string HydroModelValidator_ConstructModelStructureReport_Model_structure {

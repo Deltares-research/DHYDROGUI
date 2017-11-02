@@ -93,12 +93,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (extForceFileItems.Count > 0)
             {
                 WriteExtForceFile(extForceFileItems);
-                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value = Path.GetFileName(FilePath);
+                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString(Path.GetFileName(FilePath));
             }
             else
             {
                 FileUtils.DeleteIfExists(FilePath);
-                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value = "";
+                modelDefinition.GetModelProperty(KnownProperties.ExtForceFile).SetValueAsString(string.Empty);
             }
         }
 
@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var path = GetOtherFilePathInSameDirectory(FilePath, extForceFileItem.FileName);
 
-            var features = new PolFile().Read(path).Select(f => new Feature{Geometry = f.Geometry, Attributes = f.Attributes});
+            var features = new PolFile<Feature2DPolygon>().Read(path).Select(f => new Feature{Geometry = f.Geometry, Attributes = f.Attributes});
             
             var operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
 

@@ -459,6 +459,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap enclosure {
+            get {
+                object obj = ResourceManager.GetObject("enclosure", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extra resistance.
         /// </summary>
         public static string ExtraResistanceProperties_DisplayName {
@@ -773,6 +783,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static string NetworkCoverageProperties_DisplayName {
             get {
                 return ResourceManager.GetString("NetworkCoverageProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove ungrouped.
+        /// </summary>
+        public static string NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped {
+            get {
+                return ResourceManager.GetString("NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove group.
+        /// </summary>
+        public static string NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group {
+            get {
+                return ResourceManager.GetString("NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add group.
+        /// </summary>
+        public static string NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group {
+            get {
+                return ResourceManager.GetString("NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group", resourceCulture);
             }
         }
         
@@ -1261,6 +1298,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} only supports one feature on target layer {1}, the existing feature will be removed!{2}Press Esc to cancel.
+        /// </summary>
+        public static string SingleFeature2DLineTool_LogWarning_only_one_feature_supported {
+            get {
+                return ResourceManager.GetString("SingleFeature2DLineTool_LogWarning_only_one_feature_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {
@@ -1364,6 +1410,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("WeirSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This formula type: &apos;{0}&apos; is not (yet) supported.
+        /// </summary>
+        public static string WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__supported {
+            get {
+                return ResourceManager.GetString("WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__" +
+                        "supported", resourceCulture);
             }
         }
         

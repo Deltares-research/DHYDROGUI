@@ -7,10 +7,12 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Hydro;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -19,7 +21,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
@@ -27,6 +28,7 @@ using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
 using Control = System.Windows.Controls.Control;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -70,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            model.Area.DredgingLocations.Add(new Feature2D
+            model.Area.DredgingLocations.Add(new GroupableFeature2D
                 {
                     Geometry = new Polygon(new LinearRing(new[]
                         {
@@ -128,6 +130,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        public void CheckFMEnclosureLayerIsCreated()
+        {
+            var model = new WaterFlowFMModel();
+
+            using (var gui = new DeltaShellGui())
+            {
+                var fmGuiPlugin = new FlowFMGuiPlugin();
+
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(fmGuiPlugin);
+
+                gui.Run();
+
+                var project = app.Project;
+                project.RootFolder.Add(model);
+
+                var enclosureFeature =
+                    FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
+                        FlowFMTestHelper.GetValidGeometryForEnclosureExample());
+
+                model.Area.Enclosures.Add(enclosureFeature);
+                var layer = new NetworkEditorMapLayerProvider().CreateLayer(model.Area.Enclosures, model.Area);
+
+                Assert.IsNotNull(layer); //asssert it got injected               
+                Assert.AreEqual(1, layer.CustomRenderers.Count);
+                Assert.AreEqual(typeof(EnclosureRenderer), layer.CustomRenderers[0].GetType());
+            }
+        }
+
+        [Test]
+        public void CheckFMLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
+        {
+            var model = new WaterFlowFMModel();
+
+            using (var gui = new DeltaShellGui())
+            {
+                var fmGuiPlugin = new FlowFMGuiPlugin();
+
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(fmGuiPlugin);
+
+                gui.Run();
+
+                var project = app.Project;
+                project.RootFolder.Add(model);
+
+                var featureName = "Enclosure01";
+                var enclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                                        featureName,
+                                        FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
+
+                model.Area.Enclosures.Add(enclosureFeature);
+
+                /* Make sure the method works first */
+                var layerProvider = fmGuiPlugin.MapLayerProvider;
+                var areaChildren = layerProvider.ChildLayerObjects(model).OfType<HydroArea>();
+                Assert.AreEqual(1, areaChildren.ToList().Count);
+                
+                /* Now check there are log messages instantiating the enum to list. */
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => areaChildren.ToList(),
+                    String.Format(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, featureName));
+            }
+        }
+
+        [Test]
         public void FlowFmMapLayerProviderCanCreateLayerForListOfWaterFlowFm1D2DLinks()
         {
             var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new List<WaterFlowFM1D2DLink>(), new WaterFlowFMModel());
@@ -161,7 +239,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         #region Test helper methods
-        
         private static void ShowModelLayers(WaterFlowFMModel model)
         {
             var providers = new IMapLayerProvider[] { new FlowFMMapLayerProvider(), new SharpMapLayerProvider() };

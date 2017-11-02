@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -14,10 +15,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 using Point = NetTopologySuite.Geometries.Point;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -216,95 +219,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.AreEqual(2, retrievedModel.BoundaryConditions.Count());
             }
         }
-        
-        [Test]
-        public void RenameModelShouldRenameFilesWhereApplicable()
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Run();
-
-                var path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-
-                // add existing model to project
-                var mduPath = TestHelper.GetTestFilePath(@"rename\goot.mdu");
-                mduPath = TestHelper.CreateLocalCopy(mduPath);
-                var model = new WaterFlowFMModel(mduPath);
-                app.Project.RootFolder.Add(model);
-
-                // rename model
-                model.Name = "newgoot";
-
-                // save model
-                path = "test\\new.dsproj";
-                app.SaveProjectAs(path);
-
-                // check files
-                var dataDir = path + "_data\\newgoot";
-                Assert.AreEqual("newgoot", model.ModelDefinition.ModelName);
-                Assert.AreEqual("newgoot.ext", model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
-                Assert.AreEqual("newgoot_net.nc", model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value);
-                Assert.AreEqual("newgoot_obs.xyn", model.ModelDefinition.GetModelProperty(KnownProperties.ObsFile).Value);
-
-                Assert.IsFalse(File.Exists(Path.Combine(dataDir, "goot.mdu")), "mdu");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot.mdu")), "mdu");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot.ext")), "ext");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot_obs.xyn")), "obs");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot_net.nc")), "net3");
-            }
-        }
-
-        [Test]
-        public void RenameModelTwiceShouldRenameFilesWhereApplicable()
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Run();
-
-                var path = "mdu.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-
-                // add existing model to project
-                var mduPath = TestHelper.GetTestFilePath(@"rename\goot.mdu");
-                mduPath = TestHelper.CreateLocalCopy(mduPath);
-                var model = new WaterFlowFMModel(mduPath);
-                app.Project.RootFolder.Add(model);
-
-                // rename model
-                model.Name = "newgoot";
-
-                // save model
-                path = "test\\new.dsproj";
-                app.SaveProjectAs(path);
-
-                model.Name = "newgoot2";
-                app.SaveProject();
-
-                // check files
-                Assert.AreEqual("newgoot2", model.ModelDefinition.ModelName);
-                Assert.AreEqual("newgoot2.ext", model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
-                Assert.AreEqual("newgoot2_net.nc", model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value);
-                Assert.AreEqual("newgoot2_obs.xyn", model.ModelDefinition.GetModelProperty(KnownProperties.ObsFile).Value);
-
-                var dataDir = path + "_data\\newgoot2";
-                //Assert.IsFalse(File.Exists(Path.Combine(dataDir, "newgoot.mdu")), "mdu");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot2.mdu")), "mdu");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot2.ext")), "ext");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot2_obs.xyn")), "obs");
-                Assert.IsTrue(File.Exists(Path.Combine(dataDir, "newgoot2_net.nc")), "net3");
-            }
-        }
 
         [Test]
         public void SaveLoadModelVerifyMduIsReloadedAndModelDoesNotLeakEventSubscriptions()
@@ -496,7 +410,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Project.RootFolder.Add(model);
 
                 // add obs point
-                model.Area.ObservationPoints.Add(new Feature2DPoint { Name = "obs1", Geometry = new Point(15, 15) });
+                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs1", Geometry = new Point(15, 15) });
 
                 // save & reload
                 app.SaveProjectAs(path);
@@ -530,7 +444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.SaveProjectAs(path); // save
 
                 // add obs point
-                model.Area.ObservationPoints.Add(new Feature2DPoint { Name = "obs1", Geometry = new Point(15, 15) });
+                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint { Name = "obs1", Geometry = new Point(15, 15) });
 
                 // save & reload
                 app.SaveProject(); //this only works if nhibernate is aware that something changed and actually does something
@@ -1017,6 +931,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsNotNull(loadedModel);
                 
             }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenFmModel_WhenAddingAndRemovingAHydroAreaFeature_ThenFeatureFileReferenceIsRemovedFromTheMduFile()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\BasicModel\FlowFM.mdu");
+            Assert.IsTrue(File.Exists(filePath));
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            Assert.IsTrue(File.Exists(filePath));
+
+            using (var fmModel = new WaterFlowFMModel(filePath))
+            {
+                var obsFileModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.ObsFile);
+                var dryPointsFileModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.DryPointsFile);
+                var modelArea = fmModel.Area;
+                Assert.That(modelArea.ObservationPoints.Count, Is.EqualTo(3));
+                Assert.That(modelArea.DryPoints.Count, Is.EqualTo(1));
+                Assert.That(obsFileModelProperty.GetValueAsString(), Is.EqualTo("FlowFM_obs.xyn"));
+                Assert.That(dryPointsFileModelProperty.GetValueAsString(), Is.EqualTo("FlowFM_dry.xyz"));
+
+                modelArea.ObservationPoints.Clear();
+                modelArea.DryPoints.Clear();
+                fmModel.ExportTo(filePath);
+                Assert.IsEmpty(obsFileModelProperty.GetValueAsString());
+                Assert.IsEmpty(dryPointsFileModelProperty.GetValueAsString());
+            }
+
+            var importedModel = new WaterFlowFMModel(filePath);
+            Assert.IsEmpty(importedModel.Area.ObservationPoints);
+            Assert.IsEmpty(importedModel.Area.DryPoints);
         }
 
         [Test]

@@ -5,50 +5,8 @@
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="DryPoints" Type="NetTopologySuite.Extensions.Features.PointFeature" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="6.438" Y="4.66" />
-        <Point X="6.438" Y="5.839" />
-        <Point X="4.5" Y="5.839" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="DryAreas" Type="NetTopologySuite.Extensions.Features.Feature2DPolygon" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="8" Y="4.66" />
-        <Point X="8" Y="6.565" />
-        <Point X="10.75" Y="6.565" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="ThinDams" Type="NetTopologySuite.Extensions.Features.ThinDam2D" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="7.062" Y="4.66" />
-        <Point X="7.062" Y="9.661" />
-        <Point X="10.75" Y="9.661" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="ObservationCrossSections" Type="NetTopologySuite.Extensions.Features.ObservationCrossSection2D" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="7.688" Y="4.66" />
-        <Point X="7.688" Y="7.565" />
-        <Point X="10.75" Y="7.565" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="Embankments" Type="DelftTools.Hydro.Embankment" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="7.375" Y="4.66" />
-        <Point X="7.375" Y="8.469" />
-        <Point X="10.75" Y="8.469" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="Links" Type="DelftTools.Hydro.HydroLink" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="6.75" Y="4.66" />
-        <Point X="6.75" Y="6.782" />
-        <Point X="4.5" Y="6.782" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>YAAQiIAAMAAABwAEAIAAEABRAEAAAAAACIIC0QAAQDA=</HashCode>
+      <HashCode>YAAQiIAAMAAABwAEAIAAEABRAEAAAAAACIIC0SAAQDA=</HashCode>
       <FileName>HydroArea.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -66,6 +24,7 @@
       <Property Name="Weirs" />
       <Property Name="Gates" />
       <Property Name="Links" />
+      <Property Name="Enclosures" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>

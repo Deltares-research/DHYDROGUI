@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             ThrowIfFileNotExists(targetModelFile, fileName.TargetPath, p => ModelDefinitionFileWriter.WriteFile(p, waterFlowModel1D));
 
-            if (waterFlowModel1D.SalinityValidNonConstantFormulation)
+            if (waterFlowModel1D.ValidSalinityFileWithNonConstantFormulationAndF4Values)
             {
                 fileName.Salinity = WaterFlowModel1D.SalinityFileName;
 

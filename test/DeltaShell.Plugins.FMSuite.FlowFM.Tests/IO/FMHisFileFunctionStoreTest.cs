@@ -107,6 +107,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 dischargeFunction.Features.OfType<Feature2D>().First().Geometry);
         }
 
+
+        [Test]
+        public void OpenGeneralStructureTimeSeries()
+        {
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\generalStructure_his.nc"));
+
+            /* We use any of the components of general structure, just to check it has been created. */
+            var generalStructureFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_discharge");
+
+            Assert.IsNotNull(generalStructureFunction);
+        }
+
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
@@ -187,7 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var numEventsBefore = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
 
             var waterLevelFunction = model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel") as FeatureCoverage;
-
             Assert.IsNotNull(waterLevelFunction);
 
             for (var i = 0; i < 5; ++i)
@@ -209,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var model = new WaterFlowFMModel(localMduFilePath);
 
-            var weir = new Weir("weir", true)
+            var weir = new Weir2D("weir", true)
             {
                 Geometry = new LineString(new[] {new Coordinate(51.0, -180.0), new Coordinate(150.0, -180.0)}),
                 CrestWidth = 0.0,
@@ -221,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
             model.Area.Weirs.Add(weir);
 
-            var gate = new Gate("gate")
+            var gate = new Gate2D("gate")
             {
                 Geometry = new LineString(new[] {new Coordinate(-149.1, -180.0), new Coordinate(-50.1, -180.0)}),
                 SillWidth = 102.0,
@@ -239,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             gate.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
             model.Area.Gates.Add(gate);
 
-            var pump = new Pump("pump", true)
+            var pump = new Pump2D("pump", true)
             {
                 Geometry = new LineString(new[] {new Coordinate(0.0, 51.5), new Coordinate(0.0, 81.2)}),
                 UseCapacityTimeSeries = true

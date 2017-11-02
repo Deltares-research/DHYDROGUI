@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
     public class FMWeirPropertiesRow : IDisposable, INotifyPropertyChange, IFeatureRowObject
     {
         private IWeir weir;
-        private SimpleWeirFormula formula;
+        private IWeirFormula formula;
 
         private IWeir Weir
         {
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
                 UpdateTimeSerieStrings();
                 if (weir != null)
                 {
-                    formula = (SimpleWeirFormula)weir.WeirFormula;
+                    formula = (IWeirFormula)weir.WeirFormula;
                     ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertiesRowPropertyChanged;
                 }
             }
@@ -84,8 +85,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         [DisplayFormat("0.00")]
         public double SLateralContraction
         {
-            get { return formula.LateralContraction; }
-            set { formula.LateralContraction = value; }
+            get
+            {
+                var f = formula as SimpleWeirFormula;
+                if (f != null)
+                {
+                    return f.LateralContraction;
+                }
+                return 0.0;
+            }
+            set
+            {
+                var f = formula as SimpleWeirFormula;
+                if (f != null)
+                {
+                    f.LateralContraction = value;
+                }
+            }
         }
 
         public FMWeirPropertiesRow(IWeir weir)

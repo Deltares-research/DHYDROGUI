@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
@@ -117,7 +118,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         private void ImportPump(IFeature feature, string columnNameName, string columnNameLongName, string columnNameDescription, string columnNameCapacity, string columnNameStartDelivery, string columnNameStopDelivery, string columnNameStartSuction, string columnNameStopSuction)
         {
-            var pump = AddOrUpdateBranchFeatureFromNetwork<IPump>(feature, columnNameName, branch => Pump.CreateDefault(branch));
+            var pump = AddOrUpdateBranchFeatureFromNetwork(feature, columnNameName, branch =>
+            {
+                var branchFeature = new Pump(false);
+                BranchStructure.AddStructureToNetwork(branchFeature, branch);
+                return branchFeature;
+            });
 
             if (pump == null)
             {

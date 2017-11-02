@@ -8,26 +8,26 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
-    public class ObsFile : FMSuiteFileBase, IFeature2DFileBase<Feature2DPoint>
+    public class ObsFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
     {
-        public void Write(string obsFilePath, IEnumerable<Feature2DPoint> observationPoints, bool includeName = true)
+        public void Write(string obsFilePath, IEnumerable<T> observationPoints, bool includeName = true)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
                 OpenOutputFile(obsFilePath);
                 try
                 {
-                    foreach (Feature2DPoint observationPoint in observationPoints)
+                    foreach (var observationPoint in observationPoints)
                     {
                         if (includeName)
                         {
-                            WriteLine(String.Format("{0,24} {1,24} '{2}'",
+                            WriteLine(string.Format("{0,24} {1,24} '{2}'",
                                                     observationPoint.X, observationPoint.Y,
                                                     observationPoint.Name));
                         }
                         else
                         {
-                            WriteLine(String.Format("{0,24} {1,24}", 
+                            WriteLine(string.Format("{0,24} {1,24}", 
                                 observationPoint.X, observationPoint.Y));
                         }
                     }
@@ -39,9 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public IEventedList<Feature2DPoint> Read(string obsFilePath, bool includeName = true)
+        public IEventedList<T> Read(string obsFilePath, bool includeName = true)
         {
-            IEventedList<Feature2DPoint> observationPoints = new EventedList<Feature2DPoint>();
+            IEventedList<T> observationPoints = new EventedList<T>();
 
             OpenInputFile(obsFilePath);
             try
@@ -56,19 +56,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var lineFields = SplitLine(line).Take(3).ToList();
                     if (lineFields.Count != expectedLineCount)
                     {
-                        throw new Exception(String.Format("Invalid point row on line {0} in file {1}", LineNumber, obsFilePath));
+                        throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber, obsFilePath));
                     }
 
-                    var observationPoint = new Feature2DPoint();
+                    var observationPoint = new T
+                    {
+                        Geometry = new Point(GetDouble(lineFields[0], "x-coord"), GetDouble(lineFields[1], "y-coord")),
+                        Name = includeName
+                            ? lineFields[2]
+                            : string.Format("point{0}", nameSuffix++)
+                    };
 
-                    var x = GetDouble(lineFields[0], "x-coord");
-                    var y = GetDouble(lineFields[1], "y-coord");
-                    observationPoint.Geometry = new Point(x, y);
-
-                    observationPoint.Name = includeName
-                                                ? lineFields[2]
-                                                : string.Format("point{0}", nameSuffix++);
-
+                    observationPoint.TrySetGroupName(obsFilePath);
                     observationPoints.Add(observationPoint);
 
                     line = GetNextLine();
@@ -81,12 +80,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return observationPoints;
         }
 
-        public void Write(string path, IEnumerable<Feature2DPoint> features)
+        public void Write(string path, IEnumerable<T> features)
         {
             Write(path, features, true);
         }
 
-        public IList<Feature2DPoint> Read(string path)
+        public IList<T> Read(string path)
         {
             return Read(path, true);
         }

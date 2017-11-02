@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -79,11 +80,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
             if (structure is IWeir)
             {
-                StructureControl = new FMWeirView
+                var controlHost = new ElementHost
                 {
                     Dock = DockStyle.Fill,
-                    Data = structure
+                    Child = new WeirViewWpf { Data = structure },
                 };
+                StructureControl = controlHost;
                 structureViewPanel.AutoScrollMinSize = new Size(StructureControl.Width, StructureControl.Height);
                 structureViewPanel.Controls.Add(StructureControl);
                 return;

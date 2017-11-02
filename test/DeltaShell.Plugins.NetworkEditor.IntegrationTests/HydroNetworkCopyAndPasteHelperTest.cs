@@ -121,7 +121,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
             var channel = network.Channels.First();
 
-            channel.BranchFeatures.Add(Pump.CreateDefault(channel));
+            var pump = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump, channel);
+
+            channel.BranchFeatures.Add(pump);
             channel.BranchFeatures.Add(CrossSection.CreateDefault(CrossSectionType.YZ, channel));
 
             Assert.IsFalse(HydroNetworkCopyAndPasteHelper.PasteChannelToNetwork(network, out errorMessage));
@@ -177,7 +180,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             network1.CrossSectionSectionTypes[0].Name = "CrossSectionType1";
             network2.CrossSectionSectionTypes[0].Name = "CrossSectionType2";
             NetworkHelper.AddChannelToHydroNetwork(network1, channel);
-            channel.BranchFeatures.Add(Pump.CreateDefault(channel));
+            
+            var pump = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump, channel);
+
+            channel.BranchFeatures.Add(pump);
             var crossSectionYz = CrossSection.CreateDefault(CrossSectionType.YZ, channel);
             
 
@@ -229,7 +236,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             var channel1 = network.Channels.First();
             var channel2 = network.Channels.ElementAt(1);
 
-            channel1.BranchFeatures.Add(Pump.CreateDefault(channel1));
+            var pump = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump, channel1);
+
+            channel1.BranchFeatures.Add(pump);
             channel1.BranchFeatures.Add(CrossSection.CreateDefault(CrossSectionType.YZ, channel1));
 
             HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(network.Pumps.ElementAt(0));
@@ -268,8 +278,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             
             sourceNetwork.CrossSectionSectionTypes[0].Name = "CrossSectionType1";
             targetNetwork.CrossSectionSectionTypes[0].Name = "CrossSectionType2";
-            
-            sourceChannel.BranchFeatures.Add(Pump.CreateDefault(sourceChannel));
+
+            var pump = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump, sourceChannel);
+
+            sourceChannel.BranchFeatures.Add(pump);
             var sourceCrossSection = CrossSection.CreateDefault(CrossSectionType.YZ, sourceChannel);
             sourceCrossSection.Name = "SourceCrossSection";
             sourceCrossSection.Definition.Name = "SourceCrossSection";
@@ -324,8 +337,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                               };
 
             NetworkHelper.AddChannelToHydroNetwork(network, channel);
-            channel.BranchFeatures.Add(Pump.CreateDefault(channel));
-            channel.BranchFeatures.Add(Pump.CreateDefault(channel));
+            var pump1 = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump1, channel);
+            var pump2 = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump2, channel);
+
+            channel.BranchFeatures.Add(pump1);
+            channel.BranchFeatures.Add(pump2);
             channel.BranchFeatures.Add(CrossSection.CreateDefault(CrossSectionType.YZ, channel));
             channel.BranchFeatures.Add(CrossSection.CreateDefault(CrossSectionType.YZ, channel));
 
@@ -379,12 +397,20 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             targetNetwork.CrossSectionSectionTypes[0].Name = "CrossSectionType2";
             NetworkHelper.AddChannelToHydroNetwork(network1, channel1);
             NetworkHelper.AddChannelToHydroNetwork(targetNetwork, channel2);
-            channel1.BranchFeatures.Add(Pump.CreateDefault(channel1));
+
+            var pump1 = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump1, channel1);
+
+            channel1.BranchFeatures.Add(pump1);
             var crossSectionYz = CrossSection.CreateDefault(CrossSectionType.YZ, channel1);
             crossSectionYz.Name = "CrossSection001";
             crossSectionYz.Definition.Name = "CrossSection001";
             channel1.BranchFeatures.Add(crossSectionYz);
-            channel2.BranchFeatures.Add(Pump.CreateDefault(channel2));
+
+            var pump2 = new Pump(false);
+            BranchStructure.AddStructureToNetwork(pump2, channel2);
+
+            channel2.BranchFeatures.Add(pump2);
             var crossSection2 = CrossSection.CreateDefault(CrossSectionType.YZ, channel2);
             crossSection2.Name = "CrossSection002";
             channel2.BranchFeatures.Add(crossSection2);

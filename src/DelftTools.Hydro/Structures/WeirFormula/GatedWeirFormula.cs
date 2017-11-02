@@ -96,6 +96,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// Gate opening (openlevel)
         /// </summary>
         public virtual double GateOpening { get; set; }
+        
         /// <summary>
         /// Time dependent Lower edge level
         /// </summary>

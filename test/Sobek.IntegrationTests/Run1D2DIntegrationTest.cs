@@ -296,7 +296,7 @@ namespace Sobek.IntegrationTests
                 ICompositeActivity hydroModel = app.Project.RootFolder.Models.Cast<ICompositeActivity>().First();
 
                 var fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
-                var observationPointFM = new Feature2DPoint
+                var observationPointFM = new GroupableFeature2DPoint
                 {
                     Name = "ObservationFM",
                     Geometry =

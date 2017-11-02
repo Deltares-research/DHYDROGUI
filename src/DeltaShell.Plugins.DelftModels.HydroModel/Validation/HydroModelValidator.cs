@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
@@ -30,7 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             var hydroModelReports = new List<ValidationReport>
             {
                 ConstructCurrentWorkflowReport(model),
-                ConstructModelStructureReport(model)
+                ConstructModelStructureReport(model),
+                ConstructModelGridReport(model),
             };
 
             var hydroModelSpecificReports = new ValidationReport(Resources.HydroModelValidator_Validate_HydroModel_Specific, hydroModelReports);
@@ -40,6 +42,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             reports.AddRange(subModelReports);
 
             return new ValidationReport(validationReportName, reports);
+        }
+
+        private static ValidationReport ConstructModelGridReport(ICompositeActivity model)
+        {
+            var gridCoordinatesIssues = new List<ValidationIssue>();
+            var activitiesWithCoordSyst = model.CurrentWorkflow.Activities.GetActivitiesOfType<IHasCoordinateSystem>().Where( act => act.CoordinateSystem != null).ToList();
+
+            if (activitiesWithCoordSyst.Count > 1 && activitiesWithCoordSyst.GroupBy( act => act.CoordinateSystem.IsGeographic ).Count() > 1)
+            {
+                gridCoordinatesIssues.Add(
+                    new ValidationIssue(
+                        model, 
+                        ValidationSeverity.Error, 
+                        Resources.HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__));
+            }
+
+            return new ValidationReport(Resources.HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type, gridCoordinatesIssues);
         }
 
         private static IEnumerable<ValidationReport> ConstructSubmodelReports(ICompositeActivity model)

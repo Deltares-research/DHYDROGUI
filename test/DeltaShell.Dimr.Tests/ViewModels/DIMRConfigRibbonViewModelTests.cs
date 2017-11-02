@@ -13,8 +13,8 @@ namespace DeltaShell.Dimr.Tests.ViewModels
         public void DIMRConfigRibbonViewModelSetDebuggerLevelsTest()
         {
             // Check default values
-            Assert.AreEqual(DimrApiDataSet.FeedbackLevel, Level.Error);
-            Assert.AreEqual(DimrApiDataSet.LogFileLevel, Level.Debug);
+            Assert.AreEqual(DimrApiDataSet.FeedbackLevel, Level.None);
+            Assert.AreEqual(DimrApiDataSet.LogFileLevel, Level.None);
 
             var viewModel = new DIMRConfigRibbonViewModel();
             Assert.That(viewModel.Levels.Count(), Is.GreaterThan(0));

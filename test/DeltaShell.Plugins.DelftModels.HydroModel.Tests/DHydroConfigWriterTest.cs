@@ -39,15 +39,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(new WaveModel());
             hydroModel.Activities.Add(realTimeControlModel);
 
-            var pump = new Pump("pomp")
+            var pump = new Pump2D("pomp")
             {
                 Geometry = new LineString(new[] {new Coordinate(-50, -100), new Coordinate(50, -100)})
             };
-            var gate = new Gate("poort")
+            var gate = new Gate2D("poort")
             {
                 Geometry = new LineString(new[] {new Coordinate(-50, 100), new Coordinate(50, 100)})
             };
-            var obserVationPoint = new Feature2DPoint
+            var obserVationPoint = new GroupableFeature2DPoint
             {
                 Name = "station",
                 Geometry = new Point(0, 0)

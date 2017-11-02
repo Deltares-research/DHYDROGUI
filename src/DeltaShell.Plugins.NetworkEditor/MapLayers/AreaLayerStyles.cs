@@ -191,5 +191,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 };
             }
         }
+
+        public static VectorStyle EnclosureStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(IPolygon),
+                    Fill = new SolidBrush(Color.Transparent),
+                    Outline = new Pen(Color.FromArgb(100, Color.CornflowerBlue), 2f),
+                };
+            }
+        }
     }
 }

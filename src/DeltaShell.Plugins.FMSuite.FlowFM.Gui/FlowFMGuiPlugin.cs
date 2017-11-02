@@ -16,6 +16,7 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -48,6 +49,9 @@ using SharpMap.CoordinateSystems;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -364,8 +368,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries",
                     m => m.Boundaries, () => Gui);
 
-
-
             // Sources and sinks
             var sourceAndSinkViewInfo = new ViewInfo<SourceAndSink, SourceAndSinkView>
             {
@@ -671,118 +673,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             Gui.Application.ActivityRunner.ActivityStatusChanged -= OnActivityRunnerStatusChanged;
         }
 
-        #region Model inspection
-        // DELFT3DFM-371: Disable Model Inspection
-        /*
-        void Activities_CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            var fmModel = e.Item as WaterFlowFMModel;
-            if (fmModel == null) 
-                return;
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangeAction.Add:
-                    if (fmModel.ModelInspection)
-                        fmModel.AfterExecute += fmModel_AfterExecute;
-                    break;
-                case NotifyCollectionChangeAction.Remove:
-                    if (modelInspectionWindow != null)
-                        CleanupModelInspectionWindow();
-                    fmModel.AfterExecute -= fmModel_AfterExecute;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private static FMModelInspectionWindow modelInspectionWindow;
-
-        [InvokeRequired]
-        private void CleanupModelInspectionWindow()
-        {
-            if (openForms != null)
-                foreach (var form in openForms)
-                    form.Enabled = true;
-            openForms = null;
-
-            if (modelInspectionWindow != null)
-                modelInspectionWindow.Dispose();
-            modelInspectionWindow = null;
-        }
-
-        void fmModel_AfterExecute(object sender, EventArgs e)
-        {
-            UpdateModelInspection((WaterFlowFMModel)sender);
-        }
-
-        private List<Form> openForms;
-        [InvokeRequired]
-        private void UpdateModelInspection(WaterFlowFMModel model)
-        {
-            if (modelInspectionWindow != null && modelInspectionWindow.IsDisposed)
-                return;
-            if (modelInspectionWindow == null)
-            {
-                var sharpMapGisMapLayerProvider = Gui.Plugins.OfType<SharpMapGisGuiPlugin>().First().MapLayerProvider;
-                var hydroAreaMapLayerProvider = Gui.Plugins.OfType<NetworkEditorGuiPlugin>().First().MapLayerProvider;
-                var coverageMapLayerProvider = SharpMapGisGuiPlugin.Instance.MapLayerProvider;
-                var modelMapLayerProvider = MapLayerProvider;
-                modelInspectionWindow = new FMModelInspectionWindow(model, new[] {hydroAreaMapLayerProvider, modelMapLayerProvider,
-                    coverageMapLayerProvider, sharpMapGisMapLayerProvider}, Gui);
-            }
-
-            modelInspectionWindow.AfterExecute(model);
-
-            var wasFiring = DelayedEventHandlerController.FireEvents;
-            DelayedEventHandlerController.FireEvents = true; // otherwise map won't redraw
-            try
-            {
-                if (!modelInspectionWindow.Visible)
-                {
-                    // prevent interaction with progress dialog while we're active (otherwise we get nested message 
-                    // loops & horrible deadlocks will ensue)
-                    openForms = Application.OpenForms.OfType<Form>().Where(of => of.Enabled).ToList();
-                    foreach (var form in openForms)
-                    {
-                        form.Enabled = false;
-                    }
-                    modelInspectionWindow.Show();
-                    modelInspectionWindow.WindowState = FormWindowState.Maximized;
-                }
-
-                if (modelInspectionWindow.WaitForUserInput() == DialogResult.Cancel)
-                {
-                    modelInspectionWindow.Close();
-                    CleanupModelInspectionWindow();
-                    model.AfterExecute -= fmModel_AfterExecute;
-                }
-            }
-            finally
-            {
-                DelayedEventHandlerController.FireEvents = wasFiring;
-            }
-        }
-        */
-        #endregion
-
         private void SubscribeToProjectPropertyChanged(Project project)
         {
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging += ProjectPropertyChanging;
+            ((INotifyPropertyChanged) project).PropertyChanged += ProjectPropertyChanged;
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
-        {
+            {
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging -= ProjectPropertyChanging;
-        }
+            ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
+            }
+
+        private static readonly string CoordinateSystemMemberName =
+            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);
 
         private static readonly string OutputHisFileStoreMemberName =
             TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.OutputHisFileStore);
 
         private static readonly string HeatFluxModelTypeMemberName =
             TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.HeatFluxModelType);
+
+        void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!(sender is WaterFlowFMModel))
+                return; //early exit
+
+            if (e.PropertyName.Equals(CoordinateSystemMemberName))
+        {
+                var model = sender as WaterFlowFMModel;
+                if (! model.WriteSnappedFeatures) return;
+
+                // Set coordinate system to OutputSnappedFeatures
+                var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
+                foreach (var mapView in mapViews)
+            {
+                    var modelLayer = mapView.MapView.GetLayerForData(model);
+                    var groupModelLayer = modelLayer as GroupLayer;
+                    if (groupModelLayer != null)
+                {
+                        var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
+                        if (snappedOutputLayer == null) continue;
+
+                        snappedOutputLayer.Layers.ForEach(l => l.DataSource.CoordinateSystem = model.CoordinateSystem);
+                }
+            }
+
+        }
+        }
 
         void ProjectPropertyChanging(object sender, PropertyChangingEventArgs e)
         {
@@ -808,6 +748,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
         }
+
         [InvokeRequired]
         private void OnActivityRunnerStatusChanged(object sender,
             ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
@@ -833,6 +774,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     if (ActiveMapView != null)
                     {
                         ActiveMapView.Map.ZoomToExtents();
+                    }
+                }
+            }
+
+            var model = sender as WaterFlowFMModel;
+            if ( model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+            {
+                //Clean output snapped layers;
+                // release file locks
+                var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where( m => (m.Data as WaterFlowFMModel) == model);
+
+                foreach (var mapView in mapViews)
+                {
+                    var modelLayer = mapView.MapView.GetLayerForData(model);
+                    var groupModelLayer = modelLayer as GroupLayer;
+                    if (groupModelLayer != null)
+                    {
+                        var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
+                        if (snappedOutputLayer == null) continue;
+
+                        snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>().ForEach(sf => sf.Close());
                     }
                 }
             }

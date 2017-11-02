@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(AreaLayer) };
+        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(AreaLayer) };
 
         public Ribbon()
         {
@@ -130,6 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return showSideViewCommand;
                 yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
+                yield return addEnclosure2dCommand;
             }
         }
 
@@ -196,6 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewDryPoint2D.SetState(addDryPoint2dCommand, showArea2DTools);
             ButtonAddNewDryArea2D.SetState(addDryArea2dCommand, showArea2DTools);
             ButtonAddNewEmbankment2D.SetState(addNewEmbankmentCommand, showArea2DTools);
+            ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
 
             ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
             
@@ -563,6 +566,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewEmbankment_Click(object sender, RoutedEventArgs e)
         {
             addNewEmbankmentCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonAddNewEnclosure_Click(object sender, RoutedEventArgs e)
+        {
+            addEnclosure2dCommand.Execute();
             ValidateItems();
         }
 

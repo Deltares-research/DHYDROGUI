@@ -1,12 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.Wave;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMapTestUtils;
 using Resources = DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 {
@@ -39,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             var result = validator.Validate(model);
             Assert.That(result.ErrorCount, Is.EqualTo(1));
             Assert.AreEqual(model.Name + " (Hydro Model)", result.Category);
-            
+
             var issue = result.AllErrors.ToArray().First();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             Assert.AreEqual(Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty, issue.Message);
@@ -51,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             // Setup
             var workflowName = "RR as sequential activity";
             var hydroModel = new HydroModel();
-            
+
             var workFlow = new SequentialActivity
             {
                 Name = workflowName,
@@ -60,7 +69,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             hydroModel.CurrentWorkflow = workFlow;
 
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports
+                .Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
@@ -68,7 +78,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 
             var workflowIssue = hydroModelSpecificIssues[0];
             Assert.That(workflowIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
-            Assert.That(workflowIssue.Message, Is.EqualTo(string.Format(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, workflowName)));
+            Assert.That(workflowIssue.Message,
+                Is.EqualTo(string.Format(
+                    Resources
+                        .HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell,
+                    workflowName)));
         }
 
         [Test]
@@ -81,18 +95,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 
             var workFlow = new SequentialActivity
             {
-                Activities = { activity }
+                Activities = {activity}
             };
             hydroModel.CurrentWorkflow = workFlow;
 
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports
+                .Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
             Assert.That(hydroModelSpecificIssues.Length, Is.EqualTo(0));
         }
-        
+
         [Test]
         [TestCase("SameName", "SameName")]
         [TestCase("samename", "SAMENAME")]
@@ -100,10 +115,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
         {
             var model1 = mocks.DynamicMock<IActivity>();
             model1.Expect(m => m.Name).Return(equalModelName1).Repeat.Any();
-            
+
             var model2 = mocks.DynamicMock<IActivity>();
             model2.Expect(m => m.Name).Return(equalModelName2).Repeat.Any();
-            
+
             var workflow = mocks.DynamicMock<ICompositeActivity>();
             workflow.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() {model1, model2})
                 .Repeat.Any();
@@ -131,11 +146,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             model3.Expect(m => m.Name).Return("otherName").Repeat.Any();
 
             var workflow1 = mocks.DynamicMock<ICompositeActivity>();
-            var workflow2 = mocks.DynamicMock<ICompositeActivity>(); 
+            var workflow2 = mocks.DynamicMock<ICompositeActivity>();
 
-            workflow1.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() { model2, model3 })
+            workflow1.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() {model2, model3})
                 .Repeat.Any();
-            workflow2.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() { model1, workflow1 })
+            workflow2.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() {model1, workflow1})
                 .Repeat.Any();
             mocks.ReplayAll();
 
@@ -145,6 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             };
             ValidateAndAssertOnWorkflowValidationReport(hydroModel, equalModelName1);
         }
+
         private void ValidateAndAssertOnWorkflowValidationReport(HydroModel hydroModel, string equalModelName1)
         {
             var validationReport = validator.Validate(hydroModel);
@@ -179,9 +195,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             var workflow1 = mocks.DynamicMock<ICompositeActivity>();
             var workflow2 = mocks.DynamicMock<ICompositeActivity>();
 
-            workflow1.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() { model2, model3 })
+            workflow1.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() {model2, model3})
                 .Repeat.Any();
-            workflow2.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() { model1, workflow1 })
+            workflow2.Expect(ca => ca.Activities).Return(new EventedList<IActivity>() {model1, workflow1})
                 .Repeat.Any();
             mocks.ReplayAll();
 
@@ -190,11 +206,133 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
                 CurrentWorkflow = workflow2
             };
             var validationReport = validator.Validate(hydroModel);
-            var hydroModelSpecificReport = validationReport.SubReports.Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
+            var hydroModelSpecificReport = validationReport.SubReports
+                .Where(r => r.Category.Contains(hydroModelSpecificReportName)).ToArray().FirstOrDefault();
             Assert.NotNull(hydroModelSpecificReport);
 
             var hydroModelSpecificIssues = hydroModelSpecificReport.AllErrors.ToArray();
             Assert.That(hydroModelSpecificIssues.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ValidateIntegratedModelFlowFMAndWaveBothModelsHaveTheSameTypeOfGrid()
+        {
+            var fmModel = new WaterFlowFMModel();
+            var waveModel = new WaveModel();
+            var hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.All);
+
+            PrepareValidFMWavesIntegratedModel(hydroModel, fmModel, waveModel);
+            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 0);
+
+            //Both FM and Wave models have spherical grids -OK!
+            var fmIsSpherical = true;
+            var waveIsSpherical = true;
+            SetFmGridCoordinateType(fmModel, fmIsSpherical);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical);
+            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 0);
+
+            //Both FM and Wave models have cartesian grids - OK!
+            SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
+            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 0);
+
+            //FM model has spherical grid and Wave model has cartesian grid -NOT OK!
+            SetFmGridCoordinateType(fmModel, fmIsSpherical = true);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
+            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
+
+
+            //FM model has cartesian grid and Wave model has spherical grid -NOT OK!
+            SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
+            SetWaveGridCoordinateType(waveModel, waveIsSpherical = true);
+            ValidateUnconsistentGridTypeErrorInReport(hydroModel, 1);
+        }
+
+        private static void ValidateUnconsistentGridTypeErrorInReport(HydroModel hydroModel, int expectedErrorCount)
+        {
+            var report = hydroModel.Validate();
+            Assert.AreEqual(expectedErrorCount, report.ErrorCount);
+            if (expectedErrorCount == 0) return;
+
+            var expectedCategory = Resources.HydroModelValidator_Validate_HydroModel_Specific;
+            var expectedReportName = Resources.HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type;
+            var expectedMsg = Resources.HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__;
+
+            var generalReport = report.SubReports.FirstOrDefault(sr => sr.Category == expectedCategory && sr.ErrorCount > 0);
+            Assert.NotNull(generalReport);
+
+            var subReport = generalReport.SubReports.FirstOrDefault( sr => sr.Category == expectedReportName && sr.ErrorCount > 0);
+            Assert.NotNull(subReport);
+
+            var errorFound = subReport.AllErrors.FirstOrDefault(err => err.Message == expectedMsg);
+            Assert.NotNull(errorFound);
+        }
+
+        private static void SetWaveGridCoordinateType(WaveModel waveModel, bool isSpherical = false)
+        {
+            waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(isSpherical ? 4326 : 28992); //4326 = WGS84, Spherical system.
+
+            var waveGrid = waveModel.OuterDomain.Grid;
+            Assert.NotNull(waveGrid);
+            Assert.AreEqual(waveModel.CoordinateSystem, waveGrid.CoordinateSystem);
+            Assert.AreEqual(isSpherical, waveGrid.CoordinateSystem.IsGeographic);
+        }
+
+        private static void SetFmGridCoordinateType(WaterFlowFMModel fmModel, bool isSpherical = false)
+        {
+            fmModel.Grid.Clear();
+            fmModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG( isSpherical ? 4326 : 28992); //4326 = WGS84, Spherical system.
+            fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 20, 20);
+
+            Assert.NotNull(fmModel.Grid);
+            Assert.AreEqual(fmModel.CoordinateSystem, fmModel.Grid.CoordinateSystem);
+            Assert.AreEqual(isSpherical, fmModel.Grid.CoordinateSystem.IsGeographic);
+        }
+
+        private void PrepareValidFMWavesIntegratedModel(HydroModel hydroModel, WaterFlowFMModel fmModel, WaveModel waveModel)
+        {
+            hydroModel.Activities.Clear();
+
+            Assert.NotNull(waveModel);
+            hydroModel.Activities.Add(fmModel);
+
+            Assert.NotNull(fmModel);
+            hydroModel.Activities.Add(waveModel);
+
+            Assert.IsNotEmpty(hydroModel.Activities);
+
+            /* Wave Model */
+            int mSize = 2;
+            int nSize = 3;
+            var xCoordinates = new[] { 0.1, 2.0, 0.1, 2.0, 0.1, 2.0 };
+            var yCoordinates = new[] { 1.0, 1.0, 3.0, 3.0, 5.0, 5.0 };
+
+            //         0          1    = M
+            //      
+            //   0   (0.1,1)------(2,1)
+            //         |          |
+            //         |          |
+            //   1   (0.1,3)------(2,3)
+            //         |          |
+            //         |          |
+            //   2   (0.1,5)------(2,5)
+            //
+            //  = N
+
+            var grid = CurvilinearGrid.CreateDefault();
+            grid.Resize(nSize, mSize, xCoordinates, yCoordinates);
+            grid.IsTimeDependent = false;
+            waveModel.OuterDomain.Grid = grid;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM)
+                .Value = true;
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
+                KnownWaveProperties.COMFile).Value = "file.txt";
+            waveModel.GetFlowComFilePath = () => "";
+
+            /*FM Model*/
+            fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
+            fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
         }
     }
 }

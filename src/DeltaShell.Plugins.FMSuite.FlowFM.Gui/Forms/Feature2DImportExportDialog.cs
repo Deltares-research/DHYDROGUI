@@ -1,15 +1,19 @@
-﻿using System.Drawing;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.Feature;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.UI.Forms;
-using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
@@ -79,15 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        private static bool PopupOnDuplicateBoundaryName(object feature)
-        {
-            var boundaryConditionSet = feature as BoundaryConditionSet;
-            if (boundaryConditionSet == null || !boundaryConditionSet.ContainsData()) return true;
-            return MessageBox.Show(
-                string.Format("Overwrite boundary condition set {0} and loose all data?", boundaryConditionSet.Name),
-                "Overwrite feature data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
-        }
-
         public DelftDialogResult ShowModal(object owner)
         {
             return ShowModal();
@@ -100,7 +95,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 feature2DImporterExporter.Files = ImportMode ? openFileDialog.FileNames : new[] {saveFileDialog.FileName};
                 feature2DImporterExporter.CoordinateTransformation = CoordinateTransformation;
-                feature2DImporterExporter.ShouldReplaceFeature = PopupOnDuplicateBoundaryName;
+                feature2DImporterExporter.ShouldReplace = (originalFeature, newFeature) =>
+                {
+                    var boundaryConditionSet = originalFeature as BoundaryConditionSet;
+                    if (boundaryConditionSet == null || !boundaryConditionSet.ContainsData()) return true;
+                    return MessageBox.Show($"Overwrite boundary condition set {boundaryConditionSet.Name} and loose all data?",
+                               "Overwrite feature data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+                };
             }
         }
 

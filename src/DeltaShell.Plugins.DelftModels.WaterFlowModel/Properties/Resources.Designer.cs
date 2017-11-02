@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -658,8 +658,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Morphology file does not exist..
         /// </summary>
-        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Morphology_file_does_not_exist
-        {
+        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_file_does_not_exist__ {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_fil" +
                         "e_does_not_exist__", resourceCulture);
@@ -669,8 +668,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sediment file does not exist..
         /// </summary>
-        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Sediment_file_does_not_exist
-        {
+        public static string WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_does_not_exist__ {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_" +
                         "does_not_exist__", resourceCulture);
@@ -901,6 +899,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DOutputFileValidator_Validate_TimeVariableDoesNotContainValidUnitI" +
                         "nRequiredFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can not find specified estuary mouth node {0}..
+        /// </summary>
+        public static string WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Can_not_find_specified_estuary_mouth_node__0__ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsVal" +
+                        "id_Can_not_find_specified_estuary_mouth_node__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estuary mouth node {0} is not a boundary node..
+        /// </summary>
+        public static string WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Estuary_mouth_node__0__is_not_a_boundary_node_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsVal" +
+                        "id_Estuary_mouth_node__0__is_not_a_boundary_node_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to F4 Coverage values cannot all be set to 0. Either remove them or assign at least one value different from 0..
+        /// </summary>
+        public static string WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsVal" +
+                        "id_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_" +
+                        "value_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Estuary mouth node specified..
+        /// </summary>
+        public static string WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_No_Estuary_mouth_node_specified_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsVal" +
+                        "id_No_Estuary_mouth_node_specified_", resourceCulture);
             }
         }
         

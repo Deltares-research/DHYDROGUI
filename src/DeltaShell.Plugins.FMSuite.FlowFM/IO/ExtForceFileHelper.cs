@@ -575,7 +575,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     Directory.CreateDirectory(directoryName);
                 }
-                new PolFile().Write(polFilePath, operation.Mask.Provider.Features.OfType<IFeature>());
+                new PolFile<Feature2DPolygon>().Write(polFilePath, operation.Mask.Provider.Features.OfType<IFeature>());
             }
 
             return extForceFileItem;

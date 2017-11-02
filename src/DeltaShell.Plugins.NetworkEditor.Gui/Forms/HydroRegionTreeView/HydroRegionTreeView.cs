@@ -416,10 +416,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private void handleButtonAddPump_Click(object sender, EventArgs e)
         {
             var channel = treeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                AddBranchFeatureToBranch(Pump.CreateDefault(channel));
-            }
+            if (channel == null) return;
+
+            var branchFeature = new Pump(false);
+            BranchStructure.AddStructureToNetwork(branchFeature, channel);
+
+            AddBranchFeatureToBranch(branchFeature);
         }
 
         private void handleButtonAddWeir_Click(object sender, EventArgs e)
@@ -427,7 +429,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             var channel = treeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
-                AddBranchFeatureToBranch(Weir.CreateDefault(channel));
+                var branchFeature = new Weir();
+                BranchStructure.AddStructureToNetwork(branchFeature, channel);
             }
         }
 

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -10,7 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         protected override IEnumerable<LandBoundary2D> Import(string path)
         {
             var reader = new LdbFile();
-            return reader.Read(path);
+            var landBoundaries = reader.Read(path);
+            landBoundaries.ForEach(lb => lb.TrySetGroupName(path));
+            return landBoundaries;
         }
 
         protected override void Export(IEnumerable<LandBoundary2D> features, string path)

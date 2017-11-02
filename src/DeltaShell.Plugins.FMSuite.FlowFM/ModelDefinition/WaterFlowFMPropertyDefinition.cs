@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string HisInterval = "hisinterval";
         public const string LandBoundaryFile = "landboundaryfile";
         public const string DryPointsFile = "drypointsfile";
+        public const string EnclosureFile = "enclosurefile";
         public const string ManholeFile = "manholefile";
         public const string MapInterval = "mapinterval";
         public const string NetFile = "netfile";
@@ -78,6 +79,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string MapFormat = "MapFormat";
         public const string RenumberFlowNodes = "RenumberFlowNodes";
         public const string Conveyance2d = "conveyance2d";
+        public const string Wrishp_crs = "Wrishp_crs";
+        public const string Wrishp_weir = "Wrishp_weir";
+        public const string Wrishp_gate = "Wrishp_gate";
+        public const string Wrishp_fxw = "Wrishp_fxw";
+        public const string Wrishp_thd = "Wrishp_thd";
+        public const string Wrishp_obs = "Wrishp_obs";
+        public const string Wrishp_emb = "Wrishp_emb";
+        public const string Wrishp_dryarea = "Wrishp_dryarea";
+        public const string Wrishp_enc = "Wrishp_enc";
+        public const string Wrishp_src = "Wrishp_src";
     }
 
 
@@ -118,6 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string UseTemperature = "UseTemperature";
         public const string UseMorSed = "UseMorSed";
         public const string PartOf1D2DModel = "PartOf1D2DModel";
+        public const string WriteSnappedFeatures = "WriteSnappedFeatures";
     }
 
 

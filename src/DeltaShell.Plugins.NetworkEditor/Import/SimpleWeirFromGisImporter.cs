@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
@@ -111,7 +112,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         private void ImportWeir(IFeature feature, string columnNameName, string columnNameDescription, string columnNameLongName, string columnNameCrestWidth, string columnNameCrestLevel, string columnNameDC, string columnNameLC)
         {
-            var weir = AddOrUpdateBranchFeatureFromNetwork<IWeir>(feature, columnNameName, branch => Weir.CreateDefault(branch));
+            var weir = AddOrUpdateBranchFeatureFromNetwork<IWeir>(feature, columnNameName, branch =>
+            {
+                var branchFeature = new Weir(false);
+                BranchStructure.AddStructureToNetwork(branchFeature, branch);
+                return branchFeature;
+            });
 
             if(weir == null)
             {

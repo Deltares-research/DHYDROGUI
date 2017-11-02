@@ -18,12 +18,13 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
-using NUnit.Framework;
 using NetTopologySuite.Extensions.Features;
+using NUnit.Framework;
 using NetTopologySuite.Extensions.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -237,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 modelDefinition.GetModelProperty(KnownProperties.ObsFile);
             var obsFilePath = MduFileHelper.GetSubfilePath(mduFilePath, obsFileProperty);
             Assert.AreEqual(Path.Combine(mduDir, "fm_files_obs.xyn"), obsFilePath, "obs file path");
-            var obsFile = new ObsFile();
+            var obsFile = new ObsFile<GroupableFeature2DPoint>();
             var observationPoints = obsFile.Read(obsFilePath);
             Assert.AreEqual(51, observationPoints.Count, "#observationPoints");
             Assert.AreEqual("2241", observationPoints[11].Name, "name of 12th obs");
@@ -391,8 +392,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             const string saveToDir = "readWriteSimpleBox";
             Directory.CreateDirectory(saveToDir);
+            var fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), saveToDir);
 
-            var mduFileSaveToPath = Path.Combine(saveToDir, "simplebox.mdu");
+            var mduFileSaveToPath = Path.Combine(fullDirectoryPath, "simplebox.mdu");
             mduFile.Write(mduFileSaveToPath, modelDefinition, area);
 
             var savedModelDefinition = new WaterFlowFMModelDefinition(saveToDir, "simplebox");
@@ -593,7 +595,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var exportedHarmonics = exportedBoundary.GetDataAtPoint(firstPoint);
 
-            const string mduExportPath = "har_export.mdu";
+            string mduExportPath = "har_export.mdu";
+            mduExportPath = Path.Combine(Directory.GetCurrentDirectory(), mduExportPath);
             mduFile.Write(mduExportPath, modelDefinition, area);
 
             var modelDefinitionReimport = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduExportPath), "exported");
@@ -757,9 +760,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             });
 
             const string newnameMdu = "RenameIO/newname.mdu";
-            model.ExportTo(newnameMdu);
+            var fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), newnameMdu);
+            model.ExportTo(fullDirectoryPath);
 
-            var newModel = new WaterFlowFMModel(newnameMdu);
+            var newModel = new WaterFlowFMModel(fullDirectoryPath);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreNotEqual(model.Name + ExtForceFile.Extension,
@@ -1058,6 +1062,234 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Check that MapFormat property value has been changed accordingly in modelDefinition
             Assert.AreEqual(expectedUseMorSedValue, modelDefinition.UseMorphologySediment);
             Assert.AreEqual(MapFormatType.NetCdf, modelDefinition.MapFormat);
+        }
+
+        [Test]
+        public void WriteSnappedFeaturesTest()
+        {
+            var model = new WaterFlowFMModel();
+            var md = model.ModelDefinition;
+
+            /* Default is false */
+            Assert.IsFalse(md.WriteSnappedFeatures);
+            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
+
+            md.WriteSnappedFeatures = true;
+            Assert.IsTrue(md.WriteSnappedFeatures);
+            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
+        }
+
+        [Test]
+        public void UpdateWriteOutputSnappedFeaturesWaterfallTest()
+        {
+            var model = new WaterFlowFMModel();
+            var md = model.ModelDefinition;
+
+            /* Default is false */
+            Assert.IsFalse(md.WriteSnappedFeatures);
+            CheckOutputSnappedFeaturesValue(false, md);
+
+            /* Set one of the properties to true (try to use the last one in the UpdateWriteOutputSnappedFeatures conditional check) */
+            md.GetModelProperty(KnownProperties.Wrishp_emb).Value = true;
+            md.UpdateWriteOutputSnappedFeatures();
+
+            /* The rest should be waterfall updated */
+            Assert.IsTrue(md.WriteSnappedFeatures);
+            CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
+        }
+
+        [Test]
+        public void UpdateWriteOutputSnappedFeaturesWaterfallFromFileTest()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj_data\FlowFM\FlowFM.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(mduPath);
+            var md = model.ModelDefinition;
+
+            Assert.IsTrue(md.WriteSnappedFeatures);
+            CheckOutputSnappedFeaturesValue(true, md);
+        }
+
+        private void CheckOutputSnappedFeaturesValue(bool expectedValue, WaterFlowFMModelDefinition modelDefinition)
+        {
+            foreach (var testProp in modelDefinition.KnownWriteOutputSnappedFeatures)
+            {
+                Assert.AreEqual(expectedValue, modelDefinition.GetModelProperty(testProp).Value);
+            }
+        }
+
+        [Test]
+        public void ReadEnclosureFile()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\FlowFM.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            Assert.IsTrue(area.Enclosures.Count == 0);
+
+            var mduFile = new MduFile();
+            mduFile.Read(mduFilePath, modelDefinition, area);
+            Assert.IsTrue(area.Enclosures.Count == 1);
+        }
+
+        [Test]
+        public void Read3EnclosuresWithSameNameFromFile()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var area = new HydroArea();
+            area.Enclosures.Add(
+                FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                    "Enclosure01", 
+                    FlowFMTestHelper.GetValidGeometryForEnclosureExample()));
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            Assert.IsTrue(area.Enclosures.Count == 1);
+
+            var mduFile = new MduFile();
+            mduFile.Read(mduFilePath, modelDefinition, area);
+            Assert.IsTrue(area.Enclosures.Count == 4);
+        }
+
+        [Test]
+        public void Read3EnclosuresWithDifferentNameFromFile()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var area = new HydroArea();
+            area.Enclosures.Add(
+                FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                    "Enclosure01",
+                    FlowFMTestHelper.GetValidGeometryForEnclosureExample()));
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            Assert.IsTrue(area.Enclosures.Count == 1);
+
+            var mduFile = new MduFile();
+            mduFile.Read(mduFilePath, modelDefinition, area);
+            Assert.IsTrue(area.Enclosures.Count == 4);
+        }
+
+        [Test]
+        public void WriteEnclosureFile()
+        {
+            var nameWithoutExtension = Path.GetTempFileName();
+            var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var encFilePath = TestHelper.GetTestFilePath(String.Concat(nameWithoutExtension,"_enc.pol"));
+
+            try
+            {
+                var featureName = "EnclosureFeature";
+                var mduFile = new MduFile();
+
+                var area = new HydroArea();
+                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
+                //Add an enclosure.
+                var enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
+                var newEnclosure =
+                    FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(featureName, enclosureGeom);
+                area.Enclosures.Add(newEnclosure);
+                Assert.AreEqual(1, area.Enclosures.Count);
+
+                mduFile.Write(mduFilePath, modelDefinition, area);
+
+                Assert.IsTrue(File.Exists(mduFilePath));
+                Assert.IsTrue(File.Exists(encFilePath));
+
+                var writtenEncFile = File.ReadAllText(encFilePath);
+                Assert.NotNull(writtenEncFile);
+                Assert.IsNotEmpty(writtenEncFile);
+
+                Assert.AreEqual(FlowFMTestHelper.GetExpectedEnclosurePolFileContent(featureName), writtenEncFile);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduFilePath);
+                FileUtils.DeleteIfExists(encFilePath);
+            }
+        }
+
+        [Test]
+        public void WriteAndReadEnclosureFileTest()
+        {
+            var nameWithoutExtension = Path.GetTempFileName();
+            var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var encFilePath = TestHelper.GetTestFilePath(String.Concat(nameWithoutExtension, "_enc.pol"));
+
+            try
+            {
+                var featureName = "EnclosureFeature";
+                var mduFile = new MduFile();
+
+                Assert.IsFalse(File.Exists(mduFilePath));
+                Assert.IsFalse(File.Exists(encFilePath));
+
+                /**/
+                var area = new HydroArea();
+                var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
+                //Add an enclosure.
+                var enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
+                var newEnclosure =
+                    FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(featureName, enclosureGeom);
+                area.Enclosures.Add(newEnclosure);
+                Assert.AreEqual(1, area.Enclosures.Count);
+
+                mduFile.Write(mduFilePath, modelDefinition, area);
+
+                Assert.IsTrue(File.Exists(mduFilePath));
+                Assert.IsTrue(File.Exists(encFilePath));
+                /**/
+
+                var readModelDefinition = new WaterFlowFMModelDefinition();
+                var readArea = new HydroArea();
+                mduFile.Read(mduFilePath, readModelDefinition, readArea);
+
+                Assert.AreEqual(area.Enclosures.Count, readArea.Enclosures.Count);
+                Assert.AreEqual(enclosureGeom, readArea.Enclosures[0].Geometry);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(mduFilePath);
+                FileUtils.DeleteIfExists(encFilePath);
+            }
+        }
+
+        [Test]
+        [TestCase("EnclosureFile")]
+        [TestCase("ObsFile")]
+        [TestCase("LandBoundaryFile")]
+        [TestCase("ThinDamFile")]
+        [TestCase("FixedWeirFile")]
+        [TestCase("StructureFile")]
+        [TestCase("CrsFile")]
+        [TestCase("DryPointsFile")]
+        public void HydroAreaPropertyIsMultipleEntriesFileName(string hydroAreaFileProperty)
+        {
+            var nameWithoutExtension = Path.GetTempFileName();
+            var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
+
+            var property = modelDefinition.GetModelProperty(hydroAreaFileProperty);
+            Assert.IsNotNull(property);
+            Assert.AreEqual(typeof(List<string>), property.Value.GetType());
+            Assert.AreEqual(true, MduFileHelper.IsFileValued(property));
+            Assert.AreEqual(true, MduFileHelper.IsMultipleFileValued(property));
+            Assert.AreEqual(typeof(IList<string>), property.PropertyDefinition.DataType);
+
+            FileUtils.DeleteIfExists(mduFilePath);
         }
     }
 }

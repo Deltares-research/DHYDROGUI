@@ -38,12 +38,13 @@ model,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
 model,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
-geometry,DryPointsFile,,,,FileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
+geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
+geometry,EnclosureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Enclosure polygon file *.pol (third column 1/-1: inside/outside)"
 geometry,WaterLevIniFile,,,,FileName,,,,TRUE,,,,,,Initial water levels sample file *.xyz
-geometry,LandBoundaryFile,,,,FileName,,,,TRUE,,,,,,"Land boundaries file *.ldb, used for visualization"
-geometry,ThinDamFile,,,,FileName,,,,TRUE,,,,,,"Polyline file *_thd.pli, containing thin dams"
-geometry,FixedWeirFile,,,,FileName,,,,TRUE,,,,,,"Polyline file *_fxw.pliz, containing fixed weirs with rows x, y, crest level, left ground level, right ground level"
-geometry,StructureFile,,,,FileName,,,,TRUE,,,,,,"File *.ini containing list of structures (pumps, weirs, gates and general structures)"
+geometry,LandBoundaryFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Land boundaries file *.ldb, used for visualization"
+geometry,ThinDamFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_thd.pli, containing thin dams"
+geometry,FixedWeirFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Polyline file *_fxw.pliz, containing fixed weirs with rows x, y, crest level, left ground level, right ground level"
+geometry,StructureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"File *.ini containing list of structures (pumps, weirs, gates and general structures)"
 geometry,VertplizFile,,,,FileName,,,,TRUE,,,,,,"Vertical layering file *_vlay.pliz with rows x, y, Z, first Z, nr of layers, second Z, layer type"
 geometry,ProflocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref"
 geometry,ProfdefFile,,,,FileName,,,,TRUE,,,,,,"Channel profile definition file *_profdefinition.def with definition for all profile numbers"
@@ -61,7 +62,7 @@ geometry,AngLat,general,,Angle of latitude,Double,0,-90,90,FALSE,,,,,,"Angle of 
 geometry,AngLon,general,,Angle of longitude,Double,0,-180,180,FALSE,,,,,,"Angle of longitude E-W (deg), 0: Greenwich, used in solar heat flux computation."
 geometry,Conveyance2D,numerics,,Conveyance-2D type:R=HU|R=H|R=A/P|K=analytic-1D conv|K=analytic-2D conv,-1|0|1|2|3,-1,-1,3,FALSE,,,,,,"-1: R,HU,0: R,H, 1: R,A/P, 2: K,analytic-1D conv, 3: K,analytic-2D conv"
 geometry,Nonlin2D,,,,0|1,0,,,TRUE,,,,,,"Non-linear 2D volumes, only used if ibedlevtype=3 and Conveyance2D>=1"
-geometry,Sillheightmin,,,Weir treatment threshold,Double,0.5,0,,TRUE,,,,,,Weir treatment only if both sills larger than this value (m)
+geometry,Sillheightmin,,,Weir treatment threshold,Double,0,0,,TRUE,,,,,,Weir treatment only if both sills larger than this value (m)
 geometry,Makeorthocenters,,,From circum- to orthocentres?,0|1,0,0,1,TRUE,,,,,,"Switch from circumcentres to orthocentres in geominit (1: yes, 0: no)"
 geometry,Dcenterinside,,,Limit cell center,Double,1,0,,TRUE,,,,,,"Limit cell center (1.0: in cell, 0.0: on c/g)"
 geometry,Bamin,,,,Double,1.d-6,,,TRUE,,,,,,"Minimum grid cell area, in combination with cut cells"
@@ -86,16 +87,16 @@ numerics,FixedWeirContraction,numerics,Fixed weirs,Fixed weir contraction,Double
 numerics,FixedWeirfrictscheme,numerics,Fixed weirs,Fixed weir friction scheme:hu|Subgrid Weir,0|1,1,0,1,FALSE,,,,,,"Fixed weir friction scheme (0: friction based on hu, 1: friction based on subgrid weir friction scheme)"
 numerics,Fixedweirtopwidth,numerics,Fixed weirs,Fixed weir top width,Double,3,,,FALSE,,,,,,Uniform width of the groyne part of fixed weirs
 numerics,Fixedweirtopfrictcoef,numerics,Fixed weirs,Fixed weir top friction,Double,-999,,,FALSE,,,,,,Uniform friction coefficient of the groyne part of fixed weirs
-numerics,Fixedweirtalud,numerics,Fixed weirs,Fixed weir talud,Double,0.25,,,FALSE,,,,,,Uniform talud slope of fixed weirs
+numerics,Fixedweirtalud,numerics,Fixed weirs,Fixed weir talud,Double,4,,,FALSE,,,,,,Uniform talud slope of fixed weirs
 numerics,Izbndpos,numerics,,Position of z boundary:Delft3D-Flow|On net boundary|On specified polyline,0|1|2,0,0,2,FALSE,,,,,,"Position of z boundary (0: D3Dflow, 1: on net boundary, 2: on specifiend polyline)"
-numerics,Tlfsmo,numerics,,Boundary smoothing time,Double,0,0,,FALSE,,,,,,Fourier smoothing time (s) on water level boundaries
+numerics,Tlfsmo,numerics,,Boundary smoothing time,Double,3600,0,,FALSE,,,,,,Fourier smoothing time (s) on water level boundaries
 numerics,Slopedrop2D,advanced,,Drop losses threshold,Double,0,0,,FALSE,,,,,,"Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)"
 numerics,Chkadvd,advanced,,Advection checks depth,Double,0.1,0,,FALSE,,,,,,"Check advection terms if depth < chkadvdp, => less setbacks"
 numerics,Teta0,advanced,,Time integration theta,Double,0.55,0.5,1,FALSE,,,,,,Theta of time integration (0.5 < theta < 1)
 numerics,Qhrelax,advanced,,Relaxation on h(Q) boundaries,Double,1.d-2,0,1,FALSE,,,,,,Relaxation on Q-h open boundaries
 numerics,Jbasqbnddownwindhs,advanced,,Downwind cell h on Q-boundaries?,0|1,0,0,1,TRUE,,,,,,"Water depth scheme at discharge boundaries (0: original hu, 1: downwind hs)"
 numerics,cstbnd,advanced,,Use Delft3D velocity handling,0|1,0,,,FALSE,,,,,,"Delft3D type velocity treatment near boundaries for small coastal models (1: yes, 0: no)"
-numerics,Maxitverticalforestersal,advanced,,Max vertical Forester iterations for salinity,Integer,100,0,,TRUE,,,,,,"Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)"
+numerics,Maxitverticalforestersal,advanced,,Max vertical Forester iterations for salinity,Integer,0,0,,TRUE,,,,,,"Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)"
 numerics,Maxitverticalforestertem,advanced,,Max vertical Forester iterations for temperature,Integer,0,,,TRUE,,,,,,"Forester iterations for temperature (0: no vertical filter for temperature, > 0: max nr of iterations)"
 numerics,Jaorgsethu,,,Velocity reconstruction order,0|1,1,,,TRUE,,,,,,"Velocity reconstruction scheme (0 : setumod, sethu, setau sequence, 1 : sethu, setau, setumod sequence (standard))"
 numerics,Turbulencemodel,,,Turbulence model:None|Constant|Algebraic|k-eps|k-tau,0|1|2|3|4,3,,,FALSE,,kmx>0,,,,"Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)"
@@ -121,7 +122,7 @@ physics,Irov,physics,Roughness,Wall behaviour:Free Slip|Partial Slip|No slip,0|1
 physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls"
 physics,Rhomean,physics,Constants,Default water density,Double,1000,,,FALSE,,,,,,"Average water density (kg/m3)"
 physics,Idensform,physics,Constants,Equation of state:Uniform|Eckart|Unesco|Baroclinic,0|1|2|3,1,,,FALSE,,,,,,"Density calulation (0: uniform, 1: Eckard, 2: Unesco, 3: baroclinic case)"
-physics,Ag,physics,Constants,Gravity,Double,9.81,,,FALSE,,,,,,"Gravitational acceleration"
+physics,Ag,physics,Constants,Gravity,Double,9.813,,,FALSE,,,,,,"Gravitational acceleration"
 physics,TidalForcing,processes,,Tide generating forces,0|1,0,0,1,FALSE,,,,,,"Tidal forcing, if jsferic = 1 (0: no, 1: yes)"
 physics,Doodsonstart,,,Doodson start,Double,55.565,,,TRUE,,,,,,"TRIWAQ: 55.565, D3D: 57.555"
 physics,Doodsonstop,,,Doodson stop,Double,375.575,,,TRUE,,,,,,"TRIWAQ: 375.575, D3D: 275.555"
@@ -133,9 +134,9 @@ physics,DeltaSalinity,physics,,TODO,Double,-999,,,TRUE,,,,,,for testcases
 physics,Backgroundsalinity,physics,Salinity,Background salinity,Double,30,,,FALSE,Salinity,,,,,Background salinity for eqn. of state (ppt)
 physics,Temperature,physics,Temperature,Heat flux model:None|Transport only|Excess temperature|Composite model,0|1|3|5,0,0,5,FALSE,,,,,,"Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)"
 physics,InitialTemperature,initial,Temperature,Initial temperature,Double,6,,,FALSE,Temperature=1|3|5,,,,,Uniform initial water temperature (degC)
-physics,Secchidepth,physics,Temperature,Secchi depth,Double,1,0,,FALSE,Temperature=5,Temperature=5,,,,Water clarity parameter (m)
-physics,Stanton,physics,Temperature,Stanton number,Double,-1,0,1,FALSE,Temperature=5,Temperature=5,,,,Coefficient for convective heat flux
-physics,Dalton,physics,Temperature,Dalton number,Double,-1,0,1,FALSE,Temperature=5,Temperature=5,,,,Coefficient for evaporative heat flux
+physics,Secchidepth,physics,Temperature,Secchi depth,Double,2,0,,FALSE,Temperature=5,Temperature=5,,,,Water clarity parameter (m)
+physics,Stanton,physics,Temperature,Stanton number,Double,-1,-1,1,FALSE,Temperature=5,Temperature=5,,,,Coefficient for convective heat flux
+physics,Dalton,physics,Temperature,Dalton number,Double,-1,-1,1,FALSE,Temperature=5,Temperature=5,,,,Coefficient for evaporative heat flux
 physics,Backgroundwatertemperature,physics,Temperature,Background temperature,Double,6,,,FALSE,Temperature=1|3|5,,,,,Background water temperature for eqn. of state (deg C)
 physics,SecondaryFlow,processes,,Secondary flow,0|1,0,,,,,,,,,"Secondary flow (0: no, 1: yes)"
 physics,EffectSpiral,physics,Secondary flow,Spiral flow effect factor,Double,0,,,FALSE,SecondaryFlow,SecondaryFlow,,,,Weight factor of the spiral flow intensity on transport angle
@@ -143,7 +144,7 @@ physics,BetaSpiral,physics,Secondary flow,Spiral flow beta factor,Double,0,,,FAL
 wind,ICdtyp,wind,,Wind drag coefficient type: Constant|Smith & Banks (2 break points)|Smith & Banks (3 break points)|Charnock 1955|Whang 2005,1|2|3|4|5,2,1,5,FALSE,,,,,,"Wind drag coefficient type (1: constant, 2: S&B 2 breakpoints, 3: S&B 3 breakpoints, 4: Charnock constant, 5: Whang)"
 wind,Cdbreakpoints,wind,,Break points wind drag coefficient,DoubleArray,6.3d-4 7.23d-3,,,FALSE,ICdtyp=2|3|4,,,,,Wind drag coefficient break points
 wind,Windspeedbreakpoints,wind,,Break points wind speed,DoubleArray,0. 100.,,,FALSE,ICdtyp=2|3,,,,,Wind speed break points (m/s)
-wind,Rhoair,wind,,Air density,Double,1.2,,,FALSE,,,wind,,,Air density (kg/m3)
+wind,Rhoair,wind,,Air density,Double,1.205,,,FALSE,,,wind,,,Air density (kg/m3)
 wind,PavBnd,wind,,Average air pressure on bounds,Double,0,,,FALSE,,,,,,Average air pressure on open boundaries (N/m2) (only applied if > 0)
 wind,PavIni,wind,,Average initial air pressure,Double,0,,,FALSE,,,,,,Average air pressure for initial water level correction (N/m2) (only applied if > 0)
 waves,Wavemodelnr,processes,,Wave model:None|Fetch/depth limited Hurdle-Stive|Young-Verhagen|SWAN|Wave group forcing,0|1|2|3|4,0,0,3,FALSE,,,,,,"Wave model nr. (0: none, 1: fetch/depth limited Hurdle-Stive, 2: Young-Verhagen, 3: SWAN, 4: wave group forcing)"
@@ -174,6 +175,17 @@ GUIOnly,StopTime,timeframe,,Stop Time,DateTime,,,,FALSE,,,,,,End of simulation p
 GUIOnly,UseTemperature,processes,,Temperature,0|1,0,0,1,FALSE,,,,,,Include temperature
 GUIOnly,PartOf1D2DModel,processes,,Is part of a 1D2D Integrated Model,0|1,0,0,1,FALSE,,FALSE,,,,Is part of a 1D2D Integrated Model
 GUIOnly,UseMorSed,processes,,Sediment/Morphology [Beta],0|1,0,0,1,FALSE,PartOf1D2DModel=0,,,,,Include Sediment/Morphology [Beta version]
+GUIOnly,WriteSnappedFeatures,output,Output,Write Snapped Features,0|1,0,,,FALSE,,,,,,Write generated output snapped features
+output,Wrishp_crs,,,Write shape file for cross section,0|1,0,,,FALSE,,,,,,Write shape file for cross section
+output,Wrishp_weir,,,Write shape file for weirs,0|1,0,,,FALSE,,,,,,Write shape file for weirs
+output,Wrishp_gate,,,Write shape file for gates,0|1,0,,,FALSE,,,,,,Write shape file for gates
+output,Wrishp_fxw,,,Write shape file for fixed weirs,0|1,0,,,FALSE,,,,,,Write shape file for fixed weirs
+output,Wrishp_thd,,,Write shape file for thin dams,0|1,0,,,FALSE,,,,,,Write shape file for thin dams
+output,Wrishp_obs,,,Write shape file for observation stations,0|1,0,,,FALSE,,,,,,Write shape file for observation stations
+output,Wrishp_emb,,,Write shape file for embankments,0|1,0,,,FALSE,,,,,,Write shape file for embankments
+output,Wrishp_dryarea,,,Write shape file for dry area,0|1,0,,,FALSE,,,,,,Write shape file for dry area
+output,Wrishp_enc,,,Write shape file for enclosure,0|1,0,,,FALSE,,,,,,Write shape file for enclosure
+output,Wrishp_src,,,Write shape file for sources,0|1,0,,,FALSE,,,,,,Write shape file for sources
 *,,,,,,,,,,,,,,,
 GUIOnly,WriteHisFile,output,His,Write His File,0|1,0,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,His,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output
@@ -198,8 +210,8 @@ GUIOnly,RstOutputStopTime,output,Restart,Rst output stop time,DateTime,,,,FALSE,
 *,,,,,,,,,,,,,,,
 output,OutputDir,output,Output,Output directory,String,,,,TRUE,,,,,,"Output directory of map-, his-, rst-, dat- and timings-files, default: DFM_OUTPUT_<modelname>. Set to . for current dir."
 output,FlowGeomFile,,,,FileName,,,,TRUE,,,,,,Flow geometry NetCDF *_flowgeom.nc 
-output,ObsFile,,,,FileName,,,,TRUE,,,,,,"Points file *.xyn with observation stations with rows x, y, station name"
-output,CrsFile,,,,FileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections
+output,ObsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Points file *.xyn with observation stations with rows x, y, station name"
+output,CrsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,Polyline file *_crs.pli defining observation cross sections
 output,HisFile,,,,FileName,,,,TRUE,,,,,,History output file *_his.nc in NetCDF format
 output,HisInterval,,,His output interval,DoubleArray,300,0,,FALSE,,WriteHisFile,,,,"History output times, given as 'interval' 'start period' 'end period' (s)"
 output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval (s) between XLS history

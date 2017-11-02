@@ -12,19 +12,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void StructureMustHaveType()
         {
             var structure = new Structure2D(null);
-            structure.AddProperty("id", typeof(string), "Test");
+            var idValue = "Test";
+            structure.AddProperty("id", typeof(string), idValue);
             structure.AddProperty("type", typeof(string), "weir");
 
-            Assert.AreEqual("Structure 'Test' does not have a type specified.", StructureFactoryValidator.Validate(structure));
+            Assert.AreEqual(string.Format("Structure '{0}' cannot have null as type.", idValue), StructureFactoryValidator.Validate(structure));
 
             structure = new Structure2D("weir");
-            structure.AddProperty("id", typeof(string), "Test");
-            Assert.AreEqual("Structure 'Test' does not have a type specified.", StructureFactoryValidator.Validate(structure));
+            structure.AddProperty("id", typeof(string), idValue);
+            Assert.AreEqual(string.Format("Structure '{0}' does not have a type specified.", idValue), StructureFactoryValidator.Validate(structure));
 
-            structure = new Structure2D("");
-            structure.AddProperty("id", typeof(string), "Test");
-            structure.AddProperty("type", typeof(string), "");
-            Assert.AreEqual("Structure 'Test' does not have a type specified.", StructureFactoryValidator.Validate(structure));
+            var emptyType = "";
+            structure = new Structure2D(emptyType);
+            structure.AddProperty("id", typeof(string), idValue);
+            structure.AddProperty("type", typeof(string), emptyType);
+            Assert.AreEqual(string.Format("Structure '{0}' has unsupported type ({1}) specified.", idValue, emptyType), StructureFactoryValidator.Validate(structure));
         }
 
         [Test]

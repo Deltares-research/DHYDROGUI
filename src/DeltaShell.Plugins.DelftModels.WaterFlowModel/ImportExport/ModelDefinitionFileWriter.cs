@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             var useSalt = waterFlowModel1D != null && waterFlowModel1D.UseSalt;
             var useThatcherHarleman = waterFlowModel1D != null && waterFlowModel1D.DispersionFormulationType != DispersionFormulationType.Constant;
 
-            var salinityPath = waterFlowModel1D != null && waterFlowModel1D.SalinityValidNonConstantFormulation 
+            var salinityPath = waterFlowModel1D != null && waterFlowModel1D.ValidSalinityFileWithNonConstantFormulationAndF4Values 
                 ? WaterFlowModel1D.SalinityFileName
                 : null;
 

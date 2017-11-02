@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
@@ -39,25 +40,34 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
        
         private static ValidationReport ValidateSalinityForKuijperVanRijnPrismaticIsValid(WaterFlowModel1D flowModel1D)
         {
-            if (!flowModel1D.SalinityValidNonConstantFormulation || flowModel1D.DispersionFormulationType != DispersionFormulationType.KuijperVanRijnPrismatic)
-                return new ValidationReport(Resources.WaterFlowModel1DModelDataValidator_ValidateSalinity_Salinity, Enumerable.Empty<ValidationIssue>());
-
             var issues = new List<ValidationIssue>();
-            
-            if (string.IsNullOrEmpty(flowModel1D.SalinityEstuaryMouthNodeId))
+
+            if (flowModel1D.DispersionFormulationType != DispersionFormulationType.Constant && 
+                flowModel1D.DispersionFormulationType == DispersionFormulationType.KuijperVanRijnPrismatic)
             {
-                issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, "No Estuary mouth node specified."));
-            }
-            else
-            {
-                var node = flowModel1D.Network?.HydroNodes.FirstOrDefault(n => n.Name == flowModel1D.SalinityEstuaryMouthNodeId);
-                if (node == null)
+                //Check if the mouth node Id is correct.
+                if (string.IsNullOrEmpty(flowModel1D.SalinityEstuaryMouthNodeId))
                 {
-                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, $"Can not find specified estuary mouth node {flowModel1D.SalinityEstuaryMouthNodeId}."));
+                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_No_Estuary_mouth_node_specified_));
                 }
-                else if (!node.IsValidSalinityEstuaryMouthNodeId())
+                else
                 {
-                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, $"Estuary mouth node \"{flowModel1D.SalinityEstuaryMouthNodeId}\" is not a boundary node."));
+                    var node = flowModel1D.Network?.HydroNodes.FirstOrDefault(n => n.Name == flowModel1D.SalinityEstuaryMouthNodeId);
+                    if (node == null)
+                    {
+                        issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, String.Format(Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Can_not_find_specified_estuary_mouth_node__0__,flowModel1D.SalinityEstuaryMouthNodeId)));
+                    }
+                    else if (!node.IsValidSalinityEstuaryMouthNodeId())
+                    {
+                        issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, String.Format(Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Estuary_mouth_node__0__is_not_a_boundary_node_, flowModel1D.SalinityEstuaryMouthNodeId)));
+                    }
+                }
+
+                //Check if F4 Dispersion values are all 0.
+                var f4CoverageValues = flowModel1D.DispersionF4Coverage.GetValues<double>().ToList();
+                if (f4CoverageValues.Any() && f4CoverageValues.All(v => v.Equals(0)))
+                {
+                    issues.Add(new ValidationIssue(flowModel1D, ValidationSeverity.Error, Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_) );
                 }
             }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
@@ -19,8 +19,6 @@ using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -64,8 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
-            var observationPointFm = new Feature2DPoint { Name = "ObservationFM" };
-            var weirFm = new Weir { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+            var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
+            var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
 
             fmModel.Area.ObservationPoints.Add(observationPointFm);
             fmModel.Area.Weirs.Add(weirFm);
@@ -162,8 +160,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
-            var observationPointFm = new Feature2DPoint { Name = "ObservationFM" };
-            var weirFm = new Weir { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+            var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
+            var weirFm = new Weir2D { Name = "Weir1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
 
             fmModel.Area.ObservationPoints.Add(observationPointFm);
             fmModel.Area.Weirs.Add(weirFm);

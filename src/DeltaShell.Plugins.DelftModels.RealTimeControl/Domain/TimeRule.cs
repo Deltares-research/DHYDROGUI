@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
@@ -103,12 +104,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             var startTime = start;
             var endTime = stop;
             var timeStep = step;
-            if (TimeSeries.Time.Values.Count > 0)
-            {
-                startTime = TimeSeries.Time.Values.First();
-                endTime = TimeSeries.Time.Values.Last();
-                timeStep = endTime - startTime;
-            }
 
             var periodSpan = TimeSeries.Time.Attributes.ContainsKey("PeriodSpan")
                 ? TimeSpan.ParseExact(TimeSeries.Time.Attributes["PeriodSpan"], "c", null)
@@ -127,6 +122,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 ExtrapolationType = (ExtrapolationTimeSeriesType) TimeSeries.Time.ExtrapolationType,
                 PeriodSpan = periodSpan
             };
+
+            if (TimeSeries.Time.Values.Count > 0)
+            {
+                XmlTimeSeriesTruncater.Truncate(xmlTimeSeries, startTime, endTime);
+            }
 
             return xmlTimeSeries;
         }

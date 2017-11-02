@@ -135,13 +135,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
                 TryRetreivingMessage(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_roughness_network_coverage_is_not_created);
                 TryRetreivingMessage(Resources.WaterFlowModel1DApplicationPlugin_Description);
-                TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Morphology_file_does_not_exist);
-                TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Sediment_file_does_not_exist);
+                TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_file_does_not_exist__);
+                TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_does_not_exist__);
                 TryRetreivingMessage(Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_No_explicit_working_directory_found__Please_save_model_before_morphology_can_be_run_);
                 TryRetreivingMessage(Resources.WaterFlowModel1DModelOutputSettingsValidator_ValidateAggregationOptions_Only_allowed_values__Current__and__None__for__0_);
                 TryRetreivingMessage(Resources.WaterFlowModel1DOutputFileReader_ParseReferenceTime_UnableToParseDateTimeFromFile);
                 TryRetreivingMessage(Resources.WaterFlowModel1DTemperatureValidator_ValidateBoundaryConditions_The_boundary_condition__0__has_a_temperature_type_of_None__All_open_boundaries_must_specify_temperature_values_);
                 TryRetreivingMessage(Resources.WaterFlowModel1DTemperatureValidator_ValidateModelParameters_Values_should_be_in_double_format_);
+                TryRetreivingMessage(Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_No_Estuary_mouth_node_specified_);
+                TryRetreivingMessage(Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Can_not_find_specified_estuary_mouth_node__0__);
+                TryRetreivingMessage(Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_Estuary_mouth_node__0__is_not_a_boundary_node_);
+                TryRetreivingMessage(Resources.WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_F4_Coverage_values_cannot_all_be_set_to_0__Either_remove_them_or_set_a_valid_value_);
             }
             catch (Exception e)
             {

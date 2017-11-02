@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 radioButtonNegative.Visible = false;
                 radioButtonPositive.Visible = false;
-                controlLevelsGroupBox.Visible = Pump.SupportSobekPumpPropertiesInFM;
+                controlLevelsGroupBox.Visible = false;
                 yOffsetLabel.Visible = false;
                 yOffsetTextBox.Visible = false;
             }

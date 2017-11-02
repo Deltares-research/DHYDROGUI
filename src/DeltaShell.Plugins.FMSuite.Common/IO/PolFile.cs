@@ -10,9 +10,9 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
-    public class PolFile : FMSuiteFileBase, IFeature2DFileBase<Feature2DPolygon>
+    public class PolFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPolygon, new()
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PolFile));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(T));
 
         public const string Extension = "pol";
 
@@ -34,11 +34,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     foreach (var feature in features)
                     {
                         var lineString = new LineString(feature.Geometry.Coordinates);
+                        const int numColumns = 2; // X, Y
+
                         if (!lineString.IsClosed)
                         {
                             throw new Exception("Invalid geometry " + feature.GetType());
                         }
-                        const int numColumns = 2; // X, Y
+                        
                         var nameable = feature as INameable;
                         if (nameable != null)
                         {
@@ -50,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         }
 
                         var coordinates = lineString.Coordinates.Take(lineString.Coordinates.Length -
-                                                                      (IncludeClosingCoordinate ? 0 : 1)).ToList();
+                                                                        (IncludeClosingCoordinate ? 0 : 1)).ToList();
 
                         WriteLine(String.Format("    {0}    {1}", coordinates.Count(), numColumns));
 
@@ -67,14 +69,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public void Write(string path, IEnumerable<Feature2DPolygon> features)
+        public void Write(string path, IEnumerable<T> features)
         {
             Write(path, features.Cast<IFeature>());
         }
 
-        public IList<Feature2DPolygon> Read(string polFilePath)
+        public IList<T> Read(string polFilePath)
         {
-            var features = new List<Feature2DPolygon>();
+            var features = new List<T>();
 
             OpenInputFile(polFilePath);
             try
@@ -83,8 +85,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 while (line != null)
                 {
                     //  start of polyLine
-                    var feature = new Feature2DPolygon {Name = line};
-
+                    var feature = new T {Name = line};
+                    feature.TrySetGroupName(polFilePath);
+                    
                     line = GetNextLine();
                     if (line == null)
                     {

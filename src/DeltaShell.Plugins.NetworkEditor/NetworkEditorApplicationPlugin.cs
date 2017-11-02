@@ -188,6 +188,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
+            yield return new GroupablePointCloudImporter();
             yield return new BridgeFromGisImporter();
             yield return new CatchmentFromGisImporter();
             yield return new ChannelFromGisImporter();

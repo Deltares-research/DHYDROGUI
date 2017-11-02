@@ -269,12 +269,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 {
                     if (!File.Exists(model.MorphologyPath))
                     {
-                        issues.Add(new ValidationIssue("MorphologyPath", ValidationSeverity.Error, Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Morphology_file_does_not_exist));
+                        issues.Add(new ValidationIssue("MorphologyPath", ValidationSeverity.Error, Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_morphology_file_does_not_exist__));
                     }
 
                     if (!File.Exists(model.SedimentPath))
                     {
-                        issues.Add(new ValidationIssue("SedimentPath", ValidationSeverity.Error, Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Sediment_file_does_not_exist));
+                        issues.Add(new ValidationIssue("SedimentPath", ValidationSeverity.Error, Resources.WaterFlowModel1DModelDataValidator_ValidateModelSettings_Indicated_sediment_file_does_not_exist__));
                     }
                 }
             }

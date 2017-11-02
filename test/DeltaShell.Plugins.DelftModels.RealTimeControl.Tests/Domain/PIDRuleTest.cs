@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -251,6 +253,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var clone = (PIDRule)source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
+        }
+
+        [Test]
+        public void XmlImportTimeSeriesTruncatesValuesOutsideModelTimes()
+        {
+            var startTime = new DateTime(2012, 1, 1);
+            var stopTime = new DateTime(2012, 1, 31);
+            var timeStep = new TimeSpan(0, 1, 0, 0);
+
+            var timeSeries = new TimeSeries()
+            {
+                Components = { new Variable<double>("SetPoint") },
+                Name = "SetPoint"
+            };
+
+            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
+            timeSeries.Time.InterpolationType = InterpolationType.Linear;
+            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+
+            timeSeries[startTime] = 1.0;
+            timeSeries[stopTime] = 31.0;
+
+            var modelStartTime = startTime.AddDays(1);
+            var modelStopTime = stopTime.AddDays(-1);
+
+            var pidrule = new PIDRule("pid") { TimeSeries = timeSeries };
+
+            var truncatedTimeSeries = pidrule.XmlImportTimeSeries("", modelStartTime, modelStopTime, timeStep).ToList();
+
+            Assert.AreEqual(1, truncatedTimeSeries.Count);
+            Assert.AreEqual(modelStartTime, truncatedTimeSeries[0].TimeSeries.Time.Values.First());
+            Assert.AreEqual(modelStopTime, truncatedTimeSeries[0].TimeSeries.Time.Values.Last());
+
         }
     }
 }

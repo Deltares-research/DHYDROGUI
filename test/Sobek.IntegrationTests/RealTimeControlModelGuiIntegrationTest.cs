@@ -10,7 +10,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -616,7 +615,8 @@ namespace Sobek.IntegrationTests
         [TearDown]
         public void TearDown()
         {
-            gui.Dispose();
+            if( gui != null )
+                gui.Dispose();
         }
     }
 }

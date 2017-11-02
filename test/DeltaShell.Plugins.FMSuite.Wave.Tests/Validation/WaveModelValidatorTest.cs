@@ -1,11 +1,9 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 {

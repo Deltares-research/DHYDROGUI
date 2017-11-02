@@ -1,6 +1,5 @@
 ﻿using System;
 using DelftTools.Hydro.Structures;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using ValidationAspects;
 using Point = NetTopologySuite.Geometries.Point;
@@ -13,7 +12,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void DefaultGate()
         {
-            IGate gate = Gate.CreateDefault();
+            IGate gate = new Gate("Gate");
 
             Assert.IsTrue(gate.Validate().IsValid);
             Assert.IsFalse(gate.UseSillLevelTimeSeries);

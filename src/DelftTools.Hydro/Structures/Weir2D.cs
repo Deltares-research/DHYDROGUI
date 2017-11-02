@@ -1,0 +1,46 @@
+using System.ComponentModel;
+using DelftTools.Utils.Aop;
+using GeoAPI.Extensions.Feature;
+
+namespace DelftTools.Hydro.Structures
+{
+    [Entity]
+    public class Weir2D : Weir, IGroupableFeature
+    {
+        private string groupName;
+
+        public Weir2D()
+        {
+        }
+
+        public Weir2D(bool allowTimeVaryingData = false) :this("Weir", allowTimeVaryingData) { }
+
+
+        public Weir2D(string name, bool allowTimeVaryingData = false) : base(name, allowTimeVaryingData)
+        {
+        }
+
+        /// <summary>
+        /// Name used to group features with the same group name together
+        /// </summary>
+        [FeatureAttribute]
+        [DisplayName("Group name")]
+        public string GroupName
+        {
+            get
+            {
+                return groupName;
+            }
+            set { groupName = GroupableFeatureHelper.SetGroupableFeatureGroupName(value); }
+        }
+        
+
+        public bool IsDefaultGroup { get; set; }
+
+        public override object Clone()
+        {
+            var instance = (Weir2D) base.Clone();
+            return this.CloneGroupableFeature(instance);
+        }
+    }
+}

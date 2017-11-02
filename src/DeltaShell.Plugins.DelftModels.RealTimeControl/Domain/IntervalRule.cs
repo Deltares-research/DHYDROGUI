@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
@@ -214,9 +215,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
             if (TimeSeries.Time.Values.Count > 0)
             {
-                xmlTimeSeries.StartTime = TimeSeries.Time.Values.First();
-                xmlTimeSeries.EndTime = TimeSeries.Time.Values.Last();
-                xmlTimeSeries.TimeStep = xmlTimeSeries.EndTime - xmlTimeSeries.StartTime;
+                XmlTimeSeriesTruncater.Truncate(xmlTimeSeries, startTime, endTime);
             }
             else
             {

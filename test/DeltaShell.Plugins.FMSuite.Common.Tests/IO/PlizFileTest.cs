@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -6,6 +7,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
+using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
@@ -36,14 +38,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var features = file.Read("feature.pliz");
 
-            Assert.AreEqual(1, features.Count());
+            Assert.AreEqual(1, features.Count);
 
             var featureCopy = features[0];
 
             Assert.AreEqual(feature.Name, featureCopy.Name);
             Assert.AreEqual(feature.Geometry.Coordinates, featureCopy.Geometry.Coordinates);
-            Assert.AreEqual(featureCopy.Geometry.Coordinates.Select(c => c.Z).ToArray(), new[] {0.0, 10.0, 20.0, 30.0});
+            Assert.That(featureCopy.Geometry.Coordinates.Select(c => c.Z).ToArray(), Is.EqualTo(new[] {0.0, 10.0, 20.0, 30.0}));
+            Assert.That(featureCopy.Attributes.Count, Is.EqualTo(1));
             Assert.AreEqual(feature.Attributes["Column3"], featureCopy.Attributes["Column3"]);
+        }
+
+        [Test]
+        public void GivenSimpleFixedWeirFile_WhenReading_ThenFixedWeirLevelValuesAreStored()
+        {
+            var testFileName = "OneSimpleFixedWeir_fxw.pliz";
+            var testDir = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection"));
+            var filePath = Path.Combine(testDir, testFileName);
+
+            var fileReader = new PlizFile<FixedWeir>();
+            var fixedWeirs = fileReader.Read(filePath);
+            Assert.That(fixedWeirs.Count, Is.EqualTo(1));
+
+            var fixedWeir = fixedWeirs.FirstOrDefault();
+            Assert.That(fixedWeir.Attributes.Count, Is.EqualTo(7));
+            Assert.That(fixedWeir.CrestLevels[0], Is.EqualTo(10.96));
+            Assert.That(fixedWeir.CrestLevels[1], Is.EqualTo(10.89));
+            Assert.That(fixedWeir.GroundLevelsLeft[0], Is.EqualTo(3.5));
+            Assert.That(fixedWeir.GroundLevelsLeft[1], Is.EqualTo(3.0));
+            Assert.That(fixedWeir.GroundLevelsRight[0], Is.EqualTo(3.2));
+            Assert.That(fixedWeir.GroundLevelsRight[1], Is.EqualTo(3.3));
         }
     }
 }

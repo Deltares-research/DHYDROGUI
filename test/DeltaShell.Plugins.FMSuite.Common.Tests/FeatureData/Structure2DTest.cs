@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 
@@ -18,6 +19,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var property = structure.GetProperty("NaMe");
             Assert.IsNotNull(property, "Case insensitivity expected.");
             Assert.AreEqual(structure.Properties.ElementAt(0), property);
+        }
+
+        [Test]
+        public void GivenStructure2DWhenInstantiatingWithEmptyStringThenStructureHasInvalidType()
+        {
+            var structure = new Structure2D("");
+            Assert.That(structure.StructureType, Is.EqualTo(StructureType.InvalidType));
+        }
+
+        [Test]
+        public void WhenInstantiatingStructure2DWithNullValueThenStructureHasInvalidType()
+        {
+            var structure = new Structure2D(null);
+            Assert.That(structure.StructureType, Is.EqualTo(StructureType.InvalidType));
         }
     }
 }

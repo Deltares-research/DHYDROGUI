@@ -711,6 +711,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        public static class CoordinateSystemType
+        {
+            public const string Spherical = "Spherical";
+            public const string Cartesian = "Cartesian";
+        }
+
         [EditAction]
         private void AfterCoordinateSystemSet()
         {
@@ -723,7 +729,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     if (d.Grid.CoordinateSystem != null && d.Grid.Attributes.ContainsKey(CurvilinearGrid.CoordinateSystemKey))
                     {
                         d.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = 
-                            d.Grid.CoordinateSystem.IsGeographic ? "Spherical" : "Cartesian";
+                            d.Grid.CoordinateSystem.IsGeographic ? CoordinateSystemType.Spherical : CoordinateSystemType.Cartesian;
                     }
                 });
         }

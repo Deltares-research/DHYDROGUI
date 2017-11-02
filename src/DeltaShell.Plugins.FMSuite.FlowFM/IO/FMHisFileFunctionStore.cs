@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Units;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -27,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         private readonly IList<IFeature> stationFeatures;
         private readonly IList<IFeature> crossSectionFeatures;
+        private readonly IList<IFeature> generalStructuresFeatures;
         protected const string StandardNameAttribute = "standard_name";
         protected const string LongNameAttribute = "long_name";
         protected const string UnitAttribute = "units";
@@ -40,7 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem=null,
                                       IEnumerable<Feature2D> modelObsPoints = null,
-                                      IEnumerable<Feature2D> modelObsCrossSections = null)
+                                      IEnumerable<Feature2D> modelObsCrossSections = null,
+                                      IEnumerable<Weir2D> modelGeneralStructures = null)
             : base(hisPath) //loads the actual functions
         {
             CoordinateSystem = coordinateSystem;
@@ -49,6 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 stationFeatures = InitializeStationFeatures(modelObsPoints ?? new Feature2D[0]);
                 crossSectionFeatures = InitializeCrossSectionFeatures(modelObsCrossSections ?? new Feature2D[0]);
+                generalStructuresFeatures = InitializeGeneralStructuresFeatures(modelGeneralStructures ?? new Weir2D[0]);
             }
 
             // initialize 'Features' collection of each coverage
@@ -151,10 +157,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 coverage.Features = new EventedList<IFeature>(crossSectionFeatures);
             }
+            if (featureName == "general_structures" && generalStructuresFeatures != null)
+            {
+                coverage.Features = new EventedList<IFeature>(generalStructuresFeatures);
+            }
         }
 
         private IMultiDimensionalArray<IFeature> cachedStationsArray;
         private IMultiDimensionalArray<IFeature> cachedCrossSectionsArray;
+        private IMultiDimensionalArray<IFeature> cachedGeneralStructures;
 
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, DelftTools.Functions.Filters.IVariableFilter[] filters)
         {
@@ -177,11 +188,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                                                                            new[] {GetSize(function)});
                         }
                         return (MultiDimensionalArray<T>) cachedCrossSectionsArray;
+                    case "general_structures":
+                        if (cachedGeneralStructures == null)
+                        {
+                            cachedGeneralStructures = new MultiDimensionalArray<IFeature>(generalStructuresFeatures,
+                                new[] { GetSize(function) });
+                        }
+                        return (MultiDimensionalArray<T>)cachedGeneralStructures;
                     default:
                         throw new ArgumentException(string.Format("Unexpected dimension name: {0}", dimensionName));
                 }
             }
             return base.GetVariableValuesCore<T>(function, filters);
+        }
+
+        private IList<IFeature> InitializeGeneralStructuresFeatures(IEnumerable<IFeature> modelGeneralStructures)
+        {
+            var results = new List<IFeature>();
+
+            var generalStructureNameVariable = netCdfFile.GetVariableByName("general_structure_name");
+            if (generalStructureNameVariable == null)
+                return results;
+
+            var names = netCdfFile.Read(generalStructureNameVariable).Cast<char[]>().Select(CharArrayToString).ToArray();
+            for (int i = 0; i < names.Length; i++)
+            {
+                // first try to find the right one in the model features, otherwise we skip it for now. We are not ready to fill in all the data just yet.
+                results.Add(modelGeneralStructures.FirstOrDefault(m => (m as Weir2D) != null && (m as Weir2D).Name == names[i]) ??
+                            CreateGeneralStructureFromNetCdf(i, names));
+            }
+            return results;
         }
 
         private IList<IFeature> InitializeCrossSectionFeatures(IEnumerable<Feature2D> modelObsCrossSections)
@@ -220,9 +256,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             // TODO: xs and yx are now time dependent, evetually we will need to re-think this... for now, just take the 1st dimension
 
-            var xs = netCdfFile.Read(netCdfFile.GetVariableByName("station_x_coordinate"));
-            var ys = netCdfFile.Read(netCdfFile.GetVariableByName("station_y_coordinate"));
-            
+            var xs = netCdfFile.Read(netCdfFile.GetVariableByName("station_x_coordinate"))
+                                .Cast<double>().ToArray();
+            var ys = netCdfFile.Read(netCdfFile.GetVariableByName("station_y_coordinate"))
+                                .Cast<double>().ToArray();
+
+
             for (int i = 0; i < ids.Length; i++)
             {
                 // first try to find the right one in the model features, otherwise create our own feature
@@ -259,6 +298,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Name = ids[i],
                     Geometry = new Point((double) xs.GetValue(i), (double) ys.GetValue(i))
                 };
+        }
+
+        private static Weir2D CreateGeneralStructureFromNetCdf(int i, string[] names)
+        {
+            return new Weir2D
+            {
+                Name = names[i],
+                WeirFormula = new GeneralStructureWeirFormula()
+            };
         }
 
         private static string CharArrayToString(char[] chars)

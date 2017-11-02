@@ -238,6 +238,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Series &apos;{0}&apos; has one or more timesteps that exceed the model stop time {1}..
+        /// </summary>
+        public static string RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime {
+            get {
+                return ResourceManager.GetString("RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series &apos;{0}&apos; has one or more timesteps that precede the model start time {1}..
+        /// </summary>
+        public static string RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime {
+            get {
+                return ResourceManager.GetString("RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Series &apos;{0}&apos; time steps not multiple of model time step {1}..
+        /// </summary>
+        public static string RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep {
+            get {
+                return ResourceManager.GetString("RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established..
         /// </summary>
         public static string RealTimeControlModel_BrokenDataItemLinkDetected {

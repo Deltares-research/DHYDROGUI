@@ -12,7 +12,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void DefaultPump()
         {
-            var pump = Pump.CreateDefault();
+            var pump = (IPump) new Pump(false);
             Assert.IsTrue(pump.Validate().IsValid);
             Assert.IsFalse(pump.CanBeTimedependent);
             Assert.IsFalse(pump.UseCapacityTimeSeries);
@@ -22,7 +22,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void DefaultTimeDependentPump()
         {
-            var pump = Pump.CreateDefault(true);
+            var pump = (IPump) new Pump(true);
             Assert.IsTrue(pump.Validate().IsValid);
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsFalse(pump.UseCapacityTimeSeries);
@@ -32,7 +32,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void UseTimeDepententPreconditionThrows()
         {
-            var pump = Pump.CreateDefault();
+            var pump = (IPump) new Pump(false);
 
             // Always allow setting to false:
             pump.UseCapacityTimeSeries = false;

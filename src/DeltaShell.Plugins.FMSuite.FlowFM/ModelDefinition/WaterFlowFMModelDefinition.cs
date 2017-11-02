@@ -162,6 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
                 {GuiProperties.UseTemperature.ToLower(), OnUseTemperaturePropertyChanged},
                 {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
+                {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged},
             };
 
             SetGuiTimePropertiesFromMduProperties();
@@ -175,6 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             Embankments = new EventedList<Embankment>();
+            UpdateWriteOutputSnappedFeatures();
         }
 
        private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
@@ -253,6 +255,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
+        public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
+        {
+            KnownProperties.Wrishp_crs,
+            KnownProperties.Wrishp_obs,
+            KnownProperties.Wrishp_thd,
+            KnownProperties.Wrishp_gate,
+            KnownProperties.Wrishp_emb,
+            KnownProperties.Wrishp_fxw,
+            KnownProperties.Wrishp_weir,
+            KnownProperties.Wrishp_dryarea,
+            KnownProperties.Wrishp_enc,
+            KnownProperties.Wrishp_src
+        };
+
+        private void OnWriteSnappedFeaturesPropertyChanged(WaterFlowFMProperty prop)
+        {
+            foreach (var writeProp in KnownWriteOutputSnappedFeatures)
+            {
+                GetModelProperty(writeProp).Value = WriteSnappedFeatures;
+            }
+        }
+
         private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
         {
             SetMapFormatPropertyValue();
@@ -316,6 +340,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 MapFormat = MapFormatType.Ugrid;
                 Log.InfoFormat(Resources.WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_, ModelName);
             }
+        }
+
+        public bool WriteSnappedFeatures
+        {
+            get { return (bool)GetModelProperty(GuiProperties.WriteSnappedFeatures).Value; }
+            set { GetModelProperty(GuiProperties.WriteSnappedFeatures).Value = value; }
         }
 
         public bool UseMorphologySediment
@@ -638,6 +668,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 breakPointsProperty.Value = new List<double>(cdbreakpoints.Take(icdtyp));
             }
+        }
+
+        /// <summary>
+        /// If one of the known output snapped features is set to true in the mdu
+        /// then we set the GUI property to true (and the rest by waterfall).
+        /// </summary>
+        public void UpdateWriteOutputSnappedFeatures()
+        {
+            WriteSnappedFeatures = KnownWriteOutputSnappedFeatures.Any(ws => (bool)GetModelProperty(ws).Value);
         }
 
         /// <summary>

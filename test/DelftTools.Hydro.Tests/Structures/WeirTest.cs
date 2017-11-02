@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void DefaultWeir()
         {
-            IWeir weir = Weir.CreateDefault();
+            IWeir weir = new Weir();
 
             Assert.IsTrue(weir.Validate().IsValid);
             Assert.IsFalse(weir.CanBeTimedependent);
@@ -27,7 +27,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void DefautlTimeDependentWeir()
         {
-            IWeir weir = Weir.CreateDefault(true);
+            IWeir weir = new Weir(true);
 
             Assert.IsTrue(weir.Validate().IsValid);
             Assert.IsTrue(weir.CanBeTimedependent);
@@ -39,7 +39,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void UseTimeSeriesPreconditionThrows()
         {
-            IWeir weir = Weir.CreateDefault();
+            IWeir weir = new Weir();
 
             // Setting to false should not cause problems:
             weir.UseCrestLevelTimeSeries = false;
@@ -50,7 +50,7 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void Clone()
         {
-            IWeir weir = new Weir("Weir one", false)
+            IWeir weir = new Weir("Weir one")
                              {
                                  Geometry = new Point(7, 0),
                                  OffsetY = 175,

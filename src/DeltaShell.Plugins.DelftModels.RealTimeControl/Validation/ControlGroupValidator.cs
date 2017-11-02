@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
@@ -145,29 +147,80 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var issues = new List<ValidationIssue>();
 
             var startTime = rootObject.StartTime;
+            var stopTime = rootObject.StopTime;
             var timeStep = rootObject.TimeStep;
-            const string validationString = "Series '{0}' time steps not multiple of model time step {1}.";
 
-            var invalidPidRules = controlGroup.Rules.OfType<PIDRule>().Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries &&
-                                                                            !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidPidRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
-                                               String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
+            var pidRules = controlGroup.Rules.OfType<PIDRule>().ToList();
+            var timeRules = controlGroup.Rules.OfType<TimeRule>().ToList();
+            var intervalRules = controlGroup.Rules.OfType<IntervalRule>().ToList();
 
-            var invalidTimeRules = controlGroup.Rules.OfType<TimeRule>().Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidTimeRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
-                                                                        String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
+            // Check if time steps of rule match with the model time step
+            var invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
+            var invalidTimeRules = timeRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
+            var invalidIntervalRules = intervalRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
 
-            var invalidIntervalRules = controlGroup.Rules.OfType<IntervalRule>().Where(r => r.IntervalType == IntervalRule.IntervalRuleIntervalType.Variable && 
-                                                                                      !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            invalidIntervalRules.ForEach(r => issues.Add(new ValidationIssue(r, ValidationSeverity.Error,
-                                                                        String.Format(validationString, r.TimeSeries.Name, timeStep), r.TimeSeries)));
-            
+            string validationString = Resources.RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep;
+            issues.AddRange(
+                GetInvalidRulesIssues(
+                    invalidPidRules, invalidTimeRules, invalidIntervalRules,
+                    ValidationSeverity.Error,
+                    validationString,
+                    timeStep.ToString()));
+
+            // check start times
+            invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
+            invalidTimeRules = timeRules.Where(r => TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
+            invalidIntervalRules = intervalRules.Where(r => TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
+
+            issues.AddRange(
+                GetInvalidRulesIssues(
+                    invalidPidRules, invalidTimeRules, invalidIntervalRules,
+                    ValidationSeverity.Warning,
+                    Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime,
+                    startTime.ToString(CultureInfo.InvariantCulture)));
+
+            // check end times
+            invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
+            invalidTimeRules = timeRules.Where(r => TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
+            invalidIntervalRules = intervalRules.Where(r => TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
+
+            issues.AddRange(
+                GetInvalidRulesIssues(
+                    invalidPidRules, invalidTimeRules, invalidIntervalRules,
+                    ValidationSeverity.Warning,
+                    Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime,
+                    stopTime.ToString(CultureInfo.InvariantCulture)));
+
+            return issues;
+        }
+
+        private static IEnumerable<ValidationIssue> GetInvalidRulesIssues(IEnumerable<PIDRule> pidRules, IEnumerable<TimeRule> timeRules, IEnumerable<IntervalRule> intervalRules, ValidationSeverity severity, string message, string messageArgument)
+        {
+            var issues = new List<ValidationIssue>();
+
+            pidRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, String.Format(message, r.TimeSeries.Name, messageArgument), r.TimeSeries)));
+            timeRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, String.Format(message, r.TimeSeries.Name, messageArgument), r.TimeSeries)));
+            intervalRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, String.Format(message, r.TimeSeries.Name, messageArgument), r.TimeSeries)));
+
             return issues;
         }
 
         private static bool ValidateTimeSeries(ITimeSeries timeSeries, DateTime startTime, TimeSpan timeStep)
         {
+            if (timeSeries.Time.Values.Count == 0) return true;
             return timeSeries.Time.Values.All(t => (t - startTime).Ticks%timeStep.Ticks == 0);
+        }
+
+        private static bool TimeSeriesEntriesPrecedeModelStartTime(ITimeSeries timeSeries, DateTime startTime)
+        {
+            if (timeSeries.Time.Values.Count == 0) return false;
+            return startTime > timeSeries.Time.Values.First();
+        }
+
+        private static bool TimeSeriesEntriesExceedModelStopTime(ITimeSeries timeSeries, DateTime stopTime)
+        {
+            if (timeSeries.Time.Values.Count == 0) return false;
+            return stopTime < timeSeries.Time.Values.Last();
         }
     }
 }

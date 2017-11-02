@@ -8,6 +8,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
@@ -327,6 +328,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
                 Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
                 Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+            }
+        }
+
+        [Test]
+        public void TestGetSnappedFeaturesWorksAfterFailure()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            MockRepository mocks = new MockRepository();
+
+            using (var model = new WaterFlowFMModel(localCopy))
+            {
+                var gridExtent = model.GridExtent;
+                var center = gridExtent.Centre;
+                // Defined test geometries
+                var thinDamGeom1 = new LineString(new[]
+                    {center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0)});
+                var thinDamGeom2 = new LineString(new[]
+                    {center.CoordinateValue, new Coordinate(center.X + 10.0, center.Y + 10.0)});
+
+                // Snap a feature first to ensure it works.
+                /* Preparation for mocking */
+                var xin = new List<double>();
+                var yin = new List<double>();
+                double[] xout = new double[0], yout = new double[0];
+                double MissingValue = -999.0;
+                int[] featureIds = new int[0];
+                //Set the mockup so the first geometry will return an error but not the second one.
+                foreach (var coord in thinDamGeom1.Coordinates)
+                {
+                    xin.Add(coord.X);
+                    yin.Add(coord.Y);
+                }
+
+                // no separators for point geometries (obs points):
+                if (thinDamGeom1.Coordinates.Length != 1)
+                {
+                    xin.Add(MissingValue);
+                    yin.Add(MissingValue);
+                }
+                /**/
+                var fmModelApi = mocks.StrictMock<FlexibleMeshModelApi>();
+                fmModelApi
+                    .Expect(
+                        fma => fma.GetSnappedFeature(UnstrucGridOperationApi.ThinDams, xin.ToArray(), yin.ToArray(), ref xout, ref yout, ref featureIds))
+                    .Return(false).Repeat.Any();
+                //The inner calls will trigger the mocked api
+                var mockedUgridApi = mocks.StrictMock<UnstrucGridOperationApi>(fmModelApi);
+                mocks.ReplayAll();
+
+                // Try to snap with a 'failed' mocked process.
+                var snappedThinDamGeometries = mockedUgridApi.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[]{thinDamGeom1, thinDamGeom2}).ToList();
+                
+                //If it returns the same geometry means nothing has actually been snapped.
+                Assert.AreEqual(thinDamGeom1, snappedThinDamGeometries.First());
+                Assert.AreNotEqual(thinDamGeom1, snappedThinDamGeometries.Last());
             }
         }
 

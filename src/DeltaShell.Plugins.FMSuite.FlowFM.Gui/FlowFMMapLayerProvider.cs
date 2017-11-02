@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
@@ -22,7 +23,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Editors;
@@ -31,6 +34,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -39,11 +43,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static readonly ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData> snappedGroupLayerDataMapping =
             new ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>();
 
+        private static readonly ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData> outputSnappedGroupLayerDataMapping =
+            new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
+
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
+
         private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
 
         public const string BoundariesLayerName = "Boundaries";
         public const string BoundaryConditionsLayerName = "Boundary Conditions";
         public const string SourcesAndSinksLayerName = "Sources and Sinks";
+        public const string OutputSnappedFeaturesLayerName = "Output Snapped features";
 
         public ILayer CreateLayer(object data, object parent)
         {
@@ -167,6 +178,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     };
             }
 
+            var outputSnappedGroupLayerData = data as FMOutputSnappedFeaturesGroupLayerData;
+            if (outputSnappedGroupLayerData != null)
+            {
+                var groupLayer = new GroupLayer(OutputSnappedFeaturesLayerName) { Visible = false, NameIsReadOnly = true };
+
+                groupLayer.Layers.AddRange(outputSnappedGroupLayerData.CreateLayers());
+                groupLayer.LayersReadOnly = true;
+                return groupLayer;
+            }
+
             var snappedGroupLayerData = data as FMSnappedFeaturesGroupLayerData;
             if (snappedGroupLayerData != null)
             {
@@ -241,6 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is ImportedFMNetFile
                    || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
                    || data is FMSnappedFeaturesGroupLayerData
+                   || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
                    || data is IEventedList<Feature2D>;  // Boundaries and sources&sinks
         }
@@ -262,6 +284,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var rootModel = GetRootModel(model);
                 if (rootModel == null || rootModel is WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
                 {
+                    if( model.Area.Enclosures.Count > 0 )
+                    {
+                        foreach( var enclosure in model.Area.Enclosures)
+                        {
+                            var geoAsPol = enclosure.Geometry as Polygon;
+                            if( geoAsPol == null || !geoAsPol.IsValid)
+                            {
+                                Log.WarnFormat(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, enclosure.Name);
+                            }
+                        }
+                    }
                     yield return model.Area;
                 }
                 yield return model.Network;
@@ -271,6 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return model.BoundaryConditionSets;
                 yield return model.Boundaries;
                 yield return model.Pipes;
+
                 FMSnappedFeaturesGroupLayerData layerData;
                 if (!snappedGroupLayerDataMapping.TryGetValue(model, out layerData))
                 {
@@ -278,6 +312,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     snappedGroupLayerDataMapping.Add(model, layerData);
                 }
                 yield return layerData;
+
+                if (model.WriteSnappedFeatures && Directory.Exists(model.OutputSnappedFeaturesPath))
+                {
+                    FMOutputSnappedFeaturesGroupLayerData outputLayerData;
+                    if (!outputSnappedGroupLayerDataMapping.TryGetValue(model, out outputLayerData)
+                        || model.Status == ActivityStatus.Finished)
+                    {
+                        outputLayerData = new FMOutputSnappedFeaturesGroupLayerData(model);
+                        //Clear model
+                        outputSnappedGroupLayerDataMapping.Remove(model);
+                        outputSnappedGroupLayerDataMapping.Add(model, outputLayerData);
+                    }
+
+                    outputLayerData.coordinateSystem = model.CoordinateSystem;
+
+                    yield return outputLayerData;
+                }
                 yield return model.Grid;
 
                 yield return model.InitialWaterLevel;

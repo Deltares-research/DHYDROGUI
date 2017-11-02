@@ -58,6 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 dataType = typeof(string);
             }
+            else if (typeFieldLower.Equals("multipleentriesfilename")) /* Still only one string per entry, but multiple occurrences of the property name in the file*/
+            {
+                dataType = typeof(IList<string>);
+            }
             else if (typeFieldLower.Equals("steerable"))
             {
                 dataType = typeof (Steerable);
@@ -142,6 +146,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 return string.Join(" ", ((IList<Double>)obj).Select(d => d.ToString(CultureInfo.InvariantCulture)));
             }
+            if (dataType == typeof(IList<string>))
+            {
+                return string.Join(" ", (IList<string>)obj);
+            }
             if (dataType.IsEnum)
             {
                 return EnumDescriptionAttributeTypeConverter.GetEnumDisplayName((Enum) obj);
@@ -177,6 +185,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (dataType == typeof(string))
             {
                 return str;
+            }
+            if (dataType == typeof(IList<string>))
+            {
+                if (string.IsNullOrEmpty(str)) return new List<string>();
+
+                var strings = str.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return strings;
             }
             if (dataType == typeof(double))
             {

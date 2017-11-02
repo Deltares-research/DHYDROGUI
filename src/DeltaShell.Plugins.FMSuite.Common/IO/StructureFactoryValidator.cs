@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Utils;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                                                                 out string errorMessage)
         {
             string errorMessage1;
-            if (structure.StructureType == "pump" &&
+            if (structure.StructureType == StructureType.Pump &&
                 ValidateGeneralPumpProperties(structure, name, out errorMessage1))
             {
                 errorMessage = errorMessage1;
@@ -100,9 +101,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             #region Type property
 
-            if (String.IsNullOrEmpty(structure.StructureType))
+            var structureType = structure.StructureType;
+            if (SupportedTypes.All(t => t != structureType))
             {
-                errorMessage = String.Format("Structure '{0}' does not have a type specified.", name);
+                if(structure.InvalidStructureType == null) errorMessage = String.Format("Structure '{0}' cannot have null as type.", name);
+                else errorMessage = String.Format("Structure '{0}' has unsupported type ({1}) specified.", name, structure.InvalidStructureType);
                 return true;
             }
             var typeProperty = structure.GetProperty(KnownStructureProperties.Type);
@@ -112,17 +115,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 errorMessage = String.Format("Structure '{0}' does not have a type specified.", name);
                 return true;
             }
-
-            if (typeAsString != structure.StructureType)
+            
+            if (EnumerableExtensions.GetValueFromDescription<StructureType>(typeAsString) != structureType)
             {
                 errorMessage = String.Format("Structure '{0}' has conflicting types: '{1}' and '{2}' are stated.",
-                                    name, structure.StructureType, typeAsString);
-                return true;
-            }
-
-            if (SupportedTypes.All(t => t != structure.StructureType))
-            {
-                errorMessage = String.Format("Structure '{0}' has unsupported type ({1}) specified.", name, structure.StructureType);
+                                    name, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), typeAsString);
                 return true;
             }
 
@@ -174,20 +171,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return false;
         }
 
-        public static readonly string[] SupportedTypes = new[] { "pump", "weir", "gate" };
+        public static readonly StructureType[] SupportedTypes = new[]
+        {
+            StructureType.Pump,
+            StructureType.Weir,
+            StructureType.Gate,
+            StructureType.GeneralStructure
+        };
 
         /// <summary>
         /// Throws <see cref="FormatException"/> is case structure does not match expected type.
         /// </summary>
         /// <exception cref="FormatException"></exception>
-        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<string> expectedTypes)
+        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<StructureType> expectedTypes)
         {
-            var enumerable = expectedTypes as string[] ?? expectedTypes.ToArray();
-            if (enumerable.All(type => type != structure.StructureType))
+            var enumerable = expectedTypes as StructureType[] ?? expectedTypes.ToArray();
+            var structureType = structure.StructureType;
+            if (enumerable.All(type => type != structureType))
             {
                 var isSingularItem = enumerable.Length > 1;
                 throw new FormatException(String.Format("Structure specification for {0}, but should {1}: {2}",
-                                                        structure.StructureType, isSingularItem ? "be type" : "be any of the following", String.Join(", ", enumerable)));
+                    structureType, isSingularItem ? "be type" : "be any of the following", String.Join(", ", enumerable)));
             }
         }
     }

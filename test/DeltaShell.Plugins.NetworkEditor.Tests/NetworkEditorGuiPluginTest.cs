@@ -32,7 +32,6 @@ using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
-using SharpMap.Layers;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
 

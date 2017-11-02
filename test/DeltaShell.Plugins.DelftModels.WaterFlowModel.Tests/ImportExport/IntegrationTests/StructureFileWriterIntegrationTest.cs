@@ -33,10 +33,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             var flow1Dmodel = new WaterFlowModel1D(){ Network = HydroNetworkHelper.GetSnakeHydroNetwork(1) };
             var branch = flow1Dmodel.Network.Channels.First();
 
-            var pump = Pump.CreateDefault();
+            var pump = (IPump) new Pump(false);
             branch.BranchFeatures.Add(pump);
 
-            var weir = Weir.CreateDefault();
+            var weir = new Weir();
             branch.BranchFeatures.Add(weir);
 
             var culvert = Culvert.CreateDefault();

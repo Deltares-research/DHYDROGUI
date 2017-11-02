@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 

@@ -40,7 +40,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using SharpMap.Converters.WellKnownText;
@@ -135,9 +134,9 @@ namespace Sobek.IntegrationTests
                         project.RootFolder.Add(hydroModel);
 
                         var flowfm = hydroModel.Models.OfType<WaterFlowFMModel>().First();
-                        var flowFeature = new Feature2DPoint {Name = "flowFeature"};
+                        var flowFeature = new GroupableFeature2DPoint { Name = "flowFeature"};
                         flowfm.Area.ObservationPoints.Add(flowFeature);
-                        var pump = Pump.CreateDefault();
+                        var pump = new Pump2D(false);
                         pump.Geometry =
                             new LineString(new[]
                             {new Coordinate(0, 0), new Coordinate(1.0, 1.0), new Coordinate(123.0, -4.3)});

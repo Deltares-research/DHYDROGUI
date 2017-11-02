@@ -7,7 +7,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.CommonTools.Gui.Property;
-using DeltaShell.Plugins.CommonTools.Gui.Property.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NetTopologySuite.Extensions.Networks;
@@ -215,7 +214,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             if (propertyName == "StartDelivery" || propertyName == "StopDelivery" ||
                 propertyName == "StartSuction" || propertyName == "StopSuction" || propertyName == "ControlDirection")
             {
-                return data.Branch != null || Pump.SupportSobekPumpPropertiesInFM; //exclude FM pumps until we support it...
+                return data.Branch != null; //exclude FM pumps until we support it...
             }
             if (propertyName == "UseCapacityTimeSeries")
             {

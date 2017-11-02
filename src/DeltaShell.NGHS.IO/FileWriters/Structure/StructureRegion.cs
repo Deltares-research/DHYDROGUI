@@ -1,4 +1,6 @@
-﻿using DeltaShell.NGHS.IO.Helpers;
+﻿using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Utils;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
@@ -10,17 +12,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             public const string Pump = "pump";
             public const string Weir = "weir";
+            public const string Gate = "gate";
             public const string UniversalWeir = "universalWeir";
             public const string RiverWeir = "riverWeir";
             public const string AdvancedWeir = "advancedWeir";
             public const string Orifice = "orifice";
-            public const string GeneralStructure = "generalStructure";
+            public const string GeneralStructure = "generalstructure";
             public const string Culvert = "culvert";
             public const string InvertedSiphon = "invertedSiphon";
             public const string Siphon = "siphon";
             public const string Bridge = "bridge";
             public const string BridgePillar = "bridgePillar";
-            public const string ExtraResistanceStructure = "extraResistance";
+            public const string ExtraResistanceStructure = "extraresistance";
         }
         
         #region Common Structure Elements
@@ -127,28 +130,29 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region General Structure Elements
-        public static readonly ConfigurationSetting WidthLeftW1 = new ConfigurationSetting(key: "widthleftW1", description: "Width left side of structure (m)");
-        public static readonly ConfigurationSetting WidthLeftWsdl = new ConfigurationSetting(key: "widthleftWsdl", description: "Width structure left side (m)");
-        public static readonly ConfigurationSetting WidthCenter = new ConfigurationSetting(key: "widthcenter", description: "Width structure centre (m)");
-        public static readonly ConfigurationSetting WidthRightWsdr = new ConfigurationSetting(key: "widthrightWsdr", description: "Width structure right side (m)");
-        public static readonly ConfigurationSetting WidthRightW2 = new ConfigurationSetting(key: "widthrightW2", description: "Width right side of structure (m)");
-        public static readonly ConfigurationSetting LevelLeftZb1 = new ConfigurationSetting(key: "levelleftZb1", description: "Bed level left side of structure (m AD)");
-        public static readonly ConfigurationSetting LevelLeftZbsl = new ConfigurationSetting(key: "levelleftZbsl", description: "Bed level left side structure (m AD)");
-        public static readonly ConfigurationSetting LevelCenter = new ConfigurationSetting(key: "levelcenter", description: "Bed level at centre of structure (m AD)");
-        public static readonly ConfigurationSetting LevelRightZbsr = new ConfigurationSetting(key: "levelrightZbsr", description: "Bed level right side structure (m AD)");
-        public static readonly ConfigurationSetting LevelRightZb2 = new ConfigurationSetting(key: "levelrightZb2", description: "Bed level right side of structure (m AD)");
-        public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: "gateheight", description: "Gate lower edge level (m AD)");
-        public static readonly ConfigurationSetting PosFreeGateFlowCoeff = new ConfigurationSetting(key: "posfreegateflowcoeff", description: "Positive free gate flow (-)");
-        public static readonly ConfigurationSetting PosDrownGateFlowCoeff = new ConfigurationSetting(key: "posdrowngateflowcoeff", description: "Positive drowned gate flow (-)");
-        public static readonly ConfigurationSetting PosFreeWeirFlowCoeff = new ConfigurationSetting(key: "posfreeweirflowcoeff", description: "Positive free weir flow (-)");
-        public static readonly ConfigurationSetting PosDrownWeirFlowCoeff = new ConfigurationSetting(key: "posdrownweirflowcoeff", description: "Positive drowned weir flow (-)");
-        public static readonly ConfigurationSetting PosContrCoefFreeGate = new ConfigurationSetting(key: "poscontrcoeffreegate", description: "Positive flow contraction coefficient (-)");
-        public static readonly ConfigurationSetting NegFreeGateFlowCoeff = new ConfigurationSetting(key: "negfreegateflowcoeff", description: "Negative free gate flow (-)");
-        public static readonly ConfigurationSetting NegDrownGateFlowCoeff = new ConfigurationSetting(key: "negdrowngateflowcoeff", description: "Negative drowned gate flow (-)");
-        public static readonly ConfigurationSetting NegFreeWeirFlowCoeff = new ConfigurationSetting(key: "negfreeweirflowcoeff", description: "Negative free weir flow (-)");
-        public static readonly ConfigurationSetting NegDrownWeirFlowCoeff = new ConfigurationSetting(key: "negdrownweirflowcoeff", description: "Negative drowned weir flow (-)");
-        public static readonly ConfigurationSetting NegContrCoefFreeGate = new ConfigurationSetting(key: "negcontrcoeffreegate", description: "Negative flow contraction coefficient (-)");
-        public static readonly ConfigurationSetting ExtraResistance = new ConfigurationSetting(key: "extraresistance", description: "Extra resistance (-)");
+        public static readonly ConfigurationSetting WidthLeftW1 = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftW1), description: "Width left side of structure (m)");
+        public static readonly ConfigurationSetting WidthLeftWsdl = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthLeftWsdl), description: "Width structure left side (m)");
+        public static readonly ConfigurationSetting WidthCenter = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthCenter), description: "Width structure centre (m)");
+        public static readonly ConfigurationSetting WidthRightWsdr = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightWsdr), description: "Width structure right side (m)");
+        public static readonly ConfigurationSetting WidthRightW2 = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.WidthRightW2), description: "Width right side of structure (m)");
+        public static readonly ConfigurationSetting LevelLeftZb1 = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZb1), description: "Bed level left side of structure (m AD)");
+        public static readonly ConfigurationSetting LevelLeftZbsl = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelLeftZbsl), description: "Bed level left side structure (m AD)");
+        public static readonly ConfigurationSetting LevelCenter = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelCenter), description: "Bed level at centre of structure (m AD)");
+        public static readonly ConfigurationSetting LevelRightZbsr = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZbsr), description: "Bed level right side structure (m AD)");
+        public static readonly ConfigurationSetting LevelRightZb2 = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.LevelRightZb2), description: "Bed level right side of structure (m AD)");
+        public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateHeight), description: "Gate lower edge level (m AD)");
+        public static readonly ConfigurationSetting PosFreeGateFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient), description: "Positive free gate flow (-)");
+        public static readonly ConfigurationSetting PosDrownGateFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient), description: "Positive drowned gate flow (-)");
+        public static readonly ConfigurationSetting PosFreeWeirFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient), description: "Positive free weir flow (-)");
+        public static readonly ConfigurationSetting PosDrownWeirFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient), description: "Positive drowned weir flow (-)");
+        public static readonly ConfigurationSetting PosContrCoefFreeGate = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate), description: "Positive flow contraction coefficient (-)");
+        public static readonly ConfigurationSetting NegFreeGateFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient), description: "Negative free gate flow (-)");
+        public static readonly ConfigurationSetting NegDrownGateFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient), description: "Negative drowned gate flow (-)");
+        public static readonly ConfigurationSetting NegFreeWeirFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient), description: "Negative free weir flow (-)");
+        public static readonly ConfigurationSetting NegDrownWeirFlowCoeff = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient), description: "Negative drowned weir flow (-)");
+        public static readonly ConfigurationSetting NegContrCoefFreeGate = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate), description: "Negative flow contraction coefficient (-)");
+        public static readonly ConfigurationSetting ExtraResistance = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.ExtraResistance), description: "Extra resistance (-)");
+        public static readonly ConfigurationSetting GateDoorHeight = new ConfigurationSetting(key: EnumDescriptionAttributeTypeConverter.GetEnumDescription(KnownGeneralStructureProperties.GateDoorHeightGeneralStructure), description: "Gate opening height (m)");
         #endregion
 
         #region Common Culvert Elements

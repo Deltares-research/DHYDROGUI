@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Feature2DEditors
 {
@@ -37,21 +37,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Feature2DEditors
                 get { return fixedWeir.Geometry.Coordinates[row].Y; }
             }
 
-            [DisplayName("Crest level")]
+            [DisplayName("Crest level (m AD)")]
             public double CrestLevel
             {
                 get { return fixedWeir.CrestLevels[row]; }
-                set { fixedWeir.CrestLevels[row] = value; }
+                set
+                {
+                    fixedWeir.CrestLevels[row] = value;
+                    fixedWeir.Geometry.Coordinates[row].Z = value;
+                }
             }
 
-            [DisplayName("Left sill depth")]
+            [DisplayName("Left sill depth (m)")]
             public double LeftGroundDistance
             {
                 get { return fixedWeir.GroundLevelsLeft[row]; }
                 set { fixedWeir.GroundLevelsLeft[row] = value; }
             }
 
-            [DisplayName("Right sill depth")]
+            [DisplayName("Right sill depth (m)")]
             public double RightGroundDistance
             {
                 get { return fixedWeir.GroundLevelsRight[row]; }

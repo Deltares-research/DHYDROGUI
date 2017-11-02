@@ -713,7 +713,7 @@ namespace Sobek.IntegrationTests
         {
             var weirBranch = networkLocation.Branch;
             var weirOfset = networkLocation.Chainage;
-            var weir = Weir.CreateDefault();
+            var weir = new Weir();
             weir.Chainage = weirOfset;
             weir.CrestLevel = 0.1;
             weir.Geometry = new Point(weirBranch.Geometry.Coordinates[0]);
