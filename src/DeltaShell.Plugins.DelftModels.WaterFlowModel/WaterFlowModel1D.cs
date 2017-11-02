@@ -3906,7 +3906,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         /// <summary>
         /// Return true when a salinity.ini file needs to be added to the computation. 
         /// </summary> 
-        public virtual bool SalinityValidNonConstantFormulation
+        public virtual bool ValidSalinityFileWithNonConstantFormulationAndF4Values
         {
             get
             {
