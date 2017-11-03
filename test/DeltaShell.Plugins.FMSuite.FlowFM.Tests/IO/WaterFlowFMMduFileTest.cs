@@ -1249,6 +1249,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString(), Is.EqualTo(""));
         }
 
+        [Test]
+        public void GivenMduFileWithReferencesThatIsSituatedInAFolderWithSpacesInItsName_WhenReadingMduFile_ThenNoProblemsOccur()
+        {
+            // Preparations
+            const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
+            var filePath = Path.Combine(baseFolderPath, @"MduFileInFolderWith - SpacesInName\FlowFM.mdu");
+            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+
+            new MduFile().Read(mduFilePath,
+                new WaterFlowFMModelDefinition(mduFilePath, Path.GetFileNameWithoutExtension(filePath)),
+                new HydroArea());
+        }
+
 
         #region TestHelpers
 
