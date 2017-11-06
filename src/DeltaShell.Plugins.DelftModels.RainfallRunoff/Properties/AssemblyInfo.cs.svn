@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("3.7.5.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.5.$WCREV$")]
+[assembly: AssemblyVersion("3.7.6.$WCREV$")]
+[assembly: AssemblyFileVersion("3.7.6.$WCREV$")]
 [assembly: InternalsVisibleTo("DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests")]
