@@ -207,6 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
         private static bool ValidateTimeSeries(ITimeSeries timeSeries, DateTime startTime, TimeSpan timeStep)
         {
+            if (timeStep.Equals(TimeSpan.Zero)) return false;
             if (timeSeries.Time.Values.Count == 0) return true;
             return timeSeries.Time.Values.All(t => (t - startTime).Ticks%timeStep.Ticks == 0);
         }

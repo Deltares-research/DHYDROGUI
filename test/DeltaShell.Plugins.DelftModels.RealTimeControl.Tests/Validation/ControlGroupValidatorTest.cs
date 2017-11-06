@@ -55,6 +55,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             return validHydraulicRule;
         }
 
+
+        private Tuple<RealTimeControlModel, TimeSeries> SetUpRtcModelWithTimeSeriesAndEmptyControlGroup()
+        {
+            var timeSeriesStartTime = new DateTime(2012, 1, 1);
+            var timeSeriesStopTime = new DateTime(2012, 1, 31);
+            var timeStep = new TimeSpan(0, 1, 0, 0);
+
+            var timeSeries = new TimeSeries()
+            {
+                Components = { new Variable<double>("SetPoint") },
+                Name = "SetPoint"
+            };
+
+            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
+            timeSeries.Time.InterpolationType = InterpolationType.Linear;
+            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+
+            timeSeries[timeSeriesStartTime] = 1.0;
+            timeSeries[timeSeriesStopTime] = 31.0;
+
+            var modelStartTime = timeSeriesStartTime.AddDays(1);
+            var modelStopTime = timeSeriesStopTime.AddDays(-1);
+            var rtcModel = new RealTimeControlModel() { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
+            rtcModel.ControlGroups.Add(new ControlGroup());
+
+            return new Tuple<RealTimeControlModel, TimeSeries>(rtcModel, timeSeries);
+        }
+
         [Test]
         public void ValidControlGroup()
         {
@@ -124,32 +152,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         [Test]
         public void ValidationFailsForSetPointTimeStepSmallerThanModelTimeStep()
         {
-            var timeSeries = new TimeSeries()
-            {
-                Components = {new Variable<double>("SetPoint")},
-                Name = "SetPoint"
-            };
+            var setup = SetUpRtcModelWithTimeSeriesAndEmptyControlGroup();
 
-            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Time.InterpolationType = InterpolationType.Linear;
-            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+            var model = setup.Item1;
+            var timeSeries = setup.Item2;
 
-            var startTime = new DateTime(2012, 1, 1);
-            var timeStep = new TimeSpan(0, 1, 0, 0);
-
-            timeSeries[startTime] = 3.0;
-            timeSeries[startTime.AddSeconds(1)] = 3.5;
-
-            var model = new RealTimeControlModel() {TimeStep = timeStep, StartTime = startTime};
+            timeSeries.Clear();
+            timeSeries[model.StartTime] = 3.0;
+            timeSeries[model.StartTime.AddSeconds(1)] = 3.5;
 
             var PIDrule = new PIDRule()
                 {TimeSeries = timeSeries, PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries};
 
-
-            var controlGroup = new ControlGroup();
+            var controlGroup = model.ControlGroups.First();
             controlGroup.Rules.Add(PIDrule);
             controlGroup.Outputs.Add(new Output());
-            model.ControlGroups.Add(controlGroup);
 
             var validator = new ControlGroupValidator();
             var allPidIssues = validator.Validate(model, controlGroup).GetAllIssuesRecursive()
@@ -161,25 +178,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         }
 
         [Test]
-        public void ValidationPassesForSetPointTimeStepEqualToThanModelTimeStep()
+        public void ValidationPassesForSetPointTimeStepEqualToModelTimeStep()
         {
-            var timeSeries = new TimeSeries()
-            {
-                Components = {new Variable<double>("SetPoint")},
-                Name = "SetPoint"
-            };
+            var setup = SetUpRtcModelWithTimeSeriesAndEmptyControlGroup();
 
-            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Time.InterpolationType = InterpolationType.Linear;
-            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+            var model = setup.Item1;
+            var timeSeries = setup.Item2;
 
-            var startTime = new DateTime(2012, 1, 1);
             var timeStep = new TimeSpan(0, 1, 0, 0);
 
-            timeSeries[startTime] = 3.0;
-            timeSeries[startTime + timeStep] = 3.5;
-
-            var model = new RealTimeControlModel() {TimeStep = timeStep, StartTime = startTime};
+            timeSeries.Clear();
+            timeSeries[model.StartTime] = 3.0;
+            timeSeries[model.StartTime + timeStep] = 3.5;
 
             var PIDrule = new PIDRule()
             {
@@ -187,11 +197,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
                 TimeSeries = timeSeries
             };
 
-
-            var controlGroup = new ControlGroup();
+            var controlGroup = model.ControlGroups.First();
             controlGroup.Rules.Add(PIDrule);
             controlGroup.Outputs.Add(new Output());
-            model.ControlGroups.Add(controlGroup);
 
             var validator = new ControlGroupValidator();
             Assert.AreEqual(0, validator.Validate(model, controlGroup).GetAllIssuesRecursive().Count(
@@ -310,29 +318,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         [Test]
         public void ValidationHasWarningsIfTimeSeriesBoundsExceedModelTimes()
         {
-            var startTime = new DateTime(2012, 1, 1);
-            var stopTime = new DateTime(2012, 1, 31);
-            var timeStep = new TimeSpan(0, 1, 0, 0);
+            var setup = SetUpRtcModelWithTimeSeriesAndEmptyControlGroup();
 
-            var timeSeries = new TimeSeries()
-            {
-                Components = { new Variable<double>("SetPoint") },
-                Name = "SetPoint"
-            };
+            var model = setup.Item1;
+            var timeSeries = setup.Item2;
 
-            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Time.InterpolationType = InterpolationType.Linear;
-            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+            timeSeries[model.StartTime.AddDays(-1)] = 1.0;
+            timeSeries[model.StopTime.AddDays(1)] = 31.0;
 
-            timeSeries[startTime] = 1.0;
-            timeSeries[stopTime] = 31.0;
-
-            var modelStartTime = startTime.AddDays(1);
-            var modelStopTime = stopTime.AddDays(-1);
-            var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
             var validator = new ControlGroupValidator();
-            var controlGroup = new ControlGroup();
-            model.ControlGroups.Add(controlGroup);
+            var controlGroup = model.ControlGroups.First();
 
             // check PIDrule
             var PIDrule = new PIDRule()
@@ -391,37 +386,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
                 foundIssues[1].Message);
 
             // check values at start and stop time of model
-            Assert.AreEqual(2.0, timeSeries.Evaluate<double>(modelStartTime), 1e-5);
-            Assert.AreEqual(30.0, timeSeries.Evaluate<double>(modelStopTime), 1e-5);
+            Assert.AreEqual(2.0, timeSeries.Evaluate<double>(model.StartTime), 1e-5);
+            Assert.AreEqual(30.0, timeSeries.Evaluate<double>(model.StopTime), 1e-5);
         }
 
         [Test]
         public void ValidationDoesNotHaveWarningsIfTimeSeriesBoundsDoNotExceedModelTimes()
         {
-            // setup model and controlgroup
-            var startTime = new DateTime(2012, 1, 2);
-            var stopTime = new DateTime(2012, 1, 30);
-            var timeStep = new TimeSpan(0, 1, 0, 0);
+            var setup = SetUpRtcModelWithTimeSeriesAndEmptyControlGroup();
 
-            var timeSeries = new TimeSeries()
-            {
-                Components = { new Variable<double>("SetPoint") },
-                Name = "SetPoint"
-            };
+            var model = setup.Item1;
+            var timeSeries = setup.Item2;
 
-            timeSeries.Time.DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Time.InterpolationType = InterpolationType.Linear;
-            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+            // For the purpose of this test we need clean time series
+            timeSeries.Clear();
+            timeSeries[model.StartTime.AddDays(1)] = 1.0;
+            timeSeries[model.StopTime.AddDays(-1)] = 31.0;
 
-            timeSeries[startTime] = 1.0;
-            timeSeries[stopTime] = 31.0;
-
-            var modelStartTime = startTime.AddDays(-1);
-            var modelStopTime = stopTime.AddDays(1);
-            var model = new RealTimeControlModel() { TimeStep = timeStep, StartTime = modelStartTime, StopTime = modelStopTime };
-
-            var controlGroup = new ControlGroup();
-            model.ControlGroups.Add(controlGroup);
+            var controlGroup = model.ControlGroups.First();
 
             var validator = new ControlGroupValidator();
 
@@ -458,6 +440,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
             Assert.AreEqual(0, foundIssues.Count, "The number of validation issues for the interval rule");
 
+        }
+
+        [Test]
+        public void ValidationDoesNotThrowDivideByZeroExceptionIfModelTimestepIsZero()
+        {
+            var setup = SetUpRtcModelWithTimeSeriesAndEmptyControlGroup();
+
+            var rtcModel = setup.Item1;
+            rtcModel.TimeStep = new TimeSpan(0, 0, 0, 0);
+            var controlGroup = rtcModel.ControlGroups.First();
+
+            var timeSeries = setup.Item2;
+
+            var pidRule = new PIDRule { PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries};
+            pidRule.TimeSeries = timeSeries;
+            controlGroup.Rules.Add(pidRule);
+
+            var controlGroupValidator = new ControlGroupValidator();
+            var result = controlGroupValidator.Validate(rtcModel, controlGroup);
+
+            // If we reach this statement validation did not throw errors
+            Assert.GreaterOrEqual(result.ErrorCount, 0);
         }
     }
 }
