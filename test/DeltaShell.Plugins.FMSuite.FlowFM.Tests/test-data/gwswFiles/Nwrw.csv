@@ -1,4 +1,4 @@
-IDE_AFW;AFV_BRG;AFV_IFX ;AFV_IFN ;AFV_IFA ;AFV_IFH ;AFV_AFS ;AFV_LEN ;AFV_HEL ;AFV_RUW;TOE_OBJ
+AFV_IDE;AFV_BRG;AFV_IFX ;AFV_IFN ;AFV_IFA ;AFV_IFH ;AFV_AFS ;AFV_LEN ;AFV_HEL ;AFV_RUW;ALG_TOE
 GVH_HEL;0;0;0;0;0;0.5;;;;Gesloten verharding hellend
 GVH_VLA;0.5;0;0;0;0;0.2;;;;Gesloten verharding vlak
 GVH_VLU;1;0;0;0;0;0.1;;;;Gesloten verharding vlak uitgestrekt
