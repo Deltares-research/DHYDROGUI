@@ -189,7 +189,9 @@
     <Compile Include="GroupableFeatureComparer.cs" />
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
+    <Compile Include="ICompartment.cs" />
     <Compile Include="IGroupableFeature.cs" />
+    <Compile Include="Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
