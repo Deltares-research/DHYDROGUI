@@ -237,6 +237,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not possible to import {0}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attributes mapped {0}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing sub files..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import file {0}. Reason: {1}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No mapping was found to import File {0}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hurricane2 {
@@ -535,15 +580,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Grid is empty.
-        /// </summary>
-        public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
-            get {
-                return ResourceManager.GetString("WaterFlowFMGridValidator_Validate_Grid_is_empty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The drawn polygon {0} is not valid to create an enclosure. Verify it is not self-intersected..
         /// </summary>
         public static string WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid {
@@ -568,6 +604,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMEnclosureValidator_Validate_Only_one_enclosure_per_model_is_allowed__E" +
                         "nclosures_in_model___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid is empty.
+        /// </summary>
+        public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
+            get {
+                return ResourceManager.GetString("WaterFlowFMGridValidator_Validate_Grid_is_empty", resourceCulture);
             }
         }
         

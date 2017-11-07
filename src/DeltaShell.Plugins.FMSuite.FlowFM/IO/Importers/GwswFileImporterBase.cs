@@ -5,18 +5,17 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     class GwswFileImporterBase : IFileImporter
     {
-        private char CsvDelimeter = ';';
+        private char CsvDelimeter = ',';
         private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporterBase));
 
         #region IFileImporter
@@ -30,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var mappingData = target as CsvMappingData;
             if (mappingData == null)
             {
-                Log.ErrorFormat("No mapping was found to import File {0}.", path);
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, path);
                 return null;
             }
 
@@ -42,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
             catch (Exception e)
             {
-                Log.ErrorFormat("Could not import file {0}. Reason: {1}", path, e.Message);
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_, path, e.Message);
             }
 
             return importedCsv;
@@ -60,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool OpenViewAfterImport { get; }
         #endregion
 
-        public List<DataTable> ImportFromDefinitionFile(string path)
+        public DataTable ImportDefinitionFile(string path)
         {
             // Import definition file with predefined CSV columns.
             var mappingData = new CsvMappingData
@@ -74,11 +73,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
                 {
                     {
-                        new CsvRequiredField("Nr", typeof (string)),
+                        new CsvRequiredField("Bestandsnaam", typeof (string)),
                         new CsvColumnInfo(0, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Bestandsnaam", typeof (string)),
+                        new CsvRequiredField("ElementName", typeof (string)),
                         new CsvColumnInfo(1, CultureInfo.InvariantCulture)
                     },
                     {
@@ -90,20 +89,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         new CsvColumnInfo(3, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Definitie", typeof (string)),
+                        new CsvRequiredField("Code_International", typeof (string)),
                         new CsvColumnInfo(4, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Eenheid", typeof (string)),
+                        new CsvRequiredField("Definitie", typeof (string)),
                         new CsvColumnInfo(5, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Verplicht", typeof (string)),
+                        new CsvRequiredField("Type", typeof (string)),
                         new CsvColumnInfo(6, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Opmerking", typeof (string)),
+                        new CsvRequiredField("Eenheid", typeof (string)),
                         new CsvColumnInfo(7, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Verplicht", typeof (string)),
+                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Opmerking", typeof (string)),
+                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
                     },
                 }
             };
@@ -112,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var importedTable = importedObject as DataTable;
             if (importedTable == null)
             {
-                Log.ErrorFormat("Not possible to import {0}", path);
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_, path);
                 return null;
             }
 
@@ -124,35 +131,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             foreach (DataRow row in importedTable.Rows)
             {
                 var attributeFile = row.ItemArray[0].ToString();
-                var attributeName = row.ItemArray[1].ToString();
-                var attributeCode = row.ItemArray[2].ToString();
-                var attributeDefinition = row.ItemArray[3].ToString();
-                var attributeType = row.ItemArray[4].ToString();
+                var attributeElement = row.ItemArray[1].ToString();
+                var attributeName = row.ItemArray[2].ToString();
+                var attributeCode = row.ItemArray[3].ToString();
+                var attributeCodeInt = row.ItemArray[4].ToString();
+                var attributeDefinition = row.ItemArray[5].ToString();
+                var attributeType = row.ItemArray[6].ToString();
 
                 var attribute = new GwswsAttribute()
                 {
                     Name = attributeName,
+                    ElementName = attributeElement,
                     Definition = attributeDefinition,
                     FileName = attributeFile,
-                    Key = attributeCode,
+                    Key = attributeCodeInt,
+                    LocalKey = attributeCode,
                     AttributeType = FMParser.GetClrType(attributeName, attributeType, ref attributeDefinition,
                         attributeFile, importedTable.Rows.IndexOf(row)),
                 };
 
                 attributeList.Add(attribute);
             }
-            Log.InfoFormat("Attributes imported {0}", attributeList.Count);
 
-            Log.Info("Importing sub files.");
+            AttributesDefinition = attributeList;
 
-            var uniqueFileList = attributeList.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
-            var csvSettings = new CsvSettings
-            {
-                Delimiter = CsvDelimeter,
-                FirstRowIsHeader = true,
-                SkipEmptyLines = true
-            };
+            return importedTable;
+        }
 
+        private List<GwswsAttribute> AttributesDefinition { get; set; }
+
+        public List<DataTable> ImportFilesFromDefinitionFile(string path)
+        {
+            ImportDefinitionFile(path);
+            Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, AttributesDefinition.Count);
+
+            Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
+
+            var uniqueFileList = AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
             var importedTables = new List<DataTable>();
 
             //Read each one of the files.
@@ -166,21 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     continue;
                 }
 
-                //Import file elements based on their attributes
-                var fileAttributes = attributeList.Where(at => at.FileName.Equals(fileName)).ToList();
-                var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
-                //Create column mapping
-                fileAttributes.ForEach(
-                    attr =>
-                        fileColumnMapping.Add(
-                            new CsvRequiredField(attr.Key, attr.AttributeType),
-                            new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
-
-                var mapping = new CsvMappingData()
-                {
-                    Settings = csvSettings,
-                    FieldToColumnMapping = fileColumnMapping
-                };
+                var mapping = CreateCsvMappingDataForFile(fileName);
 
                 var importedElement = ImportItem(elementFilePath, mapping);
                 var importedElementTable = importedElement as DataTable;
@@ -194,12 +195,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedTables;
         }
 
+        public CsvMappingData CreateCsvMappingDataForFile(string fileName)
+        {
+            var csvSettings = new CsvSettings
+            {
+                Delimiter = CsvDelimeter,
+                FirstRowIsHeader = true,
+                SkipEmptyLines = true
+            };
+
+            //Import file elements based on their attributes
+            var fileAttributes = AttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName))).ToList();
+            var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
+            //Create column mapping
+            fileAttributes.ForEach(
+                attr =>
+                    fileColumnMapping.Add(
+                        new CsvRequiredField(attr.Key, attr.AttributeType),
+                        new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
+
+            var mapping = new CsvMappingData()
+            {
+                Settings = csvSettings,
+                FieldToColumnMapping = fileColumnMapping
+            };
+            return mapping;
+        }
     }
 
     public class GwswsAttribute
     {
         public string Name { get; set; }
+
+        private string _elementName;
+        public string ElementName
+        {
+            get
+            {
+                if (_elementName == null)
+                {
+                    return _elementName;
+                }
+                return Path.GetFileNameWithoutExtension(_elementName); /*The element names might contain extensions*/
+            }
+            set { _elementName = value; }
+        }
+
         public string Key { get; set; }
+        public string LocalKey { get; set; }
         public string Definition { get; set; }
         public string Mandatory { get; set; }
         public string Remarks { get; set; }

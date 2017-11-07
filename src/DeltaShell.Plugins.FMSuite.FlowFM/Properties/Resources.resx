@@ -334,4 +334,19 @@ Change this group name and save the project again to write these features to a s
     <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
 File import of structures file '{1}' has failed.</value>
   </data>
+  <data name="GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_" xml:space="preserve">
+    <value>Not possible to import {0}</value>
+  </data>
+  <data name="GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_" xml:space="preserve">
+    <value>Attributes mapped {0}</value>
+  </data>
+  <data name="GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_" xml:space="preserve">
+    <value>Importing sub files.</value>
+  </data>
+  <data name="GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__" xml:space="preserve">
+    <value>No mapping was found to import File {0}.</value>
+  </data>
+  <data name="GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_" xml:space="preserve">
+    <value>Could not import file {0}. Reason: {1}</value>
+  </data>
 </root>

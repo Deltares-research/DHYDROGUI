@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -16,149 +15,92 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     [TestFixture]
     public class GwswFileImporterTest
     {
-        private static char csvDelimeter = ';';
+        private static char csvDelimeter = ',';
+
+        #region Gwsw Attribute tests
 
         [Test]
-        public void CsvFilesCanBeReadJustProvidingTheFileColumnInfo()
+        public void GwswAttributeReturnsElementNameWithoutExtension()
         {
-            //check csv file exists
-
-            //create column info
-            //check column info is valid
-
-            //import csv file
-
-            //check csv is correct
-
-        }
-
-        [Test]
-        public void ReadGwswDefinitionFile()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie.csv");
-
-            var mappingData = new CsvMappingData
+            var elementName = "test_element";
+            var attributeTest = new GwswsAttribute()
             {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("Nr", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Bestandsnaam", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Kolomnaam", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Code", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Definitie", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Eenheid", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Verplicht", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Opmerking", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                }
+                ElementName = elementName + ".csv",
             };
-
-            CheckCsvIsImportedCorrectly(filePath, mappingData);
+            Assert.AreEqual(elementName, attributeTest.ElementName);
+            
+            /* If the name is originally given without extension, it should remain the same.*/
+            attributeTest = new GwswsAttribute()
+            {
+                ElementName = elementName,
+            };
+            Assert.AreEqual(elementName, attributeTest.ElementName);
         }
 
         [Test]
-        public void CreateGwswDictionaryFromDefinitionFile()
+        [TestCase("string", typeof(string))]
+        [TestCase("double", typeof(double))]
+        public void GwswAttibuteAssignesATypeToTheValue(string typeAsString, Type expectedType)
         {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie.csv");
+            try
+            {
+                var attributeTest = new GwswsAttribute("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                Assert.IsNotNull(attributeTest);
+                Assert.AreEqual(expectedType, attributeTest.AttributeType);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+            }
+        }
+
+        #endregion
+
+        #region Gwsw Import tests
+
+        [Test]
+        public void ImportGwswDefinitionFile()
+        {
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var gwswImporter = new GwswFileImporterBase();
+            var attributeTable = gwswImporter.ImportDefinitionFile(filePath);
+            Assert.IsNotNull(attributeTable);
+
+            var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
+            var rowsCount = attributeTable.Rows.Count;
+            Assert.AreEqual(numberOfLines, rowsCount, string.Format("The imported .csv file {0}, contains {1} rows but {2} were imported.", filePath, numberOfLines, rowsCount));
+        }
+
+        [Test]
+        public void CreateGwswDataTableFromDefinitionFileThenImportFiles()
+        {
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             // Import Csv Definition.
-            var csvImporter = new CsvImporter();
-            Assert.IsNotNull(csvImporter);
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("Nr", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Bestandsnaam", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Kolomnaam", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Code", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Definitie", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Eenheid", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Verplicht", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Opmerking", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            var importedTable = CheckGwswFileImporterWorksCorrectly(filePath, mappingData);
+            var gwswImporter = new GwswFileImporterBase();
+            var definitionTable = gwswImporter.ImportDefinitionFile(filePath);
 
             var attributeList = new List<GwswsAttribute>();
 
-            // Create new attributes for each occurrence.
-            // Retreive the files that need to be read.
-            foreach (DataRow row in importedTable.Rows)
+            foreach (DataRow row in definitionTable.Rows)
             {
                 var attributeFile = row.ItemArray[0].ToString();
-                var attributeName = row.ItemArray[1].ToString();
-                var attributeCode = row.ItemArray[2].ToString();
-                var attributeDefinition = row.ItemArray[3].ToString();
-                var attributeType = row.ItemArray[4].ToString();
+                var attributeElement = row.ItemArray[1].ToString();
+                var attributeName = row.ItemArray[2].ToString();
+                var attributeCode = row.ItemArray[3].ToString();
+                var attributeCodeInt = row.ItemArray[4].ToString();
+                var attributeDefinition = row.ItemArray[5].ToString();
+                var attributeType = row.ItemArray[6].ToString();
 
                 var attribute = new GwswsAttribute()
                 {
                     Name = attributeName,
+                    ElementName = attributeElement,
                     Definition = attributeDefinition,
                     FileName = attributeFile,
-                    Key = attributeCode,
+                    Key = attributeCodeInt,
+                    LocalKey = attributeCode,
                     AttributeType = FMParser.GetClrType(attributeName, attributeType, ref attributeDefinition,
-                        attributeFile, importedTable.Rows.IndexOf(row)),
+                        attributeFile, definitionTable.Rows.IndexOf(row)),
                 };
 
                 attributeList.Add(attribute);
@@ -201,30 +143,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                     FieldToColumnMapping = fileColumnMapping
                 };
 
-                var importedElementTable = CheckGwswFileImporterWorksCorrectly(elementFilePath, mapping);
+                var importedElementTable = CheckGwswFileImporterWorksCorrectly(elementFilePath, mapping, true);
                 importedTables.Add(importedElementTable);
             }
+
+            Assert.AreEqual( uniqueFileList.Count, importedTables.Count, string.Format("Not all files were imported correctly."));
         }
 
         [Test]
         public void ImportGwswFilesFromDefinitionFile()
         {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie.csv");
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var gwswImporter = new GwswFileImporterBase();
             Assert.IsNotNull(gwswImporter);
 
-            var dataTables = gwswImporter.ImportFromDefinitionFile(filePath);
+            var dataTables = gwswImporter.ImportFilesFromDefinitionFile(filePath);
             Assert.IsNotNull(dataTables);
 
             Assert.IsTrue(dataTables.Count > 0);
         }
 
+        [Test]
+        [TestCase(@"gwswFiles\BOP.csv")]
+        [TestCase(@"gwswFiles\Debiet.csv")]
+        [TestCase(@"gwswFiles\GroeneDaken.csv")]
+        [TestCase(@"gwswFiles\ItObject.csv")]
+        [TestCase(@"gwswFiles\Knooppunt.csv")]
+        [TestCase(@"gwswFiles\KunstWerk.csv")]
+        [TestCase(@"gwswFiles\Meta.csv")]
+        [TestCase(@"gwswFiles\Nwrw.csv")]
+        [TestCase(@"gwswFiles\Oppervlak.csv")]
+        [TestCase(@"gwswFiles\Profiel.csv")]
+        [TestCase(@"gwswFiles\Verbinding.csv")]
+        [TestCase(@"gwswFiles\Verloop.csv")]
+        public void ImportGwswCsvFileWithLoadedGwswDefinition(string testCasePath)
+        {
+            //Load GWSW definition
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            //No need to test this as already has existent tests
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            var filePath = GetFileAndCreateLocalCopy(testCasePath);
+            var mappingData = gwswImporter.CreateCsvMappingDataForFile(filePath);
+
+            CheckGwswFileImporterWorksCorrectly(filePath, mappingData);
+        }
 
         [Test]
         public void ImportCsvDebietFileUsingGwswFileImporter()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Debiet.csv");
-            
             var mappingData = new CsvMappingData
             {
                 Settings = new CsvSettings
@@ -265,12 +236,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             CheckGwswFileImporterWorksCorrectly(filePath, mappingData);
         }
 
-        #region Proof of concept - Import Csv
-
         [Test]
-        public void ImportCsvDebietFileIntoDataTable()
+        public void ImportGwswDefinitionFileWithHardcodedMapping()
         {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Debiet.csv");
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
 
             var mappingData = new CsvMappingData
             {
@@ -283,28 +252,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
                 {
                     {
-                        new CsvRequiredField("UNI_IDE", typeof (string)),
+                        new CsvRequiredField("Bestandsnaam", typeof (string)),
                         new CsvColumnInfo(0, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("DEB_TYP", typeof (string)),
+                        new CsvRequiredField("ElementName", typeof (string)),
                         new CsvColumnInfo(1, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("VER_IDE", typeof (string)),
+                        new CsvRequiredField("Kolomnaam", typeof (string)),
                         new CsvColumnInfo(2, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("AVV_ENH", typeof (string)),
+                        new CsvRequiredField("Code", typeof (string)),
                         new CsvColumnInfo(3, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("AFV_OPP", typeof (string)),
+                        new CsvRequiredField("Code_International", typeof (string)),
                         new CsvColumnInfo(4, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
+                        new CsvRequiredField("Definitie", typeof (string)),
                         new CsvColumnInfo(5, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Type", typeof (string)),
+                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Eenheid", typeof (string)),
+                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Verplicht", typeof (string)),
+                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Opmerking", typeof (string)),
+                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
                     },
                 }
             };
@@ -312,715 +297,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             CheckCsvIsImportedCorrectly(filePath, mappingData);
         }
 
-        [Test]
-        public void ReadKnooppuntCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("UNI_IDE", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("RST_IDE", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PUT_IDE", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_XCO", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_YCO", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("CMP_IDE", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("MVD_NIV", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("MVD_SCH", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("WOS_OPP", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_MAT", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_VRM", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_BOK", typeof (string)),
-                        new CsvColumnInfo(11, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_BRE", typeof (string)),
-                        new CsvColumnInfo(12, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_LEN", typeof (string)),
-                        new CsvColumnInfo(13, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KNP_TYP", typeof (string)),
-                        new CsvColumnInfo(14, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("INZ_TYP", typeof (string)),
-                        new CsvColumnInfo(15, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("INI_NIV", typeof (string)),
-                        new CsvColumnInfo(16, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("STA_OBJ", typeof (string)),
-                        new CsvColumnInfo(17, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_MVD", typeof (string)),
-                        new CsvColumnInfo(18, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ITO_IDE", typeof (string)),
-                        new CsvColumnInfo(19, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
-                        new CsvColumnInfo(20, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        public void ReadKunstwerkCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("UNI_IDE", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KWK_TYP", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("BWS_NIV", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_BOK", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("DRL_COE", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("DRL_CAP", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("OVS_BRE", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("OVS_NIV", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("OVS_COE", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PMP_CAP", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PMP_AN1", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PMP_AF1", typeof (string)),
-                        new CsvColumnInfo(11, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PMP_AN2", typeof (string)),
-                        new CsvColumnInfo(12, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PMP_AF2", typeof (string)),
-                        new CsvColumnInfo(13, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("QDH_NIV", typeof (string)),
-                        new CsvColumnInfo(14, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("QDH_DEB", typeof (string)),
-                        new CsvColumnInfo(15, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_OVN", typeof (string)),
-                        new CsvColumnInfo(16, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_OVB", typeof (string)),
-                        new CsvColumnInfo(17, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_CAP", typeof (string)),
-                        new CsvColumnInfo(18, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_ANS", typeof (string)),
-                        new CsvColumnInfo(19, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_AFS", typeof (string)),
-                        new CsvColumnInfo(20, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
-                        new CsvColumnInfo(21, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        public void ReadMetaCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Meta.csv");
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("ALG_ATL", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_VRS", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_DAT", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_OPD", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_UIT", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_OMS", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_EXP", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        public void ReadNwrwCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Nwrw.csv");
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                //IDE_AFW	AFV_BRG	AFV_IFX 	AFV_IFN 	AFV_IFA 	AFV_IFH 	AFV_AFS 	AFV_LEN 	AFV_HEL 	AFV_RUW	TOE_OBJ
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("IDE_AFW", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_BRG", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_IFX", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_IFN", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_IFA", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_IFH", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_AFS", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_LEN", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_HEL", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_RUW", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("TOE_OBJ", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        public void ReadOppervlakCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Oppervlak.csv");
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("UNI_IDE", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("NSL_STA", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_DEF", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_IDE", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AFV_OPP", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        [Category(TestCategory.WorkInProgress)]
-        public void ReadProfielCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
-
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("IDE_PRO", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("DEB_TYP", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_MAT", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_VRM", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_BRE", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_HGT", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("OPL_HL1", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("OPL_HL2", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("VNR_REG", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_NIV", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_NOP", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_NOM", typeof (string)),
-                        new CsvColumnInfo(11, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_BRE", typeof (string)),
-                        new CsvColumnInfo(12, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_PBR", typeof (string)),
-                        new CsvColumnInfo(13, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("TOE_OBJ", typeof (string)),
-                        new CsvColumnInfo(14, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        public void ReadVerbindingCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("UNI_IDE", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KN1_IDE", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("KN2_IDE", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("VRB_TYP", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("LEI_IDE", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("BOB_KN1", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("BOB_KN2", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("STR_RCH", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("VRB_LEN", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("INZ_TYP", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("INV_KN1", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("UTV_KN1", typeof (string)),
-                        new CsvColumnInfo(11, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("INV_KN2", typeof (string)),
-                        new CsvColumnInfo(12, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("UTV_KN2", typeof (string)),
-                        new CsvColumnInfo(13, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ITO_IDE", typeof (string)),
-                        new CsvColumnInfo(14, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("PRO_IDE", typeof (string)),
-                        new CsvColumnInfo(15, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("STA_OBI", typeof (string)),
-                        new CsvColumnInfo(16, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_BB1", typeof (string)),
-                        new CsvColumnInfo(17, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("AAN_BB2", typeof (string)),
-                        new CsvColumnInfo(18, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("INI_NIV", typeof (string)),
-                        new CsvColumnInfo(19, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
-                        new CsvColumnInfo(20, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
-        [Test]
-        public void ReadVerloopCsvFileIntoDataTable()
-        {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verloop.csv");
-           
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = csvDelimeter,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-																					
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("IDE_VER", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("VER_TYP", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("VER_DAG", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("VER_VOL", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U00_DAG", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U01_DAG", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U02_DAG", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U03_DAG", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U04_DAG", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U05_DAG", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U06_DAG", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U07_DAG", typeof (string)),
-                        new CsvColumnInfo(11, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U08_DAG", typeof (string)),
-                        new CsvColumnInfo(12, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U09_DAG", typeof (string)),
-                        new CsvColumnInfo(13, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U10_DAG", typeof (string)),
-                        new CsvColumnInfo(14, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U11_DAG", typeof (string)),
-                        new CsvColumnInfo(15, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U12_DAG", typeof (string)),
-                        new CsvColumnInfo(16, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U13_DAG", typeof (string)),
-                        new CsvColumnInfo(17, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U14_DAG", typeof (string)),
-                        new CsvColumnInfo(18, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U15_DAG", typeof (string)),
-                        new CsvColumnInfo(19, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U16_DAG", typeof (string)),
-                        new CsvColumnInfo(20, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U17_DAG", typeof (string)),
-                        new CsvColumnInfo(21, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U18_DAG", typeof (string)),
-                        new CsvColumnInfo(22, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U19_DAG", typeof (string)),
-                        new CsvColumnInfo(23, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U20_DAG", typeof (string)),
-                        new CsvColumnInfo(24, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U21_DAG", typeof (string)),
-                        new CsvColumnInfo(25, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U22_DAG", typeof (string)),
-                        new CsvColumnInfo(26, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("U23_DAG", typeof (string)),
-                        new CsvColumnInfo(27, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("TOE_OBJ", typeof (string)),
-                        new CsvColumnInfo(28, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
-            CheckCsvIsImportedCorrectly( filePath, mappingData);
-        }
-
         #endregion
 
         #region Helpers
 
-        private static DataTable CheckGwswFileImporterWorksCorrectly(string filePath, CsvMappingData mappingData)
+        private static DataTable CheckGwswFileImporterWorksCorrectly(string filePath, CsvMappingData mappingData, bool continousTesting = false)
         {
             var importer = new GwswFileImporterBase();
             Assert.IsNotNull(importer);
@@ -1032,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var fileAsStringList = File.ReadAllLines(filePath);
             var numberOfLines = fileAsStringList.Length - 1; // we should not include the header
             var rowsCount = importedTable.Rows.Count;
-            if (rowsCount != numberOfLines)
+            if (rowsCount != numberOfLines && !continousTesting)
             {
                 //Check there are no repeated columns in the .CSV
                 var repeatedElements = fileAsStringList[0].Split(csvDelimeter).GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)
