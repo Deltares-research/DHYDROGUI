@@ -23,14 +23,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GwswAttributeReturnsElementNameWithoutExtension()
         {
             var elementName = "test_element";
-            var attributeTest = new GwswsAttribute()
+            var attributeTest = new GwswAttributeType()
             {
                 ElementName = elementName + ".csv",
             };
             Assert.AreEqual(elementName, attributeTest.ElementName);
             
             /* If the name is originally given without extension, it should remain the same.*/
-            attributeTest = new GwswsAttribute()
+            attributeTest = new GwswAttributeType()
             {
                 ElementName = elementName,
             };
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             try
             {
-                var attributeTest = new GwswsAttribute("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                var attributeTest = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
                 Assert.IsNotNull(attributeTest);
                 Assert.AreEqual(expectedType, attributeTest.AttributeType);
             }
@@ -72,14 +72,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void CreateGwswDataTableFromDefinitionFileThenImportFiles()
+        public void CreateGwswDataTableFromDefinitionFileThenImportFilesAsDataTables()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             // Import Csv Definition.
             var gwswImporter = new GwswFileImporterBase();
             var definitionTable = gwswImporter.ImportDefinitionFile(filePath);
 
-            var attributeList = new List<GwswsAttribute>();
+            var attributeList = new List<GwswAttributeType>();
 
             foreach (DataRow row in definitionTable.Rows)
             {
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var attributeDefinition = row.ItemArray[5].ToString();
                 var attributeType = row.ItemArray[6].ToString();
 
-                var attribute = new GwswsAttribute()
+                var attribute = new GwswAttributeType()
                 {
                     Name = attributeName,
                     ElementName = attributeElement,
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                     FieldToColumnMapping = fileColumnMapping
                 };
 
-                var importedElementTable = CheckGwswFileImporterWorksCorrectly(elementFilePath, mapping, true);
+                var importedElementTable = GwswFileImportAsDataTableWorksCorrectly(elementFilePath, mapping, true);
                 importedTables.Add(importedElementTable);
             }
 
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [TestCase(@"gwswFiles\GroeneDaken.csv")]
         [TestCase(@"gwswFiles\ItObject.csv")]
         [TestCase(@"gwswFiles\Knooppunt.csv")]
-        [TestCase(@"gwswFiles\KunstWerk.csv")]
+        [TestCase(@"gwswFiles\Kunstwerk.csv")]
         [TestCase(@"gwswFiles\Meta.csv")]
         [TestCase(@"gwswFiles\Nwrw.csv")]
         [TestCase(@"gwswFiles\Oppervlak.csv")]
@@ -177,6 +177,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [TestCase(@"gwswFiles\Verbinding.csv")]
         [TestCase(@"gwswFiles\Verloop.csv")]
         public void ImportGwswCsvFileWithLoadedGwswDefinition(string testCasePath)
+        {
+            //Load GWSW definition
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.NotNull(gwswImporter);
+
+            //No need to test this as already has existent tests
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+            Assert.NotNull( gwswImporter.AttributesDefinition );
+
+            var filePath = GetFileAndCreateLocalCopy(testCasePath);
+            var mappingData = gwswImporter.CreateCsvMappingDataForFile(filePath);
+
+            var elementList = GwswFileImportAsGwswElementsWorksCorrectly(gwswImporter, filePath, mappingData);
+
+            var importedCsv = new CsvImporter().ImportCsv(filePath, mappingData);
+            Assert.IsNotNull(importedCsv, string.Format("The .csv file {0}, could not be imported.", filePath));
+
+            var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
+            Assert.AreEqual(numberOfLines, elementList.Count, string.Format("There is a mismatch between expected number of elements and imported."));
+            if (numberOfLines != 0)
+            {
+                var numberOfColumns = File.ReadLines(filePath).First().Split(mappingData.Settings.Delimiter).Where(s => !s.Equals(string.Empty)).ToList().Count;
+                foreach (var element in elementList)
+                {
+                    Assert.AreEqual(numberOfColumns, element.GwswAttributeList.Count, string.Format("There is a mismatch between expected and imported attributes for element {0}", element.ElementTypeName));
+                }
+            }
+        }
+
+        [Test]
+        [TestCase(@"gwswFiles\BOP.csv")]
+        [TestCase(@"gwswFiles\Debiet.csv")]
+        [TestCase(@"gwswFiles\GroeneDaken.csv")]
+        [TestCase(@"gwswFiles\ItObject.csv")]
+        [TestCase(@"gwswFiles\Knooppunt.csv")]
+        [TestCase(@"gwswFiles\KunstWerk.csv")]
+        [TestCase(@"gwswFiles\Meta.csv")]
+        [TestCase(@"gwswFiles\Nwrw.csv")]
+        [TestCase(@"gwswFiles\Oppervlak.csv")]
+        [TestCase(@"gwswFiles\Profiel.csv")]
+        [TestCase(@"gwswFiles\Verbinding.csv")]
+        [TestCase(@"gwswFiles\Verloop.csv")]
+        public void ImportGwswCsvFileWithLoadedGwswDefinitionAsDataTables(string testCasePath)
         {
             //Load GWSW definition
             var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
@@ -189,18 +233,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(testCasePath);
             var mappingData = gwswImporter.CreateCsvMappingDataForFile(filePath);
 
-            CheckGwswFileImporterWorksCorrectly(filePath, mappingData);
+            GwswFileImportAsDataTableWorksCorrectly(filePath, mappingData);
         }
 
         [Test]
-        public void ImportCsvDebietFileUsingGwswFileImporter()
+        public void ImportCsvDebietFileUsingGwswFileImporterAndHardcodedMapping()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Debiet.csv");
             var mappingData = new CsvMappingData
             {
                 Settings = new CsvSettings
                 {
-                    Delimiter = csvDelimeter,
+                    Delimiter = ';',
                     FirstRowIsHeader = true,
                     SkipEmptyLines = true
                 },
@@ -233,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 }
             };
 
-            CheckGwswFileImporterWorksCorrectly(filePath, mappingData);
+            GwswFileImportAsDataTableWorksCorrectly(filePath, mappingData);
         }
 
         [Test]
@@ -301,13 +345,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         #region Helpers
 
-        private static DataTable CheckGwswFileImporterWorksCorrectly(string filePath, CsvMappingData mappingData, bool continousTesting = false)
+        private static List<GwswElement> GwswFileImportAsGwswElementsWorksCorrectly(GwswFileImporterBase importer, string filePath, CsvMappingData mappingData, bool continousTesting = false)
+        {
+            var importedObject = importer.ImportItem(filePath, mappingData);
+            var importedElementList = importedObject as List<GwswElement>;
+            Assert.IsNotNull(importedElementList, string.Format("The .csv file {0}, could not be imported.", filePath));
+
+            var fileAsStringList = File.ReadAllLines(filePath);
+            var numberOfLines = fileAsStringList.Length - 1; // we should not include the header
+            var rowsCount = importedElementList.Count;
+            if (rowsCount != numberOfLines && !continousTesting)
+            {
+                //Check there are no repeated columns in the .CSV
+                var repeatedElements = fileAsStringList[0].Split(csvDelimeter).GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key)
+                    .ToList();
+
+                /* If there were repeated columns, that table will simply not be imported, and the user will receive a log message saying so. 
+                  as for this test, we are interested onto continuing, so we can ignore when a column is repeated. Its corresponding test will fail. */
+                if (repeatedElements.Count == 0)
+                {
+                    Assert.AreEqual(numberOfLines, rowsCount, string.Format("The imported .csv file {0}, contains {1} rows but {2} were imported.", filePath, numberOfLines, rowsCount));
+                }
+            }
+
+            return importedElementList;
+        }
+
+        private static DataTable GwswFileImportAsDataTableWorksCorrectly(string filePath, CsvMappingData mappingData, bool continousTesting = false)
         {
             var importer = new GwswFileImporterBase();
             Assert.IsNotNull(importer);
 
-            var importedObject = importer.ImportItem(filePath, mappingData);
-            var importedTable = importedObject as DataTable;
+            var importedTable = importer.ImportFileAsDataTable(filePath, mappingData);
             Assert.IsNotNull(importedTable, string.Format("The .csv file {0}, could not be imported.", filePath));
 
             var fileAsStringList = File.ReadAllLines(filePath);

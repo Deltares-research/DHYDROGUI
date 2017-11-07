@@ -255,6 +255,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find file {0}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0} was not imported correctly..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_correctly_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_corr" +
+                        "ectly_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Importing sub files..
         /// </summary>
         public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_ {
