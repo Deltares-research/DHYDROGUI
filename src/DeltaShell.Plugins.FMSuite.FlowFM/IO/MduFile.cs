@@ -1044,13 +1044,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             for (var i = 0; i < featureGroupNames.Count; i++)
             {
                 var filePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(mduDirectory, featureGroupNames[i]));
-                var absolutePath = new Uri(filePath).AbsolutePath;
-                
-                var isOutsideMduFolderMatch = new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, absolutePath, true));
+                var isOutsideMduFolderMatch = new Regex(@"\.{2,}").Match(FileUtils.GetRelativePath(mduDirectory, filePath, true));
                 if (!isOutsideMduFolderMatch.Success) // File is situated inside mdu-folder or in a subfolder
                 {
-                    featureGroupNames[i] = absolutePath;
-                    oldFilePaths.Add(absolutePath, absolutePath);
+                    featureGroupNames[i] = filePath;
+                    oldFilePaths.Add(filePath, filePath);
                 }
                 else // File is situated outside of mdu-folder
                 {
@@ -1064,8 +1062,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         continue;
                     }
 
-                    File.Copy(absolutePath, newFilePath);
-                    oldFilePaths.Add(newFilePath, absolutePath);
+                    File.Copy(filePath, newFilePath);
+                    oldFilePaths.Add(newFilePath, filePath);
                     Log.InfoFormat(
                         Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
                         filePath, newFilePath, modelDefinition.ModelName);
