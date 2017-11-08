@@ -2456,6 +2456,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 dispersionF3Coverage[startOfBranch] = 2.0;
                 dispersionF3Coverage[endOfBranch] = 3.0;
 
+                // set estuaryMouth
+                waterFlowModel1D.SalinityEstuaryMouthNodeId = network.Nodes[0].Name;
+
                 waterFlowModel1D.Initialize();
                 
                 // run waterFlowModel1D

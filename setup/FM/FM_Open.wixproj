@@ -8,7 +8,7 @@
     <!-- This is our release version -->
     <ReleaseVersion>1.4.0</ReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>Delft3D FM Suite 2017 OpenHMWQ</ProductName>
+    <ProductName>Delft3D FM Suite 2018 OpenHMWQ</ProductName>
     <ProjectGuid>{2481f918-8b09-42cc-ac8b-b81e78a2aaa9}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>

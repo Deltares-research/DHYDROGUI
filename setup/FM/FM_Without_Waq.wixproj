@@ -8,7 +8,7 @@
     <!-- This is our release version -->
     <ReleaseVersion>1.4.0</ReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>Delft3D FM Suite 2017 HM</ProductName>
+    <ProductName>Delft3D FM Suite 2018 HM</ProductName>
     <ProjectGuid>{526694a4-fee1-41ab-8f54-d3f3dc5f192d}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
