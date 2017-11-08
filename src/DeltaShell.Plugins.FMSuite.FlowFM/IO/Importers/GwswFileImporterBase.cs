@@ -34,9 +34,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
 
             var elementList = new List<GwswElement>();
+            var elementTypeFound = AttributesDefinition.FirstOrDefault(at => at.FileName.Equals(Path.GetFileName(path)));
+            string elementTypeName = string.Empty;
+            if (elementTypeFound != null)
+            {
+                elementTypeName = elementTypeFound.ElementName;
+            }
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
                 var element = new GwswElement();
+                element.ElementTypeName = elementTypeName;
                 var rowValues = dataRow.ItemArray.ToList();
                 foreach (var column in rowValues)
                 {
@@ -50,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         var foundAttr = AttributesDefinition.FirstOrDefault(attr => attr.Key.Equals(columnName));
                         if (foundAttr == null)
                         {
-                            Log.ErrorFormat("Row {0} column {1} of file {2} was not mapped correctly.", importedDataTable.Rows.IndexOf(dataRow), columnName, path);
+                            Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, importedDataTable.Rows.IndexOf(dataRow), columnName, path);
                             continue;
                         }
                         attribute.GwswAttributeType = foundAttr;

@@ -301,6 +301,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Row {0} column {1} of file {2} was not mapped correctly..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_cor" +
+                        "rectly_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hurricane2 {

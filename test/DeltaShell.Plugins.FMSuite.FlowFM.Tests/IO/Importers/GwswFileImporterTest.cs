@@ -197,11 +197,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
             Assert.AreEqual(numberOfLines, elementList.Count, string.Format("There is a mismatch between expected number of elements and imported."));
+            var elementTypeFound = gwswImporter.AttributesDefinition.FirstOrDefault(at => at.FileName.Equals(Path.GetFileName(testCasePath)));
+            if (elementTypeFound == null)
+            {
+                Assert.Fail("Test failed because no element name was found mapped to this file name.");    
+            }
+
             if (numberOfLines != 0)
             {
                 var numberOfColumns = File.ReadLines(filePath).First().Split(mappingData.Settings.Delimiter).Where(s => !s.Equals(string.Empty)).ToList().Count;
                 foreach (var element in elementList)
                 {
+                    Assert.AreEqual(elementTypeFound.ElementName, element.ElementTypeName);
                     Assert.AreEqual(numberOfColumns, element.GwswAttributeList.Count, string.Format("There is a mismatch between expected and imported attributes for element {0}", element.ElementTypeName));
                 }
             }
