@@ -19,6 +19,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private char CsvDelimeterSemiColon = ';';
         private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporterBase));
 
+        public Dictionary<string, SewerFeatureType> stringToSewerTypeConverter = new Dictionary<string, SewerFeatureType>
+        {
+            { "Node", SewerFeatureType.Node },
+            { "Pipe", SewerFeatureType.Pipe },
+            { "Structure", SewerFeatureType.Structure },
+            { "Surface", SewerFeatureType.Surface },
+            { "Runoff", SewerFeatureType.Runoff },
+            { "Discharge", SewerFeatureType.Discharge },
+            { "Distribution", SewerFeatureType.Distribution },
+            { "Meta", SewerFeatureType.Meta }
+        };
+
         public List<GwswAttributeType> AttributesDefinition { get; private set; }
 
         #region IFileImporter
@@ -43,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
                 var element = new GwswElement();
-                element.ElementTypeName = elementTypeName;
+                element.ElementType = stringToSewerTypeConverter[elementTypeName];
                 var rowValues = dataRow.ItemArray.ToList();
                 foreach (var column in rowValues)
                 {
@@ -271,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class GwswElement
     {
         public List<GwswAttribute> GwswAttributeList { get; set; }
-        public string ElementTypeName { get; set; }
+        public SewerFeatureType ElementType { get; set; }
 
         public GwswElement()
         {

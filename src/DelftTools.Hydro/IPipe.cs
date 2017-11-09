@@ -1,22 +1,25 @@
-using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
-    public interface IPipe : IBranch, IHydroNetworkFeature
+    public interface IPipe : IBranch
     {
-        ICrossSectionDefinition CrossSectionDefinition { get; set; }
+        string PipeId { get; set; }
+        CrossSection CrossSectionShape { get; set; }
+        PipeType PipeType { get; set; }
+        double Length { get; set; }
+        double LevelSource { get; set; }
+        double LevelTarget { get; set; }
+    }
 
-        IEnumerable<IStructure> Structures { get; set; }
-
-        IEnumerable<IPump> Pumps { get; }
-        
-        IEnumerable<IGully> Gullies { get; }
-
-        double StartZ { get; set; }
-
-        double EndZ { get; set; }
+    public enum PipeType
+    {
+        Orifice,
+        ClosedConnection,
+        InfiltrationPipe,
+        Open,
+        Crest,
+        Pump
     }
 }

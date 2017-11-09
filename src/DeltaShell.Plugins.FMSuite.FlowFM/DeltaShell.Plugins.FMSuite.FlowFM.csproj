@@ -230,6 +230,8 @@
     <Compile Include="IO\SedimentFile.cs" />
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
+    <Compile Include="SewerFeatureFactory.cs" />
+    <Compile Include="SewerFeatureType.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

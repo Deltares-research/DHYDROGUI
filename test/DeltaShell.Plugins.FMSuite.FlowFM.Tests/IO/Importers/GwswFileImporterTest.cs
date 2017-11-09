@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -208,8 +209,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var numberOfColumns = File.ReadLines(filePath).First().Split(mappingData.Settings.Delimiter).Where(s => !s.Equals(string.Empty)).ToList().Count;
                 foreach (var element in elementList)
                 {
-                    Assert.AreEqual(elementTypeFound.ElementName, element.ElementTypeName);
-                    Assert.AreEqual(numberOfColumns, element.GwswAttributeList.Count, string.Format("There is a mismatch between expected and imported attributes for element {0}", element.ElementTypeName));
+                    Assert.AreEqual(gwswImporter.stringToSewerTypeConverter[elementTypeFound.ElementName], element.ElementType);
+                    Assert.AreEqual(numberOfColumns, element.GwswAttributeList.Count, string.Format("There is a mismatch between expected and imported attributes for element {0}", element.ElementType));
                 }
             }
         }
