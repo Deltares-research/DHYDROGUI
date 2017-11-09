@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 CreateDelegate = delegate(List<Coordinate> points, string name)
                 {
                     points.ForEach(p => p.Z = 0.0);
-                    return new Embankment {Name = name, Geometry = PliFile<Embankment>.CreatePolyLine(points)};
+                    return new Embankment {Name = name, Geometry = PliFile<Embankment>.CreatePolyLineGeometry(points)};
                 },
             };
 
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate = delegate(List<Coordinate> points1, string name1)
                 {
-                    var feature1 = new FixedWeir {Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLine(points1)};
+                    var feature1 = new FixedWeir {Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)};
                     feature1.InitializeAttributes();
                     return feature1;
                 },
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     (points, name) =>
                         points.Count == 1
                             ? new Feature2DPoint {Name = name, Geometry = new Point(points[0])}
-                            : new Feature2D {Name = name, Geometry = PliFile<Feature2D>.CreatePolyLine(points)}
+                            : new Feature2D {Name = name, Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points)}
             };
             yield return new PliFileImporterExporter<BoundaryConditionSet, Feature2D>
             {

@@ -519,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 fixedWeirFile.CreateDelegate = delegate(List<Coordinate> points, string name)
                 {
-                    var feature = new FixedWeir {Name = name, Geometry = PlizFile<FixedWeir>.CreatePolyLine(points)};
+                    var feature = new FixedWeir {Name = name, Geometry = PlizFile<FixedWeir>.CreatePolyLineGeometry(points)};
                     feature.InitializeAttributes();
                     return feature;
                 };
