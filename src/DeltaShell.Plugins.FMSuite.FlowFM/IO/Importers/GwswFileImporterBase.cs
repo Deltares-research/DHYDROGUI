@@ -66,21 +66,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var elementList = new List<GwswElement>();
             var elementTypeFound = AttributesDefinition.FirstOrDefault(at => at.FileName.Equals(Path.GetFileName(path)));
-            string elementTypeName = string.Empty;
+            var elementTypeName = string.Empty;
             if (elementTypeFound != null)
             {
                 elementTypeName = elementTypeFound.ElementName;
             }
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
-                var element = new GwswElement();
-                element.ElementType = stringToSewerTypeConverter[elementTypeName];
+                var element = new GwswElement {ElementType = stringToSewerTypeConverter[elementTypeName]};
                 var rowValues = dataRow.ItemArray.ToList();
                 foreach (var column in rowValues)
                 {
-                    var attribute = new GwswAttribute();
-                    attribute.ValueAsString = column.ToString();
-                    attribute.ValueType = column.GetType();
+                    var attribute = new GwswAttribute
+                    {
+                        ValueAsString = column.ToString(),
+                        ValueType = column.GetType()
+                    };
                     var columnIndex = rowValues.IndexOf(column);
                     var columnName = importedDataTable.Columns[columnIndex].ColumnName;
                     if (AttributesDefinition != null)
