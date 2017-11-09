@@ -14,7 +14,6 @@ Knooppunt.csv,Node.csv,HydxNiveauBinnenonderkantPut,KNP_BOK,BOTTOM_LEVEL,Niveau 
 Knooppunt.csv,Node.csv,HydxBreedte_diameterPutbodem,KNP_BRE,NODE_WIDTH,Breedte/diameter putbodem,double,mm,ja,[Len=8.2]
 Knooppunt.csv,Node.csv,HydxLengtePutbodem,KNP_LEN,NODE_LENGTH,Lengte putbodem,double,mm,nee,[Len=8.2] [Verplicht als Knooppunt/KNP_VRM=RHK]
 Knooppunt.csv,Node.csv,HydxTypeKnooppunt,KNP_TYP,NODE_TYPE,Type knooppunt,string,TypeKnooppuntColl,ja,[Len=3]
-Knooppunt.csv,Node.csv,HydxTypeInzameling,INZ_TYP,WATER_TYPE,Type afvalwater dat wordt ingezameld,string,TypeInzamelingColl,ja,"[Len=3] [Verplicht als Knooppunt/KNP_TYP=INS,ITP,CMP Verbinding/VRB_TYP=GSL,OPL,ITR"
 Knooppunt.csv,Node.csv,HydxInitieleWaterstand,INI_NIV,INITIAL_WATERLEVEL,Initiële waterstand t.o.v. NAP,double,m,nee,[Len=8.2]
 Knooppunt.csv,Node.csv,HydxStatusObject,STA_OBJ,STATUS,Status van het object,string,StatusObjectColl,nee,[Len=3]
 Knooppunt.csv,Node.csv,HydxAannameMaaiveldhoogte,AAN_MVD,A_SURFACE_LEVEL,Aanname maaiveldhoogte,string,AannameHydXColl,nee,[Len=3]
