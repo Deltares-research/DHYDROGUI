@@ -15,9 +15,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     class GwswFileImporterBase : IFileImporter
     {
+        private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporterBase));
         private char CsvDelimeterComma = ',';
         private char CsvDelimeterSemiColon = ';';
-        private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporterBase));
+        private CsvSettings _csvSettings;
+
+        private CsvSettings CsvSettingsSemiColonDelimeted
+        {
+            get
+            {
+                if (_csvSettings == null)
+                {
+                    _csvSettings = new CsvSettings
+                    {
+                        Delimiter = CsvDelimeterSemiColon,
+                        FirstRowIsHeader = true,
+                        SkipEmptyLines = true
+                    };
+                }
+                
+                return _csvSettings;
+            }
+        }
 
         public Dictionary<string, SewerFeatureType> stringToSewerTypeConverter = new Dictionary<string, SewerFeatureType>
         {
@@ -36,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         #region IFileImporter
         public bool CanImportOn(object targetObject)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public object ImportItem(string path, object target = null)
@@ -83,16 +102,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return elementList;
         }
 
-        public string Name { get; }
-        public string Category { get; }
-        public Bitmap Image { get; }
-        public IEnumerable<Type> SupportedItemTypes { get; }
-        public bool CanImportOnRootLevel { get; }
-        public string FileFilter { get; }
+        public string Name
+        {
+            get { return "GWSW File importer"; }
+        }
+
+        public string Category
+        {
+            get { return "1D / 2D"; }
+        }
+
+        public Bitmap Image
+        {
+            get { return Properties.Resources.StructureFeatureSmall; }
+        }
+        public IEnumerable<Type> SupportedItemTypes
+        {
+            get
+            {
+                yield return typeof(IWaterFlowFMModel);
+            }
+        }
+        public bool CanImportOnRootLevel { get { return false;  } }
+        public string FileFilter { get { return "GWSW Csv Files (*.csv)|*.csv"; } }
         public string TargetDataDirectory { get; set; }
         public bool ShouldCancel { get; set; }
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get; }
+        public bool OpenViewAfterImport { get { return false; } }
         #endregion
 
         public DataTable ImportFileAsDataTable(string path, object target = null)
@@ -254,13 +290,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public CsvMappingData CreateCsvMappingDataForFile(string fileName)
         {
-            var csvSettings = new CsvSettings
-            {
-                Delimiter = CsvDelimeterSemiColon,
-                FirstRowIsHeader = true,
-                SkipEmptyLines = true
-            };
-
             //Import file elements based on their attributes
             var fileAttributes = AttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName))).ToList();
             var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
@@ -273,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var mapping = new CsvMappingData()
             {
-                Settings = csvSettings,
+                Settings = CsvSettingsSemiColonDelimeted,
                 FieldToColumnMapping = fileColumnMapping
             };
             return mapping;

@@ -4,7 +4,6 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -60,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         #region Gwsw Import tests
 
         [Test]
-        public void ImportGwswDefinitionFile()
+        public void ImportGwswDefinitionFileLoadsAsManyAttributesAsLinesInTheCsv()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var gwswImporter = new GwswFileImporterBase();
@@ -70,6 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
             var rowsCount = attributeTable.Rows.Count;
             Assert.AreEqual(numberOfLines, rowsCount, string.Format("The imported .csv file {0}, contains {1} rows but {2} were imported.", filePath, numberOfLines, rowsCount));
+
+            Assert.AreEqual(numberOfLines, gwswImporter.AttributesDefinition.Count, string.Format("The imported .csv file {0}, contains {1} rows but {2} were imported.", filePath, numberOfLines, rowsCount));
         }
 
         [Test]
@@ -152,16 +153,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void ImportGwswFilesFromDefinitionFile()
+        public void ImportGwswFilesFromDefinitionFileLoadsAllElements()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var gwswImporter = new GwswFileImporterBase();
             Assert.IsNotNull(gwswImporter);
 
-            var dataTables = gwswImporter.ImportFilesFromDefinitionFile(filePath);
-            Assert.IsNotNull(dataTables);
+            var dataElements = gwswImporter.ImportFilesFromDefinitionFile(filePath);
+            Assert.IsNotNull(dataElements);
 
-            Assert.IsTrue(dataTables.Count > 0);
+
+            var uniqueFileList = gwswImporter.AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
+            var expectedNumberOfElements = 0;
+
+            foreach (var fileName in uniqueFileList)
+            {
+                var directoryName = Path.GetDirectoryName(filePath);
+                var elementFilePath = Path.Combine(directoryName, fileName);
+                Assert.IsTrue(File.Exists(elementFilePath));
+                expectedNumberOfElements += File.ReadAllLines(elementFilePath).Length - 1;
+            }
+            Assert.AreNotEqual(expectedNumberOfElements, 0, "No elements were loaded.");
+            Assert.AreEqual(expectedNumberOfElements, dataElements.Count, "Not all elements were imported correctly. Other tests might be failing due to this.");
         }
 
         [Test]
