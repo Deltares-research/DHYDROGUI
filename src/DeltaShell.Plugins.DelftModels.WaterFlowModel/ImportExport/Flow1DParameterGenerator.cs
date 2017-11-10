@@ -588,6 +588,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 globalValuesGroup.AddProperty(ModelDefinitionsRegion.Dispersion.Key, waterFlowModel1D.DispersionCoverage.DefaultValue,
                     ModelDefinitionsRegion.Dispersion.Description, ModelDefinitionsRegion.Dispersion.Format);
             }
+
+            if (waterFlowModel1D.DispersionF3Coverage != null)
+            {
+                globalValuesGroup.AddProperty(ModelDefinitionsRegion.DispersionF3.Key, waterFlowModel1D.DispersionF3Coverage.DefaultValue,
+                    ModelDefinitionsRegion.DispersionF3.Description, ModelDefinitionsRegion.DispersionF3.Format);
+            }
+
+            if (waterFlowModel1D.DispersionF4Coverage != null)
+            {
+                globalValuesGroup.AddProperty(ModelDefinitionsRegion.DispersionF4.Key, waterFlowModel1D.DispersionF4Coverage.DefaultValue,
+                    ModelDefinitionsRegion.DispersionF4.Description, ModelDefinitionsRegion.DispersionF4.Format);
+            }
+
             return globalValuesGroup;
         }
     }
