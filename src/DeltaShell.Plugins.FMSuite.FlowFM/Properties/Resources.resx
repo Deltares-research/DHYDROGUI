@@ -358,4 +358,13 @@ File import of structures file '{1}' has failed.</value>
   <data name="GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_" xml:space="preserve">
     <value>Row {0} column {1} of file {2} was not mapped correctly.</value>
   </data>
+  <data name="GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__" xml:space="preserve">
+    <value>There is a mismatch for File Name {0}, currently mapped to different element names {1}.</value>
+  </data>
+  <data name="GwswFileImporterBase_ImportItem_Mapping_file__0__as_element__1_" xml:space="preserve">
+    <value>Mapping file {0} as element {1}</value>
+  </data>
+  <data name="GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_" xml:space="preserve">
+    <value>Occurrences on file {0} will not be mapped to any element.</value>
+  </data>
 </root>

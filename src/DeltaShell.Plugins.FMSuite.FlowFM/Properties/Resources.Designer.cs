@@ -246,6 +246,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is a mismatch for File Name {0}, currently mapped to different element names {1}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___" +
+                        "currently_mapped_to_different_element_names__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attributes mapped {0}.
         /// </summary>
         public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_ {
@@ -292,11 +302,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mapping file {0} as element {1}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Mapping_file__0__as_element__1_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Mapping_file__0__as_element__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No mapping was found to import File {0}..
         /// </summary>
         public static string GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__ {
             get {
                 return ResourceManager.GetString("GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occurrences on file {0} will not be mapped to any element..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any" +
+                        "_element_", resourceCulture);
             }
         }
         

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -48,7 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            var importedDataTable = ImportFileAsDataTable(path, target);
+            var mapping = CreateCsvMappingDataForFile(path);
+            var importedDataTable = ImportFileAsDataTable(path, mapping);
             if (importedDataTable == null)
                 return null;
 
@@ -58,6 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (elementTypeFound != null)
             {
                 elementTypeName = elementTypeFound.ElementName;
+                Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Mapping_file__0__as_element__1_, path, elementTypeName);
+            }
+            else
+            {
+                Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, path);
             }
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
@@ -120,9 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool OpenViewAfterImport { get { return false; } }
         #endregion
 
-        public DataTable ImportFileAsDataTable(string path, object target = null)
+        public DataTable ImportFileAsDataTable(string path, CsvMappingData mappingData)
         {
-            var mappingData = target as CsvMappingData;
             if (mappingData == null)
             {
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, path);
@@ -164,9 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     continue;
                 }
 
-                var mapping = CreateCsvMappingDataForFile(fileName);
-
-                var importedElement = ImportItem(elementFilePath, mapping);
+                var importedElement = ImportItem(elementFilePath);
                 var importedElementTable = importedElement as List<GwswElement>;
                 if (importedElementTable == null)
                 {
@@ -272,6 +276,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 attributeList.Add(attribute);
             }
 
+            //If some attributes have a different element from which they should, then we will show an error informing of such a difference.
+            attributeList.GroupBy(el => el.FileName).ForEach(gr =>
+            {
+                var mismatchedElementNames = gr.Select(el => el.ElementName).Distinct().ToList();
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__, mismatchedElementNames);
+            });
+
             AttributesDefinition = attributeList;
 
             return importedTable;
@@ -280,6 +291,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public CsvMappingData CreateCsvMappingDataForFile(string fileName)
         {
             //Import file elements based on their attributes
+            if (AttributesDefinition == null || !AttributesDefinition.Any())
+            {
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, fileName);
+                return null;
+            }
+
             var fileAttributes = AttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName))).ToList();
             var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
             //Create column mapping
