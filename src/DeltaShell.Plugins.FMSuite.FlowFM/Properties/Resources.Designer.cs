@@ -237,6 +237,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The type value {0} on line {1} file {2}, could not be parsed. Please check it is correctly written..
+        /// </summary>
+        public static string GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_ {
+            get {
+                return ResourceManager.GetString("GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___" +
+                        "could_not_be_parsed__Please_check_it_is_correctly_written_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not possible to import {0}.
         /// </summary>
         public static string GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_ {

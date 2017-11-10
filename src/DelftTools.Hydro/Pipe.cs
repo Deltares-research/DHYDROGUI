@@ -12,6 +12,12 @@ namespace DelftTools.Hydro
         public PipeType PipeType { get; set; }
         public double LevelSource { get; set; }
         public double LevelTarget { get; set; }
+        /*
+         * The following properties are inherated from the branch
+         * NODE_ID_START
+         * NODE_ID_END
+         * LENGTH
+        */
 
         public override bool IsLengthCustom
         {

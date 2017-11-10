@@ -402,9 +402,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual(expectedElements, listElements.Count);
 
             listElements.ForEach( el => Assert.AreEqual(SewerFeatureType.Pipe.ToString(), el.ElementTypeName));
-
-
-
         }
 
         #endregion

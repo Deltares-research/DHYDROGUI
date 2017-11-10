@@ -74,8 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     var attribute = new GwswAttribute
                     {
-                        ValueAsString = column.ToString(),
-                        ValueType = column.GetType()
+                        ValueAsString = column.ToString()
                     };
                     var columnIndex = rowValues.IndexOf(column);
                     var columnName = importedDataTable.Columns[columnIndex].ColumnName;
@@ -269,8 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     FileName = attributeFile,
                     Key = attributeCodeInt,
                     LocalKey = attributeCode,
-                    AttributeType = FMParser.GetClrType(attributeName, attributeType, ref attributeDefinition,
-                        attributeFile, importedTable.Rows.IndexOf(row)),
+                    AttributeType = GwswAttributeType.TryGetParsedValueType(attributeName, attributeType, attributeDefinition, attributeFile, importedTable.Rows.IndexOf(row)),
                 };
 
                 attributeList.Add(attribute);
@@ -329,15 +327,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class GwswAttribute
     {
         public GwswAttributeType GwswAttributeType { get; set; }
-        public string ValueAsString { get; set; } 
-        public Type ValueType { get; set; }
+        public string ValueAsString { get; set; }
     }
 
     public class GwswAttributeType
     {
+        private static ILog Log = LogManager.GetLogger(typeof(GwswAttributeType));
+
         public string Name { get; set; }
 
         private string _elementName;
+
         public string ElementName
         {
             get
@@ -359,9 +359,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public string FileName { get; set; }
         public Type AttributeType { get; set; }
 
-        public GwswAttributeType(){}
+        public GwswAttributeType()
+        {
+        }
 
-        public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeFiled, string codeName, string definition, string mandatory, string remarks)
+        public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeFiled, string codeName,
+            string definition, string mandatory, string remarks)
         {
             Name = columnName;
             Key = codeName;
@@ -369,7 +372,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             Mandatory = mandatory;
             Remarks = remarks;
             FileName = fileName;
-            AttributeType = FMParser.GetClrType(Name, typeFiled, ref definition, fileName, lineNumber);
+            AttributeType = TryGetParsedValueType(Name, typeFiled, definition, fileName, lineNumber);
+        }
+
+        public static Type TryGetParsedValueType(string name, string typeFiled, string definition, string fileName, int lineNumber)
+        {
+            try
+            {
+                return FMParser.GetClrType(name, typeFiled, ref definition, fileName, lineNumber);
+            }
+            catch (Exception)
+            {
+                Log.ErrorFormat(Resources.GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_, name, lineNumber, fileName);
+            }
+
+            return null;
         }
     }
 }
