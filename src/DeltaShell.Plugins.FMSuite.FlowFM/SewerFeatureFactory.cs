@@ -8,15 +8,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerFeatureFactory
     {
-        private static Dictionary<SewerFeatureType, Func<GwswElement, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<GwswElement, INetworkFeature>>
+        // For now, the types are: Node, Pipe, Structure, Surface, Runoff, Discharge, Distribution, Meta
+        private static Dictionary<string, Func<GwswElement, INetworkFeature>> CreateSewerFeature = new Dictionary<string, Func<GwswElement, INetworkFeature>>
         {
-            { SewerFeatureType.Node, CreateManhole },
-            { SewerFeatureType.Pipe, CreatePipe }
+            { "Node", CreateManhole },
+            { "Pipe", CreatePipe }
         };
 
         public static INetworkFeature CreateInstance(GwswElement element)
         {
-            return CreateSewerFeature[element.ElementType](element);
+            return CreateSewerFeature[element.ElementTypeName](element);
         }
 
         private static Manhole CreateManhole(GwswElement element)

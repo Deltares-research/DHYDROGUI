@@ -222,8 +222,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var numberOfColumns = File.ReadLines(filePath).First().Split(mappingData.Settings.Delimiter).Where(s => !s.Equals(string.Empty)).ToList().Count;
                 foreach (var element in elementList)
                 {
-                    Assert.AreEqual(gwswImporter.stringToSewerTypeConverter[elementTypeFound.ElementName], element.ElementType);
-                    Assert.AreEqual(numberOfColumns, element.GwswAttributeList.Count, string.Format("There is a mismatch between expected and imported attributes for element {0}", element.ElementType));
+                    Assert.AreEqual(elementTypeFound.ElementName, element.ElementTypeName);
+                    Assert.AreEqual(numberOfColumns, element.GwswAttributeList.Count, string.Format("There is a mismatch between expected and imported attributes for element {0}", element.ElementTypeName));
                 }
             }
         }
