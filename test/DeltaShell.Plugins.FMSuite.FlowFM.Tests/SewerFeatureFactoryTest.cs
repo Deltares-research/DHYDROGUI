@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var nodeGwswElement = new GwswElement
             {
-                ElementTypeName = "Node"
+                ElementTypeName = SewerFeatureType.Node.ToString()
             };
 
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
@@ -39,7 +39,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var nodeGwswElement = new GwswElement
             {
-                ElementTypeName = "Pipe"
+                ElementTypeName = SewerFeatureType.Pipe.ToString()
+            };
+
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+            Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+        }
+
+        [Test]
+        public void CreatePipeFromFactoryWithKnownAttributes()
+        {
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString()
+            };
+
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+            Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+        }
+
+        [Test]
+        public void CreatePipeFromFactoryWithUnknownAttributes()
+        {
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString()
             };
 
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);

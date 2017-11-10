@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(testCasePath);
             var mappingData = gwswImporter.CreateCsvMappingDataForFile(filePath);
 
-            var elementList = GwswFileImportAsGwswElementsWorksCorrectly(gwswImporter, filePath, mappingData);
+            var elementList = GwswFileImportAsGwswElementsWorksCorrectly(gwswImporter, filePath);
 
             var importedCsv = new CsvImporter().ImportCsv(filePath, mappingData);
             Assert.IsNotNull(importedCsv, string.Format("The .csv file {0}, could not be imported.", filePath));
@@ -364,11 +364,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         #endregion
 
+        #region Gwsw Import Elements
+
+        [Test]
+        public void TestImportPipesFromGwswWithoutPreviousMappingFails()
+        {
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNull( gwswImporter.AttributesDefinition );
+
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            Assert.IsNull(gwswImporter.ImportItem(filePath));
+        }
+
+        [Test]
+        public void TestImportPipesFromGwswWithMappingSucceeds()
+        {
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            Assert.IsNotNull(gwswImporter.AttributesDefinition);
+            Assert.IsNotEmpty(gwswImporter.AttributesDefinition);
+
+            //Load pipes.
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedObject = gwswImporter.ImportItem(filePath);
+
+            Assert.IsNotNull(importedObject);
+            var listElements = importedObject as List<GwswElement>;
+            Assert.IsNotNull(listElements);
+
+            var fileAsStringList = File.ReadAllLines(filePath);
+            var expectedElements = fileAsStringList.Length - 1; // we should not include the header
+            Assert.AreEqual(expectedElements, listElements.Count);
+
+            listElements.ForEach( el => Assert.AreEqual(SewerFeatureType.Pipe.ToString(), el.ElementTypeName));
+
+
+
+        }
+
+        #endregion
+
         #region Helpers
 
-        private static List<GwswElement> GwswFileImportAsGwswElementsWorksCorrectly(GwswFileImporterBase importer, string filePath, CsvMappingData mappingData, bool continousTesting = false)
+        private static List<GwswElement> GwswFileImportAsGwswElementsWorksCorrectly(GwswFileImporterBase importer, string filePath, bool continousTesting = false)
         {
-            var importedObject = importer.ImportItem(filePath, mappingData);
+            var importedObject = importer.ImportItem(filePath);
             var importedElementList = importedObject as List<GwswElement>;
             Assert.IsNotNull(importedElementList, string.Format("The .csv file {0}, could not be imported.", filePath));
 
