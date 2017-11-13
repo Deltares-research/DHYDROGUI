@@ -18,6 +18,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             { SewerFeatureType.Pipe, CreatePipe }
         };
 
+        public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements)
+        {
+            var networkFeatures = new List<INetworkFeature>();
+            foreach (var element in listOfElements)
+            {
+                networkFeatures.Add(CreateInstance(element));
+            }
+            return networkFeatures;
+        }
+
         public static INetworkFeature CreateInstance(GwswElement element)
         {
             SewerFeatureType elementType;
@@ -61,7 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Nodes are needed first.
             }
             var pipeTypeAttr = GetAttributeFromList(element, "PIPE_TYPE");
-            if (pipeTypeAttr != null)
+            if (pipeTypeAttr != null
+                && pipeTypeAttr.ValueAsString != string.Empty)
             {
                 //Find type;
                 PipeType pipeType;
@@ -74,7 +85,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (levelStart != null)
             {
                 var valueType = levelStart.GwswAttributeType.AttributeType;
-                if (valueType == newPipe.LevelSource.GetType())
+                if (valueType == newPipe.LevelSource.GetType()
+                    && levelStart.ValueAsString != string.Empty)
                 {
                     newPipe.LevelSource = double.Parse(levelStart.ValueAsString);
                 }
@@ -83,7 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (levelEnd != null)
             {
                 var valueType = levelEnd.GwswAttributeType.AttributeType;
-                if (valueType == newPipe.LevelTarget.GetType())
+                if (valueType == newPipe.LevelTarget.GetType()
+                    && levelEnd.ValueAsString != string.Empty)
                 {
                     newPipe.LevelTarget = double.Parse(levelEnd.ValueAsString);
                 }
@@ -91,8 +104,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var length = GetAttributeFromList(element, "LENGTH");
             if (length != null)
             {
-                var valueType = levelEnd.GwswAttributeType.AttributeType;
-                if (valueType == newPipe.Length.GetType())
+                var valueType = length.GwswAttributeType.AttributeType;
+                if (valueType == newPipe.Length.GetType()
+                    && length.ValueAsString != string.Empty)
                 {
                     newPipe.Length = double.Parse(length.ValueAsString);
                 }

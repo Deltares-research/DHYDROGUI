@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Csv.Importer;
@@ -94,6 +95,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 
                 elementList.Add(element);
             }
+
+            //If the target is a network means we are going to import into it.
+            if (target is IHydroNetwork)
+            {
+                return SewerFeatureFactory.CreateMultipleInstances(elementList);
+            }
+
             return elementList;
         }
 

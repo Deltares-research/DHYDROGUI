@@ -4,10 +4,12 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -402,6 +404,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual(expectedElements, listElements.Count);
 
             listElements.ForEach( el => Assert.AreEqual(SewerFeatureType.Pipe.ToString(), el.ElementTypeName));
+
+            //Now import them as IHydroNetworkFeature
+            var hydroNetwork = new HydroNetwork();
+            var importedPipes = gwswImporter.ImportItem(filePath, hydroNetwork);
+            Assert.IsNotNull(importedPipes);
+
+            var importedPipesList = importedPipes as List<INetworkFeature>;
+            Assert.IsNotNull(importedPipesList);
+            
+            importedPipesList.ToList().ForEach( pipe => Assert.IsNotNull( pipe as Pipe));
         }
 
         #endregion
