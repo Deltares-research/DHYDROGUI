@@ -191,8 +191,8 @@
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="ICompartment.cs" />
     <Compile Include="IGroupableFeature.cs" />
-    <Compile Include="ManholeCompartment.cs" />
     <Compile Include="Manhole.cs" />
+    <Compile Include="CompositeManholeNode.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Pipe.cs" />
     <Compile Include="Structures\FixedWeir.cs" />

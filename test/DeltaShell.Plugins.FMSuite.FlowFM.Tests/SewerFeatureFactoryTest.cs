@@ -37,17 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
         }
 
-        //[Test]
-        //public void CreatePipeFromFactoryWithKnownAttributes()
-        //{
-        //    var element = new GwswElement
-        //    {
-        //        ElementTypeName = SewerFeatureType.Pipe.ToString()
-        //    };
-
-        //    Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
-        //}
-
         [Test]
         public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
         {
@@ -166,72 +155,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(length, createdPipe.Length);
         }
 
-        #region Manhole
+        #region CompositeManholeNode
 
         [Test]
         public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
         {
-            var nodeGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Node.ToString(),
-                GwswAttributeList =
-                {
-                    new GwswAttribute
-                    {
-                        ValueAsString = "put1",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "UNIQUE_ID", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "01001",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "MANHOLE_ID", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "400.00",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "X_COORDINATE", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "50.00",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "Y_COORDINATE", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "7071",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_LENGTH", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "7071",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_WIDTH", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "RND",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "45,67",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "0.01",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "BOTTOM_LEVEL", "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "2.75",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
-                    }
-                }
-            };
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement1);
+            var manhole = element as CompositeManholeNode;
 
-            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-
-            var manhole = element as Manhole;
             Assert.NotNull(manhole);
             Assert.That(manhole.ManholeId, Is.EqualTo("01001"));
             Assert.That(manhole.XCoordinate, Is.EqualTo(400.0));
@@ -250,6 +181,139 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(compartment.SurfaceLevel, Is.EqualTo(2.75));
         }
 
+        [Test]
+        public void GivenTwoCompartmentsOfTheSameLocation_WhenCreatingWithFactory_ThenManholeNodeIsCorrectlyReturned()
+        {
+            var elementList = new List<GwswElement> {nodeGwswElement1, nodeGwswElement2};
+            var element = SewerFeatureFactory.CreateInstance(elementList);
+
+            var manhole = element as CompositeManholeNode;
+            Assert.NotNull(manhole);
+            Assert.That(manhole.ManholeId, Is.EqualTo("01001"));
+            Assert.That(manhole.XCoordinate, Is.EqualTo(400.0));
+            Assert.That(manhole.YCoordinate, Is.EqualTo(50.0));
+        }
+
+        #endregion
+
+        #region Test helpers
+
+        private GwswElement nodeGwswElement1 = new GwswElement
+        {
+            ElementTypeName = SewerFeatureType.Node.ToString(),
+            GwswAttributeList =
+            {
+                new GwswAttribute
+                {
+                    ValueAsString = "put1",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "UNIQUE_ID", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "01001",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "MANHOLE_ID", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "400.00",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "X_COORDINATE", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "50.00",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "Y_COORDINATE", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "7071",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_LENGTH", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "7071",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_WIDTH", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "RND",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "45,67",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "0.01",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "BOTTOM_LEVEL", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "2.75",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
+                }
+            }
+        };
+
+        private GwswElement nodeGwswElement2 = new GwswElement
+        {
+            ElementTypeName = SewerFeatureType.Node.ToString(),
+            GwswAttributeList =
+            {
+                new GwswAttribute
+                {
+                    ValueAsString = "put2",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", "UNIQUE_ID", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "01001",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", "MANHOLE_ID", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "400.20",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "X_COORDINATE", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "50.20",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "Y_COORDINATE", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "4561",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "integer", "NODE_LENGTH", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "5561",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "integer", "NODE_WIDTH", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "RHK",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "45,67",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "-0.45",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "BOTTOM_LEVEL", "MyDescription", null, null)
+                },
+                new GwswAttribute
+                {
+                    ValueAsString = "1.83",
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
+                }
+            }
+        }; 
+        
         #endregion
     }
 }

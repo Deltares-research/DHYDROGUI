@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerFeatureFactory));
         // For now, the types are: Node, Pipe, Structure, Surface, Runoff, Discharge, Distribution, Meta
-        private static Dictionary<SewerFeatureType, Func<GwswElement, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<GwswElement, INetworkFeature>>
+        private static Dictionary<SewerFeatureType, Func<object, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<object, INetworkFeature>>
         {
             { SewerFeatureType.Node, CreateManhole },
             { SewerFeatureType.Pipe, CreatePipe }
@@ -31,32 +31,89 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return networkFeatures;
         }
 
-        public static INetworkFeature CreateInstance(GwswElement element)
+        public static INetworkFeature CreateInstance(object element)
         {
-            if (Enum.TryParse(element.ElementTypeName, out SewerFeatureType elementType))
+            var gwswElement = element as GwswElement;
+            if (gwswElement != null && Enum.TryParse(gwswElement.ElementTypeName, out SewerFeatureType elementType))
             {
-                return CreateSewerFeature[elementType](element);
+                return CreateSewerFeature[elementType](gwswElement);
             }
+
+            var gwswElementList = element as List<GwswElement>;
+            if (gwswElementList != null && Enum.TryParse(gwswElementList.FirstOrDefault()?.ElementTypeName,
+                    out SewerFeatureType elementListType))
+            {
+                return CreateSewerFeature[elementListType](gwswElementList);
+            }
+
             return null;
         }
 
-        private static Manhole CreateManhole(GwswElement element)
+        private static CompositeManholeNode CreateManhole(object element)
+        {
+            switch (element)
+            {
+                case GwswElement gwswElement:
+                    return CreateSimpleManholeNode(gwswElement);
+                case List<GwswElement> gwswElementList:
+                    return CreateCompositeManholeNode(gwswElementList);
+                default:
+                    return null;
+            }
+        }
+
+        private static CompositeManholeNode CreateCompositeManholeNode(List<GwswElement> gwswElementList)
         {
             // Create dictionary with all attributes
-            var attributes = element.GwswAttributeList;
+            var elementValuesDictionary = gwswElementList.Select(gwswElement => gwswElement.GwswAttributeList)
+                .Select(attributes => attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString))
+                .ToList();
+
+            var manholeIds = elementValuesDictionary.Select(v => v["MANHOLE_ID"]).Distinct().ToList();
+            if (manholeIds.Count != 1) return null;
+
+            var manholeNode = new CompositeManholeNode(manholeIds.FirstOrDefault());
+            foreach (var elementValues in elementValuesDictionary)
+            {
+                var manholeCompartment = CreateManHoleCompartment(elementValues);
+                manholeNode.Compartments.Add(manholeCompartment);
+            }
+
+            return manholeNode;
+        }
+
+        private static Manhole CreateManHoleCompartment(Dictionary<string, string> elementValues)
+        {
+            return new Manhole(elementValues["UNIQUE_ID"])
+            {
+                ManholeLength = int.Parse(elementValues["NODE_LENGTH"]),
+                ManholeWidth = int.Parse(elementValues["NODE_WIDTH"]),
+                Shape = (ManholeShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(elementValues["NODE_SHAPE"]),
+                FloodableArea = double.Parse(elementValues["FLOODABLE_AREA"]),
+                BottomLevel = double.Parse(elementValues["BOTTOM_LEVEL"], CultureInfo.InvariantCulture),
+                SurfaceLevel = double.Parse(elementValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture),
+                Coordinates = new Coordinate(double.Parse(elementValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(elementValues["Y_COORDINATE"], CultureInfo.InvariantCulture))
+            };
+        }
+
+
+        private static CompositeManholeNode CreateSimpleManholeNode(GwswElement gwswElement)
+        {
+            // Create dictionary with all attributes
+            var attributes = gwswElement.GwswAttributeList;
             var propertyValues = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
 
-            // Create manhole
-            var coords = new Coordinate(double.Parse(propertyValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(propertyValues["Y_COORDINATE"], CultureInfo.InvariantCulture));
-            var manhole = new Manhole(propertyValues["MANHOLE_ID"], coords);
-            var compartment = new ManholeCompartment(propertyValues["UNIQUE_ID"])
+            // Create manhole compartment
+            var manhole = new CompositeManholeNode(propertyValues["MANHOLE_ID"]);
+            var compartment = new Manhole(propertyValues["UNIQUE_ID"])
             {
                 ManholeLength = int.Parse(propertyValues["NODE_LENGTH"]),
                 ManholeWidth = int.Parse(propertyValues["NODE_WIDTH"]),
                 Shape = (ManholeShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(propertyValues["NODE_SHAPE"]),
                 FloodableArea = double.Parse(propertyValues["FLOODABLE_AREA"]),
                 BottomLevel = double.Parse(propertyValues["BOTTOM_LEVEL"], CultureInfo.InvariantCulture),
-                SurfaceLevel = double.Parse(propertyValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture)
+                SurfaceLevel = double.Parse(propertyValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture),
+                Coordinates = new Coordinate(double.Parse(propertyValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(propertyValues["Y_COORDINATE"], CultureInfo.InvariantCulture))
             };
             manhole.Compartments.Add(compartment);
             
@@ -74,23 +131,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return attribute;
         }
 
-        private static Pipe CreatePipe(GwswElement element)
+        private static Pipe CreatePipe(object element)
         {
+            var gwswElement = element as GwswElement;
+            if (gwswElement == null) return null;
+
             var newPipe = new Pipe();
 
-            var nodeIdStart = GetAttributeFromList(element, "NODE_UNIQUE_ID_START");
+            var nodeIdStart = GetAttributeFromList(gwswElement, "NODE_UNIQUE_ID_START");
             if (nodeIdStart != null)
             {
                 //Find node;
                 //Nodes are needed first.
             }
-            var nodeIdEnd = GetAttributeFromList(element, "NODE_UNIQUE_ID_END");
+            var nodeIdEnd = GetAttributeFromList(gwswElement, "NODE_UNIQUE_ID_END");
             if (nodeIdEnd != null)
             {
                 //Find node;
                 //Nodes are needed first.
             }
-            var pipeTypeAttr = GetAttributeFromList(element, "PIPE_TYPE");
+            var pipeTypeAttr = GetAttributeFromList(gwswElement, "PIPE_TYPE");
             if (pipeTypeAttr != null
                 && pipeTypeAttr.ValueAsString != string.Empty)
             {
@@ -101,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     newPipe.PipeType = pipeType;
                 }
             }
-            var levelStart = GetAttributeFromList(element, "LEVEL_START");
+            var levelStart = GetAttributeFromList(gwswElement, "LEVEL_START");
             if (levelStart != null)
             {
                 var valueType = levelStart.GwswAttributeType.AttributeType;
@@ -111,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     newPipe.LevelSource = double.Parse(levelStart.ValueAsString);
                 }
             }
-            var levelEnd = GetAttributeFromList(element, "LEVEL_END");
+            var levelEnd = GetAttributeFromList(gwswElement, "LEVEL_END");
             if (levelEnd != null)
             {
                 var valueType = levelEnd.GwswAttributeType.AttributeType;
@@ -121,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     newPipe.LevelTarget = double.Parse(levelEnd.ValueAsString);
                 }
             }
-            var length = GetAttributeFromList(element, "LENGTH");
+            var length = GetAttributeFromList(gwswElement, "LENGTH");
             if (length != null)
             {
                 var valueType = length.GwswAttributeType.AttributeType;
@@ -131,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     newPipe.Length = double.Parse(length.ValueAsString);
                 }
             }
-            var crossSectionDef = GetAttributeFromList(element, "CROSS_SECTION_DEF");
+            var crossSectionDef = GetAttributeFromList(gwswElement, "CROSS_SECTION_DEF");
             if (crossSectionDef != null)
             {
                 //Find crossSectionDef;
