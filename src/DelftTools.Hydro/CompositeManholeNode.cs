@@ -15,7 +15,7 @@ namespace DelftTools.Hydro
 
         public string ManholeId { get; set; }
 
-        public ICollection<Manhole> Compartments { get; set; }
+        public IList<Manhole> Compartments { get; set; }
 
         public ICollection<IStructure> Connections { get; set; }
 
@@ -35,6 +35,11 @@ namespace DelftTools.Hydro
                 var firstManhole = Compartments.FirstOrDefault();
                 return firstManhole?.Coordinates.Y ?? -999.99;
             }
+        }
+
+        public override IGeometry Geometry
+        {
+            get { return new Point(XCoordinate, YCoordinate); }
         }
     }
 }

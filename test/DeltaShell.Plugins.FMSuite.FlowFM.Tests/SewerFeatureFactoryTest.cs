@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Manhole = DelftTools.Hydro.Manhole;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -161,24 +164,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
         {
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement1);
-            var manhole = element as CompositeManholeNode;
+            var manholeNode = element as CompositeManholeNode;
 
-            Assert.NotNull(manhole);
-            Assert.That(manhole.ManholeId, Is.EqualTo("01001"));
-            Assert.That(manhole.XCoordinate, Is.EqualTo(400.0));
-            Assert.That(manhole.YCoordinate, Is.EqualTo(50.0));
-            Assert.NotNull(manhole.Compartments);
-            Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
+            // Check manholeNode properties
+            Assert.NotNull(manholeNode);
+            CheckManholeNodePropertyValues(manholeNode, "01001", 400.0, 50.0, 1);
 
-            var compartment = manhole.Compartments.FirstOrDefault();
-            Assert.NotNull(compartment);
-            Assert.That(compartment.Id, Is.EqualTo("put1"));
-            Assert.That(compartment.ManholeLength, Is.EqualTo(7071));
-            Assert.That(compartment.ManholeWidth, Is.EqualTo(7071));
-            Assert.That(compartment.Shape, Is.EqualTo(ManholeShape.Square));
-            Assert.That(compartment.FloodableArea, Is.EqualTo(45.67));
-            Assert.That(compartment.BottomLevel, Is.EqualTo(0.01));
-            Assert.That(compartment.SurfaceLevel, Is.EqualTo(2.75));
+            // Check Manhole properties
+            var compartment = manholeNode.Compartments.FirstOrDefault();
+            CheckCompartmentPropertyValues(compartment, "put1", 7071, 7071, ManholeShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
         }
 
         [Test]
@@ -186,19 +180,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var elementList = new List<GwswElement> {nodeGwswElement1, nodeGwswElement2};
             var element = SewerFeatureFactory.CreateInstance(elementList);
+            var manholeNode = element as CompositeManholeNode;
 
-            var manhole = element as CompositeManholeNode;
-            Assert.NotNull(manhole);
-            Assert.That(manhole.ManholeId, Is.EqualTo("01001"));
-            Assert.That(manhole.XCoordinate, Is.EqualTo(400.0));
-            Assert.That(manhole.YCoordinate, Is.EqualTo(50.0));
+            // Check manholeNode properties
+            Assert.NotNull(manholeNode);
+            CheckManholeNodePropertyValues(manholeNode, "01001", 400.0, 50.0, 2);
+
+            // Check Manhole properties
+            var compartment1 = manholeNode.Compartments[0];
+            CheckCompartmentPropertyValues(compartment1, "put1", 7071, 7071, ManholeShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
+            var compartment2 = manholeNode.Compartments[1];
+            CheckCompartmentPropertyValues(compartment2, "put2", 4561, 5561, ManholeShape.Rectangular, 45.67, -0.45, 1.83, new Coordinate(400.2, 50.2));
         }
 
         #endregion
 
         #region Test helpers
 
-        private GwswElement nodeGwswElement1 = new GwswElement
+        private static void CheckManholeNodePropertyValues(CompositeManholeNode manhole, string nodeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
+        {
+            Assert.That(manhole.ManholeId, Is.EqualTo(nodeId));
+            Assert.That(manhole.XCoordinate, Is.EqualTo(xCoordinate));
+            Assert.That(manhole.YCoordinate, Is.EqualTo(yCoordinate));
+            Assert.That(manhole.Geometry, Is.EqualTo(new Point(xCoordinate, yCoordinate)));
+            Assert.NotNull(manhole.Compartments);
+            Assert.That(manhole.Compartments.Count, Is.EqualTo(numberOfCompartments));
+        }
+
+        private void CheckCompartmentPropertyValues(Manhole manhole, string manholeId, int manholeLength, int manholeWidth, ManholeShape shape, double floodableArea, double bottomLevel, double surfaceLevel, Coordinate coords)
+        {
+            Assert.NotNull(manhole);
+            Assert.That(manhole.Id, Is.EqualTo(manholeId));
+            Assert.That(manhole.ManholeLength, Is.EqualTo(manholeLength));
+            Assert.That(manhole.ManholeWidth, Is.EqualTo(manholeWidth));
+            Assert.That(manhole.Shape, Is.EqualTo(shape));
+            Assert.That(manhole.FloodableArea, Is.EqualTo(floodableArea));
+            Assert.That(manhole.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(manhole.SurfaceLevel, Is.EqualTo(surfaceLevel));
+            Assert.That(manhole.Coordinates, Is.EqualTo(coords));
+        }
+
+        private readonly GwswElement nodeGwswElement1 = new GwswElement
         {
             ElementTypeName = SewerFeatureType.Node.ToString(),
             GwswAttributeList =
@@ -256,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         };
 
-        private GwswElement nodeGwswElement2 = new GwswElement
+        private readonly GwswElement nodeGwswElement2 = new GwswElement
         {
             ElementTypeName = SewerFeatureType.Node.ToString(),
             GwswAttributeList =

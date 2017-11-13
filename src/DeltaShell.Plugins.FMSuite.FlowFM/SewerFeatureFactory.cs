@@ -101,23 +101,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             // Create dictionary with all attributes
             var attributes = gwswElement.GwswAttributeList;
-            var propertyValues = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
+            var elementValues = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
 
             // Create manhole compartment
-            var manhole = new CompositeManholeNode(propertyValues["MANHOLE_ID"]);
-            var compartment = new Manhole(propertyValues["UNIQUE_ID"])
-            {
-                ManholeLength = int.Parse(propertyValues["NODE_LENGTH"]),
-                ManholeWidth = int.Parse(propertyValues["NODE_WIDTH"]),
-                Shape = (ManholeShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(propertyValues["NODE_SHAPE"]),
-                FloodableArea = double.Parse(propertyValues["FLOODABLE_AREA"]),
-                BottomLevel = double.Parse(propertyValues["BOTTOM_LEVEL"], CultureInfo.InvariantCulture),
-                SurfaceLevel = double.Parse(propertyValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture),
-                Coordinates = new Coordinate(double.Parse(propertyValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(propertyValues["Y_COORDINATE"], CultureInfo.InvariantCulture))
-            };
-            manhole.Compartments.Add(compartment);
+            var manholeNode = new CompositeManholeNode(elementValues["MANHOLE_ID"]);
+            var manholeCompartment = CreateManHoleCompartment(elementValues);
+            manholeNode.Compartments.Add(manholeCompartment);
             
-            return manhole;
+            return manholeNode;
         }
 
         private static GwswAttribute GetAttributeFromList(GwswElement element, string attributeName)
