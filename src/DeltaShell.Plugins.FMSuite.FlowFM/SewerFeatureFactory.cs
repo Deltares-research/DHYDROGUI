@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -14,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         // For now, the types are: Node, Pipe, Structure, Surface, Runoff, Discharge, Distribution, Meta
         private static Dictionary<SewerFeatureType, Func<GwswElement, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<GwswElement, INetworkFeature>>
         {
-            {  SewerFeatureType.Node, CreateManhole },
+            { SewerFeatureType.Node, CreateManhole },
             { SewerFeatureType.Pipe, CreatePipe }
         };
 
@@ -30,8 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static INetworkFeature CreateInstance(GwswElement element)
         {
-            SewerFeatureType elementType;
-            if (Enum.TryParse(element.ElementTypeName, out elementType))
+            if (Enum.TryParse(element.ElementTypeName, out SewerFeatureType elementType))
             {
                 return CreateSewerFeature[elementType](element);
             }
@@ -40,7 +42,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static Manhole CreateManhole(GwswElement element)
         {
-            return new Manhole();
+            // Create dictionary with all attributes
+            var attributes = element.GwswAttributeList;
+            var dict = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
+
+            // Create manhole
+            var coords = new Coordinate(double.Parse(dict["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(dict["Y_COORDINATE"], CultureInfo.InvariantCulture));
+            var manhole = new Manhole(dict["MANHOLE_ID"], coords);
+            var compartment = new ManholeCompartment(dict["UNIQUE_ID"])
+            {
+                ManholeLength = int.Parse(dict["NODE_LENGTH"]),
+                ManholeWidth = int.Parse(dict["NODE_WIDTH"]),
+                Shape = (ManholeShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(dict["NODE_SHAPE"])
+            };
+            manhole.Compartments.Add(compartment);
+            
+            return manhole;
         }
 
         private static GwswAttribute GetAttributeFromList(GwswElement element, string attributeName)

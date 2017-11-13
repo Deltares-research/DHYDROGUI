@@ -1,28 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DelftTools.Hydro
 {
     public class ManholeCompartment
     {
+        public ManholeCompartment(string id)
+        {
+            Id = id;
+        }
+
         /// <summary>
         /// The unique manhole Id that is defined in the GWSW files of the sewer system.
         /// </summary>
-        private long manholeId;
-
-        public ManholeCompartment(long id)
-        {
-            manholeId = id;
-        }
+        public string Id { get; set; }
 
         /// <summary>
         /// The shape of the manhole (either square or rectangular).
         /// </summary>
         public ManholeShape Shape { get; set; }
-
-        /// <summary>
-        /// The compartments that this manhole contains.
-        /// </summary>
-        public ICollection<ICompartment> Compartments { get; set; }
 
         /// <summary>
         /// Length of manhole (mm).
@@ -52,7 +48,7 @@ namespace DelftTools.Hydro
 
     public enum ManholeShape
     {
-        Rectangular,
-        Square
+        [Description("RHK")] Rectangular,
+        [Description("RND")] Square
     }
 }

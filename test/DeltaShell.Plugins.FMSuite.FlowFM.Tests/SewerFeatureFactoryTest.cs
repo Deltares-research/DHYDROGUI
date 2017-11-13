@@ -26,18 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void CreateManholeFromFactory()
-        {
-            var nodeGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Node.ToString()
-            };
-
-            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-            Assert.That(element.GetType(), Is.EqualTo(typeof(Manhole)));
-        }
-
-        [Test]
         public void CreatePipeFromFactory()
         {
             var nodeGwswElement = new GwswElement
@@ -48,6 +36,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
             Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
         }
+
+        //[Test]
+        //public void CreatePipeFromFactoryWithKnownAttributes()
+        //{
+        //    var element = new GwswElement
+        //    {
+        //        ElementTypeName = SewerFeatureType.Pipe.ToString()
+        //    };
+
+        //    Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+        //}
 
         [Test]
         public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
@@ -147,12 +146,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var createdPipe = element as Pipe;
             Assert.IsNotNull(createdPipe);
-            
+
             //Not defined yet
             Assert.IsNull(createdPipe.Source);
             Assert.IsNull(createdPipe.Target);
             Assert.IsNull(createdPipe.CrossSectionShape);
-            
+
             //Defined
             Assert.IsNotNull(createdPipe.LevelSource);
             Assert.AreEqual(startLevel, createdPipe.LevelSource);
@@ -166,5 +165,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPipe.Length);
             Assert.AreEqual(length, createdPipe.Length);
         }
+
+        #region Manhole
+
+        [Test]
+        public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
+        {
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    new GwswAttribute
+                    {
+                        ValueAsString = "put1",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "UNIQUE_ID", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "01001",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "MANHOLE_ID", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "400.00",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "X_COORDINATE", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "50.00",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "Y_COORDINATE", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "7071",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_LENGTH", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "7071",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_WIDTH", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "RND",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
+                    }
+                }
+            };
+
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+
+            var manhole = element as Manhole;
+            Assert.NotNull(manhole);
+            Assert.That(manhole.ManholeId, Is.EqualTo("01001"));
+            Assert.That(manhole.XCoordinate, Is.EqualTo(400.0));
+            Assert.That(manhole.YCoordinate, Is.EqualTo(50.0));
+            Assert.NotNull(manhole.Compartments);
+            Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
+
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
+            Assert.That(compartment.Id, Is.EqualTo("put1"));
+            Assert.That(compartment.ManholeLength, Is.EqualTo(7071));
+            Assert.That(compartment.ManholeWidth, Is.EqualTo(7071));
+            Assert.That(compartment.Shape, Is.EqualTo(ManholeShape.Square));
+        }
+
+        #endregion
     }
 }
