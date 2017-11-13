@@ -96,6 +96,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public static void SetCoordinateSystem(string path, ICoordinateSystem coordinateSystem)
         {
             var convention = GetConvention(path);
+            if (convention == GridApiDataSet.DataSetConventions.IONC_CONV_NULL) return;
 
             // Note: Temporary solution - UGrid v2 will likely change the way the coordinate systems are written in the NetFile
             if (convention == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
@@ -193,8 +194,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static GridApiDataSet.DataSetConventions GetConvention(string path)
         {
+            var gridApi = GridApiFactory.CreateNew();
+            if (gridApi == null)
+            {
+                return GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            }
+
             GridApiDataSet.DataSetConventions convention;
-            using (var gridApi = GridApiFactory.CreateNew())
+            using (gridApi)
             {
                 convention = gridApi.GetConvention(path);
             }

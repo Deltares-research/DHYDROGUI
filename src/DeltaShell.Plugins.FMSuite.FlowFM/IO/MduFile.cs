@@ -90,7 +90,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (FMDllVersion != null) 
                 return; // do it once
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            var api = FlexibleMeshModelApiFactory.CreateNew();
+            if (api == null)
+            {
+                return;
+            }
+
+            using (api)
             {
                 try
                 {

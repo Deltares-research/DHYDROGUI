@@ -6,13 +6,20 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
+    //Todo : remove => only used in tests
     public static class MapFileImporter
     {
         public static UnstructuredGrid Import(string mduPath, string mapFile)
         {
             try
             {
-                using (var api = new RemoteFlexibleMeshModelApi())
+                var api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null)
+                {
+                    return null;
+                }
+
+                using (api)
                 {
                     api.Initialize(mduPath); // todo: get a more dedicated (quicker) call here
                 }

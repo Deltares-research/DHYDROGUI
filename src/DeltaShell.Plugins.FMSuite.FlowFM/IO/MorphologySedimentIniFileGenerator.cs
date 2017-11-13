@@ -56,7 +56,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (fmDllVersion != null)
                     return fmDllVersion; // do it once
 
-                using (var api = new RemoteFlexibleMeshModelApi())
+                fmDllVersion = "Unknown";
+
+                var api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null) return fmDllVersion;
+
+                using (api)
                 {
                     try
                     {
@@ -70,6 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         fmDllVersion = "Unknown";
                     }
                 }
+
                 return fmDllVersion;
             }
         }

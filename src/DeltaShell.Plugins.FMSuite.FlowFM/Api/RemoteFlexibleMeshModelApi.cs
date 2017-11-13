@@ -21,8 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // so we need to start the 64bit worker. This works as long as the data send over the IFlexibleMeshModelApi border 
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
-            remoteInstanceApi = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(
-                Environment.Is64BitOperatingSystem, showConsole: showDebugConsole);
+            remoteInstanceApi = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true, showConsole: showDebugConsole);
             // for non-remote use:
             //remoteInstanceApi = new FlexibleMeshModelApi();
         }

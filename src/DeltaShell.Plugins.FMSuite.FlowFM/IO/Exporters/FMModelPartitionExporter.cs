@@ -16,18 +16,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             if (PolygonFile == null && NumDomains <= 0) return false;
 
             var waterFlowFMModel = item as WaterFlowFMModel;
-            if (waterFlowFMModel != null)
-            {
-                ExportPartitionMdu(waterFlowFMModel, path);
-                return true;
-            }
-
-            return false;
+            return waterFlowFMModel != null && ExportPartitionMdu(waterFlowFMModel, path);
         }
 
-        private void ExportPartitionMdu(WaterFlowFMModel waterFlowFMModel, string path)
+        private bool ExportPartitionMdu(WaterFlowFMModel waterFlowFMModel, string path)
         {
-            using (var api = new RemoteFlexibleMeshModelApi())
+            var api = FlexibleMeshModelApiFactory.CreateNew();
+            if (api == null)
+            {
+                return false;
+            }
+
+            using (api)
             {
                 var nonzeroPath = FilePath ?? path;
 
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
                 waterFlowFMModel.ExportTo(filePath, false);
                 
-                if (PolygonFile == null && NumDomains == 1) return;
+                if (PolygonFile == null && NumDomains == 1) return true;
 
                 SourceNetFilePath = waterFlowFMModel.NetFilePath;
 
@@ -80,6 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 partFileProperty.SetValueAsString(originalPartFile);
                 igcSolverProperty.SetValueAsString(originalSolverType);
             }
+
+            return true;
         }
 
         private static IEnumerable<string> FindNetFiles(string netFileName)

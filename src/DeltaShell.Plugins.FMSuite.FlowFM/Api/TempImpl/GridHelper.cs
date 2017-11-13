@@ -86,7 +86,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
 
             // call model initialize
             var logFilePath = Path.Combine(tempPath, "flowinit.dia");
-            using (var api = new RemoteFlexibleMeshModelApi())
+            var api = FlexibleMeshModelApiFactory.CreateNew();
+
+            if (api == null)
+            {
+                throw new InvalidOperationException(
+                    "Kernel failed to initialize model, could not change grid from ugrid format to old netcdf format needed for 1d2d. See log file for information: " +
+                    Environment.NewLine + Environment.NewLine +
+                    logFilePath);
+            }
+
+            using (api)
             {
                 try
                 {
@@ -94,7 +104,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
 
                     if (!File.Exists(mapFilePath))
                     {
-                        
                         throw new InvalidOperationException(
                             "Kernel failed to initialize model, could not change grid from ugrid format to old netcdf format needed for 1d2d. See log file for information: " +
                             Environment.NewLine + Environment.NewLine +

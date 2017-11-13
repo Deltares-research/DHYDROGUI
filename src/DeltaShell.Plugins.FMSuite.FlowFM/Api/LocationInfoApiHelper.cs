@@ -46,8 +46,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 tempModel.ExportTo(mduFilePath, false, false, false);
 
                 var supportedQuantities = new Dictionary<string, QuantityInfo>();
+
+                var api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null)
+                {
+                    return null;
+                }
+
                 // call model initialize
-                using (var api = new RemoteFlexibleMeshModelApi())
+                using (api)
                 {
                     api.Initialize(mduFilePath);
                     foreach (string variable in variableNames)

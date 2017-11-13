@@ -346,9 +346,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             try
             {
-                using (var api = GridApiFactory.CreateNew())
+                var api = GridApiFactory.CreateNew();
+                if (api != null)
                 {
-                    return api.GetConvention(netCdfFile.Path);
+                    using (api)
+                    {
+                        return api.GetConvention(netCdfFile.Path);
+                    }
                 }
             }
             catch (Exception e)

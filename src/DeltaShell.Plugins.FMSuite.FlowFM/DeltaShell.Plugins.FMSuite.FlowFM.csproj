@@ -124,6 +124,7 @@
   <ItemGroup>
     <Compile Include="Api\FlexibleMeshBasicModelInterface.cs" />
     <Compile Include="Api\FlexibleMeshModelApi.cs" />
+    <Compile Include="Api\FlexibleMeshModelApiFactory.cs" />
     <Compile Include="Api\FlexibleMeshModelDll.cs" />
     <Compile Include="Api\IFlexibleMeshModelApi.cs" />
     <Compile Include="Api\RemoteFlexibleMeshModelApi.cs" />

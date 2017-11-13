@@ -19,8 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var importedNetFile = item as ImportedFMNetFile;
             if (importedNetFile != null)
             {
-                ExportPartitionGrid(importedNetFile.Path, path);
-                return true;
+                return ExportPartitionGrid(importedNetFile.Path, path);
             }
 
             var unstructuredGrid = item as UnstructuredGrid;
@@ -33,14 +32,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
                 }
                 var model = GetModelForGrid(unstructuredGrid);
                 var netFilePath = Path.Combine(Path.GetDirectoryName(model.MduFilePath), model.NetFilePath);
-                ExportPartitionGrid(Path.GetFullPath(netFilePath), path);
-                return true;
+                return ExportPartitionGrid(Path.GetFullPath(netFilePath), path);
             }
 
             return false;
         }
 
-        private void ExportPartitionGrid(string netFilePath, string path)
+        private bool ExportPartitionGrid(string netFilePath, string path)
         {
             var nonzeroPath = FilePath ?? path;
             var filePathWithoutExtension = Path.Combine(Path.GetDirectoryName(nonzeroPath),
@@ -51,12 +49,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             if (PolygonFile == null && NumDomains == 1)
             {
                 File.Copy(netFilePath, TargetNetFilePath, true);
-                return;
+                return true;
             }
-            using (var api = new RemoteFlexibleMeshModelApi())
+
+            var api = FlexibleMeshModelApiFactory.CreateNew();
+            if (api == null)
+            {
+                return false;
+            }
+
+            using (api)
             {
                 WriteNetPartition(api);
             }
+
+            return true;
         }
 
         public override IEnumerable<Type> SourceTypes()
