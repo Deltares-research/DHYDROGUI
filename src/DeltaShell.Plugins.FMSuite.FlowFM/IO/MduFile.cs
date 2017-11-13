@@ -93,6 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var api = FlexibleMeshModelApiFactory.CreateNew();
             if (api == null)
             {
+                Log.ErrorFormat("Failed to initialise FlexibleMeshModelApi");
                 return;
             }
 
