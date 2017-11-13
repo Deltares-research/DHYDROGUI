@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var compartment1 = manholeNode.Compartments[0];
             CheckCompartmentPropertyValues(compartment1, "put1", 7071, 7071, ManholeShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
             var compartment2 = manholeNode.Compartments[1];
-            CheckCompartmentPropertyValues(compartment2, "put2", 4561, 5561, ManholeShape.Rectangular, 45.67, -0.45, 1.83, new Coordinate(400.2, 50.2));
+            CheckCompartmentPropertyValues(compartment2, "put2", 4561, 5561, ManholeShape.Rectangular, 89.5, -0.45, 1.83, new Coordinate(400.2, 50.2));
         }
 
         #endregion
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 },
                 new GwswAttribute
                 {
-                    ValueAsString = "45,67",
+                    ValueAsString = "89,5",
                     GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
                 },
                 new GwswAttribute

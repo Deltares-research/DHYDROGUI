@@ -54,15 +54,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             switch (element)
             {
                 case GwswElement gwswElement:
-                    return CreateSimpleManholeNode(gwswElement);
+                    return CreateManholeNode(new List<GwswElement> {gwswElement});
                 case List<GwswElement> gwswElementList:
-                    return CreateCompositeManholeNode(gwswElementList);
+                    return CreateManholeNode(gwswElementList);
                 default:
                     return null;
             }
         }
 
-        private static CompositeManholeNode CreateCompositeManholeNode(List<GwswElement> gwswElementList)
+        private static CompositeManholeNode CreateManholeNode(IEnumerable<GwswElement> gwswElementList)
         {
             // Create dictionary with all attributes
             var elementValuesDictionary = gwswElementList.Select(gwswElement => gwswElement.GwswAttributeList)
@@ -94,21 +94,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SurfaceLevel = double.Parse(elementValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture),
                 Coordinates = new Coordinate(double.Parse(elementValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(elementValues["Y_COORDINATE"], CultureInfo.InvariantCulture))
             };
-        }
-
-
-        private static CompositeManholeNode CreateSimpleManholeNode(GwswElement gwswElement)
-        {
-            // Create dictionary with all attributes
-            var attributes = gwswElement.GwswAttributeList;
-            var elementValues = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-
-            // Create manhole compartment
-            var manholeNode = new CompositeManholeNode(elementValues["MANHOLE_ID"]);
-            var manholeCompartment = CreateManHoleCompartment(elementValues);
-            manholeNode.Compartments.Add(manholeCompartment);
-            
-            return manholeNode;
         }
 
         private static GwswAttribute GetAttributeFromList(GwswElement element, string attributeName)
