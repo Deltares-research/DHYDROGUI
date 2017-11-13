@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -6,11 +7,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
@@ -97,9 +102,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             //If the target is a network means we are going to import into it.
-            if (target is IHydroNetwork)
+            if (target is HydroNetwork)
             {
-                return SewerFeatureFactory.CreateMultipleInstances(elementList);
+                var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList);
+                SewerFeatureType elementType;
+                if (Enum.TryParse(elementTypeName, out elementType))
+                {
+                    InsertFeatures(elementsCreated, target as HydroNetwork, elementType);
+                }
+                return elementsCreated;
             }
 
             return elementList;
@@ -318,6 +329,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 FieldToColumnMapping = fileColumnMapping
             };
             return mapping;
+        }
+
+        private void InsertFeatures(IEnumerable<INetworkFeature> features, HydroNetwork network, SewerFeatureType type)
+        {
+            var count = 0;
+            switch (type)
+            {
+                case SewerFeatureType.Pipe:
+                    var tempList = network.Pipes.ToList();
+                    InsertStructure<INetworkFeature>( features, tempList);
+                    //Due to the nature of pipes being an enumerable we need to reassign Pipes with the new elements.
+                    network.Pipes = tempList;
+                    break;
+            }
+        }
+
+        [InvokeRequired]
+        private static void InsertStructure<TFeat>(IEnumerable<INetworkFeature> features, IList list) where TFeat : INameable
+        {
+            foreach (var feature in features.Where(s => s is TFeat))
+            {
+                list.Add(feature);
+            }
         }
     }
 

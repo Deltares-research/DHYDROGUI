@@ -406,14 +406,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             listElements.ForEach( el => Assert.AreEqual(SewerFeatureType.Pipe.ToString(), el.ElementTypeName));
 
             //Now import them as IHydroNetworkFeature
-            var hydroNetwork = new HydroNetwork();
-            var importedPipes = gwswImporter.ImportItem(filePath, hydroNetwork);
+            var network = new HydroNetwork();
+            Assert.IsFalse( network.Pipes.Any() );
+
+            var importedPipes = gwswImporter.ImportItem(filePath, network);
             Assert.IsNotNull(importedPipes);
+            Assert.IsTrue(network.Pipes.Any() );
 
             var importedPipesList = importedPipes as List<INetworkFeature>;
             Assert.IsNotNull(importedPipesList);
             
             importedPipesList.ToList().ForEach( pipe => Assert.IsNotNull( pipe as Pipe));
+            Assert.AreEqual(listElements.Count, importedPipesList.OfType<Pipe>().Count());
+
+            //Check imported list has been added to the network pipes.
+            Assert.AreEqual(importedPipesList, network.Pipes.ToList());
         }
 
         #endregion

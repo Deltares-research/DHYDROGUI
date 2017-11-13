@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
@@ -15,41 +16,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerFeatureFactory));
         // For now, the types are: Node, Pipe, Structure, Surface, Runoff, Discharge, Distribution, Meta
-        private static Dictionary<SewerFeatureType, Func<object, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<object, INetworkFeature>>
+        private static Dictionary<SewerFeatureType, Func<object, HydroNetwork, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<object, HydroNetwork, INetworkFeature>>
         {
             { SewerFeatureType.Node, CreateManhole },
             { SewerFeatureType.Pipe, CreatePipe }
         };
 
-        public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements)
+        public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements, HydroNetwork network = null)
         {
             var networkFeatures = new List<INetworkFeature>();
             foreach (var element in listOfElements)
             {
-                networkFeatures.Add(CreateInstance(element));
+                networkFeatures.Add(CreateInstance(element, network));
             }
             return networkFeatures;
         }
 
-        public static INetworkFeature CreateInstance(object element)
+        public static INetworkFeature CreateInstance(object element, HydroNetwork network = null)
         {
             var gwswElement = element as GwswElement;
             if (gwswElement != null && Enum.TryParse(gwswElement.ElementTypeName, out SewerFeatureType elementType))
             {
-                return CreateSewerFeature[elementType](gwswElement);
+                return CreateSewerFeature[elementType](gwswElement, network);
             }
 
             var gwswElementList = element as List<GwswElement>;
             if (gwswElementList != null && Enum.TryParse(gwswElementList.FirstOrDefault()?.ElementTypeName,
                     out SewerFeatureType elementListType))
             {
-                return CreateSewerFeature[elementListType](gwswElementList);
+                return CreateSewerFeature[elementListType](gwswElementList, network);
             }
 
             return null;
         }
 
-        private static CompositeManholeNode CreateManhole(object element)
+        private static CompositeManholeNode CreateManhole(object element, HydroNetwork network = null)
         {
             switch (element)
             {
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return attribute;
         }
 
-        private static Pipe CreatePipe(object element)
+        private static Pipe CreatePipe(object element, HydroNetwork network = null)
         {
             var gwswElement = element as GwswElement;
             if (gwswElement == null) return null;
@@ -118,13 +119,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (nodeIdStart != null)
             {
                 //Find node;
-                //Nodes are needed first.
+                if ( nodeIdStart.ValueAsString != string.Empty && network != null)
+                {
+                    var foundNode = network.HydroNodes.FirstOrDefault(n => n.Name.Equals(nodeIdStart.ValueAsString));
+                    newPipe.Source = foundNode;
+                }
             }
             var nodeIdEnd = GetAttributeFromList(gwswElement, "NODE_UNIQUE_ID_END");
             if (nodeIdEnd != null)
             {
-                //Find node;
-                //Nodes are needed first.
+                //Find node;                
+                if (nodeIdEnd.ValueAsString != string.Empty && network != null)
+                {
+                    var foundNode = network.HydroNodes.FirstOrDefault(n => n.Name.Equals(nodeIdEnd.ValueAsString));
+                    newPipe.Target = foundNode;
+                }
             }
             var pipeTypeAttr = GetAttributeFromList(gwswElement, "PIPE_TYPE");
             if (pipeTypeAttr != null
@@ -171,6 +180,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (crossSectionDef != null)
             {
                 //Find crossSectionDef;
+                if (crossSectionDef.ValueAsString != string.Empty && network != null)
+                {
+                    var foundCS = network.CrossSections.FirstOrDefault(n => n.Name.Equals(crossSectionDef.ValueAsString));
+                    newPipe.CrossSectionShape = foundCS as CrossSection;
+                }
                 //Profiles are needed first.
             }
 

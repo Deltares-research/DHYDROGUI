@@ -7,7 +7,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using GeoAPI.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -259,7 +258,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroNode> HydroNodes { get; protected set; }
 
-        public virtual IEnumerable<IPipe> Pipes { get; protected set; }
+        public virtual IEnumerable<IPipe> Pipes { get; set; }
         public virtual IEnumerable<IChannel> Channels
         {
             get ; protected set;
