@@ -210,6 +210,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = "RND",
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "45,67",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "0.01",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "BOTTOM_LEVEL", "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "2.75",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
                     }
                 }
             };
@@ -230,6 +245,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(compartment.ManholeLength, Is.EqualTo(7071));
             Assert.That(compartment.ManholeWidth, Is.EqualTo(7071));
             Assert.That(compartment.Shape, Is.EqualTo(ManholeShape.Square));
+            Assert.That(compartment.FloodableArea, Is.EqualTo(45.67));
+            Assert.That(compartment.BottomLevel, Is.EqualTo(0.01));
+            Assert.That(compartment.SurfaceLevel, Is.EqualTo(2.75));
         }
 
         #endregion

@@ -44,16 +44,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             // Create dictionary with all attributes
             var attributes = element.GwswAttributeList;
-            var dict = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
+            var propertyValues = attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
 
             // Create manhole
-            var coords = new Coordinate(double.Parse(dict["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(dict["Y_COORDINATE"], CultureInfo.InvariantCulture));
-            var manhole = new Manhole(dict["MANHOLE_ID"], coords);
-            var compartment = new ManholeCompartment(dict["UNIQUE_ID"])
+            var coords = new Coordinate(double.Parse(propertyValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(propertyValues["Y_COORDINATE"], CultureInfo.InvariantCulture));
+            var manhole = new Manhole(propertyValues["MANHOLE_ID"], coords);
+            var compartment = new ManholeCompartment(propertyValues["UNIQUE_ID"])
             {
-                ManholeLength = int.Parse(dict["NODE_LENGTH"]),
-                ManholeWidth = int.Parse(dict["NODE_WIDTH"]),
-                Shape = (ManholeShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(dict["NODE_SHAPE"])
+                ManholeLength = int.Parse(propertyValues["NODE_LENGTH"]),
+                ManholeWidth = int.Parse(propertyValues["NODE_WIDTH"]),
+                Shape = (ManholeShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(propertyValues["NODE_SHAPE"]),
+                FloodableArea = double.Parse(propertyValues["FLOODABLE_AREA"]),
+                BottomLevel = double.Parse(propertyValues["BOTTOM_LEVEL"], CultureInfo.InvariantCulture),
+                SurfaceLevel = double.Parse(propertyValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture)
             };
             manhole.Compartments.Add(compartment);
             

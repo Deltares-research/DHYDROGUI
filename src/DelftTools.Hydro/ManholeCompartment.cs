@@ -13,7 +13,7 @@ namespace DelftTools.Hydro
         /// <summary>
         /// The unique manhole Id that is defined in the GWSW files of the sewer system.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; }
 
         /// <summary>
         /// The shape of the manhole (either square or rectangular).
