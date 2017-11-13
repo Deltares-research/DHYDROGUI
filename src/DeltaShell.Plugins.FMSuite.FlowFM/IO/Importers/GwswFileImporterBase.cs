@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             Mandatory = mandatory;
             Remarks = remarks;
             FileName = fileName;
-            AttributeType = FMParser.GetClrType(Name, typeField, ref definition, fileName, lineNumber);
+            AttributeType = TryGetParsedValueType(Name, typeField, definition, fileName, lineNumber);
         }
 
         public static Type TryGetParsedValueType(string name, string typeFiled, string definition, string fileName, int lineNumber)
