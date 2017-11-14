@@ -13,13 +13,13 @@ namespace DeltaShell.Dimr
         private IDimrApi api;
         private static readonly ILog Log = LogManager.GetLogger(typeof(RemoteDimrApi));
 
-        public RemoteDimrApi(bool is64BitOperatingSystem)
+        public RemoteDimrApi()
         {
             // DeltaShell is 32bit, however we still want to take advantage of the 64bit dimr.dll if the system can use it, 
             // so we need to start the 64bit worker. This works as long as the data send over the Api border 
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
-            api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(is64BitOperatingSystem);
+            api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(true);
             api.SetLoggingLevel("feedbackLevel", DimrApiDataSet.FeedbackLevel);
             api.SetLoggingLevel("debugLevel", DimrApiDataSet.LogFileLevel);
         }

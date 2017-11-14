@@ -44,8 +44,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
                 tempModel.ExportTo(mduFilePath, false, false, false);
 
+                var api = FlexibleMeshModelApiFactory.CreateNew();
+                if (api == null)
+                {
+                    throw new InvalidOperationException("No FlexibleMesh api could be constructed.");
+                }
+
                 // call model initialize
-                using (var api = new RemoteFlexibleMeshModelApi())
+                using (api)
                 {
                     api.Initialize(mduFilePath);
                     api.WriteNetGeometry(geomFile);

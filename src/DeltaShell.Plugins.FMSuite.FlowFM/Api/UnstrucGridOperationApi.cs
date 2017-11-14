@@ -261,7 +261,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private void TryInitializeApi()
         {
-            api = new RemoteFlexibleMeshModelApi();
+            api = FlexibleMeshModelApiFactory.CreateNew();
+            if (api == null)
+            {
+                throw new InvalidOperationException("No FlexibleMesh api could be constructed.");
+            }
+
             try
             {
                 api.Initialize(mduFilePath);

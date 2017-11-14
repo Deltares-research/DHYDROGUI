@@ -346,15 +346,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             try
             {
-                using (var api = GridApiFactory.CreateNew())
+                var api = GridApiFactory.CreateNew();
+                if (api != null)
                 {
-                    GridApiDataSet.DataSetConventions convention;
-                    var ierr = api.GetConvention(netCdfFile.Path, out convention);
-                    if (ierr != GridApiDataSet.GridConstants.NOERR)
+                    using (api)
                     {
-                        throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
-                    } 
-                    return convention;
+                        GridApiDataSet.DataSetConventions convention;
+                        var ierr = api.GetConvention(netCdfFile.Path, out convention);
+                        if (ierr != GridApiDataSet.GridConstants.NOERR)
+                        {
+                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
+                        }
+                        return convention;
+                    }
                 }
             }
             catch (Exception e)

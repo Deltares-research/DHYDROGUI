@@ -77,6 +77,12 @@ namespace DeltaShell.Dimr
             // initialize dimr
             log.Info(model.KernelVersions);
             dimrApi = DimrApiFactory.CreateNew(runRemote: !runLocal);
+
+            if (dimrApi == null)
+            {
+                throw new ArgumentNullException("Could not load the Dimr api.");
+            }
+
             dimrApi.DimrRefDate = model.StartTime;
             dimrApi.KernelDirs = model.KernelDirectoryLocation;
 

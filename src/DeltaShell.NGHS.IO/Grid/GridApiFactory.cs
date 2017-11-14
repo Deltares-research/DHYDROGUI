@@ -4,12 +4,13 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public static class GridApiFactory
     {
-        public static IUGridApi CreateNew()
+        public static IUGridApi CreateNew(bool runRemote = true)
         {
-            return new UGridApi();
-            return (Environment.Is64BitProcess != Environment.Is64BitOperatingSystem)
-                    ? (IUGridApi)new RemoteUGridApi()
-                    : new UGridApi();
+            if (!Environment.Is64BitOperatingSystem || (!runRemote && !Environment.Is64BitProcess)) return null;
+            
+            return runRemote
+                ? (IUGridApi)new RemoteUGridApi()
+                : new UGridApi();
         }
 
         public static IUGridNetworkApi CreateNewNetwork()

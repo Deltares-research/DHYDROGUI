@@ -718,6 +718,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 var runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
                                           HydroModelApplicationPlugin.MainThreadId;
                 dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
+
+                if (dimrApi == null)
+                {
+                    throw new ArgumentNullException("Could not load the Dimr api.");
+                }
+
                 //run dimr
 
                 dimrApi.KernelDirs = kernelDirectories;
