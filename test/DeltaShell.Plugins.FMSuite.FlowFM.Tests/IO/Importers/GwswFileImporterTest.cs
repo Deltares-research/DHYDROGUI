@@ -423,6 +423,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual(importedPipesList, network.Pipes.ToList());
         }
 
+        [Test]
+        public void TestImportPipesFromFileAssignsNodesWhenTheyExist()
+        {
+            //Create network
+            var network = new HydroNetwork();
+            /*We know these two nodes are referred in the test data*/
+            var startNodeName = "put9"; 
+            var startNode = new HydroNode(startNodeName);
+            network.Nodes.Add(startNode);
+
+            var endNodeName = "put8";
+            var endNode = new HydroNode(endNodeName);
+            network.Nodes.Add(endNode);
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load pipes.
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedPipes = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedPipes);
+
+            Assert.IsTrue(network.Pipes.Any());
+            Assert.IsFalse(network.Pipes.Any(p => p.Source == null), "Source node has not been created during import process.");
+            Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
+            Assert.IsTrue(network.Pipes.Any( p => p.Source.Equals( startNode ) && p.Target.Equals( endNode )));
+        }
+
+        [Test]
+        public void TestImportPipesFromFileCreatesNodesWhenTheyDoNotExist()
+        {
+            //Create network
+            var network = new HydroNetwork();
+            /*We know these two nodes are referred in the test data*/
+            var expectedStartNodeName = "put9";
+            var expectedEndNodeName = "put8";
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load pipes.
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedPipes = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedPipes);
+
+            Assert.IsTrue(network.Pipes.Any());
+            Assert.IsFalse(network.Pipes.Any( p => p.Source == null), "Source node has not been created during import process.");
+            Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
+            Assert.IsTrue(network.Pipes.Any(p => p.Source.Name.Equals(expectedStartNodeName) && p.Target.Name.Equals(expectedEndNodeName)));
+            Assert.IsTrue(network.Nodes.Any( n => n.Name.Equals(expectedStartNodeName)));
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(expectedEndNodeName)));
+        }
+
         #endregion
 
         #region Helpers

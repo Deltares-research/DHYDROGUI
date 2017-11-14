@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -104,11 +103,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             //If the target is a network means we are going to import into it.
             if (target is HydroNetwork)
             {
-                var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList);
+                var network = target as HydroNetwork;
+                var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network);
                 SewerFeatureType elementType;
                 if (Enum.TryParse(elementTypeName, out elementType))
                 {
-                    InsertFeatures(elementsCreated, target as HydroNetwork, elementType);
+                    InsertFeatures(elementsCreated, network, elementType);
                 }
                 return elementsCreated;
             }
