@@ -40,7 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var gwswElement = element as GwswElement;
             if (gwswElement != null && Enum.TryParse(gwswElement.ElementTypeName, out elementType))
             {
-                return CreateSewerFeature[elementType](gwswElement, network);
+                if( CreateSewerFeature.ContainsKey(elementType))
+                    return CreateSewerFeature[elementType](gwswElement, network);
             }
 
             SewerFeatureType elementListType;
@@ -48,7 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElementList != null && Enum.TryParse(gwswElementList.FirstOrDefault()?.ElementTypeName,
                     out elementListType))
             {
-                return CreateSewerFeature[elementListType](gwswElementList, network);
+                if (CreateSewerFeature.ContainsKey(elementListType))
+                    return CreateSewerFeature[elementListType](gwswElementList, network);
             }
 
             return null;

@@ -37,6 +37,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(Enum.TryParse(SewerFeatureType.Pipe.ToString(), out testValue));
         }
 
+        [Test]
+        [TestCase(SewerFeatureType.Structure)]
+        [TestCase(SewerFeatureType.Surface)]
+        [TestCase(SewerFeatureType.Runoff)]
+        [TestCase(SewerFeatureType.Discharge)]
+        [TestCase(SewerFeatureType.Distribution)]
+        [TestCase(SewerFeatureType.Meta)]
+        public void NotKnownSewerFeaturesDoNotInstantiate(SewerFeatureType type)
+        {
+            /* When the above features are added to the object model they can remove from this test. */
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = type.ToString()
+            };
+
+            try
+            {
+                var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+                Assert.IsNull(element);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("There was a problem while instantiating. {0}", e.Message);
+            }
+        }
+
         #region Pipe
 
         [Test]

@@ -19,7 +19,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    class GwswFileImporterBase : IFileImporter
+    public class GwswFileImporterBase : IFileImporter
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporterBase));
         private char CsvDelimeterComma = ',';
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedCsv;
         }
 
-        public List<GwswElement> ImportFilesFromDefinitionFile(string path)
+        public List<INetworkFeature> ImportFilesFromDefinitionFile(string path, HydroNetwork network = null)
         {
             ImportDefinitionFile(path);
             Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, AttributesDefinition.Count);
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
 
             var uniqueFileList = AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
-            var importedElements = new List<GwswElement>();
+            var importedFeatureElements = new List<INetworkFeature>();
 
             //Read each one of the files.
             foreach (var fileName in uniqueFileList)
@@ -188,17 +188,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     continue;
                 }
 
-                var importedElement = ImportItem(elementFilePath);
-                var importedElementTable = importedElement as List<GwswElement>;
-                if (importedElementTable == null)
+                var importedElement = ImportItem(elementFilePath, network);
+                var elementAsFeature = importedElement as List<INetworkFeature>;
+                if (elementAsFeature == null)
                 {
                     Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_correctly_, fileName);
+                    continue;
                 }
 
-                importedElements.AddRange(importedElementTable);
+                importedFeatureElements.AddRange(elementAsFeature);
             }
 
-            return importedElements;
+            return importedFeatureElements;
         }
 
         public DataTable ImportDefinitionFile(string path)

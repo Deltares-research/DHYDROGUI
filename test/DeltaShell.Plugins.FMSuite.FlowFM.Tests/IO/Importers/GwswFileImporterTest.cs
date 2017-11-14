@@ -161,9 +161,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var gwswImporter = new GwswFileImporterBase();
             Assert.IsNotNull(gwswImporter);
 
-            var dataElements = gwswImporter.ImportFilesFromDefinitionFile(filePath);
-            Assert.IsNotNull(dataElements);
-
+            var importedObject = gwswImporter.ImportFilesFromDefinitionFile(filePath);
+            Assert.IsNotNull(importedObject);
 
             var uniqueFileList = gwswImporter.AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
             var expectedNumberOfElements = 0;
@@ -175,8 +174,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.IsTrue(File.Exists(elementFilePath));
                 expectedNumberOfElements += File.ReadAllLines(elementFilePath).Length - 1;
             }
-            Assert.AreNotEqual(expectedNumberOfElements, 0, "No elements were loaded.");
-            Assert.AreEqual(expectedNumberOfElements, dataElements.Count, "Not all elements were imported correctly. Other tests might be failing due to this.");
+
+            Assert.AreNotEqual(expectedNumberOfElements, 0, "No elements were read correctly, so the test cannot compare imported and elements in the file.");
+            Assert.AreEqual(expectedNumberOfElements, importedObject.Count, "Not all elements were imported correctly. Other tests might be failing due to this.");
         }
 
         [Test]
@@ -367,6 +367,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         #endregion
 
         #region Gwsw Import Elements
+
+        [Test]
+        public void TestImportFromDefinitionFileCreatesAllSortOfElementsInNetwork()
+        {
+            var network = new HydroNetwork();
+            Assert.IsFalse(network.Pipes.Any());
+            Assert.IsFalse(network.Nodes.Any());
+            Assert.IsFalse(network.SewerProfiles.Any());
+            Assert.IsFalse(network.Manholes.Any());
+
+            var gwswImporter = new GwswFileImporterBase();
+            try
+            {
+                gwswImporter.ImportFilesFromDefinitionFile(@"gwswFiles\GWSW.hydx_Definitie_DM.csv", network);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("While importing an exception was thrown {0}", e.Message);
+            }
+
+            Assert.IsTrue(network.Pipes.Any());
+            Assert.IsTrue(network.Nodes.Any());
+            Assert.IsTrue(network.SewerProfiles.Any());
+            Assert.IsTrue(network.Manholes.Any());
+
+        }
 
         [Test]
         public void TestImportPipesFromGwswWithoutPreviousMappingFails()
