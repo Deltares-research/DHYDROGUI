@@ -506,6 +506,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} was not found for element {1}.
+        /// </summary>
+        public static string SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element_" +
+                        "_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {

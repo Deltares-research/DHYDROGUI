@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
@@ -105,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var attribute = element.GwswAttributeList.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(attributeName));
             if (attribute == null)
             {
-                Log.WarnFormat("Attribute {0} was not found for element {1}", attributeName, element.ElementTypeName);
+                Log.WarnFormat(Resources.SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_, attributeName, element.ElementTypeName);
                 return null;
             }
             return attribute;
