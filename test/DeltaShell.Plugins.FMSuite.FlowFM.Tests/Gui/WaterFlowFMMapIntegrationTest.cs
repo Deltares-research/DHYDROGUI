@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -20,7 +21,6 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
-using SharpMap;
 using SharpMap.Layers;
 using Control = System.Windows.Controls.Control;
 
@@ -32,6 +32,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         private static string GetBendProfPath()
         {
             return TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void TestRunningSmallModelWithManyTimeSteps()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                gui.MainWindow.Show();
+
+                var model = new WaterFlowFMModel(mduPath);
+
+                app.Project.RootFolder.Add(model);
+
+                var sw = new Stopwatch();
+                sw.Start();
+
+                gui.Application.ActivityRunner.Enqueue(model);
+
+                while (gui.Application.IsActivityRunningOrWaiting(model))
+                {
+                    Application.DoEvents();
+                }
+
+                sw.Stop();
+                Assert.Less(sw.ElapsedMilliseconds, 30000);
+            }
         }
 
         [Test]

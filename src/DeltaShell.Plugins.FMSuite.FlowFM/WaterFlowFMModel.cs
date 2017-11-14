@@ -2733,11 +2733,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             base.OnCleanup();
             runner.OnCleanup();
         }
+
+        private double previousProgress = 0;
         protected override void OnProgressChanged()
         {
+            // Only update gui for every 1 percent progress (performance)
+            if (ProgressPercentage - previousProgress < 0.01) return;
+
+            previousProgress = ProgressPercentage;
             runner.OnProgressChanged();
             base.OnProgressChanged();
         }
+
         protected override void OnExecute()
         {
             runner.OnExecute();
