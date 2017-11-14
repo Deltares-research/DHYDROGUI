@@ -34,15 +34,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static INetworkFeature CreateInstance(object element, HydroNetwork network = null)
         {
+            SewerFeatureType elementType;
             var gwswElement = element as GwswElement;
-            if (gwswElement != null && Enum.TryParse(gwswElement.ElementTypeName, out SewerFeatureType elementType))
+            if (gwswElement != null && Enum.TryParse(gwswElement.ElementTypeName, out elementType))
             {
                 return CreateSewerFeature[elementType](gwswElement, network);
             }
 
+            SewerFeatureType elementListType;
             var gwswElementList = element as List<GwswElement>;
             if (gwswElementList != null && Enum.TryParse(gwswElementList.FirstOrDefault()?.ElementTypeName,
-                    out SewerFeatureType elementListType))
+                    out elementListType))
             {
                 return CreateSewerFeature[elementListType](gwswElementList, network);
             }
@@ -52,15 +54,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static CompositeManholeNode CreateManhole(object element, HydroNetwork network = null)
         {
-            switch (element)
-            {
-                case GwswElement gwswElement:
-                    return CreateManholeNode(new List<GwswElement> {gwswElement});
-                case List<GwswElement> gwswElementList:
-                    return CreateManholeNode(gwswElementList);
-                default:
-                    return null;
-            }
+            var gwswElement = element as GwswElement;
+            if(gwswElement != null)
+                return CreateManholeNode(new List<GwswElement> { gwswElement });
+
+            var gwswElementList = element as List<GwswElement>;
+            if (gwswElementList != null)
+                return CreateManholeNode(gwswElementList);
+
+            return null;
         }
 
         private static CompositeManholeNode CreateManholeNode(IEnumerable<GwswElement> gwswElementList)
