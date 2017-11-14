@@ -309,6 +309,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.That(locationNames[1], Is.EqualTo("point2"));
         }
 
+        [Test]
+        public void GivenPliFileThatContainsOnePoint_WhenReadingPliFile_ThenPointIsReturned()
+        {
+            var sources = ReadPliFile("structures/SourceSink01.pli");
+            Assert.That(sources.Count, Is.EqualTo(1));
+        }
+
+        #region Test helper methods
+
         private static IList<Feature2D> ReadPliFile(string relativeFilePath)
         {
             var filePath =
@@ -326,5 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
             return features;
         }
+
+        #endregion
     }
 }

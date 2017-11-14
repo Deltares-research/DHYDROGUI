@@ -3,6 +3,7 @@
   <PropertyGroup>
     <BuildPath>$(MSBuildProjectDirectory)</BuildPath>
     <SolutionDir>$(MSBuildProjectDirectory)\</SolutionDir> 
+	<DoxygenOutputDirectory>$(BuildPath)\doxygen\</DoxygenOutputDirectory>
   </PropertyGroup>
 
   <Target Name="BuildRelease">
@@ -15,6 +16,12 @@
     <Delete Files="@(PdbFiles)" />
     <Delete Files="@(PsSymFiles)" />
   </Target>
+  
+  <Target Name="Doxygen" DependsOnTargets="BuildRelease">
+    <RemoveDir Directories="$(DoxygenOutputDirectory)"/>
+    <MakeDir Directories="$(DoxygenOutputDirectory)" />
+    <Exec Command="build\doxygen\bin\doxygen.exe Nghs.doxygen" />
+  </Target>   
   
   <Target Name="MsiWaq" DependsOnTargets="BuildRelease">
     <MSBuild Projects="setup\Waq\Waq.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>

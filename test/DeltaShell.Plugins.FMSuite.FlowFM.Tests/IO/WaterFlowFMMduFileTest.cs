@@ -1263,6 +1263,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 new HydroArea());
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenPointSourceFileThatContainsOnePoint_WhenReadingMduFile_ThenSourceHasBeenImported()
+        {
+            // Preparations
+            const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
+            var filePath = Path.Combine(baseFolderPath, @"MduFileWithSourceSinkFile\FlowFM.mdu");
+            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, Path.GetFileNameWithoutExtension(filePath));
+
+            Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(0));
+            new MduFile().Read(mduFilePath, modelDefinition, area);
+            Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
+        }
+
 
         #region TestHelpers
 

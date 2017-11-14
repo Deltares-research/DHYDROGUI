@@ -704,7 +704,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         (points, name) =>
                             points.Count == 1
                                 ? new Feature2DPoint {Name = name, Geometry = new Point(points[0])}
-                                : new Feature2D {Name = name, Geometry = PliFile<Feature2D>.CreatePolyLine(points)};
+                                : new Feature2D {Name = name, Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points)};
                 }
                 var features2D = reader.Read(pliFilePath);
                 existingForceFileItems[extForceFileItem] = features2D;

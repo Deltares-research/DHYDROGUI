@@ -36,6 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting InitialDischarge = new ConfigurationSetting(key: "InitialDischarge", description: "Initial discharge for branches where no spatial varying values is defined");
         public static readonly ConfigurationSetting InitialSalinity = new ConfigurationSetting(key: "InitialSalinity", description: "Initial salinity for locations where no spatial varying values is defined");
         public static readonly ConfigurationSetting Dispersion = new ConfigurationSetting(key: "Dispersion", description: "Dispersion for locations where no spatial varying values is defined");
+        public static readonly ConfigurationSetting DispersionF3 = new ConfigurationSetting(key: "F3", description: "Dispersion (F3) for locations where no spatial varying values is defined");
+        public static readonly ConfigurationSetting DispersionF4 = new ConfigurationSetting(key: "F4", description: "Dispersion (F4) for locations where no spatial varying values is defined");
 
         public const string InitialConditionsValuesHeader = "InitialConditions";
         public static readonly ConfigurationSetting InitialEmptyWells = new ConfigurationSetting(key: "InitialEmptyWells", description: "0=false, 1=true");

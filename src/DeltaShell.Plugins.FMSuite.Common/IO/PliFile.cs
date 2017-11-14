@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public const string Extension = "pli";
 
         // Better exception message...
-        public static IGeometry CreatePolyLine(IList<Coordinate> coordinates, bool checkOpen = false)
+        public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates, bool checkOpen = false)
         {
             if (coordinates.Count < 2)
             {
@@ -279,11 +279,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private T CreateFeature2D(string name, List<Coordinate> points, int numColumns, IList<IList<double>> columnNumericalValueLists, IList<IList<string>> columnStringValueLists,
             IDictionary<int, string> locationNames, string pliFilePath)
         {
-            var polyLine = CreatePolyLine(points);
-
             var feature = CreateDelegate != null
                 ? CreateDelegate(points, name)
-                : new T {Name = name, Geometry = polyLine};
+                : new T
+                {
+                    Name = name,
+                    Geometry = points.Count != 1 ? CreatePolyLineGeometry(points) : new Point(points.FirstOrDefault())
+                };
 
             feature.TrySetGroupName(pliFilePath);
 
