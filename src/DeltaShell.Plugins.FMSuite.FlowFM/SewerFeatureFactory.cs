@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -123,7 +124,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;
                 if ( nodeIdStart.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.HydroNodes.FirstOrDefault(n => n.Name.Equals(nodeIdStart.ValueAsString));
+                    var foundNode = network.Nodes.FirstOrDefault(n => n.Name.Equals(nodeIdStart.ValueAsString));
+                    if (foundNode == null)
+                    {
+                        //create node
+                        foundNode = new Node(nodeIdStart.ValueAsString);
+                        network.Nodes.Add(foundNode);
+                    }
                     newPipe.Source = foundNode;
                 }
             }
@@ -133,7 +140,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;                
                 if (nodeIdEnd.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.HydroNodes.FirstOrDefault(n => n.Name.Equals(nodeIdEnd.ValueAsString));
+                    var foundNode = network.Nodes.FirstOrDefault(n => n.Name.Equals(nodeIdEnd.ValueAsString));
+                    if (foundNode == null)
+                    {
+                        //create node
+                        foundNode = new Node(nodeIdEnd.ValueAsString);
+                        network.Nodes.Add(foundNode);
+                    }
                     newPipe.Target = foundNode;
                 }
             }
@@ -178,16 +191,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     newPipe.Length = double.Parse(length.ValueAsString);
                 }
             }
-            var crossSectionDef = GetAttributeFromList(gwswElement, "CROSS_SECTION_DEF");
-            if (crossSectionDef != null)
+            var profileDef = GetAttributeFromList(gwswElement, "CROSS_SECTION_DEF");
+            if (profileDef != null)
             {
                 //Find crossSectionDef;
-                if (crossSectionDef.ValueAsString != string.Empty && network != null)
-                {
-                    var foundCS = network.CrossSections.FirstOrDefault(n => n.Name.Equals(crossSectionDef.ValueAsString));
-                    newPipe.CrossSectionShape = foundCS as CrossSection;
-                }
                 //Profiles are needed first.
+                if (profileDef.ValueAsString != string.Empty && network != null)
+                {
+                    var foundCs = network.SewerProfiles.FirstOrDefault(n => n.Name.Equals(profileDef.ValueAsString));
+                    if (foundCs == null)
+                    {
+                        foundCs = CrossSection.CreateDefault();
+                        foundCs.Name = profileDef.ValueAsString;
+                        network.SewerProfiles.Add(foundCs);
+                    }
+                    newPipe.CrossSectionShape = (CrossSection)foundCs;
+                }
             }
 
             return newPipe;

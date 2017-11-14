@@ -13,6 +13,8 @@ namespace DelftTools.Hydro
 
         IEnumerable<IHydroNode> HydroNodes{ get; }
         IEnumerable<IPipe> Pipes { get; }
+
+        IEventedList<ICrossSection> SewerProfiles { get; }
         IEnumerable<IChannel> Channels { get; }
 
         IEnumerable<ICrossSection> CrossSections { get; }

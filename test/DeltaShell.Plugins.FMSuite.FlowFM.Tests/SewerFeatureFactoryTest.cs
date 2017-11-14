@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -29,6 +30,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
+        {
+            SewerFeatureType testValue;
+            Assert.IsFalse(Enum.TryParse("failValue", out testValue));
+            Assert.IsTrue(Enum.TryParse(SewerFeatureType.Pipe.ToString(), out testValue));
+        }
+
+        #region Pipe
+
+        [Test]
+        public void PipeTypeCanBeRetrieveWithAStringValue()
+        {
+            PipeType testValue;
+            Assert.IsFalse(Enum.TryParse("failValue", out testValue));
+            Assert.IsTrue(Enum.TryParse(PipeType.ClosedConnection.ToString(), out testValue));
+        }
+
+        [Test]
         public void CreatePipeFromFactory()
         {
             var nodeGwswElement = new GwswElement
@@ -38,22 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
             Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
-        }
-
-        [Test]
-        public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
-        {
-            SewerFeatureType testValue;
-            Assert.IsFalse(Enum.TryParse("failValue", out testValue));
-            Assert.IsTrue(Enum.TryParse(SewerFeatureType.Pipe.ToString(), out testValue));
-        }
-
-        [Test]
-        public void PipeTypeCanBeRetrieveWithAStringValue()
-        {
-            PipeType testValue;
-            Assert.IsFalse(Enum.TryParse("failValue", out testValue));
-            Assert.IsTrue(Enum.TryParse(PipeType.ClosedConnection.ToString(), out testValue));
         }
 
         [Test]
@@ -90,48 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var endNode = "node002";
             var pipeType = PipeType.Open;
 
-            var nodeGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Pipe.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
-                {
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 0, "columnName", "string", "PIPE_TYPE", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = pipeType.ToString()
-                    },
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 1, "columnName", "double", "LEVEL_START", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = startLevel.ToString()
-                    },
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 2, "columnName", "double", "LEVEL_END", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = endLevel.ToString()
-                    },
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 3, "columnName", "double", "LENGTH", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = length.ToString()
-                    },
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 4, "columnName", "string", "CROSS_SECTION_DEF", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = crossSectionDef
-                    },
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", "NODE_ID_START", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = startNode
-                    },
-                    new GwswAttribute()
-                    {
-                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", "NODE_ID_END", "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = endNode
-                    },
-                }
-            };
+            var nodeGwswElement = GetDefaultPipeGwswElement(pipeType, startLevel, endLevel, length, crossSectionDef, startNode, endNode);
 
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
             Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
@@ -157,6 +119,177 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPipe.Length);
             Assert.AreEqual(length, createdPipe.Length);
         }
+
+        [Test]
+        public void CreatePipeFromFactoryCreatesDefaultNodesIfTheyAreNotPresentInNetwork()
+        {
+            var startNode = "node001";
+            var endNode = "node002";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", "NODE_UNIQUE_ID_START",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = startNode
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", "NODE_UNIQUE_ID_END",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = endNode
+                    },
+                }
+            };
+
+            var network = new HydroNetwork();
+            Assert.IsFalse(network.Nodes.Any(n => n.Name.Equals(startNode)));
+            Assert.IsFalse(network.Nodes.Any(n => n.Name.Equals(endNode)));
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+
+            var createdPipe = element as Pipe;
+            Assert.IsNotNull(createdPipe);
+
+            //Defined
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(startNode)));
+            Assert.IsNotNull(createdPipe.Source);
+            Assert.AreEqual(startNode, createdPipe.Source.Name);
+
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(endNode)));
+            Assert.IsNotNull(createdPipe.Target);
+            Assert.AreEqual(endNode, createdPipe.Target.Name);
+
+        }
+
+        [Test]
+        public void CreatePipeFromFactoryAssignsExistingNodesIfTheyArePresentInNetwork()
+        {
+            //Create network and nodes.
+            var network = new HydroNetwork();
+
+            var startNodeName = "node001";
+            var startNode = new HydroNode(startNodeName);
+            network.Nodes.Add(startNode);
+
+            var endNodeName = "node002";
+            var endNode = new HydroNode(endNodeName);
+            network.Nodes.Add(endNode);
+
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(startNodeName)));
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(endNodeName)));
+
+            //Create element and instantiate it.
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", "NODE_UNIQUE_ID_START",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = startNodeName
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", "NODE_UNIQUE_ID_END",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = endNodeName
+                    },
+                }
+            };
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+
+            var createdPipe = element as Pipe;
+            Assert.IsNotNull(createdPipe);
+
+            //Defined
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(startNodeName)));
+            Assert.IsNotNull(createdPipe.Source);
+            Assert.AreEqual(startNode, createdPipe.Source);
+
+            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(endNodeName)));
+            Assert.IsNotNull(createdPipe.Target);
+            Assert.AreEqual(endNode, createdPipe.Target);
+        }
+
+        [Test]
+        public void CreatePipeFromFactoryCreatesDefaultCrossSectionDefinitionIfNotPresentInNetwork()
+        {
+            var sewerDefinitionName = "crossSectionDef001";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 4, "columnName", "string", "CROSS_SECTION_DEF",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = sewerDefinitionName
+                    }
+                }
+            };
+
+            var network = new HydroNetwork();
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+
+            var createdPipe = element as Pipe;
+            Assert.IsNotNull(createdPipe);
+
+            //Defined
+            Assert.IsNotNull(createdPipe.CrossSectionShape);
+            Assert.AreEqual(sewerDefinitionName, createdPipe.CrossSectionShape.Name);
+            Assert.IsTrue(network.SewerProfiles.Any( cs => cs.Name.Equals(sewerDefinitionName)));
+        }
+
+        [Test]
+        public void CreatePipeFromFactoryAssignsExistingCrossSectionDefinitionIfPresentInNetwork()
+        {
+            var network = new HydroNetwork();
+            Assert.IsFalse(network.SewerProfiles.Any());
+
+            var sewerDefinitionName = "crossSectionDef001";
+            var auxCrossSection = CrossSection.CreateDefault();
+            auxCrossSection.Name = sewerDefinitionName;
+
+            network.SewerProfiles.Add(auxCrossSection);
+            Assert.IsTrue(network.SewerProfiles.Any( sp => sp.Name.Equals(sewerDefinitionName)));
+
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 4, "columnName", "string", "CROSS_SECTION_DEF",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = sewerDefinitionName
+                    }
+                }
+            };
+
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
+
+            var createdPipe = element as Pipe;
+            Assert.IsNotNull(createdPipe);
+
+            //Defined
+            Assert.IsNotNull(createdPipe.CrossSectionShape);
+            Assert.AreEqual(sewerDefinitionName, createdPipe.CrossSectionShape.Name);
+            Assert.IsTrue(network.SewerProfiles.Any(cs => cs.Name.Equals(sewerDefinitionName)));
+            Assert.AreEqual(auxCrossSection, createdPipe.CrossSectionShape);
+        }
+
+        #endregion
 
         #region CompositeManholeNode
 
@@ -196,6 +329,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #endregion
 
         #region Test helpers
+
+        private static GwswElement GetDefaultPipeGwswElement(PipeType pipeType, int startLevel, int endLevel, int length,
+            string crossSectionDef, string startNode, string endNode)
+        {
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Pipe.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 0, "columnName", "string", "PIPE_TYPE",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = pipeType.ToString()
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 1, "columnName", "double", "LEVEL_START",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = startLevel.ToString()
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 2, "columnName", "double", "LEVEL_END",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = endLevel.ToString()
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 3, "columnName", "double", "LENGTH",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = length.ToString()
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 4, "columnName", "string", "CROSS_SECTION_DEF",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = crossSectionDef
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", "NODE_UNIQUE_ID_START",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = startNode
+                    },
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", "NODE_UNIQUE_ID_END",
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = endNode
+                    },
+                }
+            };
+            return nodeGwswElement;
+        }
 
         private static void CheckManholeNodePropertyValues(CompositeManholeNode manhole, string nodeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
         {
