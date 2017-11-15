@@ -351,7 +351,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             foreach (var feature in features.Where(s => s is TFeat))
             {
-                list.Add(feature);
+                var replaced = false;
+                for (var i = 0; i < list.Count; ++i)
+                {
+                    if (list[i] is TFeat && ((TFeat)list[i]).Name == feature.Name)
+                    {
+                        list[i] = feature;
+                        replaced = true;
+                        break;
+                    }
+                }
+                if (!replaced)
+                {
+                    list.Add(feature);
+                }
             }
         }
     }

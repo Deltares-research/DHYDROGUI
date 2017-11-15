@@ -161,22 +161,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var gwswImporter = new GwswFileImporterBase();
             Assert.IsNotNull(gwswImporter);
 
-            var importedObject = gwswImporter.ImportFilesFromDefinitionFile(filePath);
-            Assert.IsNotNull(importedObject);
-
-            var uniqueFileList = gwswImporter.AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
-            var expectedNumberOfElements = 0;
-
-            foreach (var fileName in uniqueFileList)
+            try
             {
-                var directoryName = Path.GetDirectoryName(filePath);
-                var elementFilePath = Path.Combine(directoryName, fileName);
-                Assert.IsTrue(File.Exists(elementFilePath));
-                expectedNumberOfElements += File.ReadAllLines(elementFilePath).Length - 1;
+                var network = new HydroNetwork();
+                var importedObject = gwswImporter.ImportFilesFromDefinitionFile(filePath, network);
+                Assert.IsNotNull(importedObject);
+
+                var uniqueFileList = gwswImporter.AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
+                var expectedNumberOfElements = 0;
+
+                foreach (var fileName in uniqueFileList)
+                {
+                    var directoryName = Path.GetDirectoryName(filePath);
+                    var elementFilePath = Path.Combine(directoryName, fileName);
+                    Assert.IsTrue(File.Exists(elementFilePath));
+                    expectedNumberOfElements += File.ReadAllLines(elementFilePath).Length - 1;
+                }
+
+                Assert.AreNotEqual(expectedNumberOfElements, 0, "No elements were read correctly, so the test cannot compare imported and elements in the file.");
+                Assert.AreEqual(expectedNumberOfElements, importedObject.Count, "Not all elements were imported correctly. Other tests might be failing due to this.");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("While importing an exception was thrown {0}", e.Message);
             }
 
-            Assert.AreNotEqual(expectedNumberOfElements, 0, "No elements were read correctly, so the test cannot compare imported and elements in the file.");
-            Assert.AreEqual(expectedNumberOfElements, importedObject.Count, "Not all elements were imported correctly. Other tests might be failing due to this.");
         }
 
         [Test]
@@ -510,6 +519,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(expectedEndNodeName)));
         }
 
+        [Test]
+        public void TestImportElementReplacesExistingOne()
+        {
+            //Create network
+            var network = new HydroNetwork();
+            /*We know these two nodes are referred in the test data*/
+            var replacedPipe = "lei1";
+            var replacedPipeType = PipeType.InfiltrationPipe;
+            var pipes = new Pipe(){ Name = replacedPipe, PipeType = replacedPipeType };
+            var networkPipes = network.Pipes.ToList();
+            networkPipes.Add(pipes);
+            network.Pipes = networkPipes;
+            Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
+            Assert.AreEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).PipeType);
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load pipes.
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedPipes = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedPipes);
+            Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
+            Assert.AreNotEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).PipeType);
+        }
         #endregion
 
         #region Helpers

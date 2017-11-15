@@ -11,6 +11,7 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -206,6 +207,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElement == null) return null;
 
             var newPipe = new Pipe();
+            var nodeIdString = GetAttributeFromList(gwswElement, "UNIQUE_ID");
+            if (nodeIdString != null && nodeIdString.ValueAsString != null)
+            {
+                newPipe.PipeId = nodeIdString.ValueAsString;
+                newPipe.Name = nodeIdString.ValueAsString;
+            }
 
             var nodeIdStart = GetAttributeFromList(gwswElement, "NODE_UNIQUE_ID_START");
             if (nodeIdStart != null)
@@ -217,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new Node(nodeIdStart.ValueAsString);
+                        foundNode = new HydroNode(nodeIdStart.ValueAsString);
                         network.Nodes.Add(foundNode);
                     }
                     newPipe.Source = foundNode;
@@ -233,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new Node(nodeIdEnd.ValueAsString);
+                        foundNode = new HydroNode(nodeIdEnd.ValueAsString);
                         network.Nodes.Add(foundNode);
                     }
                     newPipe.Target = foundNode;
@@ -298,6 +305,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
+            //Setting up the geometry
+            var coordX = 0.0;
+            if (newPipe.Source != null && newPipe.Target != null)
+            {
+                if (newPipe.Source.Geometry == null)
+                {
+                    if (newPipe.Target.Geometry != null)
+                        coordX = newPipe.Target.Geometry.Coordinate.X - newPipe.Length;
+                    newPipe.Source.Geometry = new Point(coordX, newPipe.LevelSource);
+                }
+
+                if (newPipe.Target.Geometry == null)
+                    newPipe.Target.Geometry = new Point(newPipe.Length + coordX, newPipe.LevelSource);
+
+                newPipe.Geometry = new LineString(
+                    new[]
+                    {
+                        newPipe.Source.Geometry.Coordinate,
+                        newPipe.Target.Geometry.Coordinate
+                    });
+            }
             return newPipe;
         }
     }
