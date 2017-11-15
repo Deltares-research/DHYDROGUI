@@ -214,6 +214,7 @@ namespace DelftTools.Hydro
             Links = new EventedList<HydroLink>();
             SubRegions = new EventedList<IRegion>();
             SewerProfiles = new EventedList<ICrossSection>();
+            ManholeNodes = new EventedList<CompositeManholeNode>();
         }
         
         public override IEventedList<IBranch> Branches
@@ -260,6 +261,8 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IHydroNode> HydroNodes { get; protected set; }
 
         public virtual IEnumerable<IPipe> Pipes { get; set; }
+        public IEnumerable<CompositeManholeNode> ManholeNodes { get; set; }
+
         public virtual IEnumerable<IChannel> Channels
         {
             get ; protected set;
