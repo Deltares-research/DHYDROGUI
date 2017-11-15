@@ -173,12 +173,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;
                 if ( nodeIdStart.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.Nodes.FirstOrDefault(n => n.Name.Equals(nodeIdStart.ValueAsString));
+                    var foundNode = network.ManholeNodes.FirstOrDefault(n => n.ManholeId.Equals(nodeIdStart.ValueAsString));
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new HydroNode(nodeIdStart.ValueAsString);
-                        network.Nodes.Add(foundNode);
+                        foundNode = new CompositeManholeNode(nodeIdStart.ValueAsString);
+                        network.ManholeNodes.Add(foundNode);
                     }
                     newPipe.Source = foundNode;
                 }
@@ -189,12 +189,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;                
                 if (nodeIdEnd.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.Nodes.FirstOrDefault(n => n.Name.Equals(nodeIdEnd.ValueAsString));
+                    var foundNode = network.ManholeNodes.FirstOrDefault(n => n.ManholeId.Equals(nodeIdEnd.ValueAsString));
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new HydroNode(nodeIdEnd.ValueAsString);
-                        network.Nodes.Add(foundNode);
+                        foundNode = new CompositeManholeNode(nodeIdEnd.ValueAsString);
+                        network.ManholeNodes.Add(foundNode);
                     }
                     newPipe.Target = foundNode;
                 }

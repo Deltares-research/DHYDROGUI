@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var network = new HydroNetwork();
             Assert.IsFalse(network.Pipes.Any());
-            Assert.IsFalse(network.Nodes.Any());
+            Assert.IsFalse(network.ManholeNodes.Any());
             Assert.IsFalse(network.SewerProfiles.Any());
             Assert.IsFalse(network.Manholes.Any());
 
@@ -397,7 +397,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
 
             Assert.IsTrue(network.Pipes.Any());
-            Assert.IsTrue(network.Nodes.Any());
+            Assert.IsTrue(network.ManholeNodes.Any());
             Assert.IsTrue(network.SewerProfiles.Any());
             Assert.IsTrue(network.Manholes.Any());
 
@@ -465,12 +465,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var network = new HydroNetwork();
             /*We know these two nodes are referred in the test data*/
             var startNodeName = "put9"; 
-            var startNode = new HydroNode(startNodeName);
-            network.Nodes.Add(startNode);
+            var startNode = new CompositeManholeNode(startNodeName);
+            network.ManholeNodes.Add(startNode);
 
             var endNodeName = "put8";
-            var endNode = new HydroNode(endNodeName);
-            network.Nodes.Add(endNode);
+            var endNode = new CompositeManholeNode(endNodeName);
+            network.ManholeNodes.Add(endNode);
 
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -487,6 +487,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any());
             Assert.IsFalse(network.Pipes.Any(p => p.Source == null), "Source node has not been created during import process.");
             Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
+
             Assert.IsTrue(network.Pipes.Any( p => p.Source.Equals( startNode ) && p.Target.Equals( endNode )));
         }
 
@@ -514,9 +515,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any());
             Assert.IsFalse(network.Pipes.Any( p => p.Source == null), "Source node has not been created during import process.");
             Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
-            Assert.IsTrue(network.Pipes.Any(p => p.Source.Name.Equals(expectedStartNodeName) && p.Target.Name.Equals(expectedEndNodeName)));
-            Assert.IsTrue(network.Nodes.Any( n => n.Name.Equals(expectedStartNodeName)));
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(expectedEndNodeName)));
+            Assert.IsTrue(network.Pipes.Any(p => ((CompositeManholeNode)p.Source).ManholeId.Equals(expectedStartNodeName) && ((CompositeManholeNode)p.Target).ManholeId.Equals(expectedEndNodeName)));
+            
+            //Checking manhole name is stored as id
+            Assert.IsTrue(network.ManholeNodes.Any( n => n.ManholeId.Equals(expectedStartNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(expectedEndNodeName)));
         }
 
         [Test]

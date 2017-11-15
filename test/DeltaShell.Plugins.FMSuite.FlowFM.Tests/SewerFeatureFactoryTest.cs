@@ -159,8 +159,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var network = new HydroNetwork();
-            Assert.IsFalse(network.Nodes.Any(n => n.Name.Equals(startNode)));
-            Assert.IsFalse(network.Nodes.Any(n => n.Name.Equals(endNode)));
+            Assert.IsFalse(network.ManholeNodes.Any(n => n.ManholeId.Equals(startNode)));
+            Assert.IsFalse(network.ManholeNodes.Any(n => n.ManholeId.Equals(endNode)));
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
             Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
 
@@ -168,32 +168,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPipe);
 
             //Defined
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(startNode)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(startNode)));
             Assert.IsNotNull(createdPipe.Source);
-            Assert.AreEqual(startNode, createdPipe.Source.Name);
 
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(endNode)));
+            var sourceAsManhole = createdPipe.Source as CompositeManholeNode;
+            Assert.IsNotNull(sourceAsManhole);
+            Assert.AreEqual(startNode, sourceAsManhole.ManholeId);
+
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(endNode)));
             Assert.IsNotNull(createdPipe.Target);
-            Assert.AreEqual(endNode, createdPipe.Target.Name);
+
+            var targetAsManhole = createdPipe.Target as CompositeManholeNode;
+            Assert.IsNotNull(targetAsManhole);
+            Assert.AreEqual(endNode, targetAsManhole.ManholeId);
 
         }
 
         [Test]
         public void CreatePipeFromFactoryAssignsExistingNodesIfTheyArePresentInNetwork()
-                    {
+        {
             //Create network and nodes.
             var network = new HydroNetwork();
 
             var startNodeName = "node001";
-            var startNode = new HydroNode(startNodeName);
-            network.Nodes.Add(startNode);
+            var startNode = new CompositeManholeNode(startNodeName);
+            network.ManholeNodes.Add(startNode);
 
             var endNodeName = "node002";
-            var endNode = new HydroNode(endNodeName);
-            network.Nodes.Add(endNode);
+            var endNode = new CompositeManholeNode(endNodeName);
+            network.ManholeNodes.Add(endNode);
 
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(startNodeName)));
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(endNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(startNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(endNodeName)));
 
             //Create element and instantiate it.
             var nodeGwswElement = new GwswElement
@@ -222,11 +228,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPipe);
 
             //Defined
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(startNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(startNodeName)));
             Assert.IsNotNull(createdPipe.Source);
             Assert.AreEqual(startNode, createdPipe.Source);
 
-            Assert.IsTrue(network.Nodes.Any(n => n.Name.Equals(endNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(endNodeName)));
             Assert.IsNotNull(createdPipe.Target);
             Assert.AreEqual(endNode, createdPipe.Target);
         }
