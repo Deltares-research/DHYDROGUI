@@ -7,13 +7,13 @@ namespace DelftTools.Hydro
 {
     public class CompositeManholeNode : HydroNode
     {
-        public CompositeManholeNode(string manholeId)
+        public CompositeManholeNode(string manholeId) : base("manhole node")
         {
             ManholeId = manholeId;
             Compartments = new List<Manhole>();
         }
 
-        public string ManholeId { get; set; }
+        public string ManholeId { get; }
 
         public IList<Manhole> Compartments { get; set; }
 

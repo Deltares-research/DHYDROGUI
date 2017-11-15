@@ -76,31 +76,105 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 .Select(attributes => attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString))
                 .ToList();
 
-            var manholeIds = elementValuesDictionary.Select(v => v["MANHOLE_ID"]).Distinct().ToList();
-            if (manholeIds.Count != 1) return null;
-
-            var manholeNode = new CompositeManholeNode(manholeIds.FirstOrDefault());
+            CompositeManholeNode manholeNode;
+            try
+            {
+                var manholeIds = elementValuesDictionary.Select(v => v[ManholeCodes.ManholeId]).Distinct().ToList();
+                if (manholeIds.Count != 1) return null;
+                manholeNode = new CompositeManholeNode(manholeIds.FirstOrDefault());
+            }
+            catch
+            {
+                Log.Warn(Resources.SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
+                return null;
+            }
+            
             foreach (var elementValues in elementValuesDictionary)
             {
-                var manholeCompartment = CreateManHoleCompartment(elementValues);
-                manholeNode.Compartments.Add(manholeCompartment);
+                try
+                {
+                    var manholeCompartment = CreateManHoleCompartment(elementValues);
+                    manholeNode.Compartments.Add(manholeCompartment);
+                }
+                catch (Exception e)
+                {
+                    Log.Warn(e.Message);
+                    return null;
+                }
             }
 
             return manholeNode;
         }
 
-        private static Manhole CreateManHoleCompartment(Dictionary<string, string> elementValues)
+        private static Manhole CreateManHoleCompartment(IReadOnlyDictionary<string, string> elementValues)
         {
-            return new Manhole(elementValues["UNIQUE_ID"])
+            string manholeId;
+            if (!elementValues.TryGetValue(ManholeCodes.ManholeId, out manholeId))
+                throw new Exception(Resources.SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
+
+            string uniqueId;
+            if (!elementValues.TryGetValue(ManholeCodes.UniqueId, out uniqueId))
+                throw new Exception(string.Format(Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeId));
+
+            var manhole = new Manhole(uniqueId)
             {
-                ManholeLength = int.Parse(elementValues["NODE_LENGTH"]),
-                ManholeWidth = int.Parse(elementValues["NODE_WIDTH"]),
-                Shape = (ManholeShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(elementValues["NODE_SHAPE"]),
-                FloodableArea = double.Parse(elementValues["FLOODABLE_AREA"]),
-                BottomLevel = double.Parse(elementValues["BOTTOM_LEVEL"], CultureInfo.InvariantCulture),
-                SurfaceLevel = double.Parse(elementValues["SURFACE_LEVEL"], CultureInfo.InvariantCulture),
-                Coordinates = new Coordinate(double.Parse(elementValues["X_COORDINATE"], CultureInfo.InvariantCulture), double.Parse(elementValues["Y_COORDINATE"], CultureInfo.InvariantCulture))
+                FloodableArea = GetDoubleValueElseThrowException(ManholeCodes.FloodableArea, elementValues, uniqueId, manholeId),
+                BottomLevel = GetDoubleValueElseThrowException(ManholeCodes.BottomLevel, elementValues, uniqueId, manholeId),
+                SurfaceLevel = GetDoubleValueElseThrowException(ManholeCodes.SurfaceLevel, elementValues, uniqueId, manholeId),
+                Coordinates = new Coordinate(GetDoubleValueElseThrowException(ManholeCodes.XCoordinate, elementValues, uniqueId, manholeId), GetDoubleValueElseThrowException(ManholeCodes.YCoordinate, elementValues, uniqueId, manholeId))
             };
+
+            int intValue;
+            if (TryGetIntValueElseThrowException(ManholeCodes.NodeLength, elementValues, uniqueId, manholeId, out intValue)) manhole.ManholeLength = intValue;
+            if (TryGetIntValueElseThrowException(ManholeCodes.NodeWidth, elementValues, uniqueId, manholeId, out intValue)) manhole.ManholeWidth = intValue;
+
+            // Set shape value of the manhole
+            string nodeShape;
+            if (!elementValues.TryGetValue(ManholeCodes.NodeShape, out nodeShape)) return manhole;
+            try
+            {
+                manhole.Shape = (ManholeShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(nodeShape);
+            }
+            catch
+            {
+                ThrowException(uniqueId, "string", ManholeCodes.NodeShape, nodeShape, manholeId);
+            }
+
+            return manhole;
+        }
+
+        private static bool TryGetIntValueElseThrowException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string uniqueId, string manholeId, out int intValue)
+        {
+            string stringValue;
+            if (!elementValues.TryGetValue(columnKey, out stringValue))
+            {
+                intValue = 0;
+                return false;
+            }
+
+            if (!int.TryParse(stringValue, out intValue)) ThrowException(uniqueId, "integer", columnKey, stringValue, manholeId);
+            return true;
+        }
+
+        private static double GetDoubleValueElseThrowException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string id, string manholeId)
+        {
+            string stringValue;
+            double doubleValue;
+
+            if (!elementValues.TryGetValue(columnKey, out stringValue)) return 0.0;
+            if (!double.TryParse(ReplaceCommaWithPoint(stringValue), NumberStyles.Any, CultureInfo.InvariantCulture, out doubleValue))
+                ThrowException(id, "double", columnKey, stringValue, manholeId);
+            return doubleValue;
+        }
+
+        private static void ThrowException(string id, string dataType, string columnKey, string wrongValue, string manholeId)
+        {
+            throw new Exception(string.Format(Resources.SewerFeatureFactory_ThrowException_, id, dataType, columnKey, wrongValue, manholeId));
+        }
+
+        private static string ReplaceCommaWithPoint(string doubleString)
+        {
+            return doubleString.Replace(',', '.');
         }
 
         private static GwswAttribute GetAttributeFromList(GwswElement element, string attributeName)
@@ -214,5 +288,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return newPipe;
         }
+    }
+
+    public static class ManholeCodes
+    {
+        public const string ManholeId = "MANHOLE_ID";
+        public const string UniqueId = "UNIQUE_ID";
+        public const string NodeLength = "NODE_LENGTH";
+        public const string NodeWidth = "NODE_WIDTH";
+        public const string NodeShape = "NODE_SHAPE";
+        public const string FloodableArea = "FLOODABLE_AREA";
+        public const string BottomLevel = "BOTTOM_LEVEL";
+        public const string SurfaceLevel = "SURFACE_LEVEL";
+        public const string XCoordinate = "X_COORDINATE";
+        public const string YCoordinate = "Y_COORDINATE";
     }
 }

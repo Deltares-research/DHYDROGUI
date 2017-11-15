@@ -370,6 +370,16 @@ File import of structures file '{1}' has failed.</value>
   <data name="GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_" xml:space="preserve">
     <value>The type value {0} on line {1} file {2}, could not be parsed. Please check it is correctly written.</value>
   </data>
+  <data name="SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_" xml:space="preserve">
+    <value>There are lines in 'Knooppunt.csv' that do not contain a Manhole Id. These lines are not imported.</value>
+  </data>
+  <data name="SewerFeatureFactory_ThrowException_" xml:space="preserve">
+    <value>Manhole with unique id '{0}' has a wrong {1} format for '{2}': '{3}'.
+Manhole with unique id '{4}' is not imported.</value>
+  </data>
+  <data name="SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_" xml:space="preserve">
+    <value>Manhole with manhole id '{0}' could not be created, because one of its compartments misses its unique id.</value>
+  </data>
   <data name="SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_" xml:space="preserve">
     <value>Attribute {0} was not found for element {1}</value>
   </data>

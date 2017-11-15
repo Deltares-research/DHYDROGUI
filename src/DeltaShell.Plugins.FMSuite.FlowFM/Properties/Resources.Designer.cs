@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -502,6 +502,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("SedimentFile_WriteXYZIfDirectoryExists_Could_not_get_directory_name_from_file_pat" +
                         "h__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manhole with manhole id &apos;{0}&apos; could not be created, because one of its compartments misses its unique id..
+        /// </summary>
+        public static string SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_" +
+                        "not_be_created__because_one_of_its_compartments_misses_its_unique_id_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are lines in &apos;Knooppunt.csv&apos; that do not contain a Manhole Id. These lines are not imported..
+        /// </summary>
+        public static string SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_" +
+                        "not_contain_a_Manhole_Id__These_lines_are_not_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manhole with unique id &apos;{0}&apos; has a wrong {1} format for &apos;{2}&apos;: &apos;{3}&apos;.
+        ///Manhole with unique id &apos;{4}&apos; is not imported..
+        /// </summary>
+        public static string SewerFeatureFactory_ThrowException_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_ThrowException_", resourceCulture);
             }
         }
         
