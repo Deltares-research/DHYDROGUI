@@ -116,17 +116,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!elementValues.TryGetValue(ManholeCodes.UniqueId, out uniqueId))
                 throw new Exception(string.Format(Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeId));
 
-            var manhole = new Manhole(uniqueId)
-            {
-                FloodableArea = GetDoubleValueElseThrowException(ManholeCodes.FloodableArea, elementValues, uniqueId, manholeId),
-                BottomLevel = GetDoubleValueElseThrowException(ManholeCodes.BottomLevel, elementValues, uniqueId, manholeId),
-                SurfaceLevel = GetDoubleValueElseThrowException(ManholeCodes.SurfaceLevel, elementValues, uniqueId, manholeId),
-                Coordinates = new Coordinate(GetDoubleValueElseThrowException(ManholeCodes.XCoordinate, elementValues, uniqueId, manholeId), GetDoubleValueElseThrowException(ManholeCodes.YCoordinate, elementValues, uniqueId, manholeId))
-            };
-
+            var manhole = new Manhole(uniqueId);
+            // Set manhole value
             int intValue;
             if (TryGetIntValueElseThrowException(ManholeCodes.NodeLength, elementValues, uniqueId, manholeId, out intValue)) manhole.ManholeLength = intValue;
             if (TryGetIntValueElseThrowException(ManholeCodes.NodeWidth, elementValues, uniqueId, manholeId, out intValue)) manhole.ManholeWidth = intValue;
+
+            double doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholeCodes.FloodableArea, elementValues, uniqueId, manholeId, out doubleValue)) manhole.FloodableArea = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholeCodes.BottomLevel, elementValues, uniqueId, manholeId, out doubleValue)) manhole.BottomLevel = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholeCodes.SurfaceLevel, elementValues, uniqueId, manholeId, out doubleValue)) manhole.SurfaceLevel = doubleValue;
+
+            double yCoordinate;
+            double xCoordinate;
+            if (TryGetDoubleValueElseThrowException(ManholeCodes.XCoordinate, elementValues, uniqueId, manholeId, out xCoordinate) 
+                && TryGetDoubleValueElseThrowException(ManholeCodes.YCoordinate, elementValues, uniqueId, manholeId, out yCoordinate))
+                manhole.Coordinates = new Coordinate(xCoordinate, yCoordinate);
 
             // Set shape value of the manhole
             string nodeShape;
@@ -156,15 +161,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return true;
         }
 
-        private static double GetDoubleValueElseThrowException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string id, string manholeId)
+        private static bool TryGetDoubleValueElseThrowException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string id, string manholeId, out double doubleValue)
         {
             string stringValue;
-            double doubleValue;
-
-            if (!elementValues.TryGetValue(columnKey, out stringValue)) return 0.0;
+            if (!elementValues.TryGetValue(columnKey, out stringValue))
+            {
+                doubleValue = 0.0;
+                return false;
+            }
             if (!double.TryParse(ReplaceCommaWithPoint(stringValue), NumberStyles.Any, CultureInfo.InvariantCulture, out doubleValue))
                 ThrowException(id, "double", columnKey, stringValue, manholeId);
-            return doubleValue;
+            return true;
         }
 
         private static void ThrowException(string id, string dataType, string columnKey, string wrongValue, string manholeId)

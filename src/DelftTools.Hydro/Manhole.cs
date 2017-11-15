@@ -53,6 +53,7 @@ namespace DelftTools.Hydro
 
     public enum ManholeShape
     {
+        [Description("")] Unknown,
         [Description("RHK")] Rectangular,
         [Description("RND")] Square
     }

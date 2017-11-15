@@ -24,7 +24,7 @@ namespace DelftTools.Hydro
             get
             {
                 var firstManhole = Compartments.FirstOrDefault();
-                return firstManhole?.Coordinates.X ?? -999.99;
+                return firstManhole?.Coordinates?.X ?? 0.0;
             }
         }
 
@@ -33,7 +33,7 @@ namespace DelftTools.Hydro
             get
             {
                 var firstManhole = Compartments.FirstOrDefault();
-                return firstManhole?.Coordinates.Y ?? -999.99;
+                return firstManhole?.Coordinates?.Y ?? 0.0;
             }
         }
 
