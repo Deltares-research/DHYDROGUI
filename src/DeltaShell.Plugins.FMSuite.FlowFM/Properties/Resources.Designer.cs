@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -526,12 +526,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manhole with unique id &apos;{0}&apos; has a wrong {1} format for &apos;{2}&apos;: &apos;{3}&apos;.
-        ///Manhole with unique id &apos;{4}&apos; is not imported..
+        ///   Looks up a localized string similar to Not possible to parse value {0} into {1}.
         /// </summary>
-        public static string SewerFeatureFactory_ThrowException_ {
+        public static string SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_ {
             get {
-                return ResourceManager.GetString("SewerFeatureFactory_ThrowException_", resourceCulture);
+                return ResourceManager.GetString("SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_", resourceCulture);
             }
         }
         
@@ -542,6 +541,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element_" +
                         "_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manhole with unique id &apos;{0}&apos; has a wrong {1} format for &apos;{2}&apos;: &apos;{3}&apos;.
+        ///Manhole with unique id &apos;{4}&apos; is not imported..
+        /// </summary>
+        public static string SewerFeatureFactory_ThrowException_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_ThrowException_", resourceCulture);
             }
         }
         
