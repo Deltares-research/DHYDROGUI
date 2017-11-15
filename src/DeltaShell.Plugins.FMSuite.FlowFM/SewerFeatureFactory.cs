@@ -56,6 +56,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return null;
         }
 
+        #region Creating Manholes
+
         private static CompositeManholeNode CreateManhole(object element, HydroNetwork network = null)
         {
             var gwswElement = element as GwswElement;
@@ -183,6 +185,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             return doubleString.Replace(',', '.');
         }
+
+        #endregion
+
 
         private static GwswAttribute GetAttributeFromList(GwswElement element, string attributeName)
         {
