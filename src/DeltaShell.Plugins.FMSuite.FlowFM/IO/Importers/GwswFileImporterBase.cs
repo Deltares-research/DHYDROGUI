@@ -75,13 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 var element = new GwswElement {ElementTypeName = elementTypeName};
                 var rowValues = dataRow.ItemArray.ToList();
+                var columnIndex = 0;
                 foreach (var column in rowValues)
                 {
                     var attribute = new GwswAttribute
                     {
                         ValueAsString = column.ToString()
                     };
-                    var columnIndex = rowValues.IndexOf(column);
                     var columnName = importedDataTable.Columns[columnIndex].ColumnName;
                     if (AttributesDefinition != null)
                     {
@@ -95,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     }
                     
                     element.GwswAttributeList.Add( attribute );
+                    columnIndex++;
                 }
                 
                 elementList.Add(element);
