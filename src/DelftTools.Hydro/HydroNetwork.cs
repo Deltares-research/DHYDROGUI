@@ -261,7 +261,7 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IHydroNode> HydroNodes { get; protected set; }
 
         public virtual IEnumerable<IPipe> Pipes { get; set; }
-        public IEventedList<CompositeManholeNode> ManholeNodes { get; set; }
+        public virtual IEventedList<CompositeManholeNode> ManholeNodes { get; set; }
 
         public virtual IEnumerable<IChannel> Channels
         {
