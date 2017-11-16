@@ -191,10 +191,12 @@
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="ICompartment.cs" />
     <Compile Include="IGroupableFeature.cs" />
+    <Compile Include="ISewerConnection.cs" />
     <Compile Include="Manhole.cs" />
     <Compile Include="CompositeManholeNode.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Pipe.cs" />
+    <Compile Include="SewerConnection.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
     <Compile Include="FrictionTypeConverter.cs" />

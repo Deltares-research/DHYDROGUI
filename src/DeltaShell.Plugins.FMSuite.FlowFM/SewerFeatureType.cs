@@ -3,7 +3,7 @@
     public enum SewerFeatureType
     {
         Node,
-        Pipe,
+        Connection,
         Structure,
         Surface,
         Runoff,

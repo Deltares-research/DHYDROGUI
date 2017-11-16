@@ -438,7 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var expectedElements = fileAsStringList.Length - 1; // we should not include the header
             Assert.AreEqual(expectedElements, listElements.Count);
 
-            listElements.ForEach( el => Assert.AreEqual(SewerFeatureType.Pipe.ToString(), el.ElementTypeName));
+            listElements.ForEach( el => Assert.AreEqual(SewerFeatureType.Connection.ToString(), el.ElementTypeName));
 
             //Now import them as IHydroNetworkFeature
             var network = new HydroNetwork();
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var importedPipes = gwswImporter.ImportItem(filePath, network);
             Assert.IsNotNull(importedPipes);
-            Assert.IsTrue(network.Pipes.Any() );
+            Assert.IsTrue(network.Pipes.Any());
 
             var importedPipesList = importedPipes as List<INetworkFeature>;
             Assert.IsNotNull(importedPipesList);
@@ -518,8 +518,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any(p => ((CompositeManholeNode)p.Source).ManholeId.Equals(expectedStartNodeName) && ((CompositeManholeNode)p.Target).ManholeId.Equals(expectedEndNodeName)));
             
             //Checking manhole name is stored as id
-            Assert.IsTrue(network.ManholeNodes.Any( n => n.ManholeId.Equals(expectedStartNodeName)));
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(expectedEndNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any( n => n.Name.Equals(expectedStartNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(expectedEndNodeName)));
         }
 
         [Test]
@@ -529,13 +529,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var network = new HydroNetwork();
             /*We know these two nodes are referred in the test data*/
             var replacedPipe = "lei1";
-            var replacedPipeType = PipeType.InfiltrationPipe;
-            var pipes = new Pipe(){ Name = replacedPipe, PipeType = replacedPipeType };
+            var replacedPipeType = SewerConnectionType.InfiltrationPipe;
+            var pipes = new Pipe(){ Name = replacedPipe, SewerConnectionType = replacedPipeType };
             var networkPipes = network.Pipes.ToList();
             networkPipes.Add(pipes);
             network.Pipes = networkPipes;
             Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
-            Assert.AreEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).PipeType);
+            Assert.AreEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)));
 
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -549,7 +549,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var importedPipes = gwswImporter.ImportItem(filePath, network);
             Assert.IsNotNull(importedPipes);
             Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
-            Assert.AreNotEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).PipeType);
+            Assert.AreNotEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).SewerConnectionType);
         }
         #endregion
 

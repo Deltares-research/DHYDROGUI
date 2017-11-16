@@ -338,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var count = 0;
             switch (type)
             {
-                case SewerFeatureType.Pipe:
+                case SewerFeatureType.Connection:
                     var tempList = network.Pipes.ToList();
                     InsertStructure<INetworkFeature>( features, tempList);
                     //Due to the nature of pipes being an enumerable we need to reassign Pipes with the new elements.

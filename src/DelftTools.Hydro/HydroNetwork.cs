@@ -253,7 +253,7 @@ namespace DelftTools.Hydro
             { 
                 base.Nodes = value; 
 
-                Manholes = NodeFeatures.OfType<IManhole>();
+                Manholes = Nodes.OfType<IManhole>();
                 HydroNodes = Nodes.OfType<IHydroNode>();
             }
         }
