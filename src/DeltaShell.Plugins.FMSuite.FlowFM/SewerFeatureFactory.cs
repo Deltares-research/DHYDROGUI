@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var newPipe = new Pipe();
             var nodeIdString = GetAttributeFromList(gwswElement, PipePropertyKeys.UniqueId);
-            if (nodeIdString?.ValueAsString != null)
+            if (nodeIdString != null && nodeIdString.ValueAsString != null)
             {
                 newPipe.PipeId = nodeIdString.ValueAsString;
                 newPipe.Name = nodeIdString.ValueAsString;
