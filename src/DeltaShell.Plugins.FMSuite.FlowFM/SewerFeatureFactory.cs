@@ -160,13 +160,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElement == null) return null;
 
             var newPipe = new Pipe();
+            //Used for parsing
+            double newDoubleValue;
+            
+            //Assigning new values
             var nodeIdString = GetAttributeFromList(gwswElement, PipePropertyKeys.UniqueId);
-            if (nodeIdString != null && nodeIdString.ValueAsString != null)
+            if (nodeIdString?.ValueAsString != null)
             {
                 newPipe.PipeId = nodeIdString.ValueAsString;
                 newPipe.Name = nodeIdString.ValueAsString;
             }
-
             var nodeIdStart = GetAttributeFromList(gwswElement, PipePropertyKeys.NodeUniqueIdStart);
             if (nodeIdStart != null)
             {
@@ -214,27 +217,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (levelStart != null)
             {
                 var valueType = levelStart.GwswAttributeType.AttributeType;
-                if (valueType == newPipe.LevelSource.GetType() && TryParseDoubleElseLogError(levelStart, valueType, out double newValue))
+                if (valueType == newPipe.LevelSource.GetType() && TryParseDoubleElseLogError(levelStart, valueType, out newDoubleValue))
                 {
-                    newPipe.LevelSource = newValue;
+                    newPipe.LevelSource = newDoubleValue;
                 }
             }
             var levelEnd = GetAttributeFromList(gwswElement, PipePropertyKeys.LevelEnd);
             if (levelEnd != null)
             {
                 var valueType = levelEnd.GwswAttributeType.AttributeType;
-                if (valueType == newPipe.LevelTarget.GetType() && TryParseDoubleElseLogError(levelEnd, valueType, out double newValue))
+                if (valueType == newPipe.LevelTarget.GetType() && TryParseDoubleElseLogError(levelEnd, valueType, out newDoubleValue))
                 {
-                    newPipe.LevelTarget = newValue;
+                    newPipe.LevelTarget = newDoubleValue;
                 }
             }
             var length = GetAttributeFromList(gwswElement, PipePropertyKeys.Length);
             if (length != null)
             {
                 var valueType = length.GwswAttributeType.AttributeType;
-                if (valueType == newPipe.Length.GetType() && TryParseDoubleElseLogError(length, valueType, out double newValue))
+                if (valueType == newPipe.Length.GetType() && TryParseDoubleElseLogError(length, valueType, out newDoubleValue))
                 {
-                    newPipe.Length = newValue;
+                    newPipe.Length = newDoubleValue;
                 }
             }
             var profileDef = GetAttributeFromList(gwswElement, PipePropertyKeys.CrossSectionDef);
