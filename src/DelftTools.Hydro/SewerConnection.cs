@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro.CrossSections;
-using NetTopologySuite.Extensions.Networks;
+﻿using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {

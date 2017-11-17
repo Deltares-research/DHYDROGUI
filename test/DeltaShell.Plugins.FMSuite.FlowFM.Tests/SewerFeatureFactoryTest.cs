@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Hydro.CrossSections;
@@ -11,7 +10,6 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Manhole = DelftTools.Hydro.Manhole;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -112,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         GwswAttributeType = new GwswAttributeType{ Key = "PIPE_TYPE"},
                         ValueAsString = typeOfConnection
-                    }
+        }
                 }
             };
 
@@ -260,16 +258,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(startNode)));
             Assert.IsNotNull(createdConnection.Source);
 
-            var sourceAsManhole = createdConnection.Source as CompositeManholeNode;
+            var sourceAsManhole = createdConnection.Source as Manhole;
             Assert.IsNotNull(sourceAsManhole);
-            Assert.AreEqual(startNode, sourceAsManhole.ManholeId);
+            Assert.AreEqual(startNode, sourceAsManhole.Name);
 
             Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(endNode)));
             Assert.IsNotNull(createdConnection.Target);
 
-            var targetAsManhole = createdConnection.Target as CompositeManholeNode;
+            var targetAsManhole = createdConnection.Target as Manhole;
             Assert.IsNotNull(targetAsManhole);
-            Assert.AreEqual(endNode, targetAsManhole.ManholeId);
+            Assert.AreEqual(endNode, targetAsManhole.Name);
 
         }
 
@@ -280,15 +278,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
 
             var startNodeName = "node001";
-            var startNode = new CompositeManholeNode(startNodeName);
+            var startNode = new Manhole(startNodeName);
             network.ManholeNodes.Add(startNode);
 
             var endNodeName = "node002";
-            var endNode = new CompositeManholeNode(endNodeName);
+            var endNode = new Manhole(endNodeName);
             network.ManholeNodes.Add(endNode);
 
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(startNodeName)));
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(endNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(startNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(endNodeName)));
 
             //Create element and instantiate it.
             var nodeGwswElement = new GwswElement
@@ -317,18 +315,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdConnection);
 
             //Defined
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(startNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(startNodeName)));
             Assert.IsNotNull(createdConnection.Source);
-            Assert.AreEqual(startNode, createdConnection.Source as CompositeManholeNode);
+            Assert.AreEqual(startNode, createdConnection.Source as Manhole);
 
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.ManholeId.Equals(endNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(endNodeName)));
             Assert.IsNotNull(createdConnection.Target);
-            Assert.AreEqual(endNode, createdConnection.Target as CompositeManholeNode);
+            Assert.AreEqual(endNode, createdConnection.Target as Manhole);
         }
 
         [Test]
         public void CreatePipeFromFactoryCreatesDefaultCrossSectionDefinitionIfNotPresentInNetwork()
-        {
+                    {
             var sewerDefinitionName = "crossSectionDef001";
             var nodeGwswElement = new GwswElement
             {
@@ -345,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         GwswAttributeType = new GwswAttributeType{ Key = "PIPE_TYPE"},
                         ValueAsString =EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionType.ClosedConnection)
-                    }
+                }
                 }
             };
 
@@ -390,7 +388,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         GwswAttributeType = new GwswAttributeType{ Key = "PIPE_TYPE"},
                         ValueAsString =EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionType.ClosedConnection)
-                    }
+        }
                 }
             };
 
@@ -415,7 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
         {
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement1);
-            var manholeNode = element as CompositeManholeNode;
+            var manholeNode = element as Manhole;
 
             // Check manholeNode properties
             Assert.NotNull(manholeNode);
@@ -423,7 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Check Manhole properties
             var compartment = manholeNode.Compartments.FirstOrDefault();
-            CheckCompartmentPropertyValues(compartment, "put1", 7071, 7071, ManholeShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
+            CheckCompartmentPropertyValues(compartment, "put1", 7071, 7071, CompartmentShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
         }
 
         [Test]
@@ -431,17 +429,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var elementList = new List<GwswElement> {nodeGwswElement1, nodeGwswElement2};
             var element = SewerFeatureFactory.CreateInstance(elementList);
-            var manholeNode = element as CompositeManholeNode;
+            var manholeNode = element as Manhole;
 
             // Check manholeNode properties
             Assert.NotNull(manholeNode);
-            CheckManholeNodePropertyValues(manholeNode, "01001", 400.0, 50.0, 2);
+            CheckManholeNodePropertyValues(manholeNode, "01001", 400.1, 50.1, 2);
 
             // Check Manhole properties
             var compartment1 = manholeNode.Compartments[0];
-            CheckCompartmentPropertyValues(compartment1, "put1", 7071, 7071, ManholeShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
+            CheckCompartmentPropertyValues(compartment1, "put1", 7071, 7071, CompartmentShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
             var compartment2 = manholeNode.Compartments[1];
-            CheckCompartmentPropertyValues(compartment2, "put2", 4561, 5561, ManholeShape.Rectangular, 89.5, -0.45, 1.83, new Coordinate(400.2, 50.2));
+            CheckCompartmentPropertyValues(compartment2, "put2", 4561, 5561, CompartmentShape.Rectangular, 89.5, -0.45, 1.83, new Coordinate(400.2, 50.2));
         }
 
         [Test]
@@ -469,55 +467,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var manholeNode = SewerFeatureFactory.CreateInstance(gwswElement) as CompositeManholeNode;
+            var manholeNode = SewerFeatureFactory.CreateInstance(gwswElement) as Manhole;
             Assert.NotNull(manholeNode);
             CheckManholeNodePropertyValues(manholeNode, manholeNodeId, 0, 0, 1);
 
             var manhole = manholeNode.Compartments.FirstOrDefault();
-            CheckCompartmentPropertyValues(manhole, manholeId, 0, 0, ManholeShape.Unknown, 0.0, 0.0, 0.0, null);
+            CheckCompartmentPropertyValues(manhole, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, null);
         }
-
-        [TestCase("9432.0", ManholePropertyKeys.NodeLength)]
-        [TestCase("16,667", ManholePropertyKeys.NodeLength)]
-        [TestCase("(100)", ManholePropertyKeys.NodeLength)]
-        [TestCase("01FA", ManholePropertyKeys.NodeLength)]
-        [TestCase("9432.0", ManholePropertyKeys.NodeWidth)]
-        [TestCase("16,667", ManholePropertyKeys.NodeWidth)]
-        [TestCase("(100)", ManholePropertyKeys.NodeWidth)]
-        [TestCase("01FA", ManholePropertyKeys.NodeWidth)]
-        public void GivenGwswElementWithBadlyFormattedStringForIntValue_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned(string badlyFormattedEntry, string keyValue)
-        {
-            var badGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Node.ToString(),
-                GwswAttributeList =
-                {
-                    new GwswAttribute
-                    {
-                        ValueAsString = "put1",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = "01001",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = badlyFormattedEntry,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer",
-                            keyValue, "MyDescription", null, null)
-                    }
-                }
-            };
-
-            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholePropertyKeys.ManholeId)
-                .Select(attr => attr.ValueAsString).FirstOrDefault();
-            TryCreateNodeAndCheckForLogMessage(badGwswElement, "Manhole with unique id '" + manholeId + "' is not imported.");
-        }
-
+        
         [Test]
         public void GivenGwswElementWithBadlyFormattedStringForShape_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned()
         {
@@ -552,6 +509,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             TryCreateNodeAndCheckForLogMessage(badGwswElement, "Manhole with unique id '" + manholeId + "' is not imported.");
         }
 
+        [TestCase("01FA", ManholePropertyKeys.NodeWidth)]
+        [TestCase("01FA", ManholePropertyKeys.NodeLength)]
         [TestCase("01FA", ManholePropertyKeys.FloodableArea)]
         [TestCase("01FA", ManholePropertyKeys.BottomLevel)]
         [TestCase("01FA", ManholePropertyKeys.SurfaceLevel)]
@@ -729,28 +688,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return nodeGwswElement;
         }
 
-        private static void CheckManholeNodePropertyValues(CompositeManholeNode manholeNode, string nodeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
+        private static void CheckManholeNodePropertyValues(Manhole manhole, string manholeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
         {
-            Assert.That(manholeNode.Name, Is.EqualTo("manhole node"));
-            Assert.That(manholeNode.ManholeId, Is.EqualTo(nodeId));
-            Assert.That(manholeNode.XCoordinate, Is.EqualTo(xCoordinate));
-            Assert.That(manholeNode.YCoordinate, Is.EqualTo(yCoordinate));
-            Assert.That(manholeNode.Geometry, Is.EqualTo(new Point(xCoordinate, yCoordinate)));
-            Assert.NotNull(manholeNode.Compartments);
-            Assert.That(manholeNode.Compartments.Count, Is.EqualTo(numberOfCompartments));
+            Assert.That(manhole.Name, Is.EqualTo(manholeId));
+            Assert.That(manhole.XCoordinate, Is.EqualTo(xCoordinate));
+            Assert.That(manhole.YCoordinate, Is.EqualTo(yCoordinate));
+            Assert.That(manhole.Geometry, Is.EqualTo(new Point(xCoordinate, yCoordinate)));
+            Assert.NotNull(manhole.Compartments);
+            Assert.That(manhole.Compartments.Count, Is.EqualTo(numberOfCompartments));
         }
 
-        private void CheckCompartmentPropertyValues(Manhole manhole, string manholeId, int manholeLength, int manholeWidth, ManholeShape shape, double floodableArea, double bottomLevel, double surfaceLevel, Coordinate coords)
+        private void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel, Coordinate coords)
         {
-            Assert.NotNull(manhole);
-            Assert.That(manhole.Id, Is.EqualTo(manholeId));
-            Assert.That(manhole.ManholeLength, Is.EqualTo(manholeLength));
-            Assert.That(manhole.ManholeWidth, Is.EqualTo(manholeWidth));
-            Assert.That(manhole.Shape, Is.EqualTo(shape));
-            Assert.That(manhole.FloodableArea, Is.EqualTo(floodableArea));
-            Assert.That(manhole.BottomLevel, Is.EqualTo(bottomLevel));
-            Assert.That(manhole.SurfaceLevel, Is.EqualTo(surfaceLevel));
-            Assert.That(manhole.Coordinates, Is.EqualTo(coords));
+            Assert.NotNull(compartment);
+            Assert.That(compartment.Name, Is.EqualTo(uniqueId));
+            Assert.That(compartment.ManholeLength, Is.EqualTo(manholeLength));
+            Assert.That(compartment.ManholeWidth, Is.EqualTo(manholeWidth));
+            Assert.That(compartment.Shape, Is.EqualTo(shape));
+            Assert.That(compartment.FloodableArea, Is.EqualTo(floodableArea));
+            Assert.That(compartment.BottomLevel, Is.EqualTo(bottomLevel));
+            Assert.That(compartment.SurfaceLevel, Is.EqualTo(surfaceLevel));
+            Assert.That(compartment.Coordinates, Is.EqualTo(coords));
         }
 
         private static void TryCreateNodeAndCheckForLogMessage(GwswElement badGwswElement, string expectedPartOfMessage)

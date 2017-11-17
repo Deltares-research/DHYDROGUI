@@ -3,7 +3,7 @@ using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
-    public interface ISewerConnection: IBranch
+    public interface ISewerConnection : IBranch
     {
         string ConnectionId { get; set; }
         double Length { get; set; }

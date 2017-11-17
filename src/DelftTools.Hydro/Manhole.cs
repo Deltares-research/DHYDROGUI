@@ -1,60 +1,39 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro
 {
-    public class Manhole
+    public class Manhole : Node
     {
-        public Manhole(string id)
+        public Manhole(string manholeId) : base(manholeId)
         {
-            Id = id;
+            Compartments = new List<Compartment>();
+        }
+        
+        public IList<Compartment> Compartments { get; set; }
+
+        public double XCoordinate
+        {
+            get
+            {
+                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Coordinates?.X ?? 0.0);
+            }
         }
 
-        /// <summary>
-        /// The unique manhole Id that is defined in the GWSW files of the sewer system.
-        /// </summary>
-        public string Id { get; }
+        public double YCoordinate
+        {
+            get
+            {
+                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Coordinates?.Y ?? 0.0);
+            }
+        }
 
-        /// <summary>
-        /// The shape of the manhole (either square or rectangular).
-        /// </summary>
-        public ManholeShape Shape { get; set; }
-
-        /// <summary>
-        /// Length of manhole (mm).
-        /// </summary>
-        public int ManholeLength { get; set; }
-
-        /// <summary>
-        /// Width of manhole (mm).
-        /// </summary>
-        public int ManholeWidth { get; set; }
-
-        /// <summary>
-        /// The area at surface level that this manhole can flood (m2).
-        /// </summary>
-        public double FloodableArea { get; set; }
-
-        /// <summary>
-        /// The bottom level of the manhole compared to Dutch NAP (m).
-        /// </summary>
-        public double BottomLevel { get; set; }
-
-        /// <summary>
-        /// The surface level of the manhole compared to Dutch NAP (m).
-        /// </summary>
-        public double SurfaceLevel { get; set; }
-
-        /// <summary>
-        /// The coordinates of the manhole.
-        /// </summary>
-        public Coordinate Coordinates { get; set; }
-    }
-
-    public enum ManholeShape
-    {
-        [Description("")] Unknown,
-        [Description("RHK")] Rectangular,
-        [Description("RND")] Square
+        public override IGeometry Geometry
+        {
+            get { return new Point(XCoordinate, YCoordinate); }
+        }
     }
 }

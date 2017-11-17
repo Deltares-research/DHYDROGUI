@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Creating Manholes
 
-        private static CompositeManholeNode CreateManhole(object element, HydroNetwork network = null)
+        private static Manhole CreateManhole(object element, HydroNetwork network = null)
         {
             var gwswElement = element as GwswElement;
             if(gwswElement != null)
@@ -73,19 +73,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return null;
         }
 
-        private static CompositeManholeNode CreateManholeNode(IEnumerable<GwswElement> gwswElementList)
+        private static Manhole CreateManholeNode(IEnumerable<GwswElement> gwswElementList)
         {
             // Create dictionary with all attributes
             var elementValuesDictionary = gwswElementList.Select(gwswElement => gwswElement.GwswAttributeList)
                 .Select(attributes => attributes.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString))
                 .ToList();
 
-            CompositeManholeNode manholeNode;
+            Manhole manhole;
             try
             {
                 var manholeIds = elementValuesDictionary.Select(v => v[ManholePropertyKeys.ManholeId]).Distinct().ToList();
                 if (manholeIds.Count != 1) return null;
-                manholeNode = new CompositeManholeNode(manholeIds.FirstOrDefault());
+                manhole = new Manhole(manholeIds.FirstOrDefault());
             }
             catch
             {
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 try
                 {
                     var manholeCompartment = CreateManHoleCompartment(elementValues);
-                    manholeNode.Compartments.Add(manholeCompartment);
+                    manhole.Compartments.Add(manholeCompartment);
                 }
                 catch (Exception e)
                 {
@@ -107,10 +107,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            return manholeNode;
+            return manhole;
         }
 
-        private static Manhole CreateManHoleCompartment(IReadOnlyDictionary<string, string> elementValues)
+        #endregion
+
+        private static Compartment CreateManHoleCompartment(IReadOnlyDictionary<string, string> elementValues)
         {
             string manholeId;
             if (!elementValues.TryGetValue(ManholePropertyKeys.ManholeId, out manholeId))
@@ -120,13 +122,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!elementValues.TryGetValue(ManholePropertyKeys.UniqueId, out uniqueId))
                 throw new Exception(string.Format(Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeId));
 
-            var manhole = new Manhole(uniqueId);
-            // Set manhole value
-            int intValue;
-            if (TryGetIntValueElseThrowException(ManholePropertyKeys.NodeLength, elementValues, uniqueId, manholeId, out intValue)) manhole.ManholeLength = intValue;
-            if (TryGetIntValueElseThrowException(ManholePropertyKeys.NodeWidth, elementValues, uniqueId, manholeId, out intValue)) manhole.ManholeWidth = intValue;
+            var manhole = new Compartment(uniqueId);
 
+            // Set manhole value
             double doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeLength, elementValues, uniqueId, manholeId, out doubleValue)) manhole.ManholeLength = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeWidth, elementValues, uniqueId, manholeId, out doubleValue)) manhole.ManholeWidth = doubleValue;
             if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.FloodableArea, elementValues, uniqueId, manholeId, out doubleValue)) manhole.FloodableArea = doubleValue;
             if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.BottomLevel, elementValues, uniqueId, manholeId, out doubleValue)) manhole.BottomLevel = doubleValue;
             if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.SurfaceLevel, elementValues, uniqueId, manholeId, out doubleValue)) manhole.SurfaceLevel = doubleValue;
@@ -142,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!elementValues.TryGetValue(ManholePropertyKeys.NodeShape, out nodeShape)) return manhole;
             try
             {
-                manhole.Shape = (ManholeShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<ManholeShape>(nodeShape);
+                manhole.Shape = (CompartmentShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(nodeShape);
             }
             catch
             {
@@ -151,8 +152,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return manhole;
         }
-
-        #endregion
 
         #region Creating Sewer Connections
 
@@ -259,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new CompositeManholeNode(nodeIdStart.ValueAsString);
+                        foundNode = new Manhole(nodeIdStart.ValueAsString);
                         network.Nodes.Add(foundNode);
                     }
                     newConnection.Source = foundNode;
@@ -276,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new CompositeManholeNode(nodeIdEnd.ValueAsString);
+                        foundNode = new Manhole(nodeIdEnd.ValueAsString);
                         network.Nodes.Add(foundNode);
                     }
                     newConnection.Target = foundNode;

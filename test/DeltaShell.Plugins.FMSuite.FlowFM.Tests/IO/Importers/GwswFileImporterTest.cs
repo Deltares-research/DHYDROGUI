@@ -185,7 +185,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             {
                 Assert.Fail("While importing an exception was thrown {0}", e.Message);
             }
-
         }
 
         [Test]
@@ -465,11 +464,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var network = new HydroNetwork();
             /*We know these two nodes are referred in the test data*/
             var startNodeName = "put9"; 
-            var startNode = new CompositeManholeNode(startNodeName);
+            var startNode = new Manhole(startNodeName);
             network.ManholeNodes.Add(startNode);
 
             var endNodeName = "put8";
-            var endNode = new CompositeManholeNode(endNodeName);
+            var endNode = new Manhole(endNodeName);
             network.ManholeNodes.Add(endNode);
 
             //Load GWSW definition
@@ -515,7 +514,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any());
             Assert.IsFalse(network.Pipes.Any( p => p.Source == null), "Source node has not been created during import process.");
             Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
-            Assert.IsTrue(network.Pipes.Any(p => ((CompositeManholeNode)p.Source).ManholeId.Equals(expectedStartNodeName) && ((CompositeManholeNode)p.Target).ManholeId.Equals(expectedEndNodeName)));
+            Assert.IsTrue(network.Pipes.Any(p => ((Manhole)p.Source).Name.Equals(expectedStartNodeName) && ((Manhole)p.Target).Name.Equals(expectedEndNodeName)));
             
             //Checking manhole name is stored as id
             Assert.IsTrue(network.ManholeNodes.Any( n => n.Name.Equals(expectedStartNodeName)));
@@ -551,6 +550,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
             Assert.AreNotEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).SewerConnectionType);
         }
+        [Test]
+        public void WhenImportingManholeNodesFromGwswFilesWithoutTargetHydroNetwork_ThenImportIsSuccessfull()
+        {
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            Assert.IsNotNull(gwswImporter.AttributesDefinition);
+            Assert.IsNotEmpty(gwswImporter.AttributesDefinition);
+
+            //Load manholeNodes
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
+            var importedObject = gwswImporter.ImportItem(filePath);
+
+            Assert.IsNotNull(importedObject);
+            var listElements = importedObject as List<GwswElement>;
+            Assert.IsNotNull(listElements);
+
+            var fileAsStringList = File.ReadAllLines(filePath);
+            var expectedElements = fileAsStringList.Length - 1; // we should not include the header
+            Assert.That(listElements.Count, Is.EqualTo(expectedElements));
+            listElements.ForEach(el => Assert.AreEqual(SewerFeatureType.Node.ToString(), el.ElementTypeName));
+        }
+
+        [Test]
+        public void WhenImportingManholeNodesFromGwswFilesWithTargetHydroNetwork_ThenImportIsSuccessfull()
+        {
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            Assert.IsNotNull(gwswImporter.AttributesDefinition);
+            Assert.IsNotEmpty(gwswImporter.AttributesDefinition);
+
+            //Load manholeNodes
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
+
+            //Now import them as IHydroNetworkFeature
+            var network = new HydroNetwork();
+            Assert.IsFalse(network.ManholeNodes.Any());
+
+            var importedManholeNodes = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedManholeNodes);
+            Assert.IsTrue(network.ManholeNodes.Any());
+
+            //var importedPipesList = importedPipes as List<INetworkFeature>;
+            //Assert.IsNotNull(importedPipesList);
+
+            //importedPipesList.ToList().ForEach(pipe => Assert.IsNotNull(pipe as Pipe));
+            //Assert.AreEqual(listElements.Count, importedPipesList.OfType<Pipe>().Count());
+
+            ////Check imported list has been added to the network pipes.
+            //Assert.AreEqual(importedPipesList, network.Pipes.ToList());
+        }
+
         #endregion
 
         #region Helpers
