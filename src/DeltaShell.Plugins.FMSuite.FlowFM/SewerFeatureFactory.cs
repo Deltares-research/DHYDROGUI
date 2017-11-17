@@ -118,47 +118,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         #endregion
 
-        private static Compartment CreateManHoleCompartment(IReadOnlyDictionary<string, string> elementValues)
-        {
-            string manholeId;
-            if (!elementValues.TryGetValue(ManholePropertyKeys.ManholeId, out manholeId))
-                throw new Exception(Resources.SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
-
-            string uniqueId;
-            if (!elementValues.TryGetValue(ManholePropertyKeys.UniqueId, out uniqueId))
-                throw new Exception(string.Format(Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeId));
-
-            var manhole = new Compartment(uniqueId);
-
-            // Set manhole value
-            double doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeLength, elementValues, uniqueId, manholeId, out doubleValue)) manhole.ManholeLength = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeWidth, elementValues, uniqueId, manholeId, out doubleValue)) manhole.ManholeWidth = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.FloodableArea, elementValues, uniqueId, manholeId, out doubleValue)) manhole.FloodableArea = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.BottomLevel, elementValues, uniqueId, manholeId, out doubleValue)) manhole.BottomLevel = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.SurfaceLevel, elementValues, uniqueId, manholeId, out doubleValue)) manhole.SurfaceLevel = doubleValue;
-
-            double yCoordinate;
-            double xCoordinate;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.XCoordinate, elementValues, uniqueId, manholeId, out xCoordinate) 
-                && TryGetDoubleValueElseThrowException(ManholePropertyKeys.YCoordinate, elementValues, uniqueId, manholeId, out yCoordinate))
-                manhole.Geometry = new Point(xCoordinate, yCoordinate);
-
-            // Set shape value of the manhole
-            string nodeShape;
-            if (!elementValues.TryGetValue(ManholePropertyKeys.NodeShape, out nodeShape)) return manhole;
-            try
-            {
-                manhole.Shape = (CompartmentShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(nodeShape);
-            }
-            catch
-            {
-                ThrowException(uniqueId, "string", ManholePropertyKeys.NodeShape, nodeShape, manholeId);
-            }
-
-            return manhole;
-        }
-
         #region Creating Sewer Connections
 
         private static SewerConnection CreateSewerConnection(object element, HydroNetwork network = null)
