@@ -146,20 +146,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
 
             //Setting up the geometry
+            //Only made for demo-display reasons, once we get to visualize elements this might become redundant / out of place.
             if (network != null)
             {
                 var coordX = 0.0;
                 if (newConnection.Source != null && newConnection.Target != null)
                 {
-                    if (newConnection.Source.Geometry == null)
+                    if (newConnection.SourceCompartment.Geometry == null)
                     {
-                        if (newConnection.Target.Geometry != null)
-                            coordX = newConnection.Target.Geometry.Coordinate.X - newConnection.Length;
-                        newConnection.Source.Geometry = new Point(coordX, newConnection.LevelSource);
+                        if (newConnection.TargetCompartment.Geometry != null)
+                            coordX = newConnection.TargetCompartment.Geometry.Coordinate.X - newConnection.Length;
+
+                        var sourceGeometry = new Point(coordX, newConnection.LevelSource);
+                        newConnection.SourceCompartment.Geometry = sourceGeometry;
+                        newConnection.Source.Geometry = sourceGeometry;
                     }
 
-                    if (newConnection.Target.Geometry == null)
-                        newConnection.Target.Geometry = new Point(newConnection.Length + coordX, newConnection.LevelSource);
+                    if (newConnection.TargetCompartment.Geometry == null)
+                    {
+                        var targetGeometry = new Point(newConnection.Length + coordX, newConnection.LevelSource);
+                        newConnection.TargetCompartment.Geometry = targetGeometry;
+                        newConnection.Target.Geometry = targetGeometry;
+                    }
 
                     newConnection.Geometry = new LineString(
                         new[]

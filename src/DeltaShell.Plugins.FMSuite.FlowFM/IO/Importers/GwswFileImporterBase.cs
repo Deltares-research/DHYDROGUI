@@ -299,7 +299,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             attributeList.GroupBy(el => el.FileName).ForEach(gr =>
             {
                 var mismatchedElementNames = gr.Select(el => el.ElementName).Distinct().ToList();
-                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__, mismatchedElementNames);
+                if (mismatchedElementNames.Count > 1)
+                {
+                    Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__, gr.Key, string.Concat(mismatchedElementNames));
+                }
             });
 
             AttributesDefinition = attributeList;
@@ -339,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             switch (type)
             {
                 case SewerFeatureType.Connection:
-                    var branches = network.Branches.ToList();
+                    var branches = network.SewerConnections.ToList();
                     InsertStructure<INetworkFeature>( features, branches);
                     network.Branches.Clear();
                     network.Branches.AddRange(branches);
