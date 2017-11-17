@@ -35,5 +35,15 @@ namespace DelftTools.Hydro
         {
             get { return new Point(XCoordinate, YCoordinate); }
         }
+
+        public Compartment GetCompartmentByName(string compartmentName)
+        {
+            return Compartments.FirstOrDefault(c => c.Name.Equals(compartmentName));
+        }
+
+        public bool ContainsCompartment(string compartmentName)
+        {
+            return Compartments.Any(c => c.Name.Equals(compartmentName));
+        }
     }
 }

@@ -9,9 +9,7 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -23,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static Dictionary<SewerFeatureType, Func<object, HydroNetwork, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<object, HydroNetwork, INetworkFeature>>
         {
             { SewerFeatureType.Node, CreateCompartment },
-            { SewerFeatureType.Connection, CreateSewerConnection }
+            { SewerFeatureType.Connection, CreateSewerConnection },
         };
 
         public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements, HydroNetwork network = null)
@@ -31,7 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var networkFeatures = new List<INetworkFeature>();
             foreach (var element in listOfElements)
             {
-                networkFeatures.Add(CreateInstance(element, network));
+                var createdFeatures = CreateInstance(element, network);
+                if( createdFeatures != null)
+                    networkFeatures.Add(createdFeatures);
             }
             return networkFeatures;
         }
@@ -219,14 +219,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;
                 if (nodeIdStart.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.ManholeNodes.FirstOrDefault(n => n.Name.Equals(nodeIdStart.ValueAsString));
+                    var foundNode = network.ManholeNodes.FirstOrDefault( m => m.GetCompartmentByName(nodeIdStart.ValueAsString) != null);
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new Manhole(nodeIdStart.ValueAsString);
-                        network.Nodes.Add(foundNode);
+                        foundNode = GetNewManholeForCompartment(nodeIdStart.ValueAsString);
+                        network.ManholeNodes.Add(foundNode);
                     }
                     newConnection.Source = foundNode;
+                    newConnection.SourceCompartment = foundNode.GetCompartmentByName(nodeIdStart.ValueAsString);
                 }
             }
 
@@ -236,14 +237,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;                
                 if (nodeIdEnd.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.ManholeNodes.FirstOrDefault(n => n.Name.Equals(nodeIdEnd.ValueAsString));
+                    var foundNode = network.ManholeNodes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
                     if (foundNode == null)
                     {
                         //create node
-                        foundNode = new Manhole(nodeIdEnd.ValueAsString);
-                        network.Nodes.Add(foundNode);
+                        foundNode = GetNewManholeForCompartment(nodeIdEnd.ValueAsString);
+                        network.ManholeNodes.Add(foundNode);
                     }
                     newConnection.Target = foundNode;
+                    newConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString);
                 }
             }
             var levelStart = GetAttributeFromList(gwswElement, ConnectionPropertyKeys.LevelStart);
@@ -279,9 +281,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        private static Manhole GetNewManholeForCompartment(string compartmentName)
+        {
+            var manholePlaceholder = new Manhole(string.Format("Manhole_For_Compartment_{0}", compartmentName));
+
+            manholePlaceholder.Compartments.Add(new Compartment(compartmentName));
+            Log.InfoFormat(Resources.SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_, manholePlaceholder.Name, compartmentName);
+
+            return manholePlaceholder;
+        }
+
         private static SewerConnection GetNewConnectionElement(SewerConnectionType type)
         {
-            if (type == SewerConnectionType.ClosedConnection)
+            if (type == SewerConnectionType.ClosedConnection ||
+                type == SewerConnectionType.InfiltrationPipe ||
+                type == SewerConnectionType.Open)
             {
                 return new Pipe();
             }

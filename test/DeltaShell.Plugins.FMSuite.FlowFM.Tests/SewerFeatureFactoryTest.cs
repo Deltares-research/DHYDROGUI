@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class SewerFeatureFactoryTest
     {
+        #region Connection
+
         [Test]
         public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
         {
@@ -49,8 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.Fail("There was a problem while instantiating. {0}", e.Message);
             }
         }
-
-        #region Connection
 
         [Test]
         public void PipeTypeCanBeRetrieveWithAStringValue()
@@ -94,9 +94,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [TestCase("GSL", SewerConnectionType.ClosedConnection, typeof(Pipe))]
-        [TestCase("DRP", SewerConnectionType.Crest, typeof(SewerConnection))]
-        [TestCase("ITR", SewerConnectionType.InfiltrationPipe, typeof(SewerConnection))]
-        [TestCase("OPN", SewerConnectionType.Open, typeof(SewerConnection))]
+        [TestCase("OVS", SewerConnectionType.Crest, typeof(SewerConnection))]
+        [TestCase("ITR", SewerConnectionType.InfiltrationPipe, typeof(Pipe))]
+        [TestCase("OPL", SewerConnectionType.Open, typeof(Pipe))]
         [TestCase("DRL", SewerConnectionType.Orifice, typeof(SewerConnection))]
         [TestCase("PMP", SewerConnectionType.Pump, typeof(SewerConnection))]
         public void CreateSewerConnectionMapsConnectionTypeFromFactory(string typeOfConnection, SewerConnectionType expectedConnectionType, Type expectedType)
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-            Assert.AreEqual(element.GetType(), expectedType);
+            Assert.AreEqual(expectedType, element.GetType(), "Created Sewer Connection is not of the expected type.");
             var sewerConnection = element as SewerConnection;
             Assert.NotNull(sewerConnection);
             Assert.AreEqual(expectedConnectionType, sewerConnection.SewerConnectionType, "Expected sewer connection type has not been mapped correctly.");
@@ -147,10 +147,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [TestCase("GSL", SewerConnectionType.ClosedConnection, true)]
-        [TestCase("DRP", SewerConnectionType.Crest, false)]
-        [TestCase("ITR", SewerConnectionType.InfiltrationPipe, false)]
-        [TestCase("OPN", SewerConnectionType.Open, false)]
-        [TestCase("DRl", SewerConnectionType.Orifice, false)]
+        [TestCase("ITR", SewerConnectionType.InfiltrationPipe, true)]
+        [TestCase("OPL", SewerConnectionType.Open, true)]
+        [TestCase("OVS", SewerConnectionType.Crest, false)]
+        [TestCase("DRL", SewerConnectionType.Orifice, false)]
         [TestCase("PMP", SewerConnectionType.Pump, false)]
         public void CreatePipeWhenGivingPipeIndicatorAttributeFromFactory(string typeOfConnection, SewerConnectionType expectedConnectionType, bool isPipe)
         {
@@ -246,8 +246,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var network = new HydroNetwork();
-            Assert.IsFalse(network.ManholeNodes.Any(n => n.Name.Equals(startNode)));
-            Assert.IsFalse(network.ManholeNodes.Any(n => n.Name.Equals(endNode)));
+            Assert.IsFalse(network.ManholeNodes.Any());
+
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
             Assert.That(element.GetType(), Is.EqualTo(typeof(SewerConnection)));
 
@@ -255,20 +255,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdConnection);
 
             //Defined
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(startNode)));
-            Assert.IsNotNull(createdConnection.Source);
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ContainsCompartment(startNode)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ContainsCompartment(endNode)));
 
+            //Created default manholes
+            Assert.IsNotNull(createdConnection.Source);
             var sourceAsManhole = createdConnection.Source as Manhole;
             Assert.IsNotNull(sourceAsManhole);
-            Assert.AreEqual(startNode, sourceAsManhole.Name);
+            Assert.IsTrue(sourceAsManhole.ContainsCompartment(startNode));
 
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(endNode)));
             Assert.IsNotNull(createdConnection.Target);
-
             var targetAsManhole = createdConnection.Target as Manhole;
             Assert.IsNotNull(targetAsManhole);
-            Assert.AreEqual(endNode, targetAsManhole.Name);
+            Assert.IsTrue(targetAsManhole.ContainsCompartment(endNode));
 
+            //Created default compartments.
+            Assert.IsNotNull(createdConnection.SourceCompartment);
+            Assert.AreEqual(startNode, createdConnection.SourceCompartment.Name);
+
+            Assert.IsNotNull(createdConnection.TargetCompartment);
+            Assert.AreEqual(endNode, createdConnection.TargetCompartment.Name);
         }
 
         [Test]
@@ -277,16 +283,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //Create network and nodes.
             var network = new HydroNetwork();
 
-            var startNodeName = "node001";
+            var startNodeName = "man001";
+            var startCompartmentName = "node001";
             var startNode = new Manhole(startNodeName);
+            var startCompartment = new Compartment(startCompartmentName);
+            startNode.Compartments.Add(startCompartment);
             network.ManholeNodes.Add(startNode);
 
-            var endNodeName = "node002";
+            var endNodeName = "man001";
+            var endCompartmentName = "node002";
             var endNode = new Manhole(endNodeName);
+            var endCompartment = new Compartment(endCompartmentName);
+            endNode.Compartments.Add(endCompartment);
             network.ManholeNodes.Add(endNode);
 
             Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(startNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ContainsCompartment(startCompartmentName)));
             Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(endNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ContainsCompartment(endCompartmentName)));
 
             //Create element and instantiate it.
             var nodeGwswElement = new GwswElement
@@ -298,13 +312,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", "NODE_UNIQUE_ID_START",
                             "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = startNodeName
+                        ValueAsString = startCompartmentName
                     },
                     new GwswAttribute()
                     {
                         GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", "NODE_UNIQUE_ID_END",
                             "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                        ValueAsString = endNodeName
+                        ValueAsString = endCompartmentName
                     },
                 }
             };
@@ -314,7 +328,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var createdConnection = element as SewerConnection;
             Assert.IsNotNull(createdConnection);
 
-            //Defined
             Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(startNodeName)));
             Assert.IsNotNull(createdConnection.Source);
             Assert.AreEqual(startNode, createdConnection.Source as Manhole);

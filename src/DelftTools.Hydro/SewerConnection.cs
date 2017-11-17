@@ -8,8 +8,8 @@ namespace DelftTools.Hydro
         public double LevelSource { get; set; }
         public double LevelTarget { get; set; }
         public SewerConnectionType SewerConnectionType { get; set; }
-        public Manhole SourceCompartment { get; set; }
-        public Manhole TargetCompartment { get; set; }
+        public Compartment SourceCompartment { get; set; }
+        public Compartment TargetCompartment { get; set; }
 
         public override bool IsLengthCustom
         {

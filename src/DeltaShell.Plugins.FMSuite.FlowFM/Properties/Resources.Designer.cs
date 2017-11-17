@@ -545,6 +545,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Created Manhole {0} and compartment {1} with default values as they were not found in the network..
+        /// </summary>
+        public static string SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartme" +
+                        "nt__1__with_default_values_as_they_were_not_found_in_the_network_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manhole with unique id &apos;{0}&apos; has a wrong {1} format for &apos;{2}&apos;: &apos;{3}&apos;.
         ///Manhole with unique id &apos;{4}&apos; is not imported..
         /// </summary>

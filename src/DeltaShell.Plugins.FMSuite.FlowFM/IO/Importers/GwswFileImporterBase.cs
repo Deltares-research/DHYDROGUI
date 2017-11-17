@@ -339,10 +339,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             switch (type)
             {
                 case SewerFeatureType.Connection:
-                    var tempList = network.Pipes.ToList();
-                    InsertStructure<INetworkFeature>( features, tempList);
-                    //Due to the nature of pipes being an enumerable we need to reassign Pipes with the new elements.
-                    network.Pipes = tempList;
+                    var branches = network.Branches.ToList();
+                    InsertStructure<INetworkFeature>( features, branches);
+                    network.Branches.Clear();
+                    network.Branches.AddRange(branches);
                     break;
             }
         }

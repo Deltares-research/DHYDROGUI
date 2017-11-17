@@ -398,12 +398,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any());
             Assert.IsTrue(network.ManholeNodes.Any());
             Assert.IsTrue(network.SewerProfiles.Any());
-            Assert.IsTrue(network.Manholes.Any());
-
+            Assert.IsFalse(network.Manholes.Any()); //We are not using this collection, yet is good to keep a flag here in case we decide to change it.
         }
 
         [Test]
-        public void TestImportPipesFromGwswWithoutPreviousMappingFails()
+        public void TestImportSewerConnectionsFromGwswWithoutPreviousMappingFails()
         {
             var gwswImporter = new GwswFileImporterBase();
             Assert.IsNull( gwswImporter.AttributesDefinition );
@@ -413,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void TestImportPipesFromGwswWithMappingSucceeds()
+        public void TestImportSewerConnectionsFromGwswWithMappingSucceeds()
         {
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -443,32 +442,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var network = new HydroNetwork();
             Assert.IsFalse( network.Pipes.Any() );
 
-            var importedPipes = gwswImporter.ImportItem(filePath, network);
-            Assert.IsNotNull(importedPipes);
+            var importedItems = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedItems);
+            Assert.IsTrue(network.SewerConnections.Any());
+            
+            //There should be some pipes.
             Assert.IsTrue(network.Pipes.Any());
 
-            var importedPipesList = importedPipes as List<INetworkFeature>;
-            Assert.IsNotNull(importedPipesList);
+            var importedSewerItems = importedItems as List<INetworkFeature>;
+            Assert.IsNotNull(importedSewerItems);
             
-            importedPipesList.ToList().ForEach( pipe => Assert.IsNotNull( pipe as Pipe));
-            Assert.AreEqual(listElements.Count, importedPipesList.OfType<Pipe>().Count());
+            importedSewerItems.ToList().ForEach( pipe => Assert.IsNotNull( pipe as SewerConnection));
+            Assert.AreEqual(listElements.Count, importedSewerItems.OfType<SewerConnection>().Count());
 
             //Check imported list has been added to the network pipes.
-            Assert.AreEqual(importedPipesList, network.Pipes.ToList());
+            Assert.AreEqual(importedSewerItems, network.SewerConnections.ToList());
         }
 
         [Test]
-        public void TestImportPipesFromFileAssignsNodesWhenTheyExist()
+        public void TestImportSewerConnectionFromFileAssignsNodesWhenTheyExist()
         {
             //Create network
             var network = new HydroNetwork();
             /*We know these two nodes are referred in the test data*/
-            var startNodeName = "put9"; 
+            var startNodeName = "man001";
+            var startCompartmentName = "put9";
             var startNode = new Manhole(startNodeName);
+            var startCompartment = new Compartment(startCompartmentName);
+            startNode.Compartments.Add(startCompartment);
             network.ManholeNodes.Add(startNode);
 
-            var endNodeName = "put8";
+            var endNodeName = "man001";
+            var endCompartmentName = "put8";
             var endNode = new Manhole(endNodeName);
+            var endCompartment = new Compartment(endCompartmentName);
+            endNode.Compartments.Add(endCompartment);
             network.ManholeNodes.Add(endNode);
 
             //Load GWSW definition
@@ -480,14 +488,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             //Load pipes.
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var importedPipes = gwswImporter.ImportItem(filePath, network);
-            Assert.IsNotNull(importedPipes);
+            var importedConnections = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedConnections);
 
-            Assert.IsTrue(network.Pipes.Any());
-            Assert.IsFalse(network.Pipes.Any(p => p.Source == null), "Source node has not been created during import process.");
-            Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
+            Assert.IsTrue(network.SewerConnections.Any());
+            Assert.IsFalse(network.SewerConnections.Any(p => p.Source == null), "Source node has not been created during import process.");
+            Assert.IsFalse(network.SewerConnections.Any(p => p.Target == null), "Target node has not been created during import process.");
 
-            Assert.IsTrue(network.Pipes.Any( p => p.Source.Equals( startNode ) && p.Target.Equals( endNode )));
+            Assert.IsTrue(network.SewerConnections.Any( p => p.Source.Equals( startNode ) && p.Target.Equals( endNode )));
         }
 
         [Test]
@@ -514,11 +522,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any());
             Assert.IsFalse(network.Pipes.Any( p => p.Source == null), "Source node has not been created during import process.");
             Assert.IsFalse(network.Pipes.Any(p => p.Target == null), "Target node has not been created during import process.");
-            Assert.IsTrue(network.Pipes.Any(p => ((Manhole)p.Source).Name.Equals(expectedStartNodeName) && ((Manhole)p.Target).Name.Equals(expectedEndNodeName)));
+            Assert.IsTrue(network.Pipes.Any(p => p.SourceCompartment.Name.Equals(expectedStartNodeName) && p.TargetCompartment.Name.Equals(expectedEndNodeName)));
             
             //Checking manhole name is stored as id
-            Assert.IsTrue(network.ManholeNodes.Any( n => n.Name.Equals(expectedStartNodeName)));
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.Name.Equals(expectedEndNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any( n => n.ContainsCompartment(expectedStartNodeName)));
+            Assert.IsTrue(network.ManholeNodes.Any(n => n.ContainsCompartment(expectedEndNodeName)));
         }
 
         [Test]
@@ -527,14 +535,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Create network
             var network = new HydroNetwork();
             /*We know these two nodes are referred in the test data*/
-            var replacedPipe = "lei1";
-            var replacedPipeType = SewerConnectionType.InfiltrationPipe;
-            var pipes = new Pipe(){ Name = replacedPipe, SewerConnectionType = replacedPipeType };
-            var networkPipes = network.Pipes.ToList();
-            networkPipes.Add(pipes);
-            network.Pipes = networkPipes;
-            Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
-            Assert.AreEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)));
+            var replacedConnection = "lei1";
+            var replacedConnectionType = SewerConnectionType.InfiltrationPipe;
+            var sewerConnection = new SewerConnection(){ Name = replacedConnection, SewerConnectionType = replacedConnectionType };
+            network.Branches.Add(sewerConnection);
+
+            Assert.AreEqual(1, network.Branches.Count(n => n.Name.Equals(replacedConnection)));
+            Assert.AreEqual(sewerConnection, network.Branches.First(n => n.Name.Equals(replacedConnection)));
 
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -545,11 +552,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             //Load pipes.
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var importedPipes = gwswImporter.ImportItem(filePath, network);
-            Assert.IsNotNull(importedPipes);
-            Assert.AreEqual(1, network.Pipes.Count(n => n.Name.Equals(replacedPipe)));
-            Assert.AreNotEqual(replacedPipeType, network.Pipes.First(n => n.Name.Equals(replacedPipe)).SewerConnectionType);
+            var importedConnections = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedConnections);
+
+            Assert.AreEqual(1, network.SewerConnections.Count(n => n.Name.Equals(replacedConnection)));
+            Assert.AreNotEqual(replacedConnectionType, network.SewerConnections.First(n => n.Name.Equals(replacedConnection)).SewerConnectionType);
         }
+
         [Test]
         public void WhenImportingManholeNodesFromGwswFilesWithoutTargetHydroNetwork_ThenImportIsSuccessfull()
         {

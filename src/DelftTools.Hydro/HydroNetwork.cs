@@ -225,6 +225,7 @@ namespace DelftTools.Hydro
                 base.Branches = value;
                 
                 Pipes = Branches.OfType<IPipe>();
+                SewerConnections = Branches.OfType<ISewerConnection>();
                 Channels = Branches.OfType<IChannel>();
 
                 // always use filter to Interface or multiple data editor will fail on Cast<T>; reason unclear; too much smart linqing
@@ -261,8 +262,7 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IHydroNode> HydroNodes { get; protected set; }
 
         public virtual IEnumerable<IPipe> Pipes { get; set; }
-        public virtual IEventedList<Manhole> ManholeNodes { get; set; }
-
+        public virtual IEnumerable<ISewerConnection> SewerConnections { get; set; }
         public virtual IEnumerable<IChannel> Channels
         {
             get ; protected set;
@@ -271,6 +271,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<ICrossSection> SewerProfiles { get; set; }
         
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
+        public virtual IEventedList<Manhole> ManholeNodes { get; set; }
 
         public virtual IEnumerable<IStructure> Structures { get; protected set; }
         public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; }

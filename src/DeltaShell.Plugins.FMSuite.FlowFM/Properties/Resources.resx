@@ -386,4 +386,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_" xml:space="preserve">
     <value>Not possible to parse value {0} into {1}</value>
   </data>
+  <data name="SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_" xml:space="preserve">
+    <value>Created Manhole {0} and compartment {1} with default values as they were not found in the network.</value>
+  </data>
 </root>
