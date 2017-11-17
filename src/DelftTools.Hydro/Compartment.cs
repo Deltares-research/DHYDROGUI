@@ -1,11 +1,18 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
-    public class Compartment : INameable
+    public class Compartment : Node, INameable
     {
+        private string description;
+
         public Compartment(string uniqueId)
         {
             Name = uniqueId;
@@ -50,11 +57,6 @@ namespace DelftTools.Hydro
         /// The surface level of the manhole compared to Dutch NAP (m).
         /// </summary>
         public double SurfaceLevel { get; set; }
-
-        /// <summary>
-        /// The coordinates of the manhole.
-        /// </summary>
-        public Coordinate Coordinates { get; set; }
     }
 
     public enum CompartmentShape

@@ -19,7 +19,7 @@ namespace DelftTools.Hydro
         {
             get
             {
-                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Coordinates?.X ?? 0.0);
+                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.X ?? 0.0);
             }
         }
 
@@ -27,7 +27,7 @@ namespace DelftTools.Hydro
         {
             get
             {
-                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Coordinates?.Y ?? 0.0);
+                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.Y ?? 0.0);
             }
         }
 
