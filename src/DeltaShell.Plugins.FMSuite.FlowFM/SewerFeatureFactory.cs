@@ -150,50 +150,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 SetPipeAttributes(newConnection, gwswElement, network);
             }
+            
+            /*  Setting up the geometry
+             *  Needs to be done before adding structures because they will use the connection's geometry.
+             */
+            SetSewerConnectionDefaultGeometry(newConnection);
 
             #region Adding structures to the SewerConnection
 
             if (newConnection.SewerConnectionType == SewerConnectionType.Pump)
             {
                 AddPumpAndAttributesToSewerConnection(newConnection, gwswElement, network);
+
             }
 
             #endregion
 
-            //Setting up the geometry
-            //Only made for demo-display reasons, once we get to visualize elements this might become redundant / out of place.
-            if (network != null)
+            return newConnection;
+        }
+
+        private static void SetSewerConnectionDefaultGeometry(SewerConnection sewerConnection)
+        {
+            var manholeSource = sewerConnection.Source;
+            var manholeTarget = sewerConnection.Target;
+
+            if (manholeSource == null || manholeTarget == null) return;
+            var coordX = 0.0;
+
+            if (sewerConnection.Geometry == null || !sewerConnection.Geometry.Coordinates.Any())
             {
-                var coordX = 0.0;
-                if (newConnection.Source != null && newConnection.Target != null)
+                //Check source Geometry
+                var compartmentSource = sewerConnection.SourceCompartment;
+                var compartmentTarget = sewerConnection.TargetCompartment;
+                if (!manholeSource.Geometry.Equals(compartmentSource.Geometry))
                 {
-                    if (newConnection.SourceCompartment.Geometry == null)
+                    if (compartmentSource.Geometry == null)
                     {
-                        if (newConnection.TargetCompartment.Geometry != null)
-                            coordX = newConnection.TargetCompartment.Geometry.Coordinate.X - newConnection.Length;
-
-                        var sourceGeometry = new Point(coordX, newConnection.LevelSource);
-                        newConnection.SourceCompartment.Geometry = sourceGeometry;
-                        newConnection.Source.Geometry = sourceGeometry;
-                    }
-
-                    if (newConnection.TargetCompartment.Geometry == null)
-                    {
-                        var targetGeometry = new Point(newConnection.Length + coordX, newConnection.LevelSource);
-                        newConnection.TargetCompartment.Geometry = targetGeometry;
-                        newConnection.Target.Geometry = targetGeometry;
-                    }
-
-                    newConnection.Geometry = new LineString(
-                        new[]
+                        if (compartmentTarget.Geometry != null)
                         {
-                            newConnection.Source.Geometry.Coordinate,
-                            newConnection.Target.Geometry.Coordinate
-                        });
+                            coordX = compartmentTarget.Geometry.Coordinate.X - sewerConnection.Length;
+                        }
+
+                        var sourceGeometry = new Point(coordX, sewerConnection.LevelSource);
+                        compartmentSource.Geometry = sourceGeometry;
+                    }
+                    manholeSource.Geometry = compartmentSource.Geometry;
+                }
+
+                if (!manholeTarget.Geometry.Equals(compartmentTarget.Geometry))
+                {
+                    if (compartmentTarget.Geometry == null)
+                    {
+                        var targetGeometry = new Point(sewerConnection.Length + coordX, sewerConnection.LevelSource);
+                        compartmentTarget.Geometry = targetGeometry;
+                    }
+                    manholeTarget.Geometry = compartmentTarget.Geometry;
                 }
             }
 
-            return newConnection;
+            sewerConnection.Geometry = new LineString(
+                new[]
+                {
+                    manholeSource.Geometry.Coordinate,
+                    manholeTarget.Geometry.Coordinate
+                });
         }
 
         private static void AddPumpAndAttributesToSewerConnection(SewerConnection connection, GwswElement gwswElement, HydroNetwork network = null)

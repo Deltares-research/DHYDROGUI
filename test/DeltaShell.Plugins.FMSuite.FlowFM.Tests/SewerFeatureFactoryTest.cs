@@ -282,6 +282,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(waterType, sewerConnection.WaterType);
         }
 
+        [Test]
+        public void SewerFeatureFactoryGivesDefaultValidGeometryToSewerConnection()
+        {
+            var startNode = "node001";
+            var endNode = "node002";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionType.Orifice)),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                }
+            };
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.IsNotNull(createdElement);
+
+            var sewerConnection = createdElement as SewerConnection;
+            Assert.IsNotNull(sewerConnection);
+
+            Assert.IsNotNull(sewerConnection.Geometry, "Default geometry not given to Sewer Connection.");
+            Assert.IsNotNull(sewerConnection.Geometry.Coordinates);
+            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
+        }
+
         #region Pipes
 
         [Test]
@@ -507,6 +535,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(outletLossEnd, createdPump.StopDelivery);
         }
 
+        [Test]
+        public void SewerFeatureFactoryGivesDefaultValidGeometryToPump()
+        {
+            var startNode = "node001";
+            var endNode = "node002";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionType.Pump)),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                }
+            };
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.IsNotNull(createdElement);
+
+            var sewerConnection = createdElement as SewerConnection;
+            Assert.IsNotNull(sewerConnection);
+
+            var createdPump = sewerConnection.BranchFeatures.OfType<Pump>().FirstOrDefault();
+            Assert.IsNotNull(createdPump);
+
+            Assert.IsNotNull(createdPump.Geometry, "Default geometry not given to pump.");
+            Assert.IsNotNull(createdPump.Geometry.Coordinates);
+            Assert.IsTrue(createdPump.Geometry.Coordinates.Any());
+
+        }
         #endregion
 
         #endregion
