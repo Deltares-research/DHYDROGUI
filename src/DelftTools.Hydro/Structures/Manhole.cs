@@ -91,5 +91,31 @@ namespace DelftTools.Hydro.Structures
         {
             return Compartments.Any(c => c.Name.Equals(compartmentName));
         }
+
+        #region IHydroNode members
+
+        public IHydroRegion Region { get; }
+        public IEventedList<HydroLink> Links { get; set; }
+        public bool CanBeLinkSource { get; }
+        public bool CanBeLinkTarget { get; }
+        public HydroLink LinkTo(IHydroObject target)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UnlinkFrom(IHydroObject target)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool CanLinkTo(IHydroObject target)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IHydroNetwork HydroNetwork { get; }
+        public string LongName { get; set; }
+
+        #endregion
     }
 }

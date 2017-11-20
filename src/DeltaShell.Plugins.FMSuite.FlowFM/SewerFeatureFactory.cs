@@ -5,12 +5,14 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -222,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var sewerPump = new Pump();
 
             //Add pump to network
-            AddStructureToBranch(connection, sewerPump, "Pump_");
+            AddStructureToBranch(connection, sewerPump);
 
             //Add attributes.
             double newDoubleValue;
@@ -270,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void AddStructureToBranch(SewerConnection connection, BranchStructure structure, string structurePrefix)
+        private static void AddStructureToBranch(SewerConnection connection, BranchStructure structure)
         {
             structure.Branch = connection;
             structure.Network = connection.Network;
@@ -280,7 +282,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 structure.Geometry = new Point(connection.Geometry.Coordinates[0]);
             }
-            structure.Name = string.Concat(structurePrefix, connection.Name);
+            structure.Name = HydroNetworkHelper.GetUniqueFeatureName(structure.Network as HydroNetwork, structure);
+            //structure.Name = string.Concat(structurePrefix, connection.Name);
             connection.BranchFeatures.Add(structure);
         }
 

@@ -18,6 +18,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class SewerFeatureFactoryTest
     {
+        [Test]
+        public void SewerFeatureGetsAllHydrObjects()
+        {
+            var network = new HydroNetwork();
+            try
+            {
+                network.Branches.Add(new SewerConnection());
+                network.Nodes.Add(new Manhole("ManholeTest"));
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Could not cast HydroOjbects: {0}", e.Message);
+            }
+        }
+
         #region Sewer Connection
 
         [Test]
