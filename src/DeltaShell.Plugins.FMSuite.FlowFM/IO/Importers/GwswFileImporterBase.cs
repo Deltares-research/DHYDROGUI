@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -7,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -344,10 +344,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 case SewerFeatureType.Connection:
                     var branches = network.Branches;
-                    InsertStructure( features, branches);
+                    InsertStructure(features, branches);
                     break;
                 case SewerFeatureType.Node:
-                    var manholes = network.ManholeNodes.ToList();
+                    var nodes = network.Nodes;
+                    var manholes = new List<Manhole>();
+                    features.ForEach(f =>
+                    {
+                        var compartment = (Compartment)f;
+                        if (compartment != null) manholes.Add(compartment.ParentManhole);
+                    });
+
+                    InsertStructure(manholes, nodes);
                     break;
             }
         }

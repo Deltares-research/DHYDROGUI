@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro

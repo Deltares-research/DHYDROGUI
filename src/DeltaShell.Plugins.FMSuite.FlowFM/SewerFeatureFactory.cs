@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -230,12 +231,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;
                 if (nodeIdStart.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.ManholeNodes.FirstOrDefault( m => m.GetCompartmentByName(nodeIdStart.ValueAsString) != null);
+                    var foundNode = network.Manholes.FirstOrDefault( m => m.GetCompartmentByName(nodeIdStart.ValueAsString) != null);
                     if (foundNode == null)
                     {
                         //create node
                         foundNode = GetNewManholeForCompartment(nodeIdStart.ValueAsString);
-                        network.ManholeNodes.Add(foundNode);
+                        network.Nodes.Add(foundNode);
                     }
                     newConnection.Source = foundNode;
                     newConnection.SourceCompartment = foundNode.GetCompartmentByName(nodeIdStart.ValueAsString);
@@ -248,12 +249,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Find node;                
                 if (nodeIdEnd.ValueAsString != string.Empty && network != null)
                 {
-                    var foundNode = network.ManholeNodes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
+                    var foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
                     if (foundNode == null)
                     {
                         //create node
                         foundNode = GetNewManholeForCompartment(nodeIdEnd.ValueAsString);
-                        network.ManholeNodes.Add(foundNode);
+                        network.Nodes.Add(foundNode);
                     }
                     newConnection.Target = foundNode;
                     newConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString);

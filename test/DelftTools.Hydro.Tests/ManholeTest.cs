@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DelftTools.Hydro.Tests
 {

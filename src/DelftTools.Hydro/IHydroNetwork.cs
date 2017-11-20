@@ -13,7 +13,7 @@ namespace DelftTools.Hydro
 
         IEnumerable<IHydroNode> HydroNodes{ get; }
         IEnumerable<IPipe> Pipes { get; }
-        IEventedList<Manhole> ManholeNodes { get; }
+        IEnumerable<IManhole> Manholes { get; }
         IEnumerable<ISewerConnection> SewerConnections { get; }
         IEventedList<ICrossSection> SewerProfiles { get; }
         IEnumerable<IChannel> Channels { get; }
@@ -33,8 +33,6 @@ namespace DelftTools.Hydro
         IEnumerable<IRetention> Retentions { get; }
         IEnumerable<IObservationPoint> ObservationPoints { get; }
         IEnumerable<IExtraResistance> ExtraResistances { get; }
-        
-        IEnumerable<IManhole> Manholes { get; }
         IEnumerable<IGully> Gullies { get; }
 
         IEventedList<CrossSectionSectionType> CrossSectionSectionTypes { get; }

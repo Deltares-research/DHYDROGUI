@@ -193,7 +193,8 @@
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="ISewerConnection.cs" />
     <Compile Include="Compartment.cs" />
-    <Compile Include="Manhole.cs" />
+    <Compile Include="Structures\IManhole.cs" />
+    <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Pipe.cs" />
     <Compile Include="SewerConnection.cs" />
@@ -270,13 +271,11 @@
     <Compile Include="Structures\IGate.cs" />
     <Compile Include="Structures\IGroundLayer.cs" />
     <Compile Include="Structures\IGully.cs" />
-    <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
     <Compile Include="Structures\IWeirFormula.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
-    <Compile Include="Structures\Manhole.cs" />
     <Compile Include="Structures\MonitoringStation.cs" />
     <Compile Include="Structures\Pump.cs" />
     <Compile Include="Structures\Pump2D.cs" />

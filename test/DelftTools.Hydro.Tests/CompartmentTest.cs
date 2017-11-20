@@ -1,6 +1,6 @@
 ﻿using System.Linq;
+using DelftTools.Hydro.Structures;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DelftTools.Hydro.Tests
 {

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -381,9 +382,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var network = new HydroNetwork();
             Assert.IsFalse(network.Pipes.Any());
-            Assert.IsFalse(network.ManholeNodes.Any());
-            Assert.IsFalse(network.SewerProfiles.Any());
             Assert.IsFalse(network.Manholes.Any());
+            Assert.IsFalse(network.SewerProfiles.Any());
 
             var gwswImporter = new GwswFileImporterBase();
             try
@@ -396,9 +396,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
 
             Assert.IsTrue(network.Pipes.Any());
-            Assert.IsTrue(network.ManholeNodes.Any());
+            Assert.IsTrue(network.Manholes.Any());
             Assert.IsTrue(network.SewerProfiles.Any());
-            Assert.IsFalse(network.Manholes.Any()); //We are not using this collection, yet is good to keep a flag here in case we decide to change it.
         }
 
         [Test]
@@ -470,14 +469,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var startNode = new Manhole(startNodeName);
             var startCompartment = new Compartment(startCompartmentName);
             startNode.Compartments.Add(startCompartment);
-            network.ManholeNodes.Add(startNode);
+            network.Nodes.Add(startNode);
 
             var endNodeName = "man001";
             var endCompartmentName = "put8";
             var endNode = new Manhole(endNodeName);
             var endCompartment = new Compartment(endCompartmentName);
             endNode.Compartments.Add(endCompartment);
-            network.ManholeNodes.Add(endNode);
+            network.Nodes.Add(endNode);
 
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -525,8 +524,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any(p => p.SourceCompartment.Name.Equals(expectedStartNodeName) && p.TargetCompartment.Name.Equals(expectedEndNodeName)));
             
             //Checking manhole name is stored as id
-            Assert.IsTrue(network.ManholeNodes.Any( n => n.ContainsCompartment(expectedStartNodeName)));
-            Assert.IsTrue(network.ManholeNodes.Any(n => n.ContainsCompartment(expectedEndNodeName)));
+            Assert.IsTrue(network.Manholes.Any( n => n.ContainsCompartment(expectedStartNodeName)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(expectedEndNodeName)));
         }
 
         [Test]
@@ -600,20 +599,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             //Now import them as IHydroNetworkFeature
             var network = new HydroNetwork();
-            Assert.IsFalse(network.ManholeNodes.Any());
+            Assert.IsFalse(network.Manholes.Any());
 
-            var importedManholeNodes = gwswImporter.ImportItem(filePath, network);
-            Assert.IsNotNull(importedManholeNodes);
-            Assert.IsTrue(network.ManholeNodes.Any());
+            var importedCompartments = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedCompartments);
+            Assert.IsNotEmpty(network.Manholes);
 
-            //var importedPipesList = importedPipes as List<INetworkFeature>;
-            //Assert.IsNotNull(importedPipesList);
-
-            //importedPipesList.ToList().ForEach(pipe => Assert.IsNotNull(pipe as Pipe));
-            //Assert.AreEqual(listElements.Count, importedPipesList.OfType<Pipe>().Count());
-
-            ////Check imported list has been added to the network pipes.
-            //Assert.AreEqual(importedPipesList, network.Pipes.ToList());
+            var importedCompartmentsList = importedCompartments as List<INetworkFeature>;
+            Assert.NotNull(importedCompartmentsList);
+            var distinctManholeNames = importedCompartmentsList.OfType<Compartment>().Select(c => c.ParentManhole.Name).Distinct();
+            Assert.That(network.Manholes.Count(), Is.EqualTo(distinctManholeNames.Count()));
         }
 
         #endregion
