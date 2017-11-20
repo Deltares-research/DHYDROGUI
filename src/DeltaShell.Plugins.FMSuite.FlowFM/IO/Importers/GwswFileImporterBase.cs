@@ -354,16 +354,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     {
                         var compartment = (Compartment)f;
                         if (compartment == null) return;
-                        if (uniqueManholeNames.Contains(compartment.ParentManhole.Name))
+                        var parentManhole = compartment.ParentManhole;
+                        if (uniqueManholeNames.Contains(parentManhole.Name))
                         {
-                            manholes.FirstOrDefault(m => m.Name == compartment.ParentManhole.Name)?.Compartments.Add(compartment);
+                            manholes.FirstOrDefault(m => m.Name == parentManhole.Name)?.Compartments.Add(compartment);
                         }
                         else
                         {
-                            manholes.Add(compartment.ParentManhole);
-                            uniqueManholeNames.Add(compartment.ParentManhole.Name);
+                            manholes.Add(parentManhole);
+                            uniqueManholeNames.Add(parentManhole.Name);
                         }
-                        
                     });
 
                     InsertStructure(manholes, nodes);
