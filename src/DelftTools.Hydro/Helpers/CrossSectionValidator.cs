@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 
 namespace DelftTools.Hydro.Helpers

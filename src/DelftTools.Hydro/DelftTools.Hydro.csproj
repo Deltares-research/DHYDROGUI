@@ -196,7 +196,7 @@
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
-    <Compile Include="Pipe.cs" />
+    <Compile Include="Structures\Pipe.cs" />
     <Compile Include="SewerConnection.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
@@ -241,7 +241,7 @@
     <Compile Include="IHydroNetwork.cs" />
     <Compile Include="IHydroNetworkFeature.cs" />
     <Compile Include="IHydroNode.cs" />
-    <Compile Include="IPipe.cs" />
+    <Compile Include="Structures\IPipe.cs" />
     <Compile Include="IStructure.cs" />
     <Compile Include="LateralSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

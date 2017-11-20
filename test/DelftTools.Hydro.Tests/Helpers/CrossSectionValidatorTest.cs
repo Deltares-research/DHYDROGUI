@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures;
 using NUnit.Framework;
 using Rhino.Mocks;
 

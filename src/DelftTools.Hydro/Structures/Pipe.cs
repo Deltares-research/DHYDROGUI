@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Hydro.CrossSections;
 
-namespace DelftTools.Hydro
+namespace DelftTools.Hydro.Structures
 {
     [Serializable]
     public class Pipe : SewerConnection, IPipe

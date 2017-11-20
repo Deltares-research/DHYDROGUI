@@ -1,7 +1,7 @@
 using DelftTools.Hydro.CrossSections;
 using GeoAPI.Extensions.Networks;
 
-namespace DelftTools.Hydro
+namespace DelftTools.Hydro.Structures
 {
     public interface IPipe : ISewerConnection, IBranch
     {
