@@ -22,4 +22,12 @@ namespace DelftTools.Hydro
         [Description("OVS")] Crest,
         [Description("PMP")] Pump
     }
+
+    public enum SewerConnectionWaterType
+    {
+        [Description("NVT")] None,
+        [Description("HWA")] FlowingRainWater,
+        [Description("DWA")] DryWeatherRainage,
+        [Description("GMD")] MixedWasteWater,
+    }
 }

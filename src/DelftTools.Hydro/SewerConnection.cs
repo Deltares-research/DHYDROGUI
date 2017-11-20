@@ -10,6 +10,7 @@ namespace DelftTools.Hydro
         public SewerConnectionType SewerConnectionType { get; set; }
         public Compartment SourceCompartment { get; set; }
         public Compartment TargetCompartment { get; set; }
+        public SewerConnectionWaterType WaterType { get; set; }
 
         public override bool IsLengthCustom
         {

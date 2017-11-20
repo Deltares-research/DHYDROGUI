@@ -487,6 +487,7 @@ namespace DelftTools.Hydro.Helpers
             //return feature.GetEntityType().Name;
 
             var featureName = feature.GetEntityType().Name;
+            if (region == null) return featureName;
 
             var fullRegion = region.Parent as IHydroRegion ?? region;
 

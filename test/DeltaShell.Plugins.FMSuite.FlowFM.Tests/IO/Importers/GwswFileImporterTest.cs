@@ -384,6 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(network.Pipes.Any());
             Assert.IsFalse(network.Manholes.Any());
             Assert.IsFalse(network.SewerProfiles.Any());
+            Assert.IsFalse(network.Pumps.Any()); 
 
             var gwswImporter = new GwswFileImporterBase();
             try
@@ -395,9 +396,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.Fail("While importing an exception was thrown {0}", e.Message);
             }
 
-            Assert.IsTrue(network.Pipes.Any());
             Assert.IsTrue(network.Manholes.Any());
             Assert.IsTrue(network.SewerProfiles.Any());
+            Assert.IsTrue(network.Pipes.Any());//There are some pipes defined within the verbinding.csv
+            Assert.IsTrue(network.Pumps.Any());//There are some pumps defined within the verbinding.csv
         }
 
         [Test]
