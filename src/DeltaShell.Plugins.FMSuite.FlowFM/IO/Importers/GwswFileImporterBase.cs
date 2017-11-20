@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         new CsvRequiredField(attr.Key, attr.AttributeType),
                         new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
 
-            var mapping = new CsvMappingData()
+            var mapping = new CsvMappingData
             {
                 Settings = CsvSettingsSemiColonDelimeted,
                 FieldToColumnMapping = fileColumnMapping
@@ -345,6 +345,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 case SewerFeatureType.Connection:
                     var branches = network.Branches;
                     InsertStructure( features, branches);
+                    break;
+                case SewerFeatureType.Node:
+                    var manholes = network.ManholeNodes.ToList();
                     break;
             }
         }

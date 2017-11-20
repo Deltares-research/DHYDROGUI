@@ -1,32 +1,29 @@
-﻿using System;
-using System.ComponentModel;
-using DelftTools.Utils;
-using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
+﻿using System.ComponentModel;
+using System.Linq;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
-    public class Compartment : Node, INameable
+    public class Compartment : Node
     {
-        private string description;
+        private Manhole parentManhole;
 
-        public Compartment(string uniqueId)
+        public Compartment(string uniqueId) : base(uniqueId)
         {
-            Name = uniqueId;
         }
-
-        /// <summary>
-        /// Unique Id for this Compartment.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// The manhole that contains this compartment.
         /// </summary>
-        public Manhole ParentManhole { get; set; }
+        public Manhole ParentManhole {
+            get { return parentManhole; }
+            set
+            {
+                var compartmentNames = value.Compartments.Select(c => c.Name);
+                if (!compartmentNames.Contains(Name)) value.Compartments.Add(this);
+                parentManhole = value;
+            }
+        }
 
         /// <summary>
         /// The shape of the manhole (either square or rectangular).

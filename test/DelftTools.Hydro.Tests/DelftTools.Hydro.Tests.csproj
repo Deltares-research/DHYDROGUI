@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="CatchmentTest.cs" />
     <Compile Include="ChannelTest.cs" />
+    <Compile Include="CompartmentTest.cs" />
     <Compile Include="CrossSectionBranchFeatureTest.cs" />
     <Compile Include="CrossSectionDefinitionProxyTest.cs" />
     <Compile Include="CrossSectionDefinitionStandardTest.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="HydroRegionTest.cs" />
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
     <Compile Include="LateralSourceTest.cs" />
+    <Compile Include="ManholeTest.cs" />
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunoffBoundaryTest.cs" />

@@ -430,13 +430,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             
             // Check Compartment properties
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, "put1", 7071, 7071, CompartmentShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0));
+            CheckCompartmentPropertyValues(compartment, "put1", "01001", 7071, 7071, CompartmentShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0), 1);
         }
 
         [Test]
         public void GivenGwswElementWithNotAllAttributesDefined_WhenCreatingManhole_ThenNoExceptionAndMissingPropertiesAreNotDefinedOrHaveDefaultValues()
         {
-            var manholeId = "put1";
+            var uniqueId = "put1";
+            var manholeId = "01001";
             var gwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -444,13 +445,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
-                        ValueAsString = manholeId,
+                        ValueAsString = uniqueId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
-                        ValueAsString = "01001",
+                        ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.ManholeId, "MyDescription", null, null)
                     }
@@ -459,7 +460,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var compartment = SewerFeatureFactory.CreateInstance(gwswElement) as Compartment;
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, null);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, null, 1);
         }
         
         [Test]
@@ -617,6 +618,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             TryCreateNodeAndCheckForLogMessage(badGwswElement, "There are lines in 'Knooppunt.csv' that do not contain a Manhole Id. These lines are not imported.");
         }
 
+        [TestCase(ManholePropertyKeys.NodeLength)]
+        [TestCase(ManholePropertyKeys.NodeWidth)]
+        [TestCase(ManholePropertyKeys.FloodableArea)]
+        [TestCase(ManholePropertyKeys.BottomLevel)]
+        [TestCase(ManholePropertyKeys.SurfaceLevel)]
+        [TestCase(ManholePropertyKeys.NodeShape)]
+        public void GivenGwswElementWithEmptyValue_WhenCreatingWithFactory_ThenDefaultValuesAreGivenToTheCorrespondingCompartmentProperty(string manholePropertyKey)
+        {
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var gwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    new GwswAttribute
+                    {
+                        ValueAsString = uniqueId,
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
+                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = manholeId,
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
+                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = "",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
+                            manholePropertyKey, "MyDescription", null, null)
+                    }
+                }
+            };
+
+            var compartment = SewerFeatureFactory.CreateInstance(gwswElement) as Compartment;
+            Assert.NotNull(compartment);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, null, 1);
+        }
+
         #endregion
 
         #region Test helpers
@@ -685,8 +727,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(manhole.Compartments.Count, Is.EqualTo(numberOfCompartments));
         }
 
-        private void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel, Coordinate coords)
+        private void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, string manholeId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel, Coordinate coords, int numberOfParentManholeCompartments)
         {
+            Assert.NotNull(compartment.ParentManhole);
+            CheckManholeNodePropertyValues(compartment.ParentManhole, manholeId, coords?.X ?? 0.0, coords?.Y ?? 0.0, numberOfParentManholeCompartments);
+
             Assert.That(compartment.Name, Is.EqualTo(uniqueId));
             Assert.That(compartment.ManholeLength, Is.EqualTo(manholeLength));
             Assert.That(compartment.ManholeWidth, Is.EqualTo(manholeWidth));

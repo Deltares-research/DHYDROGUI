@@ -69,7 +69,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.UniqueId, out uniqueId))
                     throw new Exception(string.Format(Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_,manholeId));
 
-                compartment = new Compartment(uniqueId);
+                compartment = new Compartment(uniqueId)
+                {
+                    ParentManhole = new Manhole(manholeId)
+                };
 
                 // Set manhole value
                 double doubleValue;
@@ -294,6 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var manholePlaceholder = new Manhole(string.Format("Manhole_For_Compartment_{0}", compartmentName));
 
             manholePlaceholder.Compartments.Add(new Compartment(compartmentName));
+            
             Log.InfoFormat(Resources.SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_, manholePlaceholder.Name, compartmentName);
 
             return manholePlaceholder;
@@ -362,7 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static bool TryGetDoubleValueElseThrowException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string id, string manholeId, out double doubleValue)
         {
             string stringValue;
-            if (!elementValues.TryGetValue(columnKey, out stringValue))
+            if (!elementValues.TryGetValue(columnKey, out stringValue) || stringValue == string.Empty)
             {
                 doubleValue = 0.0;
                 return false;
