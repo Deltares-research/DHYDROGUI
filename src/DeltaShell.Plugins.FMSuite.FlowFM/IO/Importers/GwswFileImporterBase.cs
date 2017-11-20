@@ -11,6 +11,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -342,32 +343,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             switch (type)
             {
                 case SewerFeatureType.Connection:
-                    var branches = network.SewerConnections.ToList();
-                    InsertStructure<INetworkFeature>( features, branches);
-                    network.Branches.Clear();
-                    network.Branches.AddRange(branches);
+                    var branches = network.Branches;
+                    InsertStructure( features, branches);
                     break;
             }
         }
 
         [InvokeRequired]
-        private static void InsertStructure<TFeat>(IEnumerable<INetworkFeature> features, IList list) where TFeat : INameable
+        private static void InsertStructure<TFeat>(IEnumerable<INetworkFeature> features, IEventedList<TFeat> list) where TFeat : INameable
         {
             foreach (var feature in features.Where(s => s is TFeat))
             {
                 var replaced = false;
                 for (var i = 0; i < list.Count; ++i)
                 {
-                    if (list[i] is TFeat && ((TFeat)list[i]).Name == feature.Name)
+                    if (list[i].Name == feature.Name)
                     {
-                        list[i] = feature;
+                        list[i] = (TFeat)feature;
                         replaced = true;
                         break;
                     }
                 }
                 if (!replaced)
                 {
-                    list.Add(feature);
+                    list.Add((TFeat)feature);
                 }
             }
         }
