@@ -349,10 +349,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 case SewerFeatureType.Node:
                     var nodes = network.Nodes;
                     var manholes = new List<Manhole>();
+                    var uniqueManholeNames = new List<string>();
                     features.ForEach(f =>
                     {
                         var compartment = (Compartment)f;
-                        if (compartment != null) manholes.Add(compartment.ParentManhole);
+                        if (compartment == null) return;
+                        if (uniqueManholeNames.Contains(compartment.ParentManhole.Name))
+                        {
+                            manholes.FirstOrDefault(m => m.Name == compartment.ParentManhole.Name)?.Compartments.Add(compartment);
+                        }
+                        else
+                        {
+                            manholes.Add(compartment.ParentManhole);
+                            uniqueManholeNames.Add(compartment.ParentManhole.Name);
+                        }
+                        
                     });
 
                     InsertStructure(manholes, nodes);

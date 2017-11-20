@@ -609,6 +609,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.NotNull(importedCompartmentsList);
             var distinctManholeNames = importedCompartmentsList.OfType<Compartment>().Select(c => c.ParentManhole.Name).Distinct();
             Assert.That(network.Manholes.Count(), Is.EqualTo(distinctManholeNames.Count()));
+            var totalCompartmentsInNetwork = network.Manholes.Sum(m => m.Compartments.Count);
+            Assert.That(totalCompartmentsInNetwork, Is.EqualTo(importedCompartmentsList.Count));
         }
 
         #endregion
