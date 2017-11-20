@@ -559,7 +559,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void WhenImportingManholeNodesFromGwswFilesWithoutTargetHydroNetwork_ThenImportIsSuccessfull()
+        public void WhenImportingCompartmentsFromGwswFilesWithoutTargetHydroNetwork_ThenImportIsSuccessfull()
         {
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -584,7 +584,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void WhenImportingManholeNodesFromGwswFilesWithTargetHydroNetwork_ThenImportIsSuccessfull()
+        public void WhenImportingCompartmentsFromGwswFilesWithTargetHydroNetwork_ThenNetworkIsCorrectlyFilledWithManholes()
         {
             //Load GWSW definition
             var gwswImporter = new GwswFileImporterBase();
@@ -593,22 +593,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             Assert.IsNotNull(gwswImporter.AttributesDefinition);
             Assert.IsNotEmpty(gwswImporter.AttributesDefinition);
-
-            //Load manholeNodes
+            
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
-
-            //Now import them as IHydroNetworkFeature
             var network = new HydroNetwork();
             Assert.IsFalse(network.Manholes.Any());
 
+            //Load compartments and fill the network with corresponding manholes
             var importedCompartments = gwswImporter.ImportItem(filePath, network);
             Assert.IsNotNull(importedCompartments);
             Assert.IsNotEmpty(network.Manholes);
 
+            // Check that the amount of manholes in the network are as expected
             var importedCompartmentsList = importedCompartments as List<INetworkFeature>;
             Assert.NotNull(importedCompartmentsList);
-            var distinctManholeNames = importedCompartmentsList.OfType<Compartment>().Select(c => c.ParentManhole.Name).Distinct();
-            Assert.That(network.Manholes.Count(), Is.EqualTo(distinctManholeNames.Count()));
+            var expectedManholeCount = importedCompartmentsList.OfType<Compartment>().Select(c => c.ParentManhole.Name).Distinct().Count();
+            Assert.That(network.Manholes.Count(), Is.EqualTo(expectedManholeCount));
+
+            // Check that amount of compartments in the network are the same as were imported by the importer
             var totalCompartmentsInNetwork = network.Manholes.Sum(m => m.Compartments.Count);
             Assert.That(totalCompartmentsInNetwork, Is.EqualTo(importedCompartmentsList.Count));
         }

@@ -9,19 +9,19 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class ManholeTest
     {
+        Compartment compartment1 = new Compartment("myName1")
+        {
+            Geometry = new Point(1, 3)
+        };
+
+        Compartment compartment2 = new Compartment("myName2")
+        {
+            Geometry = new Point(2, 4)
+        };
+
         [Test]
         public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingTheGeometry_ThenTheAverageCoordinateIsReturned()
         {
-            var compartment1 = new Compartment("myName1")
-            {
-                Geometry = new Point(1, 3)
-            };
-
-            var compartment2 = new Compartment("myName2")
-            {
-                Geometry = new Point(2, 4)
-            };
-            
             var manhole = new Manhole("myManhole")
             {
                 Compartments = new EventedList<Compartment> { compartment1, compartment2 }
@@ -30,17 +30,32 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
+        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingXCoordinate_ThenTheAverageXCoordinateIsReturned()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartment1, compartment2 }
+            };
+            Assert.That(manhole.XCoordinate, Is.EqualTo(1.5));
+        }
+
+        [Test]
+        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingYCoordinate_ThenTheAverageYCoordinateIsReturned()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartment1, compartment2 }
+            };
+            Assert.That(manhole.YCoordinate, Is.EqualTo(3.5));
+        }
+
+        [Test]
         public void GivenManhole_WhenInstatiatingWithCompartment_ThenCompartmentHasManholeAsParentManhole()
         {
             const string manholeName = "myManhole";
-            var compartment = new Compartment("myName")
-            {
-                Geometry = new Point(1, 3)
-            };
-
             var manhole = new Manhole(manholeName)
             {
-                Compartments = new EventedList<Compartment> { compartment }
+                Compartments = new EventedList<Compartment> { compartment1 }
             };
 
             Assert.NotNull(manhole.Compartments.FirstOrDefault()?.ParentManhole);
@@ -51,13 +66,8 @@ namespace DelftTools.Hydro.Tests
         public void GivenManhole_WhenAddingCompartment_ThenCompartmentHasManholeAsParentManhole()
         {
             const string manholeName = "myManhole";
-            var compartment = new Compartment("myName")
-            {
-                Geometry = new Point(1, 3)
-            };
-
             var manhole = new Manhole(manholeName);
-            manhole.Compartments.Add(compartment);
+            manhole.Compartments.Add(compartment1);
 
             Assert.NotNull(manhole.Compartments.FirstOrDefault()?.ParentManhole);
             Assert.That(manhole.Compartments.FirstOrDefault()?.ParentManhole.Name, Is.EqualTo(manholeName));
@@ -89,6 +99,48 @@ namespace DelftTools.Hydro.Tests
             Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
             Assert.That(manhole.Compartments.FirstOrDefault()?.Name, Is.EqualTo("myCompartment"));
             Assert.That(manhole.Compartments.FirstOrDefault()?.Geometry, Is.EqualTo(newGeometry));
+        }
+
+        [Test]
+        public void GivenManholeWithCompartment_WhenGettingCompartmentByName_ThenCompartmentIsReturned()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartment1, compartment2 }
+            };
+            Assert.NotNull(manhole.GetCompartmentByName(compartment1.Name));
+            Assert.NotNull(manhole.GetCompartmentByName(compartment2.Name));
+        }
+
+        [Test]
+        public void GivenManholeWithCompartment_WhenGettingCompartmentByNameWithWrongName_ThenCompartmentIsReturned()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartment1, compartment2 }
+            };
+            Assert.IsNull(manhole.GetCompartmentByName("NonExistentCompartmentName"));
+        }
+
+        [Test]
+        public void GivenManholeWithCompartment_WhenInvokingContainsCompartment_ThenCompartmentIsReturned()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartment1, compartment2 }
+            };
+            Assert.IsTrue(manhole.ContainsCompartment(compartment1.Name));
+            Assert.IsTrue(manhole.ContainsCompartment(compartment2.Name));
+        }
+
+        [Test]
+        public void GivenManholeWithCompartment_WhenInvokingContainsCompartmentWithWrongName_ThenCompartmentIsReturned()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartment1, compartment2 }
+            };
+            Assert.IsFalse(manhole.ContainsCompartment("NonExistentCompartmentName"));
         }
     }
 }
