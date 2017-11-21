@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel.ToString(); }
+            get { return data.Branch.ToString(); }
         }
 
         [Description("Composite structure in which the Extra Resistance is located.")]

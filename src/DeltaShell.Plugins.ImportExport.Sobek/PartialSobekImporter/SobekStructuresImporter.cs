@@ -155,10 +155,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 extraResistance.LongName = extraFriction.Name;
                 extraResistance.FrictionTable.Clear();
                 FunctionHelper.AddDataTableRowsToFunction(extraFriction.Table, extraResistance.FrictionTable);
-                if(extraResistance.Channel != channel)
+                if(extraResistance.Branch != channel)
                 {
-                    extraResistance.Channel.BranchFeatures.Remove(extraResistance);
-                    extraResistance.Channel = channel;
+                    extraResistance.Branch.BranchFeatures.Remove(extraResistance);
+                    extraResistance.Branch = channel;
                     channel.BranchFeatures.Add(extraResistance);
                 }
             }

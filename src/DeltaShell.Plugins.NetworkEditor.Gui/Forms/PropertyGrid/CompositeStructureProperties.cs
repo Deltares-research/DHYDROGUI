@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public string Channel
         {
-            get { return data.Channel == null ? "Channel not set" : data.Channel.ToString(); }
+            get { return data.Branch == null ? "Channel not set" : data.Branch.ToString(); }
         }
 
         [Description("Chainage of the composite structure in the channel on the map.")]

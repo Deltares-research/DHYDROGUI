@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel != null ? data.Channel.ToString() : ""; }
+            get { return data.Branch != null ? data.Branch.ToString() : ""; }
         }
 
         [DynamicVisible]

@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(5, pump.Geometry.Coordinates[0].X);
             Assert.AreEqual(0, pump.Geometry.Coordinates[0].Y);
 
-            pumpEditor.Stop(new SnapResult(pumpEditor.TargetFeature.Geometry.Coordinate, pump.Channel, pumpEditor.Layer, pump.Channel.Geometry, 0, 0));
+            pumpEditor.Stop(new SnapResult(pumpEditor.TargetFeature.Geometry.Coordinate, pump.Branch, pumpEditor.Layer, pump.Branch.Geometry, 0, 0));
 
             Assert.AreEqual(10, pump.Geometry.Coordinates[0].X);
             Assert.AreEqual(0, pump.Geometry.Coordinates[0].Y);

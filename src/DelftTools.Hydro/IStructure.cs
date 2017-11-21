@@ -10,9 +10,6 @@ namespace DelftTools.Hydro
     {
         ICompositeBranchStructure ParentStructure { get; set; }
         
-        // TODO: why?
-        IChannel Channel { get; set; }
-
         /// <summary>
         /// Y offset relative in the profile. This value is used by the structure view to display
         /// the structure in the cross section. It is not used by the 1d model engine.

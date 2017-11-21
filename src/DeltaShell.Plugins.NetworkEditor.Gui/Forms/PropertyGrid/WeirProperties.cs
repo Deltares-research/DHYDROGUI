@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel.ToString(); }
+            get { return data.Branch.ToString(); }
         }
 
         [DynamicVisible]

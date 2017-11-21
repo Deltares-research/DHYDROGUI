@@ -1,10 +1,13 @@
-﻿using DelftTools.Hydro.Properties;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro
 {
@@ -111,14 +114,36 @@ namespace DelftTools.Hydro
             }
         }
 
+        public IEnumerable<T> GetStructuresFromBranchFeatures<T>()
+        {
+            //Branch features are added as a composite branch structure.
+            var branchStructuresT = branchFeatures.OfType<T>().ToList();
+            if (!branchStructuresT.Any())
+            {
+                //Try as a composite structure as it should be the type added.
+                var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
+                if (compositeStructures.Any())
+                {
+                    var compositeStructure = compositeStructures.First();
+                    //Only one compositeStructure allowed per connection, so we are good to go.
+                    return compositeStructure.Structures.OfType<T>();
+                }
+            }
+            return branchStructuresT;
+        }
+
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
         {
             if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;
 
-            if (branchFeatures.Count != 0)
+            if (branchFeatures.Any())
             {
-                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
-                notifyCollectionChangingEventArgs.Cancel = true;
+                var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
+                if (!compositeStructures.Any() || compositeStructures.First().Structures.Any())
+                {
+                    Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
+                    notifyCollectionChangingEventArgs.Cancel = true;
+                }
             }
         }
     }

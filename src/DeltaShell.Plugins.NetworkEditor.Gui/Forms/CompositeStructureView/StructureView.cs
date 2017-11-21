@@ -870,7 +870,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             ICrossSection predecessor;
             ICrossSection successor;
 
-            NetworkHelper.GetNeighboursOnBranch(CompositeStructure.Channel, CompositeStructure.Chainage,
+            NetworkHelper.GetNeighboursOnBranch(CompositeStructure.Branch, CompositeStructure.Chainage,
                                                 out predecessor, out successor);
 
             predecessorCrossSectionDefinition = (predecessor != null && predecessor.Definition.Profile.Any())
@@ -982,12 +982,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 if (double.IsInfinity(s.OffsetY))
                 {
                     log.Error("OffsetY in structure " + s.Name + " cannot be Infinity (type: " + StructureToStructureType(s) + "; chan: " +
-                              s.Channel.Name + ")");
+                              s.Branch.Name + ")");
                 }
                 if (double.IsNaN(s.OffsetY))
                 {
                     log.Error("OffsetY in structure " + s.Name + " cannot be NaN of (type: " + StructureToStructureType(s) + "; chan: " +
-                              s.Channel.Name + ")");
+                              s.Branch.Name + ")");
                 }
             }
         }

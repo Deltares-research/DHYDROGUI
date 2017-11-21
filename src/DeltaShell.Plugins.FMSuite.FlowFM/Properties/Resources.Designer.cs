@@ -555,6 +555,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields.
+        /// </summary>
+        public static string SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__with" +
+                        "out_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manhole with unique id &apos;{0}&apos; has a wrong {1} format for &apos;{2}&apos;: &apos;{3}&apos;.
         ///Manhole with unique id &apos;{4}&apos; is not imported..
         /// </summary>

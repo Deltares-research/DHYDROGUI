@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -152,15 +153,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var connectionType =
                 GetGwswElementSewerConnectionType(GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.PipeType));
 
-            if( connectionType == typeof(Pipe))
+            /* First we need to check whether there are target and source nodes, otherwise we will not create this sewer connection.*/
+            var nodeIdStart = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
+            var nodeIdEnd = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
+            if (nodeIdStart == null || nodeIdEnd == null)
+            {
+                Log.ErrorFormat(Resources.SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields);
+                return null;
+            }
+
+            if ( connectionType == typeof(Pipe))
             {
                 return CreateSewerConnection<Pipe>(gwswElement, network, SetPipeAttributes);
             }
 
             var sewerConnection = CreateSewerConnection<SewerConnection>(gwswElement, network);
+
+            //Add structures if needed
             if (connectionType == typeof(Pump))
             {
-                AddPumpAndAttributesToSewerConnection(sewerConnection, gwswElement, network);
+                AddPumpAndAttributesToSewerConnection(sewerConnection, gwswElement);
             }
 
             return sewerConnection;
@@ -189,40 +201,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             var nodeIdStart = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
-            if (nodeIdStart != null)
-            {
-                //Find node;
-                if (nodeIdStart.ValueAsString != string.Empty && network != null)
-                {
-                    var foundNode = network.Manholes.FirstOrDefault( m => m.GetCompartmentByName(nodeIdStart.ValueAsString) != null);
-                    if (foundNode == null)
-                    {
-                        //create node
-                        foundNode = GetNewManholeForCompartment(nodeIdStart.ValueAsString);
-                        network.Nodes.Add(foundNode);
-                    }
-                    sewerConnection.Source = foundNode;
-                    sewerConnection.SourceCompartment = foundNode.GetCompartmentByName(nodeIdStart.ValueAsString);
-                }
-            }
-
             var nodeIdEnd = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
-            if (nodeIdEnd != null)
+            if (nodeIdStart.ValueAsString != string.Empty && network != null)
             {
-                //Find node;                
-                if (nodeIdEnd.ValueAsString != string.Empty && network != null)
+                var foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdStart.ValueAsString) != null);
+                if (foundNode == null)
                 {
-                    var foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
-                    if (foundNode == null)
-                    {
-                        //create node
-                        foundNode = GetNewManholeForCompartment(nodeIdEnd.ValueAsString);
-                        network.Nodes.Add(foundNode);
-                    }
-                    sewerConnection.Target = foundNode;
-                    sewerConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString);
+                    //create node
+                    foundNode = GetNewManholeForCompartment(nodeIdStart.ValueAsString);
+                    network.Nodes.Add(foundNode);
                 }
+                sewerConnection.Source = foundNode;
+                sewerConnection.SourceCompartment = foundNode.GetCompartmentByName(nodeIdStart.ValueAsString);
             }
+ 
+            if (nodeIdEnd.ValueAsString != string.Empty && network != null)
+            {
+                var foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
+                if (foundNode == null)
+                {
+                    //create node
+                    foundNode = GetNewManholeForCompartment(nodeIdEnd.ValueAsString);
+                    network.Nodes.Add(foundNode);
+                }
+                sewerConnection.Target = foundNode;
+                sewerConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString);
+            }
+            
             var levelStart = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.LevelStart);
             if (levelStart != null)
             {
@@ -340,58 +345,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 });
         }
 
-        private static void AddPumpAndAttributesToSewerConnection(SewerConnection connection, GwswElement gwswElement, HydroNetwork network = null)
+        private static void AddPumpAndAttributesToSewerConnection(SewerConnection connection, GwswElement gwswElement)
         {
             //Add pump to structure
             var sewerPump = new Pump();
 
+            //Add Attributes
+            var flowDirection = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.FlowDirection);
+            if (flowDirection != null && flowDirection.ValueAsString != string.Empty)
+            {
+                var directionValue = GetValueFromDescription<SewerConnectionMapping.FlowDirection>(flowDirection.ValueAsString);
+                if (directionValue == SewerConnectionMapping.FlowDirection.FromStartToEnd)
+                {
+                    sewerPump.DirectionIsPositive = true;
+                }
+                if (directionValue == SewerConnectionMapping.FlowDirection.FromEndToStart)
+                {
+                    sewerPump.DirectionIsPositive = false;
+                }
+            }
+
             //Add pump to network
             AddStructureToBranch(connection, sewerPump);
-
-            //Add attributes.
-            double newDoubleValue;
-            var inletLossStart = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.InletLossStart);
-            if (inletLossStart != null)
-            {
-                var valueType = inletLossStart.GwswAttributeType.AttributeType;
-                if (valueType == sewerPump.StartSuction.GetType() &&
-                    TryParseDoubleElseLogError(inletLossStart, valueType, out newDoubleValue))
-                {
-                    sewerPump.StartSuction = newDoubleValue;
-                }
-            }
-            var inletLossEnd = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.InletLossEnd);
-            if (inletLossEnd != null)
-            {
-                var valueType = inletLossEnd.GwswAttributeType.AttributeType;
-                if (valueType == sewerPump.StopSuction.GetType() &&
-                    TryParseDoubleElseLogError(inletLossEnd, valueType, out newDoubleValue))
-                {
-                    sewerPump.StopSuction = newDoubleValue;
-                }
-            }
-
-            var outletLossStart = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.OutletLossStart);
-            if (outletLossStart != null)
-            {
-                var valueType = outletLossStart.GwswAttributeType.AttributeType;
-                if (valueType == sewerPump.StartDelivery.GetType() &&
-                    TryParseDoubleElseLogError(outletLossStart, valueType, out newDoubleValue))
-                {
-                    sewerPump.StartDelivery = newDoubleValue;
-                }
-            }
-
-            var outletLossEnd = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.OutletLossEnd);
-            if (outletLossEnd != null)
-            {
-                var valueType = outletLossEnd.GwswAttributeType.AttributeType;
-                if (valueType == sewerPump.StopDelivery.GetType() &&
-                    TryParseDoubleElseLogError(outletLossEnd, valueType, out newDoubleValue))
-                {
-                    sewerPump.StopDelivery = newDoubleValue;
-                }
-            }
         }
 
         private static void AddStructureToBranch(SewerConnection connection, BranchStructure structure)
@@ -406,7 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             structure.Name = HydroNetworkHelper.GetUniqueFeatureName(structure.Network as HydroNetwork, structure);
 
-            connection.BranchFeatures.Add(structure);
+            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, connection);
         }
 
         #endregion
@@ -508,6 +483,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             [Description("OVS")] Crest,
             [Description("PMP")] Pump
         }
+
+        public enum FlowDirection /*Field STR_RCH*/
+        {
+            [Description("GSL")] Closed,
+            [Description("OPN")] Open,
+            [Description("1_2")] FromStartToEnd,
+            [Description("2_1")] FromEndToStart,
+        }
+
         public static class PropertyKeys
         {
             public const string UniqueId = "UNIQUE_ID";

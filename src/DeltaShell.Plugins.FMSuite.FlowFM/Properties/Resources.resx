@@ -389,4 +389,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_" xml:space="preserve">
     <value>Created Manhole {0} and compartment {1} with default values as they were not found in the network.</value>
   </data>
+  <data name="SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields" xml:space="preserve">
+    <value>Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields</value>
+  </data>
 </root>

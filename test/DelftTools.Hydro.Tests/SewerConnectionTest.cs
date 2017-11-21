@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -123,8 +125,11 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void SewerConnectionBranchFeaturesDoesNotAcceptMoreThanOneFeature()
         {
-            var sewerConnection = new SewerConnection();
+            var sewerConnection = GetSewerConnectionWithSourceAndTarget();
             Assert.IsNotNull(sewerConnection);
+
+            var network = new HydroNetwork();
+            sewerConnection.Network = network;
 
             #region Features
             var featureOne = new Pump();
@@ -162,6 +167,100 @@ namespace DelftTools.Hydro.Tests
             sewerConnection.BranchFeatures.Add(featureThree);
             Assert.AreEqual(1, sewerConnection.BranchFeatures.Count);
             Assert.AreEqual(featureThree, sewerConnection.BranchFeatures.First());
+
+            Assert.IsTrue(network.BranchFeatures.Any());
+        }
+
+        private SewerConnection GetSewerConnectionWithSourceAndTarget()
+        {
+            var compartmentOne = new Compartment("compartmentOne")
+            {
+                Geometry = new Point(1, 3)
+            };
+            var sourceManhole = new Manhole("sourceManhole")
+            {
+                Compartments = new EventedList<Compartment> {
+                    compartmentOne
+                }
+            };
+            var compartmentTwo = new Compartment("compartmentTwo")
+            {
+                Geometry = new Point(10, 7)
+            };
+            var targetManhole = new Manhole("targetManhole")
+            {
+                Compartments = new EventedList<Compartment> {compartmentTwo}
+            };
+
+            var sewerConnection = new SewerConnection();
+            sewerConnection.SourceCompartment = compartmentOne;
+            sewerConnection.TargetCompartment = compartmentTwo;
+
+            Assert.AreEqual(compartmentOne, sewerConnection.SourceCompartment);
+            Assert.AreEqual(compartmentTwo, sewerConnection.TargetCompartment);
+            Assert.AreEqual(sourceManhole, sewerConnection.Source);
+            Assert.AreEqual(targetManhole, sewerConnection.Target);
+
+            sewerConnection.Geometry = new LineString(new []{sourceManhole.Geometry.Coordinate, targetManhole.Geometry.Coordinate});
+            Assert.IsNotNull(sewerConnection.Geometry);
+
+            return sewerConnection;
+        }
+
+        [Test]
+        public void SewerConnectionBranchFeaturesDoesNotAcceptMoreThanOneBranchCompositeStructure()
+        {
+            var sewerConnection = GetSewerConnectionWithSourceAndTarget();
+            Assert.IsNotNull(sewerConnection);
+
+            var network = new HydroNetwork();
+            sewerConnection.Network = network;
+
+            #region Features
+            var featureOne = new Pump();
+            Assert.IsNotNull(featureOne);
+
+            var featureTwo = new Pump();
+            Assert.IsNotNull(featureTwo);
+
+            var featureThree = new Pump();
+            Assert.IsNotNull(featureThree);
+            #endregion
+
+            Assert.AreEqual(0, sewerConnection.BranchFeatures.Count);
+            var expectedLogMessage = string.Format("Sewer connection {0} does not accept more than one branch feature", sewerConnection.Name);
+
+            //Add one composite feature.
+            var compositeStructure = HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(featureOne, sewerConnection);
+            Assert.AreEqual(1, sewerConnection.BranchFeatures.Count);
+            Assert.AreEqual(compositeStructure, sewerConnection.BranchFeatures.First());
+
+            var foundComposite = sewerConnection.BranchFeatures.First() as CompositeBranchStructure;
+            Assert.IsNotNull(foundComposite);
+            Assert.IsTrue(foundComposite.Structures.Any());
+            Assert.IsTrue(foundComposite.Structures.Contains(featureOne));
+
+            //Try to add an extra feature to the branch feature itself.
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => sewerConnection.BranchFeatures.Add(featureTwo), expectedLogMessage);
+            Assert.AreEqual(1, sewerConnection.BranchFeatures.Count);
+            Assert.AreEqual(compositeStructure, sewerConnection.BranchFeatures.First());
+
+            foundComposite = sewerConnection.BranchFeatures.First() as CompositeBranchStructure;
+            Assert.IsNotNull(foundComposite);
+            Assert.IsTrue(foundComposite.Structures.Any());
+            Assert.IsTrue(foundComposite.Structures.Contains(featureOne));
+
+            //Try to add a feature to the composite instead, it should still fail.
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(featureThree, sewerConnection), expectedLogMessage);
+            Assert.AreEqual(1, sewerConnection.BranchFeatures.Count);
+            Assert.AreEqual(compositeStructure, sewerConnection.BranchFeatures.First());
+
+            foundComposite = sewerConnection.BranchFeatures.First() as CompositeBranchStructure;
+            Assert.IsNotNull(foundComposite);
+            Assert.IsTrue(foundComposite.Structures.Any());
+            Assert.IsTrue(foundComposite.Structures.Contains(featureOne));
+
+            Assert.AreEqual(featureOne, sewerConnection.GetStructuresFromBranchFeatures<Pump>().First());
         }
 
         [Test]

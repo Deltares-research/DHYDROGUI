@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             ICrossSection crossSectionBefore;
             ICrossSection crossSectionAfter;
 
-            NetworkHelper.GetNeighboursOnBranch(compositeBranchStructure.Channel, compositeBranchStructure.Chainage,
+            NetworkHelper.GetNeighboursOnBranch(compositeBranchStructure.Branch, compositeBranchStructure.Chainage,
                                                                out crossSectionBefore, out crossSectionAfter);
 
             // set NetworkSideViewData
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             }
             if (crossSectionAfter != null)
             {
-                endPosition = Math.Min(compositeBranchStructure.Channel.Length, crossSectionAfter.Chainage + 3);
+                endPosition = Math.Min(compositeBranchStructure.Branch.Length, crossSectionAfter.Chainage + 3);
             }
 
             var route = RouteHelper.CreateRoute(new NetworkLocation(compositeBranchStructure.Branch, startPosition),

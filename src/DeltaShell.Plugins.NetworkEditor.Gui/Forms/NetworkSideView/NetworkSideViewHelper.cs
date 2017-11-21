@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public static bool GetReversed(Route route, IStructure structure)
         {
             INetworkSegment segment = RouteHelper.GetSegmentForNetworkLocation(route,
-                                                                               new NetworkLocation(structure.Channel, structure.Chainage));
+                                                                               new NetworkLocation(structure.Branch, structure.Chainage));
             return (segment != null) && (segment.EndChainage < segment.Chainage);
         }
 

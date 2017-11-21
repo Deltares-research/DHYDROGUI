@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 {
                     if (Math.Abs(branchFeature.Chainage - structure.ParentStructure.Chainage) < BranchFeature.Epsilon)
                     {
-                        structure.Channel.BranchFeatures.Remove(structure);
+                        structure.Branch.BranchFeatures.Remove(structure);
                         structure.ParentStructure.Structures.Remove(structure);
                         HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, branchFeature.Branch);
                     }

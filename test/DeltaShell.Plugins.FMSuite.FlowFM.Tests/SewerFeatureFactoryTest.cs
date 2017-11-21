@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -35,6 +36,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         #region Sewer Connection
+
+        [Test]
+        public void SewerFeatureCanNotBeCreatedIfTargetAndSourceAreNotGivenAndLogMessageIsGiven()
+        {
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString()
+            };
+
+            var expectedMessage =
+                "Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(nodeGwswElement), expectedMessage);
+            Assert.IsNull(SewerFeatureFactory.CreateInstance(nodeGwswElement));
+        }
+
+        [Test]
+        public void SewerFeatureCanNotBeCreatedIfTargetIsNotGivenAndLogMessageIsGiven()
+        {
+            var sourceNode = "node001";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", sourceNode),
+                }
+            };
+
+            var expectedMessage =
+                "Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields";
+            TestHelper.AssertAtLeastOneLogMessagesContains( () => SewerFeatureFactory.CreateInstance(nodeGwswElement), expectedMessage);
+            Assert.IsNull(SewerFeatureFactory.CreateInstance(nodeGwswElement));
+        }
+
+        [Test]
+        public void SewerFeatureCanNotBeCreatedIfSourceIsNotGivenAndLogMessageIsGiven()
+        {
+            var targetNode = "node002";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", targetNode)
+                }
+            };
+
+            var expectedMessage =
+                "Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(nodeGwswElement), expectedMessage);
+            Assert.IsNull(SewerFeatureFactory.CreateInstance(nodeGwswElement));
+        }
 
         [Test]
         public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
@@ -71,26 +124,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void CreateSewerConnectionFromFactoryWithoutAttributes()
-        {
-            var nodeGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Connection.ToString()
-            };
-
-            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-            Assert.That(element.GetType(), Is.EqualTo(typeof(SewerConnection)));
-        }
-
-        [Test]
         public void CreateSewerConnectionFromFactoryWithUnknownAttributes()
         {
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("unkownCode", "ValueShouldNotBeSet", "unknownType")
+                    GetDefaultGwswAttribute("unkownCode", "ValueShouldNotBeSet", "unknownType"),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
 
@@ -107,16 +152,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase("PMP", typeof(SewerConnection))]
         public void CreateSewerConnectionMapsConnectionTypeFromFactory(string typeOfConnection, Type expectedType)
         {
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection)
+                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
-
-            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+            var network = new HydroNetwork();
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
             Assert.AreEqual(expectedType, element.GetType(), "Created Sewer Connection is not of the expected type.");
             var sewerConnection = element as SewerConnection;
             Assert.NotNull(sewerConnection);
@@ -126,12 +175,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreateSewerConnectionWithUnknownMapConnectionTypeFromFactory()
         {
             var typeOfConnection = "NotKnown";
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection)
+                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
 
@@ -268,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var nvgDouble = 0.0;
 
             var gwswElement = GetSewerConnectionGwswElement(objectId, nvgString, nvgString, connectionTypeString,
-                levelStart, levelEnd, length, nvgString, nvgString, waterTypeString, nvgDouble,
+                levelStart, levelEnd, nvgString, length, nvgString, nvgString, waterTypeString, nvgDouble,
                 nvgDouble, nvgDouble, nvgDouble);
      
             var network = new HydroNetwork();
@@ -326,17 +379,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreatePipeWhenGivingPipeIndicatorAttributeFromFactory(string typeOfConnection, bool isPipe)
         {
             var pipeId = "123";
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
                     GetDefaultGwswAttribute("PIPE_INDICATOR", isPipe ? pipeId : string.Empty),
-                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection)
+                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
+            var network = new HydroNetwork();
 
-            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
             Assert.AreEqual(isPipe, element is Pipe);
             if (isPipe)
             {
@@ -361,7 +419,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var defaultString = string.Empty;
             var defaultDouble = 0.0;
 
-            var nodeGwswElement = GetSewerConnectionGwswElement(string.Empty, startNode, endNode, pipeTypeString, startLevel, endLevel, length, crossSectionDef, defaultString, defaultString, defaultDouble, defaultDouble,defaultDouble,defaultDouble );
+            var nodeGwswElement = GetSewerConnectionGwswElement(string.Empty, startNode, endNode, pipeTypeString, startLevel, endLevel, defaultString, length, crossSectionDef, defaultString, defaultString, defaultDouble, defaultDouble,defaultDouble,defaultDouble );
 
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
             Assert.That(element.GetType(), Is.EqualTo(typeof(Pipe)));
@@ -388,13 +446,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CreatePipeFromFactoryCreatesDefaultCrossSectionDefinitionIfNotPresentInNetwork()
         {
             var sewerDefinitionName = "crossSectionDef001";
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
                     GetDefaultGwswAttribute("CROSS_SECTION_DEF", sewerDefinitionName),
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection))
+                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
 
@@ -424,13 +486,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             network.SewerProfiles.Add(auxCrossSection);
             Assert.IsTrue(network.SewerProfiles.Any( sp => sp.Name.Equals(sewerDefinitionName)));
 
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
                     GetDefaultGwswAttribute("CROSS_SECTION_DEF", sewerDefinitionName),
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection))
+                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
 
@@ -454,12 +520,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void AddPumpToSewerConnectionFromGwswElement()
         {
+            var startNode = "node001";
+            var endNode = "node002";
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump))
+                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
+                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
                 }
             };
 
@@ -471,8 +541,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(sewerConnection);
 
             //A Pump has been added to the above sewer connection.
-            var featuresInConnection = sewerConnection.BranchFeatures;
-            Assert.AreEqual(1, featuresInConnection.Count);
+            var featuresInConnection = sewerConnection.GetStructuresFromBranchFeatures<Pump>();
+            Assert.IsNotNull(featuresInConnection);
 
             var foundPump = featuresInConnection.FirstOrDefault();
             Assert.IsNotNull(foundPump);
@@ -498,26 +568,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void CreatePumpFromGwswElementWithExpectedValues()
+        [TestCase(FlowDirection.FromStartToEnd, true)]
+        [TestCase(FlowDirection.FromEndToStart, false)]
+        [TestCase(FlowDirection.Closed, true)] /*We do not map these two to anything, so default value should prevail*/
+        [TestCase(FlowDirection.Open, true)]/*We do not map these two to anything, so default value should prevail*/
+        public void CreatePumpFromGwswElementWithExpectedValues(FlowDirection flowDirection, bool flowDirectionIsPositive)
         {
             #region Setting expected values
+
+            var startNode = "node001";
+            var endNode = "node002";
+
             var connectionType = ConnectionType.Pump;
             var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
 
             var waterType = SewerConnectionWaterType.MixedWasteWater;
             var waterTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
-            var inletLossStart = 1.0;
-            var inletLossEnd = 1.5;
-            var outletLossStart = 2.0;
-            var outletLossEnd = 2.5;
+
+            var flowDirectionString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(flowDirection);
             #endregion
             //Non value given
             var nvgString = string.Empty;
             var nvgDouble = 0.0;
-
-            var gwswElement = GetSewerConnectionGwswElement(nvgString, nvgString, nvgString, connectionTypeString,
-                nvgDouble, nvgDouble, nvgDouble, nvgString, nvgString, waterTypeString, inletLossStart,
-                inletLossEnd, outletLossStart, outletLossEnd);
+            var gwswElement = GetSewerConnectionGwswElement(nvgString, startNode, endNode, connectionTypeString,
+                nvgDouble, nvgDouble, flowDirectionString, nvgDouble, nvgString, nvgString, waterTypeString, nvgDouble,
+                nvgDouble, nvgDouble, nvgDouble);
 
             var network = new HydroNetwork();
             var createdElement = SewerFeatureFactory.CreateInstance(gwswElement, network);
@@ -526,13 +601,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var sewerConnection = createdElement as SewerConnection;
             Assert.IsNotNull(sewerConnection);
 
-            var createdPump = sewerConnection.BranchFeatures.OfType<Pump>().FirstOrDefault();
+            var createdPump = sewerConnection.GetStructuresFromBranchFeatures<Pump>().FirstOrDefault();
             Assert.IsNotNull(createdPump);
 
-            Assert.AreEqual(inletLossStart, createdPump.StartSuction);
-            Assert.AreEqual(inletLossEnd, createdPump.StopSuction);
-            Assert.AreEqual(outletLossStart, createdPump.StartDelivery);
-            Assert.AreEqual(outletLossEnd, createdPump.StopDelivery);
+            Assert.AreEqual(flowDirectionIsPositive, createdPump.DirectionIsPositive);
         }
 
         [Test]
@@ -558,7 +630,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var sewerConnection = createdElement as SewerConnection;
             Assert.IsNotNull(sewerConnection);
 
-            var createdPump = sewerConnection.BranchFeatures.OfType<Pump>().FirstOrDefault();
+            var createdPump = sewerConnection.GetStructuresFromBranchFeatures<Pump>().FirstOrDefault();
             Assert.IsNotNull(createdPump);
 
             Assert.IsNotNull(createdPump.Geometry, "Default geometry not given to pump.");
@@ -812,8 +884,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #endregion
 
         #region Test helpers
-
-        private enum ConnectionType
+        protected enum ConnectionType
         {
             [System.ComponentModel.Description("DRL")] Orifice,
             [System.ComponentModel.Description("GSL")] ClosedConnection /*Should be created as a pipe*/,
@@ -821,6 +892,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             [System.ComponentModel.Description("OPL")] Open /*Should be created as a pipe*/,
             [System.ComponentModel.Description("OVS")] Crest,
             [System.ComponentModel.Description("PMP")] Pump
+        }
+
+        public enum FlowDirection /*Field STR_RCH*/
+        {
+            [System.ComponentModel.Description("GSL")] Closed,
+            [System.ComponentModel.Description("OPN")] Open,
+            [System.ComponentModel.Description("1_2")] FromStartToEnd,
+            [System.ComponentModel.Description("2_1")] FromEndToStart,
         }
 
         private static GwswAttribute GetDefaultGwswAttribute(string attributeName, string attributeValue, string attributeType = null)
@@ -836,7 +915,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
         }
 
-        private static GwswElement GetSewerConnectionGwswElement(string uniqueId, string startNode, string endNode, string sewerConnectionTypeString , double startLevel, double endLevel, double length,
+        private static GwswElement GetSewerConnectionGwswElement(string uniqueId, string startNode, string endNode, string sewerConnectionTypeString , double startLevel, double endLevel, string flowDirectionString, double length,
             string crossSectionDef, string pipeIndicator, string sewerConnectionWaterType, double inletLossStart, double inletLossEnd, double outletLossStart, double outletLossEnd)
         {
             #region Setting Object Variables
@@ -846,6 +925,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var PipeType = "PIPE_TYPE";
             var LevelStart = "LEVEL_START";
             var LevelEnd = "LEVEL_END";
+            var FlowDirection = "FLOW_DIRECTION";
             var Length = "LENGTH";
             var CrossSectionDef = "CROSS_SECTION_DEF";
             var PipeIndicator = "PIPE_INDICATOR";
@@ -874,6 +954,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         GetDefaultGwswAttribute(LevelStart, startLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
                         GetDefaultGwswAttribute(LevelEnd, endLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
                         GetDefaultGwswAttribute(Length, length.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(FlowDirection, flowDirectionString),
                         GetDefaultGwswAttribute(CrossSectionDef, crossSectionDef),
                         GetDefaultGwswAttribute(PipeIndicator, pipeIndicator),
                         GetDefaultGwswAttribute(WaterType, sewerConnectionWaterType),
