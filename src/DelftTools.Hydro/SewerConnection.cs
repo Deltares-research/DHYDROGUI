@@ -139,7 +139,9 @@ namespace DelftTools.Hydro
             if (branchFeatures.Any())
             {
                 var compositeStructures = branchFeatures.OfType<CompositeBranchStructure>().ToList();
-                if (!compositeStructures.Any() || compositeStructures.First().Structures.Any())
+                if (!compositeStructures.Any() ||
+                    (compositeStructures.First().Structures.Any()  &&
+                    !compositeStructures.First().Structures.Contains(notifyCollectionChangingEventArgs.Item)))
                 {
                     Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                     notifyCollectionChangingEventArgs.Cancel = true;

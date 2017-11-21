@@ -10,7 +10,6 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
