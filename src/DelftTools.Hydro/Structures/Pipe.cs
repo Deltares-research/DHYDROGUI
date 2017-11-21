@@ -1,14 +1,17 @@
 ﻿using System;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
+using log4net;
 
 namespace DelftTools.Hydro.Structures
 {
     [Serializable]
     public class Pipe : SewerConnection, IPipe
     {
+        private static ILog Log = LogManager.GetLogger(typeof(Pipe));
         public CrossSection CrossSectionShape { get; set; }
         public string PipeId { get; set; }
 
@@ -22,7 +25,17 @@ namespace DelftTools.Hydro.Structures
                     branchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
                 }
 
-                branchFeatures = value;
+                if (value != null)
+                {
+                    if (value.Count > 0)
+                    {
+                        Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+                    }
+                    else
+                    {
+                        branchFeatures = value;
+                    }
+                }
 
                 if (branchFeatures != null)
                 {
@@ -37,7 +50,7 @@ namespace DelftTools.Hydro.Structures
             if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;
 
             notifyCollectionChangingEventArgs.Cancel = true;
-            //Log exception // whatever
+            Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
         }
     }
 }

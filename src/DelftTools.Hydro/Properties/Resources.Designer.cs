@@ -110,6 +110,16 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pipe {0} does not allow any branch feature on it..
+        /// </summary>
+        internal static string Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_ {
+            get {
+                return ResourceManager.GetString("Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_featur" +
+                        "e_on_it_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap polder_soft {
@@ -136,6 +146,16 @@ namespace DelftTools.Hydro.Properties {
             get {
                 object obj = ResourceManager.GetObject("sacramento", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sewer connection {0} does not accept more than one branch feature..
+        /// </summary>
+        internal static string SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_ {
+            get {
+                return ResourceManager.GetString("SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one" +
+                        "_branch_feature_", resourceCulture);
             }
         }
         

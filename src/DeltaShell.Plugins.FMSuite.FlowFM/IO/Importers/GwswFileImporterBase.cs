@@ -394,6 +394,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
     }
 
+    #region Gwsw Types
+
     public class GwswElement
     {
         public List<GwswAttribute> GwswAttributeList { get; set; }
@@ -469,4 +471,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return null;
         }
     }
+
+    #endregion
 }

@@ -9,19 +9,9 @@ namespace DelftTools.Hydro
         double Length { get; set; }
         double LevelSource { get; set; }
         double LevelTarget { get; set; }
-        SewerConnectionType SewerConnectionType { get; set; }
         SewerConnectionWaterType WaterType { get; set; }
         Compartment SourceCompartment { get; set; }
         Compartment TargetCompartment { get; set; }
-    }
-    public enum SewerConnectionType
-    {
-        [Description("DRL")] Orifice,
-        [Description("GSL")] ClosedConnection /*Should be created as a pipe*/,
-        [Description("ITR")] InfiltrationPipe /*Should be created as a pipe*/,
-        [Description("OPL")] Open /*Should be created as a pipe*/,
-        [Description("OVS")] Crest,
-        [Description("PMP")] Pump
     }
 
     public enum SewerConnectionWaterType

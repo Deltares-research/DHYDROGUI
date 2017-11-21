@@ -1,13 +1,16 @@
-﻿using System;
+﻿using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
+using log4net;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
     public class SewerConnection : Branch, ISewerConnection
     {
+        private static ILog Log = LogManager.GetLogger(typeof(SewerConnection));
         #region Constructors
 
         public SewerConnection() : this(null, null)
@@ -30,7 +33,6 @@ namespace DelftTools.Hydro
         public SewerConnection(string name, INode fromNode, INode toNode, double length) :
             base(name, fromNode, toNode, length)
         {
-            branchFeatures = new EventedList<IBranchFeature>();
         }
 
         #endregion
@@ -43,7 +45,6 @@ namespace DelftTools.Hydro
         protected IEventedList<IBranchFeature> branchFeatures;
         private Compartment sourceCompartment;
         private Compartment targetCompartment;
-        public SewerConnectionType SewerConnectionType { get; set; }
         public SewerConnectionWaterType WaterType { get; set; }
 
         public Compartment SourceCompartment
@@ -74,6 +75,11 @@ namespace DelftTools.Hydro
             }
         }
 
+        public bool IsPipe()
+        {
+            return this is Pipe;
+        }
+
         #endregion
 
         public override bool IsLengthCustom
@@ -93,14 +99,14 @@ namespace DelftTools.Hydro
                 }
 
                 //For the sewer connection we only allow one branch feature per sewer connection
-                if (value != null && value.Count == 1)
+                if (value != null && value.Count <= 1)
                 {
                     branchFeatures = value;
                     branchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
                 }
                 else
                 {
-                    //exception ??
+                    Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                 }
             }
         }
@@ -111,7 +117,7 @@ namespace DelftTools.Hydro
 
             if (branchFeatures.Count != 0)
             {
-                //exception ??
+                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                 notifyCollectionChangingEventArgs.Cancel = true;
             }
         }

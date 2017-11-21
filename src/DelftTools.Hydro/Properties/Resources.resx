@@ -145,4 +145,10 @@
   <data name="NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group" xml:space="preserve">
     <value>Remove group</value>
   </data>
+  <data name="SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_" xml:space="preserve">
+    <value>Sewer connection {0} does not accept more than one branch feature.</value>
+  </data>
+  <data name="Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_" xml:space="preserve">
+    <value>Pipe {0} does not allow any branch feature on it.</value>
+  </data>
 </root>

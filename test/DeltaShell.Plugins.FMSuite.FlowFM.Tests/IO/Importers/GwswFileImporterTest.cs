@@ -537,8 +537,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var network = new HydroNetwork();
             /*We know these two nodes are referred in the test data*/
             var replacedConnection = "lei1";
-            var replacedConnectionType = SewerConnectionType.InfiltrationPipe;
-            var sewerConnection = new SewerConnection(){ Name = replacedConnection, SewerConnectionType = replacedConnectionType };
+            var length = 1000;
+            var sewerConnection = new SewerConnection(){ Name = replacedConnection, Length = length };
             network.Branches.Add(sewerConnection);
 
             Assert.AreEqual(1, network.Branches.Count(n => n.Name.Equals(replacedConnection)));
@@ -557,7 +557,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsNotNull(importedConnections);
 
             Assert.AreEqual(1, network.SewerConnections.Count(n => n.Name.Equals(replacedConnection)));
-            Assert.AreNotEqual(replacedConnectionType, network.SewerConnections.First(n => n.Name.Equals(replacedConnection)).SewerConnectionType);
+            Assert.AreNotEqual(length, network.SewerConnections.First(n => n.Name.Equals(replacedConnection)).Length);
         }
 
         [Test]
