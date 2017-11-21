@@ -586,7 +586,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region CompositeManholeNode
+        #region Manhole
 
         [Test]
         public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
