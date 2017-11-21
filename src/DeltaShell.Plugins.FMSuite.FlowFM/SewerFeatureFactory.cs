@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 structure.Geometry = new Point(connection.Geometry.Coordinates[0]);
             }
             structure.Name = HydroNetworkHelper.GetUniqueFeatureName(structure.Network as HydroNetwork, structure);
-            //structure.Name = string.Concat(structurePrefix, connection.Name);
+
             connection.BranchFeatures.Add(structure);
         }
 

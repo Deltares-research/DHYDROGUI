@@ -3,13 +3,14 @@ using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
-    public interface ISewerConnection : IBranch, IHydroNetworkFeature
+    public interface ISewerConnection : IBranch
     {
         string ConnectionId { get; set; }
         double Length { get; set; }
         double LevelSource { get; set; }
         double LevelTarget { get; set; }
         SewerConnectionType SewerConnectionType { get; set; }
+        SewerConnectionWaterType WaterType { get; set; }
         Compartment SourceCompartment { get; set; }
         Compartment TargetCompartment { get; set; }
     }

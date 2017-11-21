@@ -24,8 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             try
             {
-                network.Branches.Add(new SewerConnection());
+                var test = network.AllHydroObjects.ToList();
                 network.Nodes.Add(new Manhole("ManholeTest"));
+                test = network.AllHydroObjects.ToList();
             }
             catch (Exception e)
             {

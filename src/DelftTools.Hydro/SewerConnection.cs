@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
@@ -33,6 +30,7 @@ namespace DelftTools.Hydro
         public SewerConnection(string name, INode fromNode, INode toNode, double length) :
             base(name, fromNode, toNode, length)
         {
+            branchFeatures = new EventedList<IBranchFeature>();
         }
 
         #endregion
@@ -42,9 +40,12 @@ namespace DelftTools.Hydro
         public string ConnectionId { get; set; }
         public double LevelSource { get; set; }
         public double LevelTarget { get; set; }
-        public SewerConnectionType SewerConnectionType { get; set; }
-
+        protected IEventedList<IBranchFeature> branchFeatures;
         private Compartment sourceCompartment;
+        private Compartment targetCompartment;
+        public SewerConnectionType SewerConnectionType { get; set; }
+        public SewerConnectionWaterType WaterType { get; set; }
+
         public Compartment SourceCompartment
         {
             get { return sourceCompartment; }
@@ -59,7 +60,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        private Compartment targetCompartment;
         public Compartment TargetCompartment
         {
             get { return targetCompartment; }
@@ -73,60 +73,6 @@ namespace DelftTools.Hydro
                 }
             }
         }
-        public SewerConnectionWaterType WaterType { get; set; }
-        
-        #endregion
-
-        public override IEventedList<IBranchFeature> BranchFeatures
-        {
-            get { return base.BranchFeatures; }
-            set
-            {
-                base.BranchFeatures = value;
-
-                // Set the filtered properties. Use backing fields ( private setters for 
-                // properties e.g. public virtual IEnumerable<IPump> Pumps { get; private set; }
-                // will have performance impact. Possible issue in implementation of propertychanged aspect
-                // check with performance tests in HydroNetworkTest
-                structures = BranchFeatures.OfType<IStructure>();
-                pumps = BranchFeatures.OfType<IPump>();
-            }
-        }
-
-        #region SewerConnection members
-
-        private IEnumerable<IStructure> structures;
-        private IEnumerable<IPump> pumps;
-        
-        public virtual IEnumerable<IStructure> Structures { get { return structures; } }
-
-        public virtual IEnumerable<IPump> Pumps { get { return pumps; } }
-
-        public override object Clone()
-        {
-            Channel clone = (Channel)base.Clone();
-
-            // TODO: remove structures from BranchFeatures if they are part of CompositeBranchStructure, clone child structures in CompositeBranchStructure and then remove this foreach!
-            foreach (var compositeBranchStructure in Structures.OfType<ICompositeBranchStructure>())
-            {
-                var compositeBranchStructureClone = (ICompositeBranchStructure)clone.BranchFeatures[BranchFeatures.IndexOf(compositeBranchStructure)];
-                foreach (var structure in compositeBranchStructure.Structures)
-                {
-                    var structureClone = (IStructure)clone.BranchFeatures[BranchFeatures.IndexOf(structure)];
-                    structureClone.ParentStructure = compositeBranchStructureClone;
-                    compositeBranchStructureClone.Structures.Add(structureClone);
-                }
-            }
-            clone.LongName = LongName;
-
-            return clone;
-        }
-
-        public virtual IHydroNetwork HydroNetwork
-        {
-            get { return (IHydroNetwork)Network; }
-        }
-
 
         #endregion
 
@@ -135,41 +81,39 @@ namespace DelftTools.Hydro
             get { return true; }
         }
 
-        public virtual string LongName { get; set; }
 
-        public virtual int CompareTo(IChannel other)
+        public override IEventedList<IBranchFeature> BranchFeatures
         {
-            return Network.Branches.IndexOf(this).CompareTo(Network.Branches.IndexOf(other));
+            get { return branchFeatures; }
+            set
+            {
+                if (branchFeatures != null)
+                {
+                    branchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
+                }
+
+                //For the sewer connection we only allow one branch feature per sewer connection
+                if (value != null && value.Count == 1)
+                {
+                    branchFeatures = value;
+                    branchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
+                }
+                else
+                {
+                    //exception ??
+                }
+            }
         }
 
-        public virtual IEnumerable<object> GetDirectChildren()
+        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
         {
-            return BranchFeatures.Cast<object>();
+            if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;
+
+            if (branchFeatures.Count != 0)
+            {
+                //exception ??
+                notifyCollectionChangingEventArgs.Cancel = true;
+            }
         }
-
-        public virtual IHydroRegion Region { get { return HydroNetwork; } }
-
-        [Aggregation]
-        public virtual IEventedList<HydroLink> Links { get; set; }
-
-        public virtual bool CanBeLinkSource { get { return false; } }
-
-        public virtual bool CanBeLinkTarget { get { return false; } }
-
-        public virtual HydroLink LinkTo(IHydroObject target)
-        {
-            throw new NotSupportedException();
-        }
-
-        public virtual void UnlinkFrom(IHydroObject target)
-        {
-            throw new NotSupportedException();
-        }
-
-        public virtual bool CanLinkTo(IHydroObject target)
-        {
-            return false; // no linking to / from sewer connection yet
-        }
-    
     }
 }

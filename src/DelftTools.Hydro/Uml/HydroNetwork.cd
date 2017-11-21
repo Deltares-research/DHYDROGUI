@@ -3,7 +3,7 @@
   <Class Name="DelftTools.Hydro.BranchFeatureHydroObject">
     <Position X="20" Y="25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAgAAgACAAAAAAAAAAAEAAAAAACAAABAAAAAA=</HashCode>
+      <HashCode>IAAAAEAAgAAgACAAAAAAAAAAAEAAAAAACAAAAAAIAAA=</HashCode>
       <FileName>BranchFeatureHydroObject.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -11,7 +11,7 @@
   <Class Name="DelftTools.Hydro.Retention">
     <Position X="17.25" Y="30.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAAAACAAEgACAAAAAAABQAAAAAABAAAQAAAAAAEEA=</HashCode>
+      <HashCode>AAgAAAACAAEgACAAAIAAABQAAAAAABAAAQAAAAAAEEA=</HashCode>
       <FileName>Retention.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -27,7 +27,7 @@
   <Class Name="DelftTools.Hydro.LateralSource">
     <Position X="15.25" Y="30.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAEAAAAAAAAAAAIIAAAAAAAAAAEAAAAAAFA=</HashCode>
+      <HashCode>AAAAAQAAAAEAAAAAAAAAAAIIAAAAAAAAAAEAAAAIAFA=</HashCode>
       <FileName>LateralSource.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -35,7 +35,7 @@
   <Class Name="DelftTools.Hydro.HydroNode" BaseTypeListCollapsed="true">
     <Position X="4.75" Y="27.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAgAEgAAAAAIAAAAAAAEAAAAAACADABAAAAFA=</HashCode>
+      <HashCode>IAQAAEAAgAEgAAEAAIIAAAAAAEAAAAAACADAAAAIAFA=</HashCode>
       <FileName>HydroNode.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -43,7 +43,7 @@
   <Class Name="DelftTools.Hydro.HydroNetwork" BaseTypeListCollapsed="true">
     <Position X="7.5" Y="27.25" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AIAoACAAMAAJAAgEEMAQTKFoAEAGAICACgSAkAAAFDE=</HashCode>
+      <HashCode>QIAoACAAMAAJAAgEEMARTKFoBEAGAIiACAyAkCgAFDE=</HashCode>
       <FileName>HydroNetwork.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -51,7 +51,7 @@
   <Class Name="DelftTools.Hydro.Channel" BaseTypeListCollapsed="true">
     <Position X="12" Y="27.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEgAkAEgABQAAYAACCUIAEAkAAgACAAMhAAABvA=</HashCode>
+      <HashCode>YAAAAEgAkAEgABQAAYAAACUIAEAkAAgACAAMgEAIBvA=</HashCode>
       <FileName>Channel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -59,7 +59,7 @@
   <Class Name="DelftTools.Hydro.BranchStructure">
     <Position X="19.75" Y="30.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgBAEgAGQAAAAAAAAABAAAAABAAAAAAAAAAEA=</HashCode>
+      <HashCode>AAAQAEAgBAEgAGQAAAAAAAAABAAAAABAAAAAAAAAAEA=</HashCode>
       <FileName>BranchStructure.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -72,7 +72,7 @@
   <Class Name="DelftTools.Hydro.Structures.Bridge">
     <Position X="14.5" Y="34.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>kgBAABAQBAAgACAIEABAAEAIACwAACECBABQAEgAAIA=</HashCode>
+      <HashCode>kgBQABIQBAAjACAoEABAAEAIACwBACkCBABQAEgAAIA=</HashCode>
       <FileName>Structures\Bridge.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -80,7 +80,7 @@
   <Class Name="DelftTools.Hydro.Structures.CompositeBranchStructure">
     <Position X="16.75" Y="34.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAABAAAAAAAAAAAACQIBAggAACAAAAAAAAEAAA=</HashCode>
+      <HashCode>AAAQEEAABAAAAAAAAAAAACQIBAggAACAAAAAAAAEAQA=</HashCode>
       <FileName>Structures\CompositeBranchStructure.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -88,7 +88,7 @@
   <Class Name="DelftTools.Hydro.Structures.Culvert">
     <Position X="19" Y="34.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ESBIgAAQBAggQCAEAGgAgEAYACgWQCEChEBBAFQwAIA=</HashCode>
+      <HashCode>ESFYgAEQBAgjQCAkACAAgEAYACgXQCEDhEBBAVQwAIA=</HashCode>
       <FileName>Structures\Culvert.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -96,7 +96,7 @@
   <Class Name="DelftTools.Hydro.Structures.ExtraResistance">
     <Position X="21.25" Y="34.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAACAAAAAAAAAIAAAAAAAAAABAAAEAAAA=</HashCode>
+      <HashCode>AAAQAAAAAAAAACAAAAAAAAAIAAAAAAAAAABAAAEAAAA=</HashCode>
       <FileName>Structures\ExtraResistance.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -104,7 +104,7 @@
   <Class Name="DelftTools.Hydro.Structures.Pump">
     <Position X="23.5" Y="34.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAEAAAAACAMAAAAAIAKIAAgAAAAAgAAAAAAAAA=</HashCode>
+      <HashCode>BAAQAAAMAAAAACCMAAAAAIACICAgACAAAgBAAAAAQAA=</HashCode>
       <FileName>Structures\Pump.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -112,10 +112,18 @@
   <Class Name="DelftTools.Hydro.Structures.Weir">
     <Position X="25.75" Y="34.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACIgQAAAAAAAACAAAAABgAAIASQAACAAAABACAACAIg=</HashCode>
+      <HashCode>ACYwSEAAAAAAACAAAQABgABABSQAACAAAABACAACQIg=</HashCode>
       <FileName>Structures\Weir.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DelftTools.Hydro.SewerConnection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="27.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAIAggAAAQAAAAAAAAAAAACEAQAEAASgA=</HashCode>
+      <FileName>SewerConnection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Interface Name="GeoAPI.Extensions.Networks.INodeFeature">
     <Position X="2.25" Y="4.25" Width="1.5" />
@@ -159,7 +167,7 @@
   <Interface Name="DelftTools.Hydro.IChannel">
     <Position X="12.25" Y="19" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEgEAAAAAAAAAACVAAAAEAAgAAAAAgAAABCA=</HashCode>
+      <HashCode>QAAAAAAAEgEAAAAAAAAAACVAAAAEAAgAAAAAgAAABCA=</HashCode>
       <FileName>IChannel.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -173,24 +181,8 @@
         <Point X="9.812" Y="15" />
       </Path>
     </InheritanceLine>
-    <InheritanceLine Type="DelftTools.Hydro.IHydroRegion" FixedToPoint="true">
-      <Path>
-        <Point X="23.25" Y="12.631" />
-        <Point X="23.25" Y="14.625" />
-        <Point X="21.333" Y="14.625" Type="JumpStart" />
-        <Point X="21.167" Y="14.625" Type="JumpEnd" />
-        <Point X="16.833" Y="14.625" Type="JumpStart" />
-        <Point X="16.667" Y="14.625" Type="JumpEnd" />
-        <Point X="13.083" Y="14.625" Type="JumpStart" />
-        <Point X="12.917" Y="14.625" Type="JumpEnd" />
-        <Point X="11.583" Y="14.625" Type="JumpStart" />
-        <Point X="11.417" Y="14.625" Type="JumpEnd" />
-        <Point X="10.188" Y="14.625" />
-        <Point X="10.188" Y="15" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAIAAAAMAAIAAgAEMAQBCEAAAAEAIAAAAQAgAAAFCE=</HashCode>
+      <HashCode>QAAIAAAAMAAIAAgAEMARBCEAAAAEAIgAAAQAgAAAFCE=</HashCode>
       <FileName>IHydroNetwork.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -225,14 +217,14 @@
   <Interface Name="DelftTools.Hydro.IStructure" Collapsed="true">
     <Position X="17.5" Y="21.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgBAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAQAAAgBAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>IStructure.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="DelftTools.Hydro.IHydroObject">
     <Position X="26" Y="10.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAgAAgAAAAAAAAAAAAAEAAAAAACAAABAAAAAA=</HashCode>
+      <HashCode>IAAAAEAAgAAgAAAAAAAAAAAAAEAAAAAACAAAAAAIAAA=</HashCode>
       <FileName>IHydroObject.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -241,18 +233,6 @@
   </Interface>
   <Interface Name="DelftTools.Hydro.IHydroNetworkFeature">
     <Position X="14" Y="16.25" Width="2.25" />
-    <InheritanceLine Type="DelftTools.Hydro.IHydroObject" FixedToPoint="true">
-      <Path>
-        <Point X="26.75" Y="12.346" />
-        <Point X="26.75" Y="15.875" />
-        <Point X="21.333" Y="15.875" Type="JumpStart" />
-        <Point X="21.167" Y="15.875" Type="JumpEnd" />
-        <Point X="16.833" Y="15.875" Type="JumpStart" />
-        <Point X="16.667" Y="15.875" Type="JumpEnd" />
-        <Point X="15.312" Y="15.875" />
-        <Point X="15.312" Y="16.25" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>IHydroNetworkFeature.cs</FileName>
@@ -261,12 +241,40 @@
   <Interface Name="DelftTools.Hydro.IHydroRegion">
     <Position X="22.5" Y="10.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAABAAAEAAAAQABAAEAAAAAACAAAEAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAABAAEAAAAAACAAAEAAAAAA=</HashCode>
       <FileName>IHydroRegion.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="AllHydroObjects" />
     </ShowAsCollectionAssociation>
   </Interface>
+  <Interface Name="DelftTools.Hydro.Structures.IManhole" Collapsed="true">
+    <Position X="7.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAgAAAAAIAA=</HashCode>
+      <FileName>Structures\IManhole.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DelftTools.Hydro.ISewerConnection">
+    <Position X="25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAgAAAQAABAAAAAAAAACEAQAEAAAAA=</HashCode>
+      <FileName>ISewerConnection.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="DelftTools.Hydro.SewerConnectionType" Collapsed="true">
+    <Position X="27.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgIAAAAAIAAIAAAAAAAAAAAAAAAACAAEAAAAAAAAAA=</HashCode>
+      <FileName>ISewerConnection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DelftTools.Hydro.SewerConnectionWaterType" Collapsed="true">
+    <Position X="29" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAIAAAAAAAAAEAAAAAAAAEAAAA=</HashCode>
+      <FileName>ISewerConnection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

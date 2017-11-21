@@ -377,10 +377,10 @@ namespace DelftTools.Hydro
         {
             get 
             {
-                return Nodes.Cast<IHydroObject>()
-                    .Concat(Branches.Cast<IHydroObject>())
-                    .Concat(BranchFeatures.Cast<IHydroObject>())
-                    .Concat(NodeFeatures.Cast<IHydroObject>()); 
+                return Nodes.OfType<IHydroObject>()
+                    .Concat(Branches.OfType<IHydroObject>())
+                    .Concat(BranchFeatures.OfType<IHydroObject>())
+                    .Concat(NodeFeatures.OfType<IHydroObject>()); 
             }
         }
 
