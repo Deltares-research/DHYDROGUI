@@ -457,11 +457,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             AttributeType = TryGetParsedValueType(Name, typeField, definition, fileName, lineNumber);
         }
 
-        public static Type TryGetParsedValueType(string name, string typeFiled, string definition, string fileName, int lineNumber)
+        public static Type TryGetParsedValueType(string name, string typeField, string definition, string fileName, int lineNumber)
         {
             try
             {
-                return FMParser.GetClrType(name, typeFiled, ref definition, fileName, lineNumber);
+                return FMParser.GetClrType(name, typeField, ref definition, fileName, lineNumber);
     }
             catch (Exception)
             {

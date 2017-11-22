@@ -36,6 +36,14 @@ namespace DelftTools.Hydro
         public SewerConnection(string name, INode fromNode, INode toNode, double length) :
             base(name, fromNode, toNode, length)
         {
+            if (fromNode != null && toNode != null)
+            {
+                if (fromNode.Geometry != null && fromNode.Geometry.IsValid &&
+                    toNode.Geometry != null && toNode.Geometry.IsValid)
+                {
+                    Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate });
+                }
+            }
         }
 
         #endregion
