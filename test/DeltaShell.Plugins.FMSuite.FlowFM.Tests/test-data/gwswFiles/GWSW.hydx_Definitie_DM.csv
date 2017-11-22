@@ -84,19 +84,19 @@ Profiel.csv,Crosssection.csv,HydxNatOppervlakNiveau,PRO_NOP,WET_AREA,Nat oppervl
 Profiel.csv,Crosssection.csv,HydxNatteOmtrekNiveau,PRO_NOM,WET_PERIMETER,Natte omtrek bij niveau,double,m,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
 Profiel.csv,Crosssection.csv,HydxAannameProfielbreedte,AAN_PBR,A_CROSS_SECTION_WIDTH,Aanname profielbreedte,string,AannameHydXColl,nee,[Len=3]
 Profiel.csv,Crosssection.csv,HydxToelichtingRegel,ALG_TOE,REMARKS,Toelichting bij deze regel,string,string,nee,[Len=100]
-Profiel_bad.csv,Crosssection.csv,HydxIdentificatieProfieldefinitie,PRO_IDE,CROSSSECTION_ID,Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv,string,string,ja,"[Len=10] [Verplicht als Verbinding/VRB_TYP=GSL,OPL,ITR]"
-Profiel_bad.csv,Crosssection.csv,HydxMateriaalProfiel,PRO_MAT,CROSS_SECTION_MATERIAL,Materiaal profiel,string,MateriaalProfielColl,nee,[Len=3] [Verplicht als Verbinding/VRB_TYP=GSL]
-Profiel_bad.csv,Crosssection.csv,HydxVormProfiel,PRO_VRM,CROSS_SECTION_SHAPE,Vorm profiel,string,VormProfielColl,nee,[Len=3] [Verplicht als Verbinding/VRB_TYP=GSL]
-Profiel_bad.csv,Crosssection.csv,HydxBreedte_diameterProfiel,PRO_BRE,CROSS_SECTION_WIDTH,Breedte/diameter profiel,double,mm,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=GSL]
-Profiel_bad.csv,Crosssection.csv,HydxHoogteProfiel,PRO_HGT,CROSS_SECTION_HEIGHT,Hoogte profiel,double,mm,nee,"[Len=8.2] [Verplicht als Verbinding/VRB_TYP=GSL, Profiel/PRO_VRM=EIV, RHK]"
-Profiel_bad.csv,Crosssection.csv,HydxCo_tangensHelling1,OPL_HL1,SLOPE_1,Co-tangens helling 1,double,decimal,nee,[Len=4.2] [Verplicht als Verbinding/VRB_TYP=OPL]
-Profiel_bad.csv,Crosssection.csv,HydxCo_tangensHelling2,OPL_HL2,SLOPE_2,Co-tangens helling 2,double,decimal,nee,[Len=4.2] [Verplicht als Verbinding/VRB_TYP=OPL]
-Profiel_bad.csv,Crosssection.csv,HydxNiveauBovenBob,PRO_NIV,CROSS_SECTION_LEVEL,"Niveau boven b.o.b. Als er meerdere profielwaardes per niveau gelden, dan meerdere Profiel-regels opnemen met gelijke waarde van PRO_IDE. De waarde van PRO_NIV mag daarbij dus niet gelijk zijn",string,m,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
-Profiel_bad.csv,Crosssection.csv,HydxNatOppervlakNiveau,PRO_NOP,WET_AREA,Nat oppervlak bij niveau,double,m2,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
-Profiel_bad.csv,Crosssection.csv,HydxNatteOmtrekNiveau,PRO_NOM,WET_PERIMETER,Natte omtrek bij niveau,double,m,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
-Profiel_bad.csv,Crosssection.csv,HydxBreedteNiveau,PRO_BRE,CROSS_SECTION_WIDTH,Breedte bij niveau,double,m,nee,"[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL, Profiel/DEF_VNR>0]"
-Profiel_bad.csv,Crosssection.csv,HydxAannameProfielbreedte,AAN_PBR,A_CROSS_SECTION_WIDTH,Aanname profielbreedte,string,AannameHydXColl,nee,[Len=3]
-Profiel_bad.csv,Crosssection.csv,HydxToelichtingRegel,ALG_TOE,REMARKS,Toelichting bij deze regel,string,string,nee,[Len=100]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxIdentificatieProfieldefinitie,PRO_IDE,CROSSSECTION_ID,Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv,string,string,ja,"[Len=10] [Verplicht als Verbinding/VRB_TYP=GSL,OPL,ITR]"
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxMateriaalProfiel,PRO_MAT,CROSS_SECTION_MATERIAL,Materiaal profiel,string,MateriaalProfielColl,nee,[Len=3] [Verplicht als Verbinding/VRB_TYP=GSL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxVormProfiel,PRO_VRM,CROSS_SECTION_SHAPE,Vorm profiel,string,VormProfielColl,nee,[Len=3] [Verplicht als Verbinding/VRB_TYP=GSL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxBreedte_diameterProfiel,PRO_BRE,CROSS_SECTION_WIDTH,Breedte/diameter profiel,double,mm,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=GSL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxHoogteProfiel,PRO_HGT,CROSS_SECTION_HEIGHT,Hoogte profiel,double,mm,nee,"[Len=8.2] [Verplicht als Verbinding/VRB_TYP=GSL, Profiel/PRO_VRM=EIV, RHK]"
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxCo_tangensHelling1,OPL_HL1,SLOPE_1,Co-tangens helling 1,double,decimal,nee,[Len=4.2] [Verplicht als Verbinding/VRB_TYP=OPL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxCo_tangensHelling2,OPL_HL2,SLOPE_2,Co-tangens helling 2,double,decimal,nee,[Len=4.2] [Verplicht als Verbinding/VRB_TYP=OPL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxNiveauBovenBob,PRO_NIV,CROSS_SECTION_LEVEL,"Niveau boven b.o.b. Als er meerdere profielwaardes per niveau gelden, dan meerdere Profiel-regels opnemen met gelijke waarde van PRO_IDE. De waarde van PRO_NIV mag daarbij dus niet gelijk zijn",string,m,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxNatOppervlakNiveau,PRO_NOP,WET_AREA,Nat oppervlak bij niveau,double,m2,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxNatteOmtrekNiveau,PRO_NOM,WET_PERIMETER,Natte omtrek bij niveau,double,m,nee,[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxBreedteNiveau,PRO_BRE,CROSS_SECTION_WIDTH,Breedte bij niveau,double,m,nee,"[Len=8.2] [Verplicht als Verbinding/VRB_TYP=OPL, Profiel/DEF_VNR>0]"
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxAannameProfielbreedte,AAN_PBR,A_CROSS_SECTION_WIDTH,Aanname profielbreedte,string,AannameHydXColl,nee,[Len=3]
+Profiel_duplicate_column_Id.csv,Crosssection.csv,HydxToelichtingRegel,ALG_TOE,REMARKS,Toelichting bij deze regel,string,string,nee,[Len=100]
 Oppervlak.csv,Surface.csv,HydxIdentificatieKnooppuntOfVerbinding,UNI_IDE,UNIQUE_ID,"Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.",string,string,ja,[Len=10]
 Oppervlak.csv,Surface.csv,HydxNaamNeerslagstation,NSL_STA,WEATHER_STATION,Naam neerslagstation,string,string,nee,[Len=30]
 Oppervlak.csv,Surface.csv,HydxAfvoerdefinitie,AFV_DEF,WWF_ID,Naam van bestand waarin het neerslag-afvoerconcept staat beschreven. Bijvoorbeeld nwrw.csv of groenedaken.csv,string,string,ja,[Len=30]
