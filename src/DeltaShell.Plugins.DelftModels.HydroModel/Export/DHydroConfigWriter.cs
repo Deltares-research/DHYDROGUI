@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
@@ -133,6 +132,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 itemNode.Add(sourceNode, targetNode);
                 coupler.Add(itemNode);
             }
+
+            if (modelCoupler.AddAdditionalCouplerInfo != null)
+            {
+                coupler = modelCoupler.AddAdditionalCouplerInfo(coupler, DHyd);
+            }
+
             return coupler;
         }
         

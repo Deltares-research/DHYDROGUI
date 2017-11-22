@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
@@ -34,6 +40,10 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.Api.Layers;
+using SharpMap.UI.Forms;
+using Control = System.Windows.Controls.Control;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace Sobek.IntegrationTests
@@ -134,6 +144,168 @@ namespace Sobek.IntegrationTests
             gui.Application.SaveProjectAs(path);
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void TestRtcOutput_LoadRunSaveAsLoad()
+        {
+            // TestSetup is not sufficient for this test... so we do things a little differently
+            gui.Dispose();
+            app.Dispose();
+
+            using (gui = new DeltaShellGui())
+            {
+                app = gui.Application;
+
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
+                gui.Plugins.Add(new RealTimeControlGuiPlugin());
+                gui.Plugins.Add(new HydroModelGuiPlugin());
+
+                gui.Run();
+                
+                var legacyPath = TestHelper.GetTestFilePath(@"RtcOutput\Flow1D_WithRtcOutput.dsproj");
+                var localLegacyPath = TestHelper.CopyProjectToLocalDirectory(legacyPath);
+                app.OpenProject(localLegacyPath);
+
+                var originalHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                Assert.NotNull(originalHydroModel);
+
+                var originalRtcModel = originalHydroModel.Activities.OfType<RealTimeControlModel>().FirstOrDefault();
+                Assert.NotNull(originalRtcModel);
+
+                var originalOutputFileFunctionStore = originalRtcModel.OutputFileFunctionStore;
+                Assert.NotNull(originalOutputFileFunctionStore);
+                Assert.Greater(originalOutputFileFunctionStore.Functions.Count, 0);
+
+                var originalFunction = originalOutputFileFunctionStore.Functions.First();
+
+                gui.MainWindow.Show();
+                app.RunActivity(originalHydroModel);
+
+                var resavedPath = "resaved_" + localLegacyPath;
+                app.SaveProjectAs(resavedPath);
+                app.OpenProject(resavedPath);
+
+                var resavedHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                Assert.NotNull(resavedHydroModel);
+
+                var resavedRtcModel = resavedHydroModel.Activities.OfType<RealTimeControlModel>().FirstOrDefault();
+                Assert.NotNull(resavedRtcModel);
+
+                var resavedOutputFileFunctionStore = resavedRtcModel.OutputFileFunctionStore;
+                Assert.NotNull(resavedOutputFileFunctionStore);
+                Assert.Greater(resavedOutputFileFunctionStore.Functions.Count, 0);
+
+                var resavedFunction = resavedOutputFileFunctionStore.Functions.First();
+
+                Assert.AreEqual(originalFunction.Name, resavedFunction.Name);
+
+                var originalVariables = originalFunction.Arguments.Concat(originalFunction.Components).ToList();
+                var resavedVariables = resavedFunction.Arguments.Concat(resavedFunction.Components).ToList();
+                Assert.AreEqual(originalVariables.Count, resavedVariables.Count);
+
+                var originalDateTimeVariables = originalVariables.OfType<IVariable<DateTime>>().ToList();
+                var resavedDateTimeVariables = resavedVariables.OfType<IVariable<DateTime>>().ToList();
+                Assert.AreEqual(originalDateTimeVariables.Count, resavedDateTimeVariables.Count);
+                Assert.IsTrue(VariablesAreEqual(originalDateTimeVariables, resavedDateTimeVariables));
+
+                var originalDoubleVariables = originalVariables.OfType<IVariable<double>>().ToList();
+                var resavedDoubleVariables = resavedVariables.OfType<IVariable<double>>().ToList();
+                Assert.AreEqual(originalDoubleVariables.Count, resavedDoubleVariables.Count);
+                Assert.IsTrue(VariablesAreEqual(originalDoubleVariables, resavedDoubleVariables));
+            }
+        }
+
+        private static bool VariablesAreEqual<T>(IList<IVariable<T>> firstVariableList, IList<IVariable<T>> secondVariableList)
+        {
+            for (var i = 0; i < firstVariableList.Count; i++)
+            {
+                var firstVariableValues = firstVariableList[i].Values;
+                var secondVariableValues = secondVariableList[i].Values;
+
+                if (!VariablesAreEqual(firstVariableValues, secondVariableValues)) return false;
+            }
+
+            return true;
+        }
+
+        private static bool VariablesAreEqual<T>(IEnumerable<T> firstVariable, IEnumerable<T> secondVariable)
+        {
+            var firstValues = firstVariable.ToList();
+            var secondValues = secondVariable.ToList();
+            if (firstValues.Count != secondValues.Count) return false;
+
+            for (var j = 0; j < firstValues.Count; j++)
+            {
+                if (!firstValues[j].Equals(secondValues[j])) return false;
+            }
+            
+
+            return true;
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
+        public void TestConnectToRtcOutputFileAndShowInFunctionView()
+        {
+            RealTimeControlModel rtcModel;
+            RealTimeControlOutputFileFunctionStore outputFunctionStore;
+            GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out outputFunctionStore, out rtcModel);
+
+            // Show in functionView
+            var function = outputFunctionStore.Functions.First();
+            var view = new FunctionView() { Data = function };
+            WindowsFormsTestHelper.ShowModal(view);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
+        public void TestConnectToRtcOutputFileAndShowInProjectTree()
+        {
+            RealTimeControlModel rtcModel;
+            RealTimeControlOutputFileFunctionStore outputFunctionStore;
+            GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out outputFunctionStore, out rtcModel);
+
+            // Show in ProjectTree
+            WpfTestHelper.ShowModal((Control)gui.MainWindow);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
+        public void TestConnectToRtcOutputFileAndShowInMapView()
+        {
+            RealTimeControlModel rtcModel;
+            RealTimeControlOutputFileFunctionStore outputFunctionStore;
+            GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out outputFunctionStore, out rtcModel);
+
+            var providers = new IMapLayerProvider[]{ new RealTimeControlMapLayerProvider() };
+            var layer = (IGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(rtcModel, null, providers);
+            layer.Layers.ForEach(l => l.Visible = true);
+
+            var map = new Map { Layers = { layer }, Size = new System.Drawing.Size { Width = 800, Height = 800 } };
+            map.ZoomToExtents();
+
+            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+
+            // Nothing to see really, but should not crash!
+            WindowsFormsTestHelper.ShowModal(mapControl);
+        }
+        
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void LinkRtcRuleOutputToWeirCrestLevel()
@@ -617,6 +789,47 @@ namespace Sobek.IntegrationTests
         {
             if( gui != null )
                 gui.Dispose();
+        }
+
+        private void GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out RealTimeControlOutputFileFunctionStore outputFunctionStore, out RealTimeControlModel rtcModel)
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RtcOutput\" + RealTimeControlModel.OutputFileName);
+
+            // create flow1d model
+            var observationPoint = new ObservationPoint() { Name = "Near pipe", Geometry = new Point(new Coordinate(10, 0)) };
+            var from = new HydroNode() { Geometry = new Point(new Coordinate(0, 0)) };
+            var to = new HydroNode() { Geometry = new Point(new Coordinate(100, 0)) };
+            var network = new HydroNetwork
+            {
+                Branches = { new Channel { BranchFeatures = { observationPoint }, Source = @from, Target = to } },
+                Nodes = { @from, to }
+            };
+            var flowModel = new WaterFlowModel1D { Network = network };
+
+            // create RTC model
+            var input = new Input();
+            rtcModel = new RealTimeControlModel { ControlGroups = { new ControlGroup { Inputs = { input } } } };
+
+            // create and add to HydroModel
+            var hydroModel = new HydroModel { Activities = { rtcModel } };
+            hydroModel.Region.SubRegions.Add(flowModel.Region);
+            hydroModel.Activities.Add(flowModel);
+
+            gui.Application.Project.RootFolder.Add(hydroModel);
+
+            // attach models to each other
+            var source = rtcModel.GetDataItemByValue(input);
+            var target = flowModel.GetChildDataItems(observationPoint).First();
+
+            // link
+            target.LinkTo(source);
+
+            // Connect output
+            TypeUtils.CallPrivateMethod(rtcModel, "ReconnectOutputFiles", new[] { testFilePath });
+
+            outputFunctionStore = rtcModel.OutputFileFunctionStore;
+            Assert.NotNull(outputFunctionStore);
+            Assert.IsTrue(outputFunctionStore.Functions.Any());
         }
     }
 }
