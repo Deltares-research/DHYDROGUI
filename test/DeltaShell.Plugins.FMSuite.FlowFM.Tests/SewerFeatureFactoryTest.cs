@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", sourceNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, sourceNode),
                 }
             };
 
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", targetNode)
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, targetNode)
                 }
             };
 
@@ -133,8 +133,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>()
                 {
                     GetDefaultGwswAttribute("unkownCode", "ValueShouldNotBeSet", "unknownType"),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -158,9 +158,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_pipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
             var network = new HydroNetwork();
@@ -181,9 +181,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_pipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -202,8 +202,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -272,13 +272,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute()
                     {
-                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", "NODE_UNIQUE_ID_START",
+                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", _nodeUniqueIdStart,
                             "unkownDefinition", "mandatoryMaybe", "noRemarks"),
                         ValueAsString = startCompartmentName
                     },
                     new GwswAttribute()
                     {
-                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", "NODE_UNIQUE_ID_END",
+                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", _nodeUniqueIdEnd,
                             "unkownDefinition", "mandatoryMaybe", "noRemarks"),
                         ValueAsString = endCompartmentName
                     },
@@ -348,9 +348,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Orifice)),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Orifice)),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -385,10 +385,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_INDICATOR", isPipe ? pipeId : string.Empty),
-                    GetDefaultGwswAttribute("PIPE_TYPE", typeOfConnection),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_pipeIndicator, isPipe ? pipeId : string.Empty),
+                    GetDefaultGwswAttribute(_pipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
             var network = new HydroNetwork();
@@ -452,10 +452,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("CROSS_SECTION_DEF", sewerDefinitionName),
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_crossSectionDef, sewerDefinitionName),
+                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -492,10 +492,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("CROSS_SECTION_DEF", sewerDefinitionName),
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_crossSectionDef, sewerDefinitionName),
+                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -526,9 +526,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -616,9 +616,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute("PIPE_TYPE", EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_START", startNode),
-                    GetDefaultGwswAttribute("NODE_UNIQUE_ID_END", endNode)
+                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -917,24 +917,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static GwswElement GetSewerConnectionGwswElement(string uniqueId, string startNode, string endNode, string sewerConnectionTypeString , double startLevel, double endLevel, string flowDirectionString, double length,
             string crossSectionDef, string pipeIndicator, string sewerConnectionWaterType, double inletLossStart, double inletLossEnd, double outletLossStart, double outletLossEnd)
         {
-            #region Setting Object Variables
-            var UniqueId = "UNIQUE_ID";
-            var NodeUniqueIdStart = "NODE_UNIQUE_ID_START";
-            var NodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
-            var PipeType = "PIPE_TYPE";
-            var LevelStart = "LEVEL_START";
-            var LevelEnd = "LEVEL_END";
-            var FlowDirection = "FLOW_DIRECTION";
-            var Length = "LENGTH";
-            var CrossSectionDef = "CROSS_SECTION_DEF";
-            var PipeIndicator = "PIPE_INDICATOR";
-            var WaterType = "WATER_TYPE";
-            var InletLossStart = "INLETLOSS_START";
-            var OutletLossStart = "OUTLETLOSS_START";
-            var InletLossEnd = "INLETLOSS_END";
-            var OutletLossEnd = "OUTLETLOSS_END";
-            #endregion
-
             var typeString = "string";
             var typeDouble = "double";
 
@@ -946,21 +928,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ElementTypeName = SewerFeatureType.Connection.ToString(),
                     GwswAttributeList = new List<GwswAttribute>()
                     {
-                        GetDefaultGwswAttribute(UniqueId, uniqueId),
-                        GetDefaultGwswAttribute(NodeUniqueIdStart, startNode),
-                        GetDefaultGwswAttribute(NodeUniqueIdEnd,endNode),
-                        GetDefaultGwswAttribute(PipeType,sewerConnectionTypeString),
-                        GetDefaultGwswAttribute(LevelStart, startLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(LevelEnd, endLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(Length, length.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(FlowDirection, flowDirectionString),
-                        GetDefaultGwswAttribute(CrossSectionDef, crossSectionDef),
-                        GetDefaultGwswAttribute(PipeIndicator, pipeIndicator),
-                        GetDefaultGwswAttribute(WaterType, sewerConnectionWaterType),
-                        GetDefaultGwswAttribute(InletLossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(InletLossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(OutletLossStart, outletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(OutletLossEnd, outletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_uniqueId, uniqueId),
+                        GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                        GetDefaultGwswAttribute(_nodeUniqueIdEnd,endNode),
+                        GetDefaultGwswAttribute(_pipeType,sewerConnectionTypeString),
+                        GetDefaultGwswAttribute(_levelStart, startLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_levelEnd, endLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_length, length.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_flowDirection, flowDirectionString),
+                        GetDefaultGwswAttribute(_crossSectionDef, crossSectionDef),
+                        GetDefaultGwswAttribute(_pipeIndicator, pipeIndicator),
+                        GetDefaultGwswAttribute(_waterType, sewerConnectionWaterType),
+                        GetDefaultGwswAttribute(_inletlossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_inletlossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_outletlossStart, outletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_outletlossEnd, outletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
                     }
                 };
             }
@@ -1018,7 +1000,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new GwswAttribute
                 {
                     ValueAsString = "put1",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "UNIQUE_ID", "MyDescription", null, null)
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", _uniqueId, "MyDescription", null, null)
                 },
                 new GwswAttribute
                 {
@@ -1076,7 +1058,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new GwswAttribute
                 {
                     ValueAsString = "put2",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", "UNIQUE_ID", "MyDescription", null, null)
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", _uniqueId, "MyDescription", null, null)
                 },
                 new GwswAttribute
                 {
@@ -1124,8 +1106,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
                 }
             }
-        }; 
-        
+        };
+
+        private static string _nodeUniqueIdStart = "NODE_UNIQUE_ID_START";
+        private static string _nodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
+        private static string _pipeType = "PIPE_TYPE";
+        private static string _pipeIndicator = "PIPE_INDICATOR";
+        private static string _crossSectionDef = "CROSS_SECTION_DEF";
+        private static string _uniqueId = "UNIQUE_ID";
+        private static string _levelStart = "LEVEL_START";
+        private static string _levelEnd = "LEVEL_END";
+        private static string _flowDirection = "FLOW_DIRECTION";
+        private static string _length = "LENGTH";
+        private static string _waterType = "WATER_TYPE";
+        private static string _inletlossStart = "INLETLOSS_START";
+        private static string _outletlossStart = "OUTLETLOSS_START";
+        private static string _inletlossEnd = "INLETLOSS_END";
+        private static string _outletlossEnd = "OUTLETLOSS_END";
+
         #endregion
     }
 }
