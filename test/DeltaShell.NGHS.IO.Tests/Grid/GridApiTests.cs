@@ -14,8 +14,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [TestFixture]
     public class GridApiTests
     {
-        private IGridApi gridApi;
-        private IGridApi remoteGridApi;
+        private GridApi gridApi;
+        private RemoteGridApi remoteGridApi;
         private MockRepository mocks;
 
         [SetUp]
@@ -24,8 +24,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks = new MockRepository();
             gridApi = mocks.DynamicMock<GridApi>();
             remoteGridApi = mocks.DynamicMock<RemoteGridApi>();
-            gridApi.Expect(a => a.Initialized)
-                .CallOriginalMethod(OriginalCallOptions.NoExpectation);
+            gridApi.Expect(a => a.Initialized).CallOriginalMethod(OriginalCallOptions.NoExpectation);
         }
 
         [TearDown]
@@ -196,7 +195,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void adherestoConventionsTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int ioncId = 0;
             int iconvtype = (int)GridApiDataSet.DataSetConventions.CONV_NULL;
 
@@ -238,7 +237,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void OpenWithoutErrorButToLowConvensionVersionTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
             int ioncId = 0;
             int iconvtype = (int)GridApiDataSet.DataSetConventions.CONV_NULL;
@@ -271,7 +270,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void OpenWithoutErrorTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
             int ioncId = 0;
             int iconvtype = (int)GridApiDataSet.DataSetConventions.CONV_NULL;
@@ -303,7 +302,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void OpenWithErrorTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
             int k = 0;
@@ -329,7 +328,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void OpenInRemoteWithErrorTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
             int k = 0;
@@ -356,7 +355,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void CloseUninitializedTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
                     w.Close(i))
@@ -375,7 +374,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void CloseTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
                     w.Close(i))
@@ -399,7 +398,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void CloseWithErrorTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
                     w.Close(i))
@@ -419,7 +418,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void CloseInRemoteWithErrorTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             wrapper.Expect(w =>
                     w.Close(i))
@@ -441,7 +440,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetMeshCountUninitializedTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -465,7 +464,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetMeshCountTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -493,7 +492,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetMeshCountWithExceptionTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -518,7 +517,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetMeshCountInRemoteWithExceptionTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -542,7 +541,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetCoordinateSystemCodeUninitializedTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -571,7 +570,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetCoordinateSystemCodeTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -600,7 +599,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetCoordinateSystemCodeWithExceptionTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -626,7 +625,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetCoordinateSystemCodeInRemoteWithExceptionTest()
         {
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int i = 0;
             int j = 0;
 
@@ -715,7 +714,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR)]
         public void CreateFileFailedTest(int apiCallReturnValue)
         {
-            var wrapper = mocks.StrictMock<IGridWrapper>();
+            var wrapper = mocks.StrictMock<GridWrapper>();
             int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
             int ioncId = 0;
             int iconvtype = 0;

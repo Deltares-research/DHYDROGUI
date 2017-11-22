@@ -5,7 +5,7 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public static class GridApiDataSet
     {
-        public class UGridAttributeConstants
+        public static class UGridAttributeConstants
         {
             public class LocationValues
             {
@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public class UGridApiConstants
+        public static class UGridApiConstants
         {
             public const string Altitude = "altitude";
             public const string NodeZ = "node_z";
@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO.Grid
             public const string DiscretisationPointIds = "node_ids";
         }
         
-        public class GridConstants
+        public static class GridConstants
         {
             public const int MAXDIMS = 6;
             public const int MAXSTRLEN = 255; // Must be equal to MAXSTRLEN in io_netcdf.dll (kernel)

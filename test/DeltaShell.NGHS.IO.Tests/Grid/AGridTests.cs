@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [TestFixture]
     public class AGridTests
     {
-        private IGrid grid;
+        private AGrid<IGridApi> grid;
         private MockRepository mocks;
 
         private const string DUMMY_TEST_FILE = @"ugrid\Dummy.nc";
@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void SetUp()
         {
             mocks = new MockRepository();
-            grid = mocks.DynamicMock<AGrid>();
+            grid = mocks.DynamicMock<AGrid<IGridApi>>();
         }
 
         [TearDown]
@@ -119,7 +119,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.Initialize()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
-            ((AGrid) grid).Expect(g => g.CoordinateSystem)
+            ((AGrid<IGridApi>) grid).Expect(g => g.CoordinateSystem)
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation)
                 .PropertyBehavior();
 
@@ -132,7 +132,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             grid.Initialize();
-            Assert.AreEqual(3819, ((AGrid) grid).CoordinateSystem.AuthorityCode);
+            Assert.AreEqual(3819, ((AGrid<IGridApi>) grid).CoordinateSystem.AuthorityCode);
             Assert.IsFalse((bool)TypeUtils.GetField(grid, "disposed"));
         }
         [Test]
@@ -146,7 +146,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
-            ((AGrid) grid).Expect(g => g.CoordinateSystem)
+            ((AGrid< IGridApi>) grid).Expect(g => g.CoordinateSystem)
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation)
                 .PropertyBehavior();
 
@@ -159,7 +159,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
 
             grid.Initialize();
-            Assert.IsNull(((AGrid) grid).CoordinateSystem);
+            Assert.IsNull(((AGrid<IGridApi>) grid).CoordinateSystem);
             Assert.IsTrue((bool)TypeUtils.GetField(grid, "disposed"));
         }
 

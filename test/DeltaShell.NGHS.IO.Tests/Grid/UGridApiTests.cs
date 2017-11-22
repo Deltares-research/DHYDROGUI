@@ -97,7 +97,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
@@ -132,7 +132,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
@@ -166,7 +166,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = IntPtr.Zero;// Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * 1); 
@@ -214,7 +214,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr zPtr = IntPtr.Zero;
@@ -249,7 +249,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int ioncId = 0;
             int meshId = 0;
             IntPtr zPtr = IntPtr.Zero;
@@ -283,7 +283,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr zPtr = IntPtr.Zero;
@@ -333,7 +333,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -363,7 +363,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -393,7 +393,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -425,7 +425,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nNetworkNodes = 8;
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
             wrapper.Expect(w => w.GetNodeCount(ioncId, networkId, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(nNetworkNodes).Return(GridApiDataSet.GridConstants.NOERR)
@@ -480,7 +480,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int nNetworkNodes = 8;
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
             wrapper.Expect(w => w.GetNodeCount(ioncId, networkId, ref nNetworkNodes)).IgnoreArguments()
                 .OutRef(ioncId, networkId, nNetworkNodes)
@@ -531,7 +531,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int numberOfMeshEdges = 8;
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
             wrapper.Expect(w => w.GetEdgeCount(ioncId, networkId, ref numberOfMeshEdges)).IgnoreArguments()
                 .OutRef(ioncId, networkId, numberOfMeshEdges)
@@ -582,7 +582,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
 
             int ioncId = 0;
@@ -612,7 +612,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -643,7 +643,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfFaces(1, out nFaces)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -680,7 +680,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(false).Repeat.Twice();
 
-            //var wrapper = mocks.DynamicMock<IGridWrapper>();
+            //var wrapper = mocks.DynamicMock<GridWrapper>();
 
             //int id = 0;
             //int localMeshId = 0;
@@ -711,7 +711,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int ioncId = 0;
             int meshId = 0;
             maxFaceNodes = 8;
@@ -741,7 +741,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -774,7 +774,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -854,7 +854,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -889,7 +889,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -923,7 +923,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1000,7 +1000,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1034,7 +1034,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1068,7 +1068,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1146,7 +1146,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1182,7 +1182,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1223,7 +1223,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1259,7 +1259,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfNodes(1, out nNodes)).IgnoreArguments().OutRef(nNodes)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNodes);
@@ -1337,7 +1337,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).IgnoreArguments().OutRef(nEdges)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -1373,7 +1373,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).IgnoreArguments().OutRef(nEdges)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -1409,7 +1409,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetNumberOfEdges(1, out nEdges)).IgnoreArguments().OutRef(nEdges)
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int meshId = 0;
@@ -1519,7 +1519,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(Arg<int>.Is.Anything, out Arg<int>.Out(maxFaceNodes).Dummy))
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * maxFaceNodes);
@@ -1555,7 +1555,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * maxFaceNodes);
@@ -1591,7 +1591,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.Expect(a => a.GetMaxFaceNodes(1, out maxFaceNodes)).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int meshId = 0;
             IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * maxFaceNodes);
@@ -1646,7 +1646,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var nCount = 0;
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             wrapper.Expect(w => w.GetVariablesCount(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(ioncId, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();
@@ -1676,7 +1676,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var nCount = 0;
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             wrapper.Expect(w => w.GetVariablesCount(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(ioncId, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
@@ -1706,7 +1706,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var nCount = 0;
 
             // wrapper
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             wrapper.Expect(w => w.GetVariablesCount(ioncId, meshId, locationType, ref nCount)).IgnoreArguments()
                 .OutRef(ioncId, meshId, locationType, nCount).Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("TestException")).Repeat.Twice();
@@ -1759,7 +1759,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nCount = 5;
             wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
@@ -1788,7 +1788,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nCount = 5;
             wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
@@ -1822,7 +1822,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nCount = 5;
             wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()
@@ -1856,7 +1856,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridApi
             uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nCount = 5;
             wrapper.Expect(w => w.GetVariablesCount(id, meshId, locationType, ref nCount)).IgnoreArguments()

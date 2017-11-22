@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class GridWrapper : IGridWrapper
+    public class GridWrapper
     {
         /// <summary>
         /// Checks whether the specified data set adheres to a specific set of conventions.
@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Grid
         #region UGRID specifics
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_def_var_dll(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref double fillValue);
+        private static extern int ionc_def_var_dll(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref double fillValue);
 
         /// <summary>
         /// Get the id of the geometry network.
@@ -203,10 +203,10 @@ namespace DeltaShell.NGHS.IO.Grid
         private static extern int ionc_get_var_count_dll([In] ref int ioncid, [In] ref int mesh, [In] ref int location, [In, Out] ref int nCount);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_inq_varid_dll(ref int ioncid, ref int meshId, string varName, ref int varId);
+        private static extern int ionc_inq_varid_dll(ref int ioncid, ref int meshId, string varName, ref int varId);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varid_by_standard_name", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_inq_varid_by_standard_name_dll(ref int ioncid, ref int meshId, ref int location, string standardName, ref int varId);
+        private static extern int ionc_inq_varid_by_standard_name_dll(ref int ioncid, ref int meshId, ref int location, string standardName, ref int varId);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_inq_varids", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_inq_varids_dll(ref int ioncid, ref int meshId, ref int location, ref IntPtr ptr, ref int nVar);
@@ -241,7 +241,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom",
             CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In, Out] ref meshgeom meshgeom, ref bool includeArrays);
+        private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In, Out] ref meshgeom meshgeom, ref bool includeArrays);
 
         /// <summary>
         /// 
@@ -251,7 +251,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshgeomdim"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In, Out] ref meshgeomdim meshgeomdim);
+        private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In, Out] ref meshgeomdim meshgeomdim);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct meshgeom
@@ -657,45 +657,43 @@ namespace DeltaShell.NGHS.IO.Grid
 
         // Read/Write discretisation point ids
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_mesh_ids", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_def_mesh_ids_dll([In] ref int ioncid, [In] ref int meshid, [In] ref int iloctype);
+        private static extern int ionc_def_mesh_ids_dll([In] ref int ioncid, [In] ref int meshid, [In] ref int iloctype);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_var_chars", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_put_var_chars_dll([In] ref int ioncid, [In] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder varname, [In] interop_charinfo[] values, [In] ref int nvalues);
+        private static extern int ionc_put_var_chars_dll([In] ref int ioncid, [In] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder varname, [In] interop_charinfo[] values, [In] ref int nvalues);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_var_chars", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_get_var_chars_dll([In] ref int ioncid, [In] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder varname, [In, Out] interop_charinfo[] values, [In] ref int nvalues);
+        private static extern int ionc_get_var_chars_dll([In] ref int ioncid, [In] ref int meshid, [MarshalAs(UnmanagedType.LPStr)][In, Out] StringBuilder varname, [In, Out] interop_charinfo[] values, [In] ref int nvalues);
 
 
         #endregion
 
-        #region Implementation of IGridWrapper
-
-        public bool AdherestoConventions(int ioncId, int convtype)
+        public virtual bool AdherestoConventions(int ioncId, int convtype)
         {
             return ionc_adheresto_conventions_dll(ref ioncId, ref convtype);
         }
 
-        public int InqueryConventions(int ioncId, ref int convtype, ref double convversion)
+        public virtual int InqueryConventions(int ioncId, ref int convtype, ref double convversion)
         {
             return ionc_inq_conventions_dll(ref ioncId, ref convtype, ref convversion);
         }
 
-        public int Open(string path, int mode, ref int ioncId, ref int convtype, ref double convversion)
+        public virtual int Open(string path, int mode, ref int ioncId, ref int convtype, ref double convversion)
         {
             return ionc_open_dll(path, ref mode, ref ioncId, ref convtype, ref convversion);
         }
 
-        public int Close(int ioncId)
+        public virtual int Close(int ioncId)
         {
             return ionc_close_dll(ref ioncId);
         }
 
-        public int GetNetworkName(int ioncId, int networkId, StringBuilder networkName)
+        public virtual int GetNetworkName(int ioncId, int networkId, StringBuilder networkName)
         {
             return ionc_get_network_name_dll(ref ioncId, ref networkId, networkName);
         }
 
-        public int DefineVariable(int ioncId, int meshId, int varId, int type, GridApiDataSet.LocationType locationType, string varName,
+        public virtual int DefineVariable(int ioncId, int meshId, int varId, int type, GridApiDataSet.LocationType locationType, string varName,
             string standardName, string longName, string unit, double fillValue)
         {
             var locType = (int) locationType;
@@ -703,62 +701,62 @@ namespace DeltaShell.NGHS.IO.Grid
                 longName, unit, ref fillValue);
         }
 
-        public int Get1DNetworkId(int ioncId, ref int networkId)
+        public virtual int Get1DNetworkId(int ioncId, ref int networkId)
         {
             return ionc_get_1d_network_id_dll(ref ioncId, ref networkId);
         }
 
-        public int Get1DMeshId(int ioncId, ref int meshId)
+        public virtual int Get1DMeshId(int ioncId, ref int meshId)
         {
             return ionc_get_1d_mesh_id_dll(ref ioncId, ref meshId);
         }
 
-        public int Get2DMeshId(ref int ioncId, ref int meshId)
+        public virtual int Get2DMeshId(ref int ioncId, ref int meshId)
         {
             return ionc_get_2d_mesh_id_dll(ref ioncId, ref meshId);
         }
 
-        public int Get3DMeshId(int ioncId, ref int meshId)
+        public virtual int Get3DMeshId(int ioncId, ref int meshId)
         {
             return ionc_get_3d_mesh_id_dll(ref ioncId, ref meshId);
         }
 
-        public int GetMeshCount(int ioncId, ref int numberOfMesh)
+        public virtual int GetMeshCount(int ioncId, ref int numberOfMesh)
         {
             return ionc_get_mesh_count_dll(ref ioncId, ref numberOfMesh);
         }
 
-        public int GetMeshName(int ioncId, int meshId, StringBuilder meshName)
+        public virtual int GetMeshName(int ioncId, int meshId, StringBuilder meshName)
         {
             return ionc_get_mesh_name_dll(ref ioncId, ref meshId, meshName);
         }
 
-        public int GetNodeCount(int ioncId, int meshId, ref int numberOfNodes)
+        public virtual int GetNodeCount(int ioncId, int meshId, ref int numberOfNodes)
         {
             return ionc_get_node_count_dll(ref ioncId, ref meshId, ref numberOfNodes);
         }
 
-        public int GetEdgeCount(int ioncId, int meshId, ref int numberOfEdges)
+        public virtual int GetEdgeCount(int ioncId, int meshId, ref int numberOfEdges)
         {
             return ionc_get_edge_count_dll(ref ioncId, ref meshId, ref numberOfEdges);
         }
 
-        public int GetFaceCount(int ioncId, int meshId, ref int numberOfFaces)
+        public virtual int GetFaceCount(int ioncId, int meshId, ref int numberOfFaces)
         {
             return ionc_get_face_count_dll(ref ioncId, ref meshId, ref numberOfFaces);
         }
 
-        public int GetMaxFaceNodes(int ioncId, int meshId, ref int numberOfMaxFaceNodes)
+        public virtual int GetMaxFaceNodes(int ioncId, int meshId, ref int numberOfMaxFaceNodes)
         {
             return ionc_get_max_face_nodes_dll(ref ioncId, ref meshId, ref numberOfMaxFaceNodes);
         }
 
-        public int GetNodeCoordinates(int ioncId, int meshId, ref IntPtr xptr, ref IntPtr yptr, int numberOfNodes)
+        public virtual int GetNodeCoordinates(int ioncId, int meshId, ref IntPtr xptr, ref IntPtr yptr, int numberOfNodes)
         {
             return ionc_get_node_coordinates_dll(ref ioncId, ref meshId, ref xptr, ref yptr, ref numberOfNodes);
         }
 
-        public int GetEdgeNodes(int ioncId, int meshId, ref IntPtr edgeNodesPtr, int numberOfEdges)
+        public virtual int GetEdgeNodes(int ioncId, int meshId, ref IntPtr edgeNodesPtr, int numberOfEdges)
         {
             /*
                     Set startIndex to 1 (we would prefer to use zero here)
@@ -771,138 +769,138 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_edge_nodes_dll(ref ioncId, ref meshId, ref edgeNodesPtr, ref numberOfEdges, ref startIndex);
         }
 
-        public int GetFaceNodes(int ioncId, int meshId, ref IntPtr faceNodesPtr, int numberOfFaces, int numberOfMaxFaceNodes, ref int fillvalue)
+        public virtual int GetFaceNodes(int ioncId, int meshId, ref IntPtr faceNodesPtr, int numberOfFaces, int numberOfMaxFaceNodes, ref int fillvalue)
         {
             // TODO: after ionc_get_face_nodes has been updated to accept a startIndex, use startIndex = 0 here (DELFT3DFM-1308)
             // TODO: also change ionc_get_edge_nodes (above) to use startIndex = 0    
             return ionc_get_face_nodes_dll(ref ioncId, ref meshId, ref faceNodesPtr, ref numberOfFaces, ref numberOfMaxFaceNodes, ref fillvalue);
         }
 
-        public int WriteGeomUgrid(string filename)
+        public virtual int WriteGeomUgrid(string filename)
         {
             return ionc_write_geom_ugrid_dll(filename);
         }
 
-        public int WriteMapUgrid(string filename)
+        public virtual int WriteMapUgrid(string filename)
         {
             return ionc_write_map_ugrid_dll(filename);
         }
 
-        public int GetCoordinateSystem(int ioncId, ref int nmesh)
+        public virtual int GetCoordinateSystem(int ioncId, ref int nmesh)
         {
             return ionc_get_coordinate_system_dll(ref ioncId, ref nmesh);
         }
 
-        public int GetVariablesCount(int ioncId, int mesh, GridApiDataSet.LocationType locationType, ref int numberOfVarCount)
+        public virtual int GetVariablesCount(int ioncId, int mesh, GridApiDataSet.LocationType locationType, ref int numberOfVarCount)
         {
             var locType = (int) locationType;
             return ionc_get_var_count_dll(ref ioncId, ref mesh, ref locType, ref numberOfVarCount);
         }
 
-        public int InqueryVariableId(int ioncId, int meshId, string varName, ref int varId)
+        public virtual int InqueryVariableId(int ioncId, int meshId, string varName, ref int varId)
         {
             return ionc_inq_varid_dll(ref ioncId, ref meshId, varName, ref varId);
         }
 
-        public int InqueryVariableIdByStandardName(int ioncId, int meshId, GridApiDataSet.LocationType locationId, string standardName,
+        public virtual int InqueryVariableIdByStandardName(int ioncId, int meshId, GridApiDataSet.LocationType locationId, string standardName,
             ref int varId)
         {
             var locId = (int) locationId;
             return ionc_inq_varid_by_standard_name_dll(ref ioncId, ref meshId, ref locId, standardName, ref varId);
         }
 
-        public int InqueryVariableIds(int ioncId, int meshId, GridApiDataSet.LocationType locationType, ref IntPtr ptr, int numberOfVar)
+        public virtual int InqueryVariableIds(int ioncId, int meshId, GridApiDataSet.LocationType locationType, ref IntPtr ptr, int numberOfVar)
         {
             var locType = (int) locationType;
             return ionc_inq_varids_dll(ref ioncId, ref meshId, ref locType, ref ptr, ref numberOfVar);
         }
 
-        public int initialize(IO_NetCDF_Message_Callback messageCallback, IO_NetCDF_Progress_Callback progressCallback)
+        public virtual int initialize(IO_NetCDF_Message_Callback messageCallback, IO_NetCDF_Progress_Callback progressCallback)
         {
             return ionc_initialize_dll(messageCallback, progressCallback);
         }
 
-        public int GetVariable(int ioncId, int meshId, int location, string varname, ref IntPtr valuesPtr, int numberOfValues, ref double fillvalue)
+        public virtual int GetVariable(int ioncId, int meshId, int location, string varname, ref IntPtr valuesPtr, int numberOfValues, ref double fillvalue)
         {
             return ionc_get_var_dll(ref ioncId, ref meshId, ref location, varname, ref valuesPtr, ref numberOfValues, ref fillvalue);
         }
 
-        public int PutVariable(int ioncId, int meshId, GridApiDataSet.LocationType locationType, string varname, IntPtr valuesPtr, int numberOfValues)
+        public virtual int PutVariable(int ioncId, int meshId, GridApiDataSet.LocationType locationType, string varname, IntPtr valuesPtr, int numberOfValues)
         {
             var locType = (int) locationType;
             return ionc_put_var_dll(ref ioncId, ref meshId, ref locType, varname, ref valuesPtr, ref numberOfValues);
         }
 
-        public int PutNodeCoordinates(int ioncId, int meshId, IntPtr xvaluesPtr, IntPtr yvaluesPtr, int numberOfNodes)
+        public virtual int PutNodeCoordinates(int ioncId, int meshId, IntPtr xvaluesPtr, IntPtr yvaluesPtr, int numberOfNodes)
         {
             return ionc_put_node_coordinates_dll(ref ioncId, ref meshId, ref xvaluesPtr, ref yvaluesPtr, ref numberOfNodes);
         }
 
-        public int AddGlobalAttributes(int ioncId, interop_metadata metadata)
+        public virtual int AddGlobalAttributes(int ioncId, interop_metadata metadata)
         {
             return ionc_add_global_attributes_dll(ref ioncId, ref metadata);
         }
 
-        public int create(string path, int mode, ref int ioncId)
+        public virtual int create(string path, int mode, ref int ioncId)
         {
             return ionc_create_dll(path, ref mode, ref ioncId);
         }
 
-        public int Create1DNetwork(int ioncId, ref int networkId, string networkName, int numberOfNodes, int numberOfBranches, int numberOfGeometry)
+        public virtual int Create1DNetwork(int ioncId, ref int networkId, string networkName, int numberOfNodes, int numberOfBranches, int numberOfGeometry)
         {
             return ionc_create_1d_network_dll(ref ioncId, ref networkId, networkName, ref numberOfNodes, ref numberOfBranches, ref numberOfGeometry);
         }
 
-        public int Write1DNetworkNodes(int ioncId, int networkId, IntPtr xNodesPtr, IntPtr yNodesPtr, interop_charinfo[] nodesinfo, int numberOfNodes)
+        public virtual int Write1DNetworkNodes(int ioncId, int networkId, IntPtr xNodesPtr, IntPtr yNodesPtr, interop_charinfo[] nodesinfo, int numberOfNodes)
         {
             return ionc_write_1d_network_nodes_dll(ref ioncId, ref networkId, ref xNodesPtr, ref yNodesPtr, nodesinfo, ref numberOfNodes);
         }
 
-        public int Write1DNetworkBranches(int ioncId, int networkId, IntPtr sourceNodeIdsPtr,
+        public virtual int Write1DNetworkBranches(int ioncId, int networkId, IntPtr sourceNodeIdsPtr,
             IntPtr targetNodeIdsPtr, interop_charinfo[] branchinfo, IntPtr branchLengthsPtr,
             IntPtr numberOfBranchGeometryPointsPtr, int numberOfBranches, int startIndex = 0)
         {
             return ionc_put_1d_network_branches_dll(ref ioncId, ref networkId, ref sourceNodeIdsPtr, ref targetNodeIdsPtr, branchinfo, ref branchLengthsPtr, ref numberOfBranchGeometryPointsPtr, ref numberOfBranches, ref startIndex);
         }
 
-        public int Write1DNetworkBranchesGeometry(int ioncId, int networkId, IntPtr xGeometryPointsPtr, IntPtr yGeometryPointsPtr, int numberOfGeometryPoints)
+        public virtual int Write1DNetworkBranchesGeometry(int ioncId, int networkId, IntPtr xGeometryPointsPtr, IntPtr yGeometryPointsPtr, int numberOfGeometryPoints)
         {
             return ionc_write_1d_network_branches_geometry_dll(ref ioncId, ref networkId, ref xGeometryPointsPtr, ref yGeometryPointsPtr, ref numberOfGeometryPoints);
         }
 
-        public int Create1DMesh(int ioncId, int networkId, ref int meshId, string meshname, int numberOfMeshPoints, int numberOfMeshEdges)
+        public virtual int Create1DMesh(int ioncId, int networkId, ref int meshId, string meshname, int numberOfMeshPoints, int numberOfMeshEdges)
         {
             return ionc_create_1d_mesh_dll(ref ioncId, ref networkId, ref meshId, meshname, ref numberOfMeshPoints, ref numberOfMeshEdges);
         }
 
-        public int Write1DMeshDiscretisationPoints(int ioncid, int networkid, IntPtr c_branchidx,
+        public virtual int Write1DMeshDiscretisationPoints(int ioncid, int networkid, IntPtr c_branchidx,
             IntPtr c_offset, IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] int edgenodes, int nmeshpoints, int startIndex)
         {
             return ionc_put_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref c_edgenodes, nodeinfo, ref edgenodes, ref nmeshpoints, ref startIndex);
         }
 
-        public int Get1DNetworkNodesCount(int ioncId, int networkId, ref int numberOfNodes)
+        public virtual int Get1DNetworkNodesCount(int ioncId, int networkId, ref int numberOfNodes)
         {
             return ionc_get_1d_network_nodes_count_dll(ref ioncId, ref networkId, ref numberOfNodes);
         }
 
-        public int Get1DNetworkBranchesCount(int ioncId, int networkId, ref int numberOfBranches)
+        public virtual int Get1DNetworkBranchesCount(int ioncId, int networkId, ref int numberOfBranches)
         {
             return ionc_get_1d_network_branches_count_dll(ref ioncId, ref networkId, ref numberOfBranches);
         }
 
-        public int Get1DNetworkBranchesGeometryCoordinateCount(int ioncId, int networkId, ref int numberOfGeometryPoints)
+        public virtual int Get1DNetworkBranchesGeometryCoordinateCount(int ioncId, int networkId, ref int numberOfGeometryPoints)
         {
             return ionc_get_1d_network_branches_geometry_coordinate_count_dll(ref ioncId, ref networkId, ref numberOfGeometryPoints);
         }
 
-        public int Read1DNetworkNodes(int ioncId, int networkId, ref IntPtr xNodesPtr, ref IntPtr yNodesPtr, interop_charinfo[] nodesinfo, int numberOfNodes)
+        public virtual int Read1DNetworkNodes(int ioncId, int networkId, ref IntPtr xNodesPtr, ref IntPtr yNodesPtr, interop_charinfo[] nodesinfo, int numberOfNodes)
         {
             return ionc_read_1d_network_nodes_dll(ref ioncId, ref networkId, ref xNodesPtr, ref yNodesPtr,
                 nodesinfo, ref numberOfNodes);
         }
 
-        public int Read1DNetworkBranches(int ioncId, int networkId, ref IntPtr sourceNodeIdsPtr, ref IntPtr targetNodeIdsPtr, ref IntPtr branchLengthsPtr, interop_charinfo[] branchinfo, ref IntPtr numberOfBranchGeometryPointsPtr, int numberOfBranches)
+        public virtual int Read1DNetworkBranches(int ioncId, int networkId, ref IntPtr sourceNodeIdsPtr, ref IntPtr targetNodeIdsPtr, ref IntPtr branchLengthsPtr, interop_charinfo[] branchinfo, ref IntPtr numberOfBranchGeometryPointsPtr, int numberOfBranches)
         {
             int startIndex = 0;
             return ionc_get_1d_network_branches_dll(ref ioncId, ref  networkId, ref sourceNodeIdsPtr,
@@ -910,100 +908,99 @@ namespace DeltaShell.NGHS.IO.Grid
                 ref numberOfBranchGeometryPointsPtr, ref numberOfBranches, ref startIndex);
         }
 
-        public int Read1DNetworkBranchesGeometry(int ioncId, int networkId, ref IntPtr xGeometryPointsPtr, ref IntPtr yGeometryPointsPtr, int numberOfNodes)
+        public virtual int Read1DNetworkBranchesGeometry(int ioncId, int networkId, ref IntPtr xGeometryPointsPtr, ref IntPtr yGeometryPointsPtr, int numberOfNodes)
         {
             return ionc_read_1d_network_branches_geometry_dll(ref ioncId, ref networkId, ref xGeometryPointsPtr,
             ref yGeometryPointsPtr, ref numberOfNodes);
         }
 
-        public int Get1DMeshDiscretisationPointsCount(int ioncId, int meshId, ref int numberOfMeshPoints)
+        public virtual int Get1DMeshDiscretisationPointsCount(int ioncId, int meshId, ref int numberOfMeshPoints)
         {
             return ionc_get_1d_mesh_discretisation_points_count_dll(ref ioncId, ref meshId, ref numberOfMeshPoints);
         }
 
-        public int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
+        public virtual int Read1DMeshDiscretisationPoints(int ioncId, int meshId, ref IntPtr xBranchIndicesPtr, ref IntPtr offsetPtr, interop_charinfo[] discretisationPointInfo, int numberOfDiscretisationPoints)
         {
             int startIndex = 0;
             return ionc_get_1d_mesh_discretisation_points_dll(ref ioncId, ref meshId, ref xBranchIndicesPtr, ref offsetPtr, discretisationPointInfo, ref numberOfDiscretisationPoints, ref startIndex);
         }
 
-        public int def_mesh_contact(ref int ioncId, ref int contactsmesh, string contactsmeshname, ref int ncontacts, ref int mesh1, ref int mesh2, ref int locationType1Id, ref int locationType2Id)
+        public virtual int def_mesh_contact(ref int ioncId, ref int contactsmesh, string contactsmeshname, ref int ncontacts, ref int mesh1, ref int mesh2, ref int locationType1Id, ref int locationType2Id)
         {
             return ionc_def_mesh_contact_dll(ref ioncId, ref contactsmesh, contactsmeshname, ref ncontacts, ref mesh1, ref mesh2, ref locationType1Id, ref locationType2Id);
         }
 
-        public int put_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
+        public virtual int put_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
         {
             var startindex = 0;
             return ionc_put_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, contactsinfo, ref ncontacts, ref startindex);
         }
 
-        public int get_contacts_count(ref int ioncId, ref int contactsmesh, ref int ncontacts)
+        public virtual int get_contacts_count(ref int ioncId, ref int contactsmesh, ref int ncontacts)
         {
             return ionc_get_contacts_count_dll(ref ioncId, ref contactsmesh, ref ncontacts);
         }
 
-        public int get_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
+        public virtual int get_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
         {
             int startIndex = 0;
             return ionc_get_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, contactsinfo, ref ncontacts, ref startIndex);
         }
 
-        public int clone_mesh_definition(ref int ncidin, ref int ncidout, ref int meshidin, ref int meshidout)
+        public virtual int clone_mesh_definition(ref int ncidin, ref int ncidout, ref int meshidin, ref int meshidout)
         {
             return ionc_clone_mesh_definition_dll(ref ncidin, ref ncidout, ref meshidin, ref meshidout);
         }
 
-        public int clone_mesh_data(ref int ncidin, ref int ncidout, ref int meshidin, ref int meshidout)
+        public virtual int clone_mesh_data(ref int ncidin, ref int ncidout, ref int meshidin, ref int meshidout)
         {
             return ionc_clone_mesh_data_dll(ref ncidin, ref ncidout, ref meshidin, ref meshidout);
         }
 
-        public int GetNumberOfNetworks(int ioncId, ref int nnumNetworks)
+        public virtual int GetNumberOfNetworks(int ioncId, ref int nnumNetworks)
         {
             return ionc_get_number_of_networks_dll(ref ioncId, ref nnumNetworks);
         }
 
-        public int GetNumberOfMeshes(int ioncId, int meshType, ref int numMeshes)
+        public virtual int GetNumberOfMeshes(int ioncId, int meshType, ref int numMeshes)
         {
             return ionc_get_number_of_meshes_dll(ref ioncId, ref meshType, ref numMeshes);
         }
 
-        public int GetNetworkIdFromMeshId(int ioncId, int meshId, ref int networkId)
+        public virtual int GetNetworkIdFromMeshId(int ioncId, int meshId, ref int networkId)
         {
             return ionc_get_network_id_from_mesh_id_dll(ref ioncId, ref meshId, ref networkId);
         }
         
-        public int GetNetworkIds(int ioncId, ref IntPtr pointerToNetworkIds, int numberOfNetworks)
+        public virtual int GetNetworkIds(int ioncId, ref IntPtr pointerToNetworkIds, int numberOfNetworks)
         {
             return ionc_get_network_ids_dll(ref ioncId, ref pointerToNetworkIds, ref numberOfNetworks);
         }
 
-        public int GetMeshIds(int ioncId, UGridMeshType meshType, ref IntPtr pointerToMeshIds, int numberOfMeshes)
+        public virtual int GetMeshIds(int ioncId, UGridMeshType meshType, ref IntPtr pointerToMeshIds, int numberOfMeshes)
         {
             var mType = (int) meshType;
             return ionc_ug_get_mesh_ids_dll(ref ioncId, ref mType, ref pointerToMeshIds, ref numberOfMeshes);
         }
 
-        public int Put1DNetworkBranchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches)
+        public virtual int Put1DNetworkBranchorder(int ioncId, int networkId, IntPtr pointerToBranchOrder, int numberOfBranches)
         {
             return ionc_put_1d_network_branchorder_dll(ref ioncId, ref networkId, ref pointerToBranchOrder, ref numberOfBranches);
         }
 
-        public int Get1DNetworkBranchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches)
+        public virtual int Get1DNetworkBranchorder(int ioncId, int networkId, ref IntPtr pointerToBranchOrder, int numberOfBranches)
         {
             return ionc_get_1d_network_branchorder_dll(ref ioncId, ref networkId, ref pointerToBranchOrder, ref numberOfBranches);
         }
 
-        public int get_meshgeom(ref int ioncid, ref int meshId, ref meshgeom meshgeom, bool includeArrays)
+        public virtual int get_meshgeom(ref int ioncid, ref int meshId, ref meshgeom meshgeom, bool includeArrays)
         {
             return ionc_get_meshgeom_dll(ref ioncid, ref meshId, ref meshgeom, ref includeArrays);
         }
 
-        public int get_meshgeom_dim(ref int ioncid, ref int meshId, ref meshgeomdim meshgeomdim)
+        public virtual int get_meshgeom_dim(ref int ioncid, ref int meshId, ref meshgeomdim meshgeomdim)
         {
             return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref meshgeomdim);
         }
-        #endregion
     }
 }

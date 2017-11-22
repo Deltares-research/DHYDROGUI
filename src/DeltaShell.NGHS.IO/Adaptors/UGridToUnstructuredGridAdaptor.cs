@@ -7,7 +7,7 @@ namespace DeltaShell.NGHS.IO.Adaptors
 {
     public class UGridToUnstructuredGridAdaptor : IDisposable
     {
-        public IUGrid uGrid { get; set; }
+        public UGrid uGrid { get; set; }
 
         public UGridToUnstructuredGridAdaptor(string filename)
         {

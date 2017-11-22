@@ -119,7 +119,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -161,7 +161,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -200,7 +200,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             //uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -268,7 +268,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -315,7 +315,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -363,7 +363,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -474,7 +474,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             mocks.ReplayAll();
 
@@ -530,7 +530,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             mocks.ReplayAll();
 
@@ -583,7 +583,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -668,7 +668,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -712,7 +712,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -756,7 +756,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -853,7 +853,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkNodes(Arg<int>.Is.Anything, out Arg<int>.Out(nNodes).Dummy))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int ioncId = 0;
             int networkId = 0;
             wrapper.Expect(w => w.Get1DNetworkNodesCount(ioncId, networkId, ref nNodes))
@@ -905,7 +905,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkNodes(1, out nodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 1;
             int nwid = 1;
             int nNetworkNodes = 8;
@@ -939,7 +939,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkNodes(1, out nodes)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 1;
             int nwid = 1;
             int nNetworkNodes = 8;
@@ -994,7 +994,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nwid = 0;
             int nNetworkBranches = 6;
@@ -1033,7 +1033,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkBranches(1, out branches)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nwid = 0;
             int nNetworkBranches = 6;
@@ -1076,7 +1076,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkGeometryPoints(1, out geopoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int ioncId = 0;
             int networkId = 0;
             wrapper.Expect(w => w.Get1DNetworkBranchesGeometryCoordinateCount(ioncId, networkId,
@@ -1108,7 +1108,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int branches = 6;
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nwid = 0;
             int nNetworkBranches = 6;
@@ -1166,7 +1166,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkGeometryPoints(1, out geopoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nwid = 0;
             int nGeometryPoints = 4;
@@ -1202,7 +1202,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkApi.Expect(a => a.GetNumberOfNetworkGeometryPoints(1, out geopoints)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int id = 0;
             int nwid = 0;
             int nGeometryPoints = 4;
@@ -1267,7 +1267,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 1;
             int nwid = 1;
@@ -1314,7 +1314,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -1359,7 +1359,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -1437,7 +1437,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 1;
             int nwid = 1;
@@ -1494,7 +1494,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Once();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 1;
             int nwid = 1;
@@ -1551,7 +1551,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 1;
             int nwid = 1;
@@ -1618,7 +1618,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 1;
             int nwid = 1;
@@ -1699,7 +1699,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 1;
             int nwid = 1;
@@ -1744,7 +1744,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -1787,7 +1787,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uGridNetworkApi
             uGridNetworkApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int id = 0;
             int nwid = 0;
@@ -1934,7 +1934,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 1;
             int meshId = 0;
             string meshName = "myMesh";
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
@@ -1967,7 +1967,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int id = 1;
             int meshId = 0;
             string meshName = "myMesh";
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
@@ -2002,7 +2002,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int meshId = 0;
             string meshName = "myMesh";
             
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
@@ -2071,7 +2071,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Twice();
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
 
@@ -2100,7 +2100,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Times(2);
-            var wrapper = mocks.StrictMock<IGridWrapper>();
+            var wrapper = mocks.StrictMock<GridWrapper>();
             wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                   .IgnoreArguments()
                   .Return(GridApiDataSet.GridConstants.NOERR)
@@ -2133,7 +2133,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Times(2);
-            var wrapper = mocks.StrictMock<IGridWrapper>();
+            var wrapper = mocks.StrictMock<GridWrapper>();
 
             wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                 .IgnoreArguments()
@@ -2169,7 +2169,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Times(2);
             uGridNetworkDiscretisationApi.Expect(a => a.NetworkReadyForWriting).Return(true).Repeat.Times(2);
-            var wrapper = mocks.StrictMock<IGridWrapper>();
+            var wrapper = mocks.StrictMock<GridWrapper>();
             wrapper.Expect(w => w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -2199,7 +2199,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int numberOfDiscretisationPoints = 5;
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
             int ioncId = 0;
             int meshId = 0;
             wrapper.Expect(
@@ -2235,7 +2235,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int ioncId = 1;
             int networkId = 1;
@@ -2271,7 +2271,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int ioncId = 1;
             int networkId = 1;
@@ -2305,7 +2305,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            var wrapper = mocks.DynamicMock<IGridWrapper>();
+            var wrapper = mocks.DynamicMock<GridWrapper>();
 
             int ioncId = 1;
             int networkId = 1;

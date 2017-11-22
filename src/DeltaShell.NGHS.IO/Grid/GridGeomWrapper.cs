@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class GridGeomWrapper: IGridGeomWrapper
+    public class GridGeomWrapper
     {
         /// <summary>
         /// 

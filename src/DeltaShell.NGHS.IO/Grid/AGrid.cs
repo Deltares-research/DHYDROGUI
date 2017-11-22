@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
     }
 
-    public abstract class AGrid : IGrid
+    public class AGrid<T> : IDisposable where T : class, IGridApi
     {
         protected readonly string filename;
         private readonly GridApiDataSet.NetcdfOpenMode mode;
@@ -63,7 +63,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if(GlobalMetaData != null) GlobalMetaData = globalMetaData;
         }
 
-        public virtual IGridApi GridApi { get; set; }
+        public virtual T GridApi { get; set; }
         public virtual ICoordinateSystem CoordinateSystem { get; private set; }
         public UGridGlobalMetaData GlobalMetaData { get; private set; }
 
@@ -145,7 +145,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return networkIds;
         }
 
-        protected T GetValidGridApi<T>(string errormessage) where T: class
+        protected T GetValidGridApi(string errormessage)
         {
             if (!IsInitialized()) Initialize();
             var uGridApi = GridApi as T;
@@ -155,22 +155,22 @@ namespace DeltaShell.NGHS.IO.Grid
             return uGridApi;
         }
 
-        protected void DoWithValidGridApi<T>(Func<T, int> function, string errorMessage) where T: class
+        public void DoWithValidGridApi(Func<T, int> function, string errorMessage)
         {
-            var uGridNetworkApi = GetValidGridApi<T>(errorMessage);
+            var uGridNetworkApi = GetValidGridApi(errorMessage);
             var ierr = function(uGridNetworkApi);
             ThrowIfError(ierr, errorMessage);
         }
 
-        protected void DoWithValidGridApi<T>(Action<T> action, string errorMessage) where T : class
+        public void DoWithValidGridApi(Action<T> action, string errorMessage)
         {
-            var uGridApi = GetValidGridApi<T>(errorMessage);
+            var uGridApi = GetValidGridApi(errorMessage);
             action(uGridApi);
         }
 
-        protected T GetFromValidGridApi<S, T>(Func<S, T> function, T defaultValue, string errorMessage) where S : class
+        protected TValue GetFromValidGridApi<TValue>(Func<T,TValue> function, TValue defaultValue, string errorMessage)
         {
-            var uGridApi = GetValidGridApi<S>(errorMessage);
+            var uGridApi = GetValidGridApi(errorMessage);
             return uGridApi != null ? function(uGridApi) : defaultValue;
         }
 

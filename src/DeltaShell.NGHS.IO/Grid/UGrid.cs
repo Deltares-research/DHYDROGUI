@@ -5,7 +5,7 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class UGrid : AGrid, IUGrid
+    public class UGrid : AGrid<IUGridApi>
     {
         public int nNodes;
 
@@ -26,14 +26,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public double ZCoordinateFillValue
         {
-            get { return GetFromValidGridApi<IUGridApi, double>(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, Resources.UGrid_ZCoordinateFillValue_Couldn_t_get_the_z_coordinate); }
-            set { DoWithValidGridApi<IUGridApi>(uGridApi => uGridApi.zCoordinateFillValue = value, Resources.UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate); }
+            get { return GetFromValidGridApi(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, Resources.UGrid_ZCoordinateFillValue_Couldn_t_get_the_z_coordinate); }
+            set { DoWithValidGridApi(uGridApi => uGridApi.zCoordinateFillValue = value, Resources.UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate); }
         }
 
         public int GetNumberOf2DMeshes()
         {
             int numberOfMeshes;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOf2DMeshes_Couldn_t_get_the_number_of_2D_meshes);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetNumberOf2DMeshes_Couldn_t_get_the_number_of_2D_meshes);
             var ierr = uGridApi.GetNumberOfMeshByType(UGridMeshType.Mesh2D, out numberOfMeshes);
             ThrowIfError(ierr, Resources.UGrid_GetNumberOf2DMeshes_Couldn_t_get_the_number_of_2D_meshes);
             return numberOfMeshes;
@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfNodesForMeshId(int meshId)
         {
             int numberOfNodes;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes);
             var ierr = uGridApi.GetNumberOfNodes(meshId, out numberOfNodes);
             ThrowIfError(ierr, Resources.UGrid_GetNumberOfNodesForMeshId_Couldn_t_get_the_number_of_nodes);
             return numberOfNodes;
@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfEdgesForMeshId(int meshId)
         {
             int numberOfEdges;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfEdgesForMeshId_Couldn_t_get_number_of_edges);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetNumberOfEdgesForMeshId_Couldn_t_get_number_of_edges);
             var ierr = uGridApi.GetNumberOfEdges(meshId, out numberOfEdges);
             ThrowIfError(ierr, Resources.UGrid_GetNumberOfEdgesForMeshId_Couldn_t_get_number_of_edges);
             
@@ -61,7 +61,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfFacesForMeshId(int meshId)
         {
             int numberOfFaces;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfFacesForMeshId_Couldn_t_get_number_of_faces);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetNumberOfFacesForMeshId_Couldn_t_get_number_of_faces);
             var ierr = uGridApi.GetNumberOfFaces(meshId, out numberOfFaces);
             ThrowIfError(ierr, Resources.UGrid_GetNumberOfFacesForMeshId_Couldn_t_get_number_of_faces);
             return numberOfFaces;
@@ -70,7 +70,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int GetNumberOfMaxFaceNodesForMeshId(int meshId)
         {
             int maxFaceNodes;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetNumberOfMaxFaceNodesForMeshId_Couldn_t_get_max_face_nodes);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetNumberOfMaxFaceNodesForMeshId_Couldn_t_get_max_face_nodes);
             var ierr = uGridApi.GetMaxFaceNodes(meshId, out maxFaceNodes);
             ThrowIfError(ierr, Resources.UGrid_GetNumberOfMaxFaceNodesForMeshId_Couldn_t_get_max_face_nodes);
             return maxFaceNodes;
@@ -78,7 +78,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public Coordinate[] GetAllNodeCoordinatesForMeshId(int meshId)
         {
-            return GetFromValidGridApi<IUGridApi, Coordinate[]>(uGridApi =>
+            return GetFromValidGridApi(uGridApi =>
             {
                 var numberOfNodes = GetNumberOfNodesForMeshId(meshId);
                 if (numberOfNodes == 0) return new Coordinate[0];
@@ -115,7 +115,7 @@ namespace DeltaShell.NGHS.IO.Grid
             int[,] edgeNodes;
 
             if (EdgeNodesByMeshId == null) EdgeNodesByMeshId = new int[GetNumberOf2DMeshes()][,];
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
             var ierr = uGridApi.GetEdgeNodesForMesh(meshId, out edgeNodes);
             ThrowIfError(ierr, Resources.UGrid_GetEdgeNodesForMeshId_Couldn_t_get_edge_nodes_of_the_mesh);
 
@@ -127,7 +127,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int[,] GetFaceNodesForMeshId(int meshId)
         {
             int[,] faceNodes;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
             var ierr = uGridApi.GetFaceNodesForMesh(meshId, out faceNodes);
             ThrowIfError(ierr, Resources.UGrid_GetFaceNodesForMeshId_Couldn_t_get_face_nodes_of_the_mesh);
 
@@ -139,7 +139,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public int NumberOfNamesForLocationType(int meshId, GridApiDataSet.LocationType locationType)
         {
             int nCount;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_NumberOfNamesAtLocation_Couldn_t_get_the_number_of_names_for_location_type);
+            var uGridApi = GetValidGridApi(Resources.UGrid_NumberOfNamesAtLocation_Couldn_t_get_the_number_of_names_for_location_type);
             var ierr = uGridApi.GetVarCount(meshId, locationType, out nCount);
             ThrowIfError(ierr, Resources.UGrid_NumberOfNamesAtLocation_Couldn_t_get_the_number_of_names_for_location_type);
 
@@ -148,7 +148,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public Dictionary<GridApiDataSet.LocationType, int[]> GetNamesAtLocation(int meshId, GridApiDataSet.LocationType locationType)
         {
-            DoWithValidGridApi<IUGridApi>(uGridApi =>
+            DoWithValidGridApi(uGridApi =>
             {
                 int[] varIds;
                 var ierr = uGridApi.GetVarNames(meshId, locationType, out varIds);
@@ -168,21 +168,21 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         public void RewriteGridCoordinatesForMeshId(int meshId, double[] xValues, double[] yValues)
         {
-            DoWithValidGridApi<IUGridApi>(
+            DoWithValidGridApi(
                 uGridApi => uGridApi.WriteXYCoordinateValues(meshId, xValues, yValues)
                 , Resources.UGrid_RewriteGridCoordinates_Couldn_t_rewrite_grid_coordinates);
         }
         
         public void WriteZValuesAtFacesForMeshId(int meshId, double[] zValues)
         {
-            DoWithValidGridApi<IUGridApi>(
+            DoWithValidGridApi(
                 uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, GridApiDataSet.UGridApiConstants.FaceZ, Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces, zValues)
                 , Resources.UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces);
         }
 
         public void WriteZValuesAtNodesForMeshId(int meshId, double[] zValues)
         {
-            DoWithValidGridApi<IUGridApi>(
+            DoWithValidGridApi(
                 uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, GridApiDataSet.UGridApiConstants.NodeZ, Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes, zValues)
                 , Resources.UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes);
         }
@@ -190,7 +190,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public string GetMeshName(int meshId)
         {
             string meshName;
-            var uGridApi = GetValidGridApi<IUGridApi>(Resources.UGrid_GetMeshName_Couldn_t_get_meshname);
+            var uGridApi = GetValidGridApi(Resources.UGrid_GetMeshName_Couldn_t_get_meshname);
             var ierr = uGridApi.GetMeshName(meshId, out meshName);
             ThrowIfError(ierr, Resources.UGrid_GetMeshName_Couldn_t_get_meshname);
 

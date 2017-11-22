@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class GridGeomApi
     {
-        protected IGridGeomWrapper geomWrapper;
+        protected GridGeomWrapper geomWrapper;
         public const string LIB_DLL_NAME = "gridgeom.dll";
         private const string DFLOWFM_FOLDER_NAME = "dflowfm";
         private const string DFLOWFM_BINFOLDER_NAME = "bin";

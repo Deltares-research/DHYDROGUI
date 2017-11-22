@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
@@ -13,7 +14,7 @@ namespace DeltaShell.NGHS.IO.Grid
         protected int ioncId;
         protected double convversion;
         protected GridApiDataSet.DataSetConventions iconvtype;
-        protected IGridWrapper wrapper;
+        protected GridWrapper wrapper;
 
         static GridApi()
         {
