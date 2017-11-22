@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
@@ -10,6 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         bool SourceIsMasterTimeStep { get; }
         IEnumerable<DimrCoupleInfo> CoupleInfos { get; }
         string Name { get; set; }
+        Func<XElement, XNamespace, XElement> AddAdditionalCouplerInfo { get; set; }
         void UpdateModel(IModel sourceModel, IModel targetModel, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler);
     }
 }

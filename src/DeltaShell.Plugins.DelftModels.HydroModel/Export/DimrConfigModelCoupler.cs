@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
+using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
@@ -13,13 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         public string Source;
         public string Target;
     }
-
-/*    public struct DimrItemDefinition
-    {
-        public string LocationType;
-        public string LocationId;
-        public string QuantityId;
-    }*/
 
     public class DimrConfigModelCoupler : IDimrConfigModelCoupler
     {
@@ -37,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         }
 
         public string Name { get; set; }
+        public Func<XElement, XNamespace, XElement> AddAdditionalCouplerInfo { get; set; }
 
         public DimrConfigModelCoupler(IModel sourceModel, IModel targetModel, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler)
         {

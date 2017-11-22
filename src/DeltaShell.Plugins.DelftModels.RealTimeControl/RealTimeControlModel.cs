@@ -22,6 +22,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -42,13 +43,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     [Entity(FireOnCollectionChange=false)]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
     {
+        public const string OutputFileName = "rtcOutput.nc";
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModel));
         private readonly DimrRunner runner;
 
         private readonly IList<IDataItem> linkedDataItemsOriginalValues;
-        
+        private ICoordinateSystem coordinateSystem;
+        private RealTimeControlOutputFileFunctionStore outputFileFunctionStore;
+
         protected virtual IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems { get; set; }
-        
+
+        public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
+        {
+            get { return outputFileFunctionStore; }
+            set
+            {
+                outputFileFunctionStore = value;
+                if (outputFileFunctionStore != null)
+                {
+                    outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
+                    outputFileFunctionStore.Features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+                }
+            }
+        }
+
         public virtual int LogLevel { get; set; }
         //set this to true when running the model..so the output won't be removed during the run
         public virtual bool FlushLogEveryStep { get; set; }
@@ -69,6 +88,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             InternalControlledModelsList = new EventedList<IModel>();
             runner = new DimrRunner(this);
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
+
+            if(outputFileFunctionStore != null)
+                ReconnectOutputFiles(outputFileFunctionStore.Path);
         }
         
         private ICompositeActivity oldOwner;
@@ -469,7 +492,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void ConnectOutput(string outputPath)
         {
-            // IDimrModel method not implemented - no output for RealTimeControl model
+            if (string.IsNullOrEmpty(outputPath)) return;
+
+            var outputFilePath = Path.Combine(outputPath, DirectoryName, OutputFileName);
+            ReconnectOutputFiles(outputFilePath);
+        }
+
+        private void ReconnectOutputFiles(string outputFilePath)
+        {
+            if (File.Exists(outputFilePath))
+            {
+                var features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+                outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
+                {
+                    Features = features,
+                    CoordinateSystem = this.CoordinateSystem, 
+                    Path = outputFilePath
+                };
+            }
         }
 
         public virtual ValidationReport Validate() // NOTE: Do not re
@@ -559,7 +599,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual ICoordinateSystem CoordinateSystem { get; set; }
+        public virtual ICoordinateSystem CoordinateSystem
+        {
+            get { return coordinateSystem; }
+            set
+            {
+                coordinateSystem = value;
+                if (outputFileFunctionStore != null)
+                    outputFileFunctionStore.CoordinateSystem = coordinateSystem;
+            }
+        }
 
         private void SetOutputOutOfSync(object sender, PropertyChangedEventArgs e)
         {
@@ -576,6 +625,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (internalControlledModelsList != null)
                 {
                     ((INotifyPropertyChanged) internalControlledModelsList).PropertyChanged -= ModelsPropertyChanged;
+                    internalControlledModelsList.CollectionChanged -= ControlledModelsCollectionChanged;
                 }
 
                 internalControlledModelsList = value;
@@ -583,7 +633,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (internalControlledModelsList != null)
                 {
                     ((INotifyPropertyChanged)internalControlledModelsList).PropertyChanged += ModelsPropertyChanged;
+                    internalControlledModelsList.CollectionChanged += ControlledModelsCollectionChanged;
                 }
+            }
+        }
+
+        private void ControlledModelsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            // required for project load
+            var model = e?.Item as IModel;
+            if (model == null) return;
+
+            if (outputFileFunctionStore != null)
+            {
+                ReconnectOutputFiles(outputFileFunctionStore.Path);
             }
         }
 
@@ -634,10 +697,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                foreach (var featureCoverage in GetDataItemValues<FeatureCoverage>(DataItemRole.Output))
-                {
-                    yield return featureCoverage;
-                }
+                return outputFileFunctionStore != null
+                ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
+                : Enumerable.Empty<IFeatureCoverage>();
             }
         }
 
@@ -707,12 +769,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 model.SuspendClearOutputOnInputChange = false;
             }
-
+            
+            if (outputFileFunctionStore != null)
+            {
+                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
+                {
+                    Path = outputFileFunctionStore.Path
+                };
+            }
+            
             return clonedModel;
         }
 
         #region IRealTimeControlModel
-
+        
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            return base.GetDirectChildren().Concat(OutputFeatureCoverages);
+        }
+        
         /// <summary>
         /// Query connectable locations from controlled models.
         /// </summary>

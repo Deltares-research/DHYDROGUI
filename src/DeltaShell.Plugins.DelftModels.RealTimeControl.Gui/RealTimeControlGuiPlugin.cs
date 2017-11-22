@@ -22,6 +22,8 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
+using GeoAPI.Extensions.Coverages;
 using log4net;
 using Mono.Addins;
 using ValidationAspects;
@@ -155,6 +157,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             };
             yield return new ViewInfo<RealTimeControlModelExporter, RtcExporterDialog>();
 
+            yield return new ViewInfo<IFeatureCoverage, CoverageTableView>
+            {
+                Description = "Output",
+                AdditionalDataCheck = o => GetModelForFeatureCoverage(o) != null,
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => GetModelForFeatureCoverage(o)
+            };
         }
 
         public override IMapLayerProvider MapLayerProvider
@@ -240,6 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new RtcObjectNodePresenter { GuiPlugin = this };
             yield return new InputNodePresenter { GuiPlugin = this };
             yield return new OutputNodePresenter {GuiPlugin = this};
+            yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
         }
@@ -434,6 +444,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             var allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
             return allRtcModels.First(m => m.ControlGroups.Contains(controlGroup));
+        }
+
+        private RealTimeControlModel GetModelForFeatureCoverage(IFeatureCoverage featureCoverage)
+        {
+            return Gui.Application.GetAllModelsInProject()
+                    .OfType<RealTimeControlModel>()
+                    .FirstOrDefault(m => m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
         }
     }
 }

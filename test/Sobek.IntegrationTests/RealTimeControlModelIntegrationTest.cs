@@ -19,8 +19,10 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Extensions.CoordinateSystems;
 using SharpTestsEx;
 
 namespace Sobek.IntegrationTests
@@ -191,6 +193,67 @@ namespace Sobek.IntegrationTests
             var clonedRtcModel = (RealTimeControlModel) rtcmodel.DeepClone();
 
             Assert.AreEqual(rtcmodel.OutputOutOfSync, clonedRtcModel.OutputOutOfSync);
+        }
+
+        [Test]
+        public void TestDeepCloneHandlesOutputFileFunctionStore()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"RtcOutput\" + RealTimeControlModel.OutputFileName);
+            
+            // create flow1d model
+            var observationPoint = new ObservationPoint() { Name = "Near pipe", Geometry = new Point(new Coordinate(10, 0)) };
+            var from = new HydroNode() { Geometry = new Point(new Coordinate(0, 0)) };
+            var to = new HydroNode() { Geometry = new Point(new Coordinate(100, 0)) };
+            var network = new HydroNetwork { Branches = { new Channel { BranchFeatures = { observationPoint }, Source = from, Target = to } }, Nodes = { from, to } };
+            var flowModel = new WaterFlowModel1D { Network = network };
+
+            // create RTC model
+            var input = new Input();
+            var rtcModel = new RealTimeControlModel { ControlGroups = { new ControlGroup { Inputs = { input } } } };
+            var hydroModel = new HydroModel { Activities = { rtcModel } };
+
+            hydroModel.Region.SubRegions.Add(flowModel.Region);
+            hydroModel.Activities.Add(flowModel);
+            
+            // attach models to each other
+            var source = rtcModel.GetDataItemByValue(input);
+            var target = flowModel.GetChildDataItems(observationPoint).First();
+
+            // link
+            target.LinkTo(source);
+            
+            // Connect output
+            TypeUtils.CallPrivateMethod(rtcModel, "ReconnectOutputFiles", new[] { testFilePath });
+
+            // Check initial conditions
+            var outputFunctionStore = rtcModel.OutputFileFunctionStore;
+            Assert.NotNull(outputFunctionStore);
+
+            // Clone model
+            var clonedRtcModel = (RealTimeControlModel)rtcModel.DeepClone();
+
+            // Check results
+            var clonedoutputFunctionStore = clonedRtcModel.OutputFileFunctionStore;
+            Assert.NotNull(clonedoutputFunctionStore);
+            Assert.AreEqual(outputFunctionStore.Path, clonedoutputFunctionStore.Path);
+        }
+
+        [Test]
+        public void TestUpdateCoordinateSystemIsReflectedInOutputFileFunctionStore()
+        {
+            var function = new FeatureCoverage();
+            var outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore() {Functions = { function }};
+            var rtcModel = new RealTimeControlModel() {OutputFileFunctionStore = outputFileFunctionStore};
+
+            Assert.AreEqual(null, rtcModel.CoordinateSystem);
+            Assert.AreEqual(null, outputFileFunctionStore.CoordinateSystem);
+            Assert.AreEqual(null, function.CoordinateSystem);
+
+            var exampleCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
+
+            rtcModel.CoordinateSystem = exampleCoordinateSystem;
+            Assert.AreEqual(exampleCoordinateSystem, outputFileFunctionStore.CoordinateSystem);
+            Assert.AreEqual(exampleCoordinateSystem, function.CoordinateSystem);
         }
 
         [Test]

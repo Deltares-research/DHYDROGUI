@@ -133,9 +133,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         {
             yield return GetRestartFolder(model);
 
-            foreach (var featureCoverage in model.OutputFeatureCoverages)
+            foreach (var outputFeatureCoverage in model.OutputFeatureCoverages)
             {
-                yield return model.GetDataItemByValue(featureCoverage);
+                yield return outputFeatureCoverage;
             }
 
             //find a better way :(
