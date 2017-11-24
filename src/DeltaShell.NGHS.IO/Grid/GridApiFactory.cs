@@ -7,10 +7,11 @@ namespace DeltaShell.NGHS.IO.Grid
         public static IUGridApi CreateNew(bool runRemote = true)
         {
             if (!Environment.Is64BitOperatingSystem || (!runRemote && !Environment.Is64BitProcess)) return null;
-            
-            return runRemote
-                ? (IUGridApi)new RemoteUGridApi()
-                : new UGridApi();
+
+            return new UGridApi();
+            //return runRemote
+            //    ? (IUGridApi)new RemoteUGridApi()
+            //    : new UGridApi();
         }
 
         public static IUGridNetworkApi CreateNewNetwork()
