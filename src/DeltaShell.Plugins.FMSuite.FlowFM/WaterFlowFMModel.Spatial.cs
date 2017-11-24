@@ -289,25 +289,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         internal void UpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
         {
             if (Bathymetry == null) return;
-            
+
+            var bathymetryReset = false;
             switch (bedLevelType)
             {
                 case UnstructuredGridFileHelper.BedLevelLocation.Faces:
                 case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                    if (Bathymetry is UnstructuredGridCellCoverage) return;
+                    // For now we just create a new Bathemetry and log a warning
+                    // Later will will re-apply values converting from one coverage type to another
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                    bathymetryReset = true;
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat("Unstructured grid edge coverages are not currently supported");
                     // Not supported yet, so create a VertexCoverage for now
+                    if (Bathymetry is UnstructuredGridVertexCoverage) return;
+                    // For now we just create a new Bathemetry and log a warning
+                    // Later will will re-apply values converting from one coverage type to another
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                    bathymetryReset = true;
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
+                    if (Bathymetry is UnstructuredGridVertexCoverage) return;
+                    // For now we just create a new Bathemetry and log a warning
+                    // Later will will re-apply values converting from one coverage type to another
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                    bathymetryReset = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("bedLevelType", bedLevelType, null);
+            }
+
+            if (bathymetryReset)
+            {
+                Log.WarnFormat("The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated");
             }
 
             var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
