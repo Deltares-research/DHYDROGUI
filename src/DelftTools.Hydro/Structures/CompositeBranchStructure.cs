@@ -178,12 +178,13 @@ namespace DelftTools.Hydro.Structures
 
         public static CompositeBranchStructure CreateDefault(IBranch branch)
         {
+            var geometryAvailable = branch.Geometry != null && branch.Geometry.Coordinates.Any();
             var compositeBranchStructure = new CompositeBranchStructure
                                                {
                                                    Branch = branch,
                                                    Network = branch.Network,
                                                    Chainage = 0,
-                                                   Geometry = new Point(branch.Geometry.Coordinates[0])
+                                                   Geometry = geometryAvailable ? new Point(branch.Geometry.Coordinates[0]) : null
                                                };
             compositeBranchStructure.Name =  HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
             return compositeBranchStructure;

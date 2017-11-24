@@ -531,6 +531,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
+        public void TestImportStructuresThenImportSewerConnectionsAssignsStructuresValues()
+        {
+            //Create network
+            var network = new HydroNetwork();
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load structures.
+            var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
+            var importedStructures = gwswImporter.ImportItem(structuresPath, network);
+            Assert.IsNotNull(importedStructures);
+            
+            //Check placeholders have been created.
+            Assert.IsTrue(network.SewerConnections.Any());
+            Assert.IsTrue(network.Structures.Any());
+
+            var structuresPh = network.Structures.Where( s => !(s is CompositeBranchStructure)).ToList();
+
+            // Now Load connections.
+            var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedConnections = gwswImporter.ImportItem(connectionsPath, network);
+            Assert.IsNotNull(importedConnections);
+
+            Assert.AreEqual(structuresPh.Count, network.Structures.Count(s => !(s is CompositeBranchStructure)));
+            foreach (var structure in structuresPh)
+            {
+                var replacedStructure = network.Structures.FirstOrDefault(s => s.Name.Equals(structure.Name));
+                Assert.AreEqual(structure, replacedStructure, "the attributes from the element do not match");
+            }
+
+        }
+
+        [Test]
         public void TestImportElementReplacesExistingOne()
         {
             //Create network
@@ -673,7 +711,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             return importedTable;
         }
-
 
         private static void CheckCsvIsImportedCorrectly(string filePath, CsvMappingData mappingData)
         {

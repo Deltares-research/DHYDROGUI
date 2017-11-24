@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             { SewerFeatureType.Node, CreateCompartment },
             { SewerFeatureType.Connection, SewerConnectionFactory },
+            { SewerFeatureType.Structure, StructureFactory }
         };
 
         public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements, HydroNetwork network = null)
@@ -179,13 +180,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static T CreateSewerConnection<T>(GwswElement gwswElement, HydroNetwork network = null, Action<T, GwswElement, HydroNetwork> connectionAction = null) where T : SewerConnection, new()
         {
-            var connection = new T();
+            var connection = FindOrGetNewConnection<T>(gwswElement, network);
 
             SetSewerConnectionAttributes(connection, gwswElement, network);
             connectionAction?.Invoke(connection, gwswElement, network);
             SetSewerConnectionDefaultGeometry(connection);
 
             return connection;
+        }
+
+        private static T FindOrGetNewConnection<T>(GwswElement gwswElement, HydroNetwork network = null) where T : SewerConnection, new()
+        {
+            if( network == null) return new T();
+
+            var nodeIdString = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.UniqueId);
+            var connectionName = string.Empty;
+            if (nodeIdString?.ValueAsString != null)
+            {
+                connectionName = nodeIdString.ValueAsString;
+            }
+
+            var foundConnection = network.SewerConnections.OfType<T>().FirstOrDefault(sc => sc.Name.Equals(connectionName));
+
+            return foundConnection ?? new T();
         }
 
         private static void SetSewerConnectionAttributes(SewerConnection sewerConnection, GwswElement gwswElement, HydroNetwork network)
@@ -344,10 +361,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 });
         }
 
+        private static Pump FindOrCreatePump(SewerConnection connection)
+        {
+            var structureFound = connection.BranchFeatures.OfType<Pump>().FirstOrDefault( bf => bf.Name.Equals(connection.Name));
+            return structureFound != null ? structureFound : new Pump(connection.Name);
+        }
         private static void AddPumpAndAttributesToSewerConnection(SewerConnection connection, GwswElement gwswElement)
         {
             //Add pump to structure
-            var sewerPump = new Pump();
+            var sewerPump = FindOrCreatePump(connection);
 
             //Add Attributes
             var flowDirection = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.FlowDirection);
@@ -364,8 +386,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            //Add pump to network
-            AddStructureToBranch(connection, sewerPump);
+            //Add pump to network if it´s not present already
+            if(!connection.BranchFeatures.Contains(sewerPump))
+                AddStructureToBranch(connection, sewerPump);
         }
 
         private static void AddStructureToBranch(SewerConnection connection, BranchStructure structure)
@@ -378,9 +401,118 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 structure.Geometry = new Point(connection.Geometry.Coordinates[0]);
             }
-            structure.Name = HydroNetworkHelper.GetUniqueFeatureName(structure.Network as HydroNetwork, structure);
+            structure.Name = connection.Name;
 
             HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, connection);
+        }
+
+        #endregion
+
+        #region Creating Structures
+
+        private static Type GetGwswElementStructureType(GwswAttribute structureTypeAttribute)
+        {
+            if (structureTypeAttribute == null || structureTypeAttribute.ValueAsString == string.Empty) return null;
+
+            var structureType = GetValueFromDescription<StructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
+            if (structureType == StructureMapping.StructureType.Pump)
+            {
+                return typeof(Pump);
+            }
+
+            return null;
+        }
+
+        private static BranchStructure StructureFactory(object element, HydroNetwork network = null)
+        {
+            var gwswElement = element as GwswElement;
+            if (gwswElement == null) return null;
+
+            var connectionType =
+                GetGwswElementStructureType(GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StructureType));
+
+            var structureName = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.UniqueId);
+            if (connectionType == null || structureName == null || structureName.ValueAsString == string.Empty) return null;
+            
+            /* First we need to check whether there are target and source nodes, otherwise we will not create this sewer connection.*/
+            if (connectionType == typeof(Pump))
+            {
+                if (network != null)
+                {
+                    var pumpFound = network.BranchFeatures.OfType<Pump>()
+                        .FirstOrDefault(p => p.Name.Equals(structureName.ValueAsString));
+                    if (pumpFound == null)
+                    {
+                        pumpFound = new Pump(structureName.ValueAsString);
+                        //Create a sewer connection placeholder and add it to the network so that the structure is later added as well.
+                        var auxSewerConnection = new SewerConnection(structureName.ValueAsString){ Network = network };
+                        network.Branches.Add(auxSewerConnection);
+                        AddStructureToBranch(auxSewerConnection, pumpFound);
+                    }
+                    ExtendPumpAttributes(pumpFound, gwswElement);
+                    
+                    return pumpFound;
+                }
+            }
+
+            return null;
+        }
+
+        private static void ExtendPumpAttributes(Pump pump, GwswElement gwswElement)
+        {
+            //Add Attributes
+            var newDoubleValue = 0.0;
+            var pumpCapacity = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.PumpCapacity);
+            if (pumpCapacity != null && pumpCapacity.ValueAsString != string.Empty)
+            {
+                var valueType = pumpCapacity.GwswAttributeType.AttributeType;
+                if (valueType == pump.Capacity.GetType() &&
+                    TryParseDoubleElseLogError(pumpCapacity, valueType, out newDoubleValue))
+                {
+                    pump.Capacity = newDoubleValue;
+                }
+            }
+            var startLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelDownstreams);
+            if (startLevelDown != null && startLevelDown.ValueAsString != string.Empty)
+            {
+                var valueType = startLevelDown.GwswAttributeType.AttributeType;
+                if (valueType == pump.StartDelivery.GetType() &&
+                    TryParseDoubleElseLogError(startLevelDown, valueType, out newDoubleValue))
+                {
+                    pump.StartDelivery = newDoubleValue;
+                }
+            }
+            var stopLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelDownstreams);
+            if (stopLevelDown != null && stopLevelDown.ValueAsString != string.Empty)
+            {
+                var valueType = stopLevelDown.GwswAttributeType.AttributeType;
+                if (valueType == pump.StopDelivery.GetType() &&
+                    TryParseDoubleElseLogError(stopLevelDown, valueType, out newDoubleValue))
+                {
+                    pump.StopDelivery = newDoubleValue;
+                }
+            }
+
+            var startLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelUpstreams);
+            if (startLevelUp != null && startLevelUp.ValueAsString != string.Empty)
+            {
+                var valueType = startLevelUp.GwswAttributeType.AttributeType;
+                if (valueType == pump.StartSuction.GetType() &&
+                    TryParseDoubleElseLogError(startLevelUp, valueType, out newDoubleValue))
+                {
+                    pump.StartSuction = newDoubleValue;
+                }
+            }
+            var stopLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelUpstreams);
+            if (stopLevelUp != null && stopLevelUp.ValueAsString != string.Empty)
+            {
+                var valueType = stopLevelUp.GwswAttributeType.AttributeType;
+                if (valueType == pump.StopSuction.GetType() &&
+                    TryParseDoubleElseLogError(stopLevelUp, valueType, out newDoubleValue))
+                {
+                    pump.StopSuction = newDoubleValue;
+                }
+            }
         }
 
         #endregion
@@ -514,6 +646,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             public const string ALevelEnd = "A_LEVEL_END";
             public const string InitialWaterLevel = "INITIAL_WATER_LEVEL";
             public const string Remarks = "REMARKS";
+        }
+    }
+
+    public static class StructureMapping
+    {
+        public enum StructureType /*Field KWK_TYP*/
+        {
+            [Description("DRL")] Orifice,
+            [Description("OVS")] Crest /*Should be created as a pipe*/,
+            [Description("UIT")] Outlet,
+            [Description("PMP")] Pump
+        }
+
+        public static class PropertyKeys
+        {
+            public const string UniqueId = "UNIQUE_ID";
+            public const string StructureType = "STRUCTURE_TYPE";
+            public const string PumpCapacity = "PUMP_CAPACITY";
+            public const string StartLevelDownstreams = "START_LEVEL_DOWNSTREAMS";
+            public const string StopLevelDownstreams = "STOP_LEVEL_DOWNSTREAMS";
+            public const string StartLevelUpstreams = "START_LEVEL_UPSTREAMS";
+            public const string StopLevelUpstreams = "STOP_LEVEL_UPSTREAMS";
         }
     }
 

@@ -5,11 +5,13 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -637,6 +639,187 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(createdPump.Geometry.Coordinates.Any());
 
         }
+
+        [Test]
+        [TestCase(StructureType.Crest, false)]
+        [TestCase(StructureType.Orifice, false)]
+        [TestCase(StructureType.Outlet, false)]
+        [TestCase(StructureType.Pump, true)]
+        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(StructureType structureType, bool mapped)
+        {
+            var structureId = "structure123";
+            var structurePumpGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Structure.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(_uniqueId, structureId),
+                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                }
+            };
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(structurePumpGwswElement, network);
+            Assert.AreEqual(mapped, createdElement != null);
+        }
+
+        [Test]
+        public void SewerFeatureFactoryReturnsNullStructuresWhenNotGivingNameForStructure()
+        {
+            var structureGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Structure.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureType.Pump)),
+                }
+            };
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            Assert.IsNull(createdElement);
+        }
+
+        [Test]
+        [TestCase(StructureType.Crest, false)]
+        [TestCase(StructureType.Orifice, false)]
+        [TestCase(StructureType.Outlet, false)]
+        [TestCase(StructureType.Pump, true)]
+        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(StructureType structureType, bool mapped)
+        {
+            var structureId = "structure123";
+            var structureGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Structure.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(_uniqueId, structureId),
+                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                }
+            };
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            Assert.AreEqual(mapped, createdElement != null);
+            if (!mapped) return;
+
+            Assert.IsTrue(network.SewerConnections.Any());
+            Assert.IsTrue(network.SewerConnections.Any(s => s.Name.Equals(structureId)));
+
+            Assert.IsTrue(network.Structures.Any());
+            Assert.IsTrue(network.Structures.Any( s => s.Name.Equals(structureId)));
+
+            Assert.IsTrue(network.CompositeBranchStructures.Any());
+            Assert.IsTrue(network.CompositeBranchStructures.Any( cb => cb.Structures.Any( s => s.Name.Equals(structureId))));
+        }
+
+        [Test]
+        public void TestCreatePumpThenCreateSewerConnectionWithThatPumpKeepsStructureValues()
+        {
+            //Create network
+            var network = new HydroNetwork();
+
+            #region GwswElements
+            var typeDouble = "double";
+            var structureId = "structure123";
+            var pumpCapacity = 30.0;
+            var structureGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Structure.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(_uniqueId, structureId),
+                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureType.Pump)),
+                    GetDefaultGwswAttribute(_pumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                }
+            };
+
+            var startNode = "node001";
+            var endNode = "node002";
+            var sewerConnectionGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+
+                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                }
+            };
+
+
+            #endregion
+
+            //Instance the Pump AS STRUCTURE
+            var structureElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            Assert.IsNotNull(structureElement);
+            Assert.IsTrue(network.Pumps.Any( p => p.Name.Equals(structureId)));
+            Assert.IsTrue(network.SewerConnections.Any(p => p.Name.Equals(structureId)));
+
+            var pumpPh = network.Pumps.FirstOrDefault();
+            Assert.NotNull(pumpPh);
+            Assert.AreEqual(pumpCapacity, pumpPh.Capacity);
+
+            //Instance the Pump AS SEWER CONNETION
+            var connectionElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            Assert.IsNotNull(connectionElement);
+            Assert.IsTrue(network.Pumps.Any(p => p.Name.Equals(structureId)));
+            Assert.IsTrue(network.SewerConnections.Any(p => p.Name.Equals(structureId)));
+
+            var replacedStructure = network.Pumps.FirstOrDefault(s => s.Name.Equals(pumpPh.Name));
+            Assert.AreEqual(pumpPh, replacedStructure, "the attributes from the element do not match");
+
+        }
+
+        [Test]
+        public void AfterAddingAPumpYouCanExtendItsDefinition()
+        {
+            var typeDouble = "double";
+
+            var pumpId = "pump123";
+            var pumpCapacity = 30.0;
+            var startLevelDownstreams = 0.5;
+            var stopLevelDownstreams = 1;
+            var startLevelUpstreams = -1;
+            var stopLevelUpstreams = -0.5;
+            var structurePumpGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Structure.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(_uniqueId, pumpId),
+                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(_pumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(_startLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(_stopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(_startLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(_stopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                }
+            };
+
+            //Create the pump, we know it works because of the previous tests.
+            var network = new HydroNetwork();
+            var sewerConnection = new SewerConnection();
+            var pump = new Pump(pumpId);
+            sewerConnection.BranchFeatures.Add(pump);
+            network.Branches.Add(sewerConnection);
+            Assert.IsTrue(network.Pumps.Contains(pump));
+            
+            //Now createInstance for the pump definition.
+            var createdElement = SewerFeatureFactory.CreateInstance(structurePumpGwswElement, network);
+            Assert.IsNotNull(createdElement);
+
+            var createdPump = createdElement as Pump;
+            Assert.IsNotNull(createdPump);
+            Assert.AreEqual(pumpId, createdPump.Name);
+            Assert.AreEqual(pumpCapacity, createdPump.Capacity);
+            Assert.AreEqual(startLevelDownstreams, createdPump.StartDelivery);
+            Assert.AreEqual(stopLevelDownstreams, createdPump.StopDelivery);
+            Assert.AreEqual(startLevelUpstreams, createdPump.StartSuction);
+            Assert.AreEqual(stopLevelUpstreams, createdPump.StopSuction);
+
+        }
         #endregion
 
         #endregion
@@ -893,6 +1076,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             [System.ComponentModel.Description("PMP")] Pump
         }
 
+        public enum StructureType
+        {
+            [System.ComponentModel.Description("DRL")] Orifice,
+            [System.ComponentModel.Description("OVS")] Crest,
+            [System.ComponentModel.Description("UIT")] Outlet,
+            [System.ComponentModel.Description("PMP")] Pump
+        }
+
         public enum FlowDirection /*Field STR_RCH*/
         {
             [System.ComponentModel.Description("GSL")] Closed,
@@ -956,6 +1147,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return nodeGwswElement;
         }
 
+        private static GwswElement GetStructureGwswElement(string uniqueId, string structureType, double pumpCapacity, double startLevelDownstreams, double stopLevelDownstreams, double startLevelUpstreams, double stopLevelUpstreams)
+        {
+            var typeString = "string";
+            var typeDouble = "double";
+
+            GwswElement nodeGwswElement = new GwswElement();
+            try
+            {
+                nodeGwswElement = new GwswElement
+                {
+                    ElementTypeName = SewerFeatureType.Connection.ToString(),
+                    GwswAttributeList = new List<GwswAttribute>()
+                    {
+                        GetDefaultGwswAttribute(_uniqueId, uniqueId),
+                        GetDefaultGwswAttribute(_structureType, structureType),
+                        GetDefaultGwswAttribute(_pumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_startLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_stopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_startLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(_stopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Gwsw element was not created, thus the test can't go ahead. {0}", e.Message);
+            }
+
+            Assert.IsNotNull(nodeGwswElement);
+
+            return nodeGwswElement;
+        }
         private static void CheckManholeNodePropertyValues(Manhole manhole, string manholeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
         {
             Assert.That(manhole.Name, Is.EqualTo(manholeId));
@@ -1108,12 +1331,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         };
 
+        private static string _uniqueId = "UNIQUE_ID";
+        // Sewer connection attributes.
         private static string _nodeUniqueIdStart = "NODE_UNIQUE_ID_START";
         private static string _nodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
         private static string _pipeType = "PIPE_TYPE";
         private static string _pipeIndicator = "PIPE_INDICATOR";
         private static string _crossSectionDef = "CROSS_SECTION_DEF";
-        private static string _uniqueId = "UNIQUE_ID";
         private static string _levelStart = "LEVEL_START";
         private static string _levelEnd = "LEVEL_END";
         private static string _flowDirection = "FLOW_DIRECTION";
@@ -1123,6 +1347,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static string _outletlossStart = "OUTLETLOSS_START";
         private static string _inletlossEnd = "INLETLOSS_END";
         private static string _outletlossEnd = "OUTLETLOSS_END";
+        // Structure attributes
+        private static string _structureType = "STRUCTURE_TYPE";
+        private static string _pumpCapacity = "PUMP_CAPACITY";
+        private static string _startLevelDownstreams = "START_LEVEL_DOWNSTREAMS";
+        private static string _stopLevelDownstreams = "STOP_LEVEL_DOWNSTREAMS";
+        private static string _startLevelUpstreams = "START_LEVEL_UPSTREAMS";
+        private static string _stopLevelUpstreams = "STOP_LEVEL_UPSTREAMS";
 
         #endregion
     }
