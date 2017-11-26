@@ -1,5 +1,7 @@
 import os
-import netCDF4
+from netCDF4 import Dataset
+from datetime import *
+
 
 class FMwriter:
     """Writer for FM files"""
@@ -10,10 +12,11 @@ class FMwriter:
     def writeAll(self, dirPath):  # write all fm files from GWSW model
         self.writeNodes(dirPath)
         self.writeConnections(dirPath)
+        self.writeFMnetwork(dirPath, "test")
         return True
 
     def writeNodes(self, dirPath):  # write all fm files from GWSW model
-        filePath = os.path.join(dirPath, 'output_inputFM\\node.ini')
+        filePath = os.path.join(dirPath, 'output_inputFM', 'node.ini')
         # UNIQUE_ID	UNI_IDE
         # MANHOLE_ID	IDE_KNP
         # network_node_id
@@ -26,26 +29,26 @@ class FMwriter:
         # NODE_WIDTH	KNP_BRE
         # NODE_LENGTH	KNP_LEN
 
-        file  = open(filePath, 'w')
+        file = open(filePath, 'w')
         for key, value in sorted(self.model.nodes.items()):
             file.write('[node]\n')
-            file.write('id='+str(key)+'\n')
-            file.write('network_node_id='+str(value[1])+'\n')
-            file.write('manhole_id='+str(value[1])+'\n')
-            file.write('manhole_indicator='+str(value[4])+'\n')
+            file.write('id=' + str(key) + '\n')
+            file.write('network_node_id=' + str(value[1]) + '\n')
+            file.write('manhole_id=' + str(value[1]) + '\n')
+            file.write('manhole_indicator=' + str(value[4]) + '\n')
             file.write('compartment_number=\n')
-            file.write('surface_level='+str(value[5])+'\n')
-            file.write('floodable_area='+str(value[7])+'\n')
-            file.write('node_shape='+str(value[9])+'\n')
-            file.write('bottom_level='+str(value[10])+'\n')
-            file.write('node_width='+str(value[11])+'\n')
-            file.write('node_length='+str(value[12])+'\n')
+            file.write('surface_level=' + str(value[5]) + '\n')
+            file.write('floodable_area=' + str(value[7]) + '\n')
+            file.write('node_shape=' + str(value[9]) + '\n')
+            file.write('bottom_level=' + str(value[10]) + '\n')
+            file.write('node_width=' + str(value[11]) + '\n')
+            file.write('node_length=' + str(value[12]) + '\n')
             file.write('\n')
         file.close()
         return True
 
     def writeConnections(self, dirPath):  # write all fm files from GWSW model
-        filePath = os.path.join(dirPath, 'output_inputFM\\pipes.ini')
+        filePath = os.path.join(dirPath, 'output_inputFM', 'pipes.ini')
         # UNIQUE_ID	UNI_IDE
         # NODE_ID_START	UNI_ID1
         # NODE_ID_END	UNI_ID2
@@ -55,7 +58,7 @@ class FMwriter:
         # LEVEL_END	BOB_IDE2
         # LENGTH	VRB_LEN
         # CROSS_SECTION_DEF	PRO_DEF
-        file  = open(filePath, 'w')
+        file = open(filePath, 'w')
         for key, value in sorted(self.model.connections.items()):
             # type
             # Doorlaat	DRL
@@ -66,12 +69,69 @@ class FMwriter:
             # Pomp	PMP
             if str(value[2]) == 'GSL':
                 file.write('[pipe]\n')
-                file.write('id='+str(key)+'\n')
-                file.write('node_id_start='+str(value[0])+'\n')
-                file.write('node_id_end='+str(value[1])+'\n')
-                file.write('network_branch_id='+str(value[3])+'\n')
-                #file.write('pipe_type'+str(value[1])+'\n')
-                file.write('level_start='+str(value[4])+'\n')
-                file.write('level_end'+str(value[5])+'\n')
-                #file.write('length'+str(value[7])+'\n')
-                #file.write('cross_section_def'+str(value[14])+'\n')
+                file.write('id=' + str(key) + '\n')
+                file.write('node_id_start=' + str(value[0]) + '\n')
+                file.write('node_id_end=' + str(value[1]) + '\n')
+                file.write('network_branch_id=' + str(value[3]) + '\n')
+                # file.write('pipe_type'+str(value[1])+'\n')
+                file.write('level_start=' + str(value[4]) + '\n')
+                file.write('level_end=' + str(value[5]) + '\n')
+                # file.write('length'+str(value[7])+'\n')
+                # file.write('cross_section_def'+str(value[14])+'\n')
+                file.write('\n')
+        file.close()
+        return True
+
+    ## writeFMnetwork documentation
+    # This fuction is going to prepare 1D Ugrid files
+    # Following code is just a DRAFT AND NEEDS SIGNIFICANT IMPROVEMENTS
+    def writeFMnetwork(self, dirPath, name):
+        ### NETCDF approach
+        output_file = os.path.join(dirPath, 'output_inputFM', name + "_net.nc")
+        print("OWN NETCDF")
+        outformat = "NETCDF3_CLASSIC"
+
+        ncfile = Dataset(output_file,'w',format=outformat)
+
+        nodes_nr = len(self.model.nodes)
+        edges_nr = len(self.model.connections)
+
+        print("Amount of nodes:",nodes_nr )
+        print("Amount of connections:", edges_nr)
+
+        ncfile.createDimension("nNetworkNodes", nodes_nr)
+
+        ncfile.createDimension("nMeshEdges",edges_nr)
+        ncfile.createDimension("nMeshNodes", nodes_nr)
+        ncfile.createDimension("Two", 2)
+        ncfile.createDimension("instance", 1)
+
+        # global attributes
+        ncfile.Conventions = "CF-1.8 UGRID-1.0/Deltares-0.91"
+        ncfile.history = "Created on %s D-Flow 1D" % datetime.now()
+        ncfile.institution = "Deltares"
+        ncfile.reference = "http://www.deltares.nl"
+        ncfile.source = "Python script to prepare D-Flow FM 1D network"
+
+        branch_x = ncfile.createVariable("network1D_geom_x", "f8", ("nNetworkNodes"))
+        branch_x.standard_name = 'projection_x_coordinate'
+        branch_x.units = 'm'
+        branch_x.cf_role = "geometry_x_node"
+
+        branch_y = ncfile.createVariable("network1D_geom_y", "f8", ("nNetworkNodes"))
+        branch_y.standard_name = 'projection_y_coordinate'
+        branch_y.units = 'm'
+        branch_y.cf_role = "geometry_y_node"
+
+        i=0
+        for key in self.model.nodes.keys():
+            print(key)
+            print(self.model.nodes[key][2],self.model.nodes[key][3])
+            branch_x[i]= self.model.nodes[key][2]
+            branch_y[i] = self.model.nodes[key][3]
+            i+=1
+        print(i)
+        print(branch_x)
+        print(branch_y)
+
+        return True
