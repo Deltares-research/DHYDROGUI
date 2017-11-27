@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (outputFileFunctionStore != null)
                 {
                     outputFileFunctionStore.CoordinateSystem = CoordinateSystem;
-                    outputFileFunctionStore.Features = new List<IFeature>(GetChildDataItemLocationsFromControlledModels(DataItemRole.Output));
+                    outputFileFunctionStore.Features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
                 }
             }
         }
@@ -487,7 +487,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            // IDimrModel method not implemented - no output for RealTimeControl model
+            if (outputFileFunctionStore == null) return;
+
+            outputFileFunctionStore.Functions?.Clear();
+            outputFileFunctionStore.Features?.Clear();
+            outputFileFunctionStore.Close();
+            outputFileFunctionStore = null;
         }
 
         public virtual void ConnectOutput(string outputPath)
@@ -500,9 +505,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void ReconnectOutputFiles(string outputFilePath)
         {
-            if (!File.Exists(outputFilePath)) return;
+            DisconnectOutput();
 
-            var features = new List<IFeature>(GetChildDataItemLocationsFromControlledModels(DataItemRole.Output));
+            if (!File.Exists(outputFilePath)) return;
+            
+            var features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
             outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
             {
                 Features = features,
@@ -643,10 +650,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             var model = e?.Item as IModel;
             if (model == null) return;
 
-            if (outputFileFunctionStore != null)
-            {
-                ReconnectOutputFiles(outputFileFunctionStore.Path);
-            }
+            if (outputFileFunctionStore == null) return;
+
+            ReconnectOutputFiles(outputFileFunctionStore.Path);
         }
 
         public virtual IEnumerable<IModel> ControlledModels

@@ -1,20 +1,30 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
+using DelftTools.Functions;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
     public class RtcOutputFileFunctionStoreNodePresenter : TreeViewNodePresenterBase<RealTimeControlOutputFileFunctionStore>
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(RtcOutputFileFunctionStoreNodePresenter));
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RealTimeControlOutputFileFunctionStore nodeData)
         {
-            node.Text = File.Exists(nodeData.Path) ? Path.GetFileName(nodeData.Path) : string.Empty;
+            if (nodeData == null || !File.Exists(nodeData.Path))
+            {
+                log.WarnFormat("Unable to update node for Real-time control model Output, file does not exist: {0}", nodeData.Path);
+                return;
+            }
+
+            node.Text = Path.GetFileName(nodeData.Path);
         }
 
         public override System.Collections.IEnumerable GetChildNodeObjects(RealTimeControlOutputFileFunctionStore parentNodeData, ITreeNode node)
         {
-            return parentNodeData.Functions;
+            return (parentNodeData != null && parentNodeData.Functions != null) ? parentNodeData.Functions : Enumerable.Empty<IFunction>();
         }
     }
 }
