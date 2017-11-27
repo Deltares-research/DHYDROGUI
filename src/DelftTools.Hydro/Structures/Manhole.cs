@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Geometries;
@@ -9,24 +10,16 @@ namespace DelftTools.Hydro.Structures
 {
     public class Manhole : Node, IManhole
     {
+        private IGeometry geometry;
         private IEventedList<Compartment> compartments;
         private bool compartmentsChanging;
 
+        private bool geometryRefreshFromCompartments;
+
         public Manhole(string manholeId) : base(manholeId)
         {
+            Geometry = new Point(0, 0);
             Compartments = new EventedList<Compartment>();
-        }
-
-        public IEventedList<Compartment> Compartments
-        {
-            get { return compartments; }
-            set
-            {
-                value.ForEach(comp => comp.ParentManhole = this);
-                value.CollectionChanging += CompartmentCollectionChanging;
-                value.CollectionChanged += CompartmentCollectionChanged;
-                compartments = value;
-            }
         }
 
         /// <summary>
@@ -37,7 +30,7 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.X ?? 0.0);
+                return !Compartments.Any() ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.X ?? 0.0);
             }
         }
 
@@ -49,37 +42,101 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                return Compartments.Count == 0 ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.Y ?? 0.0);
+                return !Compartments.Any() ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.Y ?? 0.0);
+            }
+        }
+        
+        public override IGeometry Geometry
+        {
+            get { return geometry; }
+            set
+            {
+                if(Equals(geometry, value)) return;
+                if (geometry != null && !geometryRefreshFromCompartments)
+                {
+                    var diffX = value.Coordinate.X - geometry.Coordinate.X;
+                    var diffY = value.Coordinate.Y - geometry.Coordinate.Y;
+
+                    Compartments.ForEach(c =>
+                    {
+                        var oldCoordinate = c.Geometry.Coordinate;
+                        c.Geometry = new Point(oldCoordinate.X + diffX, oldCoordinate.Y + diffY);
+                    });
+                }
+                geometry = value;
             }
         }
 
-        public override IGeometry Geometry
+        public IEventedList<Compartment> Compartments
         {
-            get { return new Point(XCoordinate, YCoordinate); }
+            get { return compartments; }
+            set
+            {
+                value.ForEach(comp => comp.ParentManhole = this);
+                value.CollectionChanging += CompartmentCollectionChanging;
+                value.CollectionChanged += CompartmentCollectionChanged;
+                compartments = value;
+                RefreshGeometry();
+            }
         }
 
         private void CompartmentCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if(compartmentsChanging || e.Action != NotifyCollectionChangeAction.Add) return;
-            compartmentsChanging = true;
 
             var compartment = e.Item as Compartment;
             if (compartment == null) return;
-            var compartmentNames = compartments.Select(c => c.Name);
 
-            // Remove compartments that have the same name
-            if (compartmentNames.Contains(compartment.Name)) compartments.RemoveAllWhere(c => c.Name == compartment.Name);
-            
-            compartmentsChanging = false;
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    compartmentsChanging = true;
+                    var compartmentNames = compartments.Select(c => c.Name);
+                    if (compartmentNames.Contains(compartment.Name)) compartments.RemoveAllWhere(c => c.Name == compartment.Name);
+                    compartmentsChanging = false;
+                    break;
+                case NotifyCollectionChangeAction.Remove:
+                    compartment.PropertyChanged -= OnCompartmentPropertyChanged;
+                    break;
+                case NotifyCollectionChangeAction.Replace:
+                    //case NotifyCollectionChangeAction.Reset:
+                    compartment.PropertyChanged -= OnCompartmentPropertyChanged;
+                    break;
+            }
         }
+
 
         private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (e.Action != NotifyCollectionChangeAction.Add) return;
-
             var compartment = e.Item as Compartment;
-            if(compartment ==  null) return;
-            compartment.ParentManhole = this;
+            if (compartment == null) return;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Add:
+                    compartment.PropertyChanged += OnCompartmentPropertyChanged;
+                    compartment.ParentManhole = this;
+                    if (compartment.Geometry == null) compartment.Geometry = Geometry;
+                    break;
+                case NotifyCollectionChangeAction.Remove:
+                    break;
+                case NotifyCollectionChangeAction.Replace:
+                    compartment.PropertyChanged += OnCompartmentPropertyChanged;
+                    break;
+            }
+            RefreshGeometry();
+        }
+
+        private void OnCompartmentPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName != nameof(Compartment.Geometry)) return;
+            RefreshGeometry();
+        }
+
+        private void RefreshGeometry()
+        {
+            geometryRefreshFromCompartments = true;
+            Geometry = new Point(XCoordinate, YCoordinate);
+            geometryRefreshFromCompartments = false;
         }
 
         public Compartment GetCompartmentByName(string compartmentName)

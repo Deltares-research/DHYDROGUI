@@ -26,9 +26,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             try
             {
-                var test = network.AllHydroObjects.ToList();
+                var allHydroObjectsInNetwork = network.AllHydroObjects.ToList();
                 network.Nodes.Add(new Manhole("ManholeTest"));
-                test = network.AllHydroObjects.ToList();
+                allHydroObjectsInNetwork = network.AllHydroObjects.ToList();
             }
             catch (Exception e)
             {
@@ -870,6 +870,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElementWithBadlyFormattedStringForShape_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned()
         {
+            var compartmentId = "put1";
+            var manholeId = "01001";
             var badGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -877,13 +879,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
-                        ValueAsString = "put1",
+                        ValueAsString = compartmentId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
-                        ValueAsString = "01001",
+                        ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.ManholeId, "MyDescription", null, null)
                     },
@@ -896,9 +898,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholePropertyKeys.ManholeId)
-                .Select(attr => attr.ValueAsString).FirstOrDefault();
-            TryCreateNodeAndCheckForLogMessage(badGwswElement, "Manhole with unique id '" + manholeId + "' is not imported.");
+            TryCreateFeatureAndCheckForLogMessageAndCheckFeatureValidity(manholeId, badGwswElement, compartmentId);
         }
 
         [TestCase("01FA", ManholePropertyKeys.NodeWidth)]
@@ -908,6 +908,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase("01FA", ManholePropertyKeys.SurfaceLevel)]
         public void GivenGwswElementWithBadlyFormattedStringForDoubleValue_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned(string badlyFormattedEntry, string keyValue)
         {
+            var compartmentId = "put1";
+            var manholeId = "01001";
             var badGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -915,13 +917,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
-                        ValueAsString = "put1",
+                        ValueAsString = compartmentId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
-                        ValueAsString = "01001",
+                        ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.ManholeId, "MyDescription", null, null)
                     },
@@ -934,15 +936,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholePropertyKeys.ManholeId)
-                .Select(attr => attr.ValueAsString).FirstOrDefault();
-            TryCreateNodeAndCheckForLogMessage(badGwswElement, "Manhole with unique id '" + manholeId + "' is not imported.");
+            TryCreateFeatureAndCheckForLogMessageAndCheckFeatureValidity(manholeId, badGwswElement, compartmentId);
         }
 
         [TestCase("01FA", "23.6")]
         [TestCase("23.6", "01FA")]
         public void GivenGwswElementWithBadEntriesForCoordinateValues_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned(string xStringValue, string yStringValue)
         {
+            var compartmentId = "put1";
+            var manholeId = "01001";
             var badGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -950,13 +952,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
-                        ValueAsString = "put1",
+                        ValueAsString = compartmentId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
-                        ValueAsString = "01001",
+                        ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
                             ManholePropertyKeys.ManholeId, "MyDescription", null, null)
                     },
@@ -974,10 +976,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     }
                 }
             };
-
-            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholePropertyKeys.ManholeId)
-                .Select(attr => attr.ValueAsString).FirstOrDefault();
-            TryCreateNodeAndCheckForLogMessage(badGwswElement, "Manhole with unique id '" + manholeId + "' is not imported.");
+            
+            TryCreateFeatureAndCheckForLogMessageAndCheckFeatureValidity(manholeId, badGwswElement, compartmentId);
         }
 
         [Test]
@@ -999,7 +999,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholePropertyKeys.ManholeId)
                 .Select(attr => attr.ValueAsString).FirstOrDefault();
-            TryCreateNodeAndCheckForLogMessage(badGwswElement, "Manhole with manhole id '" + manholeId + "' could not be created, because one of its compartments misses its unique id.");
+            TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(badGwswElement, "Manhole with manhole id '" + manholeId + "' could not be created, because one of its compartments misses its unique id.");
         }
 
         [Test]
@@ -1019,7 +1019,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             
-            TryCreateNodeAndCheckForLogMessage(badGwswElement, "There are lines in 'Knooppunt.csv' that do not contain a Manhole Id. These lines are not imported.");
+            TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(badGwswElement, "There are lines in 'Knooppunt.csv' that do not contain a Manhole Id. These lines are not imported.");
         }
 
         [TestCase(ManholePropertyKeys.NodeLength)]
@@ -1208,7 +1208,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private static void TryCreateNodeAndCheckForLogMessage(GwswElement badGwswElement, string expectedPartOfMessage)
+        private static void TryCreateFeatureAndCheckForLogMessageAndCheckFeatureValidity(string manholeId, GwswElement badGwswElement, string compartmentId)
+        {
+            INetworkFeature feature = null;
+            var expectedPartOfMessage = "Manhole with unique id '" + manholeId + "' is not imported.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature = SewerFeatureFactory.CreateInstance(badGwswElement),
+                expectedPartOfMessage);
+
+            // Check compartment
+            var compartment = feature as Compartment;
+            Assert.NotNull(compartment);
+            Assert.That(compartment.Name, Is.EqualTo(compartmentId));
+            Assert.NotNull(compartment.ParentManhole);
+            Assert.That(compartment.ParentManhole.Name, Is.EqualTo(manholeId));
+        }
+
+        private static void TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(GwswElement badGwswElement, string expectedPartOfMessage)
         {
             INetworkFeature feature = null;
             TestHelper.AssertAtLeastOneLogMessagesContains(() => feature = SewerFeatureFactory.CreateInstance(badGwswElement), expectedPartOfMessage);

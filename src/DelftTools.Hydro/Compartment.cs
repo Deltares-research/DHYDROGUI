@@ -1,13 +1,17 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Aop;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
+    [Entity]
     public class Compartment : Node
     {
         private Manhole parentManhole;
+        private bool settingParentManhole;
+
 
         public Compartment(string uniqueId) : base(uniqueId)
         {
@@ -20,9 +24,14 @@ namespace DelftTools.Hydro
             get { return parentManhole; }
             set
             {
+                if(settingParentManhole) return;
+                settingParentManhole = true;
+
                 var compartmentNames = value.Compartments.Select(c => c.Name);
-                if (!compartmentNames.Contains(Name)) value.Compartments.Add(this);
+                if (!compartmentNames.Contains(Name)) {value.Compartments.Add(this);}
                 parentManhole = value;
+
+                settingParentManhole = false;
             }
         }
 

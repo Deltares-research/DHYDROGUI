@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerFeatureFactory));
         // For now, the types are: Node, Connection, Structure, Surface, Runoff, Discharge, Distribution, Meta
-        private static Dictionary<SewerFeatureType, Func<object, HydroNetwork, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<object, HydroNetwork, INetworkFeature>>
+        private static Dictionary<SewerFeatureType, Func<GwswElement, HydroNetwork, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<GwswElement, HydroNetwork, INetworkFeature>>
         {
             { SewerFeatureType.Node, CreateCompartment },
             { SewerFeatureType.Connection, SewerConnectionFactory },
@@ -54,71 +54,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Creating Manholes
 
-        private static Compartment CreateCompartment(object element, HydroNetwork network = null)
+        private static Compartment CreateCompartment(GwswElement gwswElement, HydroNetwork network = null)
         {
-            var gwswElement = element as GwswElement;
             if (gwswElement == null) return null;
 
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-
-            Compartment compartment;
-            try
+            
+            string manholeId;
+            if (!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.ManholeId, out manholeId))
             {
-                string manholeId;
-                if(!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.ManholeId, out manholeId))
-                    throw new Exception(Resources.SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
-
-                string uniqueId;
-                if (!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.UniqueId, out uniqueId))
-                    throw new Exception(string.Format(Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_,manholeId));
-
-                compartment = new Compartment(uniqueId)
-                {
-                    ParentManhole = new Manhole(manholeId)
-                };
-
-                // Set manhole value
-                double doubleValue;
-                if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeLength, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out doubleValue)) compartment.ManholeLength = doubleValue;
-                if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeWidth, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out doubleValue)) compartment.ManholeWidth = doubleValue;
-                if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.FloodableArea, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out doubleValue)) compartment.FloodableArea = doubleValue;
-                if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.BottomLevel, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out doubleValue)) compartment.BottomLevel = doubleValue;
-                if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.SurfaceLevel, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out doubleValue)) compartment.SurfaceLevel = doubleValue;
-
-                double yCoordinate;
-                double xCoordinate;
-                if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.XCoordinate, gwswElementKeyValuePairs,
-                        uniqueId, manholeId, out xCoordinate)
-                    && TryGetDoubleValueElseThrowException(ManholePropertyKeys.YCoordinate, gwswElementKeyValuePairs,
-                        uniqueId, manholeId, out yCoordinate))
-                    compartment.Geometry = new Point(xCoordinate, yCoordinate);
-
-                // Set shape value of the manhole
-                string nodeShape;
-                if (gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.NodeShape, out nodeShape))
-                {
-                    try
-                    {
-                        compartment.Shape =
-                            (CompartmentShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(
-                                nodeShape);
-                    }
-                    catch
-                    {
-                        ThrowException(uniqueId, "string", ManholePropertyKeys.NodeShape, nodeShape, manholeId);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Warn(e.Message);
+                Log.WarnFormat(
+                    Resources.SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
                 return null;
             }
+
+            string uniqueId;
+            if (!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.UniqueId, out uniqueId))
+            {
+                Log.WarnFormat(
+                    Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeId);
+                return null;
+            }
+
+            var compartment = new Compartment(uniqueId)
+            {
+                ParentManhole = new Manhole(manholeId)
+            };
+
+            // Set manhole value
+            double doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeLength, gwswElementKeyValuePairs,
+                uniqueId, manholeId, out doubleValue)) compartment.ManholeLength = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeWidth, gwswElementKeyValuePairs,
+                uniqueId, manholeId, out doubleValue)) compartment.ManholeWidth = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.FloodableArea, gwswElementKeyValuePairs,
+                uniqueId, manholeId, out doubleValue)) compartment.FloodableArea = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.BottomLevel, gwswElementKeyValuePairs,
+                uniqueId, manholeId, out doubleValue)) compartment.BottomLevel = doubleValue;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.SurfaceLevel, gwswElementKeyValuePairs,
+                uniqueId, manholeId, out doubleValue)) compartment.SurfaceLevel = doubleValue;
+
+            double yCoordinate;
+            double xCoordinate;
+            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.XCoordinate, gwswElementKeyValuePairs,
+                    uniqueId, manholeId, out xCoordinate)
+                && TryGetDoubleValueElseThrowException(ManholePropertyKeys.YCoordinate, gwswElementKeyValuePairs,
+                    uniqueId, manholeId, out yCoordinate))
+                compartment.Geometry = new Point(xCoordinate, yCoordinate);
+
+            // Set shape value of the manhole
+            string nodeShape;
+            if (gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.NodeShape, out nodeShape))
+            {
+                try
+                {
+                    compartment.Shape =
+                        (CompartmentShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(
+                            nodeShape);
+                }
+                catch
+                {
+                    LogManholeWarningMessage(uniqueId, "string", ManholePropertyKeys.NodeShape, nodeShape, manholeId);
+                }
+            }
+            
             return compartment;
         }
         
@@ -145,9 +144,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return sewerConnectionType;
         }
 
-        private static SewerConnection SewerConnectionFactory(object element, HydroNetwork network = null)
+        private static SewerConnection SewerConnectionFactory(GwswElement gwswElement, HydroNetwork network = null)
         {
-            var gwswElement = element as GwswElement;
             if (gwswElement == null) return null;
 
             var connectionType =
@@ -584,13 +582,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return false;
             }
             if (!double.TryParse(ReplaceCommaWithPoint(stringValue), NumberStyles.Any, CultureInfo.InvariantCulture, out doubleValue))
-                ThrowException(id, "double", columnKey, stringValue, manholeId);
+                LogManholeWarningMessage(id, "double", columnKey, stringValue, manholeId);
             return true;
         }
 
-        private static void ThrowException(string id, string dataType, string columnKey, string wrongValue, string manholeId)
+        private static void LogManholeWarningMessage(string id, string dataType, string columnKey, string wrongValue, string manholeId)
         {
-            throw new Exception(string.Format(Resources.SewerFeatureFactory_ThrowException_, id, dataType, columnKey, wrongValue, manholeId));
+            Log.WarnFormat(Resources.SewerFeatureFactory_ThrowException_, id, dataType, columnKey, wrongValue, manholeId);
         }
 
         private static string ReplaceCommaWithPoint(string doubleString)
