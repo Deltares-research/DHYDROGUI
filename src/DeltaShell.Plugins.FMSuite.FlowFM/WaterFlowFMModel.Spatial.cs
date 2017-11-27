@@ -290,7 +290,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (Bathymetry == null) return;
 
-            var bathymetryReset = false;
             switch (bedLevelType)
             {
                 case UnstructuredGridFileHelper.BedLevelLocation.Faces:
@@ -299,7 +298,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     // For now we just create a new Bathemetry and log a warning
                     // Later will will re-apply values converting from one coverage type to another
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
-                    bathymetryReset = true;
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat("Unstructured grid edge coverages are not currently supported");
@@ -308,7 +306,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     // For now we just create a new Bathemetry and log a warning
                     // Later will will re-apply values converting from one coverage type to another
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
-                    bathymetryReset = true;
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
@@ -317,16 +314,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     // For now we just create a new Bathemetry and log a warning
                     // Later will will re-apply values converting from one coverage type to another
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
-                    bathymetryReset = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("bedLevelType", bedLevelType, null);
             }
 
-            if (bathymetryReset)
-            {
-                Log.WarnFormat("The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated");
-            }
+            // assuming you didn't already return (above)
+            Log.WarnFormat("The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated");
 
             var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
             if (bedLevelDataItem == null) return;
