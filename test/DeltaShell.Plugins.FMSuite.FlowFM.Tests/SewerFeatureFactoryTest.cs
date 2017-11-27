@@ -5,13 +5,11 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -864,7 +862,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var compartment = SewerFeatureFactory.CreateInstance(gwswElement) as Compartment;
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, null, 1);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, new Coordinate(0, 0), 1);
         }
         
         [Test]
@@ -1060,7 +1058,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var compartment = SewerFeatureFactory.CreateInstance(gwswElement) as Compartment;
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, null, 1);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, new Coordinate(0, 0), 1);
         }
 
         #endregion
