@@ -72,9 +72,12 @@ namespace DelftTools.Hydro.Structures
             get { return compartments; }
             set
             {
-                value.ForEach(comp => comp.ParentManhole = this);
-                value.CollectionChanging += CompartmentCollectionChanging;
-                value.CollectionChanged += CompartmentCollectionChanged;
+                if (value != null)
+                {
+                    value.ForEach(comp => comp.ParentManhole = this);
+                    value.CollectionChanging += CompartmentCollectionChanging;
+                    value.CollectionChanged += CompartmentCollectionChanged;
+                }
                 compartments = value;
                 RefreshGeometry();
             }
@@ -95,10 +98,7 @@ namespace DelftTools.Hydro.Structures
                     compartmentsChanging = false;
                     break;
                 case NotifyCollectionChangeAction.Remove:
-                    compartment.PropertyChanged -= OnCompartmentPropertyChanged;
-                    break;
                 case NotifyCollectionChangeAction.Replace:
-                    //case NotifyCollectionChangeAction.Reset:
                     compartment.PropertyChanged -= OnCompartmentPropertyChanged;
                     break;
             }
@@ -116,8 +116,6 @@ namespace DelftTools.Hydro.Structures
                     compartment.PropertyChanged += OnCompartmentPropertyChanged;
                     compartment.ParentManhole = this;
                     if (compartment.Geometry == null) compartment.Geometry = Geometry;
-                    break;
-                case NotifyCollectionChangeAction.Remove:
                     break;
                 case NotifyCollectionChangeAction.Replace:
                     compartment.PropertyChanged += OnCompartmentPropertyChanged;
