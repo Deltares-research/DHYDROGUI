@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
@@ -339,12 +340,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private void InsertFeatures(IEnumerable<INetworkFeature> features, HydroNetwork network, SewerFeatureType type)
         {
-            var count = 0;
             switch (type)
             {
                 case SewerFeatureType.Connection:
                     var branches = network.Branches;
-                    InsertStructure(features, branches);
+                    InsertStructures(features, branches);
                     break;
                 case SewerFeatureType.Node:
                     var nodes = network.Nodes;
@@ -366,13 +366,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         }
                     });
 
-                    InsertStructure(manholes, nodes);
+                    InsertStructures(manholes, nodes);
                     break;
+                case SewerFeatureType.Crosssection :
+                    foreach (var cs in features.OfType<CrossSection>())
+                    {
+                        network.Pipes.Where(p => p.CrossSectionShape.Name == cs.Name).ForEach(p =>
+                        {
+                            p.CrossSectionShape = cs;
+                        });
+                    }
+                    
+                    break;
+
             }
         }
 
         [InvokeRequired]
-        private static void InsertStructure<TFeat>(IEnumerable<INetworkFeature> features, IEventedList<TFeat> list) where TFeat : INameable
+        private static void InsertStructures<TFeat>(IEnumerable<INetworkFeature> features, IEventedList<TFeat> list) where TFeat : INameable
         {
             foreach (var feature in features.Where(s => s is TFeat))
             {

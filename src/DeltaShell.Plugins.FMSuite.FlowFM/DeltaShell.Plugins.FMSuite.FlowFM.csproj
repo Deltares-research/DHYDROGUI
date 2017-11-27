@@ -133,6 +133,7 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
+    <Compile Include="CrossSectionDefinitionReader.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />
     <Compile Include="CoverageDefinition\CoverageDepthLayersList.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="IO\SedimentFile.cs" />
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
+    <Compile Include="SewerCrossSectionDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />

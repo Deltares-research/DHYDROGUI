@@ -9,6 +9,7 @@
         Runoff,
         Discharge,
         Distribution,
-        Meta
+        Meta,
+        Crosssection
     }
 }

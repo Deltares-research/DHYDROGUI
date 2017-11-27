@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             { SewerFeatureType.Node, CreateCompartment },
             { SewerFeatureType.Connection, SewerConnectionFactory },
+            { SewerFeatureType.Crosssection, CreateSewerProfile },
             { SewerFeatureType.Structure, StructureFactory }
         };
 
@@ -51,6 +52,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return null;
         }
+
+        #region Creating sewer profiles
+        
+        private static CrossSection CreateSewerProfile(GwswElement gwswElement, HydroNetwork network = null)
+        {
+            if (gwswElement == null) return null;
+            
+            var csId = GetAttributeFromList(gwswElement, CrossSectionPropertyKeys.CrossSectionId);
+            var csShape = GetAttributeFromList(gwswElement, CrossSectionPropertyKeys.CrossSectionShape);
+            if (csId == null || csShape == null) return null;
+            
+            var definitionReader = CrossSectionFactory(csShape.ValueAsString);
+            var readCrossSectionDefinition = definitionReader.ReadCrossSectionDefinition(gwswElement);
+            var crossSection = new CrossSection(readCrossSectionDefinition)
+            {
+                Name = csId.ValueAsString
+            };
+                        
+            return crossSection;
+        }
+    
+        private static SewerCrossSectionDefinitionReader CrossSectionFactory(string csShape)
+        {
+            switch (csShape)
+            {
+                case "EIV":
+                    return new CsdEggDefinitionReader();
+                case "HEU":
+                    return new CsdHeulDefinitionReader();
+                case "MVR":
+                    return new CsdMuilDefinitionReader();
+                case "RHK":
+                    return new CsdRectangleDefinitionReader();
+                case "RND":
+                    return new CsdCircleDefinitionReader();
+                case "TPZ":
+                    return new CsdTrapezoidDefinitionReader();
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
 
         #region Creating Manholes
 
@@ -623,28 +667,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static class PropertyKeys
         {
-            public const string UniqueId = "UNIQUE_ID";
-            public const string NodeUniqueIdStart = "NODE_UNIQUE_ID_START";
-            public const string NodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
-            public const string PipeType = "PIPE_TYPE";
-            public const string LevelStart = "LEVEL_START";
-            public const string LevelEnd = "LEVEL_END";
-            public const string Length = "LENGTH";
-            public const string CrossSectionDef = "CROSS_SECTION_DEF";
-            public const string PipeIndicator = "PIPE_INDICATOR";
-            public const string WaterType = "WATER_TYPE";
-            public const string InletLossStart = "INLETLOSS_START";
-            public const string OutletLossStart = "OUTLETLOSS_START";
-            public const string InletLossEnd = "INLETLOSS_END";
-            public const string OutletLossEnd = "OUTLETLOSS_END";
-            public const string FlowDirection = "FLOW_DIRECTION";
-            public const string InfiltrationDef = "INFILTRATION_DEF";
-            public const string Status = "STATUS";
-            public const string ALevelStart = "A_LEVEL_START";
-            public const string ALevelEnd = "A_LEVEL_END";
-            public const string InitialWaterLevel = "INITIAL_WATER_LEVEL";
-            public const string Remarks = "REMARKS";
-        }
+        public const string UniqueId = "UNIQUE_ID";
+        public const string NodeUniqueIdStart = "NODE_UNIQUE_ID_START";
+        public const string NodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
+        public const string PipeType = "PIPE_TYPE";
+        public const string LevelStart = "LEVEL_START";
+        public const string LevelEnd = "LEVEL_END";
+        public const string Length = "LENGTH";
+        public const string CrossSectionDef = "CROSS_SECTION_DEF";
+        public const string PipeIndicator = "PIPE_INDICATOR";
+        public const string WaterType = "WATER_TYPE";
+        public const string InletLossStart = "INLETLOSS_START";
+        public const string OutletLossStart = "OUTLETLOSS_START";
+        public const string InletLossEnd = "INLETLOSS_END";
+        public const string OutletLossEnd = "OUTLETLOSS_END";
+        public const string FlowDirection = "FLOW_DIRECTION";
+        public const string InfiltrationDef = "INFILTRATION_DEF";
+        public const string Status = "STATUS";
+        public const string ALevelStart = "A_LEVEL_START";
+        public const string ALevelEnd = "A_LEVEL_END";
+        public const string InitialWaterLevel = "INITIAL_WATER_LEVEL";
+        public const string Remarks = "REMARKS";
+    }
     }
 
     public static class StructureMapping
@@ -681,6 +725,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public const string SurfaceLevel = "SURFACE_LEVEL";
         public const string XCoordinate = "X_COORDINATE";
         public const string YCoordinate = "Y_COORDINATE";
+    }
+
+    public static class CrossSectionPropertyKeys
+    {
+        public const string CrossSectionId = "CROSSSECTION_ID";
+        public const string CrossSectionMaterial = "CROSS_SECTION_MATERIAL";
+        public const string CrossSectionShape = "CROSS_SECTION_SHAPE";
+        public const string CrossSectionWidth = "CROSS_SECTION_WIDTH";
+        public const string CrossSectionHeight = "CROSS_SECTION_HEIGHT";
+        public const string Slope1 = "SLOPE_1";
+        public const string Slope2 = "SLOPE_2";
+        public const string CrossSectionLevel = "CROSS_SECTION_LEVEL";
+        public const string WetArea = "WET_AREA";
+        public const string WetPerimeter = "WET_PERIMETER";
+        public const string ACrossSectionWidth = "A_CROSS_SECTION_WIDTH";
+        public const string Remarks = "REMARKS";
     }
 
     #endregion

@@ -52,7 +52,7 @@ namespace DelftTools.Hydro.Tests
             var featureTwo = new Pump();
             Assert.IsNotNull(featureTwo);
 
-            var featureList = new EventedList<IBranchFeature>() { featureOne, featureTwo };
+            var featureList = new EventedList<IBranchFeature> { featureOne, featureTwo };
             Assert.IsNotNull(featureList);
             Assert.IsTrue(featureList.Any());
             #endregion
