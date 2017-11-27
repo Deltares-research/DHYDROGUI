@@ -569,6 +569,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
+        public void TestImportOutletsFromStructuresThenImportNodesAssignsStructuresValues()
+        {
+            //Create network
+            var network = new HydroNetwork();
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load structures.
+            var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
+            var importedStructures = gwswImporter.ImportItem(structuresPath, network);
+            Assert.IsNotNull(importedStructures);
+
+            //Check placeholders have been created.
+            Assert.IsTrue(network.Manholes.Any());
+
+            var outletCompartments = network.Manholes.SelectMany( mh => mh.Compartments.Where( cmp => cmp is OutletCompartment)).ToList();
+            Assert.IsTrue(outletCompartments.Any());
+
+            // Now Load connections.
+            var compartmentsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
+            var importedCompartments = gwswImporter.ImportItem(compartmentsPath, network);
+            Assert.IsNotNull(importedCompartments);
+
+            foreach (var compartment in outletCompartments)
+            {
+                var outlet = compartment as OutletCompartment;
+                Assert.IsNotNull(outlet);
+
+                var manhole = network.Manholes.FirstOrDefault( m => m.ContainsCompartment(outlet.Name));
+                Assert.IsNotNull(manhole);
+                var extendedOutlet = manhole.GetCompartmentByName(outlet.Name) as OutletCompartment;
+                Assert.IsNotNull(extendedOutlet);
+
+                Assert.AreEqual(outlet.SurfaceWaterLevel, extendedOutlet.SurfaceWaterLevel, "the attributes from the element do not match");
+            }
+
+        }
+
+        [Test]
         public void TestImportElementReplacesExistingOne()
         {
             //Create network
