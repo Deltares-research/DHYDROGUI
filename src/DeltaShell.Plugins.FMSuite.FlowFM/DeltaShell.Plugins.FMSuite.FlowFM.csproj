@@ -133,6 +133,7 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
+    <Compile Include="CrossSectionMapping.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />
     <Compile Include="CoverageDefinition\CoverageDepthLayersList.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
+    <Compile Include="ManholeMapping.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="FeatureData\SourceAndSink.cs" />
     <Compile Include="ModelDefinition\ISediment.cs" />
@@ -231,9 +233,11 @@
     <Compile Include="IO\SedimentFile.cs" />
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
+    <Compile Include="SewerConnectionMapping.cs" />
     <Compile Include="SewerCrossSectionDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
+    <Compile Include="StructureMapping.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

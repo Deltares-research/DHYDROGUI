@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         // For now, the types are: Node, Connection, Structure, Surface, Runoff, Discharge, Distribution, Meta
         private static Dictionary<SewerFeatureType, Func<GwswElement, HydroNetwork, INetworkFeature>> CreateSewerFeature = new Dictionary<SewerFeatureType, Func<GwswElement, HydroNetwork, INetworkFeature>>
         {
-            { SewerFeatureType.Node, CreateCompartment },
+            { SewerFeatureType.Node, CompartmentFactory },
             { SewerFeatureType.Connection, SewerConnectionFactory },
             { SewerFeatureType.Crosssection, CreateSewerProfile },
             { SewerFeatureType.Structure, StructureFactory }
@@ -59,8 +59,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return null;
             
-            var csId = GetAttributeFromList(gwswElement, CrossSectionPropertyKeys.CrossSectionId);
-            var csShape = GetAttributeFromList(gwswElement, CrossSectionPropertyKeys.CrossSectionShape);
+            var csId = GetAttributeFromList(gwswElement, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId);
+            var csShape = GetAttributeFromList(gwswElement, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionShape);
             if (csId == null || csShape == null) return null;
             
             var definitionReader = CrossSectionFactory(csShape.ValueAsString);
@@ -98,73 +98,145 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Creating Manholes
 
-        private static Compartment CreateCompartment(GwswElement gwswElement, HydroNetwork network = null)
+        private static Compartment CompartmentFactory(GwswElement gwswElement, HydroNetwork network = null)
         {
             if (gwswElement == null) return null;
 
-            var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-            
-            string manholeId;
-            if (!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.ManholeId, out manholeId))
+            var manholeName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.ManholeId);
+            if (manholeName == null || manholeName.ValueAsString == string.Empty)
             {
                 Log.WarnFormat(
                     Resources.SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
                 return null;
             }
 
-            string uniqueId;
-            if (!gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.UniqueId, out uniqueId))
+            var compartmentName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.UniqueId);
+            if (compartmentName == null || compartmentName.ValueAsString == string.Empty)
             {
+
                 Log.WarnFormat(
-                    Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeId);
+                    Resources.SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_, manholeName.ValueAsString);
                 return null;
             }
 
-            var compartment = new Compartment(uniqueId)
-            {
-                ParentManhole = new Manhole(manholeId)
-            };
+            var compartmentType =
+                GetGwswElementCompartmentType(GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.NodeType));
 
-            // Set manhole value
+            if (compartmentType == typeof(OutletCompartment))
+            {
+                return CreateCompartment<OutletCompartment>(gwswElement, network);
+            }
+
+            return CreateCompartment<Compartment>(gwswElement, network);
+        }
+
+        private static Type GetGwswElementCompartmentType(GwswAttribute sewerTypeAttribute)
+        {
+            var sewerConnectionType = typeof(Compartment);
+            if (sewerTypeAttribute == null || sewerTypeAttribute.ValueAsString == string.Empty) return sewerConnectionType;
+
+            var nodeType = GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute.ValueAsString);
+            if (nodeType == ManholeMapping.NodeType.Outlet)
+            {
+                return typeof(OutletCompartment);
+            }
+
+            return sewerConnectionType;
+        }
+
+        private static T CreateCompartment<T>(GwswElement gwswElement, HydroNetwork network = null) where T : Compartment, new()
+        {
+            var compartment = FindOrGetNewCompartment<T>(gwswElement, network);
+            SetCompartmentAttributes(compartment, gwswElement, network);
+            return compartment;
+        }
+
+        private static Manhole GetParentManholeFromGwswElement(GwswElement gwswElement, HydroNetwork network)
+        {
+            var manholeAttribute = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.ManholeId);
+            var compartmentName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
+            
+            //if we could not place an ID then we use the compartment name to create a place holder (if needed)
+            var manholeId = manholeAttribute != null ? manholeAttribute.ValueAsString : compartmentName;
+
+            Manhole parentManhole = null;
+            if (network != null)
+            {
+                //Find manhole by its name
+                parentManhole = network.Manholes.FirstOrDefault(m => m.Name.Equals(manholeId)) as Manhole;
+                //If it was not found, try searching by containing this compartment.
+                if (parentManhole == null)
+                {
+                    parentManhole = network.Manholes.FirstOrDefault(m => m.ContainsCompartment(compartmentName)) as Manhole;
+                }
+            }
+
+            if (parentManhole == null)
+            {
+                parentManhole = new Manhole(manholeId);
+            }
+            return parentManhole;
+        }
+
+        private static T FindOrGetNewCompartment<T>(GwswElement gwswElement, HydroNetwork network = null) where T : Compartment, new()
+        {
+            //We know they are not null, otherwise we would have already returned in the CompartmentFactory method.
+            var compartmentName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
+            var parentManhole = GetParentManholeFromGwswElement(gwswElement, network);
+
+            if (network == null || !parentManhole.ContainsCompartment(compartmentName))
+                return new T{Name = compartmentName, ParentManhole = parentManhole};
+
+            var compartmentFound = parentManhole.GetCompartmentByName(compartmentName);
+            return (T) (compartmentFound ?? new T { Name = compartmentName, ParentManhole = parentManhole });
+        }
+
+        private static void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement, HydroNetwork network)
+        {
+            var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
+
+            var uniqueId = compartment.Name;
+            compartment.ParentManhole = GetParentManholeFromGwswElement(gwswElement, network);
+            var manholeId = compartment.ParentManhole.Name;
+
+            // Set the rest of manhole values
             double doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeLength, gwswElementKeyValuePairs,
+            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.NodeLength, gwswElementKeyValuePairs,
                 uniqueId, manholeId, out doubleValue)) compartment.ManholeLength = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.NodeWidth, gwswElementKeyValuePairs,
+            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.NodeWidth, gwswElementKeyValuePairs,
                 uniqueId, manholeId, out doubleValue)) compartment.ManholeWidth = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.FloodableArea, gwswElementKeyValuePairs,
+            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.FloodableArea, gwswElementKeyValuePairs,
                 uniqueId, manholeId, out doubleValue)) compartment.FloodableArea = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.BottomLevel, gwswElementKeyValuePairs,
+            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.BottomLevel, gwswElementKeyValuePairs,
                 uniqueId, manholeId, out doubleValue)) compartment.BottomLevel = doubleValue;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.SurfaceLevel, gwswElementKeyValuePairs,
+            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.SurfaceLevel, gwswElementKeyValuePairs,
                 uniqueId, manholeId, out doubleValue)) compartment.SurfaceLevel = doubleValue;
 
             double yCoordinate;
             double xCoordinate;
-            if (TryGetDoubleValueElseThrowException(ManholePropertyKeys.XCoordinate, gwswElementKeyValuePairs,
+            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.XCoordinate, gwswElementKeyValuePairs,
                     uniqueId, manholeId, out xCoordinate)
-                && TryGetDoubleValueElseThrowException(ManholePropertyKeys.YCoordinate, gwswElementKeyValuePairs,
+                && TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.YCoordinate, gwswElementKeyValuePairs,
                     uniqueId, manholeId, out yCoordinate))
                 compartment.Geometry = new Point(xCoordinate, yCoordinate);
 
             // Set shape value of the manhole
             string nodeShape;
-            if (gwswElementKeyValuePairs.TryGetValue(ManholePropertyKeys.NodeShape, out nodeShape))
+            if (gwswElementKeyValuePairs.TryGetValue(ManholeMapping.PropertyKeys.NodeShape, out nodeShape))
             {
                 try
                 {
                     compartment.Shape =
-                        (CompartmentShape) EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(
+                        (CompartmentShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(
                             nodeShape);
                 }
                 catch
                 {
-                    LogManholeWarningMessage(uniqueId, "string", ManholePropertyKeys.NodeShape, nodeShape, manholeId);
+                    LogManholeWarningMessage(uniqueId, "string", ManholeMapping.PropertyKeys.NodeShape, nodeShape, manholeId);
                 }
             }
-            
-            return compartment;
         }
-        
+
         #endregion
 
         #region Creating Sewer Connections
@@ -461,23 +533,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 return typeof(Pump);
             }
+            if (structureType == StructureMapping.StructureType.Outlet)
+            {
+                return typeof(OutletCompartment);
+            }
 
             return null;
         }
 
-        private static BranchStructure StructureFactory(object element, HydroNetwork network = null)
+        private static INetworkFeature StructureFactory(object element, HydroNetwork network = null)
         {
             var gwswElement = element as GwswElement;
             if (gwswElement == null) return null;
 
-            var connectionType =
+            var structureType =
                 GetGwswElementStructureType(GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StructureType));
 
             var structureName = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.UniqueId);
-            if (connectionType == null || structureName == null || structureName.ValueAsString == string.Empty) return null;
+            if (structureType == null || structureName == null || structureName.ValueAsString == string.Empty) return null;
             
             /* First we need to check whether there are target and source nodes, otherwise we will not create this sewer connection.*/
-            if (connectionType == typeof(Pump))
+            if (structureType == typeof(Pump))
             {
                 if (network != null)
                 {
@@ -496,7 +572,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return pumpFound;
                 }
             }
+            if (structureType == typeof(OutletCompartment))
+            {
+                var outletStructure = FindOrGetNewCompartment<OutletCompartment>(gwswElement, network);
+                ExtendOutletAttributes(outletStructure, gwswElement);
 
+                //If the network does not contain the manhole then it means it is a placeholder, but we still need to add it.
+                if (network != null && !network.Manholes.Contains(outletStructure.ParentManhole))
+                {
+                    network.Nodes.Add(outletStructure.ParentManhole);
+                }
+
+                return outletStructure;
+            }
             return null;
         }
 
@@ -518,20 +606,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (startLevelDown != null && startLevelDown.ValueAsString != string.Empty)
             {
                 var valueType = startLevelDown.GwswAttributeType.AttributeType;
-                if (valueType == pump.StartDelivery.GetType() &&
+                if (valueType == pump.StartSuction.GetType() &&
                     TryParseDoubleElseLogError(startLevelDown, valueType, out newDoubleValue))
                 {
-                    pump.StartDelivery = newDoubleValue;
+                    pump.StartSuction = newDoubleValue;
                 }
             }
             var stopLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelDownstreams);
             if (stopLevelDown != null && stopLevelDown.ValueAsString != string.Empty)
             {
                 var valueType = stopLevelDown.GwswAttributeType.AttributeType;
-                if (valueType == pump.StopDelivery.GetType() &&
+                if (valueType == pump.StopSuction.GetType() &&
                     TryParseDoubleElseLogError(stopLevelDown, valueType, out newDoubleValue))
                 {
-                    pump.StopDelivery = newDoubleValue;
+                    pump.StopSuction = newDoubleValue;
                 }
             }
 
@@ -539,20 +627,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (startLevelUp != null && startLevelUp.ValueAsString != string.Empty)
             {
                 var valueType = startLevelUp.GwswAttributeType.AttributeType;
-                if (valueType == pump.StartSuction.GetType() &&
+                if (valueType == pump.StartDelivery.GetType() &&
                     TryParseDoubleElseLogError(startLevelUp, valueType, out newDoubleValue))
                 {
-                    pump.StartSuction = newDoubleValue;
+                    pump.StartDelivery = newDoubleValue;
                 }
             }
             var stopLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelUpstreams);
             if (stopLevelUp != null && stopLevelUp.ValueAsString != string.Empty)
             {
                 var valueType = stopLevelUp.GwswAttributeType.AttributeType;
-                if (valueType == pump.StopSuction.GetType() &&
+                if (valueType == pump.StopDelivery.GetType() &&
                     TryParseDoubleElseLogError(stopLevelUp, valueType, out newDoubleValue))
                 {
-                    pump.StopSuction = newDoubleValue;
+                    pump.StopDelivery = newDoubleValue;
+                }
+            }
+        }
+
+        private static void ExtendOutletAttributes(Compartment compartment, GwswElement gwswElement)
+        {
+            var newOutlet = compartment as OutletCompartment;
+            if (newOutlet == null) return;
+
+            var newDoubleValue = 0.0;
+            var surfaceWaterLevel = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.SurfaceWaterLevel);
+            if (surfaceWaterLevel != null && surfaceWaterLevel.ValueAsString != string.Empty)
+            {
+                var valueType = surfaceWaterLevel.GwswAttributeType.AttributeType;
+                if (valueType == newOutlet.SurfaceWaterLevel.GetType() &&
+                    TryParseDoubleElseLogError(surfaceWaterLevel, valueType, out newDoubleValue))
+                {
+                    newOutlet.SurfaceWaterLevel = newDoubleValue;
                 }
             }
         }
@@ -617,7 +723,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return true;
         }
 
-        private static bool TryGetDoubleValueElseThrowException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string id, string manholeId, out double doubleValue)
+        private static bool TryGetDoubleValueElseLogException(string columnKey, IReadOnlyDictionary<string, string> elementValues, string id, string manholeId, out double doubleValue)
         {
             string stringValue;
             if (!elementValues.TryGetValue(columnKey, out stringValue) || stringValue == string.Empty)
@@ -642,106 +748,4 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
     }
-
-    #region Mappings
-
-    public static class SewerConnectionMapping
-    {
-        public enum ConnectionType
-        {
-            [Description("DRL")] Orifice,
-            [Description("GSL")] ClosedConnection /*Should be created as a pipe*/,
-            [Description("ITR")] InfiltrationPipe /*Should be created as a pipe*/,
-            [Description("OPL")] Open /*Should be created as a pipe*/,
-            [Description("OVS")] Crest,
-            [Description("PMP")] Pump
-        }
-
-        public enum FlowDirection /*Field STR_RCH*/
-        {
-            [Description("GSL")] Closed,
-            [Description("OPN")] Open,
-            [Description("1_2")] FromStartToEnd,
-            [Description("2_1")] FromEndToStart,
-        }
-
-        public static class PropertyKeys
-        {
-        public const string UniqueId = "UNIQUE_ID";
-        public const string NodeUniqueIdStart = "NODE_UNIQUE_ID_START";
-        public const string NodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
-        public const string PipeType = "PIPE_TYPE";
-        public const string LevelStart = "LEVEL_START";
-        public const string LevelEnd = "LEVEL_END";
-        public const string Length = "LENGTH";
-        public const string CrossSectionDef = "CROSS_SECTION_DEF";
-        public const string PipeIndicator = "PIPE_INDICATOR";
-        public const string WaterType = "WATER_TYPE";
-        public const string InletLossStart = "INLETLOSS_START";
-        public const string OutletLossStart = "OUTLETLOSS_START";
-        public const string InletLossEnd = "INLETLOSS_END";
-        public const string OutletLossEnd = "OUTLETLOSS_END";
-        public const string FlowDirection = "FLOW_DIRECTION";
-        public const string InfiltrationDef = "INFILTRATION_DEF";
-        public const string Status = "STATUS";
-        public const string ALevelStart = "A_LEVEL_START";
-        public const string ALevelEnd = "A_LEVEL_END";
-        public const string InitialWaterLevel = "INITIAL_WATER_LEVEL";
-        public const string Remarks = "REMARKS";
-    }
-    }
-
-    public static class StructureMapping
-    {
-        public enum StructureType /*Field KWK_TYP*/
-        {
-            [Description("DRL")] Orifice,
-            [Description("OVS")] Crest /*Should be created as a pipe*/,
-            [Description("UIT")] Outlet,
-            [Description("PMP")] Pump
-        }
-
-        public static class PropertyKeys
-        {
-            public const string UniqueId = "UNIQUE_ID";
-            public const string StructureType = "STRUCTURE_TYPE";
-            public const string PumpCapacity = "PUMP_CAPACITY";
-            public const string StartLevelDownstreams = "START_LEVEL_DOWNSTREAMS";
-            public const string StopLevelDownstreams = "STOP_LEVEL_DOWNSTREAMS";
-            public const string StartLevelUpstreams = "START_LEVEL_UPSTREAMS";
-            public const string StopLevelUpstreams = "STOP_LEVEL_UPSTREAMS";
-        }
-    }
-
-    public static class ManholePropertyKeys
-    {
-        public const string ManholeId = "MANHOLE_ID";
-        public const string UniqueId = "UNIQUE_ID";
-        public const string NodeLength = "NODE_LENGTH";
-        public const string NodeWidth = "NODE_WIDTH";
-        public const string NodeShape = "NODE_SHAPE";
-        public const string FloodableArea = "FLOODABLE_AREA";
-        public const string BottomLevel = "BOTTOM_LEVEL";
-        public const string SurfaceLevel = "SURFACE_LEVEL";
-        public const string XCoordinate = "X_COORDINATE";
-        public const string YCoordinate = "Y_COORDINATE";
-    }
-
-    public static class CrossSectionPropertyKeys
-    {
-        public const string CrossSectionId = "CROSSSECTION_ID";
-        public const string CrossSectionMaterial = "CROSS_SECTION_MATERIAL";
-        public const string CrossSectionShape = "CROSS_SECTION_SHAPE";
-        public const string CrossSectionWidth = "CROSS_SECTION_WIDTH";
-        public const string CrossSectionHeight = "CROSS_SECTION_HEIGHT";
-        public const string Slope1 = "SLOPE_1";
-        public const string Slope2 = "SLOPE_2";
-        public const string CrossSectionLevel = "CROSS_SECTION_LEVEL";
-        public const string WetArea = "WET_AREA";
-        public const string WetPerimeter = "WET_PERIMETER";
-        public const string ACrossSectionWidth = "A_CROSS_SECTION_WIDTH";
-        public const string Remarks = "REMARKS";
-    }
-
-    #endregion
 }

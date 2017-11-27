@@ -12,6 +12,9 @@ namespace DelftTools.Hydro
         private Manhole parentManhole;
         private bool settingParentManhole;
 
+        public Compartment() : this("compartment")
+        {
+        }
 
         public Compartment(string uniqueId) : base(uniqueId)
         {

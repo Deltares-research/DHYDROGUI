@@ -195,6 +195,7 @@
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="ISewerConnection.cs" />
     <Compile Include="Compartment.cs" />
+    <Compile Include="OutletCompartment.cs" />
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />

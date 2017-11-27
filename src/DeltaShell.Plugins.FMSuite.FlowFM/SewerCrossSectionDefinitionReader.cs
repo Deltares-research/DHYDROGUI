@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             string csWidth;
             double width;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
+            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
             {
                 var csEggShape = new CrossSectionStandardShapeEgg { Width = width };
                 return new CrossSectionDefinitionStandard(csEggShape);
@@ -53,8 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             double height;
             string csWidth;
             double width;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width)
-                && gwswElementKeyValuePairs.TryGetValue(CrossSectionPropertyKeys.CrossSectionHeight, out csHeight) && double.TryParse(csHeight, out height))
+            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width)
+                && gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out csHeight) && double.TryParse(csHeight, out height))
             {
                 var csRectangleShape = new CrossSectionStandardShapeRectangle
                 {
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             string csWidth;
             double doubleValue;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out doubleValue))
+            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out doubleValue))
             {
                 var csRoundShape = new CrossSectionStandardShapeRound { Diameter = doubleValue };
                 return new CrossSectionDefinitionStandard(csRoundShape);
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             string csWidth;
             double width;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
+            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
             {
                 //TODO: investigate trapezoid properties!
                 var csTrapezoidShape = CrossSectionStandardShapeTrapezium.CreateDefault();

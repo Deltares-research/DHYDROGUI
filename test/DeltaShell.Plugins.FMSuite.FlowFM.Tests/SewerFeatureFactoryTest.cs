@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, sourceNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, sourceNode),
                 }
             };
 
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, targetNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, targetNode)
                 }
             };
 
@@ -133,8 +133,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 GwswAttributeList = new List<GwswAttribute>()
                 {
                     GetDefaultGwswAttribute("unkownCode", "ValueShouldNotBeSet", "unknownType"),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -158,9 +158,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_pipeType, typeOfConnection),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
             var network = new HydroNetwork();
@@ -181,9 +181,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_pipeType, typeOfConnection),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -202,8 +202,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -272,13 +272,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute()
                     {
-                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", _nodeUniqueIdStart,
+                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart,
                             "unkownDefinition", "mandatoryMaybe", "noRemarks"),
                         ValueAsString = startCompartmentName
                     },
                     new GwswAttribute()
                     {
-                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", _nodeUniqueIdEnd,
+                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd,
                             "unkownDefinition", "mandatoryMaybe", "noRemarks"),
                         ValueAsString = endCompartmentName
                     },
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #region Setting expected values
             var objectId = "Obj123";
 
-            var connectionType = ConnectionType.Orifice;
+            var connectionType = SewerConnectionMapping.ConnectionType.Orifice;
             var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
 
             var levelStart = 2.0;
@@ -348,9 +348,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Orifice)),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice)),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -385,10 +385,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_pipeIndicator, isPipe ? pipeId : string.Empty),
-                    GetDefaultGwswAttribute(_pipeType, typeOfConnection),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, isPipe ? pipeId : string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
             var network = new HydroNetwork();
@@ -412,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var crossSectionDef = "crossSectionDef001";
             var startNode = "node001";
             var endNode = "node002";
-            var pipeType = ConnectionType.ClosedConnection;
+            var pipeType = SewerConnectionMapping.ConnectionType.ClosedConnection;
             var pipeTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(pipeType);
 
             var defaultString = string.Empty;
@@ -452,10 +452,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_crossSectionDef, sewerDefinitionName),
-                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, sewerDefinitionName),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection)),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -492,10 +492,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_crossSectionDef, sewerDefinitionName),
-                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.ClosedConnection)),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, sewerDefinitionName),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection)),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -526,9 +526,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -567,18 +567,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(FlowDirection.FromStartToEnd, true)]
-        [TestCase(FlowDirection.FromEndToStart, false)]
-        [TestCase(FlowDirection.Closed, true)] /*We do not map these two to anything, so default value should prevail*/
-        [TestCase(FlowDirection.Open, true)]/*We do not map these two to anything, so default value should prevail*/
-        public void CreatePumpFromGwswElementWithExpectedValues(FlowDirection flowDirection, bool flowDirectionIsPositive)
+        [TestCase(SewerConnectionMapping.FlowDirection.FromStartToEnd, true)]
+        [TestCase(SewerConnectionMapping.FlowDirection.FromEndToStart, false)]
+        [TestCase(SewerConnectionMapping.FlowDirection.Closed, true)] /*We do not map these two to anything, so default value should prevail*/
+        [TestCase(SewerConnectionMapping.FlowDirection.Open, true)]/*We do not map these two to anything, so default value should prevail*/
+        public void CreatePumpFromGwswElementWithExpectedValues(SewerConnectionMapping.FlowDirection flowDirection, bool flowDirectionIsPositive)
         {
             #region Setting expected values
 
             var startNode = "node001";
             var endNode = "node002";
 
-            var connectionType = ConnectionType.Pump;
+            var connectionType = SewerConnectionMapping.ConnectionType.Pump;
             var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
 
             var waterType = SewerConnectionWaterType.MixedWasteWater;
@@ -616,9 +616,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -639,11 +639,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(StructureType.Crest, false)]
-        [TestCase(StructureType.Orifice, false)]
-        [TestCase(StructureType.Outlet, false)]
-        [TestCase(StructureType.Pump, true)]
-        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(StructureType structureType, bool mapped)
+        [TestCase(StructureMapping.StructureType.Crest, false)]
+        [TestCase(StructureMapping.StructureType.Orifice, false)]
+        [TestCase(StructureMapping.StructureType.Outlet, true)]
+        [TestCase(StructureMapping.StructureType.Pump, true)]
+        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(StructureMapping.StructureType structureType, bool mapped)
         {
             var structureId = "structure123";
             var structurePumpGwswElement = new GwswElement
@@ -651,8 +651,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_uniqueId, structureId),
-                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, structureId),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
                 }
             };
 
@@ -669,7 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureType.Pump)),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Pump)),
                 }
             };
 
@@ -679,11 +679,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(StructureType.Crest, false)]
-        [TestCase(StructureType.Orifice, false)]
-        [TestCase(StructureType.Outlet, false)]
-        [TestCase(StructureType.Pump, true)]
-        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(StructureType structureType, bool mapped)
+        [TestCase(StructureMapping.StructureType.Crest, false)]
+        [TestCase(StructureMapping.StructureType.Orifice, false)]
+        /*[TestCase(StructureType.Outlet, true)] It's a type of compartment */
+        [TestCase(StructureMapping.StructureType.Pump, true)]
+        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(StructureMapping.StructureType structureType, bool mapped)
         {
             var structureId = "structure123";
             var structureGwswElement = new GwswElement
@@ -691,8 +691,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_uniqueId, structureId),
-                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, structureId),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
                 }
             };
 
@@ -726,9 +726,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_uniqueId, structureId),
-                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureType.Pump)),
-                    GetDefaultGwswAttribute(_pumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, structureId),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Pump)),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
                 }
             };
 
@@ -739,10 +739,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-
-                    GetDefaultGwswAttribute(_pipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
-                    GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                    GetDefaultGwswAttribute(_nodeUniqueIdEnd, endNode)
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
                 }
             };
 
@@ -760,7 +759,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(pumpCapacity, pumpPh.Capacity);
 
             //Instance the Pump AS SEWER CONNETION
-            var connectionElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            var connectionElement = SewerFeatureFactory.CreateInstance(sewerConnectionGwswElement, network);
             Assert.IsNotNull(connectionElement);
             Assert.IsTrue(network.Pumps.Any(p => p.Name.Equals(structureId)));
             Assert.IsTrue(network.SewerConnections.Any(p => p.Name.Equals(structureId)));
@@ -786,13 +785,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(_uniqueId, pumpId),
-                    GetDefaultGwswAttribute(_structureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(ConnectionType.Pump)),
-                    GetDefaultGwswAttribute(_pumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(_startLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(_stopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(_startLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(_stopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, pumpId),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Pump)),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StartLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
                 }
             };
 
@@ -812,10 +811,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPump);
             Assert.AreEqual(pumpId, createdPump.Name);
             Assert.AreEqual(pumpCapacity, createdPump.Capacity);
-            Assert.AreEqual(startLevelDownstreams, createdPump.StartDelivery);
-            Assert.AreEqual(stopLevelDownstreams, createdPump.StopDelivery);
-            Assert.AreEqual(startLevelUpstreams, createdPump.StartSuction);
-            Assert.AreEqual(stopLevelUpstreams, createdPump.StopSuction);
+            Assert.AreEqual(startLevelUpstreams, createdPump.StartDelivery);
+            Assert.AreEqual(stopLevelUpstreams, createdPump.StopDelivery);
+            Assert.AreEqual(startLevelDownstreams, createdPump.StartSuction);
+            Assert.AreEqual(stopLevelDownstreams, createdPump.StopSuction);
 
         }
         #endregion
@@ -827,12 +826,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
         {
-            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement1);
+            #region expectedVariables
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var manholeLength = 7071;
+            var manholeWidth = 7071;
+            var compartmentShape = CompartmentShape.Square;
+            var compartmentShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(compartmentShape);
+            var nodeType = string.Empty;
+            var floodableArea = 45.67;
+            var bottomLevel = 0.01;
+            var surfaceLevel = 2.75;
+            var xCoordinate = 400.0;
+            var yCoordinate = 50.0;
+            var numberOfParentManholeCompartments = 1;
+            #endregion
+
+            var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
+            var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
             var compartment = element as Compartment;
             
             // Check Compartment properties
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, "put1", "01001", 7071, 7071, CompartmentShape.Square, 45.67, 0.01, 2.75, new Coordinate(400.0, 50.0), 1);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel, new Coordinate(xCoordinate, yCoordinate), numberOfParentManholeCompartments);
         }
 
         [Test]
@@ -849,13 +865,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = uniqueId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
                     }
                 }
             };
@@ -879,19 +895,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = compartmentId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = "UnkownValue",
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.NodeShape, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.NodeShape, "MyDescription", null, null)
                     }
                 }
             };
@@ -899,11 +915,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             TryCreateFeatureAndCheckForLogMessageAndCheckFeatureValidity(manholeId, badGwswElement, compartmentId);
         }
 
-        [TestCase("01FA", ManholePropertyKeys.NodeWidth)]
-        [TestCase("01FA", ManholePropertyKeys.NodeLength)]
-        [TestCase("01FA", ManholePropertyKeys.FloodableArea)]
-        [TestCase("01FA", ManholePropertyKeys.BottomLevel)]
-        [TestCase("01FA", ManholePropertyKeys.SurfaceLevel)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.NodeWidth)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.NodeLength)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.FloodableArea)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.BottomLevel)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.SurfaceLevel)]
         public void GivenGwswElementWithBadlyFormattedStringForDoubleValue_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned(string badlyFormattedEntry, string keyValue)
         {
             var compartmentId = "put1";
@@ -917,13 +933,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = compartmentId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
@@ -952,25 +968,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = compartmentId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = xStringValue,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            ManholePropertyKeys.XCoordinate, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.XCoordinate, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = yStringValue,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            ManholePropertyKeys.YCoordinate, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.YCoordinate, "MyDescription", null, null)
                     }
                 }
             };
@@ -990,12 +1006,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = "01001",
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
                     }
                 }
             };
 
-            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholePropertyKeys.ManholeId)
+            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholeMapping.PropertyKeys.ManholeId)
                 .Select(attr => attr.ValueAsString).FirstOrDefault();
             TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(badGwswElement, "Manhole with manhole id '" + manholeId + "' could not be created, because one of its compartments misses its unique id.");
         }
@@ -1012,7 +1028,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = "put1",
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
                     }
                 }
             };
@@ -1020,12 +1036,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(badGwswElement, "There are lines in 'Knooppunt.csv' that do not contain a Manhole Id. These lines are not imported.");
         }
 
-        [TestCase(ManholePropertyKeys.NodeLength)]
-        [TestCase(ManholePropertyKeys.NodeWidth)]
-        [TestCase(ManholePropertyKeys.FloodableArea)]
-        [TestCase(ManholePropertyKeys.BottomLevel)]
-        [TestCase(ManholePropertyKeys.SurfaceLevel)]
-        [TestCase(ManholePropertyKeys.NodeShape)]
+        [TestCase(ManholeMapping.PropertyKeys.NodeLength)]
+        [TestCase(ManholeMapping.PropertyKeys.NodeWidth)]
+        [TestCase(ManholeMapping.PropertyKeys.FloodableArea)]
+        [TestCase(ManholeMapping.PropertyKeys.BottomLevel)]
+        [TestCase(ManholeMapping.PropertyKeys.SurfaceLevel)]
+        [TestCase(ManholeMapping.PropertyKeys.NodeShape)]
         public void GivenGwswElementWithEmptyValue_WhenCreatingWithFactory_ThenDefaultValuesAreGivenToTheCorrespondingCompartmentProperty(string manholePropertyKey)
         {
             var uniqueId = "put1";
@@ -1039,17 +1055,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = uniqueId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.UniqueId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholePropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
                     },
                     new GwswAttribute
                     {
-                        ValueAsString = "",
+                        ValueAsString = string.Empty,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
                             manholePropertyKey, "MyDescription", null, null)
                     }
@@ -1061,122 +1077,193 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, new Coordinate(0, 0), 1);
         }
 
+        #region Outlets
+
+        [Test]
+        public void CreateOutletCompartmentFromGwswElementNodeType()
+        {
+            var uniqueId = "outlet123";
+            var manholeId = "man123";
+            var typeDouble = "double";
+            var xCoord = 30.0;
+            var yCoord = 15.0;
+            var nodeLength = 14.0;
+            var nodeWidth = 13.0;
+            var nodeShape = CompartmentShape.Square;
+            var nodeShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(nodeShape);
+            var floodableArea = 11.0;
+            var bottomLevel = 10.0;
+            var surfaceLevel = 5.0;
+            var nodeType =
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType),
+                }
+            };
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.NotNull(createdElement);
+
+            //Check it can be casted into a compartment.
+            Assert.NotNull(createdElement as Compartment);
+            CheckCompartmentPropertyValues(createdElement as Compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, new Coordinate(xCoord, yCoord), 1);
+            //Check it can be casted into an outlet.
+            var outlet = createdElement as OutletCompartment;
+            Assert.IsNotNull(outlet);
+        }
+
+        [Test]
+        public void CreateOutletCompartmentFromGwswElementNodeTypeWithoutNetwork()
+        {
+            var uniqueId = "outlet123";
+            var manholeId = "man123";
+            var typeDouble = "double";
+            var xCoord = 30.0;
+            var yCoord = 15.0;
+            var nodeLength = 14.0;
+            var nodeWidth = 13.0;
+            var nodeShape = CompartmentShape.Square;
+            var nodeShapeAsString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(nodeShape);
+            var floodableArea = 11.0;
+            var bottomLevel = 10.0;
+            var surfaceLevel = 5.0;
+            var nodeType =
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType),
+                }
+            };
+
+            var createdElement = SewerFeatureFactory.CreateInstance(nodeGwswElement);
+            Assert.NotNull(createdElement);
+
+            //Check it can be casted into a compartment.
+            Assert.NotNull(createdElement as Compartment);
+            CheckCompartmentPropertyValues(createdElement as Compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, new Coordinate(xCoord, yCoord), 1);
+            //Check it can be casted into an outlet.
+            var outlet = createdElement as OutletCompartment;
+            Assert.IsNotNull(outlet);
+        }
+
+        [Test]
+        public void CreateOutletCompartmentFromGwswElementStructureType()
+        {
+            var uniqueId = "outlet123";
+            var surfaceWaterLevel = 15.0;
+            var structureType =
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+             
+            var defaultDouble = 0.0;
+            var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
+                defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
+
+            var network = new HydroNetwork();
+            var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            Assert.NotNull(createdElement);
+
+            //Check it can be casted into a compartment.
+            Assert.NotNull(createdElement as Compartment);
+
+            //Check it can be casted into an outlet.
+            var outlet = createdElement as OutletCompartment;
+            Assert.IsNotNull(outlet);
+            Assert.AreEqual(surfaceWaterLevel, outlet.SurfaceWaterLevel);
+        }
+
+        [Test]
+        public void CreateOutletCompartmentFromGwswElementStructureTypeWithoutNetwork()
+        {
+            var uniqueId = "outlet123";
+            var surfaceWaterLevel = 15.0;
+            var structureType =
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+
+            var defaultDouble = 0.0;
+            var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
+                defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
+
+            var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement);
+            Assert.NotNull(createdElement);
+
+            //Check it can be casted into a compartment.
+            Assert.NotNull(createdElement as Compartment);
+
+            //Check it can be casted into an outlet.
+            var outlet = createdElement as OutletCompartment;
+            Assert.IsNotNull(outlet);
+            Assert.AreEqual(surfaceWaterLevel, outlet.SurfaceWaterLevel);
+        }
+
+        [Test]
+        public void CreateOutletFromGwswStructureThenCreateSameOutletFromGwswNodeShouldAddAttributesNotRemove()
+        {
+            var uniqueId = "outlet123";
+            var manholeId = "manhole1";
+            var surfaceWaterLevel = 15.0;
+            var structureType =
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+
+            var defaultString = string.Empty;
+            var defaultDouble = 0.0;
+            //Gwsw elements
+            var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
+                defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
+            var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, structureType, defaultDouble, defaultDouble, defaultDouble,
+                defaultDouble, defaultString, defaultDouble, defaultDouble, defaultDouble);
+
+            //Create structure element and add it to the network.
+            var network = new HydroNetwork();
+            var createdStructureElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
+            Assert.NotNull(createdStructureElement);
+            
+            //Check it can be casted into an outlet.
+            var outletFromStructure = createdStructureElement as OutletCompartment;
+            Assert.IsNotNull(outletFromStructure);
+            Assert.AreEqual(surfaceWaterLevel, outletFromStructure.SurfaceWaterLevel);
+
+            //Create node element and make sure it still has the surface water level value.
+            var createdNodeElement = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
+            Assert.NotNull(createdNodeElement);
+
+            //Check it can be casted into an outlet.
+            var outletFromNode = createdNodeElement as OutletCompartment;
+            Assert.IsNotNull(outletFromNode);
+            Assert.AreEqual(surfaceWaterLevel, outletFromNode.SurfaceWaterLevel);
+        }
+        #endregion
+
         #endregion
 
         #region Test helpers
-        protected enum ConnectionType
-        {
-            [System.ComponentModel.Description("DRL")] Orifice,
-            [System.ComponentModel.Description("GSL")] ClosedConnection /*Should be created as a pipe*/,
-            [System.ComponentModel.Description("ITR")] InfiltrationPipe /*Should be created as a pipe*/,
-            [System.ComponentModel.Description("OPL")] Open /*Should be created as a pipe*/,
-            [System.ComponentModel.Description("OVS")] Crest,
-            [System.ComponentModel.Description("PMP")] Pump
-        }
-
-        public enum StructureType
-        {
-            [System.ComponentModel.Description("DRL")] Orifice,
-            [System.ComponentModel.Description("OVS")] Crest,
-            [System.ComponentModel.Description("UIT")] Outlet,
-            [System.ComponentModel.Description("PMP")] Pump
-        }
-
-        public enum FlowDirection /*Field STR_RCH*/
-        {
-            [System.ComponentModel.Description("GSL")] Closed,
-            [System.ComponentModel.Description("OPN")] Open,
-            [System.ComponentModel.Description("1_2")] FromStartToEnd,
-            [System.ComponentModel.Description("2_1")] FromEndToStart,
-        }
-
-        private static GwswAttribute GetDefaultGwswAttribute(string attributeName, string attributeValue, string attributeType = null)
-        {
-            if (attributeValue == null)
-                attributeValue = string.Empty;
-
-            return new GwswAttribute()
-            {
-                GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", attributeType ?? "string", attributeName,
-                    "unkownDefinition", "mandatoryMaybe", "noRemarks"),
-                ValueAsString = attributeValue
-            };
-        }
-
-        private static GwswElement GetSewerConnectionGwswElement(string uniqueId, string startNode, string endNode, string sewerConnectionTypeString , double startLevel, double endLevel, string flowDirectionString, double length,
-            string crossSectionDef, string pipeIndicator, string sewerConnectionWaterType, double inletLossStart, double inletLossEnd, double outletLossStart, double outletLossEnd)
-        {
-            var typeString = "string";
-            var typeDouble = "double";
-
-            GwswElement nodeGwswElement = new GwswElement();
-            try
-            {
-                nodeGwswElement = new GwswElement
-                {
-                    ElementTypeName = SewerFeatureType.Connection.ToString(),
-                    GwswAttributeList = new List<GwswAttribute>()
-                    {
-                        GetDefaultGwswAttribute(_uniqueId, uniqueId),
-                        GetDefaultGwswAttribute(_nodeUniqueIdStart, startNode),
-                        GetDefaultGwswAttribute(_nodeUniqueIdEnd,endNode),
-                        GetDefaultGwswAttribute(_pipeType,sewerConnectionTypeString),
-                        GetDefaultGwswAttribute(_levelStart, startLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_levelEnd, endLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_length, length.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_flowDirection, flowDirectionString),
-                        GetDefaultGwswAttribute(_crossSectionDef, crossSectionDef),
-                        GetDefaultGwswAttribute(_pipeIndicator, pipeIndicator),
-                        GetDefaultGwswAttribute(_waterType, sewerConnectionWaterType),
-                        GetDefaultGwswAttribute(_inletlossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_inletlossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_outletlossStart, outletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_outletlossEnd, outletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Gwsw element was not created, thus the test can't go ahead. {0}", e.Message);
-            }
-
-            Assert.IsNotNull(nodeGwswElement);
-            
-            return nodeGwswElement;
-        }
-
-        private static GwswElement GetStructureGwswElement(string uniqueId, string structureType, double pumpCapacity, double startLevelDownstreams, double stopLevelDownstreams, double startLevelUpstreams, double stopLevelUpstreams)
-        {
-            var typeString = "string";
-            var typeDouble = "double";
-
-            GwswElement nodeGwswElement = new GwswElement();
-            try
-            {
-                nodeGwswElement = new GwswElement
-                {
-                    ElementTypeName = SewerFeatureType.Connection.ToString(),
-                    GwswAttributeList = new List<GwswAttribute>()
-                    {
-                        GetDefaultGwswAttribute(_uniqueId, uniqueId),
-                        GetDefaultGwswAttribute(_structureType, structureType),
-                        GetDefaultGwswAttribute(_pumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_startLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_stopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_startLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(_stopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Gwsw element was not created, thus the test can't go ahead. {0}", e.Message);
-            }
-
-            Assert.IsNotNull(nodeGwswElement);
-
-            return nodeGwswElement;
-        }
         private static void CheckManholeNodePropertyValues(Manhole manhole, string manholeId, double xCoordinate, double yCoordinate, int numberOfCompartments)
         {
             Assert.That(manhole.Name, Is.EqualTo(manholeId));
@@ -1228,145 +1315,136 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(feature);
         }
 
-        private readonly GwswElement nodeGwswElement1 = new GwswElement
-        {
-            ElementTypeName = SewerFeatureType.Node.ToString(),
-            GwswAttributeList =
-            {
-                new GwswAttribute
-                {
-                    ValueAsString = "put1",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", _uniqueId, "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "01001",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "MANHOLE_ID", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "400.00",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "X_COORDINATE", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "50.00",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "Y_COORDINATE", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "7071",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_LENGTH", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "7071",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "integer", "NODE_WIDTH", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "RND",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "45,67",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "0.01",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "BOTTOM_LEVEL", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "2.75",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
-                }
-            }
-        };
+        #region Gwsw Elements
 
-        private readonly GwswElement nodeGwswElement2 = new GwswElement
+        private static GwswAttribute GetDefaultGwswAttribute(string attributeName, string attributeValue, string attributeType = null)
         {
-            ElementTypeName = SewerFeatureType.Node.ToString(),
-            GwswAttributeList =
-            {
-                new GwswAttribute
-                {
-                    ValueAsString = "put2",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", _uniqueId, "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "01001",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", "MANHOLE_ID", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "400.20",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "X_COORDINATE", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "50.20",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "Y_COORDINATE", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "4561",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "integer", "NODE_LENGTH", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "5561",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "integer", "NODE_WIDTH", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "RHK",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "string", "NODE_SHAPE", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "89,5",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "FLOODABLE_AREA", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "-0.45",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "BOTTOM_LEVEL", "MyDescription", null, null)
-                },
-                new GwswAttribute
-                {
-                    ValueAsString = "1.83",
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 3, "MyColumnName", "double", "SURFACE_LEVEL", "MyDescription", null, null)
-                }
-            }
-        };
+            if (attributeValue == null)
+                attributeValue = string.Empty;
 
-        private static string _uniqueId = "UNIQUE_ID";
-        // Sewer connection attributes.
-        private static string _nodeUniqueIdStart = "NODE_UNIQUE_ID_START";
-        private static string _nodeUniqueIdEnd = "NODE_UNIQUE_ID_END";
-        private static string _pipeType = "PIPE_TYPE";
-        private static string _pipeIndicator = "PIPE_INDICATOR";
-        private static string _crossSectionDef = "CROSS_SECTION_DEF";
-        private static string _levelStart = "LEVEL_START";
-        private static string _levelEnd = "LEVEL_END";
-        private static string _flowDirection = "FLOW_DIRECTION";
-        private static string _length = "LENGTH";
-        private static string _waterType = "WATER_TYPE";
-        private static string _inletlossStart = "INLETLOSS_START";
-        private static string _outletlossStart = "OUTLETLOSS_START";
-        private static string _inletlossEnd = "INLETLOSS_END";
-        private static string _outletlossEnd = "OUTLETLOSS_END";
-        // Structure attributes
-        private static string _structureType = "STRUCTURE_TYPE";
-        private static string _pumpCapacity = "PUMP_CAPACITY";
-        private static string _startLevelDownstreams = "START_LEVEL_DOWNSTREAMS";
-        private static string _stopLevelDownstreams = "STOP_LEVEL_DOWNSTREAMS";
-        private static string _startLevelUpstreams = "START_LEVEL_UPSTREAMS";
-        private static string _stopLevelUpstreams = "STOP_LEVEL_UPSTREAMS";
+            return new GwswAttribute()
+            {
+                GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", attributeType ?? "string", attributeName,
+                    "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                ValueAsString = attributeValue
+            };
+        }
+
+        private static GwswElement GetNodeGwswElement(string uniqueId, string manholeId, string nodeType, double xCoordinate, double yCoordinate, double nodeLength, double nodeWidth, string nodeShape, double floodableArea, double bottomLevel, double surfaceLevel)
+        {
+            var typeString = "string";
+            var typeDouble = "double";
+            GwswElement nodeGwswElement = new GwswElement();
+            try
+            {
+                nodeGwswElement = new GwswElement
+                {
+                    ElementTypeName = SewerFeatureType.Node.ToString(),
+                    GwswAttributeList =
+                    {
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoordinate.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoordinate.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShape),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Gwsw element was not created, thus the test can't go ahead. {0}", e.Message);
+            }
+
+            Assert.IsNotNull(nodeGwswElement);
+
+            return nodeGwswElement;
+
+            return nodeGwswElement;
+        }
+
+        private static GwswElement GetSewerConnectionGwswElement(string uniqueId, string startNode, string endNode, string sewerConnectionTypeString , double startLevel, double endLevel, string flowDirectionString, double length,
+            string crossSectionDef, string pipeIndicator, string sewerConnectionWaterType, double inletLossStart, double inletLossEnd, double outletLossStart, double outletLossEnd)
+        {
+            var typeString = "string";
+            var typeDouble = "double";
+
+            GwswElement nodeGwswElement = new GwswElement();
+            try
+            {
+                nodeGwswElement = new GwswElement
+                {
+                    ElementTypeName = SewerFeatureType.Connection.ToString(),
+                    GwswAttributeList = new List<GwswAttribute>()
+                    {
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.UniqueId, uniqueId),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd,endNode),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType,sewerConnectionTypeString),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelStart, startLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelEnd, endLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.FlowDirection, flowDirectionString),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, crossSectionDef),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeIndicator),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.WaterType, sewerConnectionWaterType),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.OutletLossStart, outletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.OutletLossEnd, outletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Gwsw element was not created, thus the test can't go ahead. {0}", e.Message);
+            }
+
+            Assert.IsNotNull(nodeGwswElement);
+            
+            return nodeGwswElement;
+        }
+
+        private static GwswElement GetStructureGwswElement(string uniqueId, string structureType, double pumpCapacity, double startLevelDownstreams, double stopLevelDownstreams, double startLevelUpstreams, double stopLevelUpstreams, double surfaceWaterLevel)
+        {
+            var typeString = "string";
+            var typeDouble = "double";
+
+            GwswElement nodeGwswElement = new GwswElement();
+            try
+            {
+                nodeGwswElement = new GwswElement
+                {
+                    ElementTypeName = SewerFeatureType.Structure.ToString(),
+                    GwswAttributeList = new List<GwswAttribute>()
+                    {
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, uniqueId),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, structureType),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StartLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.SurfaceWaterLevel, surfaceWaterLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Gwsw element was not created, thus the test can't go ahead. {0}", e.Message);
+            }
+
+            Assert.IsNotNull(nodeGwswElement);
+
+            return nodeGwswElement;
+        }
+
+        #endregion
 
         #endregion
     }
