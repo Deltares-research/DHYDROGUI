@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
     {
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RealTimeControlOutputFileFunctionStore nodeData)
         {
-            node.Text = Path.GetFileName(nodeData.Path);
+            node.Text = File.Exists(nodeData.Path) ? Path.GetFileName(nodeData.Path) : string.Empty;
         }
 
         public override System.Collections.IEnumerable GetChildNodeObjects(RealTimeControlOutputFileFunctionStore parentNodeData, ITreeNode node)

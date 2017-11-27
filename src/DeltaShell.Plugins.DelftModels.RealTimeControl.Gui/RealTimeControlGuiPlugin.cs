@@ -450,7 +450,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             return Gui.Application.GetAllModelsInProject()
                     .OfType<RealTimeControlModel>()
-                    .FirstOrDefault(m => m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
+                    .FirstOrDefault(m => 
+                        m.OutputFileFunctionStore != null &&
+                        m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
         }
     }
 }
