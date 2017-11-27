@@ -1,5 +1,6 @@
 import os
 import csv
+from collections import OrderedDict
 from GWSWmodel import GWSWmodel
 
 class GWSWreader:
@@ -17,7 +18,7 @@ class GWSWreader:
         return model
 
     def file2Dict(self, filePath):
-        dict={}
+        dict=OrderedDict()
         with open(filePath) as csvfile:
             file = csv.reader(csvfile,delimiter = self.csvDelimeter)
             firstLine = True
