@@ -47,23 +47,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
 
             string csHeight;
             double height;
             string csWidth;
             double width;
+            CrossSectionStandardShapeRectangle csRectangleShape;
             if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width)
                 && gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out csHeight) && double.TryParse(csHeight, out height))
             {
-                var csRectangleShape = new CrossSectionStandardShapeRectangle
+                csRectangleShape = new CrossSectionStandardShapeRectangle
                 {
-                    Width = width,
-                    Height = height
+                    Width = width / 1000, /*Conversion from millimeters to meters*/
+                    Height = height / 1000 /*Conversion from millimeters to meters*/
                 };
-                return new CrossSectionDefinitionStandard(csRectangleShape);
             }
-            return null;
+            else
+            {
+                csRectangleShape = CrossSectionStandardShapeRectangle.CreateDefault();
+            }
+            return new CrossSectionDefinitionStandard(csRectangleShape);
         }
     }
 
@@ -80,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) 
                 && double.TryParse(csWidth, out doubleValue))
             {
-                csRoundShape = new CrossSectionStandardShapeRound {Diameter = doubleValue / 1000 /* Conversion from millimeters to meters */};
+                csRoundShape = new CrossSectionStandardShapeRound {Diameter = doubleValue / 1000 /*Conversion from millimeters to meters*/};
             }
             else
             {
