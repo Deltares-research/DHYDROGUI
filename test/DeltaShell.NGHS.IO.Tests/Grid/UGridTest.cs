@@ -420,6 +420,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        public void TestWriteGeomUGrid()
+        {
+            var testDir = FileUtils.CreateTempDirectory();
+            var testFilePath = Path.Combine(testDir, "Custom_Ugrid.nc");
+            using (var gridApi = GridApiFactory.CreateNew())
+            {
+                gridApi.ionc_write_geom_ugrid(testFilePath);
+            }
+        }
+
+        [Test]
         [Category(TestCategory.Integration)]
         public void TestCallAll()
         {

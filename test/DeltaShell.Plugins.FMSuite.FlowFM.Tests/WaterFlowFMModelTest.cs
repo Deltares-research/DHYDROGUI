@@ -612,17 +612,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ReloadGridShouldSetNoDataValueForBathemetry()
         {
-
             var model = new WaterFlowFMModel();
-
             Assert.That(model.Grid.Cells.Count, Is.EqualTo(0));
 
-            var testDir = FileUtils.CreateTempDirectory();
-            var localCopyOfTestFile = Path.Combine(testDir, "Custom_Ugrid.nc");
-            using (var gridApi = GridApiFactory.CreateNew())
-            {
-                gridApi.ionc_write_geom_ugrid(localCopyOfTestFile);
-            }
+            var testFile = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
+            Assert.IsTrue(File.Exists(testFile));
+
+            var localCopyOfTestFile = Path.Combine(FileUtils.CreateTempDirectory(), "Custom_Ugrid.nc");
+            File.Copy(testFile, localCopyOfTestFile);
 
             try
             {
@@ -638,7 +635,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 FileUtils.DeleteIfExists(localCopyOfTestFile);
             }
-
         }
 
         [TestCase(
