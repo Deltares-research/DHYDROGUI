@@ -182,7 +182,7 @@ namespace Sobek.IntegrationTests
                 var originalHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
                 Assert.NotNull(originalHydroModel);
 
-                var originalRtcModel = originalHydroModel.Activities.OfType<RealTimeControlModel>().FirstOrDefault();
+                var originalRtcModel = originalHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<RealTimeControlModel>().FirstOrDefault();
                 Assert.NotNull(originalRtcModel);
 
                 var originalOutputFileFunctionStore = originalRtcModel.OutputFileFunctionStore;
@@ -201,7 +201,7 @@ namespace Sobek.IntegrationTests
                 var resavedHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
                 Assert.NotNull(resavedHydroModel);
 
-                var resavedRtcModel = resavedHydroModel.Activities.OfType<RealTimeControlModel>().FirstOrDefault();
+                var resavedRtcModel = resavedHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<RealTimeControlModel>().FirstOrDefault();
                 Assert.NotNull(resavedRtcModel);
 
                 var resavedOutputFileFunctionStore = resavedRtcModel.OutputFileFunctionStore;
@@ -245,15 +245,10 @@ namespace Sobek.IntegrationTests
         {
             var firstValues = firstVariable.ToList();
             var secondValues = secondVariable.ToList();
-            if (firstValues.Count != secondValues.Count) return false;
 
-            for (var j = 0; j < firstValues.Count; j++)
-            {
-                if (!firstValues[j].Equals(secondValues[j])) return false;
-            }
-            
-
-            return true;
+            var firstNotSecond = firstValues.Except(secondValues).ToList();
+            var secondNotFirst = secondValues.Except(firstValues).ToList();
+            return !firstNotSecond.Any() && !secondNotFirst.Any();
         }
 
         [Test]
@@ -261,9 +256,9 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void TestConnectToRtcOutputFileAndShowInFunctionView()
         {
-            RealTimeControlModel rtcModel;
+            HydroModel hydroModel;
             RealTimeControlOutputFileFunctionStore outputFunctionStore;
-            GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out outputFunctionStore, out rtcModel);
+            GetSimpleHydroModelWithRealTimeControlOutputFileFunctionStore(out outputFunctionStore, out hydroModel);
 
             // Show in functionView
             var function = outputFunctionStore.Functions.First();
@@ -276,9 +271,9 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void TestConnectToRtcOutputFileAndShowInProjectTree()
         {
-            RealTimeControlModel rtcModel;
+            HydroModel hydroModel;
             RealTimeControlOutputFileFunctionStore outputFunctionStore;
-            GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out outputFunctionStore, out rtcModel);
+            GetSimpleHydroModelWithRealTimeControlOutputFileFunctionStore(out outputFunctionStore, out hydroModel);
 
             // Show in ProjectTree
             WpfTestHelper.ShowModal((Control)gui.MainWindow);
@@ -289,9 +284,12 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Slow)]
         public void TestConnectToRtcOutputFileAndShowInMapView()
         {
-            RealTimeControlModel rtcModel;
+            HydroModel hydroModel;
             RealTimeControlOutputFileFunctionStore outputFunctionStore;
-            GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out outputFunctionStore, out rtcModel);
+            GetSimpleHydroModelWithRealTimeControlOutputFileFunctionStore(out outputFunctionStore, out hydroModel);
+
+            var rtcModel = hydroModel.CurrentWorkflow.GetActivitiesOfType<RealTimeControlModel>().FirstOrDefault();
+            Assert.NotNull(rtcModel);
 
             var providers = new IMapLayerProvider[]{ new RealTimeControlMapLayerProvider() };
             var layer = (IGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(rtcModel, null, providers);
@@ -791,7 +789,7 @@ namespace Sobek.IntegrationTests
                 gui.Dispose();
         }
 
-        private void GetSimpleRealTimeControlModelWithOutputFileFunctionStore(out RealTimeControlOutputFileFunctionStore outputFunctionStore, out RealTimeControlModel rtcModel)
+        private void GetSimpleHydroModelWithRealTimeControlOutputFileFunctionStore(out RealTimeControlOutputFileFunctionStore outputFunctionStore, out HydroModel hydroModel)
         {
             var testFilePath = TestHelper.GetTestFilePath(@"RtcOutput\" + RealTimeControlModel.OutputFileName);
 
@@ -808,12 +806,16 @@ namespace Sobek.IntegrationTests
 
             // create RTC model
             var input = new Input();
-            rtcModel = new RealTimeControlModel { ControlGroups = { new ControlGroup { Inputs = { input } } } };
+            var rtcModel = new RealTimeControlModel { ControlGroups = { new ControlGroup { Inputs = { input } } } };
 
             // create and add to HydroModel
-            var hydroModel = new HydroModel { Activities = { rtcModel } };
+            hydroModel = new HydroModel { Activities = { rtcModel } };
             hydroModel.Region.SubRegions.Add(flowModel.Region);
             hydroModel.Activities.Add(flowModel);
+
+            var workflow = hydroModel.Workflows.FirstOrDefault(wf => wf.Name == "(RTC + Flow1D)");
+            Assert.NotNull(workflow);
+            hydroModel.CurrentWorkflow = workflow;
 
             gui.Application.Project.RootFolder.Add(hydroModel);
 

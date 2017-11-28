@@ -214,7 +214,11 @@ namespace Sobek.IntegrationTests
 
             hydroModel.Region.SubRegions.Add(flowModel.Region);
             hydroModel.Activities.Add(flowModel);
-            
+
+            var workflow = hydroModel.Workflows.FirstOrDefault(wf => wf.Name == "(RTC + Flow1D)");
+            Assert.NotNull(workflow);
+            hydroModel.CurrentWorkflow = workflow;
+
             // attach models to each other
             var source = rtcModel.GetDataItemByValue(input);
             var target = flowModel.GetChildDataItems(observationPoint).First();
