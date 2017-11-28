@@ -22,12 +22,9 @@ class GWSWreader:
         with open(filePath) as csvfile:
             file = csv.reader(csvfile,delimiter = self.csvDelimeter)
             firstLine = True
-            i=0
             for line in file:
                 if not firstLine:
                     dict[line[0]] = line[0:]
-                    dict[line[0]].append(i)
-                    i+=1
                 firstLine = False
         return dict
 

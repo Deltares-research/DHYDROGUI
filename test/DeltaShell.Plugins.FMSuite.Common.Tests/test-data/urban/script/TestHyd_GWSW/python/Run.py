@@ -2,8 +2,8 @@ import os
 from GWSWreader import GWSWreader
 from FMwriter import FMwriter
 
-
-dirPath = os.path.abspath('D:\\Documents\\D-Hydro\\Urban\\TestHyd_GWSW') + "\\"
+p = 'D:\\source\\delta-shell\\Products\\NGHS\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\urban\\script\\TestHyd_GWSW\\'
+dirPath = os.path.abspath(p)
 
 
 if __name__ == '__main__':

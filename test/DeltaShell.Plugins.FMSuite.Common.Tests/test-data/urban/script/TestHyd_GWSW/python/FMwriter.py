@@ -10,11 +10,6 @@ class FMwriter:
     def __init__(self, model):
         self.model = model
 
-    def getSorteddArrayByReadingOrder(self, dict):
-        dictValueArrayLength = len(list(self.model.nodes.values())[0])
-        lst = sorted(self.model.nodes.values(), key=lambda x: x[dictValueArrayLength-1])
-        return lst
-
     def writeAll(self, dirPath):  # write all fm files from GWSW model
         self.writeBoundaries(dirPath)
         self.writeRetentions(dirPath)
@@ -67,7 +62,9 @@ class FMwriter:
         fileBc.write('fileType = boundConds\n')
         fileBc.write('\n')
 
-        for item in self.getSorteddArrayByReadingOrder(self.model.nodes):
+        for keyvalue in self.model.nodes.items():
+
+            item = keyvalue[1]
 
             if str(item[14]) != 'UIT': # is not a boundary
                 continue
@@ -126,7 +123,9 @@ class FMwriter:
         file.write('minorVersion = 0\n')
         file.write('\n')
 
-        for item in self.getSorteddArrayByReadingOrder(self.model.nodes):
+        for keyvalue in self.model.nodes.items():
+
+            item = keyvalue[1]
 
             if str(item[14]) == 'UIT': # is a boundary
                 continue
