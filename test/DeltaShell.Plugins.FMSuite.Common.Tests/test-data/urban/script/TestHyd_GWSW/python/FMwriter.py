@@ -13,11 +13,17 @@ class FMwriter:
     def writeAll(self, dirPath):  # write all fm files from GWSW model
         self.writeBoundaries(dirPath)
         self.writeRetentions(dirPath)
-        self.writeConnections(dirPath)
+        self.writePipes(dirPath)
+        self.writeProfiles(dirPath)
         self.writeFMnetwork(dirPath, "test")
         return True
 
+    def to2Dec(selfselft, strValue):
+        result = str("%.2f" % round(float(strValue),2))
+        return result;
+
     def writeBoundaries(self, dirPath):  # write boundaries ini and bc
+
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
@@ -64,20 +70,20 @@ class FMwriter:
 
         for keyvalue in self.model.nodes.items():
 
-            item = keyvalue[1]
+            value = keyvalue[1]
 
-            if str(item[14]) != 'UIT': # is not a boundary
+            if str(value[14]) != 'UIT': # is not a boundary
                 continue
 
             #location
             fileLocs.write('[Boundary]\n')
-            fileLocs.write('nodeId = ' + str(item[0]) + '\n')
+            fileLocs.write('nodeId = ' + str(value[0]) + '\n')
             fileLocs.write('type = 1\n')
             fileLocs.write('\n')
 
             #condition
             fileBc.write('[Boundary]\n')
-            fileBc.write('name = ' + str(item[0]) + '\n')
+            fileBc.write('name = ' + str(value[0]) + '\n')
             fileBc.write('function = constant\n')
             fileBc.write('time-interpolation = linear-extrapolate\n')
             fileBc.write('quantity = water_level\n')
@@ -92,7 +98,7 @@ class FMwriter:
 
 
     def writeRetentions(self, dirPath):  # write all manholes from GWSW model
-        filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
+
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
@@ -115,6 +121,7 @@ class FMwriter:
         #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
         #ALG_TOE	Toelichting bij deze regel
 
+        filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
         file = open(filePath, 'w')
 
         #header
@@ -125,9 +132,9 @@ class FMwriter:
 
         for keyvalue in self.model.nodes.items():
 
-            item = keyvalue[1]
+            value = keyvalue[1]
 
-            if str(item[14]) == 'UIT': # is a boundary
+            if str(value[14]) == 'UIT': # is a boundary
                 continue
 
             # [Retention]
@@ -141,64 +148,170 @@ class FMwriter:
             # area=0.0
             # streetLevel=0.0
             file.write('[Retention]\n')
-            file.write('id = ' + str(item[0]) + '\n')
-            file.write('name = ' + str(item[2]) + '\n')
-            file.write('nodeId = ' + str(item[0]) + '\n')
-            file.write('manholeId = ' + str(item[2]) + '\n')
+            file.write('id = ' + str(value[0]) + '\n')
+            file.write('name = ' + str(value[2]) + '\n')
+            file.write('nodeId = ' + str(value[0]) + '\n')
+            file.write('manholeId = ' + str(value[2]) + '\n')
             file.write('storageType = Closed\n')
             file.write('useTable = 0\n')
-            file.write('bedLevel = ' + str(item[11]) + '\n')
+            file.write('bedLevel = ' + str(value[11]) + '\n')
 
             area = 0.0
-            br = (float(item[12]) / 100)
-            l = (float(item[13]) / 100)
+            br = (float(value[12]) / 100)
+            l = (float(value[13]) / 100)
 
-            if str(item[11]) == 'RND':
+            if str(value[11]) == 'RND':
                 area = pi * br**2
             else:
                 area = br * l
 
-            areaStr  = str("%.2f" % round(area,2))
+            areaStr  = self.to2Dec(area)
 
             file.write('area = ' + areaStr + '\n')
-            file.write('streetLevel = ' + str(item[6]) + '\n')
+            file.write('streetLevel = ' + str(value[6]) + '\n')
             file.write('\n')
         file.close()
         return True
 
-    def writeConnections(self, dirPath):  # write all fm files from GWSW model
-        filePath = os.path.join(dirPath, 'output_inputFM', 'pipes.ini')
-        # UNIQUE_ID	UNI_IDE
-        # NODE_ID_START	UNI_ID1
-        # NODE_ID_END	UNI_ID2
-        # network_branch_id
-        # PIPE_TYPE	LEI_TYP
-        # LEVEL_START	BOB_IDE1
-        # LEVEL_END	BOB_IDE2
-        # LENGTH	VRB_LEN
-        # CROSS_SECTION_DEF	PRO_DEF
-        file = open(filePath, 'w')
-        for key, value in sorted(self.model.connections.items()):
-            # type
-            # Doorlaat	DRL
+    def writePipes(self, dirPath):  # write pipes described as crossections from GWSW model
+
+        #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #KN1_IDE	Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
+        #KN2_IDE	Identificatie knooppunt 2. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
+        #VRB_TYP	Type verbinding
+        #LEI_IDE
+        #BOB_KN1	Binnenonderkant buis knooppunt 1 t.o.v. NAP
+        #BOB_KN2	Binnenonderkant buis knooppunt 2 t.o.v. NAP
+        #STR_RCH	Mogelijke stromingsrichting door verbinding
+        #VRB_LEN	Lengte van de leiding of de lengte die via het kunstwerk overbrugd wordt (bijvoorbeeld de lengte van de persleiding tussen pomp en lozingspunt)
+        #INZ_TYP	Type afvalwater dat wordt ingezameld
+        #INV_KN1	Instroomverliescoëfficient knooppunt 1
+        #UTV_KN1	Uitstroomverliescoëfficient knooppunt 1
+        #INV_KN2	Instroomverliescoëfficient knooppunt 2
+        #UTV_KN2	Uitstroomverliescoëfficient knooppunt 2
+        #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
+        #PRO_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #STA_OBJ	Status van het object
+        #AAN_BB1	Aanname waarde BOB_KN1
+        #AAN_BB2	Aanname waarde BOB_KN2
+        #INI_NIV	Initiële waterstand t.o.v. NAP
+        #ALG_TOE	Toelichting bij deze regel
+
+        fileCSLoc = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionLocations.ini'), 'w')
+        fileRough = open(os.path.join(dirPath, 'output_inputFM', 'Roughness_SewerSystem.ini'), 'w')
+
+        #header location
+        fileCSLoc.write('[General]\n')
+        fileCSLoc.write('majorVersion = 1\n')
+        fileCSLoc.write('minorVersion = 0\n')
+        fileCSLoc.write('fileType = crossLoc\n')
+        fileCSLoc.write('\n')
+
+        #header roughness
+        fileRough.write('[General]\n')
+        fileRough.write('majorVersion = 1\n')
+        fileRough.write('minorVersion = 0\n')
+        fileRough.write('fileType = roughness\n')
+        fileRough.write('\n')
+        fileRough.write('[Content]\n')
+        fileRough.write('sectionId = SewerSystem\n')
+        fileRough.write('flowDirection = False\n')
+        fileRough.write('interpolate = 1\n')
+        fileRough.write('globalType = 7\n')
+        fileRough.write('globalValue = 3.000\n')
+        fileRough.write('\n')
+
+        for keyvalue in self.model.connections.items():
+
+            value = keyvalue[1]
+
             # Gesloten leiding	GSL
-            # Infiltratieriool	ITR
-            # Open leiding	OPL
-            # Overstortdrempel	OVS
-            # Pomp	PMP
-            if str(value[2]) == 'GSL':
-                file.write('[pipe]\n')
-                file.write('id=' + str(key) + '\n')
-                file.write('node_id_start=' + str(value[0]) + '\n')
-                file.write('node_id_end=' + str(value[1]) + '\n')
-                file.write('network_branch_id=' + str(value[3]) + '\n')
-                # file.write('pipe_type'+str(value[1])+'\n')
-                file.write('level_start=' + str(value[4]) + '\n')
-                file.write('level_end=' + str(value[5]) + '\n')
-                # file.write('length'+str(value[7])+'\n')
-                # file.write('cross_section_def'+str(value[14])+'\n')
-                file.write('\n')
-        file.close()
+            if str(value[3]) != 'GSL':
+                    continue
+
+            #start
+            fileCSLoc.write('[CrossSection]\n')
+            fileCSLoc.write('id = ' + str(value[0]) + '_start\n')
+            fileCSLoc.write('branchid = ' + str(value[0]) + '\n')
+            fileCSLoc.write('chainage = 0.00\n')
+            fileCSLoc.write('shift = ' + self.to2Dec(value[5]) + '\n')
+            fileCSLoc.write('definition = ' + str(value[15]) + '\n')
+            fileCSLoc.write('\n')
+
+            #end
+            fileCSLoc.write('[CrossSection]\n')
+            fileCSLoc.write('id = ' + str(value[0]) + '_end\n')
+            fileCSLoc.write('branchid = ' + str(value[0]) + '\n')
+            length = str("%.2f" % round(float(value[8]),2))
+            fileCSLoc.write('chainage = ' + length + '\n')
+            fileCSLoc.write('shift = ' + self.to2Dec(value[6]) + '\n')
+            fileCSLoc.write('definition = ' + str(value[15]) + '\n')
+            fileCSLoc.write('\n')
+
+            #roughness
+            fileRough.write('[Definition]\n')
+            fileRough.write('branchId = ' + str(value[0]) + '\n')
+            fileRough.write('chainage = 0.00\n')
+            fileRough.write('value = 3.000\n')
+            fileRough.write('\n')
+
+        fileCSLoc.close()
+        fileRough.close()
+        return True
+
+    def writeProfiles(self, dirPath):  # write all profiles from GWSW model
+
+        #PRO_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #PRO_MAT	Materiaal profiel
+        #PRO_VRM	Vorm profiel
+        #PRO_BRE	Breedte/diameter profiel
+        #PRO_HGT	Hoogte profiel
+        #OPL_HL1	Co-tangens helling 1
+        #OPL_HL2	Co-tangens helling 2
+        #PRO_NIV	Niveau boven b.o.b. Als er meerdere profielwaardes per niveau gelden, dan meerdere Profiel-regels opnemen met gelijke waarde van PRO_IDE. De waarde van PRO_NIV mag daarbij dus niet gelijk zijn
+        #PRO_NOP	Nat oppervlak bij niveau
+        #PRO_NOM	Natte omtrek bij niveau
+        #PRO_BRE	Breedte bij niveau
+        #AAN_PBR	Aanname profielbreedte
+        #ALG_TOE	Toelichting bij deze regel
+
+        fileCSDef = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionsDefinitions.ini'), 'w')
+
+        #header
+        fileCSDef.write('[General]\n')
+        fileCSDef.write('majorVersion = 1\n')
+        fileCSDef.write('minorVersion = 0\n')
+        fileCSDef.write('fileType = crossDef\n')
+        fileCSDef.write('\n')
+
+        for keyvalue in self.model.profiles.items():
+
+            value = keyvalue[1]
+
+            fileCSDef.write('[Definition]\n')
+            fileCSDef.write('id = ' + str(value[0]) + '\n')
+
+            w = float(value[3])
+            wString = str("%.2f" % round(w,2))
+            t = str(value[2])
+            if t == 'RND':
+                fileCSDef.write('type = circle\n')
+                fileCSDef.write('diameter = ' + wString + '\n')
+            elif t == 'EIV':
+                fileCSDef.write('type = egg\n')
+                fileCSDef.write('width = ' + wString + '\n')
+                fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
+            else:
+                fileCSDef.write('type = rectangle\n')
+                fileCSDef.write('width = ' + wString + '\n')
+                fileCSDef.write('height = ' + self.to2Dec(value[4]) + '\n')
+
+            fileCSDef.write('closed = 1\n')
+            fileCSDef.write('groundlayerUsed = 0\n')
+            fileCSDef.write('roughnessNames = SewerSystem\n')
+            fileCSDef.write('\n')
+
+        fileCSDef.close()
         return True
 
     ## writeFMnetwork documentation
