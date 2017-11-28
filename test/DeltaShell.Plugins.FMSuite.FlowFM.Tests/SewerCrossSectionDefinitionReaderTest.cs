@@ -1,51 +1,33 @@
-﻿using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+﻿using System.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
     public class SewerCrossSectionDefinitionReaderTest
     {
-        private MockRepository mocks;
-
-        [SetUp]
-        public void Setup()
-        {
-            mocks = new MockRepository();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            mocks.VerifyAll();
-        }
-
-        private GwswElement GetGwswElement(SewerFeatureType sewerFeatureType)
-        {
-            return new GwswElement
-            {
-                ElementTypeName = sewerFeatureType.ToString(),
-                GwswAttributeList =
-                {
-                    new GwswAttribute
-                    {
-                        ValueAsString = "1250",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, "MyDescription", null, null)
-                    }
-                }
-            };
-        }
+        #region Circle cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionDefinition_ThenReturnCorrectValue()
+        public void GivenGwswElement_WhenReadingCrossSectionCircleDefinition_ThenReturnCorrectValue()
         {
             var element = GetGwswElement(SewerFeatureType.Crosssection);
             var circleReader = new CsdCircleDefinitionReader();
             var csDefinition = circleReader.ReadCrossSectionDefinition(element);
 
-            Assert.That(csDefinition.Width, Is.EqualTo(1250.0));
+            Assert.That(csDefinition.Width, Is.EqualTo(1.25));
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionCircleDefinition_ThenReturnDefaultCircleCrossSection()
+        {
+            var element = GetGwswElement(SewerFeatureType.Crosssection);
+            element.GwswAttributeList.Clear();
+            var circleReader = new CsdCircleDefinitionReader();
+            var csDefinition = circleReader.ReadCrossSectionDefinition(element);
+
+            Assert.That(csDefinition.Width, Is.EqualTo(0.160d));
         }
 
         [TestCase(SewerFeatureType.Node)]
@@ -64,5 +46,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsNull(csDefinition);
         }
+
+        #endregion
+
+        #region Test helpers
+        private GwswElement GetGwswElement(SewerFeatureType sewerFeatureType)
+        {
+            return new GwswElement
+            {
+                ElementTypeName = sewerFeatureType.ToString(),
+                GwswAttributeList =
+                {
+                    new GwswAttribute
+                    {
+                        ValueAsString = "1250",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
+                            CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, "MyDescription", null, null)
+                    }
+                }
+            };
+        }
+        
+        #endregion
     }
 }

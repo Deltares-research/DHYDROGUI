@@ -76,12 +76,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             string csWidth;
             double doubleValue;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out doubleValue))
+            CrossSectionStandardShapeRound csRoundShape;
+            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) 
+                && double.TryParse(csWidth, out doubleValue))
             {
-                var csRoundShape = new CrossSectionStandardShapeRound { Diameter = doubleValue };
-                return new CrossSectionDefinitionStandard(csRoundShape);
+                csRoundShape = new CrossSectionStandardShapeRound {Diameter = doubleValue / 1000 /* Conversion from millimeters to meters */};
             }
-            return null;
+            else
+            {
+                csRoundShape = CrossSectionStandardShapeRound.CreateDefault();
+            }
+            return new CrossSectionDefinitionStandard(csRoundShape);
         }
     }
 
