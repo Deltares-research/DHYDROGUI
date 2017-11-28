@@ -14,16 +14,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
             
             string csWidth;
             double width;
+            CrossSectionStandardShapeEgg csEggShape;
             if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
             {
-                var csEggShape = new CrossSectionStandardShapeEgg { Width = width };
-                return new CrossSectionDefinitionStandard(csEggShape);
+                csEggShape = new CrossSectionStandardShapeEgg { Width = width / 1000 /*Conversion from millimeters to meters*/};
             }
-            return null;
+            else
+            {
+                csEggShape = CrossSectionStandardShapeEgg.CreateDefault();
+            }
+            return new CrossSectionDefinitionStandard(csEggShape);
         }
     }
 

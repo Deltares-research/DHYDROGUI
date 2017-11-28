@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var element = GetGwswElement(type, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
             CreateCSDShapeAndCheckForNull<CsdCircleDefinitionReader>(element);
             CreateCSDShapeAndCheckForNull<CsdRectangleDefinitionReader>(element);
+            CreateCSDShapeAndCheckForNull<CsdEggDefinitionReader>(element);
         }
 
         private static void CreateCSDShapeAndCheckForNull<T>(GwswElement element) where T : SewerCrossSectionDefinitionReader, new()
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(csDefinition);
         }
 
-        #region Circle cross section
+        #region Circle shape cross section
 
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionCircleDefinition_ThenReturnCorrectValue()
@@ -63,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region Rectangle cross section
+        #region Rectangle shape cross section
 
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionRectangleDefinition_ThenReturnCorrectValue()
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
             var values = new List<string> { "2000", "1200" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDRectangleShapeAndCheckProperties(element, 2.0, 1.2);
+            CreateCSDShapeAndCheckProperties<CsdRectangleDefinitionReader, CrossSectionStandardShapeRectangle>(element, 2.0, 1.2);
         }
 
         [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth)]
@@ -82,20 +83,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var keys = new List<string> { key };
             var values = new List<string> { "2000" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDRectangleShapeAndCheckProperties(element, 1.0, 1.0);
+            CreateCSDShapeAndCheckProperties<CsdRectangleDefinitionReader, CrossSectionStandardShapeRectangle>(element, 1.0, 1.0);
         }
 
-        private static void CreateCSDRectangleShapeAndCheckProperties(GwswElement gwswElement, double width, double length)
+        #endregion
+
+        #region Egg shape cross section
+        
+        [Test]
+        public void GivenGwswElement_WhenReadingCrossSectionEggDefinition_ThenReturnCorrectValue()
         {
-            var rectangleReader = new CsdRectangleDefinitionReader();
-            var csDefinition = rectangleReader.ReadCrossSectionDefinition(gwswElement) as CrossSectionDefinitionStandard;
-            Assert.NotNull(csDefinition);
-
-            var csRectangleShape = csDefinition.Shape as CrossSectionStandardShapeRectangle;
-            Assert.NotNull(csRectangleShape);
-            Assert.That(csRectangleShape.Width, Is.EqualTo(width));
-            Assert.That(csRectangleShape.Height, Is.EqualTo(length));
+            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
+            var values = new List<string> { "250" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 0.25, 0.375);
         }
+
+        // TODO: Maybe check also when height is available and NOT width
+
+        // Check for default shape when there is missing data
+        [Test]
+        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionEggDefinition_ThenReturnDefaultRectangleCrossSection()
+        {
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
+            CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 2.0, 3.0);
+        }
+
+        // 
 
         #endregion
 
@@ -126,6 +140,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var keyValues = new Dictionary<string, string>();
             for (var i = 0; i < keys.Count; i++) keyValues.Add(keys[i], values[i]);
             return keyValues;
+        }
+
+        private static void CreateCSDShapeAndCheckProperties<TReader, TShape>(GwswElement gwswElement, double width, double length) 
+            where TReader : SewerCrossSectionDefinitionReader, new() 
+            where TShape : CrossSectionStandardShapeWidthHeightBase, new()
+        {
+            var rectangleReader = new TReader();
+            var csDefinition = rectangleReader.ReadCrossSectionDefinition(gwswElement) as CrossSectionDefinitionStandard;
+            Assert.NotNull(csDefinition);
+
+            var csRectangleShape = csDefinition.Shape as TShape;
+            Assert.NotNull(csRectangleShape);
+            Assert.That(csRectangleShape.Width, Is.EqualTo(width));
+            Assert.That(csRectangleShape.Height, Is.EqualTo(length));
         }
 
         #endregion
