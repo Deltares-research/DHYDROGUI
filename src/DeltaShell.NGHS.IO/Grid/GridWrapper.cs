@@ -145,9 +145,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nface">The number of faces in the mesh.</param>
         /// <param name="nmaxfacenodes">The maximum number of nodes per face in the mesh.</param>
         /// <param name="fillvalue"></param>
+        /// <param name="startIndex"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_face_nodes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ionc_get_face_nodes(ref int ioncid, ref int meshid, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue);
+        public static extern int ionc_get_face_nodes(ref int ioncid, ref int meshid, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue, ref int startIndex);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_geom_ugrid", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ionc_write_geom_ugrid(string filename);

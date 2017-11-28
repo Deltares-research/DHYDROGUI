@@ -17,6 +17,8 @@ namespace DeltaShell.NGHS.IO.Grid
         private double fillValue;
         private bool disposed;
 
+        private const int StartIndex = 0;
+
         static GridApi()
         {
             NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
@@ -395,14 +397,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                /*
-                    Set startIndex to 1 (we would prefer to use zero here)
-                    However GridWrapper.ionc_get_face_nodes in GetFaceNodesForMesh (below) does not allow for a specified startIndex
-                    and UnstructuredGridFactory.CreateFromVertexAndEdgeList (framework) uses the same start index for constructing both Edges and Cells
-
-                    TODO: this should be changed to zero with DELFT3DFM-1308
-                 */
-                var startIndex = 1; 
+                // Note: startIndex should always be the same for both GetEdgeNodesForMesh and GetFaceNodesForMesh
+                var startIndex = StartIndex; // always update the const StartIndex!
 
                 var ierr = GridWrapper.ionc_get_edge_nodes(ref ioncid, ref meshId, ref ptr, ref nEdges, ref startIndex);
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
@@ -427,9 +423,10 @@ namespace DeltaShell.NGHS.IO.Grid
             int nfillValue = 0;
             try
             {
-                // TODO: after ionc_get_face_nodes has been updated to accept a startIndex, use startIndex = 0 here (DELFT3DFM-1308)
-                // TODO: also change ionc_get_edge_nodes (above) to use startIndex = 0
-                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref nFaces, ref nMaxFaceNodes, ref nfillValue);
+                // Note: startIndex should always be the same for both GetFaceNodesForMesh and GetEdgeNodesForMesh
+                var startIndex = StartIndex; // always update the const StartIndex!
+
+                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref nFaces, ref nMaxFaceNodes, ref nfillValue, ref startIndex);
 
                 if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
                 {
