@@ -9,17 +9,17 @@ namespace DelftTools.Hydro.Tests.Structures
     [TestFixture]
     public class ManholeTest
     {
-        private static string name1 = "myName1";
-        private static string name2 = "myName2";
+        private static string compartmentName1 = "myName1";
+        private static string CompartmentName2 = "myName2";
 
         private EventedList<Compartment> GetCompartmentList()
         {
-            Compartment compartment1 = new Compartment(name1)
+            Compartment compartment1 = new Compartment(compartmentName1)
             {
                 Geometry = new Point(1, 3)
             };
 
-            Compartment compartment2 = new Compartment(name2)
+            Compartment compartment2 = new Compartment(CompartmentName2)
             {
                 Geometry = new Point(2, 4)
             };
@@ -60,7 +60,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void GivenManhole_WhenInstatiatingWithCompartment_ThenCompartmentHasManholeAsParentManhole()
         {
             const string manholeName = "myManhole";
-            var compartment1 = new Compartment(name1)
+            var compartment1 = new Compartment(compartmentName1)
             {
                 Geometry = new Point(1, 3)
             };
@@ -77,7 +77,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void GivenManhole_WhenAddingCompartment_ThenCompartmentHasManholeAsParentManhole()
         {
             const string manholeName = "myManhole";
-            var compartment1 = new Compartment(name1)
+            var compartment1 = new Compartment(compartmentName1)
             {
                 Geometry = new Point(1, 3)
             };
@@ -146,8 +146,8 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.That(manhole.Geometry, Is.EqualTo(new Point(1.5, 3.5)));
             manhole.Geometry = new Point(11.5, 8.5);
 
-            var translatedComp1 = manhole.Compartments.FirstOrDefault(c => c.Name == name1);
-            var translatedComp2 = manhole.Compartments.FirstOrDefault(c => c.Name == name2);
+            var translatedComp1 = manhole.Compartments.FirstOrDefault(c => c.Name == compartmentName1);
+            var translatedComp2 = manhole.Compartments.FirstOrDefault(c => c.Name == CompartmentName2);
             Assert.NotNull(translatedComp1);
             Assert.NotNull(translatedComp2);
             Assert.That(translatedComp1.Geometry, Is.EqualTo(new Point(11, 8)));
@@ -236,8 +236,8 @@ namespace DelftTools.Hydro.Tests.Structures
             {
                 Compartments = GetCompartmentList()
             };
-            Assert.NotNull(manhole.GetCompartmentByName(name1));
-            Assert.NotNull(manhole.GetCompartmentByName(name2));
+            Assert.NotNull(manhole.GetCompartmentByName(compartmentName1));
+            Assert.NotNull(manhole.GetCompartmentByName(CompartmentName2));
         }
 
         [Test]
@@ -257,8 +257,8 @@ namespace DelftTools.Hydro.Tests.Structures
             {
                 Compartments = GetCompartmentList()
             };
-            Assert.IsTrue(manhole.ContainsCompartment(name1));
-            Assert.IsTrue(manhole.ContainsCompartment(name2));
+            Assert.IsTrue(manhole.ContainsCompartment(compartmentName1));
+            Assert.IsTrue(manhole.ContainsCompartment(CompartmentName2));
         }
 
         [Test]
