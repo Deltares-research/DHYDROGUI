@@ -7,41 +7,7 @@ using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    [Serializable]
-    public class UGridGlobalMetaData
-    {
-        public UGridGlobalMetaData()
-        {
-            Modelname = "Unknown model";
-            Source = "Unknown Source";
-            Version = "-";
-        }
-        public UGridGlobalMetaData(string modelName, string source, string version)
-        {
-            Modelname = modelName;
-            Source = source;
-            Version = version;
-        }
-        public string Modelname { get; private set; }
-
-        public string Source { get; private set; }
-
-        public string Version { get; private set; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType()) return false;
-            var gmd = (UGridGlobalMetaData) obj;
-            return Modelname == gmd.Modelname && Source == gmd.Source && Version == gmd.Version;
-        }
-
-        public override int GetHashCode()
-        {
-            return Modelname.GetHashCode();
-        }
-    }
-
-    public class AGrid<T> : IDisposable where T : class, IGridApi
+    public abstract class AGrid<T> : IDisposable where T : class, IGridApi
     {
         protected readonly string filename;
         private readonly GridApiDataSet.NetcdfOpenMode mode;
@@ -155,14 +121,14 @@ namespace DeltaShell.NGHS.IO.Grid
             return uGridApi;
         }
 
-        public void DoWithValidGridApi(Func<T, int> function, string errorMessage)
+        protected void DoWithValidGridApi(Func<T, int> function, string errorMessage)
         {
             var uGridNetworkApi = GetValidGridApi(errorMessage);
             var ierr = function(uGridNetworkApi);
             ThrowIfError(ierr, errorMessage);
         }
 
-        public void DoWithValidGridApi(Action<T> action, string errorMessage)
+        protected void DoWithValidGridApi(Action<T> action, string errorMessage)
         {
             var uGridApi = GetValidGridApi(errorMessage);
             action(uGridApi);

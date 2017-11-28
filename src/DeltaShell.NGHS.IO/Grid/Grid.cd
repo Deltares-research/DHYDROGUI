@@ -10,6 +10,9 @@
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet">
     <Position X="19.75" Y="2.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
       <Class Name="DeltaShell.NGHS.IO.Grid.GridApiDataSet.UGridAttributeConstants" Collapsed="true">
         <TypeIdentifier>
@@ -55,7 +58,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.GridGeomApi" Collapsed="true">
-    <Position X="15.75" Y="6.25" Width="1.5" />
+    <Position X="16" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAAAAAAQABAAAIAIAAAAAgAAAACAAiAAAAgAAAA=</HashCode>
       <FileName>Grid\GridGeomApi.cs</FileName>
@@ -159,13 +162,6 @@
       <FileName>Grid\UnstructuredGridFileHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DeltaShell.NGHS.IO.Grid.UGridGlobalMetaData" Collapsed="true">
-    <Position X="12.75" Y="12.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>IAAAAAAAAgAAAAAAgAAAAAAAAAAAAIAAAAAAAAgAAAA=</HashCode>
-      <FileName>Grid\AGrid.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="DeltaShell.NGHS.IO.Grid.AGrid&lt;T&gt;" Collapsed="true">
     <Position X="9.75" Y="12.25" Width="1.5" />
     <TypeIdentifier>
@@ -182,6 +178,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAggAgAAAAAAQEAAAAAAICACAAABAAIAAQAAAAAA=</HashCode>
       <FileName>Grid\UGridNetwork.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.NGHS.IO.Grid.UGridGlobalMetaData" Collapsed="true">
+    <Position X="13.25" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAgAAAAAAgAAAAAAAAAAAAIAAAAAAAAgAAAA=</HashCode>
+      <FileName>Grid\UGridGlobalMetaData.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="DeltaShell.NGHS.IO.Grid.IGridApi" Collapsed="true">

@@ -181,6 +181,7 @@
     <Compile Include="Grid\RemoteGridApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkDiscretisationApi.cs" />
+    <Compile Include="Grid\UGridGlobalMetaData.cs" />
     <Compile Include="Grid\UGridNetwork.cs" />
     <Compile Include="Grid\UGridNetworkDiscretisation.cs" />
     <Compile Include="Grid\UGridApi.cs" />
