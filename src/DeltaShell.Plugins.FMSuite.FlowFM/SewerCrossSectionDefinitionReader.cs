@@ -36,7 +36,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
-            throw new System.NotImplementedException();
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
+
+            double height;
+            double width;
+            CrossSectionStandardShapeArch csArchShape;
+            if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width)
+                && gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out height))
+            {
+                var arcHeight = height / 1000; /*Conversion from millimeters to meters*/
+                csArchShape = new CrossSectionStandardShapeArch
+                {
+                    Width = width / 1000, /*Conversion from millimeters to meters*/
+                    Height = arcHeight,
+                    ArcHeight = arcHeight
+                };
+            }
+            else
+            {
+                csArchShape = CrossSectionStandardShapeArch.CreateDefault();
+            }
+            return new CrossSectionDefinitionStandard(csArchShape);
         }
     }
 
@@ -44,7 +65,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
-            throw new System.NotImplementedException();
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
+
+            double width;
+            CrossSectionStandardShapeCunette csCunetteShape;
+            if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width))
+            {
+                csCunetteShape = new CrossSectionStandardShapeCunette { Width = width / 1000 /*Conversion from millimeters to meters*/};
+            }
+            else
+            {
+                csCunetteShape = CrossSectionStandardShapeCunette.CreateDefault();
+            }
+            return new CrossSectionDefinitionStandard(csCunetteShape);
         }
     }
 
