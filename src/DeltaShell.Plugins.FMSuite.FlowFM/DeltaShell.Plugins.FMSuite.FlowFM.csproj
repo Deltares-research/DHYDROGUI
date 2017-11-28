@@ -205,6 +205,7 @@
     <Compile Include="IO\StructuresListType.cs" />
     <Compile Include="IO\Exporters\WaterFlowFMFileExporter.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporter.cs" />
+    <Compile Include="ISewerNetworkFeatureGenerator.cs" />
     <Compile Include="IWaterFlowFMModel.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensions.cs" />
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
@@ -233,10 +234,17 @@
     <Compile Include="IO\SedimentFile.cs" />
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
+    <Compile Include="SewerCompartmentGenerator.cs" />
+    <Compile Include="SewerCompartmentOutletGenerator.cs" />
+    <Compile Include="SewerConnectionGenerator.cs" />
     <Compile Include="SewerConnectionMapping.cs" />
+    <Compile Include="SewerConnectionPipeGenerator.cs" />
+    <Compile Include="SewerConnectionPumpGenerator.cs" />
     <Compile Include="SewerCrossSectionDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
+    <Compile Include="SewerOutletGenerator.cs" />
+    <Compile Include="SewerPumpGenerator.cs" />
     <Compile Include="StructureMapping.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
@@ -313,6 +321,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Uml\SewerFeatureFactoryAndGenerators.cd" />
     <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="WaterFlowFMModel.Network.cs" />
