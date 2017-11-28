@@ -94,36 +94,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        #region Creating Manholes
 
-        private static ISewerNetworkFeatureGenerator GetSewerCompartmentGenerator(GwswAttribute sewerTypeAttribute)
-        {
-            var basicGenerator = new SewerCompartmentGenerator();
-            if (string.IsNullOrEmpty(sewerTypeAttribute?.ValueAsString)) return basicGenerator;
-
-            var nodeType = GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute.ValueAsString);
-            return IsGwswOutlet(nodeType) ? new SewerCompartmentOutletGenerator() : basicGenerator;
-        }
+        #region Creating Sewer Compartments
 
         private static INetworkFeature CreateSewerCompartment(GwswElement gwswElement, IHydroNetwork network = null)
         {
             if (gwswElement == null) return null;
 
             var nodeType = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.NodeType);
-            var compartmentType = GetSewerCompartmentGenerator(nodeType);
+            var compartmentType = SewerCompartmentGenerator.GetSewerCompartmentGenerator(nodeType);
+
             return compartmentType?.Generate(gwswElement, network);
         }
 
-        private static bool IsGwswOutlet(ManholeMapping.NodeType nodeType)
+        protected static bool IsValidGwswCompartment(GwswElement gwswElement)
         {
-            return nodeType == ManholeMapping.NodeType.Outlet;
+            var manholeName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.ManholeId);
+            if (manholeName == null || manholeName.ValueAsString == string.Empty)
+            {
+                Log.WarnFormat(
+                    Resources
+                        .SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
+                return false;
+            }
+
+            var compartmentName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.UniqueId);
+            if (compartmentName == null || compartmentName.ValueAsString == string.Empty)
+            {
+                Log.WarnFormat(
+                    Resources
+                        .SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_,
+                    manholeName.ValueAsString);
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
 
         #region Creating Sewer Connections
 
-        private static ISewerNetworkFeatureGenerator GetSewerConnectionGenerator(GwswAttribute sewerTypeAttribute)
+        private static ISewerNetworkFeatureGenerator GetSewerConnectionGeneratorFromGwswAttribute(GwswAttribute sewerTypeAttribute)
         {
             var basicGenerator = new SewerConnectionGenerator();
             if (string.IsNullOrEmpty(sewerTypeAttribute?.ValueAsString)) return basicGenerator;
@@ -132,16 +144,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (IsGwswPipe(connectionType)) return new SewerConnectionPipeGenerator();
 
-            return IsGwswPump(connectionType) ? new SewerConnectionPumpGenerator() : basicGenerator;
+            return IsGwswPump(connectionType) ? (ISewerNetworkFeatureGenerator) new SewerPumpGenerator() : basicGenerator;
         }
+
 
         private static INetworkFeature CreateSewerConnection(GwswElement gwswElement, IHydroNetwork network = null)
         {
             if (gwswElement == null) return null;
 
             var sewerTypeAttribute = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.PipeType);
-            var connectionGenerator = GetSewerConnectionGenerator(sewerTypeAttribute);
+            var connectionGenerator = GetSewerConnectionGeneratorFromGwswAttribute(sewerTypeAttribute);
+
             return connectionGenerator?.Generate(gwswElement, network);
+        }
+
+        protected static bool IsValidGwswSewerConnection(GwswElement gwswElement)
+        {
+            var nodeIdStart = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
+            var nodeIdEnd = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
+            if (nodeIdStart == null || nodeIdEnd == null)
+            {
+                Log.ErrorFormat(Resources
+                    .SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields);
+                return false;
+            }
+
+            return true;
         }
 
         private static bool IsGwswPump(SewerConnectionMapping.ConnectionType connectionType)
@@ -175,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             if (structureType == StructureMapping.StructureType.Outlet)
             {
-                return new SewerOutletGenerator();
+                return new SewerCompartmentOutletGenerator();
             }
 
             return null;
@@ -193,6 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
+        
         #region Helpers
 
         protected static void AddStructureToBranch(ISewerConnection connection, IStructure structure)

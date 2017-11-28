@@ -1,31 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerFeatureFactory">
-    <Position X="4.5" Y="0.75" Width="3.75" />
+    <Position X="8.25" Y="1" Width="3.75" />
     <TypeIdentifier>
-      <HashCode>AAQBFAAAAAAAAGCwAQKAQAEEAAgACAAAAAAEEAgAAgA=</HashCode>
+      <HashCode>AAABFAgAAACAAEAwAQKAAAEEAAgACACAABAAEAgAAAA=</HashCode>
       <FileName>SewerFeatureFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerConnectionMapping" Collapsed="true">
-    <Position X="15.5" Y="3.5" Width="1.5" />
+    <Position X="16.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SewerConnectionMapping.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerOutletGenerator" Collapsed="true">
-    <Position X="4" Y="7.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
-      <FileName>SewerOutletGenerator.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerPumpGenerator" Collapsed="true">
-    <Position X="1.75" Y="7.75" Width="1.5" />
+    <Position X="2.75" Y="7.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAIAAAAAIAAAAgAGAAAAA=</HashCode>
       <FileName>SewerPumpGenerator.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -33,39 +25,31 @@
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerConnectionGenerator" Collapsed="true">
     <Position X="7.25" Y="7.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAAAAgAEAAAEAAAwAEAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>BAQAAAAAAAAAACAQgAAAAAEAAAwAAAAAAAAAAEAAABA=</HashCode>
       <FileName>SewerConnectionGenerator.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerConnectionPipeGenerator" Collapsed="true">
-    <Position X="5.5" Y="9.5" Width="3.25" />
+    <Position X="7.25" Y="9.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>SewerConnectionPipeGenerator.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerConnectionPumpGenerator" Collapsed="true">
-    <Position X="9.5" Y="9.5" Width="3.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAGAAAAA=</HashCode>
-      <FileName>SewerConnectionPumpGenerator.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerCompartmentGenerator" Collapsed="true">
     <Position X="14.5" Y="7.75" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAgAAAAASAAAAAQAAAAAACgAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAASACAAAQAAAAAACgAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>SewerCompartmentGenerator.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.FlowFM.SewerCompartmentOutletGenerator" Collapsed="true">
-    <Position X="14.5" Y="9.25" Width="2.75" />
+    <Position X="14.75" Y="9.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAEAAAAA=</HashCode>
       <FileName>SewerCompartmentOutletGenerator.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

@@ -10,13 +10,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if( network == null) //Log message we cannot process pump without network.
+            if (IsValidGwswSewerConnection(gwswElement)) return CreatePumpFromGwswSewerConnection(gwswElement, network);
+            return CreatePumpFromGwswStructure(gwswElement, network);
+        }
+
+        private INetworkFeature CreatePumpFromGwswSewerConnection(GwswElement gwswElement, IHydroNetwork network)
+        {
+            var sewerConnection = (SewerConnection) new SewerConnectionGenerator().Generate(gwswElement, network);
+            AddPumpAndAttributesToSewerConnection(sewerConnection, gwswElement);
+            return sewerConnection;
+        }
+
+        private INetworkFeature CreatePumpFromGwswStructure(GwswElement gwswElement, IHydroNetwork network)
+        {
+            if (network == null) //Log message we cannot process pump (structure) without network.
                 return null;
 
-            var structureName = SewerFeatureFactory.GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.UniqueId);
+            var structureName = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.UniqueId);
             if (structureName == null || structureName.ValueAsString == string.Empty) return null;
 
-            
+
             var pumpFound = network.BranchFeatures.OfType<IPump>()
                 .FirstOrDefault(p => p.Name.Equals(structureName.ValueAsString));
             if (pumpFound == null)
@@ -27,18 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 network.Branches.Add(auxSewerConnection);
                 AddStructureToBranch(auxSewerConnection, pumpFound);
             }
+
             ExtendPumpAttributes(pumpFound, gwswElement);
 
             return pumpFound;
-            
-            
         }
 
         private static void ExtendPumpAttributes(IPump pump, GwswElement gwswElement)
         {
             //Add Attributes
             var newDoubleValue = 0.0;
-            var pumpCapacity = SewerFeatureFactory.GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.PumpCapacity);
+            var pumpCapacity = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.PumpCapacity);
             if (pumpCapacity != null && pumpCapacity.ValueAsString != string.Empty)
             {
                 var valueType = pumpCapacity.GwswAttributeType.AttributeType;
@@ -48,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.Capacity = newDoubleValue;
                 }
             }
-            var startLevelDown = SewerFeatureFactory.GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelDownstreams);
+            var startLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelDownstreams);
             if (startLevelDown != null && startLevelDown.ValueAsString != string.Empty)
             {
                 var valueType = startLevelDown.GwswAttributeType.AttributeType;
@@ -58,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.StartSuction = newDoubleValue;
                 }
             }
-            var stopLevelDown = SewerFeatureFactory.GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelDownstreams);
+            var stopLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelDownstreams);
             if (stopLevelDown != null && stopLevelDown.ValueAsString != string.Empty)
             {
                 var valueType = stopLevelDown.GwswAttributeType.AttributeType;
@@ -69,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            var startLevelUp = SewerFeatureFactory.GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelUpstreams);
+            var startLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelUpstreams);
             if (startLevelUp != null && startLevelUp.ValueAsString != string.Empty)
             {
                 var valueType = startLevelUp.GwswAttributeType.AttributeType;
@@ -79,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.StartDelivery = newDoubleValue;
                 }
             }
-            var stopLevelUp = SewerFeatureFactory.GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelUpstreams);
+            var stopLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelUpstreams);
             if (stopLevelUp != null && stopLevelUp.ValueAsString != string.Empty)
             {
                 var valueType = stopLevelUp.GwswAttributeType.AttributeType;
@@ -89,6 +101,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.StopDelivery = newDoubleValue;
                 }
             }
+        }
+
+        private static IPump FindOrCreatePump(ISewerConnection connection)
+        {
+            var structureFound = connection.BranchFeatures.OfType<IPump>().FirstOrDefault(bf => bf.Name.Equals(connection.Name));
+            return structureFound ?? new Pump(connection.Name);
+        }
+
+        private static void AddPumpAndAttributesToSewerConnection(ISewerConnection connection, GwswElement gwswElement)
+        {
+            //Add pump to structure
+            var sewerPump = FindOrCreatePump(connection);
+
+            //Add Attributes
+            var flowDirection = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.FlowDirection);
+            if (flowDirection != null && flowDirection.ValueAsString != string.Empty)
+            {
+                var directionValue = GetValueFromDescription<SewerConnectionMapping.FlowDirection>(flowDirection.ValueAsString);
+                if (directionValue == SewerConnectionMapping.FlowDirection.FromStartToEnd)
+                {
+                    sewerPump.DirectionIsPositive = true;
+                }
+                if (directionValue == SewerConnectionMapping.FlowDirection.FromEndToStart)
+                {
+                    sewerPump.DirectionIsPositive = false;
+                }
+            }
+
+            //Add pump to network if it´s not present already
+            if (!connection.BranchFeatures.Contains(sewerPump))
+                AddStructureToBranch(connection, sewerPump);
         }
     }
 }
