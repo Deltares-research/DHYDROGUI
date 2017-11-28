@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -17,10 +18,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
             
-            string csWidth;
             double width;
             CrossSectionStandardShapeEgg csEggShape;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
+            if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width))
             {
                 csEggShape = new CrossSectionStandardShapeEgg { Width = width / 1000 /*Conversion from millimeters to meters*/};
             }
@@ -54,14 +54,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-
-            string csHeight;
+            
             double height;
-            string csWidth;
             double width;
             CrossSectionStandardShapeRectangle csRectangleShape;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width)
-                && gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out csHeight) && double.TryParse(csHeight, out height))
+            if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width)
+                && gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out height))
             {
                 csRectangleShape = new CrossSectionStandardShapeRectangle
                 {
@@ -83,14 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-
-            string csWidth;
-            double doubleValue;
+            
+            double width;
             CrossSectionStandardShapeRound csRoundShape;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) 
-                && double.TryParse(csWidth, out doubleValue))
+            if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width))
             {
-                csRoundShape = new CrossSectionStandardShapeRound {Diameter = doubleValue / 1000 /*Conversion from millimeters to meters*/};
+                csRoundShape = new CrossSectionStandardShapeRound {Diameter = width / 1000 /*Conversion from millimeters to meters*/};
             }
             else
             {
@@ -104,17 +100,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-
-            string csWidth;
+            
             double width;
-            if (gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out csWidth) && double.TryParse(csWidth, out width))
+            double height;
+            double slope1;
+            double slope2;
+            double slope;
+            CrossSectionStandardShapeTrapezium csTrapezoidShape;
+
+            var slope1PresentAndWellFormatted = gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.Slope1, out slope1);
+            var slope2PresentAndWellFormatted = gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.Slope2, out slope2);
+            if (slope1PresentAndWellFormatted && !slope2PresentAndWellFormatted)
             {
-                //TODO: investigate trapezoid properties!
-                var csTrapezoidShape = CrossSectionStandardShapeTrapezium.CreateDefault();
-                return new CrossSectionDefinitionStandard(csTrapezoidShape);
+                slope = slope1;
             }
-            return null;
+            else if (!slope1PresentAndWellFormatted && slope2PresentAndWellFormatted)
+            {
+                slope = slope2;
+            }
+            else if (slope1PresentAndWellFormatted && slope2PresentAndWellFormatted)
+            {
+                slope = (slope1 + slope2) / 2;
+            }
+            else
+            {
+                return new CrossSectionDefinitionStandard(CrossSectionStandardShapeTrapezium.CreateDefault());
+            }
+
+            if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width)
+                && gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out height))
+            {
+                var trapezoidWidth = width / 1000;
+                csTrapezoidShape = new CrossSectionStandardShapeTrapezium
+                {
+                    BottomWidthB = trapezoidWidth,
+                    Slope = slope,
+                    MaximumFlowWidth = (width + 2 * height / slope) / 1000
+                };
+            }
+            else
+            {
+                csTrapezoidShape = CrossSectionStandardShapeTrapezium.CreateDefault();
+            }
+            return new CrossSectionDefinitionStandard(csTrapezoidShape);
+        }
+    }
+
+    static class SewerDictionaryExtensions
+    {
+        public static bool TryGetDoubleValueFromDictionary(this IReadOnlyDictionary<string, string> gwswElementKeyValuePairs, string key, out double doubleValue)
+        {
+            string stringValue;
+            doubleValue = 0;
+            return gwswElementKeyValuePairs.TryGetValue(key, out stringValue) && double.TryParse(stringValue, out doubleValue);
         }
     }
 }

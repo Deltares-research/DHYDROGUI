@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CreateCSDShapeAndCheckForNull<CsdCircleDefinitionReader>(element);
             CreateCSDShapeAndCheckForNull<CsdRectangleDefinitionReader>(element);
             CreateCSDShapeAndCheckForNull<CsdEggDefinitionReader>(element);
+            CreateCSDShapeAndCheckForNull<CsdTrapezoidDefinitionReader>(element);
         }
 
         private static void CreateCSDShapeAndCheckForNull<T>(GwswElement element) where T : SewerCrossSectionDefinitionReader, new()
@@ -99,17 +100,100 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 0.25, 0.375);
         }
 
-        // TODO: Maybe check also when height is available and NOT width
-
-        // Check for default shape when there is missing data
         [Test]
-        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionEggDefinition_ThenReturnDefaultRectangleCrossSection()
+        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionEggDefinition_ThenReturnDefaultEggCrossSection()
         {
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
             CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 2.0, 3.0);
         }
 
-        // 
+        #endregion
+
+        #region Trapezoid shape cross section
+
+        [Test]
+        public void GivenGwswElement_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnCorrectValue()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
+                CrossSectionMapping.CrossSectionPropertyKeys.Slope2
+            };
+            var values = new List<string> { "1000", "1000", "2,5", "1,5" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDTrapezoidShapeAndCheckProperties(element, 1.0, 2.0, 2.0);
+        }
+
+        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.Slope1)]
+        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.Slope2)]
+        public void GivenGwswElementWithOneMissingSlope_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnTrapezoidWithPresentSlope(string slopeKey)
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                slopeKey
+            };
+            var values = new List<string> { "1000", "1000", "2" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDTrapezoidShapeAndCheckProperties(element, 1.0, 2.0, 2.0);
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithMissingWidth_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnDefaultTrapezoidCrossSection()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
+                CrossSectionMapping.CrossSectionPropertyKeys.Slope2
+            };
+            var values = new List<string> { "1000", "2,5", "1,5" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0);
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithMissingHeight_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnDefaultTrapezoidCrossSection()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
+                CrossSectionMapping.CrossSectionPropertyKeys.Slope2
+            };
+            var values = new List<string> { "1000", "2,5", "1,5" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0);
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithMissingSlopes_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnDefaultTrapezoidCrossSection()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight
+            };
+            var values = new List<string> { "1000", "1000" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0);
+        }
+
+        private static void CreateCSDTrapezoidShapeAndCheckProperties(GwswElement element, double expectedBottomWidth, double expectedSlope, double expectedMaxFlowWidth)
+        {
+            var reader = new CsdTrapezoidDefinitionReader();
+            var csDefinition = reader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+            Assert.NotNull(csDefinition);
+
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeTrapezium;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.BottomWidthB, Is.EqualTo(expectedBottomWidth));
+            Assert.That(csShape.Slope, Is.EqualTo(expectedSlope));
+            Assert.That(csShape.MaximumFlowWidth, Is.EqualTo(expectedMaxFlowWidth));
+        }
 
         #endregion
 
@@ -146,14 +230,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             where TReader : SewerCrossSectionDefinitionReader, new() 
             where TShape : CrossSectionStandardShapeWidthHeightBase, new()
         {
-            var rectangleReader = new TReader();
-            var csDefinition = rectangleReader.ReadCrossSectionDefinition(gwswElement) as CrossSectionDefinitionStandard;
+            var reader = new TReader();
+            var csDefinition = reader.ReadCrossSectionDefinition(gwswElement) as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
 
-            var csRectangleShape = csDefinition.Shape as TShape;
-            Assert.NotNull(csRectangleShape);
-            Assert.That(csRectangleShape.Width, Is.EqualTo(width));
-            Assert.That(csRectangleShape.Height, Is.EqualTo(length));
+            var csShape = csDefinition.Shape as TShape;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.Width, Is.EqualTo(width));
+            Assert.That(csShape.Height, Is.EqualTo(length));
         }
 
         #endregion
