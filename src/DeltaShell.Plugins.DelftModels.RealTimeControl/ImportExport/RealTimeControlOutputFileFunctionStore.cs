@@ -150,10 +150,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private bool SetFeatureCoverageFeatures(IFeatureCoverage coverage)
         {
-            var matchingFeature = Features.Where(f => f is INameable).FirstOrDefault(f => coverage.Name.Contains('_' + ((INameable) f).Name + '_'));
+            var matchingFeature = Features.Where(f => f is INameable).FirstOrDefault(f => coverage.Name.Contains('_' + ((INameable)f).Name + '_'));
+
+            coverage.Features = new EventedList<IFeature>();
             if (matchingFeature == null) return false;
 
-            coverage.Features = new EventedList<IFeature> { matchingFeature };
+            coverage.Features.Add(matchingFeature);
             return true;
         }
 

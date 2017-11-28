@@ -571,20 +571,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     //cast from int[,] (2d int array) to int[][] (2 1d int arrays)
                     var edgeNodesForThisMesh = uGrid.EdgeNodesByMeshId[meshId - 1].ConvertToTwoOneDimensionalArrays();
 
-                    /*
-                        We are currently using startIndex = 1 (we would prefer to use zero here)
-                        TODO: this should be changed to zero with DELFT3DFM-1308
-                        TODO: remove const isOneBased
-                    */
-
-                    const bool isOneBased = true;
-
-                    Assert.That(edgeNodesForThisMesh[0], Is.EqualTo(new[] { 5 + (isOneBased ? 1 : 0), 2 + (isOneBased ? 1 : 0) }));
-                    Assert.That(edgeNodesForThisMesh[1], Is.EqualTo(new[] { 2 + (isOneBased ? 1 : 0), 1 + (isOneBased ? 1 : 0) }));
-                    Assert.That(edgeNodesForThisMesh[2], Is.EqualTo(new[] { 1 + (isOneBased ? 1 : 0), 5 + (isOneBased ? 1 : 0) }));
-                    Assert.That(edgeNodesForThisMesh[3], Is.EqualTo(new[] { 5 + (isOneBased ? 1 : 0), 4 + (isOneBased ? 1 : 0) }));
-                    Assert.That(edgeNodesForThisMesh[4], Is.EqualTo(new[] { 4 + (isOneBased ? 1 : 0), 3 + (isOneBased ? 1 : 0) }));
-                    Assert.That(edgeNodesForThisMesh[5], Is.EqualTo(new[] { 3 + (isOneBased ? 1 : 0), 2 + (isOneBased ? 1 : 0) }));
+                    Assert.That(edgeNodesForThisMesh[0], Is.EqualTo(new[] { 5, 2 }));
+                    Assert.That(edgeNodesForThisMesh[1], Is.EqualTo(new[] { 2, 1 }));
+                    Assert.That(edgeNodesForThisMesh[2], Is.EqualTo(new[] { 1, 5 }));
+                    Assert.That(edgeNodesForThisMesh[3], Is.EqualTo(new[] { 5, 4 }));
+                    Assert.That(edgeNodesForThisMesh[4], Is.EqualTo(new[] { 4, 3 }));
+                    Assert.That(edgeNodesForThisMesh[5], Is.EqualTo(new[] { 3, 2 }));
                 }
             }
             finally

@@ -487,7 +487,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            // IDimrModel method not implemented - no output for RealTimeControl model
+            if (outputFileFunctionStore == null) return;
+
+            outputFileFunctionStore.Functions?.Clear();
+            outputFileFunctionStore.Features?.Clear();
+            outputFileFunctionStore.Close();
+            outputFileFunctionStore = null;
         }
 
         public virtual void ConnectOutput(string outputPath)
@@ -500,16 +505,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void ReconnectOutputFiles(string outputFilePath)
         {
-            if (File.Exists(outputFilePath))
+            DisconnectOutput();
+
+            if (!File.Exists(outputFilePath)) return;
+            
+            var features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
             {
-                var features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
-                outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
-                {
-                    Features = features,
-                    CoordinateSystem = this.CoordinateSystem, 
-                    Path = outputFilePath
-                };
-            }
+                Features = features,
+                CoordinateSystem = this.CoordinateSystem, 
+                Path = outputFilePath
+            };
         }
 
         public virtual ValidationReport Validate() // NOTE: Do not re
@@ -644,10 +650,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             var model = e?.Item as IModel;
             if (model == null) return;
 
-            if (outputFileFunctionStore != null)
-            {
-                ReconnectOutputFiles(outputFileFunctionStore.Path);
-            }
+            if (outputFileFunctionStore == null) return;
+
+            ReconnectOutputFiles(outputFileFunctionStore.Path);
         }
 
         public virtual IEnumerable<IModel> ControlledModels
@@ -697,7 +702,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return outputFileFunctionStore != null
+                return outputFileFunctionStore != null && outputFileFunctionStore.Functions != null
                 ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
                 : Enumerable.Empty<IFeatureCoverage>();
             }
@@ -770,7 +775,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 model.SuspendClearOutputOnInputChange = false;
             }
             
-            if (outputFileFunctionStore != null)
+            if (outputFileFunctionStore != null && File.Exists(outputFileFunctionStore.Path))
             {
                 clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
                 {

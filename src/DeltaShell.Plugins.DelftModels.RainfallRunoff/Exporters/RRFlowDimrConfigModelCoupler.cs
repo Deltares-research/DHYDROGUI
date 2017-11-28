@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public bool SourceIsMasterTimeStep { get; private set; }
 
         public string Name { get; set; }
-        public Func<XElement, XNamespace, XElement> AddAdditionalCouplerInfo { get; set; }
+        public Func<XElement, XNamespace, XElement> AddOptionalCouplerInfo { get; set; }
 
         private IEnumerable<DimrCoupleInfo> coupleInfos;
         public IEnumerable<DimrCoupleInfo> CoupleInfos

@@ -6,6 +6,7 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class GridWrapper
     {
+        private const int StartIndex = 0;
         /// <summary>
         /// Checks whether the specified data set adheres to a specific set of conventions.
         /// Datasets may adhere to multiple conventions at the same time, so use this method
@@ -186,9 +187,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nface">The number of faces in the mesh.</param>
         /// <param name="nmaxfacenodes">The maximum number of nodes per face in the mesh.</param>
         /// <param name="fillvalue"></param>
+        /// <param name="startIndex"></param>
         /// <returns>Result status (IONC_NOERR if successful).</returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_face_nodes", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_face_nodes_dll(ref int ioncid, ref int meshId, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue);
+        private static extern int ionc_get_face_nodes_dll(ref int ioncid, ref int meshId, ref IntPtr c_face_nodes_ptr, ref int nface, ref int nmaxfacenodes, ref int fillvalue, ref int startIndex);
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_write_geom_ugrid", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_write_geom_ugrid_dll(string filename);
@@ -758,22 +760,16 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual int GetEdgeNodes(int ioncId, int meshId, ref IntPtr edgeNodesPtr, int numberOfEdges)
         {
-            /*
-                    Set startIndex to 1 (we would prefer to use zero here)
-                    However GridWrapper.ionc_get_face_nodes in GetFaceNodesForMesh (below) does not allow for a specified startIndex
-                    and UnstructuredGridFactory.CreateFromVertexAndEdgeList (framework) uses the same start index for constructing both Edges and Cells
-
-                    TODO: this should be changed to zero with DELFT3DFM-1308
-                 */
-            var startIndex = 1;
+            // Note: startIndex should always be the same for both GetEdgeNodes and GetFaceNodes
+            var startIndex = StartIndex; // always update the const StartIndex!
             return ionc_get_edge_nodes_dll(ref ioncId, ref meshId, ref edgeNodesPtr, ref numberOfEdges, ref startIndex);
         }
 
         public virtual int GetFaceNodes(int ioncId, int meshId, ref IntPtr faceNodesPtr, int numberOfFaces, int numberOfMaxFaceNodes, ref int fillvalue)
         {
-            // TODO: after ionc_get_face_nodes has been updated to accept a startIndex, use startIndex = 0 here (DELFT3DFM-1308)
-            // TODO: also change ionc_get_edge_nodes (above) to use startIndex = 0    
-            return ionc_get_face_nodes_dll(ref ioncId, ref meshId, ref faceNodesPtr, ref numberOfFaces, ref numberOfMaxFaceNodes, ref fillvalue);
+            // Note: startIndex should always be the same for both GetEdgeNodes and GetFaceNodes
+            var startIndex = StartIndex; // always update the const StartIndex!
+            return ionc_get_face_nodes_dll(ref ioncId, ref meshId, ref faceNodesPtr, ref numberOfFaces, ref numberOfMaxFaceNodes, ref fillvalue, ref startIndex);
         }
 
         public virtual int WriteGeomUgrid(string filename)

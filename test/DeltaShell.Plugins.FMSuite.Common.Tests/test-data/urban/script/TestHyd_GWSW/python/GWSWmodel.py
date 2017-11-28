@@ -6,3 +6,5 @@ class GWSWmodel:
     connections = {}    # collection connections
 
     profiles = {}       # connection profiles
+
+    structures = {}     # structures

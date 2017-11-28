@@ -133,9 +133,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 coupler.Add(itemNode);
             }
 
-            if (modelCoupler.AddAdditionalCouplerInfo != null)
+            if (modelCoupler.AddOptionalCouplerInfo != null)
             {
-                coupler = modelCoupler.AddAdditionalCouplerInfo(coupler, DHyd);
+                coupler = modelCoupler.AddOptionalCouplerInfo(coupler, DHyd);
             }
 
             return coupler;

@@ -645,6 +645,61 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         }
 
+        [TestCase(
+            new[]
+            {
+                UnstructuredGridFileHelper.BedLevelLocation.Faces,
+                UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev,
+                UnstructuredGridFileHelper.BedLevelLocation.Faces
+            }, 
+            new[]
+            {
+                typeof(UnstructuredGridCellCoverage),
+                typeof(UnstructuredGridVertexCoverage),
+                typeof(UnstructuredGridCellCoverage)
+            }
+        )]
+        [TestCase(
+            new[]
+            {
+                UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev,
+                UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes,
+                UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev
+            }, 
+            new[]
+            {
+                typeof(UnstructuredGridVertexCoverage),
+                typeof(UnstructuredGridCellCoverage),
+                typeof(UnstructuredGridVertexCoverage)
+            }
+        )]
+        [TestCase(
+            new[]
+            {
+                UnstructuredGridFileHelper.BedLevelLocation.CellEdges
+            }, 
+            new[]
+            {
+                // UnstructuredGridEdgeCoverage not currently supported
+                // returns UnstructuredGridVertexCoverage instead
+                typeof(UnstructuredGridVertexCoverage) 
+            }
+        )]
+
+        public void TestUpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation[] bedLevelLocations, Type[] coverageTypes)
+        {
+            // if this is false, the test cases are not correct
+            Assert.AreEqual(bedLevelLocations.Length, coverageTypes.Length);
+
+            var fmModel = new WaterFlowFMModel();
+
+            for (var i = 0; i < bedLevelLocations.Length; i++)
+            {
+                TypeUtils.CallPrivateMethod(fmModel, "UpdateBathymetryCoverage", bedLevelLocations[i]);
+                Assert.AreEqual(coverageTypes[i], fmModel.Bathymetry.GetType());
+            }
+        }
+
         [Test]
         public void FmModelGetVarGridPropertyNameShouldReturnGrid()
         {

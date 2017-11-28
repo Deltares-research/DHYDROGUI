@@ -1,5 +1,6 @@
 import os
 import csv
+from collections import OrderedDict
 from GWSWmodel import GWSWmodel
 
 class GWSWreader:
@@ -17,18 +18,18 @@ class GWSWreader:
         return model
 
     def file2Dict(self, filePath):
-        dict={}
+        dict=OrderedDict()
         with open(filePath) as csvfile:
             file = csv.reader(csvfile,delimiter = self.csvDelimeter)
             firstLine = True
             for line in file:
                 if not firstLine:
-                    dict[line[0]] = line[1:]
+                    dict[line[0]] = line[0:]
                 firstLine = False
         return dict
 
     def readNodes2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW\\Knooppunt.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Knooppunt.csv')
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
@@ -54,7 +55,7 @@ class GWSWreader:
 
 
     def readConnections2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW\\Verbinding.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Verbinding.csv')
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KN1_IDE	Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
         #KN2_IDE	Identificatie knooppunt 2. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
@@ -79,7 +80,7 @@ class GWSWreader:
         return self.file2Dict(filePath)
 
     def readProfiles2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW\\Profiel.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Profiel.csv')
         #PRO_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
         #PRO_MAT	Materiaal profiel
         #PRO_VRM	Vorm profiel
@@ -96,7 +97,7 @@ class GWSWreader:
         return self.file2Dict(filePath)
 
     def readStructures2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW\\Kunstwerken.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Kunstwerken.csv')
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KWK_TYP	Type hydraulisch component in het kunstwerk
         #BWS_NIV	Buitenwaterstand t.o.v. NAP
@@ -123,7 +124,7 @@ class GWSWreader:
 
 
     def readBoundary2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW\\Debiet.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Debiet.csv')
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #DEB_TYP	Debiet vanuit DWA, RWA en Lozing
         #VER_IDE	Verloop van debiet. Koppeling tussen Debiet.csv en Verloop.csv.
@@ -133,7 +134,7 @@ class GWSWreader:
         return self.file2Dict(filePath)
 
     def readTimeSeries2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW\\Verloop.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Verloop.csv')
         #VER_IDE	Verloop van debiet. Koppeling tussen Debiet.csv en Verloop.csv.
         #VER_TYP	Constant of variabel verloop
         #VER_DAG	Dagnummer (1 t/m 7) Maandag is dag 1, dinsdag is dag 2 etc.

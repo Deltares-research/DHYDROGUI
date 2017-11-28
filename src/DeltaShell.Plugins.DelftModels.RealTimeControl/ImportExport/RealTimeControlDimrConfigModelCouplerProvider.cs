@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 return new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
                 {
-                    AddAdditionalCouplerInfo = (x, nameSpace) =>
+                    AddOptionalCouplerInfo = (x, nameSpace) =>
                     {
                         var loggerNode = new XElement(nameSpace + "logger");
                         var workingDirNode = new XElement(nameSpace + "workingDir", workingDirectory);
