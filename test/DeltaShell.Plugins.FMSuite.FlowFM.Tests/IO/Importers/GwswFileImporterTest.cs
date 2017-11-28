@@ -609,6 +609,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
                 Assert.AreEqual(outlet.SurfaceWaterLevel, extendedOutlet.SurfaceWaterLevel, "the attributes from the element do not match");
             }
+        }
+
+        [Test]
+        public void TestImportOrificesFromStructuresThenImportOrificesAssignsStructuresValues()
+        {
+            //Create network
+            var network = new HydroNetwork();
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load structures.
+            var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
+            var importedStructures = gwswImporter.ImportItem(structuresPath, network);
+            Assert.IsNotNull(importedStructures);
+
+            //Check placeholders have been created.
+            Assert.IsTrue(network.Branches.Any());
+
+            var orificeStructures = network.Branches.OfType<SewerConnectionOrifice>().ToList();
+            Assert.IsTrue(orificeStructures.Any());
+
+            // Now Load connections.
+            var compartmentsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedConnections = gwswImporter.ImportItem(compartmentsPath, network);
+            Assert.IsNotNull(importedConnections);
+
+            foreach (var orifice in orificeStructures)
+            {
+                var extendedOrifice = network.Branches.OfType<SewerConnectionOrifice>().FirstOrDefault(b => b.Name.Equals(orifice.Name));
+                Assert.IsNotNull(extendedOrifice);
+
+                Assert.AreEqual(orifice.Bottom_Level, extendedOrifice.Bottom_Level, "the attributes from the element do not match");
+            }
 
         }
 

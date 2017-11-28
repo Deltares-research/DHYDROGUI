@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var bottomLevel = 10.0;
             var surfaceLevel = 5.0;
             var nodeType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var bottomLevel = 10.0;
             var surfaceLevel = 5.0;
             var nodeType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var uniqueId = "outlet123";
             var surfaceWaterLevel = 15.0;
             var structureType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
 
             var defaultDouble = 0.0;
             var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var uniqueId = "outlet123";
             var surfaceWaterLevel = 15.0;
             var structureType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
 
             var defaultDouble = 0.0;
             var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var manholeId = "manhole1";
             var surfaceWaterLevel = 15.0;
             var structureType =
-                EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Outlet);
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
 
             var defaultString = string.Empty;
             var defaultDouble = 0.0;

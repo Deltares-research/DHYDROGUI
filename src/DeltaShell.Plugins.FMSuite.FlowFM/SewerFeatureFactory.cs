@@ -196,24 +196,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (structureTypeAttribute == null || structureTypeAttribute.ValueAsString == string.Empty) return null;
 
-            var structureType = GetValueFromDescription<StructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
-            if (structureType == StructureMapping.StructureType.Pump)
+            var structureType = GetValueFromDescription<SewerStructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
+            switch (structureType)
             {
-                return new SewerPumpGenerator();
+                case SewerStructureMapping.StructureType.Pump:
+                    return new SewerPumpGenerator();
+                case SewerStructureMapping.StructureType.Outlet:
+                    return new SewerCompartmentOutletGenerator();
+                case SewerStructureMapping.StructureType.Orifice:
+                        return new SewerConnectionOrificeGenerator();
+                default:
+                    return new SewerConnectionGenerator();
             }
-            if (structureType == StructureMapping.StructureType.Outlet)
-            {
-                return new SewerCompartmentOutletGenerator();
-            }
-
-            return null;
         }
 
         private static INetworkFeature CreateSewerStructure(GwswElement gwswElement, IHydroNetwork network = null)
         {
             if (gwswElement == null) return null;
 
-            var structureTypeAttribute = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StructureType);
+            var structureTypeAttribute = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.StructureType);
             var structureGenerator = GetSewerStructureGenerator(structureTypeAttribute);
 
             return structureGenerator?.Generate(gwswElement, network);

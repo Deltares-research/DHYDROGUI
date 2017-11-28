@@ -313,6 +313,7 @@
     <Compile Include="SewerCompartmentGeneratorTest.cs" />
     <Compile Include="SewerCompartmentOutletTest.cs" />
     <Compile Include="SewerConnectionGeneratorTest.cs" />
+    <Compile Include="SewerConnectionOrificeGeneratorTest.cs" />
     <Compile Include="SewerConnectionPipeGeneratorTest.cs" />
     <Compile Include="SewerCrossSectionDefinitionReaderTest.cs" />
     <Compile Include="SewerFeatureFactoryTest.cs" />

@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (network == null) //Log message we cannot process pump (structure) without network.
                 return null;
 
-            var structureName = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.UniqueId);
+            var structureName = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.UniqueId);
             if (structureName == null || structureName.ValueAsString == string.Empty) return null;
 
 
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             //Add Attributes
             var newDoubleValue = 0.0;
-            var pumpCapacity = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.PumpCapacity);
+            var pumpCapacity = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.PumpCapacity);
             if (pumpCapacity != null && pumpCapacity.ValueAsString != string.Empty)
             {
                 var valueType = pumpCapacity.GwswAttributeType.AttributeType;
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.Capacity = newDoubleValue;
                 }
             }
-            var startLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelDownstreams);
+            var startLevelDown = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.StartLevelDownstreams);
             if (startLevelDown != null && startLevelDown.ValueAsString != string.Empty)
             {
                 var valueType = startLevelDown.GwswAttributeType.AttributeType;
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.StartSuction = newDoubleValue;
                 }
             }
-            var stopLevelDown = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelDownstreams);
+            var stopLevelDown = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.StopLevelDownstreams);
             if (stopLevelDown != null && stopLevelDown.ValueAsString != string.Empty)
             {
                 var valueType = stopLevelDown.GwswAttributeType.AttributeType;
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            var startLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StartLevelUpstreams);
+            var startLevelUp = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.StartLevelUpstreams);
             if (startLevelUp != null && startLevelUp.ValueAsString != string.Empty)
             {
                 var valueType = startLevelUp.GwswAttributeType.AttributeType;
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     pump.StartDelivery = newDoubleValue;
                 }
             }
-            var stopLevelUp = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.StopLevelUpstreams);
+            var stopLevelUp = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.StopLevelUpstreams);
             if (stopLevelUp != null && stopLevelUp.ValueAsString != string.Empty)
             {
                 var valueType = stopLevelUp.GwswAttributeType.AttributeType;

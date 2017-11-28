@@ -12,9 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public new INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement == null) return null;
-
             return CreateSewerConnection<Pipe>(gwswElement, network, SetPipeAttributes);
         }
+
         private static void SetPipeAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network = null)
         {
             var newPipe = element as Pipe;

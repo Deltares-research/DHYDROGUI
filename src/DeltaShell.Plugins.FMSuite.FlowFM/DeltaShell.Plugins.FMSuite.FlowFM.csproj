@@ -238,12 +238,13 @@
     <Compile Include="SewerCompartmentOutletGenerator.cs" />
     <Compile Include="SewerConnectionGenerator.cs" />
     <Compile Include="SewerConnectionMapping.cs" />
+    <Compile Include="SewerConnectionOrificeGenerator.cs" />
     <Compile Include="SewerConnectionPipeGenerator.cs" />
     <Compile Include="SewerCrossSectionDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
     <Compile Include="SewerPumpGenerator.cs" />
-    <Compile Include="StructureMapping.cs" />
+    <Compile Include="SewerStructureMapping.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

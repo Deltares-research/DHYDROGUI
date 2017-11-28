@@ -86,6 +86,11 @@ namespace DelftTools.Hydro
             }
         }
 
+        public bool IsOrifice()
+        {
+            return this is SewerConnectionOrifice;
+        }
+
         public bool IsPipe()
         {
             return this is Pipe;

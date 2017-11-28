@@ -171,14 +171,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ElementTypeName = SewerFeatureType.Structure.ToString(),
                     GwswAttributeList = new List<GwswAttribute>()
                     {
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, uniqueId),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, structureType),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StartLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(StructureMapping.PropertyKeys.SurfaceWaterLevel, surfaceWaterLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, uniqueId),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, structureType),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel, surfaceWaterLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
                     }
                 };
             }

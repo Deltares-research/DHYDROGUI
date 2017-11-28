@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (newOutlet == null) return;
 
             var newDoubleValue = 0.0;
-            var surfaceWaterLevel = GetAttributeFromList(gwswElement, StructureMapping.PropertyKeys.SurfaceWaterLevel);
+            var surfaceWaterLevel = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);
             if (surfaceWaterLevel != null && surfaceWaterLevel.ValueAsString != string.Empty)
             {
                 var valueType = surfaceWaterLevel.GwswAttributeType.AttributeType;

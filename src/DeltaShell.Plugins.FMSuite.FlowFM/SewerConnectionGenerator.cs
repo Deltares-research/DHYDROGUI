@@ -35,10 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return connection;
         }
 
-        private static T FindOrGetNewConnection<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : SewerConnection, new()
+        protected static T FindOrGetNewConnection<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : SewerConnection, new()
         {
-            if (network == null) return new T();
-
             var nodeIdString = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.UniqueId);
             var connectionName = string.Empty;
             if (nodeIdString?.ValueAsString != null)
@@ -46,9 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 connectionName = nodeIdString.ValueAsString;
             }
 
+            if (network == null) return new T(){ Name = connectionName};
             var foundConnection = network.SewerConnections.OfType<T>().FirstOrDefault(sc => sc.Name.Equals(connectionName));
 
-            return foundConnection ?? new T();
+            return foundConnection ?? new T() { Name = connectionName };
         }
 
         private static void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement, IHydroNetwork network)

@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(StructureMapping.StructureType.Pump)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump)),
                 }
             };
 
@@ -80,11 +80,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(StructureMapping.StructureType.Crest, false)]
-        [TestCase(StructureMapping.StructureType.Orifice, false)]
-        [TestCase(StructureMapping.StructureType.Outlet, true)]
-        [TestCase(StructureMapping.StructureType.Pump, true)]
-        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(StructureMapping.StructureType structureType, bool mapped)
+        [TestCase(SewerStructureMapping.StructureType.Crest, false)]
+        [TestCase(SewerStructureMapping.StructureType.Orifice, true)]
+        [TestCase(SewerStructureMapping.StructureType.Outlet, true)]
+        [TestCase(SewerStructureMapping.StructureType.Pump, true)]
+        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(SewerStructureMapping.StructureType structureType, bool mapped)
         {
             var structureId = "structure123";
             var structurePumpGwswElement = new GwswElement
@@ -92,8 +92,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, structureId),
-                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
                 }
             };
 
@@ -103,11 +103,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(StructureMapping.StructureType.Crest, false)]
-        [TestCase(StructureMapping.StructureType.Orifice, false)]
-        /*[TestCase(StructureType.Outlet, true)] It's a type of compartment */
-        [TestCase(StructureMapping.StructureType.Pump, true)]
-        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(StructureMapping.StructureType structureType, bool mapped)
+        [TestCase(SewerStructureMapping.StructureType.Crest, false, false, false, false)]
+        [TestCase(SewerStructureMapping.StructureType.Orifice, true, false, true, false)]
+        [TestCase(SewerStructureMapping.StructureType.Outlet, true, true, false, false)]
+        [TestCase(SewerStructureMapping.StructureType.Pump, true, false, true, false)]
+        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(SewerStructureMapping.StructureType structureType, bool mapped, bool isNode, bool isBranch, bool isStructure)
         {
             var structureId = "structure123";
             var structureGwswElement = new GwswElement
@@ -115,8 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.UniqueId, structureId),
-                    GetDefaultGwswAttribute(StructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
                 }
             };
 
@@ -125,14 +125,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(mapped, createdElement != null);
             if (!mapped) return;
 
-            Assert.IsTrue(network.SewerConnections.Any());
-            Assert.IsTrue(network.SewerConnections.Any(s => s.Name.Equals(structureId)));
+            if (isNode)
+            {
+                Assert.IsTrue(network.Nodes.Any());
+                Assert.IsTrue(network.Manholes.Any(m => m.Name.Equals(structureId) || m.ContainsCompartment(structureId)));
+            }
 
-            Assert.IsTrue(network.Structures.Any());
-            Assert.IsTrue(network.Structures.Any(s => s.Name.Equals(structureId)));
+            if (isBranch)
+            {
+                Assert.IsTrue(network.SewerConnections.Any());
+                Assert.IsTrue(network.SewerConnections.Any(s => s.Name.Equals(structureId)));
+            }
 
-            Assert.IsTrue(network.CompositeBranchStructures.Any());
-            Assert.IsTrue(network.CompositeBranchStructures.Any(cb => cb.Structures.Any(s => s.Name.Equals(structureId))));
+            if (isStructure)
+            {
+                Assert.IsTrue(network.Structures.Any());
+                Assert.IsTrue(network.Structures.Any(s => s.Name.Equals(structureId)));
+
+                Assert.IsTrue(network.CompositeBranchStructures.Any());
+                Assert.IsTrue(network.CompositeBranchStructures.Any(cb => cb.Structures.Any(s => s.Name.Equals(structureId))));
+            }
         }
     }
 }
