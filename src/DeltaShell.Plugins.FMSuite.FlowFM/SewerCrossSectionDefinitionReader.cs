@@ -71,6 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
 
             string csWidth;
