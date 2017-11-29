@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdHeulDefinitionReader : SewerCrossSectionDefinitionReader
+    class CsdArchDefinitionReader : SewerCrossSectionDefinitionReader
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdMuilDefinitionReader : SewerCrossSectionDefinitionReader
+    class CsdCunetteDefinitionReader : SewerCrossSectionDefinitionReader
     {
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {

@@ -57,35 +57,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return null;
             
-            var csId = GetAttributeFromList(gwswElement, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId);
-            var csShape = GetAttributeFromList(gwswElement, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionShape);
-            if (csId == null || csShape == null) return null;
+            var csIdAttribute = GetAttributeFromList(gwswElement, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId);
+            var csShapeAttribute = GetAttributeFromList(gwswElement, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionShape);
+            if (csIdAttribute == null || csShapeAttribute == null) return null;
             
-            var definitionReader = CrossSectionFactory(csShape.ValueAsString);
+            var definitionReader = CrossSectionFactory(csShapeAttribute);
             var readCrossSectionDefinition = definitionReader.ReadCrossSectionDefinition(gwswElement);
             var crossSection = new CrossSection(readCrossSectionDefinition)
             {
-                Name = csId.ValueAsString
+                Name = csIdAttribute.ValueAsString
             };
                         
             return crossSection;
         }
     
-        private static SewerCrossSectionDefinitionReader CrossSectionFactory(string csShape)
+        private static SewerCrossSectionDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
         {
-            switch (csShape)
+            var structureType = GetValueFromDescription<CrossSectionMapping.CrossSectionType>(crossSectionTypeAttribute.ValueAsString);
+            switch (structureType)
             {
-                case "EIV":
+                case CrossSectionMapping.CrossSectionType.Egg:
                     return new CsdEggDefinitionReader();
-                case "HEU":
-                    return new CsdHeulDefinitionReader();
-                case "MVR":
-                    return new CsdMuilDefinitionReader();
-                case "RHK":
+                case CrossSectionMapping.CrossSectionType.Arch:
+                    return new CsdArchDefinitionReader();
+                case CrossSectionMapping.CrossSectionType.Cunette:
+                    return new CsdCunetteDefinitionReader();
+                case CrossSectionMapping.CrossSectionType.Rectangle:
                     return new CsdRectangleDefinitionReader();
-                case "RND":
+                case CrossSectionMapping.CrossSectionType.Circle:
                     return new CsdCircleDefinitionReader();
-                case "TPZ":
+                case CrossSectionMapping.CrossSectionType.Trapezoid:
                     return new CsdTrapezoidDefinitionReader();
                 default:
                     return null;

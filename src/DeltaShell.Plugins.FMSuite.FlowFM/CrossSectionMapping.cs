@@ -1,7 +1,19 @@
+using System.ComponentModel;
+
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public static class CrossSectionMapping
     {
+        public enum CrossSectionType
+        {
+            [Description("EIV")] Egg,
+            [Description("HEU")] Arch,
+            [Description("MVR")] Cunette,
+            [Description("RHK")] Rectangle,
+            [Description("RND")] Circle,
+            [Description("TPZ")] Trapezoid
+        }
+
         public static class CrossSectionPropertyKeys
         {
             public const string CrossSectionId = "CROSSSECTION_ID";
