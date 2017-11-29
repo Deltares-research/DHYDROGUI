@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         foundCs.Name = profileDef.ValueAsString;
                         network.SewerProfiles.Add(foundCs);
                     }
-                    newPipe.CrossSectionShape = (CrossSection)foundCs;
+                    newPipe.SewerProfile = (CrossSection)foundCs;
                 }
             }
         }

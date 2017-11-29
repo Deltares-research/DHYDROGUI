@@ -368,17 +368,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
                     InsertStructures(manholes, nodes);
                     break;
-                case SewerFeatureType.Crosssection :
-                    foreach (var cs in features.OfType<CrossSection>())
-                    {
-                        network.Pipes.Where(p => p.CrossSectionShape.Name == cs.Name).ForEach(p =>
-                        {
-                            p.CrossSectionShape = cs;
-                        });
-                    }
-                    
-                    break;
-
             }
         }
 

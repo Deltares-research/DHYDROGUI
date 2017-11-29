@@ -267,7 +267,7 @@ namespace DelftTools.Hydro
             get ; protected set;
         }
 
-        public virtual IEventedList<ICrossSection> SewerProfiles { get; set; }
+        public virtual IList<ICrossSection> SewerProfiles { get; set; }
         
         public virtual IEnumerable<IManhole> Manholes { get; set; }
 

@@ -67,7 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Name = csIdAttribute.ValueAsString
             };
-                        
+
+            network?.SewerProfiles.Add(crossSection);
+
             return crossSection;
         }
     

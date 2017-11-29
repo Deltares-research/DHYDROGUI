@@ -15,7 +15,7 @@ namespace DelftTools.Hydro
         IEnumerable<IPipe> Pipes { get; }
         IEnumerable<IManhole> Manholes { get; }
         IEnumerable<ISewerConnection> SewerConnections { get; }
-        IEventedList<ICrossSection> SewerProfiles { get; }
+        IList<ICrossSection> SewerProfiles { get; }
         IEnumerable<IChannel> Channels { get; }
 
         IEnumerable<ICrossSection> CrossSections { get; }

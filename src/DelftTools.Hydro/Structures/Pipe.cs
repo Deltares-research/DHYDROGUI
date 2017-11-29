@@ -12,7 +12,7 @@ namespace DelftTools.Hydro.Structures
     public class Pipe : SewerConnection, IPipe
     {
         private static ILog Log = LogManager.GetLogger(typeof(Pipe));
-        public CrossSection CrossSectionShape { get; set; }
+        public CrossSection SewerProfile { get; set; }
         public string PipeId { get; set; }
 
         public override IEventedList<IBranchFeature> BranchFeatures

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
@@ -609,6 +610,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
                 Assert.AreEqual(outlet.SurfaceWaterLevel, extendedOutlet.SurfaceWaterLevel, "the attributes from the element do not match");
             }
+        }
+
+        [Test]
+        public void WhenImportingCrossSectionsToNetworkAndThenImportingSewerConnectionsToNetwork_ThenSewerConnectionsHaveSewerProfiles()
+        {
+            //Create network
+            var network = new HydroNetwork();
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load structures.
+            var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
+            var importedFeatures = gwswImporter.ImportItem(structuresPath, network) as List<INetworkFeature>;
+            Assert.IsNotNull(importedFeatures);
+
+            //Check that sewer profiles have been put into the network
+            Assert.That(network.SewerProfiles.Count, Is.EqualTo(importedFeatures.Count));
+            var sewerProfileNames = network.SewerProfiles.Select(sp => sp.Name);
+            importedFeatures.ForEach(f =>
+            {
+                var profile = f as ICrossSection;
+                Assert.NotNull(profile);
+                Assert.IsTrue(sewerProfileNames.Contains(profile.Name));
+            });
+
+            // Now Load connections.
+            var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedConnections = gwswImporter.ImportItem(connectionsPath, network) as List<INetworkFeature>;
+            Assert.IsNotNull(importedConnections);
+
+            var pipes = network.Branches.OfType<Pipe>().ToList();
+            Assert.IsTrue(pipes.Any());
+            pipes.ForEach(p => Assert.NotNull(p.SewerProfile));
         }
 
         [Test]
