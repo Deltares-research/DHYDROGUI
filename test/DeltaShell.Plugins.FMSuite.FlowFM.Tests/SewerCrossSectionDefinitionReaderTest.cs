@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Circle shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionCircleDefinition_ThenReturnCorrectValue()
+        public void GivenGwswElement_WhenReadingCrossSectionCircleDefinition_ThenReturnCircleShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
             var values = new List<string> { "1250" };
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Rectangle shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionRectangleDefinition_ThenReturnCorrectValue()
+        public void GivenGwswElement_WhenReadingCrossSectionRectangleDefinition_ThenReturnRectangleShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
             var values = new List<string> { "2000", "1200" };
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Egg shape cross section
         
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionEggDefinition_ThenReturnCorrectValue()
+        public void GivenGwswElement_WhenReadingCrossSectionEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
             var values = new List<string> { "250" };
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Cunette shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionCunetteDefinition_ThenReturnCorrectValue()
+        public void GivenGwswElement_WhenReadingCrossSectionCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
             var values = new List<string> { "2000" };
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Arch shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionArchDefinition_ThenReturnCorrectValue()
+        public void GivenGwswElement_WhenReadingCrossSectionArchDefinition_ThenReturnArchShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
             var values = new List<string> { "1200", "2500" };
@@ -170,8 +170,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #region Trapezoid shape cross section
 
-        [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnCorrectValue()
+        [TestCase("2,5", "1,5")]
+        [TestCase("2.5", "1.5")]
+        public void GivenGwswElement_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnTrapezoidShapeWithCorrectPropertyValues(string slope1, string slope2)
         {
             var keys = new List<string>
             {
@@ -180,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
                 CrossSectionMapping.CrossSectionPropertyKeys.Slope2
             };
-            var values = new List<string> { "1000", "1000", "2,5", "1,5" };
+            var values = new List<string> { "1000", "1000", slope1, slope2 };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDTrapezoidShapeAndCheckProperties(element, 1.0, 2.0, 2.0);
         }
@@ -256,7 +257,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-
         #region Test helpers
         private GwswElement GetGwswElement(SewerFeatureType sewerFeatureType, Dictionary<string, string> keyValuePairs)
         {
@@ -298,6 +298,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(csShape);
             Assert.That(csShape.Width, Is.EqualTo(expectedWidth));
             Assert.That(csShape.Height, Is.EqualTo(expectedHeight));
+        }
+
+        #endregion
+
+        #region SewerDictionaryExtensions
+
+        [TestCase("2", 2.0)]
+        [TestCase("2.0", 2.0)]
+        [TestCase("2,0", 2.0)]
+        [TestCase("-2,0", -2.0)]
+        [TestCase("-99.3560", -99.356)]
+        public void GivenCorrectStringValue_WhenTryingToGetDoubleValueFromDictionary_ThenRetrievalIsSuccessful(string stringValue, double expectedResult)
+        {
+            bool successfulRetrieval;
+            var doubleValue = CreateDictionaryAndRetrieveDoubleValue(stringValue, out successfulRetrieval);
+            Assert.True(successfulRetrieval);
+            Assert.That(doubleValue, Is.EqualTo(expectedResult));
+        }
+
+        [TestCase("AB")]
+        [TestCase("2.0.0")]
+        [TestCase("2,0,0")]
+        [TestCase("(2.5)")]
+        public void GivenIncorrectStringValue_WhenTryingToGetDoubleValueFromDictionary_ThenRetrievalIsNotSuccessful(string stringValue)
+        {
+            bool successfulRetrieval;
+            CreateDictionaryAndRetrieveDoubleValue(stringValue, out successfulRetrieval);
+            Assert.False(successfulRetrieval);
+        }
+
+        private static double CreateDictionaryAndRetrieveDoubleValue(string stringValue, out bool successfulRetrieval)
+        {
+            var key = "myKey";
+            var dictionary = new Dictionary<string, string>
+            {
+                {key, stringValue}
+            };
+
+            double doubleValue;
+            successfulRetrieval = dictionary.TryGetDoubleValueFromDictionary(key, out doubleValue);
+            return doubleValue;
         }
 
         #endregion

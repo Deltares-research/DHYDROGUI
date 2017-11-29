@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             string stringValue;
             doubleValue = 0;
-            return gwswElementKeyValuePairs.TryGetValue(key, out stringValue) && double.TryParse(stringValue, out doubleValue);
+            return gwswElementKeyValuePairs.TryGetValue(key, out stringValue) && double.TryParse(stringValue.Replace(".", ","), out doubleValue);
         }
     }
 }
