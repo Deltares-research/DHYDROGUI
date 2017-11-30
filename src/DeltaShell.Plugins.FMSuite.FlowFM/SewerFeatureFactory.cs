@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!csIdAttribute.IsValidAttribute() || !csShapeAttribute.IsValidAttribute()) return null;
             
             var definitionReader = CrossSectionFactory(csShapeAttribute);
-            var readCrossSectionDefinition = definitionReader.ReadCrossSectionDefinition(gwswElement);
+            var readCrossSectionDefinition = definitionReader.ReadSewerProfileDefinition(gwswElement);
             var crossSection = new CrossSection(readCrossSectionDefinition)
             {
                 Name = csIdAttribute.GetValidStringValue()
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return crossSection;
         }
     
-        private static SewerCrossSectionDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
+        private static SewerProfileDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
         {
             var structureType = GetValueFromDescription<SewerProfileMapping.SewerProfileType>(crossSectionTypeAttribute.ValueAsString);
             switch (structureType)

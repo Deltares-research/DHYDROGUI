@@ -240,7 +240,7 @@
     <Compile Include="SewerConnectionMapping.cs" />
     <Compile Include="SewerConnectionOrificeGenerator.cs" />
     <Compile Include="SewerConnectionPipeGenerator.cs" />
-    <Compile Include="SewerCrossSectionDefinitionReader.cs" />
+    <Compile Include="SewerProfileDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
     <Compile Include="SewerPumpGenerator.cs" />

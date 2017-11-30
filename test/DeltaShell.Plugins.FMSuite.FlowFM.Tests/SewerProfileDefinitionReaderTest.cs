@@ -3,13 +3,17 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using log4net;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    public class SewerCrossSectionDefinitionReaderTest
+    public class SewerProfileDefinitionReaderTest
     {
+        private static ILog Log = LogManager.GetLogger(typeof(SewerProfileDefinitionReaderTest));
+        private const string ProfileId = "PRO1";
+
         [TestCase(SewerFeatureType.Node)]
         [TestCase(SewerFeatureType.Connection)]
         [TestCase(SewerFeatureType.Discharge)]
@@ -18,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerFeatureType.Runoff)]
         [TestCase(SewerFeatureType.Structure)]
         [TestCase(SewerFeatureType.Surface)]
-        public void GivenGwswElementWithElementTypeNameUnequalToCrossSection_WhenReadingCrossSectionDefinition_ThenReturnNull(SewerFeatureType type)
+        public void GivenGwswElementWithElementTypeNameUnequalToSewerProfile_WhenReadingSewerProfileDefinition_ThenReturnNull(SewerFeatureType type)
         {
             var element = GetGwswElement(type, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
             CreateCSDShapeAndCheckForNull<CsdCircleDefinitionReader>(element);
@@ -29,17 +33,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CreateCSDShapeAndCheckForNull<CsdCunetteDefinitionReader>(element);
         }
 
-        private static void CreateCSDShapeAndCheckForNull<T>(GwswElement element) where T : SewerCrossSectionDefinitionReader, new()
+        private static void CreateCSDShapeAndCheckForNull<T>(GwswElement element) where T : SewerProfileDefinitionReader, new()
         {
             var circleReader = new T();
-            var csDefinition = circleReader.ReadCrossSectionDefinition(element);
+            var csDefinition = circleReader.ReadSewerProfileDefinition(element);
             Assert.IsNull(csDefinition);
         }
 
         #region Circle shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionCircleDefinition_ThenReturnCircleShapeWithCorrectPropertyValues()
+        public void GivenGwswElement_WhenReadingSewerProfileCircleDefinition_ThenReturnCircleShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth };
             var values = new List<string> { "1250" };
@@ -48,17 +52,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionCircleDefinition_ThenReturnDefaultCircleCrossSection()
+        public void GivenSewerProfileGwswElementWithoutWidthDefined_WhenReadingSewerProfileCircleDefinition_ThenReturnDefaultCircleSewerProfileAndLogMessage()
         {
-            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
-            CreateCSDCircleShapeAndCheckProperties(element, 0.160d);
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileId };
+            var values = new List<string> { ProfileId };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDCircleShapeAndCheckProperties(element, 0.160d),
+                "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
         private static void CreateCSDCircleShapeAndCheckProperties(GwswElement element, double diameter)
         {
             var circleReader = new CsdCircleDefinitionReader();
 
-            var csDefinition = circleReader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+            var csDefinition = circleReader.ReadSewerProfileDefinition(element) as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
 
             var csRoundShape = csDefinition.Shape as CrossSectionStandardShapeRound;
@@ -71,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Rectangle shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionRectangleDefinition_ThenReturnRectangleShapeWithCorrectPropertyValues()
+        public void GivenGwswElement_WhenReadingSewerProfileRectangleDefinition_ThenReturnRectangleShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "2000", "1200" };
@@ -82,12 +90,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileHeight)]
         [TestCase("fakeKey")]
-        public void GivenCrossSectionGwswElementWithoutHeightOrWidthDefined_WhenReadingCrossSectionRectangleDefinition_ThenReturnDefaultRectangleCrossSection(string key)
+        public void GivenSewerProfileGwswElementWithoutHeightOrWidthDefined_WhenReadingSewerProfileRectangleDefinition_ThenReturnDefaultRectangleSewerProfileAndLogMessage(string key)
         {
-            var keys = new List<string> { key };
-            var values = new List<string> { "2000" };
+            var keys = new List<string> { key, SewerProfileMapping.PropertyKeys.SewerProfileId };
+            var values = new List<string> { "2000", ProfileId };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDShapeAndCheckProperties<CsdRectangleDefinitionReader, CrossSectionStandardShapeRectangle>(element, 1.0, 1.0);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDShapeAndCheckProperties<CsdRectangleDefinitionReader, CrossSectionStandardShapeRectangle>(element, 1.0, 1.0),
+                "Sewer profile 'PRO1' is missing its width and/or height. Default profile property values are used for this profile.");
         }
 
         #endregion
@@ -95,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Egg shape cross section
         
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
+        public void GivenGwswElement_WhenReadingSewerProfileEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth };
             var values = new List<string> { "250" };
@@ -104,14 +114,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionEggDefinition_ThenReturnDefaultEggShape()
+        public void GivenSewerProfileGwswElementWithoutWidthDefined_WhenReadingSewerProfileEggDefinition_ThenReturnDefaultEggShapeAndLogMessage()
         {
-            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
-            CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 2.0, 3.0);
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileId };
+            var values = new List<string> { ProfileId };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 2.0, 3.0),
+                "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
         [Test]
-        public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
+        public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingSewerProfileEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "250", "375" };
@@ -120,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenLogMessageIsGivenToUser()
+        public void GivenSewerProfileGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingSewerProfileEggDefinition_ThenLogMessageIsGivenToUser()
         {
             var keys = new List<string>
             {
@@ -132,12 +146,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
 
             var reader = new CsdEggDefinitionReader();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadCrossSectionDefinition(element), 
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadSewerProfileDefinition(element), 
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 250 mm and height is now 375 mm.");
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenHeightFromGwswElementIsIgnored()
+        public void GivenSewerProfileGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingSewerProfileEggDefinition_ThenHeightFromGwswElementIsIgnored()
         {
             var keys = new List<string>
             {
@@ -149,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
 
             var reader = new CsdEggDefinitionReader();
-            var csDefinition = reader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+            var csDefinition = reader.ReadSewerProfileDefinition(element) as CrossSectionDefinitionStandard;
 
             Assert.NotNull(csDefinition);
 
@@ -164,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Cunette shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
+        public void GivenGwswElement_WhenReadingSewerProfileCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth };
             var values = new List<string> { "2000" };
@@ -173,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
+        public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingSewerProfileCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "2000", "1268" };
@@ -182,14 +196,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionCunetteDefinition_ThenReturnDefaultCunetteShape()
+        public void GivenSewerProfileGwswElementWithoutWidthDefined_WhenReadingSewerProfileCunetteDefinition_ThenReturnDefaultCunetteShapeAndLogMessage()
         {
-            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
-            CreateCSDShapeAndCheckProperties<CsdCunetteDefinitionReader, CrossSectionStandardShapeCunette>(element, 1.0, 0.634);
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileId };
+            var values = new List<string> { ProfileId };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDShapeAndCheckProperties<CsdCunetteDefinitionReader, CrossSectionStandardShapeCunette>(element, 1.0, 0.634),
+                "Sewer profile 'PRO1' is missing its width. Default profile property values are used for this profile.");
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenLogMessageIsGivenToUser()
+        public void GivenSewerProfileGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingSewerProfileCunetteDefinition_ThenLogMessageIsGivenToUser()
         {
             var keys = new List<string>
             {
@@ -201,12 +219,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
 
             var reader = new CsdCunetteDefinitionReader();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadCrossSectionDefinition(element),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadSewerProfileDefinition(element),
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (1:0.634). Width is now 250 mm and height is now 158.5 mm.");
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenHeightFromGwswElementIsIgnored()
+        public void GivenSewerProfileGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingSewerProfileCunetteDefinition_ThenHeightFromGwswElementIsIgnored()
         {
             var keys = new List<string>
             {
@@ -218,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
 
             var reader = new CsdCunetteDefinitionReader();
-            var csDefinition = reader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+            var csDefinition = reader.ReadSewerProfileDefinition(element) as CrossSectionDefinitionStandard;
 
             Assert.NotNull(csDefinition);
 
@@ -233,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Arch shape cross section
 
         [Test]
-        public void GivenGwswElement_WhenReadingCrossSectionArchDefinition_ThenReturnArchShapeWithCorrectPropertyValues()
+        public void GivenGwswElement_WhenReadingSewerProfileArchDefinition_ThenReturnArchShapeWithCorrectPropertyValues()
         {
             var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "1200", "2500" };
@@ -243,19 +261,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
         [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileHeight)]
-        public void GivenGwswElementWithMissingValues_WhenReadingCrossSectionArchDefinition_ThenReturnDefaultArchShape(string key)
+        public void GivenGwswElementWithMissingValues_WhenReadingSewerProfileArchDefinition_ThenReturnDefaultArchShapeAndLogMessage(string key)
         {
-            var keys = new List<string> { key };
-            var values = new List<string> { "1000" };
+            var keys = new List<string> { key, SewerProfileMapping.PropertyKeys.SewerProfileId };
+            var values = new List<string> { "1000", ProfileId };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDArchShapeAndCheckProperties(element, 1.0, 2.0, 1.0);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDArchShapeAndCheckProperties(element, 1.0, 2.0, 1.0),
+                "Sewer profile 'PRO1' is missing its width and/or height. Default profile property values are used for this profile.");
         }
 
         private static void CreateCSDArchShapeAndCheckProperties(GwswElement element, double expectedWidth, double expectedHeight, double expectedArcHeight)
         {
             var archReader = new CsdArchDefinitionReader();
 
-            var csDefinition = archReader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+            var csDefinition = archReader.ReadSewerProfileDefinition(element) as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
 
             var csShape = csDefinition.Shape as CrossSectionStandardShapeArch;
@@ -271,7 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase("2,5", "1,5")]
         [TestCase("2.5", "1.5")]
-        public void GivenGwswElement_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnTrapezoidShapeWithCorrectPropertyValues(string slope1, string slope2)
+        public void GivenGwswElement_WhenReadingSewerProfileTrapezoidDefinition_ThenReturnTrapezoidShapeWithCorrectPropertyValues(string slope1, string slope2)
         {
             var keys = new List<string>
             {
@@ -287,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase(SewerProfileMapping.PropertyKeys.Slope1)]
         [TestCase(SewerProfileMapping.PropertyKeys.Slope2)]
-        public void GivenGwswElementWithOneMissingSlope_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnTrapezoidWithPresentSlope(string slopeKey)
+        public void GivenGwswElementWithOneMissingSlope_WhenReadingSewerProfileTrapezoidDefinition_ThenReturnTrapezoidWithPresentSlope(string slopeKey)
         {
             var keys = new List<string>
             {
@@ -301,50 +321,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithMissingWidth_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnDefaultTrapezoidCrossSection()
+        public void GivenSewerProfileGwswElementWithMissingWidth_WhenReadingSewerProfileTrapezoidDefinition_ThenReturnDefaultTrapezoidSewerProfileAndLogMessage()
         {
             var keys = new List<string>
             {
+                SewerProfileMapping.PropertyKeys.SewerProfileId,
                 SewerProfileMapping.PropertyKeys.SewerProfileHeight,
                 SewerProfileMapping.PropertyKeys.Slope1,
                 SewerProfileMapping.PropertyKeys.Slope2
             };
-            var values = new List<string> { "1000", "2,5", "1,5" };
+            var values = new List<string> { ProfileId, "1000", "2,5", "1,5" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0),
+                "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithMissingHeight_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnDefaultTrapezoidCrossSection()
+        public void GivenSewerProfileGwswElementWithMissingHeight_WhenReadingSewerProfileTrapezoidDefinition_ThenReturnDefaultTrapezoidSewerProfile()
         {
             var keys = new List<string>
             {
+                SewerProfileMapping.PropertyKeys.SewerProfileId,
                 SewerProfileMapping.PropertyKeys.SewerProfileWidth,
                 SewerProfileMapping.PropertyKeys.Slope1,
                 SewerProfileMapping.PropertyKeys.Slope2
             };
-            var values = new List<string> { "1000", "2,5", "1,5" };
+            var values = new List<string> { ProfileId, "1000", "2,5", "1,5" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0),
+                "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
         }
 
         [Test]
-        public void GivenCrossSectionGwswElementWithMissingSlopes_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnDefaultTrapezoidCrossSection()
+        public void GivenSewerProfileGwswElementWithMissingSlopes_WhenReadingSewerProfileTrapezoidDefinition_ThenReturnDefaultTrapezoidSewerProfile()
         {
             var keys = new List<string>
             {
+                SewerProfileMapping.PropertyKeys.SewerProfileId,
                 SewerProfileMapping.PropertyKeys.SewerProfileWidth,
                 SewerProfileMapping.PropertyKeys.SewerProfileHeight
             };
-            var values = new List<string> { "1000", "1000" };
+            var values = new List<string> { ProfileId, "1000", "1000" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
-            CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => CreateCSDTrapezoidShapeAndCheckProperties(element, 10.0, 2.0, 20.0),
+                "Sewer profile 'PRO1' is missing its width, height and/or slope. Default profile property values are used for this profile.");
         }
 
         private static void CreateCSDTrapezoidShapeAndCheckProperties(GwswElement element, double expectedBottomWidth, double expectedSlope, double expectedMaxFlowWidth)
         {
             var reader = new CsdTrapezoidDefinitionReader();
-            var csDefinition = reader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+            var csDefinition = reader.ReadSewerProfileDefinition(element) as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
 
             var csShape = csDefinition.Shape as CrossSectionStandardShapeTrapezium;
@@ -386,11 +415,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         private static void CreateCSDShapeAndCheckProperties<TReader, TShape>(GwswElement gwswElement, double expectedWidth, double expectedHeight) 
-            where TReader : SewerCrossSectionDefinitionReader, new() 
+            where TReader : SewerProfileDefinitionReader, new() 
             where TShape : CrossSectionStandardShapeWidthHeightBase, new()
         {
             var reader = new TReader();
-            var csDefinition = reader.ReadCrossSectionDefinition(gwswElement) as CrossSectionDefinitionStandard;
+            var csDefinition = reader.ReadSewerProfileDefinition(gwswElement) as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
 
             var csShape = csDefinition.Shape as TShape;
@@ -425,6 +454,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             bool successfulRetrieval;
             CreateDictionaryAndRetrieveDoubleValue(stringValue, out successfulRetrieval);
             Assert.False(successfulRetrieval);
+        }
+
+        [Test]
+        public void GivenLogger_WhenInvokingMessageForMissingValues_ThenMessageIsLogged()
+        {
+            var missingValuesText = "key values";
+            var dict = new Dictionary<string, string>
+            {
+                { SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId }
+            };
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => Log.MessageForMissingValues(dict, missingValuesText),
+                "Sewer profile 'PRO1' is missing its " + missingValuesText + ". Default profile property values are used for this profile.");
+        }
+
+        [Test]
+        public void GivenLogger_WhenInvokingLogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion_ThenMessageIsLogged()
+        {
+            var dict = new Dictionary<string, string>
+            {
+                { SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId },
+                { SewerProfileMapping.PropertyKeys.SewerProfileHeight, "2500" }
+            };
+            var csShape = new CrossSectionStandardShapeEgg { Width = 2.0 };
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => Log.LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(dict, 2000.0, 1.5, "(2:3)", csShape),
+                "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 2000 mm and height is now 3000 mm.");
         }
 
         private static double CreateDictionaryAndRetrieveDoubleValue(string stringValue, out bool successfulRetrieval)
