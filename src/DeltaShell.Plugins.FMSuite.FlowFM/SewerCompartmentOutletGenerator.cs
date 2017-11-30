@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return null;
 
-            if(IsValidGwswCompartment(gwswElement)) return CreateCompartment<OutletCompartment>(gwswElement, network);
+            if(gwswElement.IsValidGwswCompartment()) return CreateCompartment<OutletCompartment>(gwswElement, network);
             
             return CreateOutletFromGwswStructureElement(gwswElement, network);
         }
@@ -34,17 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var newOutlet = compartment as OutletCompartment;
             if (newOutlet == null) return;
 
-            var newDoubleValue = 0.0;
-            var surfaceWaterLevel = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);
-            if (surfaceWaterLevel != null && surfaceWaterLevel.ValueAsString != string.Empty)
-            {
-                var valueType = surfaceWaterLevel.GwswAttributeType.AttributeType;
-                if (valueType == newOutlet.SurfaceWaterLevel.GetType() &&
-                    TryParseDoubleElseLogError(surfaceWaterLevel, valueType, out newDoubleValue))
-                {
-                    newOutlet.SurfaceWaterLevel = newDoubleValue;
-                }
-            }
+            var auxDouble = 0.0;
+
+            var surfaceWaterLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);
+            if( surfaceWaterLevel.TryGetValueAsDouble(out auxDouble))
+                newOutlet.SurfaceWaterLevel = auxDouble;
         }
     }
 }

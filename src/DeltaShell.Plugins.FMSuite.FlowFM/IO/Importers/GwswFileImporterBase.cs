@@ -18,6 +18,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
+using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -396,6 +397,90 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
     #region Gwsw Types
 
+    public static class GwswElementExtensions
+    {
+        private static ILog Log = LogManager.GetLogger(typeof(GwswElementExtensions));
+
+        public static bool IsTypeOf(this GwswAttribute gwswAttribute, Type compareType)
+        {
+            if (gwswAttribute.GwswAttributeType != null && gwswAttribute.GwswAttributeType.AttributeType != null)
+                return gwswAttribute.GwswAttributeType.AttributeType == compareType;
+
+            return false;
+        }
+
+        public static bool IsValidAttribute(this GwswAttribute gwswAttribute)
+        {
+            if (gwswAttribute == null) return false;
+
+            if (!string.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
+                gwswAttribute.GwswAttributeType != null &&
+                gwswAttribute.GwswAttributeType.AttributeType != null)
+            {
+                return true;
+            }
+
+            gwswAttribute.LogInvalidAttribute();
+            return false;
+        }
+
+        public static GwswAttribute GetAttributeFromList(this GwswElement element, string attributeName)
+        {
+            var attribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(attributeName));
+            if (attribute != null)
+                return attribute;
+
+            Log.WarnFormat(Resources.SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_, attributeName, element.ElementTypeName);
+            return null;
+        }
+
+        public static string GetValidStringValue(this GwswAttribute gwswAttribute)
+        {
+            if (gwswAttribute.IsValidAttribute() && gwswAttribute.IsTypeOf(typeof(string)))
+            {
+                return gwswAttribute.ValueAsString;
+            }
+
+            return null;
+        }
+
+        public static bool TryGetValueAsDouble(this GwswAttribute gwswAttribute, out double value)
+        {
+            value = default(double);
+            if (!gwswAttribute.IsValidAttribute()) return false;
+            if( !gwswAttribute.IsTypeOf(typeof(double)))
+            {
+                gwswAttribute.LogErrorParseType(typeof(double));
+                return false;
+            }
+
+            try
+            {
+                value = Convert.ToDouble(gwswAttribute.ValueAsString, CultureInfo.InvariantCulture);
+                return true;
+            }
+            catch (Exception e)
+            {
+                gwswAttribute.LogErrorParseType(typeof(double));
+            }
+            return false;
+        }
+
+        private static void LogInvalidAttribute(this GwswAttribute gwswAttribute)
+        {
+            if (gwswAttribute.GwswAttributeType == null) return;
+
+            var attr = gwswAttribute.GwswAttributeType;
+            Log.ErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_, attr.FileName, attr.LineNumber, attr.Name);
+        }
+
+        private static void LogErrorParseType(this GwswAttribute gwswAttribute, Type toType)
+        {
+            var attr = gwswAttribute.GwswAttributeType;
+            Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__, attr.FileName, attr.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
+        }
+    }
+
     public class GwswElement
     {
         public List<GwswAttribute> GwswAttributeList { get; set; }
@@ -410,7 +495,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class GwswAttribute
     {
         public GwswAttributeType GwswAttributeType { get; set; }
-        public string ValueAsString { get; set; } 
+
+        private string _valueAsString;
+
+        public string ValueAsString
+        {
+            get
+            {
+                return this.IsTypeOf(typeof(double)) ? ReplaceCommaWithPoint(_valueAsString) : _valueAsString;
+            }
+            set { _valueAsString = value; }
+        }
+
+        private static string ReplaceCommaWithPoint(string doubleString)
+        {
+            return doubleString.Replace(',', '.');
+        }
     }
 
     public class GwswAttributeType
@@ -434,6 +534,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             set { _elementName = value; }
         }
 
+        public int LineNumber { get; set; }
+
         public string Key { get; set; }
         public string LocalKey { get; set; }
         public string Definition { get; set; }
@@ -449,6 +551,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeField, string codeName, string definition, string mandatory, string remarks)
         {
             Name = columnName;
+            LineNumber = lineNumber;
             Key = codeName;
             Definition = definition;
             Mandatory = mandatory;
@@ -462,11 +565,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             try
             {
                 return FMParser.GetClrType(name, typeField, ref definition, fileName, lineNumber);
-    }
+            }
             catch (Exception)
             {
-                Log.ErrorFormat(Resources.GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_, name, lineNumber, fileName);
-}
+                Log.ErrorFormat(
+                    Resources
+                        .GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_,
+                    name, lineNumber, fileName);
+            }
 
             return null;
         }

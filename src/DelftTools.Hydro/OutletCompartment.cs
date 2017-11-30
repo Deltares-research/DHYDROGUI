@@ -7,6 +7,6 @@
         {
         }
 
-        public double SurfaceWaterLevel;
+        public double SurfaceWaterLevel { get; set; }
     }
 }

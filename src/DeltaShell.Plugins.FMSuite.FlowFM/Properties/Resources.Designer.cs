@@ -247,6 +247,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0}, line {1}, element {2}. It was not possible to parse attribute {3} with value {4} from type {5} to type {6}..
+        /// </summary>
+        public static string GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_n" +
+                        "ot_possible_to_parse_attribute__3__from_type__4__to_type__5__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, line {1}. Attribute {2} contains an invalid value and will not be imported..
+        /// </summary>
+        public static string GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_no" +
+                        "t_valid_and_will_not_be_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not possible to import {0}.
         /// </summary>
         public static string GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_ {
@@ -555,6 +575,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type {0} is not recognized, please check the syntax.
+        /// </summary>
+        public static string SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_ch" +
+                        "eck_the_syntax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields.
         /// </summary>
         public static string SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields {
@@ -571,6 +601,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string SewerFeatureFactory_ThrowException_ {
             get {
                 return ResourceManager.GetString("SewerFeatureFactory_ThrowException_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pump(s) cannot be created without a network previously defined..
+        /// </summary>
+        public static string SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_ {
+            get {
+                return ResourceManager.GetString("SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_" +
+                        "a_network_previously_defined_", resourceCulture);
             }
         }
         

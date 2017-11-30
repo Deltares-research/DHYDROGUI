@@ -50,6 +50,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [TestCase("GSL")]
+        [TestCase("ITR")]
+        [TestCase("OPL")]
+        public void CreatePipeWhenGivingPipeIndicatorAttributeFromGenerator(string typeOfConnection)
+        {
+            var pipeId = "123";
+            var startNode = "node001";
+            var endNode = "node002";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeId),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode)
+                }
+            };
+            var network = new HydroNetwork();
+
+            var element = new SewerConnectionPipeGenerator().Generate(nodeGwswElement, network);
+            Assert.IsTrue(element is Pipe);
+            
+            var pipe = element as Pipe;
+            Assert.NotNull(pipe);
+            Assert.AreEqual(pipeId, pipe.PipeId);
+        }
+
+        [Test]
         public void CreatePipeFromFactoryWithKnownAttributes()
         {
             var startLevel = 30;

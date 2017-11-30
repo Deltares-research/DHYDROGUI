@@ -43,21 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        public static void TryCreateFeatureAndCheckForLogMessageAndCheckFeatureValidity(string manholeId, GwswElement badGwswElement, string compartmentId)
-        {
-            INetworkFeature feature = null;
-            var expectedPartOfMessage = "Manhole with unique id '" + manholeId + "' is not imported.";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature = SewerFeatureFactory.CreateInstance(badGwswElement),
-                expectedPartOfMessage);
-
-            // Check compartment
-            var compartment = feature as Compartment;
-            Assert.NotNull(compartment);
-            Assert.That(compartment.Name, Is.EqualTo(compartmentId));
-            Assert.NotNull(compartment.ParentManhole);
-            Assert.That(compartment.ParentManhole.Name, Is.EqualTo(manholeId));
-        }
-
         public static void TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(GwswElement badGwswElement, string expectedPartOfMessage)
         {
             INetworkFeature feature = null;
@@ -110,8 +95,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             Assert.IsNotNull(nodeGwswElement);
-
-            return nodeGwswElement;
 
             return nodeGwswElement;
         }

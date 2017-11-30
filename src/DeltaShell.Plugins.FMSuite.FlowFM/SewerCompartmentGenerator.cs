@@ -1,7 +1,6 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
@@ -10,7 +9,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerCompartmentGenerator: SewerFeatureFactory, ISewerNetworkFeatureGenerator
+    public class SewerCompartmentGenerator: ISewerNetworkFeatureGenerator
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerCompartmentGenerator));
 
@@ -20,24 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return CreateCompartment<Compartment>(gwswElement, network);
         }
 
-        public static ISewerNetworkFeatureGenerator GetSewerCompartmentGenerator(GwswAttribute sewerTypeAttribute)
-        {
-            var basicGenerator = new SewerCompartmentGenerator();
-            if (string.IsNullOrEmpty(sewerTypeAttribute?.ValueAsString)) return basicGenerator;
-
-            var nodeType = GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute.ValueAsString);
-            return IsGwswOutlet(nodeType) ? new SewerCompartmentOutletGenerator() : basicGenerator;
-        }
-
-        private static bool IsGwswOutlet(ManholeMapping.NodeType nodeType)
-        {
-            return nodeType == ManholeMapping.NodeType.Outlet;
-        }
-
         public static T FindOrGetNewCompartment<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
         {
             //We know they are not null, otherwise we would have already returned in the CompartmentFactory method.
-            var compartmentName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
+            var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
             var parentManhole = GetParentManholeFromGwswElement(gwswElement, network);
 
             if (network == null || !parentManhole.ContainsCompartment(compartmentName))
@@ -49,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         protected static T CreateCompartment<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
         {
-            if (!IsValidGwswCompartment(gwswElement)) return null;
+            if (!gwswElement.IsValidGwswCompartment()) return null;
 
             var compartment = FindOrGetNewCompartment<T>(gwswElement, network);
             SetCompartmentAttributes(compartment, gwswElement, network);
@@ -58,8 +43,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static Manhole GetParentManholeFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
         {
-            var manholeAttribute = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.ManholeId);
-            var compartmentName = GetAttributeFromList(gwswElement, ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
+            var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
+            var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
             
             //if we could not place an ID then we use the compartment name to create a place holder (if needed)
             var manholeName = manholeAttribute != null ? manholeAttribute.ValueAsString : compartmentName;
@@ -90,47 +75,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement, IHydroNetwork network)
         {
-            var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
-
-            var uniqueId = compartment.Name;
             compartment.ParentManhole = GetParentManholeFromGwswElement(gwswElement, network);
-            var manholeId = compartment.ParentManhole.Name;
 
             // Set the rest of manhole values
-            double doubleValue;
-            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.NodeLength, gwswElementKeyValuePairs,
-                uniqueId, manholeId, out doubleValue)) compartment.ManholeLength = doubleValue;
-            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.NodeWidth, gwswElementKeyValuePairs,
-                uniqueId, manholeId, out doubleValue)) compartment.ManholeWidth = doubleValue;
-            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.FloodableArea, gwswElementKeyValuePairs,
-                uniqueId, manholeId, out doubleValue)) compartment.FloodableArea = doubleValue;
-            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.BottomLevel, gwswElementKeyValuePairs,
-                uniqueId, manholeId, out doubleValue)) compartment.BottomLevel = doubleValue;
-            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.SurfaceLevel, gwswElementKeyValuePairs,
-                uniqueId, manholeId, out doubleValue)) compartment.SurfaceLevel = doubleValue;
+            var auxDouble = 0.0;
+            var nodeLength = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
+            if( nodeLength.TryGetValueAsDouble(out auxDouble))
+                compartment.ManholeLength = auxDouble;
+
+            var nodeWidth = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeWidth);
+            if( nodeWidth.TryGetValueAsDouble(out auxDouble))
+                compartment.ManholeWidth = auxDouble;
+
+            var floodableArea = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.FloodableArea);
+            if(floodableArea.TryGetValueAsDouble(out auxDouble))
+                compartment.FloodableArea = auxDouble;
+
+            var bottomLevel = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.BottomLevel);
+            if( bottomLevel.TryGetValueAsDouble(out auxDouble))
+                compartment.BottomLevel = auxDouble;
+
+            var surfaceLevel = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.SurfaceLevel);
+            if (surfaceLevel.TryGetValueAsDouble(out auxDouble))
+                compartment.SurfaceLevel = auxDouble;
 
             double yCoordinate;
             double xCoordinate;
-            if (TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.XCoordinate, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out xCoordinate)
-                && TryGetDoubleValueElseLogException(ManholeMapping.PropertyKeys.YCoordinate, gwswElementKeyValuePairs,
-                    uniqueId, manholeId, out yCoordinate))
+            var xCoord = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.XCoordinate);
+            var yCoord = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.YCoordinate);
+            if (xCoord.TryGetValueAsDouble(out xCoordinate) && yCoord.TryGetValueAsDouble(out yCoordinate))
+            {
                 compartment.Geometry = new Point(xCoordinate, yCoordinate);
+            }
 
             // Set shape value of the manhole
-            string nodeShape;
-            if (gwswElementKeyValuePairs.TryGetValue(ManholeMapping.PropertyKeys.NodeShape, out nodeShape))
+            var nodeShape = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
+            if(nodeShape.IsValidAttribute())
             {
-                try
-                {
-                    compartment.Shape =
-                        (CompartmentShape)EnumDescriptionAttributeTypeConverter.GetEnumValue<CompartmentShape>(
-                            nodeShape);
-                }
-                catch
-                {
-                    LogManholeWarningMessage(uniqueId, "string", ManholeMapping.PropertyKeys.NodeShape, nodeShape, manholeId);
-                }
+                compartment.Shape = SewerFeatureFactory.GetValueFromDescription<CompartmentShape>(nodeShape.GetValidStringValue());
             }
         }
     }

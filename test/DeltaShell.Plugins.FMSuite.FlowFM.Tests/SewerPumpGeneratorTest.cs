@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(network.Pumps.Contains(pump));
 
             //Now createInstance for the pump definition.
-            var createdElement = SewerFeatureFactory.CreateInstance(structurePumpGwswElement, network);
+            var createdElement = new SewerPumpGenerator().Generate(structurePumpGwswElement, network);
             Assert.IsNotNull(createdElement);
 
             var createdPump = createdElement as Pump;

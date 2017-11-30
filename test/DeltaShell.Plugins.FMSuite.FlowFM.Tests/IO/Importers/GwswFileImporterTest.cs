@@ -12,6 +12,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
@@ -52,6 +53,115 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var attributeTest = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
                 Assert.IsNotNull(attributeTest);
                 Assert.AreEqual(expectedType, attributeTest.AttributeType);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+            }
+        }
+
+        [Test]
+        public void GwswElementExtensionsGetAttributeFromList()
+        {
+            var attributeOne = "attributeOne";
+            var attributeTwo = "attributeTwo";
+            var valueAsString = "valueAttrOne";
+            var gwswElement = new GwswElement()
+            {
+                ElementTypeName = "test",
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", attributeOne,
+                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                        ValueAsString = valueAsString
+                    },
+                }
+            };
+
+            var retrievedAttr = gwswElement.GetAttributeFromList(attributeOne);
+            Assert.IsNotNull(retrievedAttr);
+            Assert.AreEqual(valueAsString, retrievedAttr.ValueAsString);
+
+            Assert.IsNull(gwswElement.GetAttributeFromList(attributeTwo));
+        }
+
+        [Test]
+        public void GwswElementExtensionsGetValidStringValueSucceeds()
+        {
+            var expectedValue = "test";
+            string valueAsString = expectedValue;
+            string typeAsString = "string";
+            try
+            {
+                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                Assert.IsNotNull(gwswAttributeType);
+                Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
+
+                var attribute = new GwswAttribute() { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                Assert.IsNotNull(attribute);
+
+                var testVariable = attribute.GetValidStringValue();
+                Assert.AreEqual(expectedValue, testVariable);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+            }
+        }
+
+
+        [Test]
+        public void GwswElementExtensionsTryGetValueAsDoubleSucceeds()
+        {
+            var expectedValue = 100.0;
+            string valueAsString = expectedValue.ToString(CultureInfo.InvariantCulture);
+            string typeAsString = "double";
+            var testVariable = 0.0;
+            try
+            {
+                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                Assert.IsNotNull(gwswAttributeType);
+                Assert.AreEqual(typeof(double), gwswAttributeType.AttributeType);
+
+                var attribute = new GwswAttribute() {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                Assert.IsNotNull(attribute);
+
+                Assert.IsTrue(attribute.TryGetValueAsDouble(out testVariable));
+                Assert.AreEqual(expectedValue, testVariable);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+            }
+        }
+
+        
+        [Test]
+        public void GwswElementExtensionsSetValueIfPossibleForDoubleFailsWithStringValueAndLogsMessage()
+        {
+            string valueAsString = "stringValue";
+            string typeAsString = "string";
+            try
+            {
+                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                Assert.IsNotNull(gwswAttributeType);
+                Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
+
+                var attribute = new GwswAttribute() { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                Assert.IsNotNull(attribute);
+
+                var auxValue = 0.0;
+                var logError =
+                    string.Format(
+                        Resources
+                            .GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__,
+                        gwswAttributeType.FileName, gwswAttributeType.LineNumber, gwswAttributeType.ElementName,
+                        gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType, typeof(double));
+
+                Assert.IsFalse(attribute.TryGetValueAsDouble(out auxValue));
+                TestHelper.AssertAtLeastOneLogMessagesContains( () => attribute.TryGetValueAsDouble(out auxValue), logError);
             }
             catch (Exception e)
             {

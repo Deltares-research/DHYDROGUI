@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 
@@ -9,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public new INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (IsValidGwswSewerConnection(gwswElement)) return CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network);
+            if (gwswElement.IsValidGwswSewerConnection()) return CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network);
             return CreateOrificeFromGwswStructure(gwswElement, network);
         }
 
@@ -29,40 +28,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void ExtendOrificeAttributes(GwswElement gwswElement, SewerConnectionOrifice connection)
         {
+            var auxDouble = 0.0;
             //Add Attributes
-            var newDoubleValue = 0.0;
-            var bottomLevel = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.BottomLevel);
-            if (bottomLevel != null && bottomLevel.ValueAsString != string.Empty)
-            {
-                var valueType = bottomLevel.GwswAttributeType.AttributeType;
-                if (valueType == connection.Bottom_Level.GetType() &&
-                    TryParseDoubleElseLogError(bottomLevel, valueType, out newDoubleValue))
-                {
-                    connection.Bottom_Level = newDoubleValue;
-                }
-            }
+            var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
+            if( bottomLevel.TryGetValueAsDouble(out auxDouble))
+                connection.Bottom_Level = auxDouble;
 
-            var contractionCoefficient = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.ContractionCoefficient);
-            if (contractionCoefficient != null && contractionCoefficient.ValueAsString != string.Empty)
-            {
-                var valueType = contractionCoefficient.GwswAttributeType.AttributeType;
-                if (valueType == connection.Contraction_Coefficent.GetType() &&
-                    TryParseDoubleElseLogError(contractionCoefficient, valueType, out newDoubleValue))
-                {
-                    connection.Contraction_Coefficent = newDoubleValue;
-                }
-            }
+            var contractionCoefficient = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.ContractionCoefficient);
+            if (contractionCoefficient.TryGetValueAsDouble(out auxDouble))
+                connection.Contraction_Coefficent = auxDouble;
 
-            var maxDischarge = GetAttributeFromList(gwswElement, SewerStructureMapping.PropertyKeys.MaxDischarge);
-            if (maxDischarge != null && maxDischarge.ValueAsString != string.Empty)
-            {
-                var valueType = maxDischarge.GwswAttributeType.AttributeType;
-                if (valueType == connection.Max_Discharge.GetType() &&
-                    TryParseDoubleElseLogError(maxDischarge, valueType, out newDoubleValue))
-                {
-                    connection.Max_Discharge = newDoubleValue;
-                }
-            }
+            var maxDischarge = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.MaxDischarge);
+            if (maxDischarge.TryGetValueAsDouble(out auxDouble))
+                connection.Max_Discharge = auxDouble;
         }
     }
 }

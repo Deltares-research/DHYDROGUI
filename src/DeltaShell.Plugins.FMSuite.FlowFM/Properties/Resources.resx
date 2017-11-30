@@ -392,4 +392,16 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields" xml:space="preserve">
     <value>Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields</value>
   </data>
+  <data name="GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__" xml:space="preserve">
+    <value>File {0}, line {1}, element {2}. It was not possible to parse attribute {3} with value {4} from type {5} to type {6}.</value>
+  </data>
+  <data name="GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_" xml:space="preserve">
+    <value>File {0}, line {1}. Attribute {2} contains an invalid value and will not be imported.</value>
+  </data>
+  <data name="SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax" xml:space="preserve">
+    <value>Type {0} is not recognized, please check the syntax</value>
+  </data>
+  <data name="SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_" xml:space="preserve">
+    <value>Pump(s) cannot be created without a network previously defined.</value>
+  </data>
 </root>

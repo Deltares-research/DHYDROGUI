@@ -20,28 +20,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var newPipe = element as Pipe;
             if (newPipe == null) return;
 
-            var pipeIndicator = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.PipeIndicator);
-            if (pipeIndicator?.ValueAsString != null)
-            {
-                newPipe.PipeId = pipeIndicator.ValueAsString;
-            }
+            var auxDouble = 0.0;
 
-            var profileDef = GetAttributeFromList(gwswElement, SewerConnectionMapping.PropertyKeys.CrossSectionDef);
-            if (profileDef != null)
+            var pipeIndicator = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeIndicator);
+            if( pipeIndicator.IsValidAttribute())
+                newPipe.PipeId = pipeIndicator.GetValidStringValue();
+
+            var profileDef = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.CrossSectionDef);
+            if (profileDef.IsValidAttribute() && network != null)
             {
                 //Find crossSectionDef;
                 //Profiles are needed first.
-                if (profileDef.ValueAsString != string.Empty && network != null)
+                var foundCs = network.SewerProfiles.FirstOrDefault(n => n.Name.Equals(profileDef.ValueAsString));
+                if (foundCs == null)
                 {
-                    var foundCs = network.SewerProfiles.FirstOrDefault(n => n.Name.Equals(profileDef.ValueAsString));
-                    if (foundCs == null)
-                    {
-                        foundCs = CrossSection.CreateDefault(CrossSectionType.Standard, null);
-                        foundCs.Name = profileDef.ValueAsString;
-                        network.SewerProfiles.Add(foundCs);
-                    }
-                    newPipe.SewerProfile = (CrossSection)foundCs;
+                    foundCs = CrossSection.CreateDefault(CrossSectionType.Standard, null);
+                    foundCs.Name = profileDef.ValueAsString;
+                    network.SewerProfiles.Add(foundCs);
                 }
+                newPipe.SewerProfile = (CrossSection)foundCs;
             }
         }
     }

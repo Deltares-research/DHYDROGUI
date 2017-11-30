@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -60,6 +64,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Assert.Fail("There was a problem while instantiating. {0}", e.Message);
             }
+        }
+
+        [Test]
+        public void SewerFeatureFactoryDoesNotGenerateStructuresAndLogsErrorWithoutNetwork()
+        {
+            var structureGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Structure.ToString(),
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump)),
+                }
+            };
+            var expectedMsg = String.Format(Resources
+                .SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_);
+
+            var createdElement = new Branch() as INetworkFeature;
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement), expectedMsg);
+            Assert.IsNull(createdElement);
         }
 
         [Test]
