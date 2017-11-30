@@ -26,23 +26,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width))
             {
                 csEggShape = new CrossSectionStandardShapeEgg { Width = width / 1000 /*Conversion from millimeters to meters*/};
+                Log.LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(gwswElementKeyValuePairs, width, 1.5, "(2:3)", csEggShape);
             }
             else
             {
                 csEggShape = CrossSectionStandardShapeEgg.CreateDefault();
             }
+            
+            return new CrossSectionDefinitionStandard(csEggShape);
+        }
 
+        private static void LogMessageInCaseWidthHeightAreNotInCorrectProportion<T>(IReadOnlyDictionary<string, string> gwswElementKeyValuePairs, double width, T csEggShape)
+            where T : CrossSectionStandardShapeWidthHeightBase
+        {
             double height;
             string id;
             var heightDefined = gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out height);
-            if (heightDefined && !(Math.Abs(1.5 * width - height) < 0.0001))
-            {
-                var csHeight = csEggShape.Height * 1000;
-                gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId, out id);
-                Log.WarnFormat("The width and height of sewer profile '{0}' are not in the right proportion (2:3). Width is now {1} mm and height is now {2} mm.", id, width, csHeight);
-            }
+            if (!heightDefined || Math.Abs(1.5 * width - height) < 0.0001) return;
 
-            return new CrossSectionDefinitionStandard(csEggShape);
+            var csHeight = csEggShape.Height * 1000;
+            gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId, out id);
+            Log.WarnFormat(
+                "The width and height of sewer profile '{0}' are not in the right proportion (2:3). Width is now {1} mm and height is now {2} mm.",
+                id, width, csHeight);
         }
     }
 
@@ -77,6 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
     class CsdCunetteDefinitionReader : SewerCrossSectionDefinitionReader
     {
+        private static ILog Log = LogManager.GetLogger(typeof(CsdCunetteDefinitionReader));
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -87,11 +94,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, out width))
             {
                 csCunetteShape = new CrossSectionStandardShapeCunette { Width = width / 1000 /*Conversion from millimeters to meters*/};
+                Log.LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(gwswElementKeyValuePairs, width, 0.634, "(1:0.634)", csCunetteShape);
             }
             else
             {
                 csCunetteShape = CrossSectionStandardShapeCunette.CreateDefault();
             }
+            
             return new CrossSectionDefinitionStandard(csCunetteShape);
         }
     }
@@ -203,6 +212,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             string stringValue;
             doubleValue = 0;
             return gwswElementKeyValuePairs.TryGetValue(key, out stringValue) && double.TryParse(stringValue.Replace(".", ","), out doubleValue);
+        }
+
+        public static void LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion<T>(this ILog logger, IReadOnlyDictionary<string, string> gwswElementKeyValuePairs,
+            double width, double heightProportion, string proportionString, T csShape)
+            where T : CrossSectionStandardShapeWidthHeightBase
+        {
+            double height;
+            string id;
+            var heightDefined = gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out height);
+            if (!heightDefined || Math.Abs(heightProportion * width - height) < 0.0001) return;
+
+            var csHeight = csShape.Height * 1000;
+            gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId, out id);
+            logger.WarnFormat(
+                "The width and height of sewer profile '{0}' are not in the right proportion {1}. Width is now {2} mm and height is now {3} mm.",
+                id, proportionString, width, csHeight);
         }
     }
 }

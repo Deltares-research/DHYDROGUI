@@ -173,10 +173,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
+        {
+            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
+            var values = new List<string> { "2000", "1268" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDShapeAndCheckProperties<CsdCunetteDefinitionReader, CrossSectionStandardShapeCunette>(element, 2.0, 1.268);
+        }
+
+        [Test]
         public void GivenCrossSectionGwswElementWithoutWidthDefined_WhenReadingCrossSectionCunetteDefinition_ThenReturnDefaultCunetteShape()
         {
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
             CreateCSDShapeAndCheckProperties<CsdCunetteDefinitionReader, CrossSectionStandardShapeCunette>(element, 1.0, 0.634);
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenLogMessageIsGivenToUser()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+            };
+            var values = new List<string> { "250", "400", "PRO1" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+
+            var reader = new CsdCunetteDefinitionReader();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadCrossSectionDefinition(element),
+                "The width and height of sewer profile 'PRO1' are not in the right proportion (1:0.634). Width is now 250 mm and height is now 158.5 mm.");
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenHeightFromGwswElementIsIgnored()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+            };
+            var values = new List<string> { "250", "400", "PRO1" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+
+            var reader = new CsdCunetteDefinitionReader();
+            var csDefinition = reader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+
+            Assert.NotNull(csDefinition);
+
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeCunette;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.Width, Is.EqualTo(0.25));
+            Assert.That(csShape.Height, Is.EqualTo(0.1585));
         }
 
         #endregion
