@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var foundCs = network.SewerProfiles.FirstOrDefault(n => n.Name.Equals(profileDef.ValueAsString));
                     if (foundCs == null)
                     {
-                        foundCs = CrossSection.CreateDefault();
+                        foundCs = CrossSection.CreateDefault(CrossSectionType.Standard, null);
                         foundCs.Name = profileDef.ValueAsString;
                         network.SewerProfiles.Add(foundCs);
                     }

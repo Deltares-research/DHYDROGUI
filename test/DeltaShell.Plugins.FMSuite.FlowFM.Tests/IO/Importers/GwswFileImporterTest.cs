@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
@@ -613,7 +614,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void WhenImportingCrossSectionsToNetworkAndThenImportingSewerConnectionsToNetwork_ThenSewerConnectionsHaveSewerProfiles()
+        public void WhenImportingSewerProfilesToNetworkAndThenImportingSewerConnectionsToNetwork_ThenSewerConnectionsHaveSewerProfiles()
         {
             //Create network
             var network = new HydroNetwork();
@@ -625,15 +626,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             gwswImporter.ImportDefinitionFile(definitionfilePath);
 
-            //Load structures.
-            var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
-            var importedFeatures = gwswImporter.ImportItem(structuresPath, network) as List<INetworkFeature>;
-            Assert.IsNotNull(importedFeatures);
+            //Load sewer profiles
+            var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
+            var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, network) as List<INetworkFeature>;
+            Assert.IsNotNull(importedProfiles);
 
             //Check that sewer profiles have been put into the network
-            Assert.That(network.SewerProfiles.Count, Is.EqualTo(importedFeatures.Count));
+            Assert.That(network.SewerProfiles.Count, Is.EqualTo(importedProfiles.Count));
             var sewerProfileNames = network.SewerProfiles.Select(sp => sp.Name);
-            importedFeatures.ForEach(f =>
+            importedProfiles.ForEach(f =>
             {
                 var profile = f as ICrossSection;
                 Assert.NotNull(profile);
@@ -648,6 +649,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var pipes = network.Branches.OfType<Pipe>().ToList();
             Assert.IsTrue(pipes.Any());
             pipes.ForEach(p => Assert.NotNull(p.SewerProfile));
+        }
+
+        [Test]
+        public void WhenImportingSewerConnectionsToNetworkAndThenImportingSewerProfilesToNetwork_ThenSewerConnectionsHaveTheCorrectSewerProfiles()
+        {
+            //Create network
+            var network = new HydroNetwork();
+
+            //Load GWSW definition
+            var gwswImporter = new GwswFileImporterBase();
+            Assert.IsNotNull(gwswImporter);
+
+            var definitionfilePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            gwswImporter.ImportDefinitionFile(definitionfilePath);
+
+            //Load connections
+            var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedConnections = gwswImporter.ImportItem(connectionsPath, network) as List<INetworkFeature>;
+            Assert.IsNotNull(importedConnections);
+
+            // Retrieve one profile to later compare to the same one after loading the sewer profiles
+            var csDefinitionBefore = (CrossSectionDefinitionStandard) network.SewerProfiles.FirstOrDefault(sp => sp.Name == "PRO2")?.Definition;
+            Assert.NotNull(csDefinitionBefore);
+            var csShapeBefore = (CrossSectionStandardShapeWidthHeightBase)csDefinitionBefore.Shape;
+            Assert.NotNull(csShapeBefore);
+
+            // Now Load sewer profiles
+            var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
+            var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, network) as List<INetworkFeature>;
+            Assert.IsNotNull(importedProfiles);
+
+            //Check that sewer profiles have been put into the network
+            Assert.That(network.SewerProfiles.Count, Is.EqualTo(importedProfiles.Count));
+            var sewerProfileNames = network.SewerProfiles.Select(sp => sp.Name);
+            importedProfiles.ForEach(f =>
+            {
+                var profile = f as ICrossSection;
+                Assert.NotNull(profile);
+                Assert.IsTrue(sewerProfileNames.Contains(profile.Name));
+            });
+
+            //Get the same profile as before loading the profiles
+            var testProfileAfter = network.SewerProfiles.FirstOrDefault(sp => sp.Name == csDefinitionBefore.Name);
+            Assert.NotNull(testProfileAfter);
+            var csShapeAfter = (CrossSectionStandardShapeWidthHeightBase)((CrossSectionDefinitionStandard) testProfileAfter.Definition).Shape;
+            Assert.NotNull(csShapeAfter);
+
+            // Compare the width and height to the one before
+            Assert.AreNotEqual(csShapeAfter.Width, csShapeBefore.Width);
+            Assert.AreNotEqual(csShapeAfter.Height, csShapeBefore.Height);
+            Assert.AreNotEqual(csShapeAfter.Type, csShapeBefore.Type);
         }
 
         [Test]

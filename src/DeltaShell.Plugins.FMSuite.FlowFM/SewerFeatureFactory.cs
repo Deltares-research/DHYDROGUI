@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
@@ -68,7 +69,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Name = csIdAttribute.ValueAsString
             };
 
-            network?.SewerProfiles.Add(crossSection);
+            if (network != null)
+            {
+                network.SewerProfiles.RemoveAllWhere(sp => sp.Definition.Name == crossSection.Name);
+                network.SewerProfiles.Add(crossSection);
+            }
 
             return crossSection;
         }
