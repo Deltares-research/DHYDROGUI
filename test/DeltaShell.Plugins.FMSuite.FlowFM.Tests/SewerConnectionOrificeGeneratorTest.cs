@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
@@ -164,6 +163,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var orifice = new SewerConnectionOrifice();
             network.Branches.Add(orifice);
             Assert.IsTrue(network.Branches.Contains(orifice));
+            //it should be found under sewerconnections as well
+            Assert.IsTrue(network.SewerConnections.Contains(orifice));
 
             //Now createInstance for the pump definition.
             var generator = new SewerConnectionOrificeGenerator();
