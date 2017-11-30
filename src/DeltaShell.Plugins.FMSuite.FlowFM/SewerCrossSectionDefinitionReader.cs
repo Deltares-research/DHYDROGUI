@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -13,6 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
     class CsdEggDefinitionReader : SewerCrossSectionDefinitionReader
     {
+        private static ILog Log = LogManager.GetLogger(typeof(CsdEggDefinitionReader));
         public ICrossSectionDefinition ReadCrossSectionDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -28,6 +31,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 csEggShape = CrossSectionStandardShapeEgg.CreateDefault();
             }
+
+            double height;
+            string id;
+            var heightDefined = gwswElementKeyValuePairs.TryGetDoubleValueFromDictionary(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight, out height);
+            if (heightDefined && !(Math.Abs(1.5 * width - height) < 0.0001))
+            {
+                var csHeight = csEggShape.Height * 1000;
+                gwswElementKeyValuePairs.TryGetValue(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId, out id);
+                Log.WarnFormat("The width and height of sewer profile '{0}' are not in the right proportion (2:3). Width is now {1} mm and height is now {2} mm.", id, width, csHeight);
+            }
+
             return new CrossSectionDefinitionStandard(csEggShape);
         }
     }

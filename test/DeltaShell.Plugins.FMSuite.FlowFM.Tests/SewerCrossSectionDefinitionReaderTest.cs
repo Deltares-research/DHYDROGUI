@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -107,6 +108,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(new List<string>(), new List<string>()));
             CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 2.0, 3.0);
+        }
+
+        [Test]
+        public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
+        {
+            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
+            var values = new List<string> { "250", "375" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+            CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 0.25, 0.375);
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenLogMessageIsGivenToUser()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+            };
+            var values = new List<string> { "250", "400", "PRO1" };
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+
+            var reader = new CsdEggDefinitionReader();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.ReadCrossSectionDefinition(element), 
+                "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 250 mm and height is now 375 mm.");
+        }
+
+        [Test]
+        public void GivenCrossSectionGwswElementWithWidthAndHeightNotInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenHeightFromGwswElementIsIgnored()
+        {
+            var keys = new List<string>
+            {
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+            };
+            var values = new List<string> {"250", "400", "PRO1"};
+            var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
+
+            var reader = new CsdEggDefinitionReader();
+            var csDefinition = reader.ReadCrossSectionDefinition(element) as CrossSectionDefinitionStandard;
+
+            Assert.NotNull(csDefinition);
+
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeEgg;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.Width, Is.EqualTo(0.25));
+            Assert.That(csShape.Height, Is.EqualTo(0.375));
         }
 
         #endregion
