@@ -318,6 +318,7 @@
     <Compile Include="SewerCrossSectionDefinitionReaderTest.cs" />
     <Compile Include="SewerFeatureFactoryTest.cs" />
     <Compile Include="SewerFeatureFactoryTestHelper.cs" />
+    <Compile Include="SewerProfileGenerationTest.cs" />
     <Compile Include="SewerPumpGeneratorTest.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />

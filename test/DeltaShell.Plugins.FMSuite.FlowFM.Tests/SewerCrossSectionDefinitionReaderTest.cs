@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionCircleDefinition_ThenReturnCircleShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth };
             var values = new List<string> { "1250" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDCircleShapeAndCheckProperties(element, 1.25);
@@ -73,14 +73,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionRectangleDefinition_ThenReturnRectangleShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "2000", "1200" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDShapeAndCheckProperties<CsdRectangleDefinitionReader, CrossSectionStandardShapeRectangle>(element, 2.0, 1.2);
         }
 
-        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth)]
-        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight)]
+        [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
+        [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileHeight)]
         [TestCase("fakeKey")]
         public void GivenCrossSectionGwswElementWithoutHeightOrWidthDefined_WhenReadingCrossSectionRectangleDefinition_ThenReturnDefaultRectangleCrossSection(string key)
         {
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth };
             var values = new List<string> { "250" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 0.25, 0.375);
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingCrossSectionEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "250", "375" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDShapeAndCheckProperties<CsdEggDefinitionReader, CrossSectionStandardShapeEgg>(element, 0.25, 0.375);
@@ -124,9 +124,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
+                SewerProfileMapping.PropertyKeys.SewerProfileId
             };
             var values = new List<string> { "250", "400", "PRO1" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
@@ -141,9 +141,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
+                SewerProfileMapping.PropertyKeys.SewerProfileId
             };
             var values = new List<string> {"250", "400", "PRO1"};
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth };
             var values = new List<string> { "2000" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDShapeAndCheckProperties<CsdCunetteDefinitionReader, CrossSectionStandardShapeCunette>(element, 2.0, 1.268);
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElementWithWidthAndHeightInCorrectProportion_WhenReadingCrossSectionCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "2000", "1268" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDShapeAndCheckProperties<CsdCunetteDefinitionReader, CrossSectionStandardShapeCunette>(element, 2.0, 1.268);
@@ -193,9 +193,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
+                SewerProfileMapping.PropertyKeys.SewerProfileId
             };
             var values = new List<string> { "250", "400", "PRO1" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
@@ -210,9 +210,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
+                SewerProfileMapping.PropertyKeys.SewerProfileId
             };
             var values = new List<string> { "250", "400", "PRO1" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
@@ -235,14 +235,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GivenGwswElement_WhenReadingCrossSectionArchDefinition_ThenReturnArchShapeWithCorrectPropertyValues()
         {
-            var keys = new List<string> { CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth, CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight };
+            var keys = new List<string> { SewerProfileMapping.PropertyKeys.SewerProfileWidth, SewerProfileMapping.PropertyKeys.SewerProfileHeight };
             var values = new List<string> { "1200", "2500" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDArchShapeAndCheckProperties(element, 1.2, 2.5, 2.5);
         }
 
-        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth)]
-        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight)]
+        [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileWidth)]
+        [TestCase(SewerProfileMapping.PropertyKeys.SewerProfileHeight)]
         public void GivenGwswElementWithMissingValues_WhenReadingCrossSectionArchDefinition_ThenReturnDefaultArchShape(string key)
         {
             var keys = new List<string> { key };
@@ -275,24 +275,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
-                CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
-                CrossSectionMapping.CrossSectionPropertyKeys.Slope2
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
+                SewerProfileMapping.PropertyKeys.Slope1,
+                SewerProfileMapping.PropertyKeys.Slope2
             };
             var values = new List<string> { "1000", "1000", slope1, slope2 };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
             CreateCSDTrapezoidShapeAndCheckProperties(element, 1.0, 2.0, 2.0);
         }
 
-        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.Slope1)]
-        [TestCase(CrossSectionMapping.CrossSectionPropertyKeys.Slope2)]
+        [TestCase(SewerProfileMapping.PropertyKeys.Slope1)]
+        [TestCase(SewerProfileMapping.PropertyKeys.Slope2)]
         public void GivenGwswElementWithOneMissingSlope_WhenReadingCrossSectionTrapezoidDefinition_ThenReturnTrapezoidWithPresentSlope(string slopeKey)
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
                 slopeKey
             };
             var values = new List<string> { "1000", "1000", "2" };
@@ -305,9 +305,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight,
-                CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
-                CrossSectionMapping.CrossSectionPropertyKeys.Slope2
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight,
+                SewerProfileMapping.PropertyKeys.Slope1,
+                SewerProfileMapping.PropertyKeys.Slope2
             };
             var values = new List<string> { "1000", "2,5", "1,5" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
@@ -319,9 +319,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.Slope1,
-                CrossSectionMapping.CrossSectionPropertyKeys.Slope2
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.Slope1,
+                SewerProfileMapping.PropertyKeys.Slope2
             };
             var values = new List<string> { "1000", "2,5", "1,5" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));
@@ -333,8 +333,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var keys = new List<string>
             {
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionWidth,
-                CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionHeight
+                SewerProfileMapping.PropertyKeys.SewerProfileWidth,
+                SewerProfileMapping.PropertyKeys.SewerProfileHeight
             };
             var values = new List<string> { "1000", "1000" };
             var element = GetGwswElement(SewerFeatureType.Crosssection, GetGwswKeyValuePairs(keys, values));

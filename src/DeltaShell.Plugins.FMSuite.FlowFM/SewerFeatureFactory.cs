@@ -57,8 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return null;
             
-            var csIdAttribute = gwswElement.GetAttributeFromList(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionId);
-            var csShapeAttribute = gwswElement.GetAttributeFromList(CrossSectionMapping.CrossSectionPropertyKeys.CrossSectionShape);
+            var csIdAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            var csShapeAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
             if (!csIdAttribute.IsValidAttribute() || !csShapeAttribute.IsValidAttribute()) return null;
             
             var definitionReader = CrossSectionFactory(csShapeAttribute);
@@ -79,20 +79,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     
         private static SewerCrossSectionDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
         {
-            var structureType = GetValueFromDescription<CrossSectionMapping.CrossSectionType>(crossSectionTypeAttribute.ValueAsString);
+            var structureType = GetValueFromDescription<SewerProfileMapping.SewerProfileType>(crossSectionTypeAttribute.ValueAsString);
             switch (structureType)
             {
-                case CrossSectionMapping.CrossSectionType.Egg:
+                case SewerProfileMapping.SewerProfileType.Egg:
                     return new CsdEggDefinitionReader();
-                case CrossSectionMapping.CrossSectionType.Arch:
+                case SewerProfileMapping.SewerProfileType.Arch:
                     return new CsdArchDefinitionReader();
-                case CrossSectionMapping.CrossSectionType.Cunette:
+                case SewerProfileMapping.SewerProfileType.Cunette:
                     return new CsdCunetteDefinitionReader();
-                case CrossSectionMapping.CrossSectionType.Rectangle:
+                case SewerProfileMapping.SewerProfileType.Rectangle:
                     return new CsdRectangleDefinitionReader();
-                case CrossSectionMapping.CrossSectionType.Circle:
+                case SewerProfileMapping.SewerProfileType.Circle:
                     return new CsdCircleDefinitionReader();
-                case CrossSectionMapping.CrossSectionType.Trapezoid:
+                case SewerProfileMapping.SewerProfileType.Trapezoid:
                     return new CsdTrapezoidDefinitionReader();
                 default:
                     return null;

@@ -1,0 +1,33 @@
+using System.ComponentModel;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM
+{
+    public static class SewerProfileMapping
+    {
+        public enum SewerProfileType
+        {
+            [Description("EIV")] Egg,
+            [Description("HEU")] Arch,
+            [Description("MVR")] Cunette,
+            [Description("RHK")] Rectangle,
+            [Description("RND")] Circle,
+            [Description("TPZ")] Trapezoid
+        }
+
+        public static class PropertyKeys
+        {
+            public const string SewerProfileId = "CROSSSECTION_ID";
+            public const string SewerProfileMaterial = "CROSS_SECTION_MATERIAL";
+            public const string SewerProfileShape = "CROSS_SECTION_SHAPE";
+            public const string SewerProfileWidth = "CROSS_SECTION_WIDTH";
+            public const string SewerProfileHeight = "CROSS_SECTION_HEIGHT";
+            public const string Slope1 = "SLOPE_1";
+            public const string Slope2 = "SLOPE_2";
+            public const string SewerProfileLevel = "CROSS_SECTION_LEVEL";
+            public const string WetArea = "WET_AREA";
+            public const string WetPerimeter = "WET_PERIMETER";
+            public const string ACrossSectionWidth = "A_CROSS_SECTION_WIDTH";
+            public const string Remarks = "REMARKS";
+        }
+    }
+}
