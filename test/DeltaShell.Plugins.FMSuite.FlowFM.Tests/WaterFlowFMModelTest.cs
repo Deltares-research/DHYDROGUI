@@ -618,8 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var testFile = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFile));
 
-            var localCopyOfTestFile = Path.Combine(FileUtils.CreateTempDirectory(), "Custom_Ugrid.nc");
-            File.Copy(testFile, localCopyOfTestFile);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFile);
 
             try
             {
