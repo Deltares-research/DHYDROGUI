@@ -266,9 +266,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void InitializeUnstructuredGridCoverages()
         {
-            var bathymetryValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z) : null;
-            Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, bathymetryValues);
+            var bedLevelLocationsForUnstructuredGridCellCoverage = new List<UnstructuredGridFileHelper.BedLevelLocation>
+            {
+                UnstructuredGridFileHelper.BedLevelLocation.Faces,
+                UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes
+            };
 
+            // Update bathymetry coverage based on specified value in .mdu file
+            var bedLevelTypeProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+            if (bedLevelTypeProperty != null && bedLevelLocationsForUnstructuredGridCellCoverage.Contains((UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value))
+            {
+                Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+            }
+            else
+            {
+                var bathymetryValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z) : null;
+                Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, bathymetryValues);
+            }
+            
             InitialWaterLevel = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
             InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
             {
@@ -582,6 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var vertexCoverage = coverage as UnstructuredGridVertexCoverage;
             if (vertexCoverage!=null && vertexCoverage.Name == WaterFlowFMModelDefinition.BathymetryDataItemName)
             {
+                // TODO: this method does not take bathymetry as an UnstructuredGridCellCoverage into account! (DELFT3DFM-1355)
                 if (!vertexCoverage.GetValues<double>().Any())
                 {
                     vertexCoverage.LoadBathymetry(newGrid, bathymetryNoDataValue);

@@ -691,6 +691,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
+        [TestCase(UnstructuredGridFileHelper.BedLevelLocation.Faces, typeof(UnstructuredGridCellCoverage))]
+        [TestCase(UnstructuredGridFileHelper.BedLevelLocation.CellEdges, typeof(UnstructuredGridVertexCoverage))] // UnstructuredGridEdgeCoverages not yet supported
+        [TestCase(UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev, typeof(UnstructuredGridVertexCoverage))]
+        [TestCase(UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev, typeof(UnstructuredGridVertexCoverage))]
+        [TestCase(UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, typeof(UnstructuredGridVertexCoverage))]
+        [TestCase(UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes, typeof(UnstructuredGridCellCoverage))]
+
+        public void TestInitializeUnstructuredGridCoveragesSetsCorrectBathymetryCoverageType(UnstructuredGridFileHelper.BedLevelLocation bedLevelLocation, Type coverageType)
+        {
+            // setup
+            var fmModel = new WaterFlowFMModel();
+
+            var bedLevelTypeProperty = fmModel.ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+            Assert.NotNull(bedLevelTypeProperty);
+            
+            bedLevelTypeProperty.SetValueAsString(((int)bedLevelLocation).ToString());
+            
+            // execution
+            TypeUtils.CallPrivateMethod(fmModel, "InitializeUnstructuredGridCoverages");
+
+            // check result
+            Assert.AreEqual(coverageType, fmModel.Bathymetry.GetType());
+        }
+
         [Test]
         public void FmModelGetVarGridPropertyNameShouldReturnGrid()
         {

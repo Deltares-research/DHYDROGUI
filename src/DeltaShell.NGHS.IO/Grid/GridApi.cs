@@ -18,6 +18,7 @@ namespace DeltaShell.NGHS.IO.Grid
         private bool disposed;
 
         private const int StartIndex = 0;
+        private const int NF90_DOUBLE = 6;
 
         static GridApi()
         {
@@ -156,10 +157,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 if (varId == -1) // does not exist
                 {
                     const string Unit = "m";
-                    int NF90_DOUBLE = 6;
-                    double fillValue = -999.9;
+                    var type = NF90_DOUBLE;
 
-                    GridWrapper.ionc_def_var(ref ioncid, ref meshId, ref varId, ref NF90_DOUBLE, ref locationId, varName, StandardName, longName, Unit, ref fillValue);
+                    GridWrapper.ionc_def_var(ref ioncid, ref meshId, ref varId, ref type, ref locationId, varName, StandardName, longName, Unit, ref fillValue);
                 }
 
                 Marshal.Copy(zValues, 0, zPtr, nVal);
