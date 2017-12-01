@@ -10,21 +10,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return null;
 
-            if(gwswElement.IsValidGwswCompartment()) return CreateCompartment<OutletCompartment>(gwswElement, network);
+            if(gwswElement.IsValidGwswCompartment()) return CreateCompartmentForManhole<OutletCompartment>(gwswElement, network);
+
+            var newOutlet = CreateOutletFromGwswStructureElement(gwswElement, network);
             
-            return CreateOutletFromGwswStructureElement(gwswElement, network);
+            //Get the parentmanhole and add the new outlet.
+            var parentManhole = GetNewOrExistingManholeFromGwswElement(gwswElement, network);
+            parentManhole.Compartments.Add(newOutlet);
+
+            return parentManhole;
         }
 
-        private INetworkFeature CreateOutletFromGwswStructureElement(GwswElement gwswElement, IHydroNetwork network)
+        private Compartment CreateOutletFromGwswStructureElement(GwswElement gwswElement, IHydroNetwork network)
         {
             var outletCompartment = FindOrGetNewCompartment<OutletCompartment>(gwswElement, network);
             ExtendOutletAttributes(outletCompartment, gwswElement);
-            
-            //If the network does not contain the manhole then it means it is a placeholder, but we still need to add it.
-            if (network != null && !network.Nodes.Contains(outletCompartment.ParentManhole))
-            {
-                network.Nodes.Add(outletCompartment.ParentManhole);
-            }
 
             return outletCompartment;
         }

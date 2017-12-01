@@ -339,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return mapping;
         }
 
-        private void InsertFeatures(IEnumerable<INetworkFeature> features, HydroNetwork network, SewerFeatureType type)
+        private void InsertFeatures(IEnumerable<INetworkFeature> features, IHydroNetwork network, SewerFeatureType type)
         {
             switch (type)
             {
@@ -349,25 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     break;
                 case SewerFeatureType.Node:
                     var nodes = network.Nodes;
-                    var manholes = new List<Manhole>();
-                    var uniqueManholeNames = new List<string>();
-                    features.ForEach(f =>
-                    {
-                        var compartment = (Compartment)f;
-                        if (compartment == null) return;
-                        var parentManhole = compartment.ParentManhole;
-                        if (uniqueManholeNames.Contains(parentManhole.Name))
-                        {
-                            manholes.FirstOrDefault(m => m.Name == parentManhole.Name)?.Compartments.Add(compartment);
-                        }
-                        else
-                        {
-                            manholes.Add(parentManhole);
-                            uniqueManholeNames.Add(parentManhole.Name);
-                        }
-                    });
-
-                    InsertStructures(manholes, nodes);
+                    InsertStructures(features, nodes);
                     break;
             }
         }

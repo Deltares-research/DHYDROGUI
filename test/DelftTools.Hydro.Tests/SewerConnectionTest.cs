@@ -26,11 +26,19 @@ namespace DelftTools.Hydro.Tests
             var sourcePoint = new Point(1, 3);
             var targetPoint = new Point(10, 7);
 
-            var compartmentOne = new Compartment("compartmentOne"){ Geometry = sourcePoint};
-            var sourceManhole = new Manhole("sourceManhole"){ Compartments = new EventedList<Compartment> {compartmentOne}};
+            var compartmentOne = new Compartment("compartmentOne");
+            var sourceManhole = new Manhole("sourceManhole")
+            {
+                Compartments = new EventedList<Compartment> {compartmentOne},
+                Geometry = sourcePoint
+            };
 
-            var compartmentTwo = new Compartment("compartmentTwo"){ Geometry = targetPoint };
-            var targetManhole = new Manhole("targetManhole"){ Compartments = new EventedList<Compartment> { compartmentTwo }};
+            var compartmentTwo = new Compartment("compartmentTwo");
+            var targetManhole = new Manhole("targetManhole")
+            {
+                Compartments = new EventedList<Compartment> { compartmentTwo },
+                Geometry = targetPoint
+            };
 
             var sewerConnection = new SewerConnection(sourceManhole, targetManhole);
             Assert.IsNotNull(sewerConnection);
@@ -43,15 +51,42 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        public void CreateSewerConnectionWithEmptyManholesGetsValidGeometry()
+        public void CreateSewerConnectionWithEmptyManholesGetsGeometry()
         {
             //This test relies on maholes getting a default geometry when being created.
             var sewerConnection = new SewerConnection(new Manhole("sourceManhole"), new Manhole("targetManhole"));
             Assert.IsNotNull(sewerConnection);
 
             Assert.IsNotNull(sewerConnection.Geometry);
-            Assert.IsTrue(sewerConnection.Geometry.IsValid, "Default geometry for default Sewer Connection was not given.");
             Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
+        }
+
+        [Test]
+        public void SewerConnectionGeometryGetsRefreshedWhenManholesGeometryChanges()
+        {
+            //This test relies on maholes getting a default geometry when being created.
+            var sourcePoint = new Point(1, 3);
+            var targetPoint = new Point(10, 7);
+
+            var sourceManhole = new Manhole("sourceManhole"){Geometry = sourcePoint};
+            var targetManhole = new Manhole("targetManhole"){Geometry = targetPoint};
+
+            var sewerConnection = new SewerConnection(sourceManhole, targetManhole);
+            Assert.IsNotNull(sewerConnection);
+
+            Assert.IsNotNull(sewerConnection.Geometry);
+            Assert.IsTrue(sewerConnection.Geometry.IsValid);
+            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
+            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(sourcePoint.Coordinate));
+            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(targetPoint.Coordinate));
+
+            //Change geometry now.
+            sourceManhole.Geometry = new Point(30, 30);
+            Assert.IsNotNull(sewerConnection.Geometry);
+            Assert.IsTrue(sewerConnection.Geometry.IsValid);
+            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
+            Assert.IsFalse(sewerConnection.Geometry.Coordinates.Contains(sourcePoint.Coordinate));
+            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(targetPoint.Coordinate));
         }
 
         [Test]
@@ -455,23 +490,18 @@ namespace DelftTools.Hydro.Tests
 
         private SewerConnection GetSewerConnectionWithSourceAndTarget()
         {
-            var compartmentOne = new Compartment("compartmentOne")
-            {
-                Geometry = new Point(1, 3)
-            };
+            var compartmentOne = new Compartment("compartmentOne");
             var sourceManhole = new Manhole("sourceManhole")
             {
-                Compartments = new EventedList<Compartment> {
-                    compartmentOne
-                }
+                Compartments = new EventedList<Compartment> {compartmentOne},
+                Geometry = new Point(1, 3)
             };
-            var compartmentTwo = new Compartment("compartmentTwo")
-            {
-                Geometry = new Point(10, 7)
-            };
+
+            var compartmentTwo = new Compartment("compartmentTwo");
             var targetManhole = new Manhole("targetManhole")
             {
-                Compartments = new EventedList<Compartment> {compartmentTwo}
+                Compartments = new EventedList<Compartment> {compartmentTwo},
+                Geometry = new Point(10, 7)
             };
 
             var sewerConnection = new SewerConnection();

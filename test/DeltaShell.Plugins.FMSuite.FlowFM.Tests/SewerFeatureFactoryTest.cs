@@ -169,5 +169,94 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsTrue(network.CompositeBranchStructures.Any(cb => cb.Structures.Any(s => s.Name.Equals(structureId))));
             }
         }
+
+        [Test]
+        public void SewerFeatureFactoryGeneratesManholesWhenGivingABatchOfCompartiments()
+        {
+            //define a few compartiments with different manholes
+            #region creating GwswElements
+            var manholeOne = "manholeOne";
+            var manholeTwo = "maholeTwo";
+            var dbl = 0.0;
+            var str = string.Empty;
+            //Node one
+            var nodeOneCoordX = 0.0;
+            var nodeOneCoordY = 10.0;
+            var nodeOneName = "nodeOne";
+            var nodeOne = GetNodeGwswElement(nodeOneName, manholeOne, str, nodeOneCoordX, nodeOneCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            //Node two
+            var nodeTwoCoordX = 10.0;
+            var nodeTwoCoordY = 20.0;
+            var nodeTwoName = "nodeTwo";
+            var nodeTwo = GetNodeGwswElement(nodeTwoName, manholeOne, str, nodeTwoCoordX, nodeTwoCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            //Node three
+            var nodeThreeCoordX = 10.0;
+            var nodeThreeCoordY = 20.0;
+            var nodeThreeName = "nodeThree";
+            var nodeThree = GetNodeGwswElement(nodeThreeName, manholeTwo, str, nodeTwoCoordX, nodeTwoCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            #endregion
+            //generate all instances
+            var listOfElements = new List<GwswElement> {nodeOne, nodeTwo, nodeThree};
+            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements);
+            Assert.IsNotNull(features);
+
+            var listOfManholes = features.OfType<Manhole>().ToList();
+            Assert.IsNotNull(listOfManholes);
+            Assert.IsTrue(listOfManholes.Any());
+            Assert.AreEqual(listOfElements.Count, listOfManholes.Count);
+
+            //check compartiments exist
+            var compartimentList = listOfManholes.SelectMany(m => m.Compartments).ToList();
+            Assert.IsTrue(compartimentList.Any( c => c.Name.Equals(nodeOneName)));
+            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeTwoName)));
+            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeThreeName)));
+
+            //check manholes and their geometries
+            Assert.IsTrue(listOfManholes.Any( m => m.Name.Equals(manholeOne)));
+            var mOne = listOfManholes.First(m => m.Name.Equals(manholeOne));
+            var avgX = (nodeOneCoordX + nodeTwoCoordX) / 2;
+            var avgY = (nodeOneCoordY + nodeTwoCoordY) / 2;
+            Assert.AreEqual(avgX, mOne.XCoordinate);
+            Assert.AreEqual(avgY, mOne.YCoordinate);
+
+            Assert.IsTrue(listOfManholes.Any(m => m.Name.Equals(manholeTwo)));
+            var mTwo = listOfManholes.First(m => m.Name.Equals(manholeTwo));
+            Assert.AreEqual(nodeThreeCoordX, mTwo.XCoordinate);
+            Assert.AreEqual(nodeThreeCoordY, mTwo.YCoordinate);
+        }
+
+        [Test]
+        public void SewerFeatureFactoryGeneratesManholesWhenGivingABatchOfCompartimentsWithoutManholeId()
+        {
+            //define a few compartiments with different manholes
+            #region creating GwswElements
+            var dbl = 0.0;
+            var str = string.Empty;
+            //Node one
+            var nodeOneCoordX = 0.0;
+            var nodeOneCoordY = 10.0;
+            var nodeOneName = "nodeOne";
+            var nodeOne = GetNodeGwswElement(nodeOneName, str, str, nodeOneCoordX, nodeOneCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            //Node two
+            var nodeTwoCoordX = 10.0;
+            var nodeTwoCoordY = 20.0;
+            var nodeTwoName = "nodeTwo";
+            var nodeTwo = GetNodeGwswElement(nodeTwoName, str, str, nodeTwoCoordX, nodeTwoCoordY, dbl, dbl, str, dbl, dbl, dbl);
+            #endregion
+            //generate all instances
+            var listOfElements = new List<GwswElement> { nodeOne, nodeTwo };
+            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements);
+            Assert.IsNotNull(features);
+
+            var listOfManholes = features.OfType<Manhole>().ToList();
+            Assert.IsNotNull(listOfManholes);
+            Assert.IsTrue(listOfManholes.Any());
+            Assert.AreEqual(listOfElements.Count, listOfManholes.Count);
+
+            //check compartiments exist
+            var compartimentList = listOfManholes.SelectMany(m => m.Compartments).ToList();
+            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeOneName)));
+            Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeTwoName)));
+        }
     }
 }

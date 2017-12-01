@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -36,11 +36,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
             var element = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-            var compartment = element as Compartment;
-
-            // Check Compartment properties
+            var manhole = element as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel, new Coordinate(xCoordinate, yCoordinate), numberOfParentManholeCompartments);
+            // Check Compartment properties
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel, numberOfParentManholeCompartments);
         }
 
         [Test]
@@ -68,9 +70,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var compartment = SewerFeatureFactory.CreateInstance(gwswElement) as Compartment;
+            var element = SewerFeatureFactory.CreateInstance(gwswElement);
+            var manhole = element as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
             Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, new Coordinate(0, 0), 1);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, 1);
         }
 
         [Test]
@@ -144,48 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     }
                 }
             };
-            var expectedPartOfMessage = "It was not possible to parse attribute";
-            TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedPartOfMessage);
-        }
-
-        [TestCase("01FA", "23.6")]
-        [TestCase("23.6", "01FA")]
-        public void GivenGwswElementWithBadEntriesForCoordinateValues_WhenCreatingWithFactory_ThenLogMessageIsShownButDefaultCompartmentIsGivenBack(string xStringValue, string yStringValue)
-        {
-            var compartmentId = "put1";
-            var manholeId = "01001";
-            var badGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Node.ToString(),
-                GwswAttributeList =
-                {
-                    new GwswAttribute
-                    {
-                        ValueAsString = compartmentId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = xStringValue,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            ManholeMapping.PropertyKeys.XCoordinate, "MyDescription", null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = yStringValue,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            ManholeMapping.PropertyKeys.YCoordinate, "MyDescription", null, null)
-                    }
-                }
-            };
-
             var expectedPartOfMessage = "It was not possible to parse attribute";
             TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedPartOfMessage);
         }
@@ -268,9 +232,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            var compartment = SewerFeatureFactory.CreateInstance(gwswElement) as Compartment;
-            Assert.NotNull(compartment);
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, new Coordinate(0, 0), 1);
+            var manhole = SewerFeatureFactory.CreateInstance(gwswElement) as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Any());
+
+            CheckCompartmentPropertyValues(manhole.Compartments.FirstOrDefault(), uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0, 1);
         }
 
         #endregion
@@ -283,8 +249,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 expectedMsg);
 
             // Check compartment
-            var compartment = feature as Compartment;
-            Assert.NotNull(compartment);
+            var manhole = feature as Manhole;
+            Assert.NotNull(manhole);
+
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.IsNotNull(compartment);
             Assert.That(compartment.Name, Is.EqualTo(compartmentId));
             Assert.NotNull(compartment.ParentManhole);
             Assert.That(compartment.ParentManhole.Name, Is.EqualTo(manholeId));

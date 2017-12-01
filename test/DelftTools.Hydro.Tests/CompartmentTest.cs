@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro.Structures;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests

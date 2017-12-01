@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Geometries;
@@ -51,13 +53,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var network = new HydroNetwork();
             var createdElement = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
-            Assert.NotNull(createdElement);
-
-            //Check it can be casted into a compartment.
-            Assert.NotNull(createdElement as Compartment);
-            CheckCompartmentPropertyValues(createdElement as Compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, new Coordinate(xCoord, yCoord), 1);
+            var manhole = createdElement as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
+            
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, 1);
             //Check it can be casted into an outlet.
-            var outlet = createdElement as OutletCompartment;
+            var outlet = compartment as OutletCompartment;
             Assert.IsNotNull(outlet);
         }
 
@@ -98,13 +102,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var createdElement = SewerFeatureFactory.CreateInstance(nodeGwswElement);
-            Assert.NotNull(createdElement);
+            var manhole = createdElement as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
 
-            //Check it can be casted into a compartment.
-            Assert.NotNull(createdElement as Compartment);
-            CheckCompartmentPropertyValues(createdElement as Compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, new Coordinate(xCoord, yCoord), 1);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, 1);
             //Check it can be casted into an outlet.
-            var outlet = createdElement as OutletCompartment;
+            var outlet = compartment as OutletCompartment;
             Assert.IsNotNull(outlet);
         }
 
@@ -122,13 +128,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var network = new HydroNetwork();
             var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
-            Assert.NotNull(createdElement);
-
-            //Check it can be casted into a compartment.
-            Assert.NotNull(createdElement as Compartment);
+            var manhole = createdElement as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
 
             //Check it can be casted into an outlet.
-            var outlet = createdElement as OutletCompartment;
+            var outlet = compartment as OutletCompartment;
             Assert.IsNotNull(outlet);
             Assert.AreEqual(surfaceWaterLevel, outlet.SurfaceWaterLevel);
         }
@@ -149,10 +156,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(createdElement);
 
             //Check it can be casted into a compartment.
-            Assert.NotNull(createdElement as Compartment);
+            var manhole = createdElement as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
 
             //Check it can be casted into an outlet.
-            var outlet = createdElement as OutletCompartment;
+            var outlet = compartment as OutletCompartment;
             Assert.IsNotNull(outlet);
             Assert.AreEqual(surfaceWaterLevel, outlet.SurfaceWaterLevel);
         }
@@ -180,7 +191,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(createdStructureElement);
 
             //Check it can be casted into an outlet.
-            var outletFromStructure = createdStructureElement as OutletCompartment;
+            var manhole = createdStructureElement as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Count == 1);
+            var compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
+
+            var outletFromStructure = compartment as OutletCompartment;
             Assert.IsNotNull(outletFromStructure);
             Assert.AreEqual(surfaceWaterLevel, outletFromStructure.SurfaceWaterLevel);
 
@@ -188,8 +205,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var createdNodeElement = SewerFeatureFactory.CreateInstance(nodeGwswElement, network);
             Assert.NotNull(createdNodeElement);
 
+            manhole = createdStructureElement as Manhole;
+            Assert.NotNull(manhole);
+            Assert.IsTrue(manhole.Compartments.Any());
+            compartment = manhole.Compartments.FirstOrDefault();
+            Assert.NotNull(compartment);
+
             //Check it can be casted into an outlet.
-            var outletFromNode = createdNodeElement as OutletCompartment;
+            var outletFromNode = compartment as OutletCompartment;
             Assert.IsNotNull(outletFromNode);
             Assert.AreEqual(surfaceWaterLevel, outletFromNode.SurfaceWaterLevel);
         }

@@ -922,14 +922,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(network.Manholes.Any());
 
             //Load compartments and fill the network with corresponding manholes
-            var importedCompartments = gwswImporter.ImportItem(filePath, network);
-            Assert.IsNotNull(importedCompartments);
+            var importedManholes = gwswImporter.ImportItem(filePath, network);
+            Assert.IsNotNull(importedManholes);
             Assert.IsNotEmpty(network.Manholes);
 
-            // Check that the amount of manholes in the network are as expected
-            var importedCompartmentsList = importedCompartments as List<INetworkFeature>;
+            // Check that the amount of manholes in the network are as expected (no duplicates or whatsoever)
+            var importedCompartmentsList = importedManholes as List<INetworkFeature>;
             Assert.NotNull(importedCompartmentsList);
-            var expectedManholeCount = importedCompartmentsList.OfType<Compartment>().Select(c => c.ParentManhole.Name).Distinct().Count();
+            var expectedManholeCount = importedCompartmentsList.OfType<Manhole>().Select(c => c.Name).Distinct().Count();
             Assert.That(network.Manholes.Count(), Is.EqualTo(expectedManholeCount));
 
             // Check that amount of compartments in the network are the same as were imported by the importer

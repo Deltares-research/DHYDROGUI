@@ -19,15 +19,8 @@ namespace DelftTools.Hydro.Tests.Structures
 
         private EventedList<Compartment> GetCompartmentList()
         {
-            Compartment compartment1 = new Compartment(compartmentName1)
-            {
-                Geometry = coordinate13
-            };
-
-            Compartment compartment2 = new Compartment(CompartmentName2)
-            {
-                Geometry = coordinate24
-            };
+            Compartment compartment1 = new Compartment(compartmentName1);
+            Compartment compartment2 = new Compartment(CompartmentName2);
             return new EventedList<Compartment> {compartment1, compartment2};
         }
 
@@ -65,10 +58,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void GivenManhole_WhenInstatiatingWithCompartment_ThenCompartmentHasManholeAsParentManhole()
         {
             const string manholeName = "myManhole";
-            var compartment1 = new Compartment(compartmentName1)
-            {
-                Geometry = coordinate13
-            };
+            var compartment1 = new Compartment(compartmentName1);
             var manhole = new Manhole(manholeName)
             {
                 Compartments = new EventedList<Compartment> { compartment1 }
@@ -82,10 +72,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void GivenManhole_WhenAddingCompartment_ThenCompartmentHasManholeAsParentManhole()
         {
             const string manholeName = "myManhole";
-            var compartment1 = new Compartment(compartmentName1)
-            {
-                Geometry = coordinate13
-            };
+            var compartment1 = new Compartment(compartmentName1);
             var manhole = new Manhole(manholeName);
             manhole.Compartments.Add(compartment1);
 
@@ -115,127 +102,34 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void GivenManholeWithOneCompartmentThatHasNoGeometryDefined_WhenGettingGeometry_ThenDefaultGeometryIsReturned()
+        public void GivenManhole_WhenGettingGeometry_ThenDefaultGeometryIsReturned()
         {
             var defaultCoordinate = new Point(0, 0);
             var manhole = new Manhole("myManhole");
-            manhole.Compartments.Add(new Compartment("myCompartment"));
             Assert.That(manhole.Geometry, Is.EqualTo(defaultCoordinate));
-
-            var compartment = manhole.Compartments.FirstOrDefault();
-            Assert.NotNull(compartment);
-            Assert.That(compartment.Geometry, Is.EqualTo(defaultCoordinate));
         }
 
-        [Test]
-        public void GivenManhole_WhenAddingCompartmentWithoutGeometryDefined_ThenCompartmentGeometryIsEqualToManholeGeometry()
-        {
-            var coords = new Point(3, 4);
-            var manhole = new Manhole("myManhole")
-            {
-                Geometry = coords
-            };
-            manhole.Compartments.Add(new Compartment("myCompartment"));
-            Assert.That(manhole.Geometry, Is.EqualTo(coords));
-
-            var compartment = manhole.Compartments.FirstOrDefault();
-            Assert.NotNull(compartment);
-            Assert.That(compartment.Geometry, Is.EqualTo(coords));
-        }
-
-        [Test]
-        public void GivenManholeWithCompartments_WhenChangingManholeGeometry_ThenCompartmentGeometriesAreTransitionedCorrectly()
-        {
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = GetCompartmentList()
-            };
-            Assert.That(manhole.Geometry, Is.EqualTo(averageInitialCoordinate));
-            manhole.Geometry = new Point(11.5, 8.5);
-
-            var translatedComp1 = manhole.Compartments.FirstOrDefault(c => c.Name == compartmentName1);
-            var translatedComp2 = manhole.Compartments.FirstOrDefault(c => c.Name == CompartmentName2);
-            Assert.NotNull(translatedComp1);
-            Assert.NotNull(translatedComp2);
-            Assert.That(translatedComp1.Geometry, Is.EqualTo(new Point(11, 8)));
-            Assert.That(translatedComp2.Geometry, Is.EqualTo(new Point(12, 9)));
-        }
-
-        [Test]
-        public void GivenManholeWithCompartments_WhenChangingCompartmentGeometry_ThenManholeGeometryIsUpdated()
-        {
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = GetCompartmentList()
-            };
-            Assert.That(manhole.Compartments[0].Geometry, Is.EqualTo(coordinate13));
-            Assert.That(manhole.Compartments[1].Geometry, Is.EqualTo(coordinate24));
-            Assert.That(manhole.Geometry, Is.EqualTo(averageInitialCoordinate));
-            
-            manhole.Compartments[0].Geometry = coordinate35;
-            Assert.That(manhole.Compartments[0].Geometry, Is.EqualTo(coordinate35));
-            Assert.That(manhole.Compartments[1].Geometry, Is.EqualTo(coordinate24));
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(2.5, 4.5)));
-        }
-
-        [Test]
-        public void GivenManhole_WhenReplacingCompartment_ThenUpdatingManholeGeometryStillWorksCorrectly()
-        {
-            var initialCoordinate = new Point(10, 10);
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = GetCompartmentList()
-            };
-            manhole.Compartments[0] = new Compartment("myReplacedCompartment")
-            {
-                Geometry = initialCoordinate
-            };
-
-            // Check that replacement has updated the manhole geometry correctly
-            Assert.That(manhole.Compartments[0].Geometry, Is.EqualTo(initialCoordinate));
-            Assert.That(manhole.Compartments[1].Geometry, Is.EqualTo(coordinate24));
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(6.0, 7.0)));
-
-            // Check that changing the geometry of the new compartment updates the manhole geometry correctly
-            manhole.Compartments[0].Geometry = coordinate35;
-            Assert.That(manhole.Compartments[0].Geometry, Is.EqualTo(coordinate35));
-            Assert.That(manhole.Compartments[1].Geometry, Is.EqualTo(coordinate24));
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(2.5, 4.5)));
-
-            // Check that changing the geometry of the other compartment updates the manhole geometry correctly
-            var newCoordinateCompartment2 = new Point(6, 6);
-            manhole.Compartments[1].Geometry = newCoordinateCompartment2;
-            Assert.That(manhole.Compartments[0].Geometry, Is.EqualTo(coordinate35));
-            Assert.That(manhole.Compartments[1].Geometry, Is.EqualTo(newCoordinateCompartment2));
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(4.5, 5.5)));
-        }
-
+ 
         [Test]
         public void GivenManhole_WhenAddingCompartmentWithSameName_ThenReplaceOldCompartmentWithNewCompartment()
         {
-            var oldGeometry = coordinate13;
-            var newGeometry = coordinate24;
-            var oldCompartment = new Compartment("myCompartment")
-            {
-                Geometry = oldGeometry
-            };
-
-            var newCompartment = new Compartment("myCompartment")
-            {
-                Geometry = newGeometry
-            };
+            var oldBottomLevel = 10;
+            var oldCompartment = new Compartment("myCompartment"){BottomLevel = oldBottomLevel};
+            var newBottomLevel = 23;
+            var newCompartment = new Compartment("myCompartment"){BottomLevel = newBottomLevel};
             var manhole = new Manhole("myManhole")
             {
                 Compartments = new EventedList<Compartment> { oldCompartment }
             };
             Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
-            Assert.That(manhole.Compartments.FirstOrDefault()?.Name, Is.EqualTo("myCompartment"));
-            Assert.That(manhole.Compartments.FirstOrDefault()?.Geometry, Is.EqualTo(oldGeometry));
+
+            Assert.AreEqual(oldCompartment, manhole.Compartments.FirstOrDefault());
+            Assert.AreEqual(oldBottomLevel, manhole.Compartments.FirstOrDefault()?.BottomLevel);
 
             manhole.Compartments.Add(newCompartment);
             Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
-            Assert.That(manhole.Compartments.FirstOrDefault()?.Name, Is.EqualTo("myCompartment"));
-            Assert.That(manhole.Compartments.FirstOrDefault()?.Geometry, Is.EqualTo(newGeometry));
+            Assert.AreEqual(newCompartment, manhole.Compartments.FirstOrDefault());
+            Assert.AreEqual(newBottomLevel, manhole.Compartments.FirstOrDefault()?.BottomLevel);
         }
 
         [Test]

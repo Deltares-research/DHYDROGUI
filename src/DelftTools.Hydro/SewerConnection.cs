@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
@@ -11,6 +12,7 @@ using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro
 {
+    [Entity]
     public class SewerConnection : Branch, ISewerConnection
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerConnection));

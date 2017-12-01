@@ -5,43 +5,69 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerCompartmentGenerator: ISewerNetworkFeatureGenerator
     {
+        /*It generates compartments AND manholes when needed. However the return value will always be a manhole because compartments are not
+         INetworkFeatures */
         private static ILog Log = LogManager.GetLogger(typeof(SewerCompartmentGenerator));
 
         public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement == null) return null;
-            return CreateCompartment<Compartment>(gwswElement, network);
+            var manhole = CreateCompartmentForManhole<Compartment>(gwswElement, network);
+            return manhole;
         }
 
         public static T FindOrGetNewCompartment<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
         {
             //We know they are not null, otherwise we would have already returned in the CompartmentFactory method.
             var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
-            var parentManhole = GetParentManholeFromGwswElement(gwswElement, network);
+            var parentManhole = GetManholeOrNullFromGwswElement(gwswElement, network);
 
-            if (network == null || !parentManhole.ContainsCompartment(compartmentName))
-                return new T{Name = compartmentName, ParentManhole = parentManhole};
+            if (parentManhole != null && parentManhole.ContainsCompartment(compartmentName))
+                return (T)parentManhole.GetCompartmentByName(compartmentName);
 
-            var compartmentFound = parentManhole.GetCompartmentByName(compartmentName);
-            return (T) compartmentFound ?? new T { Name = compartmentName, ParentManhole = parentManhole };
+            return new T { Name = compartmentName };
         }
 
-        protected static T CreateCompartment<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
+        protected static Manhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
         {
             if (!gwswElement.IsValidGwswCompartment()) return null;
 
             var compartment = FindOrGetNewCompartment<T>(gwswElement, network);
+
             SetCompartmentAttributes(compartment, gwswElement, network);
-            return compartment;
+            var manhole = GetNewOrExistingManholeFromGwswElement(gwswElement, network);
+            manhole.Compartments.Add(compartment);
+
+            return manhole;
         }
 
-        private static Manhole GetParentManholeFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
+        private static Manhole GetManholeOrNullFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
+        {
+            if (network == null) return null;
+
+            var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
+            var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
+
+            //if we could not place an ID then we use the compartment name to create a place holder (if needed)
+            var manholeName = manholeAttribute.IsValidAttribute() ? manholeAttribute.ValueAsString : compartmentName;
+            var parentManhole = network.Manholes.FirstOrDefault(m => m.Name.Equals(manholeName)) as Manhole;
+            
+            //If it was not found, try searching by containing this compartment.
+            if (parentManhole == null)
+            {
+                parentManhole = network.Manholes.FirstOrDefault(m => m.ContainsCompartment(compartmentName)) as Manhole;
+            }
+
+            return parentManhole;
+        }
+
+
+        protected static Manhole GetNewOrExistingManholeFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
         {
             var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
             var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
@@ -75,8 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement, IHydroNetwork network)
         {
-            compartment.ParentManhole = GetParentManholeFromGwswElement(gwswElement, network);
-
             // Set the rest of manhole values
             var auxDouble = 0.0;
             var nodeLength = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
@@ -99,14 +123,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (surfaceLevel.TryGetValueAsDouble(out auxDouble))
                 compartment.SurfaceLevel = auxDouble;
 
-            double yCoordinate;
-            double xCoordinate;
-            var xCoord = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.XCoordinate);
-            var yCoord = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.YCoordinate);
-            if (xCoord.TryGetValueAsDouble(out xCoordinate) && yCoord.TryGetValueAsDouble(out yCoordinate))
-            {
-                compartment.Geometry = new Point(xCoordinate, yCoordinate);
-            }
+            /* Coordinates are not set in the ManholeGenerator*/
+
 
             // Set shape value of the manhole
             var nodeShape = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);

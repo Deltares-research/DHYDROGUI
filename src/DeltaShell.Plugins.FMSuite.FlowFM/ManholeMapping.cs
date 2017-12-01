@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             [Description("INS")] InspectionPoint /*Should be created as a pipe*/,
             [Description("PMP")] Pump /*Should be created as a pipe*/,
             [Description("UIT")] Outlet,
+            [Description("MAN")] Manhole /* Custom type, only for creating a manhole with no compartiments*/,
         }
         public static class PropertyKeys
         {

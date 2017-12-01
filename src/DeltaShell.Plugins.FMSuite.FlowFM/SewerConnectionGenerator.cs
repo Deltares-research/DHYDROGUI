@@ -112,42 +112,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static void SetSewerConnectionDefaultGeometry(ISewerConnection sewerConnection)
         {
+            if (sewerConnection.Geometry?.Coordinate != null) return;
+
             var manholeSource = sewerConnection.Source;
             var manholeTarget = sewerConnection.Target;
 
             if (manholeSource == null || manholeTarget == null) return;
-            var coordX = 0.0;
+            var defaultPoint = new Point(0,0);
 
-            if (sewerConnection.Geometry == null || !sewerConnection.Geometry.Coordinates.Any())
-            {
-                //Check source Geometry
-                var compartmentSource = sewerConnection.SourceCompartment;
-                var compartmentTarget = sewerConnection.TargetCompartment;
-                if (!manholeSource.Geometry.Equals(compartmentSource.Geometry))
-                {
-                    if (compartmentSource.Geometry == null)
-                    {
-                        if (compartmentTarget.Geometry != null)
-                        {
-                            coordX = compartmentTarget.Geometry.Coordinate.X - sewerConnection.Length;
-                        }
-
-                        var sourceGeometry = new Point(coordX, sewerConnection.LevelSource);
-                        compartmentSource.Geometry = sourceGeometry;
-                    }
-                    manholeSource.Geometry = compartmentSource.Geometry;
-                }
-
-                if (!manholeTarget.Geometry.Equals(compartmentTarget.Geometry))
-                {
-                    if (compartmentTarget.Geometry == null)
-                    {
-                        var targetGeometry = new Point(sewerConnection.Length + coordX, sewerConnection.LevelSource);
-                        compartmentTarget.Geometry = targetGeometry;
-                    }
-                    manholeTarget.Geometry = compartmentTarget.Geometry;
-                }
-            }
+            if (manholeSource.Geometry?.Coordinate == null)
+                manholeSource.Geometry = defaultPoint;
+            if (manholeTarget.Geometry?.Coordinate == null)
+                manholeTarget.Geometry = defaultPoint;
 
             sewerConnection.Geometry = new LineString(
                 new[]
