@@ -150,6 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var definitionReader = CrossSectionFactory(profileShapeId);
             if (definitionReader == null)
             {
+                Log.WarnFormat("Shape was not defined for sewer profile '{0}' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.", csIdAttribute.ValueAsString);
                 var defaultShape = new CrossSectionStandardShapeRound { Diameter = 0.4 };
                 return new CrossSection(new CrossSectionDefinitionStandard(defaultShape)
                 {

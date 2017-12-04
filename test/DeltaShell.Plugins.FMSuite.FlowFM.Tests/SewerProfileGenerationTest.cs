@@ -35,10 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 ElementTypeName = SewerFeatureType.Crosssection.ToString()
             };
-            var expectedMessage =
-                "Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's";
-
-           TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(sewerProfileGwswElement), expectedMessage);
+            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's");
         }
 
         [Test]
@@ -79,6 +76,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
             Assert.NotNull(csShape);
             Assert.That(csShape.Diameter, Is.EqualTo(0.4));
+        }
+
+        [Test]
+        public void GivenGwswElementWithUnrecognizedShapeDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturned()
+        {
+            var expectedProfileId = "MyProfile";
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
+                }
+            };
+            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Shape was not defined for sewer profile 'MyProfile' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.");
+        }
+
+        [TestCase(SewerProfileMapping.SewerProfileType.Rectangle)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Arch)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Circle)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Cunette)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Egg)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
+        public void GivenValidGwswElementWithoutWidthDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturned(SewerProfileMapping.SewerProfileType sewerProfileType)
+        {
+            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, "")
+                }
+            };
+            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
+        }
+
+        [TestCase(SewerProfileMapping.SewerProfileType.Rectangle)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Arch)]
+        [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
+        public void GivenValidGwswElementWithoutHeightDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturned(SewerProfileMapping.SewerProfileType sewerProfileType)
+        {
+            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", "")
+                }
+            };
+            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
+        }
+        
+        [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
+        public void GivenValidGwswElementWithoutSlopeDefined_WhenCreatingSewerProfile_ThenLogMessageIsReturnedForTrapezoidType(SewerProfileMapping.SewerProfileType sewerProfileType)
+        {
+            var profileType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(sewerProfileType);
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "2000", "")
+                }
+            };
+            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
         }
 
         #region Test helpers
@@ -129,6 +200,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(Math.Abs(csShape.MaximumFlowWidth - expectedHeight) < 0.0001);
                 Assert.That(Math.Abs(csShape.Slope - expectedSlope) < 0.0001);
             }
+        }
+
+        private static void CreateProfileAndCheckForLogMessage(GwswElement sewerProfileGwswElement, string expectedMessage)
+        {
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(sewerProfileGwswElement),
+                expectedMessage);
         }
 
         private static void CheckWidthHeightBasedShapeProperties<TShape>(CrossSectionDefinitionStandard csDefinition, double expectedWidth, double expectedHeight) 
