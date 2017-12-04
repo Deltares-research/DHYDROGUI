@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (!gwswElement.IsValidGwswManhole()) return null;
             var manhole = GetNewOrExistingManhole(gwswElement, network);
-            SetManholeAttributes(manhole, gwswElement);
+            SetManholeCoordinateAttributes(manhole, gwswElement);
             return manhole;
         }
 
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return parentManhole ?? new Manhole(manholeName);
         }
 
-        private static void SetManholeAttributes(IManhole manhole, GwswElement gwswElement)
+        public static void SetManholeCoordinateAttributes(IManhole manhole, GwswElement gwswElement)
         {
             // Set the rest of manhole values
             double yCoordinate;

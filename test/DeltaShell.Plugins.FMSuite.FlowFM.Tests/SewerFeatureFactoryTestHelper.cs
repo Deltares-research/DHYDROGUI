@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -24,12 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(manhole.Compartments.Count, Is.EqualTo(numberOfCompartments));
         }
 
-        public void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, string manholeId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel, int numberOfParentManholeCompartments)
+        public void CheckCompartmentAndManholePropertyValues(Compartment compartment, string uniqueId, string manholeId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel, double xCoordinate, double yCoordinate, int numberOfParentManholeCompartments)
         {
             Assert.NotNull(compartment.ParentManhole);
             
             /*A compartment is not (directly) responsible of setting the coordinates.*/
-            CheckManholeNodePropertyValues(compartment.ParentManhole, manholeId, 0.0, 0.0, numberOfParentManholeCompartments);
+            CheckManholeNodePropertyValues(compartment.ParentManhole, manholeId, xCoordinate, yCoordinate, numberOfParentManholeCompartments);
 
             Assert.That(compartment.Name, Is.EqualTo(uniqueId));
             Assert.That(compartment.ManholeLength, Is.EqualTo(manholeLength));

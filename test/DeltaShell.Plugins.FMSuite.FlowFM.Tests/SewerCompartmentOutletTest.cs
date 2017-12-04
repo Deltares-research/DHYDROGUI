@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -37,17 +36,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, ""),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, ""),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString, ""),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, string.Empty),
                 }
             };
 
@@ -59,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var compartment = manhole.Compartments.FirstOrDefault();
             Assert.NotNull(compartment);
             
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, 1);
+            CheckCompartmentAndManholePropertyValues(compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, xCoord, yCoord, 1);
             //Check it can be casted into an outlet.
             var outlet = compartment as OutletCompartment;
             Assert.IsNotNull(outlet);
@@ -87,17 +86,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, ""),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, ""),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString, ""),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, "")
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), string.Empty, typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, string.Empty)
                 }
             };
 
@@ -108,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var compartment = manhole.Compartments.FirstOrDefault();
             Assert.NotNull(compartment);
 
-            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, 1);
+            CheckCompartmentAndManholePropertyValues(compartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel, xCoord, yCoord, 1);
             //Check it can be casted into an outlet.
             var outlet = compartment as OutletCompartment;
             Assert.IsNotNull(outlet);

@@ -130,11 +130,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (parentManhole == null)
             {
                 parentManhole = new Manhole(manholeName);
-                if (network != null)
-                {
-                    network.Nodes.Add(parentManhole);
-                    Log.InfoFormat(Resources.SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_, manholeName, compartmentName);
-                }
+                SewerManholeGenerator.SetManholeCoordinateAttributes(parentManhole, gwswElement);
+
+                if (network == null) return parentManhole;
+
+                network.Nodes.Add(parentManhole);
+                Log.InfoFormat(Resources.SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_, manholeName, compartmentName);
             }
             return parentManhole;
         }
