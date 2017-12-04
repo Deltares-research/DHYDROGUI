@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -263,6 +263,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_no" +
                         "t_valid_and_will_not_be_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot import sewer profile(s) without profile id. Please check &apos;Profiel.csv&apos; for empty profile id&apos;s.
+        /// </summary>
+        public static string GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s {
+            get {
+                return ResourceManager.GetString("GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profi" +
+                        "le_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s", resourceCulture);
             }
         }
         
@@ -551,6 +561,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_ {
             get {
                 return ResourceManager.GetString("SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shape was not defined for sewer profile &apos;{0}&apos; in &apos;Profiel.csv&apos;. A default round profile with diameter of 400 mm is used for this profile..
+        /// </summary>
+        public static string SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_for_this_profile_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___" +
+                        "0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_fo" +
+                        "r_this_profile_", resourceCulture);
             }
         }
         

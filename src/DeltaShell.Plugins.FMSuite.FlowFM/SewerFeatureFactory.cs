@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var definitionReader = CrossSectionFactory(profileShapeId);
             if (definitionReader == null)
             {
-                Log.WarnFormat("Shape was not defined for sewer profile '{0}' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.", csIdAttribute.ValueAsString);
+                Log.WarnFormat(Resources.SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_for_this_profile_, csIdAttribute.ValueAsString);
                 var defaultShape = new CrossSectionStandardShapeRound { Diameter = 0.4 };
                 return new CrossSection(new CrossSectionDefinitionStandard(defaultShape)
                 {
@@ -420,7 +420,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             profileId = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
             if (!profileId.IsValidAttribute())
             {
-                Log.Error("Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's");
+                Log.Error(Resources.GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s);
                 return false;
             }
             return true;

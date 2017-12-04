@@ -404,4 +404,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_" xml:space="preserve">
     <value>Pump(s) cannot be created without a network previously defined.</value>
   </data>
+  <data name="SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_for_this_profile_" xml:space="preserve">
+    <value>Shape was not defined for sewer profile '{0}' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.</value>
+  </data>
+  <data name="GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s" xml:space="preserve">
+    <value>Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's</value>
+  </data>
 </root>
