@@ -66,16 +66,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
                 }
             };
-            var loadedProfile = SewerFeatureFactory.CreateInstance(sewerProfileGwswElement) as CrossSection;
-            Assert.NotNull(loadedProfile);
+            CreateProfileAndCheckForDefaultShape(sewerProfileGwswElement, expectedProfileId);
+        }
 
-            var csDefinition = loadedProfile.Definition as CrossSectionDefinitionStandard;
-            Assert.NotNull(csDefinition);
-            Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
-
-            var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
-            Assert.NotNull(csShape);
-            Assert.That(csShape.Diameter, Is.EqualTo(0.4));
+        [Test]
+        public void GivenGwswElementWithoutShapeDefined_WhenCreatingSewerProfile_ThenDefaultProfileIsReturned()
+        {
+            var expectedProfileId = "MyProfile";
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, "")
+                }
+            };
+            CreateProfileAndCheckForDefaultShape(sewerProfileGwswElement, expectedProfileId);
         }
 
         [Test]
@@ -200,6 +206,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(Math.Abs(csShape.MaximumFlowWidth - expectedHeight) < 0.0001);
                 Assert.That(Math.Abs(csShape.Slope - expectedSlope) < 0.0001);
             }
+        }
+
+        private static void CreateProfileAndCheckForDefaultShape(GwswElement sewerProfileGwswElement, string expectedProfileId)
+        {
+            var loadedProfile = SewerFeatureFactory.CreateInstance(sewerProfileGwswElement) as CrossSection;
+            Assert.NotNull(loadedProfile);
+
+            var csDefinition = loadedProfile.Definition as CrossSectionDefinitionStandard;
+            Assert.NotNull(csDefinition);
+            Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
+
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.Diameter, Is.EqualTo(0.4));
         }
 
         private static void CreateProfileAndCheckForLogMessage(GwswElement sewerProfileGwswElement, string expectedMessage)
