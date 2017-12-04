@@ -40,13 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(compartment.SurfaceLevel, Is.EqualTo(surfaceLevel));
         }
 
-        public static void TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(GwswElement badGwswElement, string expectedPartOfMessage)
-        {
-            INetworkFeature feature = null;
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature = SewerFeatureFactory.CreateInstance(badGwswElement), expectedPartOfMessage);
-            Assert.IsNull(feature);
-        }
-
         public static GwswAttribute GetDefaultGwswAttribute(string attributeName, string attributeValue, string defaultValue, string attributeType = null)
         {
             if (attributeValue == null)

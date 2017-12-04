@@ -852,7 +852,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void TestImportElementReplacesExistingOne()
+        public void TestImportSewerConnectionReplacesExistingOne()
         {
             //Create network
             var network = new HydroNetwork();

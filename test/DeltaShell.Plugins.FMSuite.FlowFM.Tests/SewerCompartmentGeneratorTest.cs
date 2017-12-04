@@ -155,30 +155,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenGwswElementWithMissingUniqueId_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned()
+        public void GivenManhole_WhenGeneratingNewCompartmentWithSameName_ThenReplaceOldCompartmentWithNewCompartment()
         {
-            var badGwswElement = new GwswElement
+            /* This test should be SewerCompartment responsibility.*/
+            var oldBottomLevel = 10;
+            var newBottomLevel = 33;
+            var uniqueId = "testCompartment";
+            var oldCompartment = new Compartment(uniqueId) { BottomLevel = oldBottomLevel };
+
+            var manholeId = "testManhole";
+            var manhole = new Manhole(manholeId);
+            manhole.Compartments.Add(oldCompartment);
+
+            Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
+            Assert.AreEqual(uniqueId, manhole.Compartments.FirstOrDefault()?.Name);
+            Assert.AreEqual(oldCompartment, manhole.Compartments.FirstOrDefault());
+            Assert.AreEqual(oldBottomLevel, manhole.Compartments.FirstOrDefault()?.BottomLevel);
+
+            #region MyRegion
+
+            var gwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList =
                 {
                     new GwswAttribute
                     {
-                        ValueAsString = "01001",
+                        ValueAsString = uniqueId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, "", null)
+                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null, null)
+                    },
+                    new GwswAttribute
+                    {
+                        ValueAsString = manholeId,
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null,  null, null)
+                    },
+                    new GwswAttribute
+                    {
+                    ValueAsString = newBottomLevel.ToString(),
+                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
+                        ManholeMapping.PropertyKeys.BottomLevel, "MyDescription", null,  null, null)
                     }
                 }
             };
 
-            var manholeId = badGwswElement.GwswAttributeList.Where(attr => attr.GwswAttributeType.Key == ManholeMapping.PropertyKeys.ManholeId)
-                .Select(attr => attr.ValueAsString).FirstOrDefault();
-            TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(badGwswElement, "Manhole with manhole id '" + manholeId + "' could not be created, because one of its compartments misses its unique id.");
+            #endregion
+
+            var network = new HydroNetwork();
+            network.Nodes.Add(manhole);
+            Assert.IsTrue(network.Manholes.Contains(manhole));
+
+            new SewerCompartmentGenerator().Generate(gwswElement, network);
+            
+            Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
+            Assert.AreEqual(uniqueId, manhole.Compartments.FirstOrDefault()?.Name);
+            Assert.AreEqual(newBottomLevel, manhole.Compartments.FirstOrDefault()?.BottomLevel);
         }
 
         [Test]
-        public void GivenGwswElementWithMissingManholeId_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned()
+        public void GivenGwswElementWithMissingUniqueId_WhenCreatingWithSewerCompartmentGenerator_ThenLogMessageIsShownAndManholeWithCompartmentIsReturned()
         {
+            var manholeId = "01001";
+            var lineNumber = 2;
             var badGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -186,14 +225,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
-                        ValueAsString = "put1",
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
+                        ValueAsString = manholeId,
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", lineNumber, "MyColumnName", "string",
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription",  null, null, null)
+                    }
+                }
+            };
+
+            var manhole = GenerateManholeWithLogMessages(badGwswElement, "Compartment", lineNumber, string.Empty);
+
+            Assert.AreEqual(manholeId, manhole.Name);
+            Assert.IsTrue(manhole.Compartments.Any());
+            Assert.AreEqual(1, manhole.Compartments.Count);
+        }
+
+        [Test]
+        public void GivenGwswElementWithMissingManholeId_WhenCreatingWithSewerCompartmentGenerator_ThenLogMessageIsShownAndManholeWithCompartmentIsReturned()
+        {
+            var compartmentName = "put1";
+            var lineNumber = 2;
+            var badGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    new GwswAttribute
+                    {
+                        ValueAsString = compartmentName,
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", lineNumber, "MyColumnName", "string",
                             ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, "", null)
                     }
                 }
             };
 
-            TryCreateFeatureAndCheckForLogMessageAndFeatureIsNull(badGwswElement, "There are lines in 'Knooppunt.csv' that do not contain a Manhole Id. These lines are not imported.");
+            var manhole = GenerateManholeWithLogMessages(badGwswElement, "Manhole", lineNumber, string.Empty);
+            Assert.IsTrue(manhole.Compartments.Any());
+            Assert.AreEqual(1, manhole.Compartments.Count);
+            Assert.IsTrue(manhole.ContainsCompartment(compartmentName));
+        }
+
+        [Test]
+        public void GivenGwswElementWithMissingUniqueIdAndManholeId_WhenCreatingWithSewerCompartmentGenerator_ThenLogMessageAreShownAndManholeWithCompartmentIsReturned()
+        {
+            var badGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString()
+            };
+
+            GenerateManholeWithLogMessages(badGwswElement, "Compartment", 0, string.Empty);
+            var manhole = GenerateManholeWithLogMessages(badGwswElement, "Manhole", 0, string.Empty);
+
+            Assert.IsTrue(manhole.Compartments.Any());
+            Assert.AreEqual(1, manhole.Compartments.Count);
+        }
+
+        private static Manhole GenerateManholeWithLogMessages(GwswElement badGwswElement, string componentType, int lineNumber, string newName)
+        {
+            INetworkFeature feature = null;
+            var message =
+                string.Format(
+                    Resources
+                        .SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_has_been_created_as__2_,
+                    componentType, lineNumber, newName);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => feature = new SewerCompartmentGenerator().Generate(badGwswElement, null), message);
+            Assert.IsNotNull(feature);
+
+            var manhole = feature as Manhole;
+            Assert.IsNotNull(manhole);
+            return manhole;
         }
 
         [TestCase(ManholeMapping.PropertyKeys.NodeLength)]

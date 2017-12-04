@@ -30,7 +30,6 @@ namespace DelftTools.Hydro.Structures
             {
                 var point = Geometry as IPoint;
                 return point?.X ?? 0;
-                //return Geometry.Coordinate!Compartments.Any() ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.X ?? 0.0);
             }
         }
 
@@ -42,7 +41,6 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                // return !Compartments.Any() ? 0.0 : Compartments.Average(c => c.Geometry?.Coordinate.Y ?? 0.0);
                 var point = Geometry as IPoint;
                 return point?.Y ?? 0;
             }
@@ -71,9 +69,23 @@ namespace DelftTools.Hydro.Structures
         private void CompartmentCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var compartment = e.Item as Compartment;
-            if (compartment == null || e.Action != NotifyCollectionChangeAction.Add) return;
+            if (compartment == null) return;
 
-            compartment.ParentManhole = this;
+            switch (e.Action)
+            {
+                case NotifyCollectionChangeAction.Remove:
+                    //It has a NoNotifyPropertyChanged, so it won't propagate again.
+                    compartment.ParentManhole = null;
+                    return;
+                case NotifyCollectionChangeAction.Add:
+                    var oldParentManhole = compartment.ParentManhole;
+                    if ( oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartment(compartment.Name))
+                    {
+                        oldParentManhole.Compartments.Remove(compartment);
+                    }
+                    compartment.ParentManhole = this;
+                    break;
+            }
         }
 
         public Compartment GetCompartmentByName(string compartmentName)
@@ -83,7 +95,7 @@ namespace DelftTools.Hydro.Structures
 
         public bool ContainsCompartment(string compartmentName)
         {
-            return Compartments.Any(c => c.Name.Equals(compartmentName));
+            return Compartments != null && Compartments.Any(c => c.Name.Equals(compartmentName));
         }
     }
 }

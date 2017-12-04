@@ -536,6 +536,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} in line {1} does not have a name and has been created as {2}.
+        /// </summary>
+        public static string SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_has_been_created_as__2_ {
+            get {
+                return ResourceManager.GetString("SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a" +
+                        "_name_and_has_been_created_as__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manhole with manhole id &apos;{0}&apos; could not be created, because one of its compartments misses its unique id..
         /// </summary>
         public static string SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_ {

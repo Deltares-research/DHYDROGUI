@@ -12,11 +12,6 @@ namespace DelftTools.Hydro.Tests.Structures
         private static string compartmentName1 = "myName1";
         private static string CompartmentName2 = "myName2";
 
-        private readonly Point coordinate13 = new Point(1, 3);
-        private readonly Point coordinate24 = new Point(2, 4);
-        private readonly Point coordinate35 = new Point(3, 5);
-        private readonly Point averageInitialCoordinate = new Point(1.5, 3.5);
-
         private EventedList<Compartment> GetCompartmentList()
         {
             Compartment compartment1 = new Compartment(compartmentName1);
@@ -25,33 +20,27 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingTheGeometry_ThenTheAverageCoordinateIsReturned()
+        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingTheGeometry_ThenDefaultCoordinateIsReturned()
         {
             var manhole = new Manhole("myManhole")
             {
                 Compartments = GetCompartmentList()
             };
-            Assert.That(manhole.Geometry, Is.EqualTo(averageInitialCoordinate));
+            Assert.IsTrue(manhole.Geometry.IsValid);
         }
 
         [Test]
-        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingXCoordinate_ThenTheAverageXCoordinateIsReturned()
+        public void GivenNewManhole_WhenGettingYCoordinate_ThenXCoordinateIsReturned()
         {
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = GetCompartmentList()
-            };
-            Assert.That(manhole.XCoordinate, Is.EqualTo(1.5));
+            var manhole = new Manhole("myManhole");
+            Assert.IsNotNull(manhole.XCoordinate);
         }
 
         [Test]
-        public void GivenManholeWithTwoCompartmentsWithAGeometry_WhenGettingYCoordinate_ThenTheAverageYCoordinateIsReturned()
+        public void GivenNewManhole_WhenGettingYCoordinate_ThenYCoordinateIsReturned()
         {
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = GetCompartmentList()
-            };
-            Assert.That(manhole.YCoordinate, Is.EqualTo(3.5));
+            var manhole = new Manhole("myManhole");
+            Assert.IsNotNull(manhole.YCoordinate);
         }
 
         [Test]
@@ -76,28 +65,15 @@ namespace DelftTools.Hydro.Tests.Structures
             var manhole = new Manhole(manholeName);
             manhole.Compartments.Add(compartment1);
 
-            Assert.That(manhole.Geometry, Is.EqualTo(new Point(1.0, 3.0)));
             Assert.NotNull(manhole.Compartments.FirstOrDefault()?.ParentManhole);
             Assert.That(manhole.Compartments.FirstOrDefault()?.ParentManhole.Name, Is.EqualTo(manholeName));
-        }
-
-        [Test]
-        public void GivenManholeWithTwoCompartments_WhenRemovingCompartment_ThenGeometryIsCorrectlyUpdated()
-        {
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = GetCompartmentList()
-            };
-            Assert.That(manhole.Geometry, Is.EqualTo(averageInitialCoordinate));
-
-            manhole.Compartments.RemoveAt(0);
-            Assert.That(manhole.Geometry, Is.EqualTo(coordinate24));
         }
 
         [Test]
         public void GivenManholeWithoutCompartments_WhenGettingGeometry_ThenDefaultGeometryIsReturned()
         {
             var manhole = new Manhole("myManhole");
+            Assert.IsTrue(manhole.Geometry.IsValid);
             Assert.That(manhole.Geometry, Is.EqualTo(new Point(0, 0)));
         }
 
@@ -107,29 +83,6 @@ namespace DelftTools.Hydro.Tests.Structures
             var defaultCoordinate = new Point(0, 0);
             var manhole = new Manhole("myManhole");
             Assert.That(manhole.Geometry, Is.EqualTo(defaultCoordinate));
-        }
-
- 
-        [Test]
-        public void GivenManhole_WhenAddingCompartmentWithSameName_ThenReplaceOldCompartmentWithNewCompartment()
-        {
-            var oldBottomLevel = 10;
-            var oldCompartment = new Compartment("myCompartment"){BottomLevel = oldBottomLevel};
-            var newBottomLevel = 23;
-            var newCompartment = new Compartment("myCompartment"){BottomLevel = newBottomLevel};
-            var manhole = new Manhole("myManhole")
-            {
-                Compartments = new EventedList<Compartment> { oldCompartment }
-            };
-            Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
-
-            Assert.AreEqual(oldCompartment, manhole.Compartments.FirstOrDefault());
-            Assert.AreEqual(oldBottomLevel, manhole.Compartments.FirstOrDefault()?.BottomLevel);
-
-            manhole.Compartments.Add(newCompartment);
-            Assert.That(manhole.Compartments.Count, Is.EqualTo(1));
-            Assert.AreEqual(newCompartment, manhole.Compartments.FirstOrDefault());
-            Assert.AreEqual(newBottomLevel, manhole.Compartments.FirstOrDefault()?.BottomLevel);
         }
 
         [Test]
@@ -172,6 +125,48 @@ namespace DelftTools.Hydro.Tests.Structures
                 Compartments = GetCompartmentList()
             };
             Assert.IsFalse(manhole.ContainsCompartment("NonExistentCompartmentName"));
+        }
+
+        [Test]
+        public void GivenManholeWithCompartment_RemovingCompartment_UpdatesListOfCompartments()
+        {
+            var manhole = new Manhole("myManhole")
+            {
+                Compartments = GetCompartmentList()
+            };
+
+            Assert.IsTrue(manhole.ContainsCompartment(compartmentName1));
+
+            var compartmentToRemove = manhole.GetCompartmentByName(compartmentName1);
+            manhole.Compartments.Remove(compartmentToRemove);
+
+            Assert.IsFalse(manhole.ContainsCompartment(compartmentName1));
+            Assert.AreNotEqual(compartmentToRemove.ParentManhole, manhole);
+        }
+
+        [Test] 
+        public void GivenManholeWithCompartment_MovingCompartmentToNewManhole_UpdatesListOfCompartments()
+        {
+            var oldManholeName = "oldManhole";
+            var compartmentName = "compartmentName";
+            var compartmentToMove = new Compartment(compartmentName);
+            var oldManhole = new Manhole(oldManholeName)
+            {
+                Compartments = new EventedList<Compartment>() { compartmentToMove }
+            };
+
+            var newManholeName = "newManhole";
+            var newManhole = new Manhole(newManholeName);
+
+            Assert.IsTrue(oldManhole.ContainsCompartment(compartmentName));
+            Assert.IsFalse(newManhole.ContainsCompartment(compartmentName));
+            Assert.AreEqual(compartmentToMove.ParentManhole, oldManhole);
+
+            newManhole.Compartments.Add(compartmentToMove);
+
+            Assert.IsFalse(oldManhole.ContainsCompartment(compartmentName));
+            Assert.IsTrue(newManhole.ContainsCompartment(compartmentName));
+            Assert.AreEqual(compartmentToMove.ParentManhole, newManhole);
         }
     }
 }

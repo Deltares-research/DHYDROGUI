@@ -379,26 +379,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public static bool IsValidGwswCompartment(this GwswElement gwswElement)
             {
             if (gwswElement == null) return false;
-//            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
-//            if (manholeName == null || manholeName.ValueAsString == string.Empty)
-//            {
-//                Log.WarnFormat(
-//                    Resources
-//                        .SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
-//                return false;
-//            }
-
-            var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId);
-            if (!compartmentName.IsValidAttribute()) return false;
+//            var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId);
+//            if (!compartmentName.IsValidAttribute()) return false;
 
             var featureType = (SewerFeatureType) EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
             return featureType == SewerFeatureType.Node;
-
-            //            Log.WarnFormat(
-            //                Resources
-            //                    .SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_,
-            //                manholeName.ValueAsString);
         }
+
+        //            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
+        //            if (manholeName == null || manholeName.ValueAsString == string.Empty)
+        //            {
+        //                Log.WarnFormat(
+        //                    Resources
+        //                        .SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_);
+        //                return false;
+        //            }
+        //            Log.WarnFormat(
+        //                Resources
+        //                    .SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_,
+        //                manholeName.ValueAsString);
 
         public static bool IsValidGwswSewerConnection(this GwswElement gwswElement)
         {

@@ -412,6 +412,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return false;
         }
 
+        public static int GetElementLine(this GwswElement gwswElement)
+        {
+            var line = 0;
+            /* It should always have attributes, but just in case (mostly testing) we include this check. */
+            if( gwswElement.GwswAttributeList.Any())
+                return gwswElement.GwswAttributeList.Select(attr => attr.GwswAttributeType?.LineNumber).First() ?? line;
+
+            return line;
+        }
+
         public static GwswAttribute GetAttributeFromList(this GwswElement element, string attributeName)
         {
             var attribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(attributeName));
@@ -436,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             value = default(double);
             if (!gwswAttribute.IsValidAttribute()) return false;
-            if( !gwswAttribute.IsTypeOf(typeof(double)))
+            if( !gwswAttribute.IsTypeOf(typeof(double)) && !gwswAttribute.IsTypeOf(typeof(int)))
             {
                 gwswAttribute.LogErrorParseType(typeof(double));
                 return false;
