@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>()
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump), "")
                 }
             };
             var expectedMsg = String.Format(Resources
@@ -91,9 +91,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var structureGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Pump), "")
                 }
             };
 
@@ -113,10 +113,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var structurePumpGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, ""),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), "")
                 }
             };
 
@@ -136,10 +136,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var structureGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType)),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, ""),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(structureType), "")
                 }
             };
 

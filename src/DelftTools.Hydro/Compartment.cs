@@ -64,7 +64,7 @@ namespace DelftTools.Hydro
 
     public enum CompartmentShape
     {
-        [Description("")] Unknown,
+        [Description("Unknown")] Unknown,
         [Description("RHK")] Rectangular,
         [Description("RND")] Square
     }

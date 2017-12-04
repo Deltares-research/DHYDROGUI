@@ -6,6 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public enum SewerProfileType
         {
+            [Description("Unknown")] Unknown,
             [Description("EIV")] Egg,
             [Description("HEU")] Arch,
             [Description("MVR")] Cunette,

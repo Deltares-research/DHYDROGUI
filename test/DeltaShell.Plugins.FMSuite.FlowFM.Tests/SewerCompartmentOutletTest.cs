@@ -35,19 +35,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, ""),
                 }
             };
 
@@ -85,19 +85,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoord.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShapeAsString, ""),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, "")
                 }
             };
 

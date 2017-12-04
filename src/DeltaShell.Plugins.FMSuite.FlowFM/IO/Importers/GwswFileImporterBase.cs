@@ -256,8 +256,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         new CsvColumnInfo(8, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Opmerking", typeof (string)),
+                        new CsvRequiredField("Standaardwaarde", typeof (string)),
                         new CsvColumnInfo(9, CultureInfo.InvariantCulture)
+                    },
+                    {
+                        new CsvRequiredField("Opmerking", typeof (string)),
+                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
                     },
                 }
             };
@@ -283,6 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 var attributeCodeInt = row.ItemArray[4].ToString();
                 var attributeDefinition = row.ItemArray[5].ToString();
                 var attributeType = row.ItemArray[6].ToString();
+                var attributeDefaultValue = row.ItemArray[9].ToString();
 
                 var attribute = new GwswAttributeType()
                 {
@@ -293,6 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     Key = attributeCodeInt,
                     LocalKey = attributeCode,
                     AttributeType = GwswAttributeType.TryGetParsedValueType(attributeName, attributeType, attributeDefinition, attributeFile, importedTable.Rows.IndexOf(row)),
+                    DefaultValue = attributeDefaultValue
                 };
 
                 attributeList.Add(attribute);
@@ -489,6 +495,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             set { _valueAsString = value; }
         }
 
+        public string DefaultValueAsString
+        {
+            get { return GwswAttributeType.DefaultValue; }
+        }
+
         private static string ReplaceCommaWithPoint(string doubleString)
         {
             return doubleString.Replace(',', '.');
@@ -525,12 +536,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public string Remarks { get; set; }
         public string FileName { get; set; }
         public Type AttributeType { get; set; }
+        public string DefaultValue { get; set; }
 
         public GwswAttributeType()
         {
         }
 
-        public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeField, string codeName, string definition, string mandatory, string remarks)
+        public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeField, string codeName, string definition, string mandatory, string defaultValue, string remarks)
         {
             Name = columnName;
             LineNumber = lineNumber;
@@ -540,6 +552,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             Remarks = remarks;
             FileName = fileName;
             AttributeType = TryGetParsedValueType(Name, typeField, definition, fileName, lineNumber);
+            DefaultValue = defaultValue;
         }
 
         public static Type TryGetParsedValueType(string name, string typeField, string definition, string fileName, int lineNumber)

@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
             if (flowDirection != null && flowDirection.ValueAsString != string.Empty)
             {
-                var directionValue = SewerFeatureFactory.GetValueFromDescription<SewerConnectionMapping.FlowDirection>(flowDirection.ValueAsString);
+                var directionValue = SewerFeatureFactory.GetValueFromDescription<SewerConnectionMapping.FlowDirection>(flowDirection);
                 if (directionValue == SewerConnectionMapping.FlowDirection.FromStartToEnd)
                 {
                     sewerPump.DirectionIsPositive = true;

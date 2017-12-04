@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             try
             {
-                var attributeTest = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                var attributeTest = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "", "remarks");
                 Assert.IsNotNull(attributeTest);
                 Assert.AreEqual(expectedType, attributeTest.AttributeType);
             }
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                     new GwswAttribute()
                     {
                         GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", attributeOne,
-                            "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                            "unkownDefinition", "mandatoryMaybe", "", "noRemarks"),
                         ValueAsString = valueAsString
                     },
                 }
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             string typeAsString = "string";
             try
             {
-                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "", "remarks");
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
@@ -121,11 +121,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var testVariable = 0.0;
             try
             {
-                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "", "remarks");
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(double), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute() {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                var attribute = new GwswAttribute {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
                 Assert.IsNotNull(attribute);
 
                 Assert.IsTrue(attribute.TryGetValueAsDouble(out testVariable));
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             string typeAsString = "string";
             try
             {
-                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "remarks");
+                var gwswAttributeType = new GwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", "", "remarks");
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 

@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(feature);
         }
 
-        public static GwswAttribute GetDefaultGwswAttribute(string attributeName, string attributeValue, string attributeType = null)
+        public static GwswAttribute GetDefaultGwswAttribute(string attributeName, string attributeValue, string defaultValue, string attributeType = null)
         {
             if (attributeValue == null)
                 attributeValue = string.Empty;
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return new GwswAttribute
             {
                 GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", attributeType ?? "string", attributeName,
-                    "unkownDefinition", "mandatoryMaybe", "noRemarks"),
+                    "unkownDefinition", "mandatoryMaybe", defaultValue, "noRemarks"),
                 ValueAsString = attributeValue
             };
         }
@@ -71,17 +71,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ElementTypeName = SewerFeatureType.Node.ToString(),
                     GwswAttributeList =
                     {
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoordinate.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoordinate.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShape),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, ""),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, ""),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeType, nodeType, ""),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.XCoordinate, xCoordinate.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.YCoordinate, yCoordinate.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeLength, nodeLength.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeWidth, nodeWidth.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, nodeShape, ""),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.FloodableArea, floodableArea.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.SurfaceLevel, surfaceLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
                     }
                 };
             }
@@ -108,21 +108,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ElementTypeName = SewerFeatureType.Connection.ToString(),
                     GwswAttributeList = new List<GwswAttribute>
                     {
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.UniqueId, uniqueId),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd,endNode),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType,sewerConnectionTypeString),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelStart, startLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelEnd, endLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.FlowDirection, flowDirectionString),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, crossSectionDef),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeIndicator),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.WaterType, sewerConnectionWaterType),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.OutletLossStart, outletLossStart.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.OutletLossEnd, outletLossEnd.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.UniqueId, uniqueId, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, sewerConnectionTypeString, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelStart, startLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.LevelEnd, endLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.Length, length.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.FlowDirection, flowDirectionString, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, crossSectionDef, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeIndicator, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.WaterType, sewerConnectionWaterType, ""),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossStart, inletLossStart.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.InletLossEnd, inletLossEnd.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.OutletLossStart, outletLossStart.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.OutletLossEnd, outletLossEnd.ToString(CultureInfo.InvariantCulture), "", typeDouble),
                     }
                 };
             }
@@ -148,14 +148,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ElementTypeName = SewerFeatureType.Structure.ToString(),
                     GwswAttributeList = new List<GwswAttribute>
                     {
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, uniqueId),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, structureType),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), typeDouble),
-                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel, surfaceWaterLevel.ToString(CultureInfo.InvariantCulture), typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, uniqueId, ""),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, structureType, ""),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.PumpCapacity, pumpCapacity.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelDownstreams, startLevelDownstreams.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelDownstreams, stopLevelDownstreams.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StartLevelUpstreams, startLevelUpstreams.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StopLevelUpstreams, stopLevelUpstreams.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                        GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel, surfaceWaterLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
                     }
                 };
             }
@@ -181,12 +181,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                     GwswAttributeList = new List<GwswAttribute>
                     {
-                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, profileId),
-                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileShape),
-                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, profileWidth, typeDouble),
-                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, profileHeight, typeDouble),
-                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope1, slope1, typeDouble),
-                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope2, slope2, typeDouble)
+                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, profileId, ""),
+                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileShape, ""),
+                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, profileWidth, "", typeDouble),
+                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, profileHeight, "", typeDouble),
+                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope1, slope1, "", typeDouble),
+                        GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.Slope2, slope2, "", typeDouble)
                     }
                 };
             }

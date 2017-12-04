@@ -138,25 +138,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     {
                         ValueAsString = nodeType,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.NodeType, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.NodeType, "MyDescription", null, "", null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = manholeId,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, "", null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = xStringValue,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            ManholeMapping.PropertyKeys.XCoordinate, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.XCoordinate, "MyDescription", null, "", null)
                     },
                     new GwswAttribute
                     {
                         ValueAsString = yStringValue,
                         GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            ManholeMapping.PropertyKeys.YCoordinate, "MyDescription", null, null)
+                            ManholeMapping.PropertyKeys.YCoordinate, "MyDescription", null, "", null)
                     }
                 }
             };

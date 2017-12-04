@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -141,13 +142,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private static CrossSection CreateSewerProfile(GwswElement gwswElement, IHydroNetwork network = null)
         {
-            if (gwswElement == null) return null;
-            
-            var csIdAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
-            var csShapeAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
-            if (!csIdAttribute.IsValidAttribute() || !csShapeAttribute.IsValidAttribute()) return null;
-            
-            var definitionReader = CrossSectionFactory(csShapeAttribute);
+            GwswAttribute csIdAttribute;
+            if (gwswElement == null || !gwswElement.IsValidGwswSewerProfile(out csIdAttribute)) return null;
+            var profileShapeId = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
+
+            // If the cross section definition reader, return a cross section with default shape
+            var definitionReader = CrossSectionFactory(profileShapeId);
+            if (definitionReader == null)
+            {
+                var defaultShape = new CrossSectionStandardShapeRound { Diameter = 0.4 };
+                return new CrossSection(new CrossSectionDefinitionStandard(defaultShape)
+                {
+                    Name = csIdAttribute.GetValidStringValue()
+                });
+            }
+
             var readCrossSectionDefinition = definitionReader.ReadSewerProfileDefinition(gwswElement);
             var crossSection = new CrossSection(readCrossSectionDefinition)
             {
@@ -165,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     
         private static SewerProfileDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
         {
-            var structureType = GetValueFromDescription<SewerProfileMapping.SewerProfileType>(crossSectionTypeAttribute.ValueAsString);
+            var structureType = GetValueFromDescription<SewerProfileMapping.SewerProfileType>(crossSectionTypeAttribute);
             switch (structureType)
             {
                 case SewerProfileMapping.SewerProfileType.Egg:
@@ -240,8 +249,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public static ISewerNetworkFeatureGenerator GetSewerStructureGenerator(GwswAttribute structureTypeAttribute, IHydroNetwork network)
         {
             if (structureTypeAttribute == null || structureTypeAttribute.ValueAsString == string.Empty) return null;
-
-            var structureType = GetValueFromDescription<SewerStructureMapping.StructureType>(structureTypeAttribute.ValueAsString);
+            
+            var structureType = GetValueFromDescription<SewerStructureMapping.StructureType>(structureTypeAttribute);
             switch (structureType)
             {
                 case SewerStructureMapping.StructureType.Pump:
@@ -301,8 +310,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return xAvgCoord;
         }
 
-        public static T GetValueFromDescription<T>(string description)
+        public static T GetValueFromDescription<T>(GwswAttribute gwswAttribute)
         {
+            var description = gwswAttribute.GetValidStringValue();
             try
             {
                 return (T) EnumDescriptionAttributeTypeConverter.GetEnumValue<T>(description);
@@ -324,25 +334,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static bool IsAuxGwswManhole(this GwswAttribute sewerTypeAttribute)
         {
-            var nodeType = SewerFeatureFactory.GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute.ValueAsString);
+            var nodeType = SewerFeatureFactory.GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute);
             return nodeType == ManholeMapping.NodeType.Manhole;
         }
 
         public static bool IsGwswOutlet(this GwswAttribute sewerTypeAttribute)
         {
-            var nodeType = SewerFeatureFactory.GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute.ValueAsString);
+            var nodeType = SewerFeatureFactory.GetValueFromDescription<ManholeMapping.NodeType>(sewerTypeAttribute);
             return nodeType == ManholeMapping.NodeType.Outlet;
         }
 
         public static bool IsGwswPump(this GwswAttribute sewerTypeAttribute)
         {
-            var connectionType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionMapping.ConnectionType>(sewerTypeAttribute.ValueAsString);
+            var connectionType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionMapping.ConnectionType>(sewerTypeAttribute);
             return connectionType == SewerConnectionMapping.ConnectionType.Pump;
         }
 
         public static bool IsGwswPipe(this GwswAttribute sewerTypeAttribute)
         {
-            var connectionType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionMapping.ConnectionType>(sewerTypeAttribute.ValueAsString);
+            var connectionType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionMapping.ConnectionType>(sewerTypeAttribute);
             if (connectionType == SewerConnectionMapping.ConnectionType.ClosedConnection ||
                 connectionType == SewerConnectionMapping.ConnectionType.InfiltrationPipe ||
                 connectionType == SewerConnectionMapping.ConnectionType.Open)
@@ -361,12 +371,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!manholeName.IsValidAttribute()) return false;
 
             var typeAttr = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType);
-            var manholeType = SewerFeatureFactory.GetValueFromDescription<ManholeMapping.NodeType>(typeAttr.GetValidStringValue());
+            var manholeType = SewerFeatureFactory.GetValueFromDescription<ManholeMapping.NodeType>(typeAttr);
             return manholeType == ManholeMapping.NodeType.Manhole;
         }
 
         public static bool IsValidGwswCompartment(this GwswElement gwswElement)
-        {
+            {
             if (gwswElement == null) return false;
 //            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
 //            if (manholeName == null || manholeName.ValueAsString == string.Empty)
@@ -380,7 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId);
             if (!compartmentName.IsValidAttribute()) return false;
 
-            var featureType = SewerFeatureFactory.GetValueFromDescription<SewerFeatureType>(gwswElement.ElementTypeName);
+            var featureType = (SewerFeatureType) EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
             return featureType == SewerFeatureType.Node;
 
             //            Log.WarnFormat(
@@ -401,6 +411,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return false;
             }
 
+            return true;
+        }
+
+        public static bool IsValidGwswSewerProfile(this GwswElement gwswElement, out GwswAttribute profileId)
+        {
+            profileId = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            if (!profileId.IsValidAttribute())
+            {
+                Log.Error("Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's");
+                return false;
+            }
             return true;
         }
     }

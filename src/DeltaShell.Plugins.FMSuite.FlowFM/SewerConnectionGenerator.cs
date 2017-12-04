@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
             if (waterType.IsValidAttribute())
             {
-                //Find type;
-                sewerConnection.WaterType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionWaterType>(waterType.ValueAsString);
+                //Find type
+                sewerConnection.WaterType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionWaterType>(waterType);
             }
         }
 

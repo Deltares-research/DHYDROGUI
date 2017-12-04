@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
@@ -26,7 +28,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CreateProfileAndCheckProperties(profileGwswElement, ProfileId, 0.4, expectedHeight, expectedSlope);
         }
 
+        [Test]
+        public void GivenGwswElementWithoutIdDefined_WhenCreatingSewerProfile_ThenLogMessageIsGiven()
+        {
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString()
+            };
+            var expectedMessage =
+                "Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's";
 
+           TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(sewerProfileGwswElement), expectedMessage);
+        }
+
+        [Test]
+        public void GivenGwswElementWithoutIdDefined_WhenCreatingSewerProfile_ThenNullValueIsReturned()
+        {
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
+                }
+            };
+
+            Assert.IsNull(SewerFeatureFactory.CreateInstance(sewerProfileGwswElement));
+        }
+
+        [Test]
+        public void GivenGwswElementWithUnrecognizedShapeDefined_WhenCreatingSewerProfile_ThenDefaultProfileIsReturned()
+        {
+            var expectedProfileId = "MyProfile";
+            var sewerProfileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
+                }
+            };
+            var loadedProfile = SewerFeatureFactory.CreateInstance(sewerProfileGwswElement) as CrossSection;
+            Assert.NotNull(loadedProfile);
+
+            var csDefinition = loadedProfile.Definition as CrossSectionDefinitionStandard;
+            Assert.NotNull(csDefinition);
+            Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
+
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.Diameter, Is.EqualTo(0.4));
+        }
 
         #region Test helpers
 

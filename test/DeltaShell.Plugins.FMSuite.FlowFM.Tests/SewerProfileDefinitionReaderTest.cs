@@ -399,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     ValueAsString = keyValuePair.Value,
                     GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                        keyValuePair.Key, "MyDescription", null, null)
+                        keyValuePair.Key, "MyDescription", null, "", null)
                 });
             }
 
