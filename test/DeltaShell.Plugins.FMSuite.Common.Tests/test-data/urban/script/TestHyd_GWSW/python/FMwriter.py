@@ -17,6 +17,7 @@ class FMwriter:
         self.writePipes(dirPath)
         self.writeProfiles(dirPath)
         self.writeStructures(dirPath)
+        self.writeLaterals(dirPath)
         self.writeFMnetwork(dirPath, "test")
         return True
 
@@ -49,6 +50,7 @@ class FMwriter:
         #ALG_TOE	Toelichting bij deze regel
 
         defaultWaterlevelOut = '-100.00' # low value needed
+        defaultDischargeIn = '0.1' # m3/s from street
 
         filePathIni = os.path.join(dirPath, 'output_inputFM', 'BoundaryLocations.ini')
         filePathBc = os.path.join(dirPath, 'output_inputFM', 'BoundaryConditions.bc')
@@ -92,6 +94,18 @@ class FMwriter:
             fileBc.write('unit = m\n')
             fileBc.write(defaultWaterlevelOut + '\n')
             fileBc.write('\n')
+
+            for keyvalue in self.model.nodes.items():
+                value = keyvalue[1]
+                #laterals
+                fileBc.write('[LateralDischarge]\n')
+                fileBc.write('name = lateral' + str(value[0]) + '\n')
+                fileBc.write('function = constant\n')
+                fileBc.write('time-interpolation = linear-extrapolate\n')
+                fileBc.write('quantity = water_discharge\n')
+                fileBc.write('unit = m3/s\n')
+                fileBc.write(defaultDischargeIn + '\n')
+                fileBc.write('\n')
 
         fileLocs.close()
         fileBc.close()
@@ -437,6 +451,31 @@ class FMwriter:
                 self.writePliFile(dirPath,value[0],xyz)
 
         fileStructures.close()
+        return True
+
+    def writeLaterals(self, dirPath):  # write all inlets from GWSW model
+
+        #_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #_Opp
+
+        fileLateral = open(os.path.join(dirPath, 'output_inputFM', 'LateralLocations.ini'), 'w')
+
+        #header
+        fileLateral.write('[General]\n')
+        fileLateral.write('majorVersion = 1\n')
+        fileLateral.write('minorVersion = 0\n')
+        fileLateral.write('fileType = latLocs\n')
+        fileLateral.write('\n')
+
+        for keyvalue in self.model.inlets.items():
+            value = keyvalue[1]
+            fileLateral.write('[LateralDischarge]\n')
+            fileLateral.write('id = lateral' + value[0] + '\n')
+            fileLateral.write('name = nameLateral' + value[0] + '\n')
+            fileLateral.write('nodeId = ' + value[0] + '\n')
+            fileLateral.write('\n')
+
+        fileLateral.close()
         return True
 
     def writePliFile(self, dirPath, name, xyz):

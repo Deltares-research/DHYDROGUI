@@ -8,3 +8,5 @@ class GWSWmodel:
     profiles = {}       # connection profiles
 
     structures = {}     # structures
+
+    inlets = {}         # inlets
