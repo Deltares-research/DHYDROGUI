@@ -8,14 +8,19 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    interface SewerProfileDefinitionReader
+    interface ISewerProfileDefinitionReader
     {
         ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement);
     }
 
-    class CsdEggDefinitionReader : SewerProfileDefinitionReader
+    class CsdEggDefinitionReader : ISewerProfileDefinitionReader
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CsdEggDefinitionReader));
+        private SewerProfileDefinitionLogger<CsdEggDefinitionReader> Log;
+
+        public CsdEggDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdEggDefinitionReader>();
+        }
         public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -38,9 +43,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdArchDefinitionReader : SewerProfileDefinitionReader
+    class CsdArchDefinitionReader : ISewerProfileDefinitionReader
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CsdArchDefinitionReader));
+        private SewerProfileDefinitionLogger<CsdArchDefinitionReader> Log;
+
+        public CsdArchDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdArchDefinitionReader>();
+        }
         public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -69,9 +79,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdCunetteDefinitionReader : SewerProfileDefinitionReader
+    class CsdCunetteDefinitionReader : ISewerProfileDefinitionReader
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CsdCunetteDefinitionReader));
+        private SewerProfileDefinitionLogger<CsdCunetteDefinitionReader> Log;
+
+        public CsdCunetteDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdCunetteDefinitionReader>();
+        }
+
         public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -94,9 +110,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdRectangleDefinitionReader : SewerProfileDefinitionReader
+    class CsdRectangleDefinitionReader : ISewerProfileDefinitionReader
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CsdRectangleDefinitionReader));
+        private SewerProfileDefinitionLogger<CsdRectangleDefinitionReader> Log;
+
+        public CsdRectangleDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdRectangleDefinitionReader>();
+        }
+
         public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -123,9 +145,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdCircleDefinitionReader : SewerProfileDefinitionReader
+    class CsdCircleDefinitionReader : ISewerProfileDefinitionReader
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CsdCircleDefinitionReader));
+        private SewerProfileDefinitionLogger<CsdCircleDefinitionReader> Log;
+
+        public CsdCircleDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdCircleDefinitionReader>();
+        }
+
         public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
@@ -146,13 +174,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdTrapezoidDefinitionReader : SewerProfileDefinitionReader
+    class CsdTrapezoidDefinitionReader : ISewerProfileDefinitionReader
     {
-        private static ILog Log = LogManager.GetLogger(typeof(CsdCircleDefinitionReader));
+        private SewerProfileDefinitionLogger<CsdTrapezoidDefinitionReader> Log;
+
+        public CsdTrapezoidDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdTrapezoidDefinitionReader>();
+        }
+
         public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
-            var gwswElementKeyValuePairs = gwswElement.GwswAttributeList.ToDictionary(attr => attr.GwswAttributeType.Key, attr => attr.ValueAsString);
             
             double width;
             double height;
@@ -173,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 slope = slope2;
             }
-            else if (slope1PresentAndWellFormatted && slope2PresentAndWellFormatted)
+            else if (slope1PresentAndWellFormatted)
             {
                 slope = (slope1 + slope2) / 2;
             }
@@ -204,11 +237,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    static class SewerDictionaryExtensions
+    class SewerProfileDefinitionLogger<TReader> where TReader : ISewerProfileDefinitionReader
     {
-        public static void LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion<T>(this ILog logger, GwswElement gwswElement,
-            double width, double heightProportion, string proportionString, T csShape)
-            where T : CrossSectionStandardShapeWidthHeightBase
+        private static ILog Log;
+        public SewerProfileDefinitionLogger()
+        {
+            Log = LogManager.GetLogger(typeof(TReader));
+        }
+
+        public void LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion<TShape>(GwswElement gwswElement,
+            double width, double heightProportion, string proportionString, TShape csShape)
+            where TShape : CrossSectionStandardShapeWidthHeightBase
         {
             double height;
             var heightAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileHeight);
@@ -218,15 +257,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var idAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
 
             var id = idAttribute?.ValueAsString;
-            logger.WarnFormat(
+            Log.WarnFormat(
                 "The width and height of sewer profile '{0}' are not in the right proportion {1}. Width is now {2} mm and height is now {3} mm.",
                 id, proportionString, width, csHeight);
         }
 
-        public static void MessageForMissingValues(this ILog logger, GwswElement gwswElement, string missingValuesText)
+        public void MessageForMissingValues(GwswElement gwswElement, string missingValuesText)
         {
             var id = gwswElement?.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId)?.ValueAsString;
-            logger.WarnFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", id, missingValuesText);
+            Log.WarnFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", id, missingValuesText);
         }
     }
 }

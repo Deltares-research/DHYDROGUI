@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class SewerProfileDefinitionReaderTest : SewerFeatureFactoryTestHelper
     {
-        private static ILog Log = LogManager.GetLogger(typeof(SewerProfileDefinitionReaderTest));
         private const string ProfileId = "PRO1";
         private const string TypeDouble = "double";
 
@@ -37,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CreateCsdShapeAndCheckForNull<CsdCunetteDefinitionReader>(profileGwswElement);
         }
 
-        private static void CreateCsdShapeAndCheckForNull<T>(GwswElement element) where T : SewerProfileDefinitionReader, new()
+        private static void CreateCsdShapeAndCheckForNull<T>(GwswElement element) where T : ISewerProfileDefinitionReader, new()
         {
             var circleReader = new T();
             var csDefinition = circleReader.ReadSewerProfileDefinition(element);
@@ -477,7 +476,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Test helpers
         
         private static void CreateCsdShapeAndCheckProperties<TReader, TShape>(GwswElement gwswElement, double expectedWidth, double expectedHeight) 
-            where TReader : SewerProfileDefinitionReader, new() 
+            where TReader : ISewerProfileDefinitionReader, new() 
             where TShape : CrossSectionStandardShapeWidthHeightBase, new()
         {
             var reader = new TReader();
@@ -506,9 +505,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
                 }
             };
-            
+
+            var logger = new SewerProfileDefinitionLogger<CsdCircleDefinitionReader>();
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => Log.MessageForMissingValues(profileGwswElement, missingValuesText),
+                () => logger.MessageForMissingValues(profileGwswElement, missingValuesText),
                 "Sewer profile 'PRO1' is missing its " + missingValuesText + ". Default profile property values are used for this profile.");
         }
 
@@ -526,8 +526,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var csShape = new CrossSectionStandardShapeEgg { Width = 2.0 };
+            var logger = new SewerProfileDefinitionLogger<CsdEggDefinitionReader>();
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => Log.LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(profileGwswElement, 2000.0, 1.5, "(2:3)", csShape),
+                () => logger.LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(profileGwswElement, 2000.0, 1.5, "(2:3)", csShape),
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 2000 mm and height is now 3000 mm.");
         }
 

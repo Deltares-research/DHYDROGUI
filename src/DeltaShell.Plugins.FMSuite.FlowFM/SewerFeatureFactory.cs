@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return crossSection;
         }
     
-        private static SewerProfileDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
+        private static ISewerProfileDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
         {
             var structureType = GetValueFromDescription<SewerProfileMapping.SewerProfileType>(crossSectionTypeAttribute);
             switch (structureType)
