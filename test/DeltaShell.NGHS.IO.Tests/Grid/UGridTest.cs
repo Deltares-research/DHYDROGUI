@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -231,6 +233,56 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             Assert.NotNull(zValues); // variable should have been created by ionc_def_var
             Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
+        }
+
+        [TestCase(GridApiDataSet.Locations.UG_LOC_NODE, 5, "node_z", -999.0)]
+        [TestCase(GridApiDataSet.Locations.UG_LOC_FACE, 2, "face_z", -999.0)]
+        [Category(TestCategory.DataAccess)]
+        public void TestWriteZValuesAtLocation_SetsCorrectFillValue(GridApiDataSet.Locations location, int nLocations, string varName, double expectedFillValue)
+        {
+            var testFilePath = TestHelper.GetTestFilePath(UGRID_TEST_FILE);
+            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+
+            var meshId = 1;
+            var zValues = Enumerable.Repeat(123.456, nLocations).ToArray();
+
+            using (var uGrid = new UGrid(localCopyOfTestFile, GridApiDataSet.NetcdfOpenMode.nf90_write))
+            {
+                switch (location)
+                {
+                    case GridApiDataSet.Locations.UG_LOC_NODE:
+                        uGrid.WriteZValuesAtNodes(meshId, zValues);
+                        break;
+                    case GridApiDataSet.Locations.UG_LOC_FACE:
+                        uGrid.WriteZValuesAtFaces(meshId, zValues);
+                        break;
+                    default:
+                        Assert.Fail(string.Format("Please add support for Location: {0} to this test"));
+                        break;
+                }
+            }
+
+            using (var gridApi = GridApiFactory.CreateNew(false)) // explicitly use local api... otherwise TypeUtils doesn't work
+            {
+                try
+                {
+                    gridApi.Open(localCopyOfTestFile, GridApiDataSet.NetcdfOpenMode.nf90_nowrite);
+
+                    var ioncid = (int)TypeUtils.GetField(gridApi, "ioncid");
+                    var locationId = (int)location;
+                    var fillValue = double.MinValue;
+                    IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nLocations);
+
+                    // check result
+                    var ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varName, ref zPtr, ref nLocations, ref fillValue);
+                    Assert.AreEqual(GridApiDataSet.GridConstants.IONC_NOERR, ierr);
+                    Assert.AreEqual(expectedFillValue, fillValue, 0.1);
+                }
+                finally
+                {
+                    if (gridApi != null) gridApi.Close();
+                }
+            }
         }
 
         [Test]

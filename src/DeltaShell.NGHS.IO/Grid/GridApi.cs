@@ -158,6 +158,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     const string Unit = "m";
                     var type = NF90_DOUBLE;
+                    double fillValue = -999.0; // explicitly set to this value
 
                     GridWrapper.ionc_def_var(ref ioncid, ref meshId, ref varId, ref type, ref locationId, varName, StandardName, longName, Unit, ref fillValue);
                 }
