@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [TestFixture]
     public class SewerConnectionOrificeGeneratorTest: SewerFeatureFactoryTestHelper
     {
-
         [Test]
         public void GenerateOrificeFromGwswConnectionElementReturnsValidObject()
         {
@@ -20,11 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var nodeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, "")
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
                 }
             };
 
@@ -39,8 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void GenerateOrificeFromGwswStructureElementReturnsValidObject()
         {
-            var typeDouble = "double";
-
             var orificeId = "orifice123";
             var bottomLevel = 30.0;
             var contractionCoef = 0.5;
@@ -48,13 +45,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var structureOrificeGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, ""),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), ""),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), "", typeDouble)
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
 
@@ -80,17 +77,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
 
             #region GwswElements
-            var typeDouble = "double";
             var structureId = "structure123";
             var bottomLevel = 30.0;
             var structureGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, ""),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Orifice), ""),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                 }
             };
 
@@ -99,12 +95,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var sewerConnectionGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, "")
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, structureId, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
                 }
             };
 
@@ -139,8 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void AfterAddingAConnectionOrificeYouCanExtendItsDefinitionWithTheStructure()
         {
-            var typeDouble = "double";
-
             var orificeId = "orifice123";
             var bottomLevel = 30.0;
             var contractionCoef = 0.5;
@@ -150,11 +144,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, ""),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), ""),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), "", typeDouble),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), "", typeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.UniqueId, orificeId, string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.Orifice), string.Empty),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.BottomLevel, bottomLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.ContractionCoefficient, contractionCoef.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.MaxDischarge, maxDischarge.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                 }
             };
 

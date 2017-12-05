@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, string.Empty),
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
                 }
             };
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenGwswElementWithoutShapeDefined_WhenCreatingSewerProfile_ThenDefaultProfileIsReturned()
+        public void GivenGwswElementWithoutShapeDefined_WhenCreatingSewerProfile_ThenNullValusIsReturned()
         {
             var expectedProfileId = "MyProfile";
             var sewerProfileGwswElement = new GwswElement
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, "")
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, string.Empty)
                 }
             };
             CreateProfileAndCheckForDefaultShape(sewerProfileGwswElement, expectedProfileId);
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, ""),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, expectedProfileId, string.Empty),
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
                 }
             };
@@ -114,8 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, ""),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, "")
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, string.Empty)
                 }
             };
             CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
@@ -132,9 +132,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, ""),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, ""),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", "")
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, string.Empty),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", string.Empty)
                 }
             };
             CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
@@ -149,10 +149,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, ""),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, ""),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", ""),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "2000", "")
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, string.Empty),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", string.Empty),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "2000", string.Empty)
                 }
             };
             CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");

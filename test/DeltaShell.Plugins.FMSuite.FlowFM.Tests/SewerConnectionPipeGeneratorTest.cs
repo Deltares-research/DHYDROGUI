@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, isPipe ? pipeId : string.Empty, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, "")
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, isPipe ? pipeId : string.Empty, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
                 }
             };
             var network = new HydroNetwork();
@@ -63,10 +63,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeId, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, "")
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeIndicator, pipeId, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, typeOfConnection, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
                 }
             };
             var network = new HydroNetwork();
@@ -128,10 +128,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, sewerDefinitionName, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection), ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, "")
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, sewerDefinitionName, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
                 }
             };
 
@@ -168,10 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Connection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, sewerDefinitionName, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection), ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, ""),
-                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, "")
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.CrossSectionDef, sewerDefinitionName, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.ClosedConnection), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
                 }
             };
 

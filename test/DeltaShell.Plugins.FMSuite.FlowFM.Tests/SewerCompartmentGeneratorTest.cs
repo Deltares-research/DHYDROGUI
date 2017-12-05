@@ -162,18 +162,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList =
                 {
-                    new GwswAttribute
-                    {
-                        ValueAsString = uniqueId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, "", null)
-                    }
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty)
                 }
             };
 
@@ -197,24 +187,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList =
                 {
-                    new GwswAttribute
-                    {
-                        ValueAsString = compartmentId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = unknownShapeValue,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.NodeShape, "MyDescription", null, "", null)
-                    }
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, compartmentId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, unknownShapeValue, string.Empty)
                 }
             };
 
@@ -237,24 +212,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList =
                 {
-                    new GwswAttribute
-                    {
-                        ValueAsString = compartmentId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = badlyFormattedEntry,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            keyValue, "MyDescription", null, "", null)
-                    }
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, compartmentId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(keyValue, badlyFormattedEntry, string.Empty)
                 }
             };
             var expectedPartOfMessage = "It was not possible to parse attribute";
@@ -286,24 +246,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList =
                 {
-                    new GwswAttribute
-                    {
-                        ValueAsString = uniqueId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, null, null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null,  null, null)
-                    },
-                    new GwswAttribute
-                    {
-                    ValueAsString = newBottomLevel.ToString(),
-                    GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                        ManholeMapping.PropertyKeys.BottomLevel, "MyDescription", null,  null, null)
-                    }
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.BottomLevel, newBottomLevel.ToString(), string.Empty, TypeDouble)
                 }
             };
 
@@ -401,24 +346,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ElementTypeName = SewerFeatureType.Node.ToString(),
                 GwswAttributeList =
                 {
-                    new GwswAttribute
-                    {
-                        ValueAsString = uniqueId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "string",
-                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription", null, "", null)
-                    },
-                    new GwswAttribute
-                    {
-                        ValueAsString = string.Empty,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 2, "MyColumnName", "double",
-                            manholePropertyKey, "MyDescription", null, "", null)
-                    }
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(manholePropertyKey, string.Empty, string.Empty)
                 }
             };
 
