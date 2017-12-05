@@ -15,6 +15,7 @@ class GWSWreader:
         model.nodes = self.readNodes2Dict()
         model.connections = self.readConnections2Dict()
         model.profiles = self.readProfiles2Dict()
+        model.structures = self.readStructures2Dict()
         return model
 
     def file2Dict(self, filePath):
@@ -97,7 +98,7 @@ class GWSWreader:
         return self.file2Dict(filePath)
 
     def readStructures2Dict(self):
-        filePath = os.path.join(self.dirPath, 'input_GWSW','Kunstwerken.csv')
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Kunstwerk.csv')
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KWK_TYP	Type hydraulisch component in het kunstwerk
         #BWS_NIV	Buitenwaterstand t.o.v. NAP

@@ -16,6 +16,7 @@ class FMwriter:
         self.writeRetentions(dirPath)
         self.writePipes(dirPath)
         self.writeProfiles(dirPath)
+        self.writeStructures(dirPath)
         self.writeFMnetwork(dirPath, "test")
         return True
 
@@ -315,6 +316,155 @@ class FMwriter:
         fileCSDef.close()
         return True
 
+    def writeStructures(self, dirPath):
+
+        #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #KWK_TYP	Type hydraulisch component in het kunstwerk
+        #BWS_NIV	Buitenwaterstand t.o.v. NAP
+        #PRO_BOK	Niveau binnenonderkant profiel t.o.v. NAP
+        #DRL_COE	Contractiecoëfficient doorlaatprofiel
+        #DRL_CAP	Maximale capaciteit doorlaat
+        #OVS_BRE	Breedte overstortdrempel / crest length
+        #OVS_NIV	Niveau overstortdrempel t.o.v. NAP / crest height
+        #OVS_COE	Afvoercoëfficient overstortdrempel
+        #PMP_CAP	Capaciteit van de individuele pomp
+        #PMP_AN1	Aanslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
+        #PMP_AF1	Afslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
+        #PMP_AN2	Aanslagniveau bovenstrooms (perszijde) pomp t.o.v. NAP
+        #PMP_AF2	Afslagniveau benedenstrooms (perszijde) pomp t.o.v. NAP
+        #QDH_NIV	Niveauverschil bij debiet-verhangrelatie
+        #QDH_DEB	Debietverschil bij debiet-verhangrelatie
+        #AAN_OVN	Aanname waarde OVS_NIV
+        #AAN_OVB	Aanname waarde OVS_BRE
+        #AAN_CAP	Aanname waarde PMP_CAP
+        #AAN_ANS	Aanname waarde PMP_ANS
+        #AAN_AFS	Aanname waarde PMP_AFS
+        #ALG_TOE	Toelichting bij deze regel
+
+        fileStructures = open(os.path.join(dirPath, 'output_inputFM', 'Structures.ini'), 'w')
+
+        #header
+        fileStructures.write('[General]\n')
+        fileStructures.write('majorVersion = 1\n')
+        fileStructures.write('minorVersion = 0\n')
+        fileStructures.write('fileType = structure\n')
+        fileStructures.write('\n')
+
+        for keyvalue in self.model.structures.items():
+
+            value = keyvalue[1]
+            type = value[1]
+            writePliz = False
+
+            if type == 'DRL':
+                writePliz = True
+                fileStructures.write('[Structure]\n')
+                fileStructures.write('type = orifice\n')
+                fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+
+                direction = self.getDirectionOfStructure(value[0])
+                if direction == '1_2':
+                    fileStructures.write('allowed_flow_dir = 2\n')
+                elif direction == '2_1':
+                    fileStructures.write('allowed_flow_dir = 3\n')
+                else:
+                    fileStructures.write('allowed_flow_dir = 1\n')
+
+                fileStructures.write('bottom_level = ' + self.to2Dec(value[3]) + '\n')
+                fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[4]) + '\n')
+                if value[5] != '':
+                    fileStructures.write('capacity = ' + self.to2Dec(value[5]) + '\n')
+                fileStructures.write('\n')
+
+            elif type == 'OVS':
+                writePliz = True
+                fileStructures.write('[Structure]\n')
+                fileStructures.write('type = weir\n')
+                fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+
+                direction = self.getDirectionOfStructure(value[0])
+                if direction == '1_2':
+                    fileStructures.write('allowed_flow_dir = 2\n')
+                elif direction == '2_1':
+                    fileStructures.write('allowed_flow_dir = 3\n')
+                else:
+                    fileStructures.write('allowed_flow_dir = 1\n')
+
+                fileStructures.write('crest_width = ' + self.to2Dec(value[6]) + '\n')
+                fileStructures.write('crest_level = ' + self.to2Dec(value[7]) + '\n')
+                fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[8]) + '\n')
+                fileStructures.write('\n')
+
+                #type              = gate
+                #polylinefile      = <edge.pli>
+                #sill_level        = <scalar (m)>
+                #door_height       = <scalar (m)>
+                #lower_edge_level  = <scalar (m)> | <timeseries.tim> | ...bct later
+                #opening_width     = <scalar (m)> | <timeseries.tim> | ...bct later
+                #horizontal_opening_direction = symmetric | from_left | from_right
+
+            elif type == 'PMP':
+                writePliz = True
+                fileStructures.write('[Structure]\n')
+                fileStructures.write('type = pump\n')
+                fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+                fileStructures.write('capacity = ' + self.to2Dec(value[9]) + '\n')
+
+                direction = self.getDirectionOfStructure(value[0])
+                if direction == '1_2':
+                    fileStructures.write('direction = 1\n')
+                elif direction == '2_1':
+                    fileStructures.write('direction = 2\n')
+                else:
+                    fileStructures.write('direction = 3\n')
+
+                if value[10] != '' and value[11] != '':
+                    fileStructures.write('start_level_suction_side = ' + self.to2Dec(value[10]) + '\n')
+                    fileStructures.write('stop_level_suction_side = ' + self.to2Dec(value[11]) + '\n')
+
+                if value[12] != '' and value[13] != '':
+                    fileStructures.write('start_level_delivery_side = ' + self.to2Dec(value[12]) + '\n')
+                    fileStructures.write('stop_level_delivery_side = ' + self.to2Dec(value[13]) + '\n')
+                direction = 1
+                fileStructures.write('reduction_factor_no_levels = 1.00\n')
+                fileStructures.write('\n')
+
+            if writePliz:
+                xyz = self.getXYZofStructure(value[0])
+                self.writePliFile(dirPath,value[0],xyz)
+
+        fileStructures.close()
+        return True
+
+    def writePliFile(self, dirPath, name, xyz):
+        plizFile = open(os.path.join(dirPath, 'output_inputFM', name + '.pli'), 'w')
+        plizFile.write(name + '\n')
+        plizFile.write('1    2\n')
+        plizFile.write(xyz[0] + '    ' + xyz[1] + '\n')
+        plizFile.close()
+        return True
+
+    def getXYZofStructure(self, id):
+        xyz = [0.0,0.0,0.0]
+        connection = self.model.connections[id]
+        nodeId = connection[1]
+        node = self.model.nodes[nodeId]
+        xyz[0] = node[3]
+        xyz[1] = node[4]
+        xyz[2] = connection[5]
+        return xyz
+
+    def getDirectionOfStructure(self, id):
+        connection = self.model.connections[id]
+        direction = connection[7]
+        return direction
+
+    ## writeFMnetwork documentation
+    # This fuction is going to prepare 1D Ugrid files
+    # Following code is just a DRAFT AND NEEDS SIGNIFICANT IMPROVEMENTS
         ## writeFMnetwork documentation
         # This fuction is going to prepare 1D Ugrid files
         # Following code is not a piece of art so please do improve it
