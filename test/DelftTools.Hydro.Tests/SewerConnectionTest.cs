@@ -4,6 +4,8 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -74,19 +76,26 @@ namespace DelftTools.Hydro.Tests
             var sewerConnection = new SewerConnection(sourceManhole, targetManhole);
             Assert.IsNotNull(sewerConnection);
 
-            Assert.IsNotNull(sewerConnection.Geometry);
-            Assert.IsTrue(sewerConnection.Geometry.IsValid);
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(sourcePoint.Coordinate));
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(targetPoint.Coordinate));
+            var connectionGeom = sewerConnection.Geometry;
+            var firstLength = connectionGeom.Length;
+            Assert.IsNotNull(connectionGeom);
+            Assert.IsTrue(connectionGeom.IsValid);
+            Assert.IsTrue(connectionGeom.Coordinates.Any());
+            Assert.IsTrue(connectionGeom.Coordinates.Contains(sourcePoint.Coordinate));
+            Assert.IsTrue(connectionGeom.Coordinates.Contains(targetPoint.Coordinate));
 
             //Change geometry now.
-            sourceManhole.Geometry = new Point(30, 30);
-            Assert.IsNotNull(sewerConnection.Geometry);
-            Assert.IsTrue(sewerConnection.Geometry.IsValid);
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Any());
-            Assert.IsFalse(sewerConnection.Geometry.Coordinates.Contains(sourcePoint.Coordinate));
-            Assert.IsTrue(sewerConnection.Geometry.Coordinates.Contains(targetPoint.Coordinate));
+            var newSourceCoordinate = new Coordinate(30, 30);
+            GeometryHelper.MoveCoordinate(sourceManhole.Geometry, 0, newSourceCoordinate.X - sourcePoint.X, newSourceCoordinate.Y - sourcePoint.Y);
+
+            Assert.IsNotNull(connectionGeom);
+            Assert.IsTrue(connectionGeom.IsValid);
+            Assert.IsTrue(connectionGeom.Coordinates.Any());
+
+            Assert.IsTrue(connectionGeom.Coordinates.Contains(targetPoint.Coordinate));
+            Assert.IsTrue(connectionGeom.Coordinates.Contains(newSourceCoordinate));
+
+            Assert.AreNotEqual(firstLength, connectionGeom.Length);
         }
 
         [Test]
