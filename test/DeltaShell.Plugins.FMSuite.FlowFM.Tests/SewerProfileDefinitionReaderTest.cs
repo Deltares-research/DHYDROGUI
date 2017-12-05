@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class SewerProfileDefinitionReaderTest : SewerFeatureFactoryTestHelper
     {
         private const string ProfileId = "PRO1";
-        private const string TypeDouble = "double";
 
         [TestCase(SewerFeatureType.Node)]
         [TestCase(SewerFeatureType.Connection)]
@@ -33,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CreateCsdShapeAndCheckForNull<CsdTrapezoidDefinitionReader>(profileGwswElement);
             CreateCsdShapeAndCheckForNull<CsdArchDefinitionReader>(profileGwswElement);
             CreateCsdShapeAndCheckForNull<CsdCunetteDefinitionReader>(profileGwswElement);
+            CreateCsdShapeAndCheckForNull<CsdDefaultDefinitionReader>(profileGwswElement);
         }
 
         private static void CreateCsdShapeAndCheckForNull<T>(GwswElement element) where T : ISewerProfileDefinitionReader, new()
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(csDefinition);
         }
 
-        #region Circle shape cross section
+        #region Circle sewer profile shape
 
         [Test]
         public void GivenGwswElement_WhenReadingSewerProfileCircleDefinition_ThenReturnCircleShapeWithCorrectPropertyValues()
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region Rectangle shape cross section
+        #region Rectangle sewer profile shape
 
         [Test]
         public void GivenGwswElement_WhenReadingSewerProfileRectangleDefinition_ThenReturnRectangleShapeWithCorrectPropertyValues()
@@ -126,8 +126,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region Egg shape cross section
-        
+        #region Egg sewer profile shape
+
         [Test]
         public void GivenGwswElement_WhenReadingSewerProfileEggDefinition_ThenReturnEggShapeWithCorrectPropertyValues()
         {
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region Cunette shape cross section
+        #region Cunette sewer profile shape
 
         [Test]
         public void GivenGwswElement_WhenReadingSewerProfileCunetteDefinition_ThenReturnCunetteShapeWithCorrectPropertyValues()
@@ -312,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region Arch shape cross section
+        #region Arch sewer profile shape
 
         [Test]
         public void GivenGwswElement_WhenReadingSewerProfileArchDefinition_ThenReturnArchShapeWithCorrectPropertyValues()
@@ -364,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region Trapezoid shape cross section
+        #region Trapezoid sewer profile shape
 
         [TestCase("2,5", "1,5")]
         [TestCase("2.5", "1.5")]
@@ -472,8 +472,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
+        #region Default sewer profile shape
+
+        [Test]
+        public void GivenDefaultDefinitionReader_WhenReadingSewerProfileDefinition_ThenReturnDefaultDefinitionAlways()
+        {
+            var gwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString()
+            };
+            var defaultReader = new CsdDefaultDefinitionReader();
+            var csDefinition = defaultReader.ReadSewerProfileDefinition(gwswElement) as CrossSectionDefinitionStandard;
+            Assert.NotNull(csDefinition);
+
+            var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
+            Assert.NotNull(csShape);
+            Assert.That(csShape.Diameter, Is.EqualTo(0.4));
+        }
+
+        [Test]
+        public void GivenDefaultDefinitionReader_WhenReadingSewerProfileDefinition_ThenLogMessage()
+        {
+            var profileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
+                }
+            };
+            var defaultReader = new CsdDefaultDefinitionReader();
+            var expectedMessage =
+                "Shape was not defined for sewer profile 'PRO1' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => defaultReader.ReadSewerProfileDefinition(profileGwswElement), expectedMessage);
+        }
+
+        #endregion
+
         #region Test helpers
-        
+
         private static void CreateCsdShapeAndCheckProperties<TReader, TShape>(GwswElement gwswElement, double expectedWidth, double expectedHeight) 
             where TReader : ISewerProfileDefinitionReader, new() 
             where TShape : CrossSectionStandardShapeWidthHeightBase, new()
@@ -529,6 +566,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             TestHelper.AssertAtLeastOneLogMessagesContains(
                 () => logger.LogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion(profileGwswElement, 2000.0, 1.5, "(2:3)", csShape),
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 2000 mm and height is now 3000 mm.");
+        }
+
+        [Test]
+        public void GivenSewerProfileDefinitionLogger_WhenInvokingMessageForDefaultProfile_ThenMessageIsLogged()
+        {
+            var profileGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Crosssection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty)
+                }
+            };
+            
+            var logger = new SewerProfileDefinitionLogger<CsdEggDefinitionReader>();
+            var expectedMessage =
+                "Shape was not defined for sewer profile 'PRO1' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.";
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => logger.MessageForDefaultProfile(profileGwswElement), expectedMessage);
         }
 
         #endregion

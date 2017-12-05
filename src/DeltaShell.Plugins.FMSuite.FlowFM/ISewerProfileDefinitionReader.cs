@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -11,6 +10,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     interface ISewerProfileDefinitionReader
     {
         ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement);
+    }
+
+    class CsdDefaultDefinitionReader : ISewerProfileDefinitionReader
+    {
+        private SewerProfileDefinitionLogger<CsdDefaultDefinitionReader> Log;
+
+        public CsdDefaultDefinitionReader()
+        {
+            Log = new SewerProfileDefinitionLogger<CsdDefaultDefinitionReader>();
+        }
+
+        public ICrossSectionDefinition ReadSewerProfileDefinition(GwswElement gwswElement)
+        {
+            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            Log.MessageForDefaultProfile(gwswElement);
+            var csRoundShape = new CrossSectionStandardShapeRound
+            {
+                Diameter = 0.4
+            };
+            return new CrossSectionDefinitionStandard(csRoundShape);
+        }
     }
 
     class CsdEggDefinitionReader : ISewerProfileDefinitionReader
@@ -266,6 +286,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var id = gwswElement?.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId)?.ValueAsString;
             Log.WarnFormat("Sewer profile '{0}' is missing its {1}. Default profile property values are used for this profile.", id, missingValuesText);
+        }
+
+        public void MessageForDefaultProfile(GwswElement gwswElement)
+        {
+            var id = gwswElement?.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId)?.ValueAsString;
+            Log.WarnFormat(Resources.SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_for_this_profile_, id);
         }
     }
 }

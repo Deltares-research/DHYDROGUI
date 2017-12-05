@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenGwswElementWithoutShapeDefined_WhenCreatingSewerProfile_ThenNullValusIsReturned()
+        public void GivenGwswElementWithoutShapeDefined_WhenCreatingSewerProfile_ThenNullValuesIsReturned()
         {
             var expectedProfileId = "MyProfile";
             var sewerProfileGwswElement = new GwswElement
