@@ -270,6 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void ImportGwswFilesFromDefinitionFileLoadsAllElements()
         {
+            //This test should be replaced by a whole user case (import all files, check their values).
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var gwswImporter = new GwswFileImporterBase();
             Assert.IsNotNull(gwswImporter);
@@ -312,7 +313,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [TestCase(@"gwswFiles\Profiel.csv")]
         [TestCase(@"gwswFiles\Verbinding.csv")]
         [TestCase(@"gwswFiles\Verloop.csv")]
-        [TestCase(@"gwswFiles\Profiel_duplicate_column_Id.csv")]
         public void ImportGwswCsvFileWithLoadedGwswDefinition(string testCasePath)
         {
             //Load GWSW definition
@@ -363,7 +363,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [TestCase(@"gwswFiles\Profiel.csv")]
         [TestCase(@"gwswFiles\Verbinding.csv")]
         [TestCase(@"gwswFiles\Verloop.csv")]
-        [TestCase(@"gwswFiles\Profiel_duplicate_column_Id.csv")]
         public void ImportGwswCsvFileWithLoadedGwswDefinitionAsDataTables(string testCasePath)
         {
             //Load GWSW definition

@@ -363,6 +363,9 @@ namespace DelftTools.Hydro
 
             clone.Links = new EventedList<HydroLink>(Links);
 
+            //SewerProfiles
+            clone.SewerProfiles = new EventedList<ICrossSection>(SewerProfiles);
+
             return clone;
         }
 
