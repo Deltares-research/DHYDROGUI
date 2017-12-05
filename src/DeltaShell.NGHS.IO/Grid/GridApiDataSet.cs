@@ -50,7 +50,7 @@ namespace DeltaShell.NGHS.IO.Grid
             public const int TESTING_ERROR = -9999;
 
             public const int NF90_DOUBLE = 6;
-            public const double DEFAULT_FILL_VALUE = -999.9;
+            public const double DEFAULT_FILL_VALUE = -999.0;
 
         }
 

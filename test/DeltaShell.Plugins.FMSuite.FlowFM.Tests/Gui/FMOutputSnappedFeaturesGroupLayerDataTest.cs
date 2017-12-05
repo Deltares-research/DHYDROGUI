@@ -327,14 +327,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var groupLayerData = new FMOutputSnappedFeaturesGroupLayerData(loadedModel);
                 //Let's try to pull it up to 10.
                 var outputSnappedLayers = groupLayerData.CreateLayers().ToList();
-                var layersCount = outputSnappedLayers.Count;
-                
+
+                var outputSnappedLayerNames = outputSnappedLayers.Select(osl => osl.Name).ToList();
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Cross Sections"));
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Weirs"));
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Gates"));
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Fixed weirs"));
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Thin dams"));
+                Assert.IsTrue(outputSnappedLayerNames.Contains("Observation stations"));
+
+                /* If the assert below fails, did the FM kernel add support for more outputSnappedFeatures?
+                   See about adding them to the Asserts above^ */
+                Assert.AreEqual(6, outputSnappedLayers.Count, "Number of outputSnappedFeatures differs from expected");
+               
                 //Limitation from the tests. CreateLayers do not get disposed properly
                 outputSnappedLayers.ForEach(l => l.Dispose());
-                /* This test will most likely fail once the kernel gets updated. Instead of just replacing this number,
-                 consider opening the project file and add more 'output snapped features'. By doing so, more tests on this test fixture
-                 will fail as well. */
-                Assert.AreEqual(5, layersCount); 
                 
                 app.CloseProject();
             }

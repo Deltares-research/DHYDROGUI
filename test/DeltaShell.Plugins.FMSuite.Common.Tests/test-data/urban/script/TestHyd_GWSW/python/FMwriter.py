@@ -1,6 +1,7 @@
 import os
 from math import pi
 from netCDF4 import Dataset
+from collections import OrderedDict
 from datetime import *
 
 
@@ -13,11 +14,18 @@ class FMwriter:
     def writeAll(self, dirPath):  # write all fm files from GWSW model
         self.writeBoundaries(dirPath)
         self.writeRetentions(dirPath)
-        self.writeConnections(dirPath)
+        self.writePipes(dirPath)
+        self.writeProfiles(dirPath)
+        self.writeStructures(dirPath)
         self.writeFMnetwork(dirPath, "test")
         return True
 
+    def to2Dec(selfselft, strValue):
+        result = str("%.2f" % round(float(strValue),2))
+        return result;
+
     def writeBoundaries(self, dirPath):  # write boundaries ini and bc
+
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
@@ -64,20 +72,20 @@ class FMwriter:
 
         for keyvalue in self.model.nodes.items():
 
-            item = keyvalue[1]
+            value = keyvalue[1]
 
-            if str(item[14]) != 'UIT': # is not a boundary
+            if str(value[14]) != 'UIT': # is not a boundary
                 continue
 
             #location
             fileLocs.write('[Boundary]\n')
-            fileLocs.write('nodeId = ' + str(item[0]) + '\n')
+            fileLocs.write('nodeId = ' + str(value[0]) + '\n')
             fileLocs.write('type = 1\n')
             fileLocs.write('\n')
 
             #condition
             fileBc.write('[Boundary]\n')
-            fileBc.write('name = ' + str(item[0]) + '\n')
+            fileBc.write('name = ' + str(value[0]) + '\n')
             fileBc.write('function = constant\n')
             fileBc.write('time-interpolation = linear-extrapolate\n')
             fileBc.write('quantity = water_level\n')
@@ -92,7 +100,7 @@ class FMwriter:
 
 
     def writeRetentions(self, dirPath):  # write all manholes from GWSW model
-        filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
+
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
@@ -115,6 +123,7 @@ class FMwriter:
         #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
         #ALG_TOE	Toelichting bij deze regel
 
+        filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
         file = open(filePath, 'w')
 
         #header
@@ -125,9 +134,9 @@ class FMwriter:
 
         for keyvalue in self.model.nodes.items():
 
-            item = keyvalue[1]
+            value = keyvalue[1]
 
-            if str(item[14]) == 'UIT': # is a boundary
+            if str(value[14]) == 'UIT': # is a boundary
                 continue
 
             # [Retention]
@@ -141,116 +150,476 @@ class FMwriter:
             # area=0.0
             # streetLevel=0.0
             file.write('[Retention]\n')
-            file.write('id = ' + str(item[0]) + '\n')
-            file.write('name = ' + str(item[2]) + '\n')
-            file.write('nodeId = ' + str(item[0]) + '\n')
-            file.write('manholeId = ' + str(item[2]) + '\n')
+            file.write('id = ' + str(value[0]) + '\n')
+            file.write('name = ' + str(value[2]) + '\n')
+            file.write('nodeId = ' + str(value[0]) + '\n')
+            file.write('manholeId = ' + str(value[2]) + '\n')
             file.write('storageType = Closed\n')
             file.write('useTable = 0\n')
-            file.write('bedLevel = ' + str(item[11]) + '\n')
+            file.write('bedLevel = ' + str(value[11]) + '\n')
 
             area = 0.0
-            br = (float(item[12]) / 100)
-            l = (float(item[13]) / 100)
+            br = (float(value[12]) / 100)
+            l = (float(value[13]) / 100)
 
-            if str(item[11]) == 'RND':
+            if str(value[11]) == 'RND':
                 area = pi * br**2
             else:
                 area = br * l
 
-            areaStr  = str("%.2f" % round(area,2))
+            areaStr  = self.to2Dec(area)
 
             file.write('area = ' + areaStr + '\n')
-            file.write('streetLevel = ' + str(item[6]) + '\n')
+            file.write('streetLevel = ' + str(value[6]) + '\n')
             file.write('\n')
         file.close()
         return True
 
-    def writeConnections(self, dirPath):  # write all fm files from GWSW model
-        filePath = os.path.join(dirPath, 'output_inputFM', 'pipes.ini')
-        # UNIQUE_ID	UNI_IDE
-        # NODE_ID_START	UNI_ID1
-        # NODE_ID_END	UNI_ID2
-        # network_branch_id
-        # PIPE_TYPE	LEI_TYP
-        # LEVEL_START	BOB_IDE1
-        # LEVEL_END	BOB_IDE2
-        # LENGTH	VRB_LEN
-        # CROSS_SECTION_DEF	PRO_DEF
-        file = open(filePath, 'w')
-        for key, value in sorted(self.model.connections.items()):
-            # type
-            # Doorlaat	DRL
+    def writePipes(self, dirPath):  # write pipes described as crossections from GWSW model
+
+        #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #KN1_IDE	Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
+        #KN2_IDE	Identificatie knooppunt 2. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
+        #VRB_TYP	Type verbinding
+        #LEI_IDE
+        #BOB_KN1	Binnenonderkant buis knooppunt 1 t.o.v. NAP
+        #BOB_KN2	Binnenonderkant buis knooppunt 2 t.o.v. NAP
+        #STR_RCH	Mogelijke stromingsrichting door verbinding
+        #VRB_LEN	Lengte van de leiding of de lengte die via het kunstwerk overbrugd wordt (bijvoorbeeld de lengte van de persleiding tussen pomp en lozingspunt)
+        #INZ_TYP	Type afvalwater dat wordt ingezameld
+        #INV_KN1	Instroomverliescoëfficient knooppunt 1
+        #UTV_KN1	Uitstroomverliescoëfficient knooppunt 1
+        #INV_KN2	Instroomverliescoëfficient knooppunt 2
+        #UTV_KN2	Uitstroomverliescoëfficient knooppunt 2
+        #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
+        #PRO_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #STA_OBJ	Status van het object
+        #AAN_BB1	Aanname waarde BOB_KN1
+        #AAN_BB2	Aanname waarde BOB_KN2
+        #INI_NIV	Initiële waterstand t.o.v. NAP
+        #ALG_TOE	Toelichting bij deze regel
+
+        fileCSLoc = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionLocations.ini'), 'w')
+        fileRough = open(os.path.join(dirPath, 'output_inputFM', 'Roughness_SewerSystem.ini'), 'w')
+
+        #header location
+        fileCSLoc.write('[General]\n')
+        fileCSLoc.write('majorVersion = 1\n')
+        fileCSLoc.write('minorVersion = 0\n')
+        fileCSLoc.write('fileType = crossLoc\n')
+        fileCSLoc.write('\n')
+
+        #header roughness
+        fileRough.write('[General]\n')
+        fileRough.write('majorVersion = 1\n')
+        fileRough.write('minorVersion = 0\n')
+        fileRough.write('fileType = roughness\n')
+        fileRough.write('\n')
+        fileRough.write('[Content]\n')
+        fileRough.write('sectionId = SewerSystem\n')
+        fileRough.write('flowDirection = False\n')
+        fileRough.write('interpolate = 1\n')
+        fileRough.write('globalType = 7\n')
+        fileRough.write('globalValue = 3.000\n')
+        fileRough.write('\n')
+
+        for keyvalue in self.model.connections.items():
+
+            value = keyvalue[1]
+
             # Gesloten leiding	GSL
-            # Infiltratieriool	ITR
-            # Open leiding	OPL
-            # Overstortdrempel	OVS
-            # Pomp	PMP
-            if str(value[2]) == 'GSL':
-                file.write('[pipe]\n')
-                file.write('id=' + str(key) + '\n')
-                file.write('node_id_start=' + str(value[0]) + '\n')
-                file.write('node_id_end=' + str(value[1]) + '\n')
-                file.write('network_branch_id=' + str(value[3]) + '\n')
-                # file.write('pipe_type'+str(value[1])+'\n')
-                file.write('level_start=' + str(value[4]) + '\n')
-                file.write('level_end=' + str(value[5]) + '\n')
-                # file.write('length'+str(value[7])+'\n')
-                # file.write('cross_section_def'+str(value[14])+'\n')
-                file.write('\n')
-        file.close()
+            if str(value[3]) != 'GSL':
+                    continue
+
+            #start
+            fileCSLoc.write('[CrossSection]\n')
+            fileCSLoc.write('id = ' + str(value[0]) + '_start\n')
+            fileCSLoc.write('branchid = ' + str(value[0]) + '\n')
+            fileCSLoc.write('chainage = 0.00\n')
+            fileCSLoc.write('shift = ' + self.to2Dec(value[5]) + '\n')
+            fileCSLoc.write('definition = ' + str(value[15]) + '\n')
+            fileCSLoc.write('\n')
+
+            #end
+            fileCSLoc.write('[CrossSection]\n')
+            fileCSLoc.write('id = ' + str(value[0]) + '_end\n')
+            fileCSLoc.write('branchid = ' + str(value[0]) + '\n')
+            length = str("%.2f" % round(float(value[8]),2))
+            fileCSLoc.write('chainage = ' + length + '\n')
+            fileCSLoc.write('shift = ' + self.to2Dec(value[6]) + '\n')
+            fileCSLoc.write('definition = ' + str(value[15]) + '\n')
+            fileCSLoc.write('\n')
+
+            #roughness
+            fileRough.write('[Definition]\n')
+            fileRough.write('branchId = ' + str(value[0]) + '\n')
+            fileRough.write('chainage = 0.00\n')
+            fileRough.write('value = 3.000\n')
+            fileRough.write('\n')
+
+        fileCSLoc.close()
+        fileRough.close()
         return True
+
+    def writeProfiles(self, dirPath):  # write all profiles from GWSW model
+
+        #PRO_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #PRO_MAT	Materiaal profiel
+        #PRO_VRM	Vorm profiel
+        #PRO_BRE	Breedte/diameter profiel
+        #PRO_HGT	Hoogte profiel
+        #OPL_HL1	Co-tangens helling 1
+        #OPL_HL2	Co-tangens helling 2
+        #PRO_NIV	Niveau boven b.o.b. Als er meerdere profielwaardes per niveau gelden, dan meerdere Profiel-regels opnemen met gelijke waarde van PRO_IDE. De waarde van PRO_NIV mag daarbij dus niet gelijk zijn
+        #PRO_NOP	Nat oppervlak bij niveau
+        #PRO_NOM	Natte omtrek bij niveau
+        #PRO_BRE	Breedte bij niveau
+        #AAN_PBR	Aanname profielbreedte
+        #ALG_TOE	Toelichting bij deze regel
+
+        fileCSDef = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionsDefinitions.ini'), 'w')
+
+        #header
+        fileCSDef.write('[General]\n')
+        fileCSDef.write('majorVersion = 1\n')
+        fileCSDef.write('minorVersion = 0\n')
+        fileCSDef.write('fileType = crossDef\n')
+        fileCSDef.write('\n')
+
+        for keyvalue in self.model.profiles.items():
+
+            value = keyvalue[1]
+
+            fileCSDef.write('[Definition]\n')
+            fileCSDef.write('id = ' + str(value[0]) + '\n')
+
+            w = float(value[3])
+            wString = str("%.2f" % round(w,2))
+            t = str(value[2])
+            if t == 'RND':
+                fileCSDef.write('type = circle\n')
+                fileCSDef.write('diameter = ' + wString + '\n')
+            elif t == 'EIV':
+                fileCSDef.write('type = egg\n')
+                fileCSDef.write('width = ' + wString + '\n')
+                fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
+            else:
+                fileCSDef.write('type = rectangle\n')
+                fileCSDef.write('width = ' + wString + '\n')
+                fileCSDef.write('height = ' + self.to2Dec(value[4]) + '\n')
+
+            fileCSDef.write('closed = 1\n')
+            fileCSDef.write('groundlayerUsed = 0\n')
+            fileCSDef.write('roughnessNames = SewerSystem\n')
+            fileCSDef.write('\n')
+
+        fileCSDef.close()
+        return True
+
+    def writeStructures(self, dirPath):
+
+        #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #KWK_TYP	Type hydraulisch component in het kunstwerk
+        #BWS_NIV	Buitenwaterstand t.o.v. NAP
+        #PRO_BOK	Niveau binnenonderkant profiel t.o.v. NAP
+        #DRL_COE	Contractiecoëfficient doorlaatprofiel
+        #DRL_CAP	Maximale capaciteit doorlaat
+        #OVS_BRE	Breedte overstortdrempel / crest length
+        #OVS_NIV	Niveau overstortdrempel t.o.v. NAP / crest height
+        #OVS_COE	Afvoercoëfficient overstortdrempel
+        #PMP_CAP	Capaciteit van de individuele pomp
+        #PMP_AN1	Aanslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
+        #PMP_AF1	Afslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
+        #PMP_AN2	Aanslagniveau bovenstrooms (perszijde) pomp t.o.v. NAP
+        #PMP_AF2	Afslagniveau benedenstrooms (perszijde) pomp t.o.v. NAP
+        #QDH_NIV	Niveauverschil bij debiet-verhangrelatie
+        #QDH_DEB	Debietverschil bij debiet-verhangrelatie
+        #AAN_OVN	Aanname waarde OVS_NIV
+        #AAN_OVB	Aanname waarde OVS_BRE
+        #AAN_CAP	Aanname waarde PMP_CAP
+        #AAN_ANS	Aanname waarde PMP_ANS
+        #AAN_AFS	Aanname waarde PMP_AFS
+        #ALG_TOE	Toelichting bij deze regel
+
+        fileStructures = open(os.path.join(dirPath, 'output_inputFM', 'Structures.ini'), 'w')
+
+        #header
+        fileStructures.write('[General]\n')
+        fileStructures.write('majorVersion = 1\n')
+        fileStructures.write('minorVersion = 0\n')
+        fileStructures.write('fileType = structure\n')
+        fileStructures.write('\n')
+
+        for keyvalue in self.model.structures.items():
+
+            value = keyvalue[1]
+            type = value[1]
+            writePliz = False
+
+            if type == 'DRL':
+                writePliz = True
+                fileStructures.write('[Structure]\n')
+                fileStructures.write('type = orifice\n')
+                fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+
+                direction = self.getDirectionOfStructure(value[0])
+                if direction == '1_2':
+                    fileStructures.write('allowed_flow_dir = 2\n')
+                elif direction == '2_1':
+                    fileStructures.write('allowed_flow_dir = 3\n')
+                else:
+                    fileStructures.write('allowed_flow_dir = 1\n')
+
+                fileStructures.write('bottom_level = ' + self.to2Dec(value[3]) + '\n')
+                fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[4]) + '\n')
+                if value[5] != '':
+                    fileStructures.write('capacity = ' + self.to2Dec(value[5]) + '\n')
+                fileStructures.write('\n')
+
+            elif type == 'OVS':
+                writePliz = True
+                fileStructures.write('[Structure]\n')
+                fileStructures.write('type = weir\n')
+                fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+
+                direction = self.getDirectionOfStructure(value[0])
+                if direction == '1_2':
+                    fileStructures.write('allowed_flow_dir = 2\n')
+                elif direction == '2_1':
+                    fileStructures.write('allowed_flow_dir = 3\n')
+                else:
+                    fileStructures.write('allowed_flow_dir = 1\n')
+
+                fileStructures.write('crest_width = ' + self.to2Dec(value[6]) + '\n')
+                fileStructures.write('crest_level = ' + self.to2Dec(value[7]) + '\n')
+                fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[8]) + '\n')
+                fileStructures.write('\n')
+
+                #type              = gate
+                #polylinefile      = <edge.pli>
+                #sill_level        = <scalar (m)>
+                #door_height       = <scalar (m)>
+                #lower_edge_level  = <scalar (m)> | <timeseries.tim> | ...bct later
+                #opening_width     = <scalar (m)> | <timeseries.tim> | ...bct later
+                #horizontal_opening_direction = symmetric | from_left | from_right
+
+            elif type == 'PMP':
+                writePliz = True
+                fileStructures.write('[Structure]\n')
+                fileStructures.write('type = pump\n')
+                fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+                fileStructures.write('capacity = ' + self.to2Dec(value[9]) + '\n')
+
+                direction = self.getDirectionOfStructure(value[0])
+                if direction == '1_2':
+                    fileStructures.write('direction = 1\n')
+                elif direction == '2_1':
+                    fileStructures.write('direction = 2\n')
+                else:
+                    fileStructures.write('direction = 3\n')
+
+                if value[10] != '' and value[11] != '':
+                    fileStructures.write('start_level_suction_side = ' + self.to2Dec(value[10]) + '\n')
+                    fileStructures.write('stop_level_suction_side = ' + self.to2Dec(value[11]) + '\n')
+
+                if value[12] != '' and value[13] != '':
+                    fileStructures.write('start_level_delivery_side = ' + self.to2Dec(value[12]) + '\n')
+                    fileStructures.write('stop_level_delivery_side = ' + self.to2Dec(value[13]) + '\n')
+                direction = 1
+                fileStructures.write('reduction_factor_no_levels = 1.00\n')
+                fileStructures.write('\n')
+
+            if writePliz:
+                xyz = self.getXYZofStructure(value[0])
+                self.writePliFile(dirPath,value[0],xyz)
+
+        fileStructures.close()
+        return True
+
+    def writePliFile(self, dirPath, name, xyz):
+        plizFile = open(os.path.join(dirPath, 'output_inputFM', name + '.pli'), 'w')
+        plizFile.write(name + '\n')
+        plizFile.write('1    2\n')
+        plizFile.write(xyz[0] + '    ' + xyz[1] + '\n')
+        plizFile.close()
+        return True
+
+    def getXYZofStructure(self, id):
+        xyz = [0.0,0.0,0.0]
+        connection = self.model.connections[id]
+        nodeId = connection[1]
+        node = self.model.nodes[nodeId]
+        xyz[0] = node[3]
+        xyz[1] = node[4]
+        xyz[2] = connection[5]
+        return xyz
+
+    def getDirectionOfStructure(self, id):
+        connection = self.model.connections[id]
+        direction = connection[7]
+        return direction
 
     ## writeFMnetwork documentation
     # This fuction is going to prepare 1D Ugrid files
     # Following code is just a DRAFT AND NEEDS SIGNIFICANT IMPROVEMENTS
+        ## writeFMnetwork documentation
+        # This fuction is going to prepare 1D Ugrid files
+        # Following code is not a piece of art so please do improve it
+
     def writeFMnetwork(self, dirPath, name):
         ### NETCDF approach
         output_file = os.path.join(dirPath, 'output_inputFM', name + "_net.nc")
-        print("OWN NETCDF")
-        outformat = "NETCDF3_CLASSIC"
 
-        ncfile = Dataset(output_file,'w',format=outformat)
+        # File format:
+        outformat = "NETCDF4"
+        # File where we going to write
+        ncfile = Dataset(output_file, 'w', format=outformat)
 
+        # dimensions of the network
         nodes_nr = len(self.model.nodes)
         edges_nr = len(self.model.connections)
 
-        print("Amount of nodes:",nodes_nr )
-        print("Amount of connections:", edges_nr)
+        # Temporary dictionary to store the id number of the nodes and branches
+        node_order = OrderedDict()
+        con_order = OrderedDict()
 
+        # Definition of the network dimensions
+        ncfile.createDimension("nNetworkBranches", edges_nr)
         ncfile.createDimension("nNetworkNodes", nodes_nr)
-
-        ncfile.createDimension("nMeshEdges",edges_nr)
-        ncfile.createDimension("nMeshNodes", nodes_nr)
+        ncfile.createDimension("nGeometryNodes", nodes_nr)
+        ncfile.createDimension("nMesh1DEdges", edges_nr)
+        ncfile.createDimension("nMesh1DNodes", edges_nr + 1)
         ncfile.createDimension("Two", 2)
-        ncfile.createDimension("instance", 1)
 
         # global attributes
         ncfile.Conventions = "CF-1.8 UGRID-1.0/Deltares-0.91"
-        ncfile.history = "Created on %s D-Flow 1D" % datetime.now()
+        ncfile.history = "Created on {} D-Flow 1D, D-Flow FM".format(datetime.now())
         ncfile.institution = "Deltares"
         ncfile.reference = "http://www.deltares.nl"
         ncfile.source = "Python script to prepare D-Flow FM 1D network"
 
-        branch_x = ncfile.createVariable("network1D_geom_x", "f8", ("nNetworkNodes"))
-        branch_x.standard_name = 'projection_x_coordinate'
-        branch_x.units = 'm'
-        branch_x.cf_role = "geometry_x_node"
+        # geometry
+        ntw = ncfile.createVariable("network1D", "u4", ())
+        ntw.cf_role = 'mesh_topology'
+        ntw.edge_dimension = 'nNetworkBranches'
+        ntw.edge_geometry = 'network1D_geometry'
+        ntw.edge_node_connectivity = 'network1D_edge_nodes'
+        ntw.long_name = "Network topology"
+        ntw.node_coordinates = 'network1D_nodes_x network1D_nodes_y'
+        ntw.node_dimension = 'nNetworkNodes'
+        ntw.topology_dimension = 1
 
-        branch_y = ncfile.createVariable("network1D_geom_y", "f8", ("nNetworkNodes"))
-        branch_y.standard_name = 'projection_y_coordinate'
-        branch_y.units = 'm'
-        branch_y.cf_role = "geometry_y_node"
+        ntw_nodes_id = ncfile.createVariable("network1D_node_id", "str", "nNetworkNodes")
+        ntw_nodes_id.standard_name = 'network1D_node_id_name'
+        ntw_nodes_id.long_name = "The identification name of the node"
 
-        i=0
+        ntw_nodes_x = ncfile.createVariable("network1D_nodes_x", "f8", "nNetworkNodes")
+        ntw_nodes_x.standard_name = 'projection_x_coordinate'
+        ntw_nodes_x.long_name = "x coordinates of the network connection nodes"
+        ntw_nodes_x.units = 'm'
+
+        ntw_nodes_y = ncfile.createVariable("network1D_nodes_y", "f8", "nNetworkNodes")
+        ntw_nodes_y.standard_name = 'projection_y_coordinate'
+        ntw_nodes_y.long_name = "y coordinates of the network connection nodes"
+        ntw_nodes_y.units = 'm'
+
+        i = 0
         for key in self.model.nodes.keys():
-            print(key)
-            print(self.model.nodes[key][2],self.model.nodes[key][3])
-            branch_x[i]= self.model.nodes[key][2]
-            branch_y[i] = self.model.nodes[key][3]
-            i+=1
-        print(i)
-        print(branch_x)
-        print(branch_y)
+            ntw_nodes_id[i] = self.model.nodes[key][0]
+            ntw_nodes_x[i] = self.model.nodes[key][3]
+            ntw_nodes_y[i] = self.model.nodes[key][4]
+            node_order[key] = i + 1
+            i += 1
 
+        ntw_geom = ncfile.createVariable("network1D_geometry", "u4", ())
+        ntw_geom.geometry_type = 'multiline'
+        ntw_geom.long_name = "1D Geometry"
+        ntw_geom.node_count = "nGeometryNodes"
+        ntw_geom.part_node_count = 'network1D_part_node_count'
+        ntw_geom.node_coordinates = 'network1D_geom_x network1D_geom_y'
+
+        ntw_geom_x = ncfile.createVariable("network1D_geom_x", "f8", ("nGeometryNodes"))
+        ntw_geom_x.standard_name = 'projection_x_coordinate'
+        ntw_geom_x.units = 'm'
+        ntw_geom_x.cf_role = "geometry_x_node"
+        ntw_geom_x.long_name = 'x coordinates of the branch geometries'
+
+        ntw_geom_y = ncfile.createVariable("network1D_geom_y", "f8", ("nGeometryNodes"))
+        ntw_geom_y.standard_name = 'projection_y_coordinate'
+        ntw_geom_y.units = 'm'
+        ntw_geom_y.cf_role = "geometry_y_node"
+        ntw_geom_y.long_name = 'y coordinates of the branch geometries'
+
+        # Note we could use the code that is above
+        # In this case geometry and network are the same
+        i = 0
+        for key in self.model.nodes.keys():
+            ntw_geom_x[i] = self.model.nodes[key][3]
+            ntw_geom_y[i] = self.model.nodes[key][4]
+            i += 1
+
+        # mesh1D
+
+        mesh1d = ncfile.createVariable("mesh1D", "u4", ())
+        mesh1d.cf_role = 'mesh_topology'
+        mesh1d.coordinate_space = 'network1D'
+        mesh1d.edge_dimension = 'nmesh1DEdges'
+        mesh1d.edge_node_connectivity = 'mesh1D_edge_nodes'
+        mesh1d.long_name = "Mesh 1D"
+        mesh1d.node_coordinates = 'mesh1D_nodes_branch_id mesh1D_nodes_branch_offset'
+        mesh1d.node_dimension = 'nmesh1DNodes'
+        mesh1d.topology_dimension = 1
+
+        mesh1d_branch_id_name = ncfile.createVariable("mesh1D_branch_id", "str", "nMesh1DNodes")
+        mesh1d_branch_id_name.cf_role = 'feature_name'
+        mesh1d_branch_id_name.long_name = 'name of branch on which node is located'
+
+        mesh1d_branch_id = ncfile.createVariable("mesh1D_nodes_branch_id", "u4", "nMesh1DNodes")
+        mesh1d_branch_id.cf_role = 'feature_index'
+        mesh1d_branch_id.long_name = 'number of branch on which node is located'
+        i = 0
+        for key in self.model.connections.keys():
+            con_order[key] = i
+            if i == 0:
+                mesh1d_branch_id[0] = con_order[self.model.connections[key][0]]
+                mesh1d_branch_id[1] = con_order[self.model.connections[key][0]]
+                mesh1d_branch_id_name[0] = self.model.connections[key][0]
+                mesh1d_branch_id_name[1] = self.model.connections[key][0]
+                i = 1
+            else:
+                mesh1d_branch_id[i] = con_order[self.model.connections[key][0]]
+                mesh1d_branch_id_name[i] = self.model.connections[key][0]
+            i += 1
+
+        #######-------------------------------------
+        # This is a bit out of place due to the con_order which is filled above
+        ntw_edge_node = ncfile.createVariable("network1D_edge_nodes", "u4", ("nNetworkBranches", "Two"))
+        ntw_edge_node.cf_role = 'edge_node_connectivity'
+        ntw_edge_node.long_name = 'start and end nodes of each branch in the network'
+        ntw_edge_node.start_index = 1
+        i = 0
+        for key in self.model.connections.keys():
+            ntw_edge_node[i, :] = [node_order[self.model.connections[key][1]],
+                                   node_order[self.model.connections[key][2]]]
+            i += 1
+        #######-------------------------------------
+
+        mesh1d_geom_offset = ncfile.createVariable("mesh1D_nodes_branch_offset", "f8", "nMesh1DNodes")
+        mesh1d_geom_offset.cf_role = 'coordinate_on_feature'
+        mesh1d_geom_offset.long_name = 'offset along the branch at which the node is located'
+        mesh1d_geom_offset.units = 'm'
+        mesh1d_geom_offset[0] = 0.
+        i = 1
+        for key in self.model.connections.keys():
+            try:
+                mesh1d_geom_offset[i] = self.model.connections[key][8]
+            except:
+                # print("Empty or not a number in a cell")
+                mesh1d_geom_offset[i] = 1.
+            i += 1
+
+        # END OF THE NTWORK WRITER
         return True
