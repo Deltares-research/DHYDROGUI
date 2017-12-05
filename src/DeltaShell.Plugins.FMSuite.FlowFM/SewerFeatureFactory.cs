@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static GwswAttribute GetAuxGwswAttribute(string value, Type attrType, string keyValue)
         {
-            return new GwswAttribute()
+            return new GwswAttribute
             {
                 ValueAsString = value,
                 GwswAttributeType = new GwswAttributeType()
@@ -144,10 +144,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             GwswAttribute csIdAttribute;
             if (gwswElement == null || !gwswElement.IsValidGwswSewerProfile(out csIdAttribute)) return null;
-            var profileShapeId = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
 
-            var definitionReader = CrossSectionFactory(profileShapeId);
-            var readCrossSectionDefinition = definitionReader.ReadSewerProfileDefinition(gwswElement);
+            var definitionReader = gwswElement.GetCrossSectionDefinitionGenerator();
+            var readCrossSectionDefinition = definitionReader.GenerateSewerProfileDefinition(gwswElement);
             var crossSection = new CrossSection(readCrossSectionDefinition)
             {
                 Name = csIdAttribute.GetValidStringValue()
@@ -160,28 +159,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             return crossSection;
-        }
-    
-        private static ISewerProfileDefinitionReader CrossSectionFactory(GwswAttribute crossSectionTypeAttribute)
-        {
-            var structureType = GetValueFromDescription<SewerProfileMapping.SewerProfileType>(crossSectionTypeAttribute);
-            switch (structureType)
-            {
-                case SewerProfileMapping.SewerProfileType.Egg:
-                    return new CsdEggDefinitionReader();
-                case SewerProfileMapping.SewerProfileType.Arch:
-                    return new CsdArchDefinitionReader();
-                case SewerProfileMapping.SewerProfileType.Cunette:
-                    return new CsdCunetteDefinitionReader();
-                case SewerProfileMapping.SewerProfileType.Rectangle:
-                    return new CsdRectangleDefinitionReader();
-                case SewerProfileMapping.SewerProfileType.Circle:
-                    return new CsdCircleDefinitionReader();
-                case SewerProfileMapping.SewerProfileType.Trapezoid:
-                    return new CsdTrapezoidDefinitionReader();
-                default:
-                    return new CsdDefaultDefinitionReader();
-            }
         }
 
         #endregion

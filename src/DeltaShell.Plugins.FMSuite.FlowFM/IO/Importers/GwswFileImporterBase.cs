@@ -6,8 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -18,7 +16,6 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -401,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             if (gwswAttribute == null) return false;
 
-            if (!string.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
+            if (!String.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
                 gwswAttribute.GwswAttributeType != null &&
                 gwswAttribute.GwswAttributeType.AttributeType != null)
             {
@@ -457,7 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 value = Convert.ToDouble(gwswAttribute.ValueAsString, CultureInfo.InvariantCulture);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 gwswAttribute.LogErrorParseType(typeof(double));
             }
@@ -476,6 +473,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             var attr = gwswAttribute.GwswAttributeType;
             Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__, attr.FileName, attr.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
+        }
+
+        public static ISewerProfileDefinitionReader GetCrossSectionDefinitionGenerator(this GwswElement gwswElement)
+        {
+            var profileShapeAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
+            var structureType = SewerFeatureFactory.GetValueFromDescription<SewerProfileMapping.SewerProfileType>(profileShapeAttribute);
+            switch (structureType)
+            {
+                case SewerProfileMapping.SewerProfileType.Egg:
+                    return new CsdEggGenerator();
+                case SewerProfileMapping.SewerProfileType.Arch:
+                    return new CsdArchGenerator();
+                case SewerProfileMapping.SewerProfileType.Cunette:
+                    return new CsdCunetteGenerator();
+                case SewerProfileMapping.SewerProfileType.Rectangle:
+                    return new CsdRectangleGenerator();
+                case SewerProfileMapping.SewerProfileType.Circle:
+                    return new CsdCircleGenerator();
+                case SewerProfileMapping.SewerProfileType.Trapezoid:
+                    return new CsdTrapezoidGenerator();
+                default:
+                    return new CsdDefaultShapeGenerator();
+            }
         }
     }
 
