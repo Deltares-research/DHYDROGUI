@@ -3,7 +3,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using log4net;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -491,10 +490,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
-        #region SewerDictionaryExtensions
+        #region SewerProfileDefinitionLogger
 
         [Test]
-        public void GivenLogger_WhenInvokingMessageForMissingValues_ThenMessageIsLogged()
+        public void GivenSewerProfileDefinitionLogger_WhenInvokingMessageForMissingValues_ThenMessageIsLogged()
         {
             var missingValuesText = "key values";
             var profileGwswElement = new GwswElement
@@ -513,7 +512,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenLogger_WhenInvokingLogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion_ThenMessageIsLogged()
+        public void GivenSewerProfileDefinitionLogger_WhenInvokingLogMessageInCaseSewerShapeWidthHeightAreNotInCorrectProportion_ThenMessageIsLogged()
         {
             var profileGwswElement = new GwswElement
             {
