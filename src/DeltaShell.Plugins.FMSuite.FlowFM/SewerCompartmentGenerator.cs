@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
          INetworkFeatures */
         private static ILog Log = LogManager.GetLogger(typeof(SewerCompartmentGenerator));
 
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement == null) return null;
             var manhole = CreateCompartmentForManhole<Compartment>(gwswElement, network);
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var compartment = FindOrGetNewCompartment<T>(gwswElement, network);
 
-            SetCompartmentAttributes(compartment, gwswElement, network);
+            SetCompartmentAttributes(compartment, gwswElement);
             var manhole = GetNewOrExistingManholeFromGwswElement(gwswElement, network);
             if( !manhole.ContainsCompartment(compartment.Name))
                 manhole.Compartments.Add(compartment);
@@ -97,7 +97,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return parentManhole;
         }
-
 
         protected static Manhole GetNewOrExistingManholeFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
         {
@@ -140,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return parentManhole;
         }
 
-        private static void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement, IHydroNetwork network)
+        private static void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement)
         {
             // Set the rest of manhole values
             var auxDouble = 0.0;
@@ -165,8 +164,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 compartment.SurfaceLevel = auxDouble;
 
             /* Coordinates are not set in the ManholeGenerator*/
-
-
             // Set shape value of the manhole
             var nodeShape = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
             if(nodeShape.IsValidAttribute())

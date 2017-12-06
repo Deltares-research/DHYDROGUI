@@ -14,16 +14,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerConnectionGenerator));
 
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement == null) return null;
+            if (!gwswElement.IsValidGwswSewerConnection()) return null;
             return CreateSewerConnection<SewerConnection>(gwswElement, network);
         }
 
         protected static T CreateSewerConnection<T>(GwswElement gwswElement, IHydroNetwork network = null, Action<T, GwswElement, IHydroNetwork> connectionAction = null) where T : SewerConnection, new()
         {
-            /* First we need to check whether there are target and source nodes, otherwise we will not create this sewer connection.*/
-            if (!gwswElement.IsValidGwswSewerConnection()) return null;
+            if (gwswElement == null) return null;
 
             //Now we are free to create the connection.
             var connection = FindOrGetNewConnection<T>(gwswElement, network);
@@ -133,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 });
         }
 
-        public static Manhole GetNewManholeForSewerCompartment(string compartmentName)
+        private static Manhole GetNewManholeForSewerCompartment(string compartmentName)
         {
             var manholePlaceholder = new Manhole(string.Format("Manhole_For_Compartment_{0}", compartmentName));
 

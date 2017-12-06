@@ -25,6 +25,143 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         #region Gwsw Attribute tests
 
         [Test]
+        public void GetEnumTypeFromGwswAttribute_ReturnsDefaultValueAndLogMessage_IfNotFound()
+        {
+            var elementName = "test_element";
+            var attributeTest = new GwswAttribute()
+            {
+                ValueAsString = elementName,
+                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(string) }
+            };
+
+            SewerConnectionWaterType value = SewerConnectionWaterType.FlowingRainWater;
+            //Just to make sure the test is setting the default value later on.
+            Assert.AreNotEqual(default(SewerConnectionWaterType), value);
+
+            var msg = String.Format(
+                Resources
+                    .SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax,
+                elementName);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>(), msg);
+
+            Assert.IsNotNull(value);
+            Assert.AreEqual(default(SewerConnectionWaterType), value);
+        }
+
+        [Test]
+        public void GetEnumTypeFromGwswAttribute_ReturnsCorrectValue_IfFound()
+        {
+            var elementName = "DWA";
+            var attributeTest = new GwswAttribute()
+            {
+                ValueAsString = elementName,
+                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(string)}
+            };
+
+            var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(SewerConnectionWaterType.DryWeatherRainage, value);
+        }
+
+        [Test]
+        public void GwswAttributeIsValid_ReturnsFalseWithoutLogMessageIfNoTypeIsPresent()
+        {
+            var emptyAttribute = new GwswAttribute(){ GwswAttributeType = new GwswAttributeType()};
+            var value = true;
+
+            var msg = string.Format(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_, null, 0, null);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => value = emptyAttribute.IsValidAttribute(), msg);
+            Assert.IsFalse(value);
+        }
+
+        [Test]
+        public void GwswAttributeIsValid_ReturnsTrueIfEverythingIsPresent()
+        {
+            var emptyAttribute = new GwswAttribute() { ValueAsString = "test", GwswAttributeType = new GwswAttributeType() };
+            Assert.IsTrue(emptyAttribute.IsValidAttribute());
+        }
+
+        [Test]
+        public void GwswAttributeIsValid_ReturnsFalseIfNoTypeIsPresent()
+        {
+            var emptyAttribute = new GwswAttribute(){ GwswAttributeType = new GwswAttributeType() };
+            Assert.IsFalse(emptyAttribute.IsValidAttribute());
+        }
+
+        [Test]
+        public void GwswAttribute_IsTypeOfInt_Test()
+        {
+            var attr = new GwswAttribute()
+            {
+                GwswAttributeType = new GwswAttributeType() {AttributeType = typeof(int)}
+            };
+            Assert.IsTrue(attr.IsTypeOf(typeof(int)));
+            Assert.IsFalse(attr.IsTypeOf(typeof(double)));
+            Assert.IsFalse(attr.IsTypeOf(typeof(string)));
+        }
+
+        [Test]
+        public void GwswAttribute_IsTypeOfDouble_Test()
+        {
+            var attr = new GwswAttribute()
+            {
+                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(double) }
+            };
+            Assert.IsFalse(attr.IsTypeOf(typeof(int)));
+            Assert.IsTrue(attr.IsTypeOf(typeof(double)));
+            Assert.IsFalse(attr.IsTypeOf(typeof(string)));
+        }
+
+        [Test]
+        public void GwswAttribute_IsTypeOfString_Test()
+        {
+            var attr = new GwswAttribute()
+            {
+                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(string) }
+            };
+            Assert.IsFalse(attr.IsTypeOf(typeof(int)));
+            Assert.IsFalse(attr.IsTypeOf(typeof(double)));
+            Assert.IsTrue(attr.IsTypeOf(typeof(string)));
+        }
+
+        [Test]
+        public void GetElementLine_ReturnsLineIfAvailable()
+        {
+            var elementName = "DWA";
+            var gwswElement = new GwswElement()
+            {
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        ValueAsString = elementName,
+                        GwswAttributeType = new GwswAttributeType() {AttributeType = typeof(string), LineNumber = 2}
+                    }
+                }
+            };
+            Assert.AreEqual(2, gwswElement.GetElementLine());
+        }
+
+        [Test]
+        public void GetElementLine_ReturnsZeroIfNotAvailable()
+        {
+            var elementName = "DWA";
+            var gwswElement = new GwswElement()
+            {
+                GwswAttributeList = new List<GwswAttribute>()
+                {
+                    new GwswAttribute()
+                    {
+                        ValueAsString = elementName,
+                    }
+                }
+            };
+            Assert.AreEqual(0, gwswElement.GetElementLine());
+        }
+
+        [Test]
         public void GwswAttributeReturnsElementNameWithoutExtension()
         {
             var elementName = "test_element";

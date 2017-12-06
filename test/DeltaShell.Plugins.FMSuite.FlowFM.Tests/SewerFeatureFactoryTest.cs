@@ -17,6 +17,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class SewerFeatureFactoryTest: SewerFeatureFactoryTestHelper
     {
         [Test]
+        public void SewerFeatureFactory_AddStructureToBranch()
+        {
+            //SewerFeatureFactory.AddStructureToBranch();
+        }
+
+        [Test]
         public void SewerFeatureGetsAllHydrObjects()
         {
             var network = new HydroNetwork();

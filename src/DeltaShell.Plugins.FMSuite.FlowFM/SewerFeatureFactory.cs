@@ -222,21 +222,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Helpers
 
-        public static void AddStructureToBranch(ISewerConnection connection, IStructure structure)
-        {
-            structure.Branch = connection;
-            structure.Network = connection.Network;
-            structure.Chainage = 0;
-
-            if (connection.Geometry != null && connection.Geometry.Coordinates.Any())
-            {
-                structure.Geometry = new Point(connection.Geometry.Coordinates[0]);
-            }
-            structure.Name = connection.Name;
-
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, connection);
-        }
-
         private static double GetAverageCoordinate(IEnumerable<GwswAttribute> xCoords)
         {
             var cSum = 0.0;

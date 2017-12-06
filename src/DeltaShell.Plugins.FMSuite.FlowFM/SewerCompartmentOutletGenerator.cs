@@ -4,9 +4,9 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerCompartmentOutletGenerator : SewerCompartmentGenerator, ISewerNetworkFeatureGenerator
+    public class SewerCompartmentOutletGenerator : SewerCompartmentGenerator
     {
-        public new INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement == null) return null;
 

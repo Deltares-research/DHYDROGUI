@@ -15,6 +15,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #region Pipes
 
         [Test]
+        public void GeneratePipeFromGwswConnectionElementReturnsValidObject()
+        {
+            var startNode = "node001";
+            var endNode = "node002";
+            var nodeGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Connection.ToString(),
+                GwswAttributeList = new List<GwswAttribute>
+                {
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.PipeType, EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerConnectionMapping.ConnectionType.InfiltrationPipe), string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart, startNode, string.Empty),
+                    GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd, endNode, string.Empty)
+                }
+            };
+
+            var network = new HydroNetwork();
+            var element = new SewerConnectionPipeGenerator().Generate(nodeGwswElement, network);
+
+            //A sewer connection is created.
+            var pipe = element as IPipe;
+            Assert.IsNotNull(pipe);
+        }
+
+        [Test]
         [TestCase("GSL", true)]
         [TestCase("ITR", true)]
         [TestCase("OPL", true)]

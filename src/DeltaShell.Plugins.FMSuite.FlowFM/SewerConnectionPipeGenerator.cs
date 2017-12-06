@@ -7,9 +7,9 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerConnectionPipeGenerator: SewerConnectionGenerator, ISewerNetworkFeatureGenerator
+    public class SewerConnectionPipeGenerator: SewerConnectionGenerator
     {
-        public new INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement == null) return null;
             return CreateSewerConnection<Pipe>(gwswElement, network, SetPipeAttributes);
@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static void SetPipeAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network = null)
         {
-            var newPipe = element as Pipe;
+            var newPipe = element as IPipe;
             if (newPipe == null) return;
 
             var auxDouble = 0.0;

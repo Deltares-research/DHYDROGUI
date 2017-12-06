@@ -4,31 +4,24 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public class SewerConnectionOrificeGenerator: SewerConnectionGenerator, ISewerNetworkFeatureGenerator
+    public class SewerConnectionOrificeGenerator: SewerConnectionGenerator
     {
-        public new INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.IsValidGwswSewerConnection()) return CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network);
-            return CreateOrificeFromGwswStructure(gwswElement, network);
-        }
 
-        private INetworkFeature CreateOrificeFromGwswStructure(GwswElement gwswElement, IHydroNetwork network)
-        {
-            if (network == null)
-                return null;
-
-            var orifice = FindOrGetNewConnection<SewerConnectionOrifice>(gwswElement, network);
-            ExtendOrificeAttributes(gwswElement, orifice);
-
+            var orifice = CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network, ExtendOrificeAttributes);
             //Because it is read as a structure, it needs to be added in here (if it is not already)
-            if(! network.Branches.Contains(orifice))
+            if (network != null && !network.Branches.Contains(orifice))
                 network.Branches.Add(orifice);
-
             return orifice;
         }
 
-        private void ExtendOrificeAttributes(GwswElement gwswElement, SewerConnectionOrifice connection)
+        private void ExtendOrificeAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network = null)
         {
+            var connection = element as SewerConnectionOrifice;
+            if (connection == null) return;
+
             var auxDouble = 0.0;
             //Add Attributes
             var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
