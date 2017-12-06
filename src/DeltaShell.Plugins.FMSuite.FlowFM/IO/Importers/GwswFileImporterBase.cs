@@ -398,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             if (gwswAttribute == null) return false;
 
-            if (!String.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
+            if (!string.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
                 gwswAttribute.GwswAttributeType != null &&
                 gwswAttribute.GwswAttributeType.AttributeType != null)
             {
