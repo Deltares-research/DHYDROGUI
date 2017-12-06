@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var nodeShape = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
             if(nodeShape.IsValidAttribute())
             {
-                compartment.Shape = SewerFeatureFactory.GetValueFromDescription<CompartmentShape>(nodeShape);
+                compartment.Shape = nodeShape.GetValueFromDescription<CompartmentShape>();
             }
         }
     }

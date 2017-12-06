@@ -241,7 +241,7 @@
     <Compile Include="SewerConnectionMapping.cs" />
     <Compile Include="SewerConnectionOrificeGenerator.cs" />
     <Compile Include="SewerConnectionPipeGenerator.cs" />
-    <Compile Include="ISewerProfileDefinitionReader.cs" />
+    <Compile Include="ASewerProfileDefinitionReader.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
     <Compile Include="SewerPumpGenerator.cs" />

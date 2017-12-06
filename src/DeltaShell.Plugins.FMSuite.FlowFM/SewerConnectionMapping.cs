@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             [Description("GSL")] ClosedConnection /*Should be created as a pipe*/,
             [Description("ITR")] InfiltrationPipe /*Should be created as a pipe*/,
             [Description("OPL")] Open /*Should be created as a pipe*/,
-            [Description("OVS")] Crest,
+            [Description("OVS")] Weir,
             [Description("PMP")] Pump
         }
 

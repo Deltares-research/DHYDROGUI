@@ -1,21 +1,36 @@
 ﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
-    public interface ISewerProfileDefinitionReader
+    abstract class ASewerCrossSectionGenerator : ISewerNetworkFeatureGenerator
     {
-        ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement);
-    }
+        private static ILog Log = LogManager.GetLogger(typeof(ASewerCrossSectionGenerator));
+        public abstract INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network);
 
-    abstract class ASewerProfileDefinitionGenerator : ISewerProfileDefinitionReader
-    {
-        private static ILog Log = LogManager.GetLogger(typeof(ISewerProfileDefinitionReader));
-        public abstract ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement);
+        protected static CrossSection CreateCrossSection<TShape>(GwswElement gwswElement, IHydroNetwork network, TShape csRoundShape)
+            where TShape : CrossSectionStandardShapeBase
+        {
+            var csIdAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            var csDefinition = new CrossSectionDefinitionStandard(csRoundShape);
+            var crossSection = new CrossSection(csDefinition)
+            {
+                Name = csIdAttribute.GetValidStringValue()
+            };
+
+            if (network == null) return crossSection;
+            network.SewerProfiles.RemoveAllWhere(sp => sp.Definition.Name == crossSection.Name);
+            network.SewerProfiles.Add(crossSection);
+
+            return crossSection;
+        }
 
         protected void MessageForMissingValues(GwswElement gwswElement, string missingValuesText)
         {
@@ -47,9 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
     }
 
-    class CsdDefaultShapeGenerator : ASewerProfileDefinitionGenerator
+    class DefaultCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             MessageForDefaultProfile(gwswElement);
@@ -57,13 +72,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Diameter = 0.4
             };
-            return new CrossSectionDefinitionStandard(csRoundShape);
+            return CreateCrossSection(gwswElement, network, csRoundShape);
         }
     }
 
-    class CsdEggGenerator : ASewerProfileDefinitionGenerator
+    class EggCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
 
@@ -80,14 +95,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 csEggShape = CrossSectionStandardShapeEgg.CreateDefault();
                 MessageForMissingValues(gwswElement, "width");
             }
-            
-            return new CrossSectionDefinitionStandard(csEggShape);
+            return CreateCrossSection(gwswElement, network, csEggShape);
         }
     }
 
-    class CsdArchGenerator : ASewerProfileDefinitionGenerator
+    class ArchCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
 
@@ -111,13 +125,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 csArchShape = CrossSectionStandardShapeArch.CreateDefault();
                 MessageForMissingValues(gwswElement, "width and/or height");
             }
-            return new CrossSectionDefinitionStandard(csArchShape);
+            return CreateCrossSection(gwswElement, network, csArchShape);
         }
     }
 
-    class CsdCunetteGenerator : ASewerProfileDefinitionGenerator
+    class CunetteCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
 
@@ -134,14 +148,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 csCunetteShape = CrossSectionStandardShapeCunette.CreateDefault();
                 MessageForMissingValues(gwswElement, "width");
             }
-            
-            return new CrossSectionDefinitionStandard(csCunetteShape);
+            return CreateCrossSection(gwswElement, network, csCunetteShape);
         }
     }
 
-    class CsdRectangleGenerator : ASewerProfileDefinitionGenerator
+    class RectangleCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             
@@ -163,13 +176,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 csRectangleShape = CrossSectionStandardShapeRectangle.CreateDefault();
                 MessageForMissingValues(gwswElement, "width and/or height");
             }
-            return new CrossSectionDefinitionStandard(csRectangleShape);
+            return CreateCrossSection(gwswElement, network, csRectangleShape);
         }
     }
 
-    class CsdCircleGenerator : ASewerProfileDefinitionGenerator
+    class CircleCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             
@@ -185,13 +198,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 csRoundShape = CrossSectionStandardShapeRound.CreateDefault();
                 MessageForMissingValues(gwswElement, "width");
             }
-            return new CrossSectionDefinitionStandard(csRoundShape);
+            return CreateCrossSection(gwswElement, network, csRoundShape);
         }
     }
 
-    class CsdTrapezoidGenerator : ASewerProfileDefinitionGenerator
+    class TrapezoidCrossSectionGenerator : ASewerCrossSectionGenerator
     {
-        public override ICrossSectionDefinition GenerateSewerProfileDefinition(GwswElement gwswElement)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
             
@@ -221,7 +234,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else
             {
                 MessageForMissingValues(gwswElement, "width, height and/or slope");
-                return new CrossSectionDefinitionStandard(CrossSectionStandardShapeTrapezium.CreateDefault());
+                csTrapezoidShape = CrossSectionStandardShapeTrapezium.CreateDefault();
+                return CreateCrossSection(gwswElement, network, csTrapezoidShape);
             }
 
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
@@ -241,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 csTrapezoidShape = CrossSectionStandardShapeTrapezium.CreateDefault();
                 MessageForMissingValues(gwswElement, "width, height and/or slope");
             }
-            return new CrossSectionDefinitionStandard(csTrapezoidShape);
+            return CreateCrossSection(gwswElement, network, csTrapezoidShape);
         }
     }
 }

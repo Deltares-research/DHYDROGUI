@@ -44,10 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 connectionName = nodeIdString.ValueAsString;
             }
 
-            if (network == null) return new T(){ Name = connectionName};
+            if (network == null) return new T { Name = connectionName};
             var foundConnection = network.SewerConnections.OfType<T>().FirstOrDefault(sc => sc.Name.Equals(connectionName));
 
-            return foundConnection ?? new T() { Name = connectionName };
+            return foundConnection ?? new T { Name = connectionName };
         }
 
         private static void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement, IHydroNetwork network)
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 sewerConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString);
             }
 
-            var auxDouble = 0.0;
+            double auxDouble;
 
             var levelStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.LevelStart);
             if( levelStart.TryGetValueAsDouble(out auxDouble))
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (waterType.IsValidAttribute())
             {
                 //Find type
-                sewerConnection.WaterType = SewerFeatureFactory.GetValueFromDescription<SewerConnectionWaterType>(waterType);
+                sewerConnection.WaterType = waterType.GetValueFromDescription<SewerConnectionWaterType>();
             }
         }
 

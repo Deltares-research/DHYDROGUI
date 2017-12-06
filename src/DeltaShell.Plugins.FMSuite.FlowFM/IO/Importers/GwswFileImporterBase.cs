@@ -22,25 +22,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class GwswFileImporterBase : IFileImporter
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporterBase));
-        private char CsvDelimeterComma = ',';
-        private char CsvDelimeterSemiColon = ';';
-        private CsvSettings _csvSettings;
+        private const char CsvDelimeterComma = ',';
+        private const char CsvDelimeterSemiColon = ';';
+        private CsvSettings csvSettings;
 
         private CsvSettings CsvSettingsSemiColonDelimeted
         {
             get
             {
-                if (_csvSettings == null)
+                return csvSettings ?? (csvSettings = new CsvSettings
                 {
-                    _csvSettings = new CsvSettings
-                    {
-                        Delimiter = CsvDelimeterSemiColon,
-                        FirstRowIsHeader = true,
-                        SkipEmptyLines = true
-                    };
-                }
-                
-                return _csvSettings;
+                    Delimiter = CsvDelimeterSemiColon,
+                    FirstRowIsHeader = true,
+                    SkipEmptyLines = true
+                });
             }
         }
 
@@ -398,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             if (gwswAttribute == null) return false;
 
-            if (!string.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
+            if (!String.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
                 gwswAttribute.GwswAttributeType != null &&
                 gwswAttribute.GwswAttributeType.AttributeType != null)
             {
@@ -425,7 +420,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (attribute != null)
                 return attribute;
 
-            Log.WarnFormat(Resources.SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_, attributeName, element.ElementTypeName);
+            Log.WarnFormat(Resources.SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_, attributeName, element?.ElementTypeName);
             return null;
         }
 
@@ -461,6 +456,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return false;
         }
 
+        public static T GetValueFromDescription<T>(this GwswAttribute gwswAttribute)
+        {
+            var description = gwswAttribute.GetValidStringValue();
+            try
+            {
+                return (T)EnumDescriptionAttributeTypeConverter.GetEnumValue<T>(description);
+            }
+            catch (Exception)
+            {
+                Log.WarnFormat(Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, description);
+            }
+
+            return default(T);
+        }
+
         private static void LogInvalidAttribute(this GwswAttribute gwswAttribute)
         {
             if (gwswAttribute.GwswAttributeType == null) return;
@@ -473,29 +483,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             var attr = gwswAttribute.GwswAttributeType;
             Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__, attr.FileName, attr.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
-        }
-
-        public static ISewerProfileDefinitionReader GetCrossSectionDefinitionGenerator(this GwswElement gwswElement)
-        {
-            var profileShapeAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileShape);
-            var structureType = SewerFeatureFactory.GetValueFromDescription<SewerProfileMapping.SewerProfileType>(profileShapeAttribute);
-            switch (structureType)
-            {
-                case SewerProfileMapping.SewerProfileType.Egg:
-                    return new CsdEggGenerator();
-                case SewerProfileMapping.SewerProfileType.Arch:
-                    return new CsdArchGenerator();
-                case SewerProfileMapping.SewerProfileType.Cunette:
-                    return new CsdCunetteGenerator();
-                case SewerProfileMapping.SewerProfileType.Rectangle:
-                    return new CsdRectangleGenerator();
-                case SewerProfileMapping.SewerProfileType.Circle:
-                    return new CsdCircleGenerator();
-                case SewerProfileMapping.SewerProfileType.Trapezoid:
-                    return new CsdTrapezoidGenerator();
-                default:
-                    return new CsdDefaultShapeGenerator();
-            }
         }
     }
 
@@ -514,15 +501,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         public GwswAttributeType GwswAttributeType { get; set; }
 
-        private string _valueAsString;
+        private string valueAsString;
 
         public string ValueAsString
         {
             get
             {
-                return this.IsTypeOf(typeof(double)) ? ReplaceCommaWithPoint(_valueAsString) : _valueAsString;
+                return this.IsTypeOf(typeof(double)) ? ReplaceCommaWithPoint(valueAsString) : valueAsString;
             }
-            set { _valueAsString = value; }
+            set { valueAsString = value; }
         }
 
         public string DefaultValueAsString
@@ -542,19 +529,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public string Name { get; set; }
 
-        private string _elementName;
+        private string elementName;
 
         public string ElementName
         {
             get
             {
-                if (_elementName == null)
+                if (elementName == null)
                 {
-                    return _elementName;
+                    return elementName;
                 }
-                return Path.GetFileNameWithoutExtension(_elementName); /*The element names might contain extensions*/
+                return Path.GetFileNameWithoutExtension(elementName); /*The element names might contain extensions*/
             }
-            set { _elementName = value; }
+            set { elementName = value; }
         }
 
         public int LineNumber { get; set; }

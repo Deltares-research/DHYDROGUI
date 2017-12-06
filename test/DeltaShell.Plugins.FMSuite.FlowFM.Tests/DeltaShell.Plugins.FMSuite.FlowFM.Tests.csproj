@@ -316,7 +316,7 @@
     <Compile Include="SewerConnectionOrificeGeneratorTest.cs" />
     <Compile Include="SewerConnectionPipeGeneratorTest.cs" />
     <Compile Include="SewerManholeGeneratorTest.cs" />
-    <Compile Include="SewerProfileDefinitionReaderTest.cs" />
+    <Compile Include="SewerCrossSectionGeneratorTest.cs" />
     <Compile Include="SewerFeatureFactoryTest.cs" />
     <Compile Include="SewerFeatureFactoryTestHelper.cs" />
     <Compile Include="SewerProfileGenerationTest.cs" />
