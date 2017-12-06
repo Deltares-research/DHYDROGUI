@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
             MessageForDefaultProfile(gwswElement);
             var csRoundShape = new CrossSectionStandardShapeRound
             {
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
 
             double width;
             CrossSectionStandardShapeEgg csEggShape;
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
 
             double height;
             double width;
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
 
             double width;
             CrossSectionStandardShapeCunette csCunetteShape;
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
             
             double height;
             double width;
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
             
             double width;
             CrossSectionStandardShapeRound csRoundShape;
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement.ElementTypeName != SewerFeatureType.Crosssection.ToString()) return null;
+            if (!gwswElement.IsValidGwswSewerProfile()) return null;
             
             double width;
             double height;
