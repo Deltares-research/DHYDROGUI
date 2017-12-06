@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedCsv;
         }
 
-        public List<INetworkFeature> ImportFilesFromDefinitionFile(string path, HydroNetwork network = null)
+        public List<INetworkFeature> ImportFilesFromDefinitionFile(string path, IHydroNetwork network = null)
         {
             ImportDefinitionFile(path);
             Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, AttributesDefinition.Count);

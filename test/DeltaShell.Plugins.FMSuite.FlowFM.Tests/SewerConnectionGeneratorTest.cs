@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase("OVS", typeof(SewerConnection))]
         [TestCase("ITR", typeof(Pipe))]
         [TestCase("OPL", typeof(Pipe))]
-        [TestCase("DRL", typeof(SewerConnection))]
+        [TestCase("DRL", typeof(SewerConnectionOrifice))]
         [TestCase("PMP", typeof(SewerConnection))]
         public void CreateSewerConnectionMapsConnectionTypeFromFactory(string typeOfConnection, Type expectedType)
         {

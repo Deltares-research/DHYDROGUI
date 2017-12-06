@@ -20,8 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var orifice = FindOrGetNewConnection<SewerConnectionOrifice>(gwswElement, network);
             ExtendOrificeAttributes(gwswElement, orifice);
 
-            //Because it is read as a structure, it needs to be added in here.
-            network.Branches.Add(orifice);
+            //Because it is read as a structure, it needs to be added in here (if it is not already)
+            if(! network.Branches.Contains(orifice))
+                network.Branches.Add(orifice);
 
             return orifice;
         }

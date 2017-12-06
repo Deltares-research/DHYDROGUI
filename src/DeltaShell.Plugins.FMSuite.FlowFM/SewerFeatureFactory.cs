@@ -131,6 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (string.IsNullOrEmpty(sewerTypeAttribute?.ValueAsString)) return basicGenerator;
 
             if (sewerTypeAttribute.IsGwswPipe()) return new SewerConnectionPipeGenerator();
+            if (sewerTypeAttribute.IsGwswOrifice()) return new SewerConnectionOrificeGenerator();
 
             return sewerTypeAttribute.IsGwswPump() ? (ISewerNetworkFeatureGenerator)new SewerPumpGenerator() : basicGenerator;
         }
@@ -269,6 +270,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return nodeType == ManholeMapping.NodeType.Outlet;
         }
 
+        public static bool IsGwswOrifice(this GwswAttribute sewerTypeAttribute)
+        {
+            var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
+            return connectionType == SewerConnectionMapping.ConnectionType.Orifice;
+        }
+
         public static bool IsGwswPump(this GwswAttribute sewerTypeAttribute)
         {
             var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
@@ -325,13 +332,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static bool IsValidGwswSewerProfile(this GwswElement gwswElement)
         {
+            if (gwswElement == null) return false;
+
             var profileId = gwswElement?.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
             if (!profileId.IsValidAttribute())
             {
                 Log.Error(Resources.GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s);
                 return false;
             }
-            return true;
+
+            var featureType = (SewerFeatureType)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
+            return featureType == SewerFeatureType.Crosssection;
         }
     }
 }

@@ -16,7 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             //Get the parentmanhole and add the new outlet.
             var parentManhole = GetNewOrExistingManholeFromGwswElement(gwswElement, network);
-            parentManhole.Compartments.Add(newOutlet);
+            if (!parentManhole.ContainsCompartment(newOutlet.Name))
+            {
+                parentManhole.Compartments.Add(newOutlet);
+            }
 
             return parentManhole;
         }

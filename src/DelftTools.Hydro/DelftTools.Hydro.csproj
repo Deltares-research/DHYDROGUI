@@ -302,6 +302,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Uml\SewerFeatures.cd" />
     <None Include="Uml\CrossSectionDefinition.cd" />
     <None Include="Uml\DrainageBasin.cd" />
     <None Include="Uml\HydroArea.cd" />

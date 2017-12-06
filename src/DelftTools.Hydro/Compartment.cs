@@ -59,6 +59,14 @@ namespace DelftTools.Hydro
         /// The surface level of the manhole compared to Dutch NAP (m).
         /// </summary>
         public double SurfaceLevel { get; set; }
+
+        /// <summary>
+        /// The Compartment is an outlet
+        /// </summary>
+        public bool IsOutletCompartment()
+        {
+            return this is OutletCompartment;
+        }
     }
 
     public enum CompartmentShape

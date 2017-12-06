@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     public class GwswFileImporterTest
     {
         private static char csvDelimeter = ',';
-
         #region Gwsw Attribute tests
 
         [Test]
@@ -267,40 +266,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual( uniqueFileList.Count, importedTables.Count, string.Format("Not all files were imported correctly."));
         }
 
-        [Test]
-        public void ImportGwswFilesFromDefinitionFileLoadsAllElements()
-        {
-            //This test should be replaced by a whole user case (import all files, check their values).
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
-            var gwswImporter = new GwswFileImporterBase();
-            Assert.IsNotNull(gwswImporter);
-
-            try
-            {
-                var network = new HydroNetwork();
-                var importedObject = gwswImporter.ImportFilesFromDefinitionFile(filePath, network);
-                Assert.IsNotNull(importedObject);
-
-                var uniqueFileList = gwswImporter.AttributesDefinition.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
-                var expectedNumberOfElements = 0;
-
-                foreach (var fileName in uniqueFileList)
-                {
-                    var directoryName = Path.GetDirectoryName(filePath);
-                    var elementFilePath = Path.Combine(directoryName, fileName);
-                    Assert.IsTrue(File.Exists(elementFilePath));
-                    expectedNumberOfElements += File.ReadAllLines(elementFilePath).Length - 1;
-                }
-
-                Assert.AreNotEqual(expectedNumberOfElements, 0, "No elements were read correctly, so the test cannot compare imported and elements in the file.");
-                Assert.AreEqual(expectedNumberOfElements, importedObject.Count, "Not all elements were imported correctly. Other tests might be failing due to this.");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("While importing an exception was thrown {0}", e.Message);
-            }
-        }
-
         [TestCase(@"gwswFiles\BOP.csv")]
         [TestCase(@"gwswFiles\Debiet.csv")]
         [TestCase(@"gwswFiles\GroeneDaken.csv")]
@@ -489,7 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         #region Gwsw Import Elements
 
         [Test]
-        public void TestImportFromDefinitionFileCreatesAllSortOfElementsInNetwork()
+        public IHydroNetwork TestImportFromDefinitionFileCreatesAllSortOfElementsInNetwork()
         {
             var network = new HydroNetwork();
             Assert.IsFalse(network.Pipes.Any());
@@ -511,6 +476,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.SewerProfiles.Any());
             Assert.IsTrue(network.Pipes.Any());//There are some pipes defined within the verbinding.csv
             Assert.IsTrue(network.Pumps.Any());//There are some pumps defined within the verbinding.csv
+
+            return network;
+        }
+
+        [Test]
+        public void TestImportFromDefinitionFileAndCheckGwswUseCaseImportsAllSewerConnectionsCorrectly()
+        {
+            var network = TestImportFromDefinitionFileCreatesAllSortOfElementsInNetwork();
+            var numberOfSewerConnectionsInGwsw = 97;
+            Assert.IsNotNull(network);
+            Assert.IsNotNull(network.SewerConnections);
+
+            var repeadedSewerConnections = network.SewerConnections.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            Assert.IsEmpty(repeadedSewerConnections, string.Format("Repeated compartments entries. {0}", String.Concat(repeadedSewerConnections.Select(cmp => cmp.Name + " "))));
+
+            var sewerConnectionsWithoutPlaceholders = network.SewerConnections.Where(sc => sc.Source != null && sc.Target != null).ToList();
+            Assert.AreEqual(numberOfSewerConnectionsInGwsw, sewerConnectionsWithoutPlaceholders.Count);
+
+            //CheckPipes
+            var numberOfPipes = 81;
+            Assert.AreEqual(numberOfPipes, network.Pipes.Count(), "Not all pipes were found.");
+
+            //CheckPumps
+            var numberOfPumps = 8;
+            Assert.AreEqual(numberOfPumps, network.Pumps.Count(), "Not all pumps were found.");
+
+            //CheckOrifices
+            var numberOfOrifices = 2;
+            Assert.AreEqual(numberOfOrifices, sewerConnectionsWithoutPlaceholders.Count( sc => (sc as SewerConnection).IsOrifice()), "Not all orifices were found.");
+        }
+
+        [Test]
+        public void TestImportFromDefinitionFileAndCheckCheckGwswUseCaseImportsAllCompartmentsCorrectly()
+        {
+            var network = TestImportFromDefinitionFileCreatesAllSortOfElementsInNetwork();
+            var numberOfManholesInGwsw = 76;
+            Assert.IsNotNull(network);
+
+            //CheckManholes
+            Assert.IsNotNull(network.Manholes);
+            var repeatedManholes = network.Manholes.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            Assert.IsEmpty(repeatedManholes, string.Format("Repeated manhole entries. {0}", String.Concat(repeatedManholes.Select(cmp => cmp.Name + " "))));
+
+            var manholesWithoutPlaceholders = network.Manholes.Where(mh => mh.Compartments.Any()).ToList();
+            Assert.AreEqual(numberOfManholesInGwsw, manholesWithoutPlaceholders.Count);
+
+            //Check compartments
+            var compartments = manholesWithoutPlaceholders.SelectMany(mh => mh.Compartments).ToList();
+            var repeatedCompartments = compartments.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            Assert.IsEmpty(repeatedCompartments, string.Format("Repeated compartments entries. {0}", String.Concat(repeatedCompartments.Select( cmp => cmp.Name+" " ))));
+
+            var numberOfCompartmentsInGwsw = 90;
+            Assert.AreEqual(numberOfCompartmentsInGwsw, compartments.Count, "Not all compartments were found.");
+
+            //CheckOutlets
+            var numberOfOutlets = 4;
+            Assert.AreEqual(numberOfOutlets, compartments.Count(cmp => cmp.IsOutletCompartment()), "Not all outlets were found.");
         }
 
         [Test]
@@ -994,7 +1016,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             return importedTable;
         }
 
-        private static void CheckCsvIsImportedCorrectly(string filePath, CsvMappingData mappingData)
+        protected static void CheckCsvIsImportedCorrectly(string filePath, CsvMappingData mappingData)
         {
             var csvImporter = new CsvImporter();
             Assert.IsNotNull(csvImporter);
@@ -1014,7 +1036,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
         }
 
-        private string GetFileAndCreateLocalCopy(string path)
+        protected string GetFileAndCreateLocalCopy(string path)
         {
             var filePath = TestHelper.GetTestFilePath(path);
             Assert.IsTrue(File.Exists(filePath), string.Format("File {0} could not be located", filePath));
