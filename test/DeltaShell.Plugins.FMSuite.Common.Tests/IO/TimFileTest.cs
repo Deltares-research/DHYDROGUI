@@ -102,6 +102,54 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
+        public void WriteReadMultiColumnTimFile_SpecificComponents()
+        {
+            var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
+            var startDate = new DateTime(2014, 5, 5, 13, 25, 30);
+            var timeStep = new TimeSpan(0, 0, 1, 00);
+
+            const int count = 100;
+
+            var timesList = new List<DateTime>();
+            var valuesList1 = new List<double>();
+            var valuesList2 = new List<double>();
+            var valuesList3 = new List<double>();
+
+            var date = startDate;
+            for (var i = 0; i < count; ++i)
+            {
+                timesList.Add(date);
+                date += timeStep;
+                valuesList1.Add(1.0 / (i * i + 1));
+                valuesList2.Add(1.0 / (i * i + 2));
+                valuesList3.Add(1.0 / (i * i + 3));
+            }
+
+            var function = new TimeSeries();
+            function.Components.Add(new Variable<double>("a"));
+            function.Components.Add(new Variable<double>("b"));
+            function.Components.Add(new Variable<double>("c"));
+
+            function.Time.SetValues(timesList);
+            function.Components[0].SetValues(valuesList1);
+            function.Components[1].SetValues(valuesList2);
+            function.Components[2].SetValues(valuesList3);
+
+            var timFile = new TimFile();
+            timFile.Write("testFile.tim", function, refDate, new [] { 1 }); // ignore component index 1
+
+            var readFunction = timFile.Read("testFile.tim", refDate, 2);
+
+            Assert.AreEqual(1, readFunction.Arguments.Count);
+            Assert.AreEqual(2, readFunction.Components.Count);
+            Assert.AreEqual(function.Time.Values, readFunction.Arguments[0].Values);
+            ListTestUtils.AssertAreEqual(function.Components[0].GetValues<double>(),
+                readFunction.Components[0].GetValues<double>(), 1e-06);
+            ListTestUtils.AssertAreEqual(function.Components[2].GetValues<double>(), // Note: component index 2 of the original function
+                readFunction.Components[1].GetValues<double>(), 1e-06);              // should equal component index 1 of the read function
+        }
+
+        [Test]
         public void ReadMultiColumnTimFile()
         {
             var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
@@ -149,6 +197,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 readFunction.Components[1].GetValues<double>(), 1e-06);
             ListTestUtils.AssertAreEqual(function.Components[2].GetValues<double>(),
                 readFunction.Components[2].GetValues<double>(), 1e-06);
+        }
+
+        [Test]
+        public void ReadMultiColumnTimFile_SpecificComponents()
+        {
+            var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
+
+            var readFunction = new TimeSeries();
+            readFunction.Components.Add(new Variable<double>("a"));
+            readFunction.Components.Add(new Variable<double>("b"));
+            readFunction.Components.Add(new Variable<double>("c"));
+
+            var fileReader = new TimFile();
+            fileReader.Read(TestHelper.GetTestFilePath("timFiles/testFile.tim"), readFunction, refDate, new [] { 1 }); // ignore component index 1
+
+            var componentAValues = readFunction.Components[0].GetValues<double>();
+            var componentBValues = readFunction.Components[1].GetValues<double>();
+            var componentCValues = readFunction.Components[2].GetValues<double>();
+
+            Assert.AreEqual(50, componentAValues.Count(v => v > double.Epsilon)); // should have read from file successfully
+            Assert.AreEqual(50, componentBValues.Count(v => v <= double.Epsilon)); // should all be zeros (default values)
+            Assert.AreEqual(50, componentCValues.Count(v => v > double.Epsilon)); // should have read from file successfully
         }
 
         [Test]

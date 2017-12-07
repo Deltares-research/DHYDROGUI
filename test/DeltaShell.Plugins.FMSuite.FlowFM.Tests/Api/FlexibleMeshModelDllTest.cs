@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            using (var api = FlexibleMeshModelApiFactory.CreateNew())
             {
                 api.Initialize(model.MduFilePath);
 
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            using (var api = FlexibleMeshModelApiFactory.CreateNew())
             {
                 api.Initialize(model.MduFilePath);
 

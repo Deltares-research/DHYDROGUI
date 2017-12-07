@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static ExtForceFileItem WriteSourceAndSinkData(string filePath, SourceAndSink sourceAndSink,
                                                               DateTime referenceTime,
                                                               ExtForceFileItem existingExtForceFileItem,
-                                                              bool writeToDisk)
+                                                              bool writeToDisk, bool writeSalinity, bool writeTemperature)
         {
             var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(ExtForceQuantNames.SourceAndSink)
                 {
@@ -200,7 +200,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> {sourceAndSink.Feature});
                 var dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
-                new TimFile().Write(dataFilePath, sourceAndSink.Function, referenceTime);
+
+                var componentIndexesToIgnore = new List<int>();
+                var function = sourceAndSink.Function;
+
+                if (function != null)
+                {
+                    if (!writeSalinity)
+                    {
+                        var salinityComponentIndex = function.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
+                        if (salinityComponentIndex >= 0)
+                        {
+                            componentIndexesToIgnore.Add(salinityComponentIndex);
+                        }
+                    }
+
+                    if (!writeTemperature)
+                    {
+                        var temperatureComponentIndex = function.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
+                        if (temperatureComponentIndex >= 0)
+                        {
+                            componentIndexesToIgnore.Add(temperatureComponentIndex);
+                        }
+                    }
+                }
+                new TimFile().Write(dataFilePath, function, referenceTime, componentIndexesToIgnore);
             }
 
             return extForceFileItem;
@@ -390,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static SourceAndSink ReadSourceAndSinkData(string filePath, Feature2D feature2D,
                                                               ExtForceFileItem extForceFileItem,
-                                                              DateTime modelReferenceDate)
+                                                              DateTime modelReferenceDate, bool readSalinity, bool readTemperature)
         {
             if (!Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink)) return null;
 
@@ -412,7 +436,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return sourceAndSink;
             }
 
-            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate);
+            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate, readSalinity, readTemperature);
 
             return sourceAndSink;
         }
@@ -536,9 +560,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate)
+        private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate, bool readSalinity, bool readTemperature)
         {
-            new TimFile().Read(filePath, sourceAndSink.Data, modelReferenceDate);
+            var componentIndexesToIgnore = new List<int>();
+            var data = sourceAndSink.Data;
+            if (data != null)
+            {
+                if (!readSalinity)
+                {
+                    var salinityComponentIndex = data.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
+                    if (salinityComponentIndex >= 0)
+                    {
+                        componentIndexesToIgnore.Add(salinityComponentIndex);
+                    }
+                }
+
+                if (!readTemperature)
+                {
+                    var temperatureComponentIndex = data.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
+                    if (temperatureComponentIndex >= 0)
+                    {
+                        componentIndexesToIgnore.Add(temperatureComponentIndex);
+                    }
+                }
+            }
+            new TimFile().Read(filePath, data, modelReferenceDate, componentIndexesToIgnore);
         }
 
         public static ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceFileItem existingExtForceFileItem = null, bool writeToDisk = true, string prefix = null)

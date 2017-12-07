@@ -134,7 +134,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 try
                 {
-                    InsertTimeSeries(path, sourceAndSink.Function, GetModelForSourceAndSink(sourceAndSink).ReferenceTime);
+                    var model = GetModelForSourceAndSink(sourceAndSink);
+                    if (model == null)
+                    {
+                        Log.ErrorFormat("Tim-file import failed: could not retrieve model for SourceAndSink: {0}", sourceAndSink.Name);
+                    }
+                    else
+                    {
+                        var function = sourceAndSink.Function;
+                        var componentIndexesToIgnore = new List<int>();
+
+                        if (function != null)
+                        {
+                            if (!model.UseSalinity)
+                            {
+                                var salinityComponentIndex = function.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
+                                if (salinityComponentIndex >= 0)
+                                {
+                                    componentIndexesToIgnore.Add(salinityComponentIndex);
+                                }
+                            }
+
+                            if (!model.UseTemperature)
+                            {
+                                var temperatureComponentIndex = function.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
+                                if (temperatureComponentIndex >= 0)
+                                {
+                                    componentIndexesToIgnore.Add(temperatureComponentIndex);
+                                }
+                            }
+                        }
+                        InsertTimeSeries(path, function, model.ReferenceTime, componentIndexesToIgnore);
+                    }
+                    
                 }
                 catch (Exception e)
                 {
@@ -164,9 +196,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         [InvokeRequired]
-        private static void InsertTimeSeries(string path, IFunction data, DateTime refDate)
+        private static void InsertTimeSeries(string path, IFunction data, DateTime refDate, ICollection<int> componentsToIgnore = null)
         {
-            new TimFile().Read(path, data, refDate);
+            new TimFile().Read(path, data, refDate, componentsToIgnore);
         }
 
         [InvokeRequired]

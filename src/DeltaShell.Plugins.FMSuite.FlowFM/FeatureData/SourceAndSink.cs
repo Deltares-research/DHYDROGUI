@@ -17,6 +17,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
     [Entity]
     public class SourceAndSink : NetTopologySuite.Extensions.Features.Generic.FeatureData<IFunction, Feature2D>
     {
+        public const string TimeVariableName = "Time";
+        public const string DischargeVariableName = "Discharge";
+        public const string SalinityVariableName = "Salinity";
+        public const string TemperatureVariableName = "Temperature";
+
+        private const string DischargeVariableUnitDescription = "cubic meters per second";
+        private const string DischargeVariableUnitSymbol = "m³/s";
+
+        private const string SalinityVariableUnitDescription = "parts per trillion";
+        private const string SalinityVariableUnitSymbol = "ppt";
+
+        private const string TemperatureVariableUnitDescription = "degree celsius";
+        private const string TemperatureVariableUnitSymbol = "°C";
+
         public SourceAndSink()
         {
             Function = CreateData();
@@ -85,18 +99,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         private static IFunction CreateData()
         {
             var function = new Function();
-            function.Arguments.Add(new Variable<DateTime>("Time"));
-            function.Components.Add(new Variable<double>("Discharge")
+            function.Arguments.Add(new Variable<DateTime>(TimeVariableName));
+            function.Components.Add(new Variable<double>(DischargeVariableName)
             {
-                Unit = new Unit("cubic meters per second", "m³/s")
+                Unit = new Unit(DischargeVariableUnitDescription, DischargeVariableUnitSymbol)
             });
-            function.Components.Add(new Variable<double>("Salinity")
+            function.Components.Add(new Variable<double>(SalinityVariableName)
             {
-                Unit = new Unit("parts per trillion", "ppt")
+                Unit = new Unit(SalinityVariableUnitDescription, SalinityVariableUnitSymbol)
             });
-            function.Components.Add(new Variable<double>("Temperature")
+            function.Components.Add(new Variable<double>(TemperatureVariableName)
             {
-                Unit = new Unit("degree celsius", "°C")
+                Unit = new Unit(TemperatureVariableUnitDescription, TemperatureVariableUnitSymbol)
             });
             return function;
         }

@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             IFunction data = null;
             DateTime? refDate = null;
+            ICollection<int> componentIndexesToIgnore = null;
 
             var boundaryCondition = item as IBoundaryCondition;
             if (boundaryCondition != null && boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
@@ -41,9 +42,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             if (sourceAndSink != null)
             {
                 data = sourceAndSink.Function;
-                if (GetModelForSourceAndSink != null)
+                var model = GetModelForSourceAndSink(sourceAndSink);
+                if (model != null)
                 {
-                    refDate = GetModelForSourceAndSink(sourceAndSink).ReferenceTime;
+                    refDate = model.ReferenceTime;
+                    componentIndexesToIgnore = new List<int>();
+
+                    if (data != null)
+                    {
+                        if (!model.UseSalinity)
+                        {
+                            var salinityComponentIndex = data.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
+                            if (salinityComponentIndex >= 0)
+                            {
+                                componentIndexesToIgnore.Add(salinityComponentIndex);
+                            }
+                        }
+
+                        if (!model.UseTemperature)
+                        {
+                            var temperatureComponentIndex = data.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
+                            if (temperatureComponentIndex >= 0)
+                            {
+                                componentIndexesToIgnore.Add(temperatureComponentIndex);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -62,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             try
             {
                 var writer = new TimFile();
-                writer.Write(path, data, refDate);
+                writer.Write(path, data, refDate, componentIndexesToIgnore);
                 return true;
             }
             catch (Exception e)
