@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.TestUtils;
@@ -11,7 +13,7 @@ using Assert = NUnit.Framework.Assert;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    public class SewerProfileGenerationTest : SewerFeatureFactoryTestHelper
+    public class SewerProfileDefinitionGenerationTest : SewerFeatureFactoryTestHelper
     {
         private const string ProfileId = "PRO1";
 
@@ -163,14 +165,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static void CreateProfileAndCheckProperties(GwswElement profileGwswElement, string expectedProfileId,
             double expectedWidth, double expectedHeight, double expectedSlope)
         {
-            var element = SewerFeatureFactory.CreateInstance(profileGwswElement);
-            var sewerProfile = element as CrossSection;
-            Assert.NotNull(sewerProfile);
+            var network = new HydroNetwork();
+            var element = SewerFeatureFactory.CreateInstance(profileGwswElement, network);
+            var loadedProfile = element as CrossSection;
+            Assert.Null(loadedProfile);
 
-            var csDefinition = sewerProfile.Definition as CrossSectionDefinitionStandard;
+            // Check that the correct cross section has been added to the network
+            Assert.IsNotEmpty(network.SharedCrossSectionDefinitions);
+            var csDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault() as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
             Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
 
+            // Check shape and its properties
             var shapeType = csDefinition.Shape.Type;
             if (shapeType == CrossSectionStandardShapeType.Round)
             {
@@ -210,13 +216,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         private static void CreateProfileAndCheckForDefaultShape(GwswElement sewerProfileGwswElement, string expectedProfileId)
         {
-            var loadedProfile = SewerFeatureFactory.CreateInstance(sewerProfileGwswElement) as CrossSection;
-            Assert.NotNull(loadedProfile);
+            var network = new HydroNetwork();
+            var loadedProfile = SewerFeatureFactory.CreateInstance(sewerProfileGwswElement, network);
+            Assert.Null(loadedProfile);
 
-            var csDefinition = loadedProfile.Definition as CrossSectionDefinitionStandard;
+            // Check that the correct cross section has been added to the network
+            Assert.IsNotEmpty(network.SharedCrossSectionDefinitions);
+            var csDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault() as CrossSectionDefinitionStandard;
             Assert.NotNull(csDefinition);
             Assert.That(csDefinition.Name, Is.EqualTo(expectedProfileId));
 
+            // get cross section shape and check diameter
             var csShape = csDefinition.Shape as CrossSectionStandardShapeRound;
             Assert.NotNull(csShape);
             Assert.That(csShape.Diameter, Is.EqualTo(0.4));

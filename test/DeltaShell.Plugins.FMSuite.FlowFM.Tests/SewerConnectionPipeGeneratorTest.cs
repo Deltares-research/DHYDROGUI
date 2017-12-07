@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsNull(createdPipe.Source);
             Assert.IsNull(createdPipe.Target);
-            Assert.IsNull(createdPipe.SewerProfile);
+            Assert.IsNull(createdPipe.SewerProfileDefinition);
 
             //Defined
             Assert.IsNotNull(createdPipe.LevelSource);
@@ -167,23 +167,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPipe);
 
             //Defined
-            Assert.IsNotNull(createdPipe.SewerProfile);
-            Assert.AreEqual(sewerDefinitionName, createdPipe.SewerProfile.Name);
-            Assert.IsTrue(network.SewerProfiles.Any(cs => cs.Name.Equals(sewerDefinitionName)));
+            Assert.IsNotNull(createdPipe.SewerProfileDefinition);
+            Assert.AreEqual(sewerDefinitionName, createdPipe.SewerProfileDefinition.Name);
+            Assert.IsTrue(network.SharedCrossSectionDefinitions.Any(cs => cs.Name.Equals(sewerDefinitionName)));
         }
 
         [Test]
         public void CreatePipeFromFactoryAssignsExistingCrossSectionDefinitionIfPresentInNetwork()
         {
             var network = new HydroNetwork();
-            Assert.IsFalse(network.SewerProfiles.Any());
+            Assert.IsFalse(network.SharedCrossSectionDefinitions.Any());
 
             var sewerDefinitionName = "crossSectionDef001";
-            var auxCrossSection = CrossSection.CreateDefault();
+            var auxCrossSection = CrossSectionDefinitionStandard.CreateDefault();
             auxCrossSection.Name = sewerDefinitionName;
 
-            network.SewerProfiles.Add(auxCrossSection);
-            Assert.IsTrue(network.SewerProfiles.Any(sp => sp.Name.Equals(sewerDefinitionName)));
+            network.SharedCrossSectionDefinitions.Add(auxCrossSection);
+            Assert.IsTrue(network.SharedCrossSectionDefinitions.Any(sp => sp.Name.Equals(sewerDefinitionName)));
 
             var startNode = "node001";
             var endNode = "node002";
@@ -206,10 +206,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPipe);
 
             //Defined
-            Assert.IsNotNull(createdPipe.SewerProfile);
-            Assert.AreEqual(sewerDefinitionName, createdPipe.SewerProfile.Name);
-            Assert.IsTrue(network.SewerProfiles.Any(cs => cs.Name.Equals(sewerDefinitionName)));
-            Assert.AreEqual(auxCrossSection, createdPipe.SewerProfile);
+            Assert.IsNotNull(createdPipe.SewerProfileDefinition);
+            Assert.AreEqual(sewerDefinitionName, createdPipe.SewerProfileDefinition.Name);
+            Assert.IsTrue(network.SharedCrossSectionDefinitions.Any(cs => cs.Name.Equals(sewerDefinitionName)));
+            Assert.AreEqual(auxCrossSection, createdPipe.SewerProfileDefinition);
         }
 
         #endregion

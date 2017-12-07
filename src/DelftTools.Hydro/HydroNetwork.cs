@@ -213,7 +213,6 @@ namespace DelftTools.Hydro
 
             Links = new EventedList<HydroLink>();
             SubRegions = new EventedList<IRegion>();
-            SewerProfiles = new EventedList<ICrossSection>();
         }
         
         public override IEventedList<IBranch> Branches
@@ -266,8 +265,6 @@ namespace DelftTools.Hydro
         {
             get ; protected set;
         }
-
-        public virtual IList<ICrossSection> SewerProfiles { get; set; }
         
         public virtual IEnumerable<IManhole> Manholes { get; set; }
 
@@ -364,7 +361,7 @@ namespace DelftTools.Hydro
             clone.Links = new EventedList<HydroLink>(Links);
 
             //SewerProfiles
-            clone.SewerProfiles = new EventedList<ICrossSection>(SewerProfiles);
+            clone.sharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>(sharedCrossSectionDefinitions);
 
             return clone;
         }

@@ -316,10 +316,10 @@
     <Compile Include="SewerConnectionOrificeGeneratorTest.cs" />
     <Compile Include="SewerConnectionPipeGeneratorTest.cs" />
     <Compile Include="SewerManholeGeneratorTest.cs" />
-    <Compile Include="SewerCrossSectionGeneratorTest.cs" />
+    <Compile Include="SewerCrossSectionDefinitionGeneratorTest.cs" />
     <Compile Include="SewerFeatureFactoryTest.cs" />
     <Compile Include="SewerFeatureFactoryTestHelper.cs" />
-    <Compile Include="SewerProfileGenerationTest.cs" />
+    <Compile Include="SewerProfileDefinitionGenerationTest.cs" />
     <Compile Include="SewerPumpGeneratorTest.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />

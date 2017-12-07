@@ -86,19 +86,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             switch (structureType)
             {
                 case SewerProfileMapping.SewerProfileType.Egg:
-                    return new EggCrossSectionGenerator();
+                    return new EggCrossSectionDefinitionGenerator();
                 case SewerProfileMapping.SewerProfileType.Arch:
-                    return new ArchCrossSectionGenerator();
+                    return new ArchCrossSectionDefinitionGenerator();
                 case SewerProfileMapping.SewerProfileType.Cunette:
-                    return new CunetteCrossSectionGenerator();
+                    return new CunetteCrossSectionDefinitionGenerator();
                 case SewerProfileMapping.SewerProfileType.Rectangle:
-                    return new RectangleCrossSectionGenerator();
+                    return new RectangleCrossSectionDefinitionGenerator();
                 case SewerProfileMapping.SewerProfileType.Circle:
-                    return new CircleCrossSectionGenerator();
+                    return new CircleCrossSectionDefinitionGenerator();
                 case SewerProfileMapping.SewerProfileType.Trapezoid:
-                    return new TrapezoidCrossSectionGenerator();
+                    return new TrapezoidCrossSectionDefinitionGenerator();
                 default:
-                    return new DefaultCrossSectionGenerator();
+                    return new DefaultCrossSectionDefinitionGenerator();
             }
         }
 

@@ -28,10 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GetEnumTypeFromGwswAttribute_ReturnsDefaultValueAndLogMessage_IfNotFound()
         {
             var elementName = "test_element";
-            var attributeTest = new GwswAttribute()
+            var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,
-                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
             };
 
             SewerConnectionWaterType value = SewerConnectionWaterType.FlowingRainWater;
@@ -53,10 +53,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GetEnumTypeFromGwswAttribute_ReturnsCorrectValue_IfFound()
         {
             var elementName = "DWA";
-            var attributeTest = new GwswAttribute()
+            var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,
-                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(string)}
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string)}
             };
 
             var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>();
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseWithoutLogMessageIfNoTypeIsPresent()
         {
-            var emptyAttribute = new GwswAttribute(){ GwswAttributeType = new GwswAttributeType()};
+            var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType()};
             var value = true;
 
             var msg = string.Format(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_, null, 0, null);
@@ -79,23 +79,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsTrueIfEverythingIsPresent()
         {
-            var emptyAttribute = new GwswAttribute() { ValueAsString = "test", GwswAttributeType = new GwswAttributeType(){AttributeType = typeof(string)} };
+            var emptyAttribute = new GwswAttribute { ValueAsString = "test", GwswAttributeType = new GwswAttributeType(){AttributeType = typeof(string)} };
             Assert.IsTrue(emptyAttribute.IsValidAttribute());
         }
 
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseIfNoTypeIsPresent()
         {
-            var emptyAttribute = new GwswAttribute(){ GwswAttributeType = new GwswAttributeType() };
+            var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
             Assert.IsFalse(emptyAttribute.IsValidAttribute());
         }
 
         [Test]
         public void GwswAttribute_IsTypeOfInt_Test()
         {
-            var attr = new GwswAttribute()
+            var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType() {AttributeType = typeof(int)}
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(int)}
             };
             Assert.IsTrue(attr.IsTypeOf(typeof(int)));
             Assert.IsFalse(attr.IsTypeOf(typeof(double)));
@@ -105,9 +105,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GwswAttribute_IsTypeOfDouble_Test()
         {
-            var attr = new GwswAttribute()
+            var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(double) }
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(double) }
             };
             Assert.IsFalse(attr.IsTypeOf(typeof(int)));
             Assert.IsTrue(attr.IsTypeOf(typeof(double)));
@@ -117,9 +117,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GwswAttribute_IsTypeOfString_Test()
         {
-            var attr = new GwswAttribute()
+            var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType() { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
             };
             Assert.IsFalse(attr.IsTypeOf(typeof(int)));
             Assert.IsFalse(attr.IsTypeOf(typeof(double)));
@@ -130,14 +130,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GetElementLine_ReturnsLineIfAvailable()
         {
             var elementName = "DWA";
-            var gwswElement = new GwswElement()
+            var gwswElement = new GwswElement
             {
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    new GwswAttribute()
+                    new GwswAttribute
                     {
                         ValueAsString = elementName,
-                        GwswAttributeType = new GwswAttributeType() {AttributeType = typeof(string), LineNumber = 2}
+                        GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string), LineNumber = 2}
                     }
                 }
             };
@@ -148,11 +148,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GetElementLine_ReturnsZeroIfNotAvailable()
         {
             var elementName = "DWA";
-            var gwswElement = new GwswElement()
+            var gwswElement = new GwswElement
             {
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    new GwswAttribute()
+                    new GwswAttribute
                     {
                         ValueAsString = elementName,
                     }
@@ -165,14 +165,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GwswAttributeReturnsElementNameWithoutExtension()
         {
             var elementName = "test_element";
-            var attributeTest = new GwswAttributeType()
+            var attributeTest = new GwswAttributeType
             {
                 ElementName = elementName + ".csv",
             };
             Assert.AreEqual(elementName, attributeTest.ElementName);
             
             /* If the name is originally given without extension, it should remain the same.*/
-            attributeTest = new GwswAttributeType()
+            attributeTest = new GwswAttributeType
             {
                 ElementName = elementName,
             };
@@ -202,12 +202,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var attributeOne = "attributeOne";
             var attributeTwo = "attributeTwo";
             var valueAsString = "valueAttrOne";
-            var gwswElement = new GwswElement()
+            var gwswElement = new GwswElement
             {
                 ElementTypeName = "test",
-                GwswAttributeList = new List<GwswAttribute>()
+                GwswAttributeList = new List<GwswAttribute>
                 {
-                    new GwswAttribute()
+                    new GwswAttribute
                     {
                         GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", attributeOne,
                             "unkownDefinition", "mandatoryMaybe", string.Empty, "noRemarks"),
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute() { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
                 Assert.IsNotNull(attribute);
 
                 var testVariable = attribute.GetValidStringValue();
@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute() { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
                 Assert.IsNotNull(attribute);
 
                 var auxValue = 0.0;
@@ -596,7 +596,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var network = new HydroNetwork();
             Assert.IsFalse(network.Pipes.Any());
             Assert.IsFalse(network.Manholes.Any());
-            Assert.IsFalse(network.SewerProfiles.Any());
+            Assert.IsFalse(network.SharedCrossSectionDefinitions.Any());
             Assert.IsFalse(network.Pumps.Any()); 
 
             var gwswImporter = new GwswFileImporterBase();
@@ -610,7 +610,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
 
             Assert.IsTrue(network.Manholes.Any());
-            Assert.IsTrue(network.SewerProfiles.Any());
+            Assert.IsTrue(network.SharedCrossSectionDefinitions.Any());
             Assert.IsTrue(network.Pipes.Any());//There are some pipes defined within the verbinding.csv
             Assert.IsTrue(network.Pumps.Any());//There are some pumps defined within the verbinding.csv
 
@@ -625,23 +625,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsNotNull(network);
             Assert.IsNotNull(network.SewerConnections);
 
-            var repeadedSewerConnections = network.SewerConnections.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
-            Assert.IsEmpty(repeadedSewerConnections, string.Format("Repeated compartments entries. {0}", String.Concat(repeadedSewerConnections.Select(cmp => cmp.Name + " "))));
+            var repeatedSewerConnections = network.SewerConnections.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            Assert.IsEmpty(repeatedSewerConnections, string.Format("Repeated compartments entries. {0}", String.Concat(repeatedSewerConnections.Select(cmp => cmp.Name + " "))));
 
             var sewerConnectionsWithoutPlaceholders = network.SewerConnections.Where(sc => sc.Source != null && sc.Target != null).ToList();
             Assert.AreEqual(numberOfSewerConnectionsInGwsw, sewerConnectionsWithoutPlaceholders.Count);
 
             //CheckPipes
-            var numberOfPipes = 81;
-            Assert.AreEqual(numberOfPipes, network.Pipes.Count(), "Not all pipes were found.");
+            var expectedNumberOfPipes = 81;
+            Assert.AreEqual(expectedNumberOfPipes, network.Pipes.Count(), "Not all pipes were found.");
 
             //CheckPumps
-            var numberOfPumps = 8;
-            Assert.AreEqual(numberOfPumps, network.Pumps.Count(), "Not all pumps were found.");
+            var expectedNumberOfPumps = 8;
+            Assert.AreEqual(expectedNumberOfPumps, network.Pumps.Count(), "Not all pumps were found.");
 
             //CheckOrifices
-            var numberOfOrifices = 2;
-            Assert.AreEqual(numberOfOrifices, sewerConnectionsWithoutPlaceholders.Count( sc => (sc as SewerConnection).IsOrifice()), "Not all orifices were found.");
+            var expectedNumberOfOrifices = 2;
+            Assert.AreEqual(expectedNumberOfOrifices, sewerConnectionsWithoutPlaceholders.Count( sc => (sc as SewerConnection).IsOrifice()), "Not all orifices were found.");
+
+            //Check sewer profiles
+            var expectedNumberOfSewerProfiles = 41;
+            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(expectedNumberOfSewerProfiles));
         }
 
         [Test]
@@ -897,17 +901,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Load sewer profiles
             var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
             var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, network) as List<INetworkFeature>;
-            Assert.IsNotNull(importedProfiles);
+            Assert.IsEmpty(importedProfiles);
 
             //Check that sewer profiles have been put into the network
-            Assert.That(network.SewerProfiles.Count, Is.EqualTo(importedProfiles.Count));
-            var sewerProfileNames = network.SewerProfiles.Select(sp => sp.Name);
-            importedProfiles.ForEach(f =>
-            {
-                var profile = f as ICrossSection;
-                Assert.NotNull(profile);
-                Assert.IsTrue(sewerProfileNames.Contains(profile.Name));
-            });
+            var numberOfLinesInFile = File.ReadAllLines(sewerProfilesPath).Length - 1;
+            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
 
             // Now Load connections.
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
@@ -916,12 +914,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var pipes = network.Branches.OfType<Pipe>().ToList();
             Assert.IsTrue(pipes.Any());
-            pipes.ForEach(p => Assert.NotNull(p.SewerProfile));
+            pipes.ForEach(p => Assert.NotNull(p.SewerProfileDefinition));
+
+            // Check for each pipe that its SewerProfileDefinition is equal to one of the sewer profiles in
+            // the SharedCrossSectionDefinitions of the network
+            pipes.ForEach(p =>
+            {
+                var pipeCsDefinition = p.SewerProfileDefinition;
+                var sharedCsDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault(csd => csd.Name == pipeCsDefinition.Name);
+                Assert.NotNull(sharedCsDefinition);
+                Assert.That(pipeCsDefinition.Width, Is.EqualTo(sharedCsDefinition.Width));
+
+                var pipeShape = pipeCsDefinition.Shape;
+                var sharedCsShape = ((CrossSectionDefinitionStandard)sharedCsDefinition).Shape;
+                Assert.That(pipeShape.Type, Is.EqualTo(sharedCsShape.Type));
+
+                var pipeWidthHeightShape = pipeShape as CrossSectionStandardShapeWidthHeightBase;
+                var sharedWidthHeightShape = sharedCsShape as CrossSectionStandardShapeWidthHeightBase;
+                if (pipeWidthHeightShape != null && sharedWidthHeightShape != null)
+                {
+                    Assert.That(pipeWidthHeightShape.Height, Is.EqualTo(sharedWidthHeightShape.Height));
+                }
+            });
         }
 
         [Test]
         public void WhenImportingSewerConnectionsToNetworkAndThenImportingSewerProfilesToNetwork_ThenSewerConnectionsHaveTheCorrectSewerProfiles()
         {
+            const string csdName = "PRO2";
+            const string csdNameForAddedProfile = "PRO6";
+
             //Create network
             var network = new HydroNetwork();
 
@@ -938,36 +960,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsNotNull(importedConnections);
 
             // Retrieve one profile to later compare to the same one after loading the sewer profiles
-            var csDefinitionBefore = (CrossSectionDefinitionStandard) network.SewerProfiles.FirstOrDefault(sp => sp.Name == "PRO2")?.Definition;
+            var csDefinitionBefore = (CrossSectionDefinitionStandard) network.SharedCrossSectionDefinitions.FirstOrDefault(crossSectionDefinition => crossSectionDefinition.Name == csdName);
             Assert.NotNull(csDefinitionBefore);
             var csShapeBefore = (CrossSectionStandardShapeWidthHeightBase)csDefinitionBefore.Shape;
             Assert.NotNull(csShapeBefore);
+            var amountOfProfilesBefore = network.SharedCrossSectionDefinitions.Count;
+            Assert.That(network.SharedCrossSectionDefinitions.Count(cs => cs.Name == csdNameForAddedProfile), Is.EqualTo(0));
+
+            // Check the sewer profiles in the network
+            var sewerProfileShapeBefore = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.SewerProfileDefinition).FirstOrDefault(d => d.Name == csdName)?.Shape;
+            Assert.NotNull(sewerProfileShapeBefore);
 
             // Now Load sewer profiles
             var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
             var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, network) as List<INetworkFeature>;
-            Assert.IsNotNull(importedProfiles);
+            Assert.IsEmpty(importedProfiles);
 
             //Check that sewer profiles have been put into the network
-            Assert.That(network.SewerProfiles.Count, Is.EqualTo(importedProfiles.Count));
-            var sewerProfileNames = network.SewerProfiles.Select(sp => sp.Name);
-            importedProfiles.ForEach(f =>
-            {
-                var profile = f as ICrossSection;
-                Assert.NotNull(profile);
-                Assert.IsTrue(sewerProfileNames.Contains(profile.Name));
-            });
+            var numberOfLinesInFile = File.ReadAllLines(sewerProfilesPath).Length - 1;
+            var networkCsDefinitions = network.SharedCrossSectionDefinitions;
+            Assert.That(networkCsDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
 
             //Get the same profile as before loading the profiles
-            var testProfileAfter = network.SewerProfiles.FirstOrDefault(sp => sp.Name == csDefinitionBefore.Name);
+            var sharedCsDefinitions = network.SharedCrossSectionDefinitions;
+            var testProfileAfter = sharedCsDefinitions.FirstOrDefault(crossSectionDefinition => crossSectionDefinition.Name == csdName);
             Assert.NotNull(testProfileAfter);
-            var csShapeAfter = (CrossSectionStandardShapeWidthHeightBase)((CrossSectionDefinitionStandard) testProfileAfter.Definition).Shape;
+            var csShapeAfter = (CrossSectionStandardShapeWidthHeightBase)((CrossSectionDefinitionStandard) testProfileAfter).Shape;
             Assert.NotNull(csShapeAfter);
+            Assert.That(sharedCsDefinitions.Count >= amountOfProfilesBefore);
+            Assert.That(sharedCsDefinitions.Count(cs => cs.Name == csdNameForAddedProfile), Is.EqualTo(1));
 
-            // Compare the width and height to the one before
+            // Check the sewer profiles in the network
+            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.SewerProfileDefinition).FirstOrDefault(d => d.Name == csdName)?.Shape;
+            Assert.NotNull(sewerProfileShapeAfter);
+
+            // Compare properties of shapes found in SharedCrossSectionDefinitions
             Assert.AreNotEqual(csShapeAfter.Width, csShapeBefore.Width);
             Assert.AreNotEqual(csShapeAfter.Height, csShapeBefore.Height);
             Assert.AreNotEqual(csShapeAfter.Type, csShapeBefore.Type);
+
+            // Compare properties of shapes found in SharedCrossSectionDefinitions
+            Assert.AreNotEqual(sewerProfileShapeAfter.Width, sewerProfileShapeBefore.Width);
+            Assert.AreNotEqual(sewerProfileShapeAfter.Height, sewerProfileShapeBefore.Height);
+            Assert.AreNotEqual(sewerProfileShapeAfter.Type, sewerProfileShapeBefore.Type);
         }
 
         [Test]

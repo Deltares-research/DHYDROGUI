@@ -33,14 +33,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 //Find crossSectionDef;
                 //Profiles are needed first.
-                var foundCs = network.SewerProfiles.FirstOrDefault(n => n.Name.Equals(profileDef.ValueAsString));
-                if (foundCs == null)
+                var foundCsd = network.SharedCrossSectionDefinitions.FirstOrDefault(n => n.Name.Equals(profileDef.ValueAsString));
+                if (foundCsd == null)
                 {
-                    foundCs = CrossSection.CreateDefault(CrossSectionType.Standard, null);
-                    foundCs.Name = profileDef.ValueAsString;
-                    network.SewerProfiles.Add(foundCs);
+                    foundCsd = CrossSectionDefinitionStandard.CreateDefault();
+                    foundCsd.Name = profileDef.ValueAsString;
+                    network.SharedCrossSectionDefinitions.Add(foundCsd);
                 }
-                newPipe.SewerProfile = (CrossSection)foundCs;
+                newPipe.SewerProfileDefinition = (CrossSectionDefinitionStandard)foundCsd;
             }
         }
     }
