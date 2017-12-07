@@ -95,17 +95,17 @@ class FMwriter:
             fileBc.write(defaultWaterlevelOut + '\n')
             fileBc.write('\n')
 
-            for keyvalue in self.model.nodes.items():
-                value = keyvalue[1]
-                #laterals
-                fileBc.write('[LateralDischarge]\n')
-                fileBc.write('name = lateral' + str(value[0]) + '\n')
-                fileBc.write('function = constant\n')
-                fileBc.write('time-interpolation = linear-extrapolate\n')
-                fileBc.write('quantity = water_discharge\n')
-                fileBc.write('unit = m3/s\n')
-                fileBc.write(defaultDischargeIn + '\n')
-                fileBc.write('\n')
+        for keyvalue in self.model.nodes.items():
+            value = keyvalue[1]
+            #laterals
+            fileBc.write('[LateralDischarge]\n')
+            fileBc.write('name = lateral' + str(value[0]) + '\n')
+            fileBc.write('function = constant\n')
+            fileBc.write('time-interpolation = linear-extrapolate\n')
+            fileBc.write('quantity = water_discharge\n')
+            fileBc.write('unit = m3/s\n')
+            fileBc.write(defaultDischargeIn + '\n')
+            fileBc.write('\n')
 
         fileLocs.close()
         fileBc.close()
