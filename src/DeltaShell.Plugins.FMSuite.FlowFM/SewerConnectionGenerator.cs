@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -20,21 +19,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return CreateSewerConnection<SewerConnection>(gwswElement, network);
         }
 
-        protected static T CreateSewerConnection<T>(GwswElement gwswElement, IHydroNetwork network = null, Action<T, GwswElement, IHydroNetwork> connectionAction = null) where T : SewerConnection, new()
+        protected  T CreateSewerConnection<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : SewerConnection, new()
         {
             if (gwswElement == null) return null;
 
             //Now we are free to create the connection.
             var connection = FindOrGetNewConnection<T>(gwswElement, network);
-
             SetSewerConnectionAttributes(connection, gwswElement, network);
-            connectionAction?.Invoke(connection, gwswElement, network);
             SetSewerConnectionDefaultGeometry(connection);
 
             return connection;
         }
 
-        protected static T FindOrGetNewConnection<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : SewerConnection, new()
+        private static T FindOrGetNewConnection<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : SewerConnection, new()
         {
             var nodeIdString = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId);
             var connectionName = string.Empty;
@@ -49,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return foundConnection ?? new T { Name = connectionName };
         }
 
-        private static void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement, IHydroNetwork network)
+        protected virtual void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement, IHydroNetwork network)
         {
             sewerConnection.Network = network;
 

@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return manhole;
         }
 
-        protected static T FindOrGetNewCompartment<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
+        private static T FindOrGetNewCompartment<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
         {
             //We know they are not null, otherwise we would have already returned in the CompartmentFactory method.
             var compartmentAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId);
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Log.WarnFormat(Resources.SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_has_been_created_as__2_, "Compartment", gwswElement.GetElementLine(), compartmentName);
             }
 
-            var parentManhole = GetManholeOrNullFromGwswElement(gwswElement, network);
+            var parentManhole = FindManholeFromGwswElementInNetwork(gwswElement, network);
 
             if (parentManhole != null && parentManhole.ContainsCompartment(compartmentName))
                 return (T)parentManhole.GetCompartmentByName(compartmentName);
@@ -64,9 +64,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return NetworkHelper.GetUniqueName("Manhole{0:D2}ForCompartment"+compartmentName, manholeList, "Manhole"); ;
         }
 
-        protected static Manhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
+        protected Manhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
         {
-            if (!gwswElement.IsValidGwswCompartment()) return null;
+            if (gwswElement == null) return null;
 
             var compartment = FindOrGetNewCompartment<T>(gwswElement, network);
 
@@ -78,14 +78,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return manhole;
         }
 
-        private static Manhole GetManholeOrNullFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
+        private static Manhole FindManholeFromGwswElementInNetwork(GwswElement gwswElement, IHydroNetwork network)
         {
             if (network == null) return null;
 
             var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
             var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
 
-            //if we could not place an ID then we use the compartment name to create a place holder (if needed)
             var manholeName = manholeAttribute.IsValidAttribute() ? manholeAttribute.ValueAsString : compartmentName;
             var parentManhole = network.Manholes.FirstOrDefault(m => m.Name.Equals(manholeName)) as Manhole;
             
@@ -98,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return parentManhole;
         }
 
-        protected static Manhole GetNewOrExistingManholeFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
+        private static Manhole GetNewOrExistingManholeFromGwswElement(GwswElement gwswElement, IHydroNetwork network)
         {
             var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
             var compartmentAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId);
@@ -139,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return parentManhole;
         }
 
-        private static void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement)
+        protected virtual void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement)
         {
             // Set the rest of manhole values
             var auxDouble = 0.0;

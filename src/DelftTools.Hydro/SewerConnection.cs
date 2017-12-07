@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -127,6 +128,25 @@ namespace DelftTools.Hydro
                     Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                 }
             }
+        }
+
+        /// <summary>
+        /// Add structure to branch, additionaly makes certain the geometry is set.
+        /// </summary>
+        /// <param name="structure"></param>
+        public ICompositeBranchStructure AddStructureToBranch(IStructure structure)
+        {
+            structure.Branch = this;
+            structure.Network = Network;
+            structure.Chainage = 0;
+
+            if (Geometry != null && Geometry.Coordinates.Any())
+            {
+                structure.Geometry = new Point(Geometry.Coordinates[0]);
+            }
+            structure.Name = Name;
+
+            return HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, this);
         }
 
         public IEnumerable<T> GetStructuresFromBranchFeatures<T>()

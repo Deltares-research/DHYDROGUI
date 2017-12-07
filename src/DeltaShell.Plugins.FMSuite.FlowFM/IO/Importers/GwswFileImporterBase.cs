@@ -47,6 +47,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
+        /// <summary>
+        /// Given a file path, it tries to import a CSV file and generate Gwsw elements out of the data on it.
+        /// </summary>
+        /// <param name="path">The locatino of the CSV file we want to transform into Gwsw elements.</param>
+        /// <param name="target">HydroNetwork where we want to store (later) the imported data.</param>
+        /// <returns>List of GwswElements or null</returns>
         public object ImportItem(string path, object target = null)
         {
             var mapping = CreateCsvMappingDataForFile(path);
@@ -141,6 +147,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public bool OpenViewAfterImport { get { return false; } }
         #endregion
 
+        /// <summary>
+        /// Transforms a CSV data file, into tables that we can handle internally
+        /// </summary>
+        /// <param name="path">Location of the CSV file to import.</param>
+        /// <param name="mappingData">Delimeters and properties for handling the CSV file.</param>
+        /// <returns>DataTable with the content of the CSV file of <param name="path"/>.</returns>
         public DataTable ImportFileAsDataTable(string path, CsvMappingData mappingData)
         {
             if (mappingData == null)
@@ -163,6 +175,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedCsv;
         }
 
+        /// <summary>
+        /// First imports a Gwsw Definition file and all the files mentioned on it. When the definition file is imported, 
+        /// a mapping per file is created. Each of the mappings contains a list of attributes, their types, and their default values (when applicable).
+        /// After the mappings are created, the importer will look for all the files mentioned on it and will try to import
+        /// them, using said mappings, into Network Features.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="network"></param>
+        /// <returns></returns>
         public List<INetworkFeature> ImportFilesFromDefinitionFile(string path, IHydroNetwork network = null)
         {
             ImportDefinitionFile(path);

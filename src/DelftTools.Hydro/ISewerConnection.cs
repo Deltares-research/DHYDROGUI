@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro
@@ -12,6 +13,7 @@ namespace DelftTools.Hydro
         SewerConnectionWaterType WaterType { get; set; }
         Compartment SourceCompartment { get; set; }
         Compartment TargetCompartment { get; set; }
+        ICompositeBranchStructure AddStructureToBranch(IStructure structure);
     }
 
     public enum SewerConnectionWaterType

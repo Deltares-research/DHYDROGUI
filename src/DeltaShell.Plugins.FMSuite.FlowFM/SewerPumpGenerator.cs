@@ -1,12 +1,10 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -46,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 //Create a sewer connection placeholder and add it to the network so that the structure is later added as well.
                 var auxSewerConnection = new SewerConnection(structureName.ValueAsString) { Network = network };
                 network.Branches.Add(auxSewerConnection);
-                AddPumpToBranch(pumpFound, auxSewerConnection);
+                auxSewerConnection.AddStructureToBranch(pumpFound);
             }
 
             ExtendPumpAttributes(pumpFound, gwswElement);
@@ -107,22 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             //Add pump to network if it´s not present already
             if (!connection.BranchFeatures.Contains(sewerPump))
-                AddPumpToBranch(sewerPump, connection);
-        }
-
-        private static void AddPumpToBranch(IStructure structure, ISewerConnection connection)
-        {
-            structure.Branch = connection;
-            structure.Network = connection.Network;
-            structure.Chainage = 0;
-
-            if (connection.Geometry != null && connection.Geometry.Coordinates.Any())
-            {
-                structure.Geometry = new Point(connection.Geometry.Coordinates[0]);
-            }
-            structure.Name = connection.Name;
-
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, connection);
+                connection.AddStructureToBranch(sewerPump);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -11,7 +10,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -20,7 +18,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static ILog Log = LogManager.GetLogger(typeof(SewerFeatureFactory));
 
         #region Creators
-
+        
+        /// <summary>
+        /// Generate multiple Network features from a list of GwswElements. Additionally use an existent HydroNetwork to find elements
+        /// already present on it or add auxiliar ones such as structures or profiles.
+        /// </summary>
+        /// <param name="listOfElements">List of GwswElements.</param>
+        /// <param name="network">HydroNetwork</param>
+        /// <returns>List of Network Features representing the elements stored in the <param name="listOfElements"/></returns>
         public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements, IHydroNetwork network = null)
         {
             var auxNetwork = network ?? new HydroNetwork();
@@ -37,10 +42,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return listOfElements.Select(element => CreateInstance(element, auxNetwork)).Where(createdFeatures => createdFeatures != null).ToList();
         }
 
-        public static INetworkFeature CreateInstance(object element, IHydroNetwork network = null)
+        /// <summary>
+        /// Generates a single Network Feature out of a GwswElement.
+        /// </summary>
+        /// <param name="gwswElement">Collection of attributes and values extracted from a Csv Element.</param>
+        /// <param name="network">HydroNetwork where we can find existing Network Features or add new ones.</param>
+        /// <returns>Single Network Feature representing the <param name="gwswElement"/> given as a parameter.</returns>
+        public static INetworkFeature CreateInstance(GwswElement gwswElement, IHydroNetwork network = null)
         {
             SewerFeatureType elementType;
-            var gwswElement = element as GwswElement;
             if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
 
             ISewerNetworkFeatureGenerator generator;
@@ -239,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         #endregion
     }
 
-    public static class GwswElementValidationExtensions
+    internal static class GwswElementValidationExtensions
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswElementValidationExtensions));
 

@@ -321,13 +321,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="Uml\SewerFeatureFactoryAndGenerators.cd" />
     <None Include="Uml\HydroAreaCollection.cd" />
     <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="WaterFlowFMModel.Network.cs" />
     <Compile Include="WaterFlowFMModel.Spatial.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
     <None Include="Uml\FlowFMOverview.cd" />
+    <None Include="Uml\SewerFeatureFactoryAndGeneratorUML.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />

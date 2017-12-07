@@ -8,35 +8,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
-            if (gwswElement == null) return null;
-
-            if(gwswElement.IsValidGwswCompartment()) return CreateCompartmentForManhole<OutletCompartment>(gwswElement, network);
-
-            var newOutlet = CreateOutletFromGwswStructureElement(gwswElement, network);
-            
-            //Get the parentmanhole and add the new outlet.
-            var parentManhole = GetNewOrExistingManholeFromGwswElement(gwswElement, network);
-            if (!parentManhole.ContainsCompartment(newOutlet.Name))
-            {
-                parentManhole.Compartments.Add(newOutlet);
-            }
-
-            return parentManhole;
+            return CreateCompartmentForManhole<OutletCompartment>(gwswElement, network);
         }
 
-        private Compartment CreateOutletFromGwswStructureElement(GwswElement gwswElement, IHydroNetwork network)
-        {
-            var outletCompartment = FindOrGetNewCompartment<OutletCompartment>(gwswElement, network);
-            ExtendOutletAttributes(outletCompartment, gwswElement);
-
-            return outletCompartment;
-        }
-
-        private static void ExtendOutletAttributes(Compartment compartment, GwswElement gwswElement)
+        protected override void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement)
         {
             var newOutlet = compartment as OutletCompartment;
             if (newOutlet == null) return;
 
+            base.SetCompartmentAttributes(compartment, gwswElement);
             var auxDouble = 0.0;
 
             var surfaceWaterLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);

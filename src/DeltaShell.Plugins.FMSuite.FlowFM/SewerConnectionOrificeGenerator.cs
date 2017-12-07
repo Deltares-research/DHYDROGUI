@@ -10,17 +10,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement.IsValidGwswSewerConnection()) return CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network);
 
-            var orifice = CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network, ExtendOrificeAttributes);
+            var orifice = CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network);
             //Because it is read as a structure, it needs to be added in here (if it is not already)
             if (network != null && !network.Branches.Contains(orifice))
                 network.Branches.Add(orifice);
             return orifice;
         }
 
-        private void ExtendOrificeAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network = null)
+        protected override void SetSewerConnectionAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network)
         {
             var connection = element as SewerConnectionOrifice;
             if (connection == null) return;
+
+            base.SetSewerConnectionAttributes(connection, gwswElement, network);
 
             var auxDouble = 0.0;
             //Add Attributes

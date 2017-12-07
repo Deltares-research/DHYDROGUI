@@ -12,13 +12,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (gwswElement == null) return null;
-            return CreateSewerConnection<Pipe>(gwswElement, network, SetPipeAttributes);
+            return CreateSewerConnection<Pipe>(gwswElement, network);
         }
 
-        private static void SetPipeAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network = null)
+        protected override void SetSewerConnectionAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network)
         {
             var newPipe = element as IPipe;
             if (newPipe == null) return;
+
+            base.SetSewerConnectionAttributes(newPipe, gwswElement, network);
 
             var auxDouble = 0.0;
 

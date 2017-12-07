@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsTrueIfEverythingIsPresent()
         {
-            var emptyAttribute = new GwswAttribute() { ValueAsString = "test", GwswAttributeType = new GwswAttributeType() };
+            var emptyAttribute = new GwswAttribute() { ValueAsString = "test", GwswAttributeType = new GwswAttributeType(){AttributeType = typeof(string)} };
             Assert.IsTrue(emptyAttribute.IsValidAttribute());
         }
 
