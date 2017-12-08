@@ -281,7 +281,9 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
+    <Compile Include="IO\Importers\GwswDefinitionImporterTest.cs" />
+    <Compile Include="IO\Importers\GwswBaseImporterTest.cs" />
+    <Compile Include="IO\Importers\GwswImporterTestHelper.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />

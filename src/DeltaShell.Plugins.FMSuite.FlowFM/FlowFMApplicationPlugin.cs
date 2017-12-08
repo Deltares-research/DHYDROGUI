@@ -213,6 +213,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     WindFileImporter = true,
                     GetModelForWindTimeSeries = GetModelForWindField
                 };
+
+            yield return new GwswDefinitionImporter()
+            {
+                ImportWithFiles = true
+            };
         }
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors) where T : IFeature, INameable
