@@ -109,11 +109,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(SewerStructureMapping.StructureType.Crest, false)]
-        [TestCase(SewerStructureMapping.StructureType.Orifice, true)]
-        [TestCase(SewerStructureMapping.StructureType.Outlet, true)]
-        [TestCase(SewerStructureMapping.StructureType.Pump, true)]
-        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(SewerStructureMapping.StructureType structureType, bool mapped)
+        [TestCase(SewerStructureMapping.StructureType.Crest)]
+        [TestCase(SewerStructureMapping.StructureType.Orifice)]
+        [TestCase(SewerStructureMapping.StructureType.Outlet)]
+        [TestCase(SewerStructureMapping.StructureType.Pump)]
+        public void SewerFeatureFactoryReturnsStructuresWhenGivingNameForStructure(SewerStructureMapping.StructureType structureType)
         {
             var structureId = "structure123";
             var structurePumpGwswElement = new GwswElement
@@ -128,15 +128,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var network = new HydroNetwork();
             var createdElement = SewerFeatureFactory.CreateInstance(structurePumpGwswElement, network);
-            Assert.AreEqual(mapped, createdElement != null);
+            Assert.IsNotNull(createdElement);
         }
 
         [Test]
-        [TestCase(SewerStructureMapping.StructureType.Crest, false, false, false, false)]
-        [TestCase(SewerStructureMapping.StructureType.Orifice, true, false, true, false)]
-        [TestCase(SewerStructureMapping.StructureType.Outlet, true, true, false, false)]
-        [TestCase(SewerStructureMapping.StructureType.Pump, true, false, true, false)]
-        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(SewerStructureMapping.StructureType structureType, bool mapped, bool isNode, bool isBranch, bool isStructure)
+        [TestCase(SewerStructureMapping.StructureType.Crest, false, true, true)]
+        [TestCase(SewerStructureMapping.StructureType.Orifice, false, true, false)]
+        [TestCase(SewerStructureMapping.StructureType.Outlet, true, false, false)]
+        [TestCase(SewerStructureMapping.StructureType.Pump, false, true, true)]
+        public void SewerFeatureFactoryCreatesStructureAndSewerConnectionIfNeitherExists(SewerStructureMapping.StructureType structureType, bool isNode, bool isBranch, bool isStructure)
         {
             var structureId = "structure123";
             var structureGwswElement = new GwswElement
@@ -151,9 +151,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var network = new HydroNetwork();
             var createdElement = SewerFeatureFactory.CreateInstance(structureGwswElement, network);
-            Assert.AreEqual(mapped, createdElement != null);
-            if (!mapped) return;
-
+            Assert.IsNotNull(createdElement);
+            
             if (isNode)
             {
                 Assert.IsTrue(network.Nodes.Any());

@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddPumpAndAttributesToSewerConnection(sewerConnection, gwswElement);
             return sewerConnection;
         }
-
+        
         private INetworkFeature CreatePumpFromGwswStructure(GwswElement gwswElement, IHydroNetwork network)
         {
             var structureName = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);

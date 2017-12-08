@@ -114,6 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     if (network != null) return new SewerPumpGenerator();
                     Log.ErrorFormat(Resources.SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_);
                     return null;
+                case SewerStructureMapping.StructureType.Crest:
+                    return new SewerWeirGenerator();
                 case SewerStructureMapping.StructureType.Outlet:
                     return new SewerCompartmentOutletGenerator();
                 case SewerStructureMapping.StructureType.Orifice:
@@ -142,8 +144,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (sewerTypeAttribute.IsGwswPipe()) return new SewerConnectionPipeGenerator();
             if (sewerTypeAttribute.IsGwswOrifice()) return new SewerConnectionOrificeGenerator();
+            if (sewerTypeAttribute.IsGwswPump()) return new SewerPumpGenerator();
+            if (sewerTypeAttribute.IsGwswWeir()) return new SewerWeirGenerator();
 
-            return sewerTypeAttribute.IsGwswPump() ? (ISewerNetworkFeatureGenerator)new SewerPumpGenerator() : basicGenerator;
+            return basicGenerator;
         }
 
         #region Auxiliar Gwsw Elements
@@ -289,6 +293,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return false;
         }
 
+        public static bool IsGwswWeir(this GwswAttribute sewerTypeAttribute)
+        {
+            var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
+            return connectionType == SewerConnectionMapping.ConnectionType.Weir;
+        }
+
         public static bool IsValidGwswManhole(this GwswElement gwswElement)
         {
             if (gwswElement == null) return false;
@@ -313,7 +323,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public static bool IsValidGwswSewerConnection(this GwswElement gwswElement)
         {
             if (gwswElement == null) return false;
-            var nodeIdStart = gwswElement.GetAttributeFromList( SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
+            var nodeIdStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
             var nodeIdEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
             if (nodeIdStart == null || nodeIdEnd == null)
             {

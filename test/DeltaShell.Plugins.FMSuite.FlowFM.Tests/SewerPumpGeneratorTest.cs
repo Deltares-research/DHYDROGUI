@@ -38,10 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(sewerConnection);
 
             //A Pump has been added to the above sewer connection.
-            var featuresInConnection = sewerConnection.GetStructuresFromBranchFeatures<Pump>();
-            Assert.IsNotNull(featuresInConnection);
-
-            var foundPump = featuresInConnection.FirstOrDefault();
+            var foundPump = sewerConnection.GetStructuresFromBranchFeatures<Pump>().FirstOrDefault();
             Assert.IsNotNull(foundPump);
             Assert.AreEqual(typeof(Pump), foundPump.GetType());
 

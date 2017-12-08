@@ -246,6 +246,7 @@
     <Compile Include="SewerFeatureType.cs" />
     <Compile Include="SewerPumpGenerator.cs" />
     <Compile Include="SewerStructureMapping.cs" />
+    <Compile Include="SewerWeirGenerator.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

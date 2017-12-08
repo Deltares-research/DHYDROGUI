@@ -161,6 +161,7 @@ namespace DelftTools.Hydro
         /// <summary>
         /// Add structure to branch, additionaly makes certain the geometry is set.
         /// </summary>
+        /// <param name="sewerConnection"></param>
         /// <param name="structure"></param>
         public static ICompositeBranchStructure AddStructureToBranch(this ISewerConnection sewerConnection, IStructure structure)
         {
