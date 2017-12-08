@@ -190,11 +190,11 @@ namespace DelftTools.Hydro.Tests
                                                                  crossSectionDefinitionProxy, 10.0);
             
             var clonedNetwork = (HydroNetwork) network.Clone();
-            Assert.AreEqual(1,clonedNetwork.SharedCrossSectionDefinitions.Count);
+            Assert.AreEqual(1, clonedNetwork.SharedCrossSectionDefinitions.Count);
             //check the proxy got rewired
             var crossSectionClone = clonedNetwork.CrossSections.First();
             var clonedProxyDefinition = (CrossSectionDefinitionProxy)crossSectionClone.Definition;
-            Assert.AreEqual(clonedProxyDefinition.InnerDefinition,clonedNetwork.SharedCrossSectionDefinitions.First());
+            Assert.AreEqual(clonedProxyDefinition.InnerDefinition, clonedNetwork.SharedCrossSectionDefinitions.First());
         }
 
         

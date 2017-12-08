@@ -359,10 +359,6 @@ namespace DelftTools.Hydro
             }
 
             clone.Links = new EventedList<HydroLink>(Links);
-
-            //SewerProfiles
-            clone.sharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>(sharedCrossSectionDefinitions);
-
             return clone;
         }
 

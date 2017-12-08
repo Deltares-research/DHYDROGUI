@@ -65,8 +65,8 @@ namespace DelftTools.Hydro.Tests
             var defaultDefinition = networkCopy.DefaultCrossSectionDefinition;
 
             // Compare dafault cross section defs.
-            Assert.AreEqual(networkCopy.SharedCrossSectionDefinitions.First(),defaultDefinition);
-            Assert.AreEqual(crossSectionDefinition.GetType(),defaultDefinition.GetType());
+            Assert.AreEqual(networkCopy.SharedCrossSectionDefinitions.First(), defaultDefinition);
+            Assert.AreEqual(crossSectionDefinition.GetType(), defaultDefinition.GetType());
         }
 
         [Test]
