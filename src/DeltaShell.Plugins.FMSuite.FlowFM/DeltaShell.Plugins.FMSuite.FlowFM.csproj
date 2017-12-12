@@ -159,6 +159,7 @@
     <Compile Include="IO\Importers\BcmFileImporter.cs" />
     <Compile Include="IO\Importers\GwswBaseImporter.cs" />
     <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
+    <Compile Include="IO\Importers\SourceAndSinkImporterHelper.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\MorphologySedimentIniFileGenerator.cs" />
     <Compile Include="IO\Importers\FMRstFileImporter.cs" />

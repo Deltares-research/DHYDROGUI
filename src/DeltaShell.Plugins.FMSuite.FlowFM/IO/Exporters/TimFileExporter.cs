@@ -40,10 +40,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var sourceAndSink = item as SourceAndSink;
             if (sourceAndSink != null)
             {
-                data = sourceAndSink.Function;
-                if (GetModelForSourceAndSink != null)
+                data = (IFunction)sourceAndSink.Function.Clone(true);
+
+                var model = GetModelForSourceAndSink(sourceAndSink);
+                if (model != null)
                 {
-                    refDate = GetModelForSourceAndSink(sourceAndSink).ReferenceTime;
+                    refDate = model.ReferenceTime;
+
+                    if (data == null)
+                    {
+                        Log.ErrorFormat("Could not export data for SourceAndSink: {0}, no Function was found");
+                        return false;
+                    }
+
+                    if (!model.UseSalinity) data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                    if (!model.UseTemperature) data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
                 }
             }
 

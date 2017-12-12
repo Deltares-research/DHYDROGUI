@@ -276,15 +276,15 @@
     <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
     <Compile Include="IO\Exporters\GeometryZipExporterTest.cs" />
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporterTest.cs" />
+    <Compile Include="IO\Exporters\TimFileExporterTest.cs" />
     <Compile Include="IO\ExtForceFileHelperTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswDefinitionImporterTest.cs" />
+    <Compile Include="IO\Importers\TimFileImporterTest.cs" />    <Compile Include="IO\Importers\GwswDefinitionImporterTest.cs" />
     <Compile Include="IO\Importers\GwswBaseImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswImporterTestHelper.cs" />
-    <Compile Include="IO\MduFileHelperTest.cs" />
+    <Compile Include="IO\Importers\GwswImporterTestHelper.cs" />    <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />

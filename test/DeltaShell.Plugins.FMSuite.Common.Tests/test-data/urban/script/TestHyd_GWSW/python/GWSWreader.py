@@ -16,6 +16,7 @@ class GWSWreader:
         model.connections = self.readConnections2Dict()
         model.profiles = self.readProfiles2Dict()
         model.structures = self.readStructures2Dict()
+        model.inlets = self.readInlet2Dict(model)
         return model
 
     def file2Dict(self, filePath):
@@ -166,3 +167,32 @@ class GWSWreader:
         #U23_DAG	Percentage van het dagvolume op 23 uur
         #ALG_TOE	Toelichting bij deze regel
         return self.file2Dict(filePath)
+
+    def readInlet2Dict(self, model):
+        filePath = os.path.join(self.dirPath, 'input_GWSW','Oppervlak.csv')
+
+        #UNI_IDE
+        #NSL_STA
+        #AFV_DEF
+        #AFV_IDE
+        #AFV_OPP
+        dict=OrderedDict()
+        with open(filePath) as csvfile:
+            file = csv.reader(csvfile,delimiter = self.csvDelimeter)
+            firstLine = True
+            for line in file:
+                if not firstLine:
+                    node = line[0]
+                    if node in model.connections:
+                        connection = model.connections[node]
+                        if float(connection[6]) > float(connection[5]):
+                            node = connection[2]
+                        else:
+                            node = connection[1]
+
+                    if node in dict:
+                        dict[node][1] += int(line[4])
+                    else:
+                        dict[node] = [node,int(line[4])]
+                firstLine = False
+        return dict

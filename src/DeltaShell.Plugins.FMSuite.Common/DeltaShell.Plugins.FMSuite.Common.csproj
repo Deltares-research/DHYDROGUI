@@ -151,6 +151,7 @@
     <Compile Include="IO\Feature2DImportExportBase.cs" />
     <Compile Include="IO\FMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\FeatureGroupExtensions.cs" />
+    <Compile Include="IO\FunctionExtensions.cs" />
     <Compile Include="IO\IFeature2DFileBase.cs" />
     <Compile Include="IO\ObsFile.cs" />
     <Compile Include="IO\PliFile.cs" />

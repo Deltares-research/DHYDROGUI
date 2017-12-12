@@ -37,10 +37,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             ? string.Format("{0:yyyyMMddhhmm}", timeValues[i])
                             : string.Format("{0:0.0000000e+00}", (timeValues[i] - modelReferenceDate.Value).TotalMinutes);
 
-                        var valueStrings =
-                            components.Select(v => string.Format("{0:0.0000000e+00}", v.Values[i])).ToList();
+                        var valueStrings = components.Select(c => 
+                            string.Format("{0:0.0000000e+00}", c.Values[i])).ToList();
 
-                        WriteLine(string.Join(" ", (new[] {timeString}).Concat(valueStrings)));
+                        WriteLine(string.Join(" ", (new[] { timeString }).Concat(valueStrings)));
                     }
                 }
                 finally

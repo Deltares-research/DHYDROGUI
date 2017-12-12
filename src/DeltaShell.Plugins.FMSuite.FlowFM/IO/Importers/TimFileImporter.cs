@@ -134,7 +134,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 try
                 {
-                    InsertTimeSeries(path, sourceAndSink.Function, GetModelForSourceAndSink(sourceAndSink).ReferenceTime);
+                    var model = GetModelForSourceAndSink(sourceAndSink);
+                    if (model == null)
+                    {
+                        Log.ErrorFormat("Tim-file import failed: could not retrieve model for SourceAndSink: {0}", sourceAndSink.Name);
+                        return sourceAndSink;
+                    }
+                    
+                    var sourceAndSinkFunction = sourceAndSink.Function;
+                    if (sourceAndSinkFunction == null)
+                    {
+                        Log.ErrorFormat("Tim-file import failed: could not retrieve function for SourceAndSink: {0}", sourceAndSink.Name);
+                        return sourceAndSink;
+                    }
+
+                    var readFunction = (IFunction)sourceAndSinkFunction.Clone(true);
+                    InsertTimeSeries(path, readFunction, model.ReferenceTime);
+
+                    if (SourceAndSinkImporterHelper.DetermineComponentValuesForImportedSourceAndSinkFunction(readFunction, model.UseSalinity, model.UseTemperature))
+                    {
+                        sourceAndSink.Data = readFunction;
+                    }
+                    else
+                    {
+                        Log.ErrorFormat("Tim-file import failed: could not determine component values for imported SourceAndSink {0}", sourceAndSink.Name);
+                    }
+                    return sourceAndSink;
                 }
                 catch (Exception e)
                 {
