@@ -81,16 +81,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var numberOfOutlets = 4;
             Assert.AreEqual(numberOfOutlets, compartments.Count(cmp => cmp.IsOutletCompartment()), "Not all outlets were found.");
         }
-
+        
         [Test]
         public void ImportGwswDefinitionFileLoadsAsManyAttributesAsLinesInTheCsv()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
-            var gwswImporter = new GwswDefinitionImporter(){ ImportWithFiles = false };
-            var importedObject = gwswImporter.ImportItem(filePath);
-            Assert.IsNotNull(importedObject);
-
-            var attributeTable = importedObject as DataTable;
+            var gwswImporter = new GwswBaseImporter();
+            var attributeTable = gwswImporter.ImportGwswDefinitionFile(filePath);
             Assert.IsNotNull(attributeTable);
 
             var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
@@ -105,8 +102,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             // Import Csv Definition.
-            var gwswImporter = new GwswDefinitionImporter(){ ImportWithFiles = false};
-            var definitionTable = gwswImporter.ImportItem(filePath) as DataTable;
+            var gwswImporter = new GwswBaseImporter();
+            var definitionTable = gwswImporter.ImportGwswDefinitionFile(filePath);
             Assert.IsNotNull(definitionTable);
 
             var attributeList = new List<GwswAttributeType>();
@@ -193,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(network.SharedCrossSectionDefinitions.Any());
             Assert.IsFalse(network.Pumps.Any());
 
-            var gwswImporter = new GwswDefinitionImporter{ImportWithFiles = true};
+            var gwswImporter = new GwswDefinitionImporter();
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             try
             {

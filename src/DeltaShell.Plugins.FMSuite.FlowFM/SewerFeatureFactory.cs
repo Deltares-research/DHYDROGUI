@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <param name="listOfElements">List of GwswElements.</param>
         /// <param name="network">HydroNetwork</param>
         /// <returns>List of Network Features representing the elements stored in the <param name="listOfElements"/></returns>
-        public static IEnumerable<INetworkFeature> CreateMultipleInstances(List<GwswElement> listOfElements, IHydroNetwork network = null)
+        public static IEnumerable<INetworkFeature> CreateMultipleInstances(IList<GwswElement> listOfElements, IHydroNetwork network)
         {
             var auxNetwork = network ?? new HydroNetwork();
             
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Auxiliar Gwsw Elements
 
-        private static List<GwswElement> CreateAuxiliarGwswElements(List<GwswElement> listOfElements)
+        private static List<GwswElement> CreateAuxiliarGwswElements(IList<GwswElement> listOfElements)
         {
             var elementsGrouped = listOfElements.GroupBy(el => el.ElementTypeName).ToList();
             SewerFeatureType elementType;

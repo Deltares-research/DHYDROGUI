@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #endregion
             //generate all instances
             var listOfElements = new List<GwswElement> {nodeOne, nodeTwo, nodeThree};
-            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements);
+            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements, null);
             Assert.IsNotNull(features);
 
             var listOfManholes = features.OfType<Manhole>().ToList();
@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #endregion
             //generate all instances
             var listOfElements = new List<GwswElement> { nodeOne, nodeTwo };
-            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements);
+            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements, null);
             Assert.IsNotNull(features);
 
             var listOfManholes = features.OfType<Manhole>().ToList();
