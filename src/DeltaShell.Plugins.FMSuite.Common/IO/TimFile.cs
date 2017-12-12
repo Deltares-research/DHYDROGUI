@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFile));
         // if modelStartTime is null, we write absolute time values. 
-        public void Write(string timFilePath, IFunction timeSeries, DateTime? modelReferenceDate, ICollection<int> componentIndexesToIgnore = null)
+        public void Write(string timFilePath, IFunction timeSeries, DateTime? modelReferenceDate)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
@@ -37,11 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             ? string.Format("{0:yyyyMMddhhmm}", timeValues[i])
                             : string.Format("{0:0.0000000e+00}", (timeValues[i] - modelReferenceDate.Value).TotalMinutes);
 
-                        var componentsToWrite = componentIndexesToIgnore == null
-                            ? components
-                            : components.Where((c, index) => !componentIndexesToIgnore.Contains(index));
-
-                        var valueStrings = componentsToWrite.Select(c => 
+                        var valueStrings = components.Select(c => 
                             string.Format("{0:0.0000000e+00}", c.Values[i])).ToList();
 
                         WriteLine(string.Join(" ", (new[] { timeString }).Concat(valueStrings)));
@@ -54,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public void Read(string timFilePath, IFunction function, DateTime refDate, ICollection<int> componentIndexesToIgnore = null)
+        public void Read(string timFilePath, IFunction function, DateTime refDate)
         {
             if (!(function.Arguments.Count == 1 && function.Arguments.First() is IVariable<DateTime>))
             {
@@ -75,10 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             FunctionHelper.SetValuesRaw(function.Arguments[0], minutes.Select(m => GetDateTime(m, refDate)));
             for (var i = 0; i < function.Components.Count; ++i)
             {
-                FunctionHelper.SetValuesRaw<double>(function.Components[i],
-                    (componentIndexesToIgnore != null && componentIndexesToIgnore.Contains(i)) 
-                    ? Enumerable.Repeat(0.0, minutes.Count) 
-                    : componentValues[i]);
+                FunctionHelper.SetValuesRaw<double>(function.Components[i], componentValues[i]);
             }
             function.EndEdit();
         }

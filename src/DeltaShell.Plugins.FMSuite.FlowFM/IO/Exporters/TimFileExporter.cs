@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
         {
             IFunction data = null;
             DateTime? refDate = null;
-            ICollection<int> componentIndexesToIgnore = null;
 
             var boundaryCondition = item as IBoundaryCondition;
             if (boundaryCondition != null && boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries)
@@ -41,33 +40,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var sourceAndSink = item as SourceAndSink;
             if (sourceAndSink != null)
             {
-                data = sourceAndSink.Function;
+                data = (IFunction)sourceAndSink.Function.Clone(true);
+
                 var model = GetModelForSourceAndSink(sourceAndSink);
                 if (model != null)
                 {
                     refDate = model.ReferenceTime;
-                    componentIndexesToIgnore = new List<int>();
 
-                    if (data != null)
+                    if (data == null)
                     {
-                        if (!model.UseSalinity)
-                        {
-                            var salinityComponentIndex = data.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
-                            if (salinityComponentIndex >= 0)
-                            {
-                                componentIndexesToIgnore.Add(salinityComponentIndex);
-                            }
-                        }
-
-                        if (!model.UseTemperature)
-                        {
-                            var temperatureComponentIndex = data.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
-                            if (temperatureComponentIndex >= 0)
-                            {
-                                componentIndexesToIgnore.Add(temperatureComponentIndex);
-                            }
-                        }
+                        Log.ErrorFormat("Could not export data for SourceAndSink: {0}, no Function was found");
+                        return false;
                     }
+
+                    if (!model.UseSalinity) data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                    if (!model.UseTemperature) data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
                 }
             }
 
@@ -86,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             try
             {
                 var writer = new TimFile();
-                writer.Write(path, data, refDate, componentIndexesToIgnore);
+                writer.Write(path, data, refDate);
                 return true;
             }
             catch (Exception e)

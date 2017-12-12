@@ -138,35 +138,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     if (model == null)
                     {
                         Log.ErrorFormat("Tim-file import failed: could not retrieve model for SourceAndSink: {0}", sourceAndSink.Name);
+                        return sourceAndSink;
+                    }
+                    
+                    var sourceAndSinkFunction = sourceAndSink.Function;
+                    if (sourceAndSinkFunction == null)
+                    {
+                        Log.ErrorFormat("Tim-file import failed: could not retrieve function for SourceAndSink: {0}", sourceAndSink.Name);
+                        return sourceAndSink;
+                    }
+
+                    var readFunction = (IFunction)sourceAndSinkFunction.Clone(true);
+                    InsertTimeSeries(path, readFunction, model.ReferenceTime);
+
+                    if (SourceAndSinkImporterHelper.DetermineComponentValuesForImportedSourceAndSinkFunction(readFunction, model.UseSalinity, model.UseTemperature))
+                    {
+                        sourceAndSink.Data = readFunction;
                     }
                     else
                     {
-                        var function = sourceAndSink.Function;
-                        var componentIndexesToIgnore = new List<int>();
-
-                        if (function != null)
-                        {
-                            if (!model.UseSalinity)
-                            {
-                                var salinityComponentIndex = function.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
-                                if (salinityComponentIndex >= 0)
-                                {
-                                    componentIndexesToIgnore.Add(salinityComponentIndex);
-                                }
-                            }
-
-                            if (!model.UseTemperature)
-                            {
-                                var temperatureComponentIndex = function.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
-                                if (temperatureComponentIndex >= 0)
-                                {
-                                    componentIndexesToIgnore.Add(temperatureComponentIndex);
-                                }
-                            }
-                        }
-                        InsertTimeSeries(path, function, model.ReferenceTime, componentIndexesToIgnore);
+                        Log.ErrorFormat("Tim-file import failed: could not determine component values for imported SourceAndSink {0}", sourceAndSink.Name);
                     }
-                    
+                    return sourceAndSink;
                 }
                 catch (Exception e)
                 {
@@ -196,9 +189,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         [InvokeRequired]
-        private static void InsertTimeSeries(string path, IFunction data, DateTime refDate, ICollection<int> componentsToIgnore = null)
+        private static void InsertTimeSeries(string path, IFunction data, DateTime refDate)
         {
-            new TimFile().Read(path, data, refDate, componentsToIgnore);
+            new TimFile().Read(path, data, refDate);
         }
 
         [InvokeRequired]

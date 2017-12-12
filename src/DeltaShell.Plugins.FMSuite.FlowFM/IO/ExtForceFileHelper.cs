@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -201,30 +202,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> {sourceAndSink.Feature});
                 var dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
 
-                var componentIndexesToIgnore = new List<int>();
-                var function = sourceAndSink.Function;
-
+                var function = (IFunction)sourceAndSink.Function.Clone(true);
                 if (function != null)
                 {
-                    if (!writeSalinity)
-                    {
-                        var salinityComponentIndex = function.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
-                        if (salinityComponentIndex >= 0)
-                        {
-                            componentIndexesToIgnore.Add(salinityComponentIndex);
-                        }
-                    }
-
-                    if (!writeTemperature)
-                    {
-                        var temperatureComponentIndex = function.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
-                        if (temperatureComponentIndex >= 0)
-                        {
-                            componentIndexesToIgnore.Add(temperatureComponentIndex);
-                        }
-                    }
+                    if (!writeSalinity) function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                    if (!writeTemperature) function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                    new TimFile().Write(dataFilePath, function, referenceTime);
                 }
-                new TimFile().Write(dataFilePath, function, referenceTime, componentIndexesToIgnore);
             }
 
             return extForceFileItem;
@@ -562,29 +546,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate, bool readSalinity, bool readTemperature)
         {
-            var componentIndexesToIgnore = new List<int>();
             var data = sourceAndSink.Data;
-            if (data != null)
+            if (data == null)
             {
-                if (!readSalinity)
-                {
-                    var salinityComponentIndex = data.GetComponentIndexByName(SourceAndSink.SalinityVariableName);
-                    if (salinityComponentIndex >= 0)
-                    {
-                        componentIndexesToIgnore.Add(salinityComponentIndex);
-                    }
-                }
-
-                if (!readTemperature)
-                {
-                    var temperatureComponentIndex = data.GetComponentIndexByName(SourceAndSink.TemperatureVariableName);
-                    if (temperatureComponentIndex >= 0)
-                    {
-                        componentIndexesToIgnore.Add(temperatureComponentIndex);
-                    }
-                }
+                log.ErrorFormat("Read SourceAndSink values failed: no function detected for SourceAndSink {0}", sourceAndSink.Name);
+                return;
             }
-            new TimFile().Read(filePath, data, modelReferenceDate, componentIndexesToIgnore);
+            var readFunction = (IFunction)data.Clone(true);
+            new TimFile().Read(filePath, readFunction, modelReferenceDate);
+
+            if (SourceAndSinkImporterHelper.DetermineComponentValuesForImportedSourceAndSinkFunction(readFunction, readSalinity, readTemperature))
+            {
+                sourceAndSink.Data = readFunction;
+            }
+            else
+            {
+                log.ErrorFormat("Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}", sourceAndSink.Name);
+            }
         }
 
         public static ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath, string extForceFileQuantityName, SetValueOperation operation, ExtForceFileItem existingExtForceFileItem = null, bool writeToDisk = true, string prefix = null)
