@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             sewerConnection.Network = network;
 
             var nodeIdString = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId);
-            if (nodeIdString?.ValueAsString != null)
+            if (nodeIdString.IsValidAttribute())
             {
                 sewerConnection.Name = nodeIdString.ValueAsString;
             }

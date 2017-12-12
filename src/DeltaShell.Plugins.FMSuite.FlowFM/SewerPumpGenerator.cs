@@ -27,23 +27,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private INetworkFeature CreatePumpFromGwswStructure(GwswElement gwswElement, IHydroNetwork network)
         {
-            var structureName = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);
             if (network == null)
             {
                 Log.ErrorFormat(Resources.SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_);
                 return null;
             }
-                
-            if (!structureName.IsValidAttribute()) return null;
 
+            var structureNameAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);
+            if (!structureNameAttribute.IsValidAttribute()) return null;
+            var structureName = structureNameAttribute.ValueAsString;
 
-            var pumpFound = network.BranchFeatures.OfType<IPump>()
-                .FirstOrDefault(p => p.Name.Equals(structureName.ValueAsString));
+            var pumpFound = network.BranchFeatures.OfType<IPump>().FirstOrDefault(p => p.Name.Equals(structureName));
             if (pumpFound == null)
             {
-                pumpFound = new Pump(structureName.ValueAsString);
+                pumpFound = new Pump(structureName);
                 //Create a sewer connection placeholder and add it to the network so that the structure is later added as well.
-                var auxSewerConnection = new SewerConnection(structureName.ValueAsString) { Network = network };
+                var auxSewerConnection = new SewerConnection(structureName) { Network = network };
                 network.Branches.Add(auxSewerConnection);
                 auxSewerConnection.AddStructureToBranch(pumpFound);
             }

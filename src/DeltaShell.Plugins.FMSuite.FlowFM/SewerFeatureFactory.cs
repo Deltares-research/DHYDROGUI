@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var sewerTypeAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeType);
             var basicGenerator = new SewerConnectionGenerator();
-            if (string.IsNullOrEmpty(sewerTypeAttribute?.ValueAsString)) return basicGenerator;
+            if (!sewerTypeAttribute.IsValidAttribute()) return basicGenerator;
 
             if (sewerTypeAttribute.IsGwswPipe()) return new SewerConnectionPipeGenerator();
             if (sewerTypeAttribute.IsGwswOrifice()) return new SewerConnectionOrificeGenerator();
