@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -195,9 +196,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             double width;
             CrossSectionStandardShapeRound csRoundShape;
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
+            var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
             if (widthAttribute.TryGetValueAsDouble(out width))
             {
-                csRoundShape = new CrossSectionStandardShapeRound {Diameter = width / 1000 /*Conversion from millimeters to meters*/};
+                var multiplier = 1.0;
+                var pvcStringId = EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid);
+                if (materialAttribute.IsValidAttribute() && materialAttribute.ValueAsString.Equals(pvcStringId)) multiplier = 16.0 / 17.0;
+                csRoundShape = new CrossSectionStandardShapeRound
+                {
+                    Diameter = multiplier * width / 1000 /*Conversion from millimeters to meters*/
+                };
             }
             else
             {

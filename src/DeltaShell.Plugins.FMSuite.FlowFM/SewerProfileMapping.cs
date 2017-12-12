@@ -15,6 +15,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             [Description("TPZ")] Trapezoid
         }
 
+        public enum SewerProfileMaterial
+        {
+            [Description("BET")] Concrete,
+            [Description("GIJ")] CastIron,
+            [Description("GRE")] StoneWare,
+            [Description("HPE")] Hdpe,
+            [Description("MSW")] Masonry,
+            [Description("PIJ")] SheetMetal,
+            [Description("HPE")] Polyester,
+            [Description("PVC")] Polyvinylchlorid,
+            [Description("STL")] Steel
+        }
+
         public static class PropertyKeys
         {
             public const string SewerProfileId = "CROSSSECTION_ID";

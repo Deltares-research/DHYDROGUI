@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -38,20 +39,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         #region Circle sewer profile shape
-
-        [Test]
-        public void GivenGwswElement_WhenGeneratingSewerProfileCircle_ThenReturnCircleShapeWithCorrectPropertyValues()
+        
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.CastIron, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.Concrete, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.Hdpe, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.Masonry, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.Polyester, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.Polyvinylchlorid, 1.6)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.SheetMetal, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.Steel, 1.7)]
+        [TestCase(SewerProfileMapping.SewerProfileMaterial.StoneWare, 1.7)]
+        public void GivenCircleProfileGwswElement_WhenGeneratingSewerProfileCircle_ThenReturnCircleShapeWithCorrectDiameter(SewerProfileMapping.SewerProfileMaterial material, double expectedDiameter)
         {
+            var materialString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(material);
             var profileGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Crosssection.ToString(),
                 GwswAttributeList = new List<GwswAttribute>
                 {
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileId, ProfileId, string.Empty),
-                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "1250", string.Empty, TypeDouble)
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "1700", string.Empty, TypeDouble),
+                    GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, materialString, string.Empty)
                 }
             };
-            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionDefinitionGenerator, CrossSectionStandardShapeRound>(profileGwswElement, 1.25);
+            GenerateCrossSectionDefinitionAndCheckShapeProperties<CircleCrossSectionDefinitionGenerator, CrossSectionStandardShapeRound>(profileGwswElement, expectedDiameter);
         }
 
         [Test]
