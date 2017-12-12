@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -90,16 +91,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             //Add Attributes
             var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
-            if (flowDirection != null && flowDirection.ValueAsString != string.Empty)
+            if (flowDirection.IsValidAttribute())
             {
                 var directionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>();
-                if (directionValue == SewerConnectionMapping.FlowDirection.FromStartToEnd)
+                switch (directionValue)
                 {
-                    sewerPump.DirectionIsPositive = true;
-                }
-                if (directionValue == SewerConnectionMapping.FlowDirection.FromEndToStart)
-                {
-                    sewerPump.DirectionIsPositive = false;
+                    case SewerConnectionMapping.FlowDirection.Open:
+                        sewerPump.DirectionIsPositive = true;
+                        break;
+                    case SewerConnectionMapping.FlowDirection.Closed:
+                        sewerPump.DirectionIsPositive = true;
+                        break;
+                    case SewerConnectionMapping.FlowDirection.FromStartToEnd:
+                        sewerPump.DirectionIsPositive = true;
+                        break;
+                    case SewerConnectionMapping.FlowDirection.FromEndToStart:
+                        sewerPump.DirectionIsPositive = false;
+                        break;
                 }
             }
 

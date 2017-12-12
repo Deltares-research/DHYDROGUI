@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -45,12 +44,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 auxSewerConnection.AddStructureToBranch(weirFound);
             }
 
-            ExtendPumpAttributes(weirFound, gwswElement);
+            ExtendWeirAttributes(weirFound, gwswElement);
 
             return weirFound;
         }
 
-        private static void ExtendPumpAttributes(Weir weir, GwswElement gwswElement)
+        private static void ExtendWeirAttributes(IWeir weir, GwswElement gwswElement)
         {
             var auxDouble = 0.0;
             //Add Attributes
