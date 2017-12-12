@@ -130,7 +130,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdPump.Geometry, "Default geometry not given to pump.");
             Assert.IsNotNull(createdPump.Geometry.Coordinates);
             Assert.IsTrue(createdPump.Geometry.Coordinates.Any());
-
         }
 
         [Test]
@@ -180,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(pumpPh);
             Assert.AreEqual(pumpCapacity, pumpPh.Capacity);
 
-            //Instance the Pump AS SEWER CONNETION
+            //Instance the Pump AS SEWER CONNECTION
             var connectionElement = SewerFeatureFactory.CreateInstance(sewerConnectionGwswElement, network);
             Assert.IsNotNull(connectionElement);
             Assert.IsTrue(network.Pumps.Any(p => p.Name.Equals(structureId)));
@@ -188,7 +187,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var replacedStructure = network.Pumps.FirstOrDefault(s => s.Name.Equals(pumpPh.Name));
             Assert.AreEqual(pumpPh, replacedStructure, "the attributes from the element do not match");
-
         }
 
         [Test]

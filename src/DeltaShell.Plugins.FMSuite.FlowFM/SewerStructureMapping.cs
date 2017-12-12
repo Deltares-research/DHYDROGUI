@@ -25,6 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             public const string StopLevelDownstreams = "STOP_LEVEL_DOWNSTREAMS";
             public const string StartLevelUpstreams = "START_LEVEL_UPSTREAMS";
             public const string StopLevelUpstreams = "STOP_LEVEL_UPSTREAMS";
+            public const string CrestWidth = "CREST_WIDTH";
+            public const string CrestLevel = "CREST_LEVEL";
+            public const string DischargeCoefficient = "DISCHARGE_COEFFICIENT";
         }
     }
 }

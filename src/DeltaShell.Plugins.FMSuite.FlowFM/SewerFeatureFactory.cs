@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public static bool IsGwswWeir(this GwswAttribute sewerTypeAttribute)
         {
             var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
-            return connectionType == SewerConnectionMapping.ConnectionType.Weir;
+            return connectionType == SewerConnectionMapping.ConnectionType.Crest;
         }
 
         public static bool IsValidGwswManhole(this GwswElement gwswElement)
