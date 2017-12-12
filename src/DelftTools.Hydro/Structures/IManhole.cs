@@ -7,6 +7,6 @@ namespace DelftTools.Hydro.Structures
     {
         IEventedList<Compartment> Compartments { get; set; }
         Compartment GetCompartmentByName(string compartmentName);
-        bool ContainsCompartment(string compartmentName);
+        bool ContainsCompartmentWithName(string compartmentName);
     }
 }

@@ -143,8 +143,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(network.Pipes.Any(p => p.SourceCompartment.Name.Equals(expectedStartNodeName) && p.TargetCompartment.Name.Equals(expectedEndNodeName)));
 
             //Checking manhole name is stored as id
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(expectedStartNodeName)));
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(expectedEndNodeName)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(expectedStartNodeName)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(expectedEndNodeName)));
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 var outlet = compartment as OutletCompartment;
                 Assert.IsNotNull(outlet);
 
-                var manhole = network.Manholes.FirstOrDefault(m => m.ContainsCompartment(outlet.Name));
+                var manhole = network.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(outlet.Name));
                 Assert.IsNotNull(manhole);
                 var extendedOutlet = manhole.GetCompartmentByName(outlet.Name) as OutletCompartment;
                 Assert.IsNotNull(extendedOutlet);

@@ -161,19 +161,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdConnection);
 
             //Defined
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(startNode)));
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(endNode)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(startNode)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(endNode)));
 
             //Created default manholes
             Assert.IsNotNull(createdConnection.Source);
             var sourceAsManhole = createdConnection.Source as Manhole;
             Assert.IsNotNull(sourceAsManhole);
-            Assert.IsTrue(sourceAsManhole.ContainsCompartment(startNode));
+            Assert.IsTrue(sourceAsManhole.ContainsCompartmentWithName(startNode));
 
             Assert.IsNotNull(createdConnection.Target);
             var targetAsManhole = createdConnection.Target as Manhole;
             Assert.IsNotNull(targetAsManhole);
-            Assert.IsTrue(targetAsManhole.ContainsCompartment(endNode));
+            Assert.IsTrue(targetAsManhole.ContainsCompartmentWithName(endNode));
 
             //Created default compartments.
             Assert.IsNotNull(createdConnection.SourceCompartment);
@@ -204,9 +204,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             network.Nodes.Add(endNode);
 
             Assert.IsTrue(network.Manholes.Any(n => n.Name.Equals(startNodeName)));
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(startCompartmentName)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(startCompartmentName)));
             Assert.IsTrue(network.Manholes.Any(n => n.Name.Equals(endNodeName)));
-            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartment(endCompartmentName)));
+            Assert.IsTrue(network.Manholes.Any(n => n.ContainsCompartmentWithName(endCompartmentName)));
 
             //Create element and instantiate it.
             var nodeGwswElement = new GwswElement

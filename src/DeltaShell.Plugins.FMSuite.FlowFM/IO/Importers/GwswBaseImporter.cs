@@ -10,6 +10,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
@@ -329,6 +330,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswElementExtensions));
 
+        public static bool IsNumerical(this GwswAttribute gwswAttribute)
+        {
+            if (gwswAttribute.GwswAttributeType != null && gwswAttribute.GwswAttributeType.AttributeType != null)
+                return gwswAttribute.GwswAttributeType.AttributeType.IsNumericalType();
+
+            return false;
+        }
+
         public static bool IsTypeOf(this GwswAttribute gwswAttribute, Type compareType)
         {
             if (gwswAttribute.GwswAttributeType != null && gwswAttribute.GwswAttributeType.AttributeType != null)
@@ -386,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             value = default(double);
             if (!gwswAttribute.IsValidAttribute()) return false;
-            if( !gwswAttribute.IsTypeOf(typeof(double)) && !gwswAttribute.IsTypeOf(typeof(int)))
+            if( !gwswAttribute.IsNumerical())
             {
                 gwswAttribute.LogErrorParseType(typeof(double));
                 return false;

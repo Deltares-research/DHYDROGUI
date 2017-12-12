@@ -94,6 +94,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
+        public void GwswAttribute_IsNumerical_GivenInt_Test()
+        {
+            var attr = new GwswAttribute
+            {
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(int) }
+            };
+            Assert.IsTrue(attr.IsNumerical());
+        }
+
+        [Test]
+        public void GwswAttribute_IsNumerical_GivenDouble_Test()
+        {
+            var attr = new GwswAttribute
+            {
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(double) }
+            };
+            Assert.IsTrue(attr.IsNumerical());
+        }
+
+
+        [Test]
+        public void GwswAttribute_IsNumerical_GivenString_Test()
+        {
+            var attr = new GwswAttribute
+            {
+                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+            };
+            Assert.IsFalse(attr.IsNumerical());
+        }
+
+
+        [Test]
         public void GwswAttribute_IsTypeOfDouble_Test()
         {
             var attr = new GwswAttribute

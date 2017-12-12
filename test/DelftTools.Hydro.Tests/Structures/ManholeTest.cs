@@ -113,8 +113,8 @@ namespace DelftTools.Hydro.Tests.Structures
             {
                 Compartments = GetCompartmentList()
             };
-            Assert.IsTrue(manhole.ContainsCompartment(compartmentName1));
-            Assert.IsTrue(manhole.ContainsCompartment(CompartmentName2));
+            Assert.IsTrue(manhole.ContainsCompartmentWithName(compartmentName1));
+            Assert.IsTrue(manhole.ContainsCompartmentWithName(CompartmentName2));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace DelftTools.Hydro.Tests.Structures
             {
                 Compartments = GetCompartmentList()
             };
-            Assert.IsFalse(manhole.ContainsCompartment("NonExistentCompartmentName"));
+            Assert.IsFalse(manhole.ContainsCompartmentWithName("NonExistentCompartmentName"));
         }
 
         [Test]
@@ -135,12 +135,12 @@ namespace DelftTools.Hydro.Tests.Structures
                 Compartments = GetCompartmentList()
             };
 
-            Assert.IsTrue(manhole.ContainsCompartment(compartmentName1));
+            Assert.IsTrue(manhole.ContainsCompartmentWithName(compartmentName1));
 
             var compartmentToRemove = manhole.GetCompartmentByName(compartmentName1);
             manhole.Compartments.Remove(compartmentToRemove);
 
-            Assert.IsFalse(manhole.ContainsCompartment(compartmentName1));
+            Assert.IsFalse(manhole.ContainsCompartmentWithName(compartmentName1));
             Assert.AreNotEqual(compartmentToRemove.ParentManhole, manhole);
         }
 
@@ -158,14 +158,14 @@ namespace DelftTools.Hydro.Tests.Structures
             var newManholeName = "newManhole";
             var newManhole = new Manhole(newManholeName);
 
-            Assert.IsTrue(oldManhole.ContainsCompartment(compartmentName));
-            Assert.IsFalse(newManhole.ContainsCompartment(compartmentName));
+            Assert.IsTrue(oldManhole.ContainsCompartmentWithName(compartmentName));
+            Assert.IsFalse(newManhole.ContainsCompartmentWithName(compartmentName));
             Assert.AreEqual(compartmentToMove.ParentManhole, oldManhole);
 
             newManhole.Compartments.Add(compartmentToMove);
 
-            Assert.IsFalse(oldManhole.ContainsCompartment(compartmentName));
-            Assert.IsTrue(newManhole.ContainsCompartment(compartmentName));
+            Assert.IsFalse(oldManhole.ContainsCompartmentWithName(compartmentName));
+            Assert.IsTrue(newManhole.ContainsCompartmentWithName(compartmentName));
             Assert.AreEqual(compartmentToMove.ParentManhole, newManhole);
         }
     }

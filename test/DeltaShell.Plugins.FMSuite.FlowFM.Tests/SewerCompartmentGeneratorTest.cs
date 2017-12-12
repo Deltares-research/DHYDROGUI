@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var manhole = GenerateManholeWithLogMessages(badGwswElement, "Manhole", lineNumber, string.Empty);
             Assert.IsTrue(manhole.Compartments.Any());
             Assert.AreEqual(1, manhole.Compartments.Count);
-            Assert.IsTrue(manhole.ContainsCompartment(compartmentName));
+            Assert.IsTrue(manhole.ContainsCompartmentWithName(compartmentName));
         }
 
         [Test]

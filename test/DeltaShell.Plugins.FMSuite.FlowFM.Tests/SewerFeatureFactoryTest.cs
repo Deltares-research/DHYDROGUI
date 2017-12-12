@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             if (isNode)
             {
                 Assert.IsTrue(network.Nodes.Any());
-                Assert.IsTrue(network.Manholes.Any(m => m.Name.Equals(structureId) || m.ContainsCompartment(structureId)));
+                Assert.IsTrue(network.Manholes.Any(m => m.Name.Equals(structureId) || m.ContainsCompartmentWithName(structureId)));
             }
 
             if (isBranch)

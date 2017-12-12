@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerManholeGenerator: ISewerNetworkFeatureGenerator
     {
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
         {
             if (!gwswElement.IsValidGwswManhole()) return null;
             var manhole = GetNewOrExistingManhole(gwswElement, network);
@@ -17,17 +17,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return manhole;
         }
 
-        private static IManhole GetNewOrExistingManhole(GwswElement gwswElement, IHydroNetwork network)
+        protected virtual string GetManholeName(GwswElement gwswElement, IHydroNetwork network)
         {
-            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId).GetValidStringValue();
-            if( network == null) return new Manhole(manholeName);
-
-            //Find manhole by its name or get a new one
-            var parentManhole = network.Manholes.FirstOrDefault(m => m.Name.Equals(manholeName));
-            return parentManhole ?? new Manhole(manholeName);
+            return gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId).GetValidStringValue();
         }
 
-        public static void SetManholeCoordinateAttributes(IManhole manhole, GwswElement gwswElement)
+        protected virtual IManhole FindManhole(GwswElement gwswElement, IHydroNetwork network)
+        {
+            var manholeName = GetManholeName(gwswElement, network);
+            return network?.Manholes.FirstOrDefault(m => m.Name.Equals(manholeName));
+        }
+
+        protected virtual IManhole GetNewOrExistingManhole(GwswElement gwswElement, IHydroNetwork network)
+        {
+            var manholeName = GetManholeName(gwswElement, network);
+            return FindManhole(gwswElement, network) ?? new Manhole(manholeName);
+        }
+
+        protected static void SetManholeCoordinateAttributes(IManhole manhole, GwswElement gwswElement)
         {
             // Set the rest of manhole values
             double yCoordinate;

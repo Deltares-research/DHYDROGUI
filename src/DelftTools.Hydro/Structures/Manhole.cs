@@ -79,7 +79,7 @@ namespace DelftTools.Hydro.Structures
                     return;
                 case NotifyCollectionChangeAction.Add:
                     var oldParentManhole = compartment.ParentManhole;
-                    if ( oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartment(compartment.Name))
+                    if ( oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartmentWithName(compartment.Name))
                     {
                         oldParentManhole.Compartments.Remove(compartment);
                     }
@@ -93,7 +93,7 @@ namespace DelftTools.Hydro.Structures
             return Compartments.FirstOrDefault(c => c.Name.Equals(compartmentName));
         }
 
-        public bool ContainsCompartment(string compartmentName)
+        public bool ContainsCompartmentWithName(string compartmentName)
         {
             return Compartments != null && Compartments.Any(c => c.Name.Equals(compartmentName));
         }
