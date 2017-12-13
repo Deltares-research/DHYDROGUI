@@ -108,8 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var fmModel = target as IWaterFlowFMModel;
             var network = fmModel?.Network;
-            //var importedElement = ImportFeatureFile(path, fmModel?.Network);
-            //
+
             var elementList = ImportGwswElementList(path);
             if (!elementList.Any()) return null;
 
@@ -145,6 +144,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             return importedFeatureElements;
+        }
+
+        public IList<INetworkFeature> ImportFeaturesFromDefinitionFile(string definitionPath, IWaterFlowFMModel model)
+        {
+            ImportDefinitionFile(definitionPath);
+            var directoryName = Path.GetDirectoryName(definitionPath);
+            var pathList = GwswDefaultFeatures.Select(it => Path.Combine(directoryName, it.Key)).ToList();
+            return ImportFeatureFileList(pathList, model);
         }
 
         /// <summary>

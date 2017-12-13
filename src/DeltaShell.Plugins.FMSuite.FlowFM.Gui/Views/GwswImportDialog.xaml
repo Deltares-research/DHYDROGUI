@@ -35,8 +35,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Grid.Row="0" Header="Gwsw Custom Feature File">
                         <Grid>
@@ -50,26 +49,35 @@
                             <TextBox Grid.Column="2" VerticalAlignment="Center" Text="{Binding Path=CustomFeatureFilePath, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                     </GroupBox>
-                    <ListView Name="FeatureList" Grid.Row="1" Margin="5" Height="Auto" MinHeight="150" ItemsSource="{Binding Path=GwswFeatureFiles, UpdateSourceTrigger=PropertyChanged}" SelectionMode="Extended" SelectionChanged="FeatureList_SelectionChanged">
-                        <ListView.View>
-                            <GridView>
-                                <GridView.Columns>
-                                    <GridViewColumn>
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CheckBox Tag="{Binding}" IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Path=IsSelected}" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Value}" Header="Feature" />
-                                    <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="File name" />
-                                </GridView.Columns>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button Grid.Row="2" Margin="5" Content="Import Selected Feature Files" Command="{Binding Path=OnImportSelectedFeatures}" VerticalAlignment="Center" />
+                    <Grid Grid.Row="1">
+                        <ListView Name="FeatureList" Margin="5" Height="Auto" MinHeight="150" ItemsSource="{Binding Path=GwswFeatureFiles, UpdateSourceTrigger=PropertyChanged}" SelectionMode="Extended" SelectionChanged="FeatureList_SelectionChanged">
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Tag="{Binding}" IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Path=IsSelected}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Value}" Header="Feature" />
+                                        <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="File name" />
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
                 </Grid>
             </GroupBox>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Margin="5" Content="Import Selected Feature Files" Click="OkImport_OnClick" Command="{Binding Path=OnImportSelectedFeatures}" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsDefinitionFileLoaded, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Column="1" Margin="5" Content="Close" Click="CancelImport_OnClick" VerticalAlignment="Center" />
+            </Grid>
         </Grid>
     </ScrollViewer>
 </Window>

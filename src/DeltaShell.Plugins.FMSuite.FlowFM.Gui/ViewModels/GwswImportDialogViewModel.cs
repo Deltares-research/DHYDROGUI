@@ -84,7 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             }
         }
 
-        private RelayCommand closeCommand;
         private void ImportFeatures()
         {
             if (Importer.GwswAttributesDefinition == null || !Importer.GwswAttributesDefinition.Any()) return;

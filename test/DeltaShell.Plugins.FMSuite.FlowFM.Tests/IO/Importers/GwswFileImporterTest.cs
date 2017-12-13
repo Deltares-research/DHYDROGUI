@@ -501,11 +501,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             try
             {
-                gwswImporter.ImportDefinitionFile(filePath);
-                //Get the items to import
-                var directoryName = Path.GetDirectoryName(filePath);
-                var pathList = gwswImporter.GwswDefaultFeatures.Select(it => Path.Combine(directoryName, it.Key)).ToList();
-                gwswImporter.ImportFeatureFileList(pathList, model);
+                gwswImporter.ImportFeaturesFromDefinitionFile(filePath, model);
             }
             catch (Exception e)
             {

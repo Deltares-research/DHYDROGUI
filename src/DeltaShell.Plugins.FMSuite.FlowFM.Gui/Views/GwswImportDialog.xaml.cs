@@ -61,5 +61,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 .Cast<KeyValuePair<string, string>>()
                 .ToList();
         }
+
+        private void CancelImport_OnClick(object sender, RoutedEventArgs e)
+        {
+            if(DialogResult != null)
+                DialogResult = false;
+            Close();
+        }
+
+        private void OkImport_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (DialogResult != null)
+                DialogResult = true;
+            Close();
+        }
     }
 }
