@@ -646,6 +646,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Weir(s) cannot be created without a network defined..
+        /// </summary>
+        public static string SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_ {
+            get {
+                return ResourceManager.GetString("SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_" +
+                        "a_network_defined_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {

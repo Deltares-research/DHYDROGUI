@@ -6,6 +6,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -218,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
 
-            const string expectedMessage = "Weir(s) cannot be created without a network defined.";
+            var expectedMessage = Resources.SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_;
             TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateInstance(gwswElement), expectedMessage);
             TestHelper.AssertAtLeastOneLogMessagesContains(() => new SewerWeirGenerator().Generate(gwswElement, null), expectedMessage);
         }

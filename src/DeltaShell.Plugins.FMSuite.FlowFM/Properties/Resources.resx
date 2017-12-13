@@ -413,4 +413,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s" xml:space="preserve">
     <value>Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's</value>
   </data>
+  <data name="SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_" xml:space="preserve">
+    <value>Weir(s) cannot be created without a network defined.</value>
+  </data>
 </root>

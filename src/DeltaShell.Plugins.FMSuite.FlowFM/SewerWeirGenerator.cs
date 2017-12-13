@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (network == null)
             {
-                Log.ErrorFormat("Weir(s) cannot be created without a network defined.");
+                Log.ErrorFormat(Resources.SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_);
                 return null;
             }
 
