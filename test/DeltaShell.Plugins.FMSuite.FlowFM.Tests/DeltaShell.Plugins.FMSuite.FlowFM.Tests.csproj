@@ -244,6 +244,7 @@
     <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
+    <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
     <Compile Include="Gui\SupportPointSelectionFormTest.cs" />
@@ -282,10 +283,9 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
-    <Compile Include="IO\Importers\TimFileImporterTest.cs" />    <Compile Include="IO\Importers\GwswDefinitionImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswBaseImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswFeatureImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswImporterTestHelper.cs" />
+    <Compile Include="IO\Importers\TimFileImporterTest.cs" />
+    <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
+    <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />

@@ -313,6 +313,10 @@
     <Compile Include="Forms\GridWizard.Designer.cs">
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />
+    <Compile Include="Views\GwswImportDialog.xaml.cs">
+      <DependentUpon>GwswImportDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\RemoveBoundaryPointDialog.cs" />
     <Compile Include="Forms\DataImportPointsListBox.cs">
       <SubType>Component</SubType>
@@ -557,6 +561,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\SedimentFractionsEditorResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GwswImportDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

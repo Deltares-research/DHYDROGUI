@@ -456,7 +456,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         v.EnableSolverSelection = false;
                     }
                 };
-
+            yield return new ViewInfo<GwswFileImporter, GwswImportDialog>
+            {
+                AfterCreate = (v, i) =>
+                {
+                    v.ViewModel.Model = Gui.SelectedModel as WaterFlowFMModel;
+                }
+            };
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Embankment, Embankment>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<FixedWeir, FixedWeir>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>();

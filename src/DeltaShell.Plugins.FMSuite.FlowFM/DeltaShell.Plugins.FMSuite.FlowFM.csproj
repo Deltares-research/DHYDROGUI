@@ -133,8 +133,6 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
-    <Compile Include="IO\Importers\GwswDefinitionImporter.cs" />
-    <Compile Include="IO\Importers\GwswFeatureImporter.cs" />
     <Compile Include="SewerManholeGenerator.cs" />
     <Compile Include="SewerProfileMapping.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
@@ -158,7 +156,7 @@
     <Compile Include="IO\Exporters\ImportedNetFileXyzExporter.cs" />
     <Compile Include="IO\Exporters\WindItemExporter.cs" />
     <Compile Include="IO\Importers\BcmFileImporter.cs" />
-    <Compile Include="IO\Importers\GwswBaseImporter.cs" />
+    <Compile Include="IO\Importers\GwswFileImporter.cs" />
     <Compile Include="IO\Importers\ObsFileImporterExporter.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImporterHelper.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
