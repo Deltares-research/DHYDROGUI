@@ -416,4 +416,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_" xml:space="preserve">
     <value>Weir(s) cannot be created without a network defined.</value>
   </data>
+  <data name="GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_" xml:space="preserve">
+    <value>File {0}, line {1}. Column {2} ({3}) contains invalid value '{4}' and will not be imported.</value>
+  </data>
 </root>

@@ -58,19 +58,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseWithoutLogMessageIfNoTypeIsPresent()
         {
-            var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType()};
-            var value = true;
+            var invalidAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
+            CheckThatGwswAttributeValidationLogMessageIsReturned(null, 0, null, string.Empty, invalidAttribute);
+        }
 
-            var msg = string.Format(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_, null, 0, null);
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => value = emptyAttribute.IsValidAttribute(), msg);
-            Assert.IsFalse(value);
+        [TestCase("")]
+        [TestCase(null)]
+        public void GivenGwswAttributeWithEmptyValueAsString_WhenValidatingAttribute_ThenLogMessageIsReturned(string valueAsString)
+        {
+            const string fileName = "myFile.csv";
+            const int lineNumber = 3;
+            const string localKey = "XXX_YYY";
+            const string key = "MY_KEY";
+
+            var attributeType = new GwswAttributeType
+            {
+                FileName = fileName,
+                LineNumber = lineNumber,
+                LocalKey = localKey,
+                Key = key
+            };
+
+            var invalidAttribute = new GwswAttribute
+            {
+                ValueAsString = valueAsString,
+                GwswAttributeType = attributeType
+            };
+            
+            CheckThatGwswAttributeValidationLogMessageIsReturned(fileName, lineNumber, localKey, key, invalidAttribute);
         }
 
         [Test]
         public void GwswAttributeIsValid_ReturnsTrueIfEverythingIsPresent()
         {
-            var emptyAttribute = new GwswAttribute { ValueAsString = "test", GwswAttributeType = new GwswAttributeType(){AttributeType = typeof(string)} };
+            var emptyAttribute = new GwswAttribute { ValueAsString = "test", GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string)} };
             Assert.IsTrue(emptyAttribute.IsValidAttribute());
         }
 
@@ -79,6 +100,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
             Assert.IsFalse(emptyAttribute.IsValidAttribute());
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        public void GwswAttributeIsValid_ReturnsFalseIfValueAsStringIsNullOrEmpty(string valueAsString)
+        {
+            var invalidAttribute = new GwswAttribute
+            {
+                ValueAsString = valueAsString,
+                GwswAttributeType = new GwswAttributeType()
+            };
+            Assert.IsFalse(invalidAttribute.IsValidAttribute());
         }
 
         [Test]
@@ -444,5 +477,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             CheckCsvIsImportedCorrectly(filePath, mappingData);
         }
+
+        #region Test helpers
+
+        private static void CheckThatGwswAttributeValidationLogMessageIsReturned(string fileName, int lineNumber,
+            string localKey, string key, GwswAttribute invalidAttribute)
+        {
+            var expectedMessage = string.Format(
+                Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
+                , fileName, lineNumber, localKey, key, string.Empty);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => invalidAttribute.IsValidAttribute(), expectedMessage);
+        }
+
+        #endregion
     }
 }

@@ -267,6 +267,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0}, line {1}. Column {2} ({3}) contains invalid value &apos;{4}&apos; and will not be imported..
+        /// </summary>
+        public static string GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___co" +
+                        "ntains_invalid_value___4___and_will_not_be_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot import sewer profile(s) without profile id. Please check &apos;Profiel.csv&apos; for empty profile id&apos;s.
         /// </summary>
         public static string GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s {

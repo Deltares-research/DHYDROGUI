@@ -68,8 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <summary>
         /// Given a file path, it tries to import a CSV file and generate Gwsw elements out of the data on it.
         /// </summary>
-        /// <param name="path">The locatino of the CSV file we want to transform into Gwsw elements.</param>
-        /// <param name="target">HydroNetwork where we want to store (later) the imported data.</param>
+        /// <param name="path">The location of the CSV file we want to transform into Gwsw elements.</param>
         /// <returns>List of GwswElements or null</returns>
         public IList<GwswElement> ImportGwswElementList(string path)
         {
@@ -80,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var elementList = new List<GwswElement>();
             var elementTypeFound = GwswAttributesDefinition.FirstOrDefault(at => at.FileName.Equals(Path.GetFileName(path)));
-            var elementTypeName = String.Empty;
+            var elementTypeName = string.Empty;
             if (elementTypeFound != null)
             {
                 elementTypeName = elementTypeFound.ElementName;
@@ -90,6 +89,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, path);
             }
+
+            var lineNumber = 2;
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
                 var element = new GwswElement { ElementTypeName = elementTypeName };
@@ -104,20 +105,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     var columnName = importedDataTable.Columns[columnIndex].ColumnName;
                     if (GwswAttributesDefinition != null)
                     {
-                        var foundAttr = GwswAttributesDefinition.FirstOrDefault(attr => attr.Key.Equals(columnName));
-                        if (foundAttr == null)
+                        var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.Key.Equals(columnName));
+                        if (foundAttributeType == null)
                         {
                             Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, importedDataTable.Rows.IndexOf(dataRow), columnName, path);
                             continue;
                         }
-                        attribute.GwswAttributeType = foundAttr;
+                        attribute.GwswAttributeType = (GwswAttributeType)foundAttributeType.Clone();
+                        attribute.GwswAttributeType.LineNumber = lineNumber;
                     }
 
                     element.GwswAttributeList.Add(attribute);
                     columnIndex++;
                 }
 
+
                 elementList.Add(element);
+                lineNumber++;
             }
 
             return elementList;
@@ -433,7 +437,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (gwswAttribute.GwswAttributeType == null) return;
 
             var attr = gwswAttribute.GwswAttributeType;
-            Log.ErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_, attr.FileName, attr.LineNumber, attr.Name);
+            Log.ErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
+                , attr.FileName, attr.LineNumber, attr.LocalKey, attr.Key, gwswAttribute.ValueAsString);
         }
 
         private static void LogErrorParseType(this GwswAttribute gwswAttribute, Type toType)
@@ -480,7 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
     }
 
-    public class GwswAttributeType
+    public class GwswAttributeType : ICloneable
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswAttributeType));
 
@@ -544,6 +549,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             return null;
+        }
+
+        public object Clone()
+        {
+            var clone = new GwswAttributeType
+            {
+                Name = Name,
+                LineNumber = LineNumber,
+                Key = Key,
+                LocalKey = LocalKey,
+                Definition = Definition,
+                Mandatory = Mandatory,
+                Remarks = Remarks,
+                FileName = FileName,
+                AttributeType = AttributeType,
+                DefaultValue = DefaultValue,
+                ElementName = elementName
+            };
+            return clone;
         }
     }
 
