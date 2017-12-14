@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using DelftTools.Controls;
 using Image = System.Drawing.Image;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -19,7 +14,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             InitializeComponent();
             if (ViewModel.CloseAction == null)
-                ViewModel.CloseAction = new Action(() => this.Close());
+                ViewModel.CloseAction = result =>
+                {
+                    DialogResult = result;
+                    Close();
+                };
         }
 
         public object Data
@@ -53,27 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return DialogResult.HasValue && DialogResult.Value 
                 ? DelftDialogResult.OK 
                 : DelftDialogResult.Cancel;
-        }
-
-        private void FeatureList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ViewModel.SelectedItems = FeatureList.SelectedItems
-                .Cast<KeyValuePair<string, string>>()
-                .ToList();
-        }
-
-        private void CancelImport_OnClick(object sender, RoutedEventArgs e)
-        {
-            if(DialogResult != null)
-                DialogResult = false;
-            Close();
-        }
-
-        private void OkImport_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (DialogResult != null)
-                DialogResult = true;
-            Close();
         }
     }
 }

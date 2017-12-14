@@ -489,7 +489,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         #region Gwsw Import Elements
 
-        protected static IHydroNetwork ImportFromDefinitionFileAndCheckFeatures()
+        [Test]
+        public void ImportFile_WithoutLoadingDefinition_ReturnsNull_AndLogsMessage()
+        {
+            var mssg = Resources.GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_;
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => new GwswFileImporter().ImportItem(null), mssg);
+        }
+
+        [Test]
+        public void ImportFile_WithLoadedDefinition_GivingWrongFilePath_ReturnsNull_AndLogsMessage()
+        {
+            var filePath = "wrongPath.csv";
+            var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var importer = new GwswFileImporter();
+
+            importer.LoadDefinitionFile(definitionPath);
+            Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
+
+            var mssg = string.Format(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(filePath), mssg);
+        }
+
+        [Test]
+        public void ImportFile_WithLoadedDefinition_GivingFilePath_LoadsIt()
+        {
+            var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var importer = new GwswFileImporter();
+
+            importer.LoadDefinitionFile(definitionPath);
+            Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var importedFeatures = importer.ImportItem(filePath);
+            Assert.IsNotNull(importedFeatures);
+
+            var featuresAsConnections = importedFeatures as List<INetworkFeature>;
+            Assert.IsNotNull(featuresAsConnections);
+            Assert.IsTrue(featuresAsConnections.Any( f => f is ISewerConnection));
+            Assert.IsFalse(featuresAsConnections.Any(f => f is Manhole));
+        }
+
+        [Test]
+        public void ImportFile_WithLoadedDefinition_NotGivingFilePath_LoadsDefinitionFeaturesList()
+        {
+            var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var importer = new GwswFileImporter();
+
+            importer.LoadDefinitionFile(definitionPath);
+            Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
+            var importedFeatures = importer.ImportItem(null);
+            Assert.IsNotNull(importedFeatures);
+
+            var featuresAsConnections = importedFeatures as List<INetworkFeature>;
+            Assert.IsNotNull(featuresAsConnections);
+            Assert.IsTrue(featuresAsConnections.Any(f => f is ISewerConnection));
+            Assert.IsTrue(featuresAsConnections.Any(f => f is Manhole));
+        }
+
+        [Test]
+        public void ImportFile_WithLoadedDefinition_GivingEmptyStringAsPath_LoadsDefinitionFeaturesList()
+        {
+            var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var importer = new GwswFileImporter();
+
+            importer.LoadDefinitionFile(definitionPath);
+            Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
+            var importedFeatures = importer.ImportItem(string.Empty);
+            Assert.IsNotNull(importedFeatures);
+
+            var featuresAsConnections = importedFeatures as List<INetworkFeature>;
+            Assert.IsNotNull(featuresAsConnections);
+            Assert.IsTrue(featuresAsConnections.Any(f => f is ISewerConnection));
+            Assert.IsTrue(featuresAsConnections.Any(f => f is Manhole));
+        }
+
+        private static IHydroNetwork ImportFromDefinitionFileAndCheckFeatures()
         {
             var model = new WaterFlowFMModel();
             var network = model.Network;
@@ -502,7 +575,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             try
             {
-                gwswImporter.ImportFeaturesFromDefinitionFile(filePath, model);
+                gwswImporter.LoadDefinitionFile(filePath);
+                gwswImporter.ImportItem(null, model);
             }
             catch (Exception e)
             {
@@ -551,7 +625,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             //Check sewer profiles
             var expectedNumberOfSewerProfiles = 41;
-            Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(expectedNumberOfSewerProfiles));
+            Assert.AreEqual(expectedNumberOfSewerProfiles, network.SharedCrossSectionDefinitions.Count);
         }
 
         [Test]
@@ -587,7 +661,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var gwswImporter = new GwswFileImporter();
-            var attributeTable = gwswImporter.ImportDefinitionFile(filePath);
+            var attributeTable = gwswImporter.LoadDefinitionFile(filePath);
             Assert.IsNotNull(attributeTable);
 
             var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
@@ -603,7 +677,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             // Import Csv Definition.
             var gwswImporter = new GwswFileImporter();
-            var definitionTable = gwswImporter.ImportDefinitionFile(filePath);
+            var definitionTable = gwswImporter.LoadDefinitionFile(filePath);
             Assert.IsNotNull(definitionTable);
 
             var attributeList = new List<GwswAttributeType>();

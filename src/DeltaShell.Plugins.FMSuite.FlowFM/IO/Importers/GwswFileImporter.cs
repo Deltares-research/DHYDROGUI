@@ -27,6 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private const char CsvDelimeterSemiColon = ';';
         private CsvSettings csvSettings;
 
+        public IEventedList<string> FilesToImport;
+
         private CsvSettings CsvSettingsSemiColonDelimeted
         {
             get
@@ -40,185 +42,156 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
         }
         public IEventedList<GwswAttributeType> GwswAttributesDefinition { get; private set; }
-        public IDictionary<string, string> GwswDefaultFeatures {
+
+        /// <summary>
+        /// Dictionary content:
+        /// Key = Feature FileName.
+        /// Value = List containing 3 strings:
+        ///     [0] <string>ElementName</string>
+        ///     [1] <string>SewerFeatureType (mapped value)</string>
+        ///     [2] <string>Full path</string>
+        /// </summary>
+        public IDictionary<string, List<string>> GwswDefaultFeatures { get; private set; }
+
+        private static CsvMappingData CsvMappingData
+        {
             get
             {
-                return GwswAttributesDefinition?.GroupBy(i => i.FileName)
-                    .ToDictionary(
-                        grp => grp.Key,
-                        grp =>
+                var mappingData = new CsvMappingData
+                {
+                    Settings = new CsvSettings
+                    {
+                        Delimiter = CsvDelimeterComma,
+                        FirstRowIsHeader = true,
+                        SkipEmptyLines = true
+                    },
+                    FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
+                    {
                         {
-                            SewerFeatureType elementType;
-                            var validName = grp.FirstOrDefault(
-                                g => !String.IsNullOrEmpty(g.ElementName) &&
-                                     Enum.TryParse(g.ElementName, out elementType))?.ElementName;
-                            if (validName == null) return String.Empty;
-                            Enum.TryParse(validName, out elementType);
-                            return elementType.ToString();
-                        });
+                            new CsvRequiredField("Bestandsnaam", typeof(string)),
+                            new CsvColumnInfo(0, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("ElementName", typeof(string)),
+                            new CsvColumnInfo(1, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Kolomnaam", typeof(string)),
+                            new CsvColumnInfo(2, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Code", typeof(string)),
+                            new CsvColumnInfo(3, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Code_International", typeof(string)),
+                            new CsvColumnInfo(4, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Definitie", typeof(string)),
+                            new CsvColumnInfo(5, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Type", typeof(string)),
+                            new CsvColumnInfo(6, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Eenheid", typeof(string)),
+                            new CsvColumnInfo(7, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Verplicht", typeof(string)),
+                            new CsvColumnInfo(8, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Standaardwaarde", typeof(string)),
+                            new CsvColumnInfo(9, CultureInfo.InvariantCulture)
+                        },
+                        {
+                            new CsvRequiredField("Opmerking", typeof(string)),
+                            new CsvColumnInfo(10, CultureInfo.InvariantCulture)
+                        },
+                    }
+                };
+                return mappingData;
             }
         }
 
-        #region IFileImporter
-
-        public string Name
+        private void SetProgress(string currentStepName, int currentStep, int totalSteps)
         {
-            get { return "GWSW Feature File importer"; }
+            if (ProgressChanged == null) return;
+            ProgressChanged(currentStepName, currentStep, totalSteps);
         }
-
-        public string Category
-        {
-            get { return "1D / 2D"; }
-        }
-
-        public Bitmap Image
-        {
-            get { return Resources.StructureFeatureSmall; }
-        }
-
-        public IEnumerable<Type> SupportedItemTypes
-        {
-            get
-            {
-                yield return typeof(IWaterFlowFMModel);
-            }
-        }
-
-        public bool CanImportOnRootLevel { get { return false; } }
-        public string FileFilter { get { return "GWSW Csv Files (*.csv)|*.csv"; } }
-        public string TargetDataDirectory { get; set; }
-        public bool ShouldCancel { get; set; }
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get { return false; } }
-
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Imports the given file as path. If it is null, then the list of files (FilesToImport) will be imported instead. 
+        /// A Gwsw Definition file needs to be loaded beforehand with method LoadDefinitionFile.
+        /// By default, all files referenced in the GwswDefinitionFile are selected to import.
+        /// </summary>
+        /// <param name="path">File to import. If this argument is missing then FilesToImport will be taken instead.</param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public object ImportItem(string path, object target = null)
         {
-            if (!File.Exists(path))
+            if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())
             {
-                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, path);
+                Log.ErrorFormat(Resources.GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_);
                 return null;
             }
 
+            if( !String.IsNullOrEmpty(path) ) FilesToImport = new EventedList<string>{path};
+
+            Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
+
             var fmModel = target as IWaterFlowFMModel;
             var network = fmModel?.Network;
-
-            var elementList = ImportGwswElementList(path);
-            if (!elementList.Any()) return null;
-
-            var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network).ToList();
-            Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_correctly_, path, elementsCreated.Count);
-
-            SewerFeatureType elementType;
-            var elementTypeName = elementList.FirstOrDefault()?.ElementTypeName;
-            if (Enum.TryParse(elementTypeName, out elementType))
-            {
-                InsertFeatures(elementsCreated, network, elementType);
-            }
-            return elementsCreated;
-        }
-
-        /// <summary>
-        /// Import all files given into the network.
-        /// </summary>
-        /// <param name="pathList">List of paths that need to be imported.</param>
-        /// <param name="network">Target where to import the features.</param>
-        /// <returns></returns>
-        public IList<INetworkFeature> ImportFeatureFileList(IList<string> pathList, IWaterFlowFMModel model)
-        {
             var importedFeatureElements = new List<INetworkFeature>();
-            Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
-            //Read each one of the files.
-            foreach (var path in pathList)
+            var subSteps = network != null ? 3 : 2;
+            var totalSteps = FilesToImport.Count * subSteps; /*1. Import Gwsw Element, 2. Import INetworkFeature, 3.Add to Network.*/
+            foreach (var filePath in FilesToImport)
             {
-                var elementImported = ImportItem(path, model);
-                var elementAsFeature = elementImported as IList<INetworkFeature>;
-                if(elementAsFeature != null)
-                    importedFeatureElements.AddRange(elementAsFeature);
+                var fileStep = FilesToImport.IndexOf(filePath) * subSteps;
+                if (!File.Exists(filePath))
+                {
+                    Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
+                    continue;
+                }
+                
+                //Get the file content as a list of Gwsw Elements
+                SetProgress(string.Format("Importing file {0}", filePath), fileStep, totalSteps);
+                var elementList = ImportGwswElementList(filePath);
+                if (!elementList.Any()) continue;
+
+                fileStep++;
+                SetProgress(string.Format("Importing file {0}", Path.GetFileName(filePath)), fileStep, totalSteps);
+                var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network).ToList();
+                Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, elementsCreated.Count);
+                
+                SewerFeatureType elementType;
+                var elementTypeName = elementList.FirstOrDefault()?.ElementTypeName;
+                if (Enum.TryParse(elementTypeName, out elementType))
+                {
+                    fileStep++;
+                    SetProgress(string.Format("Importing file {0}", filePath), fileStep, totalSteps);
+                    InsertFeatures(elementsCreated, network, elementType);
+                }
+
+                if (elementsCreated.Any())
+                    importedFeatureElements.AddRange(elementsCreated);
             }
 
             return importedFeatureElements;
         }
 
-        public IList<INetworkFeature> ImportFeaturesFromDefinitionFile(string definitionPath, IWaterFlowFMModel model)
-        {
-            ImportDefinitionFile(definitionPath);
-            var directoryName = Path.GetDirectoryName(definitionPath);
-            var pathList = GwswDefaultFeatures.Select(it => Path.Combine(directoryName, it.Key)).ToList();
-            return ImportFeatureFileList(pathList, model);
-        }
-
         /// <summary>
         /// It loads a definition file into the dictionary GwswAttributeDefinition
+        /// It also sets the initial FilesToImport
         /// </summary>
         /// <param name="path">Path to the definition file</param>
         /// <returns>DataTable describing contents of the CSV file</returns>
-        public DataTable ImportDefinitionFile(string path)
+        public DataTable LoadDefinitionFile(string path)
         {
             // Import definition file with predefined CSV columns.
-            var mappingData = new CsvMappingData
-            {
-                Settings = new CsvSettings
-                {
-                    Delimiter = CsvDelimeterComma,
-                    FirstRowIsHeader = true,
-                    SkipEmptyLines = true
-                },
-                FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                {
-                    {
-                        new CsvRequiredField("Bestandsnaam", typeof (string)),
-                        new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("ElementName", typeof (string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Kolomnaam", typeof (string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Code", typeof (string)),
-                        new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Code_International", typeof (string)),
-                        new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Definitie", typeof (string)),
-                        new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Type", typeof (string)),
-                        new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Eenheid", typeof (string)),
-                        new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Verplicht", typeof (string)),
-                        new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Standaardwaarde", typeof (string)),
-                        new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("Opmerking", typeof (string)),
-                        new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                    },
-                }
-            };
-
+            var mappingData = CsvMappingData;
             var importedTable = ImportFileAsDataTable(path, mappingData);
             if (importedTable == null)
             {
@@ -270,6 +243,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             GwswAttributesDefinition = attributeList;
             Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, GwswAttributesDefinition.Count);
 
+            if ( attributeList.Any()) GwswDefaultFeatures = GetDefinitionFeatureFiles(path);
+            FilesToImport = new EventedList<string>(GwswDefaultFeatures.Select( f => f.Value[2]));
+
             return importedTable;
         }
 
@@ -302,7 +278,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 var element = new GwswElement { ElementTypeName = elementTypeName };
                 var rowValues = dataRow.ItemArray.ToList();
-                var columnIndex = 0;
                 foreach (var column in rowValues)
                 {
                     var attribute = new GwswAttribute
@@ -310,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         LineNumber = importedDataTable.Rows.IndexOf(dataRow),
                         ValueAsString = column.ToString()
                     };
-                    var columnName = importedDataTable.Columns[columnIndex].ColumnName;
+                    var columnName = importedDataTable.Columns[rowValues.IndexOf(column)].ColumnName;
                     if (GwswAttributesDefinition != null)
                     {
                         var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.ElementName.Equals(elementTypeName) && attr.Key.Equals(columnName));
@@ -323,39 +298,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     }
 
                     element.GwswAttributeList.Add(attribute);
-                    columnIndex++;
                 }
 
                 elementList.Add(element);
             }
 
             return elementList;
-        }
-
-        private CsvMappingData CreateCsvMappingDataForFile(string fileName)
-        {
-            //Import file elements based on their attributes
-            if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())
-            {
-                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, fileName);
-                return null;
-            }
-
-            var fileAttributes = GwswAttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName))).ToList();
-            var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
-            //Create column mapping
-            fileAttributes.ForEach(
-                attr =>
-                    fileColumnMapping.Add(
-                        new CsvRequiredField(attr.Key, attr.AttributeType),
-                        new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
-
-            var mapping = new CsvMappingData
-            {
-                Settings = CsvSettingsSemiColonDelimeted,
-                FieldToColumnMapping = fileColumnMapping
-            };
-            return mapping;
         }
 
         /// <summary>
@@ -384,6 +332,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             return importedCsv;
+        }
+
+        private IDictionary<string, List<string>> GetDefinitionFeatureFiles(string definitionPath)
+        {
+            var directoryName = Path.GetDirectoryName(definitionPath);
+
+            //Get the items to import
+            var dictionary = GwswAttributesDefinition?.GroupBy(i => i.FileName)
+                .ToDictionary(
+                    grp => grp.Key,
+                    grp => {
+                        var valueList = new List<string>();
+                        var elementName = grp.FirstOrDefault( g => !String.IsNullOrEmpty(g.ElementName))?.ElementName;
+                        SewerFeatureType featureName;
+                        Enum.TryParse(elementName, out featureName);
+                        valueList.Add(elementName);
+                        valueList.Add(featureName.ToString());
+                        valueList.Add(Path.Combine(directoryName, grp.Key));
+                        return valueList;
+                    });
+
+            return dictionary;
+        }
+
+        private CsvMappingData CreateCsvMappingDataForFile(string fileName)
+        {
+            //Import file elements based on their attributes
+            if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())
+            {
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, fileName);
+                return null;
+            }
+
+            var fileAttributes = GwswAttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(fileName))).ToList();
+            var fileColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>();
+            //Create column mapping
+            fileAttributes.ForEach(
+                attr =>
+                    fileColumnMapping.Add(
+                        new CsvRequiredField(attr.Key, attr.AttributeType),
+                        new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
+
+            var mapping = new CsvMappingData
+            {
+                Settings = CsvSettingsSemiColonDelimeted,
+                FieldToColumnMapping = fileColumnMapping
+            };
+            return mapping;
         }
 
         private void InsertFeatures(IEnumerable<INetworkFeature> features, IHydroNetwork network, SewerFeatureType type)
@@ -423,6 +419,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
             }
         }
+
+        #region IFileImporter
+
+        public string Name
+        {
+            get { return "GWSW Feature File importer"; }
+        }
+
+        public string Category
+        {
+            get { return "1D / 2D"; }
+        }
+
+        public Bitmap Image
+        {
+            get { return Resources.StructureFeatureSmall; }
+        }
+
+        public IEnumerable<Type> SupportedItemTypes
+        {
+            get
+            {
+                yield return typeof(IWaterFlowFMModel);
+            }
+        }
+
+        public bool CanImportOnRootLevel { get { return false; } }
+        public string FileFilter { get { return "GWSW Csv Files (*.csv)|*.csv"; } }
+        public string TargetDataDirectory { get; set; }
+        public bool ShouldCancel { get; set; }
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public bool OpenViewAfterImport { get { return false; } }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
+
+        #endregion
     }
 
     #region Gwsw Types

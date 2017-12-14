@@ -287,6 +287,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No mapping was found to import Gwsw Files..
+        /// </summary>
+        public static string GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not possible to import {0}.
         /// </summary>
         public static string GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_ {
@@ -324,16 +333,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File {0}, imported {1} features..
-        /// </summary>
-        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_correctly_ {
-            get {
-                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_corr" +
-                        "ectly_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Importing sub files..
         /// </summary>
         public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_ {
@@ -348,6 +347,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_ {
             get {
                 return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, imported {1} features..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_File__0__imported__1__features_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_File__0__imported__1__features_", resourceCulture);
             }
         }
         

@@ -352,7 +352,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__" xml:space="preserve">
     <value>Could not find file {0}.</value>
   </data>
-  <data name="GwswFileImporterBase_ImportFilesFromDefinitionFile_File__0__was_not_imported_correctly_" xml:space="preserve">
+  <data name="GwswFileImporterBase_ImportItem_File__0__imported__1__features_" xml:space="preserve">
     <value>File {0}, imported {1} features.</value>
   </data>
   <data name="GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_" xml:space="preserve">
@@ -418,5 +418,8 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_" xml:space="preserve">
     <value>File {0}, line {1}. Column {2} ({3}) contains invalid value '{4}' and will not be imported.</value>
+  </data>
+  <data name="GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_" xml:space="preserve">
+    <value>No mapping was found to import Gwsw Files.</value>
   </data>
 </root>

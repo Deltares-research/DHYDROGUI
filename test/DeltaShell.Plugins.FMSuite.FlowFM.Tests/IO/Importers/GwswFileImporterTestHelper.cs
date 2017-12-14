@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         protected static char csvCommaDelimeter = ',';
         protected static char csvSemiColonDelimeter = ';';
 
-        public static DataTable GwswFileImportAsDataTableWorksCorrectly(string filePath, CsvMappingData mappingData, bool continousTesting = false)
+        protected static DataTable GwswFileImportAsDataTableWorksCorrectly(string filePath, CsvMappingData mappingData, bool continousTesting = false)
         {
             var importer = new GwswFileImporter();
             Assert.IsNotNull(importer);
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             return importedTable;
         }
 
-        public static void CheckCsvIsImportedCorrectly(string filePath, CsvMappingData mappingData)
+        protected static void CheckCsvIsImportedCorrectly(string filePath, CsvMappingData mappingData)
         {
             var csvImporter = new CsvImporter();
             Assert.IsNotNull(csvImporter);
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
         }
 
-        public static string GetFileAndCreateLocalCopy(string path)
+        protected static string GetFileAndCreateLocalCopy(string path)
         {
             var filePath = TestHelper.GetTestFilePath(path);
             Assert.IsTrue(File.Exists(filePath), string.Format("File {0} could not be located", filePath));
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var importer = new GwswFileImporter();
             Assert.IsNotNull(importer);
             var defFile = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"); ;
-            importer.ImportDefinitionFile(defFile);
+            importer.LoadDefinitionFile(defFile);
 
             return importer;
         }
