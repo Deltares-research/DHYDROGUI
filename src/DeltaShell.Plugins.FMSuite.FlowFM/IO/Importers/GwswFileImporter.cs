@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var attributeList = new EventedList<GwswAttributeType>();
 
             // Create new attributes for each occurrence.
-            // Retreive the files that need to be read.
+            // Retrieve the files that need to be read.
             foreach (DataRow row in importedTable.Rows)
             {
                 var attributeFile = row.ItemArray[0].ToString();
