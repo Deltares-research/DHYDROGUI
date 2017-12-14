@@ -268,19 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ExtForceFileItem matchingItem;
                 polylineForceFileItems.TryGetValue(sourceAndSink, out matchingItem);
 
-                var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-                var writeSalinity = useSalinityProperty != null 
-                    ? (bool)useSalinityProperty.Value 
-                    : true; // default to True
-
-                var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-                var writeTemperature = useTemperatureProperty != null 
-                    ? (bool)useTemperatureProperty.Value 
-                    : true; // default to True
-
-                yield return
-                    ExtForceFileHelper.WriteSourceAndSinkData(FilePath, sourceAndSink, referenceTime, matchingItem,
-                        WriteToDisk, writeSalinity, writeTemperature);
+                yield return ExtForceFileHelper.WriteSourceAndSinkData(FilePath, sourceAndSink, referenceTime, matchingItem, WriteToDisk, modelDefinition);
             }
         }
 
@@ -727,18 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         SourceAndSink sourceAndSink;
                         try
                         {
-                            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-                            var readSalinity = useSalinityProperty != null 
-                                ? (bool)useSalinityProperty.Value 
-                                : true; // default to True
-
-                            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-                            var readTemperature = useTemperatureProperty != null 
-                                ? (bool)useTemperatureProperty.Value 
-                                : true; // default to True
-
-                            sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(pliFilePath, feature2D,
-                                extForceFileItem, modelReferenceDate, readSalinity, readTemperature);
+                            sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(pliFilePath, feature2D, extForceFileItem, modelReferenceDate, modelDefinition);
                         }
                         catch (Exception e)
                         {

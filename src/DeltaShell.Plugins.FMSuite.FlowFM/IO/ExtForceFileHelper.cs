@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -177,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static ExtForceFileItem WriteSourceAndSinkData(string filePath, SourceAndSink sourceAndSink,
                                                               DateTime referenceTime,
                                                               ExtForceFileItem existingExtForceFileItem,
-                                                              bool writeToDisk, bool writeSalinity, bool writeTemperature)
+                                                              bool writeToDisk, WaterFlowFMModelDefinition modelDefinition)
         {
             var extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(ExtForceQuantNames.SourceAndSink)
                 {
@@ -203,12 +204,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
 
                 var function = (IFunction)sourceAndSink.Function.Clone(true);
-                if (function != null)
-                {
-                    if (!writeSalinity) function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
-                    if (!writeTemperature) function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
-                    new TimFile().Write(dataFilePath, function, referenceTime);
-                }
+                if (function == null) return extForceFileItem;
+
+                var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+                var salinityEnabled = useSalinityProperty != null
+                    ? (bool)useSalinityProperty.Value
+                    : true; // default to True
+
+                var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+                var temperatureEnabled = useTemperatureProperty != null
+                    ? (bool)useTemperatureProperty.Value
+                    : true; // default to True
+
+                if (!salinityEnabled) function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                if (!temperatureEnabled) function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+
+                new TimFile().Write(dataFilePath, function, referenceTime);
             }
 
             return extForceFileItem;
@@ -398,7 +409,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static SourceAndSink ReadSourceAndSinkData(string filePath, Feature2D feature2D,
                                                               ExtForceFileItem extForceFileItem,
-                                                              DateTime modelReferenceDate, bool readSalinity, bool readTemperature)
+                                                              DateTime modelReferenceDate, WaterFlowFMModelDefinition modelDefinition)
         {
             if (!Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink)) return null;
 
@@ -420,7 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return sourceAndSink;
             }
 
-            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate, readSalinity, readTemperature);
+            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate, modelDefinition);
 
             return sourceAndSink;
         }
@@ -544,7 +555,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate, bool readSalinity, bool readTemperature)
+        private static void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath, DateTime modelReferenceDate, WaterFlowFMModelDefinition modelDefinition)
         {
             var data = sourceAndSink.Data;
             if (data == null)
@@ -555,7 +566,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var readFunction = (IFunction)data.Clone(true);
             new TimFile().Read(filePath, readFunction, modelReferenceDate);
 
-            if (SourceAndSinkImporterHelper.DetermineComponentValuesForImportedSourceAndSinkFunction(readFunction, readSalinity, readTemperature))
+            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            var salinityEnabled = useSalinityProperty != null
+                ? (bool)useSalinityProperty.Value
+                : true; // default to True
+
+            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            var temperatureEnabled = useTemperatureProperty != null
+                ? (bool)useTemperatureProperty.Value
+                : true; // default to True
+            
+            var componentSettings = new Dictionary<string, bool>()
+            {
+                {SourceAndSink.SalinityVariableName, salinityEnabled},
+                {SourceAndSink.TemperatureVariableName, temperatureEnabled},
+            };
+
+            if (SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(readFunction, componentSettings))
             {
                 sourceAndSink.Data = readFunction;
             }

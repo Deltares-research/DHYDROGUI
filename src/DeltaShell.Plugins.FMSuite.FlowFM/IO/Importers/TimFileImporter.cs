@@ -151,7 +151,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     var readFunction = (IFunction)sourceAndSinkFunction.Clone(true);
                     InsertTimeSeries(path, readFunction, model.ReferenceTime);
 
-                    if (SourceAndSinkImporterHelper.DetermineComponentValuesForImportedSourceAndSinkFunction(readFunction, model.UseSalinity, model.UseTemperature))
+                    var componentSettings = new Dictionary<string, bool>()
+                    {
+                        {SourceAndSink.SalinityVariableName, model.UseSalinity},
+                        {SourceAndSink.TemperatureVariableName, model.UseTemperature},
+                    };
+                    
+                    if (SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(readFunction, componentSettings))
                     {
                         sourceAndSink.Data = readFunction;
                     }

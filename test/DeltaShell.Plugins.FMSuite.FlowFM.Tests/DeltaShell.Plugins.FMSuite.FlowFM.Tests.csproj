@@ -278,6 +278,7 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
+    <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
