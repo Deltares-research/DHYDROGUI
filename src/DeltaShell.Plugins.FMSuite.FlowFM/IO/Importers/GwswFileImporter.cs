@@ -297,8 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, path);
             }
-
-            var lineNumber = 2;
+            
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
                 var element = new GwswElement { ElementTypeName = elementTypeName };
@@ -308,28 +307,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     var attribute = new GwswAttribute
                     {
+                        LineNumber = importedDataTable.Rows.IndexOf(dataRow),
                         ValueAsString = column.ToString()
                     };
                     var columnName = importedDataTable.Columns[columnIndex].ColumnName;
                     if (GwswAttributesDefinition != null)
                     {
-                        var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.Key.Equals(columnName));
+                        var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.ElementName.Equals(elementTypeName) && attr.Key.Equals(columnName));
                         if (foundAttributeType == null)
                         {
                             Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, importedDataTable.Rows.IndexOf(dataRow), columnName, path);
                             continue;
                         }
-                        attribute.GwswAttributeType = (GwswAttributeType)foundAttributeType.Clone();
-                        attribute.GwswAttributeType.LineNumber = lineNumber;
+                        attribute.GwswAttributeType = foundAttributeType;
                     }
 
                     element.GwswAttributeList.Add(attribute);
                     columnIndex++;
                 }
 
-
                 elementList.Add(element);
-                lineNumber++;
             }
 
             return elementList;
@@ -470,7 +467,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var line = 0;
             /* It should always have attributes, but just in case (mostly testing) we include this check. */
             if( gwswElement.GwswAttributeList.Any())
-                return gwswElement.GwswAttributeList.Select(attr => attr.GwswAttributeType?.LineNumber).First() ?? line;
+                return gwswElement.GwswAttributeList.Select(attr => attr?.LineNumber).First() ?? line;
 
             return line;
         }
@@ -536,15 +533,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             if (gwswAttribute.GwswAttributeType == null) return;
 
-            var attr = gwswAttribute.GwswAttributeType;
+            var attributeType = gwswAttribute.GwswAttributeType;
             Log.ErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
-                , attr.FileName, attr.LineNumber, attr.LocalKey, attr.Key, gwswAttribute.ValueAsString);
+                , attributeType.FileName, gwswAttribute.LineNumber, attributeType.LocalKey, attributeType.Key, gwswAttribute.ValueAsString);
         }
 
         private static void LogErrorParseType(this GwswAttribute gwswAttribute, Type toType)
         {
             var attr = gwswAttribute.GwswAttributeType;
-            Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__, attr.FileName, attr.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
+            Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__
+                , attr.FileName, gwswAttribute.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
         }
     }
 
@@ -561,9 +559,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
     public class GwswAttribute
     {
-        public GwswAttributeType GwswAttributeType { get; set; }
-
         private string valueAsString;
+        public GwswAttributeType GwswAttributeType { get; set; }
+        public int LineNumber { get; set; }
 
         public string ValueAsString
         {
@@ -585,7 +583,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
     }
 
-    public class GwswAttributeType : ICloneable
+    public class GwswAttributeType
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswAttributeType));
 
@@ -605,9 +603,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
             set { elementName = value; }
         }
-
-        public int LineNumber { get; set; }
-
+        
         public string Key { get; set; }
         public string LocalKey { get; set; }
         public string Definition { get; set; }
@@ -624,7 +620,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeField, string codeName, string definition, string mandatory, string defaultValue, string remarks)
         {
             Name = columnName;
-            LineNumber = lineNumber;
             Key = codeName;
             Definition = definition;
             Mandatory = mandatory;
@@ -649,25 +644,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             return null;
-        }
-
-        public object Clone()
-        {
-            var clone = new GwswAttributeType
-            {
-                Name = Name,
-                LineNumber = LineNumber,
-                Key = Key,
-                LocalKey = LocalKey,
-                Definition = Definition,
-                Mandatory = Mandatory,
-                Remarks = Remarks,
-                FileName = FileName,
-                AttributeType = AttributeType,
-                DefaultValue = DefaultValue,
-                ElementName = elementName
-            };
-            return clone;
         }
     }
 

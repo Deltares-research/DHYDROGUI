@@ -82,13 +82,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var attributeType = new GwswAttributeType
             {
                 FileName = fileName,
-                LineNumber = lineNumber,
                 LocalKey = localKey,
                 Key = key
             };
 
             var invalidAttribute = new GwswAttribute
             {
+                LineNumber = lineNumber,
                 ValueAsString = valueAsString,
                 GwswAttributeType = attributeType
             };
@@ -200,8 +200,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 {
                     new GwswAttribute
                     {
+                        LineNumber = 2,
                         ValueAsString = elementName,
-                        GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string), LineNumber = 2}
+                        GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
                     }
                 }
             };
@@ -349,7 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString, LineNumber = 2 };
                 Assert.IsNotNull(attribute);
 
                 var auxValue = 0.0;
@@ -357,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                     string.Format(
                         Resources
                             .GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__,
-                        gwswAttributeType.FileName, gwswAttributeType.LineNumber, gwswAttributeType.ElementName,
+                        gwswAttributeType.FileName, attribute.LineNumber, gwswAttributeType.ElementName,
                         gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType, typeof(double));
 
                 Assert.IsFalse(attribute.TryGetValueAsDouble(out auxValue));

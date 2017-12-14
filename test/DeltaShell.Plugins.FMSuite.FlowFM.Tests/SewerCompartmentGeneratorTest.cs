@@ -277,8 +277,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
+                        LineNumber = lineNumber,
                         ValueAsString = manholeId,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", lineNumber, "MyColumnName", "string",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 0, "MyColumnName", "string",
                             ManholeMapping.PropertyKeys.ManholeId, "MyDescription",  null, null, null)
                     }
                 }
@@ -303,8 +304,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
+                        LineNumber = lineNumber,
                         ValueAsString = compartmentName,
-                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", lineNumber, "MyColumnName", "string",
+                        GwswAttributeType = new GwswAttributeType("Knooppunt.csv", 0, "MyColumnName", "string",
                             ManholeMapping.PropertyKeys.UniqueId, "MyDescription", null, "", null)
                     }
                 }
