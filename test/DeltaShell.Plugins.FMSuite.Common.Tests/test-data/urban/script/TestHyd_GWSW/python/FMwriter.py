@@ -8,6 +8,8 @@ from datetime import *
 class FMwriter:
     """Writer for FM files"""
 
+    deltaGateHeightTopLevel = 0.3
+
     def __init__(self, model):
         self.model = model
 
@@ -18,7 +20,7 @@ class FMwriter:
         self.writeProfiles(dirPath)
         self.writeStructures(dirPath)
         self.writeLaterals(dirPath)
-        self.writeFMnetwork(dirPath, "test")
+        self.writeFMnetwork(dirPath, "ugrid")
         return True
 
     def to2Dec(selfselft, strValue):
@@ -50,7 +52,7 @@ class FMwriter:
         #ALG_TOE	Toelichting bij deze regel
 
         defaultWaterlevelOut = '-100.00' # low value needed
-        defaultDischargeIn = '0.1' # m3/s from street
+        defaultDischargeIn = '0.01' # m3/s from street
 
         filePathIni = os.path.join(dirPath, 'output_inputFM', 'BoundaryLocations.ini')
         filePathBc = os.path.join(dirPath, 'output_inputFM', 'BoundaryConditions.bc')
@@ -59,14 +61,14 @@ class FMwriter:
         fileBc = open(filePathBc, 'w')
 
         #header Ini
-        fileLocs.write('[General]\n')
+        fileLocs.write('[general]\n')
         fileLocs.write('majorVersion = 1\n')
         fileLocs.write('minorVersion = 0\n')
         fileLocs.write('fileType = boundLocs\n')
         fileLocs.write('\n')
 
         #header Bc
-        fileBc.write('[Boundary]\n')
+        fileBc.write('[boundary]\n')
         fileBc.write('majorVersion = 1\n')
         fileBc.write('minorVersion = 0\n')
         fileBc.write('fileType = boundConds\n')
@@ -80,13 +82,13 @@ class FMwriter:
                 continue
 
             #location
-            fileLocs.write('[Boundary]\n')
+            fileLocs.write('[boundary]\n')
             fileLocs.write('nodeId = ' + str(value[0]) + '\n')
             fileLocs.write('type = 1\n')
             fileLocs.write('\n')
 
             #condition
-            fileBc.write('[Boundary]\n')
+            fileBc.write('[boundary]\n')
             fileBc.write('name = ' + str(value[0]) + '\n')
             fileBc.write('function = constant\n')
             fileBc.write('time-interpolation = linear-extrapolate\n')
@@ -98,13 +100,13 @@ class FMwriter:
         for keyvalue in self.model.nodes.items():
             value = keyvalue[1]
             #laterals
-            fileBc.write('[LateralDischarge]\n')
+            fileBc.write('[lateraldischarge]\n')
             fileBc.write('name = lateral' + str(value[0]) + '\n')
             fileBc.write('function = constant\n')
             fileBc.write('time-interpolation = linear-extrapolate\n')
             fileBc.write('quantity = water_discharge\n')
             fileBc.write('unit = m3/s\n')
-            fileBc.write(defaultDischargeIn + '\n')
+            fileBc.write(defaultDischargeIn + ' #surface of ' + str(value[1]) + '  m2\n')
             fileBc.write('\n')
 
         fileLocs.close()
@@ -141,7 +143,7 @@ class FMwriter:
         file = open(filePath, 'w')
 
         #header
-        file.write('[General]\n')
+        file.write('[general]\n')
         file.write('majorVersion = 1\n')
         file.write('minorVersion = 0\n')
         file.write('\n')
@@ -163,7 +165,7 @@ class FMwriter:
             # bedLevel=0.0
             # area=0.0
             # streetLevel=0.0
-            file.write('[Retention]\n')
+            file.write('[retention]\n')
             file.write('id = ' + str(value[0]) + '\n')
             file.write('name = ' + str(value[2]) + '\n')
             file.write('nodeId = ' + str(value[0]) + '\n')
@@ -217,19 +219,19 @@ class FMwriter:
         fileRough = open(os.path.join(dirPath, 'output_inputFM', 'Roughness_SewerSystem.ini'), 'w')
 
         #header location
-        fileCSLoc.write('[General]\n')
+        fileCSLoc.write('[general]\n')
         fileCSLoc.write('majorVersion = 1\n')
         fileCSLoc.write('minorVersion = 0\n')
         fileCSLoc.write('fileType = crossLoc\n')
         fileCSLoc.write('\n')
 
         #header roughness
-        fileRough.write('[General]\n')
+        fileRough.write('[general]\n')
         fileRough.write('majorVersion = 1\n')
         fileRough.write('minorVersion = 0\n')
         fileRough.write('fileType = roughness\n')
         fileRough.write('\n')
-        fileRough.write('[Content]\n')
+        fileRough.write('[content]\n')
         fileRough.write('sectionId = SewerSystem\n')
         fileRough.write('flowDirection = False\n')
         fileRough.write('interpolate = 1\n')
@@ -246,7 +248,7 @@ class FMwriter:
                     continue
 
             #start
-            fileCSLoc.write('[CrossSection]\n')
+            fileCSLoc.write('[crosssection]\n')
             fileCSLoc.write('id = ' + str(value[0]) + '_start\n')
             fileCSLoc.write('branchid = ' + str(value[0]) + '\n')
             fileCSLoc.write('chainage = 0.00\n')
@@ -255,17 +257,16 @@ class FMwriter:
             fileCSLoc.write('\n')
 
             #end
-            fileCSLoc.write('[CrossSection]\n')
+            fileCSLoc.write('[crosssection]\n')
             fileCSLoc.write('id = ' + str(value[0]) + '_end\n')
             fileCSLoc.write('branchid = ' + str(value[0]) + '\n')
-            length = str("%.2f" % round(float(value[8]),2))
-            fileCSLoc.write('chainage = ' + length + '\n')
+            fileCSLoc.write('chainage = ' + self.to2Dec(value[8]) + '\n')
             fileCSLoc.write('shift = ' + self.to2Dec(value[6]) + '\n')
             fileCSLoc.write('definition = ' + str(value[15]) + '\n')
             fileCSLoc.write('\n')
 
             #roughness
-            fileRough.write('[Definition]\n')
+            fileRough.write('[definition]\n')
             fileRough.write('branchId = ' + str(value[0]) + '\n')
             fileRough.write('chainage = 0.00\n')
             fileRough.write('value = 3.000\n')
@@ -294,7 +295,7 @@ class FMwriter:
         fileCSDef = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionsDefinitions.ini'), 'w')
 
         #header
-        fileCSDef.write('[General]\n')
+        fileCSDef.write('[general]\n')
         fileCSDef.write('majorVersion = 1\n')
         fileCSDef.write('minorVersion = 0\n')
         fileCSDef.write('fileType = crossDef\n')
@@ -304,23 +305,25 @@ class FMwriter:
 
             value = keyvalue[1]
 
-            fileCSDef.write('[Definition]\n')
+            fileCSDef.write('[definition]\n')
             fileCSDef.write('id = ' + str(value[0]) + '\n')
 
-            w = float(value[3])
-            wString = str("%.2f" % round(w,2))
+            w = float(value[3])/100.0 #mm -> m
             t = str(value[2])
             if t == 'RND':
                 fileCSDef.write('type = circle\n')
-                fileCSDef.write('diameter = ' + wString + '\n')
+                if str(value[0]) == 'PVC':
+                    w -= ((2*w)/34.0)
+                fileCSDef.write('diameter = ' + self.to2Dec(w) + '\n')
             elif t == 'EIV':
                 fileCSDef.write('type = egg\n')
-                fileCSDef.write('width = ' + wString + '\n')
+                fileCSDef.write('width = ' + self.to2Dec(w) + '\n')
                 fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
             else:
+                h = float(value[4])/100.0 #mm -> m
                 fileCSDef.write('type = rectangle\n')
-                fileCSDef.write('width = ' + wString + '\n')
-                fileCSDef.write('height = ' + self.to2Dec(value[4]) + '\n')
+                fileCSDef.write('width = ' + self.to2Dec(w) + '\n')
+                fileCSDef.write('height = ' + self.to2Dec(h) + '\n')
 
             fileCSDef.write('closed = 1\n')
             fileCSDef.write('groundlayerUsed = 0\n')
@@ -358,7 +361,7 @@ class FMwriter:
         fileStructures = open(os.path.join(dirPath, 'output_inputFM', 'Structures.ini'), 'w')
 
         #header
-        fileStructures.write('[General]\n')
+        fileStructures.write('[general]\n')
         fileStructures.write('majorVersion = 1\n')
         fileStructures.write('minorVersion = 0\n')
         fileStructures.write('fileType = structure\n')
@@ -372,7 +375,7 @@ class FMwriter:
 
             if type == 'DRL':
                 writePliz = True
-                fileStructures.write('[Structure]\n')
+                fileStructures.write('[structure]\n')
                 fileStructures.write('type = orifice\n')
                 fileStructures.write('id = ' + value[0] + '\n')
                 fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
@@ -386,46 +389,36 @@ class FMwriter:
                     fileStructures.write('allowed_flow_dir = 1\n')
 
                 fileStructures.write('bottom_level = ' + self.to2Dec(value[3]) + '\n')
+
+                area = self.getAreaOfOrifice(value[0])
+
+                fileStructures.write('area = ' + self.to2Dec(area) + '\n')
                 fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[4]) + '\n')
-                if value[5] != '':
-                    fileStructures.write('capacity = ' + self.to2Dec(value[5]) + '\n')
                 fileStructures.write('\n')
 
             elif type == 'OVS':
                 writePliz = True
-                fileStructures.write('[Structure]\n')
-                fileStructures.write('type = weir\n')
+                fileStructures.write('[structure]\n')
+                fileStructures.write('type = gate\n')
                 fileStructures.write('id = ' + value[0] + '\n')
                 fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
 
-                direction = self.getDirectionOfStructure(value[0])
-                if direction == '1_2':
-                    fileStructures.write('allowed_flow_dir = 2\n')
-                elif direction == '2_1':
-                    fileStructures.write('allowed_flow_dir = 3\n')
-                else:
-                    fileStructures.write('allowed_flow_dir = 1\n')
+                fileStructures.write('sill_level = ' + self.to2Dec(value[7]) + '\n')
+                fileStructures.write('door_height = ' + self.to2Dec(self.deltaGateHeightTopLevel) + '\n')
+                fileStructures.write('lower_edge_level = ' + self.to2Dec(self.getGateHeight(value[0])) + '\n')
+                fileStructures.write('opening_width = ' + self.to2Dec(value[6]) + '\n')
+                fileStructures.write('horizontal_opening_direction = symmetric\n')
 
-                fileStructures.write('crest_width = ' + self.to2Dec(value[6]) + '\n')
-                fileStructures.write('crest_level = ' + self.to2Dec(value[7]) + '\n')
-                fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[8]) + '\n')
                 fileStructures.write('\n')
-
-                #type              = gate
-                #polylinefile      = <edge.pli>
-                #sill_level        = <scalar (m)>
-                #door_height       = <scalar (m)>
-                #lower_edge_level  = <scalar (m)> | <timeseries.tim> | ...bct later
-                #opening_width     = <scalar (m)> | <timeseries.tim> | ...bct later
-                #horizontal_opening_direction = symmetric | from_left | from_right
 
             elif type == 'PMP':
                 writePliz = True
-                fileStructures.write('[Structure]\n')
+                fileStructures.write('[structure]\n')
                 fileStructures.write('type = pump\n')
                 fileStructures.write('id = ' + value[0] + '\n')
                 fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
-                fileStructures.write('capacity = ' + self.to2Dec(value[9]) + '\n')
+                valuePerSecond = float(value[9])/3600
+                fileStructures.write('capacity = ' + str("%.2f" % round(float(valuePerSecond),6)) + '  #m3/s\n')
 
                 direction = self.getDirectionOfStructure(value[0])
                 if direction == '1_2':
@@ -461,7 +454,7 @@ class FMwriter:
         fileLateral = open(os.path.join(dirPath, 'output_inputFM', 'LateralLocations.ini'), 'w')
 
         #header
-        fileLateral.write('[General]\n')
+        fileLateral.write('[general]\n')
         fileLateral.write('majorVersion = 1\n')
         fileLateral.write('minorVersion = 0\n')
         fileLateral.write('fileType = latLocs\n')
@@ -469,7 +462,7 @@ class FMwriter:
 
         for keyvalue in self.model.inlets.items():
             value = keyvalue[1]
-            fileLateral.write('[LateralDischarge]\n')
+            fileLateral.write('[lateraldischarge]\n')
             fileLateral.write('id = lateral' + value[0] + '\n')
             fileLateral.write('name = nameLateral' + value[0] + '\n')
             fileLateral.write('nodeId = ' + value[0] + '\n')
@@ -498,8 +491,24 @@ class FMwriter:
 
     def getDirectionOfStructure(self, id):
         connection = self.model.connections[id]
-        direction = connection[7]
-        return direction
+        result = connection[7]
+        return result
+
+    def getAreaOfOrifice(self, id):
+        connection = self.model.connections[id]
+        profile = self.model.profiles[connection[15]]
+        result = pi * ((float(profile[3])/200.0) ** 2)
+        return result
+
+    def getGateHeight(self, id):
+        connection = self.model.connections[id]
+        cmp1Level = float(self.model.nodes[connection[1]][6])
+        cmp2Level = float(self.model.nodes[connection[2]][6])
+        if cmp1Level < cmp2Level:
+            result = cmp1Level - self.deltaGateHeightTopLevel
+        else:
+            result = cmp2Level - self.deltaGateHeightTopLevel
+        return result;
 
     ## writeFMnetwork documentation
     # This fuction is going to prepare 1D Ugrid files
@@ -513,7 +522,7 @@ class FMwriter:
         output_file = os.path.join(dirPath, 'output_inputFM', name + "_net.nc")
 
         # File format:
-        outformat = "NETCDF4"
+        outformat = "NETCDF4"  #"NETCDF3_CLASSIC"
         # File where we going to write
         ncfile = Dataset(output_file, 'w', format=outformat)
 

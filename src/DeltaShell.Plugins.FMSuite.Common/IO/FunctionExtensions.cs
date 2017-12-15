@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Functions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var componentIndexGrouping = function.Components
                 .Select((component, index) => new { component, index })
-                .FirstOrDefault(cig => cig.component.Name == componentName);
+                .FirstOrDefault(cig => cig.component.Name.Equals(componentName, StringComparison.InvariantCultureIgnoreCase));
 
             return componentIndexGrouping == null ? -1 : componentIndexGrouping.index;
         }

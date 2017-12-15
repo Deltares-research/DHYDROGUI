@@ -40,9 +40,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // setup
             var feature = new Feature2D();
             var extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.SourceAndSink);
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            Assert.NotNull(useSalinityProperty);
+            useSalinityProperty.Value = useSalinity;
+
+            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            Assert.NotNull(useTemperatureProperty);
+            useTemperatureProperty.Value = useTemperature;
 
             // do the import
-            var sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(testFilePath, feature, extForceFileItem, DateTime.Now, useSalinity, useTemperature);
+            var sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(testFilePath, feature, extForceFileItem, DateTime.Now, modelDefinition);
 
             // check results
             var function = sourceAndSink.Function;
@@ -88,12 +97,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             var modelDefinition = fmModel.ModelDefinition;
-            var salinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            salinityProperty.Value = useSalinity;
+            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            Assert.NotNull(useSalinityProperty);
+            useSalinityProperty.Value = useSalinity;
 
-            var tempertureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
-            tempertureProperty.Value = useTemperature;
-            
+            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            Assert.NotNull(useTemperatureProperty);
+            useTemperatureProperty.Value = useTemperature;
+
             var function = sourceAndSink.Function;
 
             var timeVariable = function.Arguments.FirstOrDefault(c => c.Name == SourceAndSink.TimeVariableName);
@@ -125,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             // do the export
-            ExtForceFileHelper.WriteSourceAndSinkData(exportedFile, sourceAndSink, fmModel.ReferenceTime, extForceFileItem, true, useSalinity, useTemperature);
+            ExtForceFileHelper.WriteSourceAndSinkData(exportedFile, sourceAndSink, fmModel.ReferenceTime, extForceFileItem, true, modelDefinition);
 
             // check results
             Assert.IsTrue(FileUtils.FilesAreEqual(expectedFile, exportedFile));

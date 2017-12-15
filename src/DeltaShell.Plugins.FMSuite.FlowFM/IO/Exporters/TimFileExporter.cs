@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 
                     if (data == null)
                     {
-                        Log.ErrorFormat("Could not export data for SourceAndSink: {0}, no Function was found");
+                        Log.ErrorFormat("Could not export data for SourceAndSink: {0}, no Function was found", sourceAndSink.Name);
                         return false;
                     }
 

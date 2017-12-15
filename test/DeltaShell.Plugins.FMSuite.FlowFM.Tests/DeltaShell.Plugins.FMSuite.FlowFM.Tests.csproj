@@ -283,6 +283,7 @@
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
+    <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />
