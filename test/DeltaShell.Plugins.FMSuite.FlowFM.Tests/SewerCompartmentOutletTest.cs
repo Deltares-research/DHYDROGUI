@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -214,6 +215,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var outletFromNode = compartment as OutletCompartment;
             Assert.IsNotNull(outletFromNode);
             Assert.AreEqual(surfaceWaterLevel, outletFromNode.SurfaceWaterLevel);
+        }
+
+        [Test]
+        public void
+            CreateOutletCompartmentFromGwswElementStructureWhenCompartmentWithSameNameExistsOnNetworkShouldCreateNewOutletCompartment()
+        {
+            var uniqueId = "outlet123";
+            var surfaceWaterLevel = 15.0;
+            var structureType =
+                EnumDescriptionAttributeTypeConverter.GetEnumDescription(SewerStructureMapping.StructureType.Outlet);
+
+            var defaultDouble = 0.0;
+            //Gwsw elements
+            var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
+                defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
+
+            var network = new HydroNetwork();
+            var compartment = new Compartment(uniqueId);
+            Assert.IsFalse(compartment.IsOutletCompartment());
+
+            var manhole = new Manhole("manholeName"){ Compartments = new EventedList<Compartment>(){compartment}};
+            network.Nodes.Add(manhole);
+            Assert.IsTrue(network.Manholes.Any( m => m.ContainsCompartmentWithName(uniqueId)));
+
+            var manholeForOutlet = new SewerCompartmentOutletGenerator().Generate(structureGwswElement, network) as IManhole;
+            Assert.IsNotNull(manholeForOutlet);
+            Assert.AreEqual(manhole, manholeForOutlet);
+
+            Assert.AreEqual(2, manholeForOutlet.Compartments.Count);
+            var outletCompartment = manholeForOutlet.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+            Assert.IsNotNull(outletCompartment);
+            Assert.IsTrue(outletCompartment.IsOutletCompartment());
+
+            Assert.AreEqual(compartment.Name, outletCompartment.Name);
+            Assert.IsTrue(manhole.Compartments.Contains(compartment));
+            Assert.IsTrue(manhole.Compartments.Contains(outletCompartment));
         }
         #endregion
     }

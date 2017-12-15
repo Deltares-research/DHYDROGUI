@@ -278,6 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 var element = new GwswElement { ElementTypeName = elementTypeName };
                 var rowValues = dataRow.ItemArray.ToList();
+                var columnIndex = 0;
                 foreach (var column in rowValues)
                 {
                     var attribute = new GwswAttribute
@@ -285,7 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         LineNumber = importedDataTable.Rows.IndexOf(dataRow),
                         ValueAsString = column.ToString()
                     };
-                    var columnName = importedDataTable.Columns[rowValues.IndexOf(column)].ColumnName;
+                    var columnName = importedDataTable.Columns[columnIndex].ColumnName;
+                    columnIndex++;
                     if (GwswAttributesDefinition != null)
                     {
                         var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.ElementName.Equals(elementTypeName) && attr.Key.Equals(columnName));

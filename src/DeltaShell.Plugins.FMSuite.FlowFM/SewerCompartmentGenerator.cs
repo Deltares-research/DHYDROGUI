@@ -41,7 +41,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var parentManhole = FindManhole(gwswElement, network);
 
             if (parentManhole != null && parentManhole.ContainsCompartmentWithName(compartmentName))
-                return (T)parentManhole.GetCompartmentByName(compartmentName);
+            {
+                var foundCompartment = parentManhole.GetCompartmentByName(compartmentName) as T;
+                if (foundCompartment != null)
+                    return foundCompartment;
+            }
 
             return new T { Name = compartmentName };
         }
@@ -83,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             SetCompartmentAttributes(compartment, gwswElement);
             var manhole = GetNewOrExistingManhole(gwswElement, network);
-            if( !manhole.ContainsCompartmentWithName(compartment.Name))
+            if( !manhole.Compartments.Contains(compartment))
                 manhole.Compartments.Add(compartment);
 
             return manhole;
