@@ -383,10 +383,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static Compartment TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(string manholeId, GwswElement badGwswElement, string compartmentId, string expectedMsg)
         {
             INetworkFeature feature = null;
-
-            feature = SewerFeatureFactory.CreateInstance(badGwswElement);
-            //TestHelper.AssertAtLeastOneLogMessagesContains(() => feature = SewerFeatureFactory.CreateInstance(badGwswElement),
-            //    expectedMsg);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature = SewerFeatureFactory.CreateInstance(badGwswElement),
+                expectedMsg);
 
             // Check compartment
             var manhole = feature as Manhole;
