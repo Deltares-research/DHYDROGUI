@@ -216,13 +216,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     new GwswAttribute
                     {
-                        GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", "string", SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart,
+                        GwswAttributeType = new TestGwswAttributeType("testFile", 5, "columnName", "string", SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart,
                             "unkownDefinition", "mandatoryMaybe", string.Empty, "noRemarks"),
                         ValueAsString = startCompartmentName
                     },
                     new GwswAttribute
                     {
-                        GwswAttributeType = new GwswAttributeType("testFile", 6, "columnName", "string", SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd,
+                        GwswAttributeType = new TestGwswAttributeType("testFile", 6, "columnName", "string", SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd,
                             "unkownDefinition", "mandatoryMaybe", string.Empty, "noRemarks"),
                         ValueAsString = endCompartmentName
                     },

@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             return new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType("testFile", 5, "columnName", attributeType ?? "string", attributeName,
+                GwswAttributeType = new TestGwswAttributeType("testFile", 5, "columnName", attributeType ?? "string", attributeName,
                     "unkownDefinition", "mandatoryMaybe", defaultValue, "noRemarks"),
                 ValueAsString = attributeValue
             };
@@ -183,6 +183,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(nodeGwswElement);
 
             return nodeGwswElement;
+        }
+    }
+
+    public class TestGwswAttributeType : GwswAttributeType
+    {
+        public TestGwswAttributeType(string fileName, int lineNumber, string columnName, string typeField, string codeName, string definition, string mandatory, string defaultValue, string remarks)
+        {
+            Name = columnName;
+            Key = codeName;
+            Definition = definition;
+            Mandatory = mandatory;
+            Remarks = remarks;
+            FileName = fileName;
+            AttributeType = TryGetParsedValueType(Name, typeField, definition, fileName, lineNumber);
+            DefaultValue = defaultValue;
         }
     }
 }

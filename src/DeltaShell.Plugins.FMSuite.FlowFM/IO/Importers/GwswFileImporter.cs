@@ -119,9 +119,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private void SetProgress(string currentStepName, int currentStep, int totalSteps)
         {
-            if (ProgressChanged == null) return;
-            ProgressChanged(currentStepName, currentStep, totalSteps);
+            ProgressChanged?.Invoke(currentStepName, currentStep, totalSteps);
         }
+
         /// <summary>
         /// Imports the given file as path. If it is null, then the list of files (FilesToImport) will be imported instead. 
         /// A Gwsw Definition file needs to be loaded beforehand with method LoadDefinitionFile.
@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 var attributeType = row.ItemArray[6].ToString();
                 var attributeDefaultValue = row.ItemArray[9].ToString();
 
-                var attribute = new GwswAttributeType()
+                var attribute = new GwswAttributeType
                 {
                     Name = attributeName,
                     ElementName = attributeElement,
@@ -607,11 +607,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             set { valueAsString = value; }
         }
 
-        public string DefaultValueAsString
-        {
-            get { return GwswAttributeType.DefaultValue; }
-        }
-
         private static string ReplaceCommaWithPoint(string doubleString)
         {
             return doubleString.Replace(',', '.');
@@ -647,23 +642,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public string FileName { get; set; }
         public Type AttributeType { get; set; }
         public string DefaultValue { get; set; }
-
-        public GwswAttributeType()
-        {
-        }
-
-        public GwswAttributeType(string fileName, int lineNumber, string columnName, string typeField, string codeName, string definition, string mandatory, string defaultValue, string remarks)
-        {
-            Name = columnName;
-            Key = codeName;
-            Definition = definition;
-            Mandatory = mandatory;
-            Remarks = remarks;
-            FileName = fileName;
-            AttributeType = TryGetParsedValueType(Name, typeField, definition, fileName, lineNumber);
-            DefaultValue = defaultValue;
-        }
-
+        
         public static Type TryGetParsedValueType(string name, string typeField, string definition, string fileName, int lineNumber)
         {
             try
