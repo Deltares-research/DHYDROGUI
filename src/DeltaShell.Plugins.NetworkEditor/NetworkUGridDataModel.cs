@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -68,11 +70,33 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             if (network.Nodes != null)
             {
-                NumberOfNodes = network.Nodes.Count;
-                NodesX = network.Nodes.Select(n => n.Geometry.Coordinates[0].X).ToArray();
-                NodesY = network.Nodes.Select(n => n.Geometry.Coordinates[0].Y).ToArray();
-                NodesNames = network.Nodes.Select(n => n.Name).ToArray();
-                NodesDescriptions = network.Nodes.Select(n => n.Description).ToArray();
+                var compartments = new List<Compartment>();
+                network.Manholes.ForEach(m =>
+                {
+                    compartments.AddRange(m.Compartments);
+                });
+                var compartmentCount = compartments.Count;
+
+                var nonManholeNetworkNodes = network.Nodes.Where(n => n.GetType() != typeof(Manhole)).ToList();
+
+                var compartmentsX = new List<double>();
+                var compartmentsY = new List<double>();
+                network.Manholes.ForEach(m =>
+                {
+                    var numOfCompartments = m.Compartments.Count;
+                    var offset = (compartmentCount - 1) * 0.5;
+                    for (var i = 0; i < numOfCompartments; i++)
+                    {
+                        compartmentsX.Add(m.Geometry.Coordinate.X - offset + i);
+                        compartmentsY.Add(m.Geometry.Coordinate.Y);
+                    }
+                });
+
+                NumberOfNodes = nonManholeNetworkNodes.Count + compartmentCount;
+                NodesX = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates[0].X).Concat(compartmentsX).ToArray();
+                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates[0].Y).Concat(compartmentsY).ToArray();
+                NodesNames = nonManholeNetworkNodes.Select(n => n.Name).Concat(compartments.Select(c => c.Name)).ToArray();
+                NodesDescriptions = nonManholeNetworkNodes.Select(n => n.Description).Concat(compartments.Select(c => string.Empty)).ToArray();
             }
 
             if (network.Branches != null)

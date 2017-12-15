@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -12,12 +13,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     {
         private IHydroNetwork TestNetwork()
         {
-            var network = new HydroNetwork() { Name = "my Network" };
-            var hydroNode1 = new HydroNode() { Name = "my Node1", Description = "Node 1 Description", Geometry = new Point(0, 0), Network = network };
+            var network = new HydroNetwork { Name = "my Network" };
+            var hydroNode1 = new HydroNode { Name = "my Node1", Description = "Node 1 Description", Geometry = new Point(0, 0), Network = network };
             network.Nodes.Add(hydroNode1);
-            var hydroNode2 = new HydroNode() { Name = "my Node2", Description = "Node 2 Description", Geometry = new Point(3, 4), Network = network };
+            var hydroNode2 = new HydroNode { Name = "my Node2", Description = "Node 2 Description", Geometry = new Point(3, 4), Network = network };
             network.Nodes.Add(hydroNode2);
-            var branch1 = new Branch()
+            var branch1 = new Branch
             {
                 Name = "my Branch 1",
                 Description = "Branch 1 Description",
@@ -65,6 +66,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // Test the geometry points
             Assert.AreEqual(new[] {0, 3}, networkDataModel.GeopointsX);
             Assert.AreEqual(new[] {0, 4}, networkDataModel.GeopointsY);
+        }
+
+        [Test]
+        public void GivenNetworkWithMultipleCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
+        {
+            var network = new HydroNetwork { Name = "my Network" };
+            var manhole = new Manhole("myManhole")
+            {
+                Geometry = new Point(10, 10)
+            };
+            manhole.Compartments.Add(new Compartment("cmp1"));
+            manhole.Compartments.Add(new Compartment("cmp2"));
+            network.Nodes.Add(manhole);
+
+            var networkDataModel = new NetworkUGridDataModel(network);
+            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(2));
+            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.5, 10.5 }));
+            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10, 10 }));
+            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2" }));
+            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty }));
         }
 
         [Test]
