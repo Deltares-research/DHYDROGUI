@@ -145,6 +145,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             {
                 return GetEnumerableList(Network.Nodes.OfType<HydroNode>(), (INotifyCollectionChange)Network);
             }
+            if (FeatureType == typeof(Manhole))
+            {
+                return GetEnumerableList(Network.Nodes.OfType<Manhole>(), (INotifyCollectionChange) Network);
+            }
+            if (FeatureType == typeof(SewerConnection))
+            {
+                return GetEnumerableList(Network.SewerConnections.OfType<SewerConnection>(), (INotifyCollectionChange)Network);
+            }
             if (FeatureType == typeof(CompositeBranchStructure))
             {
                 return GetEnumerableList(Network.CompositeBranchStructures.OfType<CompositeBranchStructure>(), (INotifyCollectionChange)Network);

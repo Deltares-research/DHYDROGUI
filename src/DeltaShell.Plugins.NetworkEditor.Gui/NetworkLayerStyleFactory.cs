@@ -135,6 +135,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
+            var sewerConnections = networkObjects as IEnumerable<ISewerConnection>;
+            if (sewerConnections != null)
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.CadetBlue, 3)
+                    {
+                        CustomEndCap = new AdjustableArrowCap(5, 5, true)
+                        {
+                            BaseCap = LineCap.Triangle
+                        }
+                    },
+                    EnableOutline = false
+                };
+            }
+
             return null;
         }
 
@@ -197,6 +214,64 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                                     new CategorialThemeItem("False", branchStyle, null, false)
                                                 }
                            };
+            }
+
+            var manholes = networkObjects as IEnumerable<IManhole>;
+            if (manholes != null)
+            {
+                var onSingleBranchesStyle = CreatePointStyle(Properties.Resources.NodeOnSingleBranch);
+                var onMultipleBranchesStyle = CreatePointStyle(Properties.Resources.NodeOnMultipleBranches);
+                return new CategorialTheme
+                {
+                    AttributeName = "IsOnSingleBranch",
+                    DefaultStyle = onSingleBranchesStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("True", onSingleBranchesStyle, onSingleBranchesStyle.Symbol, true),
+                        new CategorialThemeItem("False", onMultipleBranchesStyle, onMultipleBranchesStyle.Symbol, false)
+                    }
+                };
+            }
+
+            var connections = networkObjects as IEnumerable<ISewerConnection>;
+            if (connections != null)
+            {
+                var branchStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.CadetBlue, 3)
+                    {
+                        CustomEndCap = new AdjustableArrowCap(5, 5, true)
+                        {
+                            BaseCap = LineCap.Triangle
+                        }
+                    },
+                    EnableOutline = false
+                };
+
+                var customBranchStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.PowderBlue, 5)
+                    {
+                        CustomEndCap = new AdjustableArrowCap(4, 4, true)
+                        {
+                            BaseCap = LineCap.Triangle
+                        }
+                    },
+                    EnableOutline = false
+                };
+
+                return new CategorialTheme
+                {
+                    AttributeName = "IsLengthCustom",
+                    DefaultStyle = branchStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("True", customBranchStyle, null, true),
+                        new CategorialThemeItem("False", branchStyle, null, false)
+                    }
+                };
             }
 
             var pumps = networkObjects as IEnumerable<IPump>;

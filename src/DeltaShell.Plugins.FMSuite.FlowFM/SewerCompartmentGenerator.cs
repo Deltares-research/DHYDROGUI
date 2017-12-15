@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (network != null)
                 manholeList = network.Manholes.ToList();
 
-            return NetworkHelper.GetUniqueName("Manhole{0:D2}ForCompartment"+compartmentName, manholeList, "Manhole"); ;
+            return NetworkHelper.GetUniqueName("Manhole{0:D2}ForCompartment"+compartmentName, manholeList, "Manhole");
         }
 
         protected IManhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
