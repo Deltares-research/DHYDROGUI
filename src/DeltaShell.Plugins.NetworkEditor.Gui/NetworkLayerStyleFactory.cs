@@ -219,8 +219,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var manholes = networkObjects as IEnumerable<IManhole>;
             if (manholes != null)
             {
-                var onSingleBranchesStyle = CreatePointStyle(Properties.Resources.NodeOnSingleBranch);
-                var onMultipleBranchesStyle = CreatePointStyle(Properties.Resources.NodeOnMultipleBranches);
+                var onSingleBranchesStyle = new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Shape = ShapeType.Ellipse,
+                    Fill = new SolidBrush(Color.Orange),
+                    Outline = new Pen(Color.FromArgb(100, Color.DarkSlateGray), 2f),
+                };
+                var onMultipleBranchesStyle = new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Shape = ShapeType.Ellipse,
+                    Fill = new SolidBrush(Color.DarkOrange),
+                    Outline = new Pen(Color.FromArgb(100, Color.DimGray), 2f),
+                };
                 return new CategorialTheme
                 {
                     AttributeName = "IsOnSingleBranch",
@@ -239,7 +251,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.CadetBlue, 3)
+                    Line = new Pen(Color.DarkSlateGray, 3)
                     {
                         CustomEndCap = new AdjustableArrowCap(5, 5, true)
                         {
@@ -252,7 +264,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var customBranchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.PowderBlue, 5)
+                    Line = new Pen(Color.DimGray, 5)
                     {
                         CustomEndCap = new AdjustableArrowCap(4, 4, true)
                         {

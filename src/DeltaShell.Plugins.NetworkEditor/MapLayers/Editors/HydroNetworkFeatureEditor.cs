@@ -119,6 +119,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
             else if (feature is IChannel)
                 featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
+            else if (feature is ISewerConnection)
+                featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
             else if (feature is INetworkLocation)
                 featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
             else if (feature is LateralSource)
