@@ -148,14 +148,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
         {
             if (Importer.GwswAttributesDefinition == null || !Importer.GwswAttributesDefinition.Any()) return;
             var pathList = new List<string>();
-            var directoryName = Path.GetDirectoryName(DefinitionFilePath);
 
             //Get the items to import
-            GwswFeatureFiles.Where( it => it.Selected ).ForEach( it => pathList.Add(Path.Combine(directoryName, it.FileName)));
+            GwswFeatureFiles.Where( it => it.Selected ).ForEach( it => pathList.Add(it.FullPath));
             
             //Add the files to import to the importer property, close the window and then launch the importer.
             Importer.FilesToImport = new EventedList<string>(pathList);
-            CloseAction(true);
+            CloseAction?.Invoke(true);
         }
     }
 
