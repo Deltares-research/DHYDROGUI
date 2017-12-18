@@ -24,7 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             base.SetSewerConnectionAttributes(connection, gwswElement, network);
 
-            var auxDouble = 0.0;
+            if (!gwswElement.IsValidGwswStructure()) return;
+            double auxDouble;
             //Add Attributes
             var bottomLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.BottomLevel);
             if( bottomLevel.TryGetValueAsDouble(out auxDouble))

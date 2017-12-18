@@ -515,7 +515,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (attribute != null)
                 return attribute;
 
-            Log.WarnFormat(Resources.SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_, attributeName, element?.ElementTypeName);
+            var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals("UNIQUE_ID"));
+            Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
             return null;
         }
 

@@ -17,8 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (newOutlet == null) return;
 
             base.SetCompartmentAttributes(compartment, gwswElement);
-            var auxDouble = 0.0;
-
+            
+            if(!gwswElement.IsValidGwswStructure()) return;
+            double auxDouble;
             var surfaceWaterLevel = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);
             if( surfaceWaterLevel.TryGetValueAsDouble(out auxDouble))
                 newOutlet.SurfaceWaterLevel = auxDouble;

@@ -122,25 +122,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (network == null) return null;
 
-            var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
-            var compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
-
-            var manholeName = manholeAttribute.IsValidAttribute() ? manholeAttribute.ValueAsString : compartmentName;
-            var parentManhole = network.Manholes.FirstOrDefault(m => m.Name.Equals(manholeName)) as Manhole;
-
-            //If it was not found, try searching by containing this compartment.
-            if (parentManhole == null)
+            Manhole manholeInNetwork = null;
+            string compartmentName;
+            if (gwswElement.IsValidGwswCompartment())
             {
-                parentManhole = network.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(compartmentName)) as Manhole;
+                var manholeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
+                compartmentName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.UniqueId).ValueAsString;
+
+                var manholeName = manholeAttribute.IsValidAttribute()
+                    ? manholeAttribute.ValueAsString
+                    : compartmentName;
+                manholeInNetwork = network.Manholes.FirstOrDefault(m => m.Name.Equals(manholeName)) as Manhole;
             }
 
-            return parentManhole;
+            //If it was not found, try searching by containing this compartment.
+            if (manholeInNetwork == null)
+            {
+                compartmentName = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId).ValueAsString;
+                manholeInNetwork = network.Manholes.FirstOrDefault(m => m.ContainsCompartmentWithName(compartmentName)) as Manhole;
+            }
+
+            return manholeInNetwork;
         }
 
         protected virtual void SetCompartmentAttributes(Compartment compartment, GwswElement gwswElement)
         {
+            if (!gwswElement.IsValidGwswCompartment()) return;
+
             // Set the rest of manhole values
-            var auxDouble = 0.0;
+            double auxDouble;
             var nodeLength = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
             if( nodeLength.TryGetValueAsDouble(out auxDouble))
                 compartment.ManholeLength = auxDouble;

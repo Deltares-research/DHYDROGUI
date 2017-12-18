@@ -56,6 +56,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 sewerConnection.Name = nodeIdString.ValueAsString;
             }
 
+            //if (gwswElement.ElementTypeName != SewerFeatureType.Connection.ToString()) return;
+            if (gwswElement.ElementTypeName != SewerFeatureType.Connection.ToString()) return;
             var nodeIdStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
             var nodeIdEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
             if (nodeIdStart.IsValidAttribute() && network != null)

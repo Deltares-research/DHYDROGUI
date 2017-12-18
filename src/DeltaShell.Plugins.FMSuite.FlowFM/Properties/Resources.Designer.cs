@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -247,6 +247,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} was not found for element {1} of type {2}..
+        /// </summary>
+        public static string GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_elemen" +
+                        "t__1__of_type__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0}, line {1}, element {2}. It was not possible to parse attribute {3} with value {4} from type {5} to type {6}..
         /// </summary>
         public static string GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__ {
@@ -283,6 +293,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profi" +
                         "le_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot import sewer structure(s) without a unique id. Please check &apos;Kunstwerk.csv&apos; for empty unique id&apos;s.
+        /// </summary>
+        public static string GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structure_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s {
+            get {
+                return ResourceManager.GetString("GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structur" +
+                        "e_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s", resourceCulture);
             }
         }
         

@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public static bool IsValidGwswCompartment(this GwswElement gwswElement)
-            {
+        {
             if (gwswElement == null) return false;
 
             var featureType = (SewerFeatureType) EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
@@ -322,7 +322,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static bool IsValidGwswSewerConnection(this GwswElement gwswElement)
         {
-            if (gwswElement == null) return false;
+            if (gwswElement == null || gwswElement.ElementTypeName != SewerFeatureType.Connection.ToString()) return false;
+
             var nodeIdStart = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdStart);
             var nodeIdEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
             if (nodeIdStart == null || nodeIdEnd == null)
@@ -339,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (gwswElement == null) return false;
 
-            var profileId = gwswElement?.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            var profileId = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
             if (!profileId.IsValidAttribute())
             {
                 Log.Error(Resources.GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s);
@@ -348,6 +349,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var featureType = (SewerFeatureType)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
             return featureType == SewerFeatureType.Crosssection;
+        }
+
+        public static bool IsValidGwswStructure(this GwswElement gwswElement)
+        {
+            if (gwswElement == null) return false;
+
+            var profileId = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.UniqueId);
+            if (!profileId.IsValidAttribute())
+            {
+                Log.Error(Resources.GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structure_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s);
+                return false;
+            }
+
+            var featureType = (SewerFeatureType)EnumDescriptionAttributeTypeConverter.GetEnumValue<SewerFeatureType>(gwswElement.ElementTypeName);
+            return featureType == SewerFeatureType.Structure;
         }
     }
 }
