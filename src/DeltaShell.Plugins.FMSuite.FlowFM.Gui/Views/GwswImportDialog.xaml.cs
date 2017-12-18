@@ -1,14 +1,18 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Forms;
 using DelftTools.Controls;
 using Image = System.Drawing.Image;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     /// <summary>
     /// Interaction logic for GwswImportDialog.xaml
     /// </summary>
-    public partial class GwswImportDialog : Window, IView, IDialog
+    public partial class GwswImportDialog : IView, IDialog
     {
         public GwswImportDialog()
         {
@@ -24,7 +28,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         public object Data
         {
             get { return ViewModel.Importer; }
-            set { ViewModel.Importer = (GwswFileImporter) value; }
+            set
+            {
+                ViewModel.Importer = (GwswFileImporter) value;
+                ViewModel.MessageAction = ShowMessageDialog;
+            }
         }
 
         public string Text { get; set; }
@@ -52,6 +60,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return DialogResult.HasValue && DialogResult.Value 
                 ? DelftDialogResult.OK 
                 : DelftDialogResult.Cancel;
+        }
+
+        private void Click_LoadDefinitionFile(object sender, RoutedEventArgs e)
+        {
+            var selectedFile = BrowseFiles();
+            if (!String.IsNullOrEmpty(selectedFile)
+                && ViewModel.GwswFeatureFiles != null && ViewModel.GwswFeatureFiles.Any())
+            {
+                var message =
+                    "Importing a new Definition File will remove the existent Feature Files from the list. \nDo you wish to continue with this action?";
+                var proceed = ShowMessageDialog("Feature Files to be overwritten", message, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                ViewModel.OverwriteGwswFeatureFiles = proceed;
+                if (!proceed) return;
+            }
+
+            ViewModel.SelectedDefinitionFilePath = selectedFile;
+        }
+
+        private void Click_AddFeatureFile(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectedFeatureFilePath = BrowseFiles();
+        }
+
+        private string BrowseFiles()
+        {
+            var dialog = new OpenFileDialog { Filter = ViewModel.Importer.FileFilter };
+            var result = dialog.ShowDialog();
+            return result != System.Windows.Forms.DialogResult.OK ? null : dialog.FileName;
+        }
+
+        private bool ShowMessageDialog(string title, string message, MessageBoxButtons button, MessageBoxIcon icon)
+        {
+            var result = MessageBox.Show(message, title, button, icon);
+            return result == System.Windows.Forms.DialogResult.OK ||
+                   result == System.Windows.Forms.DialogResult.Yes;
         }
     }
 }

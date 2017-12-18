@@ -3,19 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
-        xmlns:description="clr-namespace:Mono.Addins.Description;assembly=Mono.Addins"
-        xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
         xmlns:vm="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels"
         mc:Ignorable="d"
-        Title="Gwsw Feature Importer" Height="480" Width="670" WindowStartupLocation="CenterOwner" SizeToContent="Height" ResizeMode="CanResizeWithGrip">
+        Title="Gwsw Feature Importer" Height="429" Width="550" WindowStartupLocation="CenterOwner" SizeToContent="Height" ResizeMode="CanResizeWithGrip" ScrollViewer.CanContentScroll="True">
     <Window.DataContext>
         <vm:GwswImportDialogViewModel x:Name="ViewModel"/>
     </Window.DataContext>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" >
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="10" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -26,77 +22,68 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0"  
-                             VerticalAlignment="Center" 
+                    <TextBox Grid.Column="0" VerticalAlignment="Center" Margin="3" Padding="3"
                              IsEnabled="False" 
-                             Margin="3"
-                             Padding="3"
                              TextWrapping="WrapWithOverflow"
-                             Text="{Binding Path=DefinitionFilePath, UpdateSourceTrigger=PropertyChanged}"
-                             ToolTip="{Binding Path=DefinitionFilePath}"/>
-                    <Button Grid.Column="1" Margin="5" Padding="3" Content="Load Definition" Command="{Binding Path=OnLoadDefinitionFile}" VerticalAlignment="Center" />
+                             Text="{Binding SelectedDefinitionFilePath, UpdateSourceTrigger=PropertyChanged}"
+                             ToolTip="{Binding SelectedDefinitionFilePath}" VerticalScrollBarVisibility="Auto"/>
+                    <Button Grid.Column="1" Margin="5" Padding="3" VerticalAlignment="Center"
+                            Content="Load Definition" 
+                            Click="Click_LoadDefinitionFile"
+                            Command="{Binding OnLoadDefinitionFile}"/>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Row="1" Header="Feature files" IsEnabled="{Binding Path=IsDefinitionFileLoaded, UpdateSourceTrigger=PropertyChanged}">
+            <GroupBox Grid.Row="1" Header="Feature files" 
+                      IsEnabled="{Binding IsDefinitionFileLoaded, UpdateSourceTrigger=PropertyChanged}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <DataGrid Grid.Row="0" Margin="5" 
-                              Height="180"
-                              ItemsSource="{Binding GwswFeatureFiles}" 
-                              CanUserAddRows="False" 
-                              AutoGenerateColumns="False"
-                              GridLinesVisibility="None"
-                              HorizontalGridLinesBrush="Gray"
-                              SelectionMode="Extended" Padding="0">
-                        <DataGrid.Columns>
-                            <DataGridCheckBoxColumn Header="Selected" Binding="{Binding Selected}"/>
-                            <DataGridTextColumn Header="File name" Binding="{Binding FileName}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Feature name" Binding="{Binding ElementName}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Mapped type" Binding="{Binding FeatureType}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Full path" Binding="{Binding FullPath}" IsReadOnly="True"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <ListView Grid.Row="0" Margin="5" ItemsSource="{Binding GwswFeatureFiles}" Height="200">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn>
+                                    <GridViewColumn.Header>
+                                        <CheckBox IsChecked="{Binding AllFilesSelected}" Command="{Binding OnSelectAll}"/>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="vm:GwswFeatureViewItem">
+                                            <CheckBox IsChecked="{Binding Selected}" HorizontalContentAlignment="Center"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="File name"  DisplayMemberBinding="{Binding FileName}"/>
+                                <GridViewColumn Header="Feature name" DisplayMemberBinding="{Binding ElementName}"/>
+                                <GridViewColumn Header="Mapped type" DisplayMemberBinding="{Binding FeatureType}"/>
+                                <GridViewColumn Header="Path" DisplayMemberBinding="{Binding FullPath}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                     <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto" MinWidth="100"/>
-                            <ColumnDefinition Width="Auto" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Margin="5" Padding="3" VerticalAlignment="Center" Command="{Binding Path=OnSelectAllItems}" Content="Select all"/>
-                        <Button Grid.Column="1" Margin="5" Padding="3" VerticalAlignment="Center" Command="{Binding Path=OnClearSelectedList}" Content="Clear selection"/>
-                        <Button Grid.Column="2" Margin="5" Padding="3" Content="Add File" Command="{Binding Path=OnAddCustomFeatureFile}" VerticalAlignment="Center"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Margin="5" Padding="3" VerticalAlignment="Center"  
+                            Content="Add File" 
+                            Command="{Binding Path=OnAddCustomFeatureFile}"
+                            Click="Click_AddFeatureFile" />
                     </Grid>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Row="2" Margin="5" Header="Info">
-                <TextBlock Text="{Binding LogMessage}" TextWrapping="Wrap" ScrollViewer.CanContentScroll="True"/>
-            </GroupBox>
-            <Grid Grid.Row="3" Margin="5" HorizontalAlignment="Right">
+            <Grid Grid.Row="2" Margin="5" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto" MinWidth="100"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Margin="5" Padding="3" Content="Import Selection" IsEnabled="{Binding Path=IsDefinitionFileLoaded, UpdateSourceTrigger=PropertyChanged}" Command="{Binding Path=OnImportSelectedFeatures}" VerticalAlignment="Center" />
-                <Button Grid.Column="1" Margin="5" Padding="3" Content="Cancel"  VerticalAlignment="Center" Command="{Binding OnCancelImportFeatures}"/>
+                <Button Grid.Column="0" Margin="5" Padding="3" VerticalAlignment="Center"
+                        Content="Import Selection" 
+                        IsEnabled="{Binding Path=IsDefinitionFileLoaded, UpdateSourceTrigger=PropertyChanged}" 
+                        Command="{Binding Path=OnConfigureImporter}"/>
+                <Button Grid.Column="1" Margin="5" Padding="3" VerticalAlignment="Center" 
+                        Content="Cancel" 
+                        Command="{Binding OnCancelImportFeatures}"/>
             </Grid>
         </Grid>
     </ScrollViewer>
 </Window>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

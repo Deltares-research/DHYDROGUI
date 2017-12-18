@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private const char CsvDelimeterSemiColon = ';';
         private CsvSettings csvSettings;
 
-        public IEventedList<string> FilesToImport;
+        public IList<string> FilesToImport;
 
         private CsvSettings CsvSettingsSemiColonDelimeted
         {
@@ -120,6 +120,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private void SetProgress(string currentStepName, int currentStep, int totalSteps)
         {
             ProgressChanged?.Invoke(currentStepName, currentStep, totalSteps);
+        }
+
+        public GwswFileImporter()
+        {
+            FilesToImport = new List<string>();
+            GwswAttributesDefinition = new EventedList<GwswAttributeType>();
+            GwswDefaultFeatures = new Dictionary<string, List<string>>();
         }
 
         /// <summary>
@@ -243,8 +250,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             GwswAttributesDefinition = attributeList;
             Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, GwswAttributesDefinition.Count);
 
-            if ( attributeList.Any()) GwswDefaultFeatures = GetDefinitionFeatureFiles(path);
-            FilesToImport = new EventedList<string>(GwswDefaultFeatures.Select( f => f.Value[2]));
+            GwswDefaultFeatures = GetDefinitionFeatureFiles(path);
+            FilesToImport = new EventedList<string>(GwswDefaultFeatures?.Select( f => f.Value[2]));
 
             return importedTable;
         }
