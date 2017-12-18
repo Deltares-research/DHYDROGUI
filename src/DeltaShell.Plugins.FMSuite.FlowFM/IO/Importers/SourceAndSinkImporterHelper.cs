@@ -44,9 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private static void ProcessSalinityAndTemperatureComponents(IVariable salinityComponent, IVariable temperatureComponent, IDictionary<string, bool> componentSettings)
         {          
-            var salinityValues = ((MultiDimensionalArray<double>)salinityComponent.Values).ToList();
-            var temperatureValues = ((MultiDimensionalArray<double>)temperatureComponent.Values).ToList();
-
             bool salinityEnabled;
             if (!componentSettings.TryGetValue(SourceAndSink.SalinityVariableName, out salinityEnabled))
                 salinityEnabled = true; // Assume enabled by default, only disabled if explicitly set to false
@@ -55,26 +52,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (!componentSettings.TryGetValue(SourceAndSink.TemperatureVariableName, out temperatureEnabled))
                 temperatureEnabled = true; // Assume enabled by default, only disabled if explicitly set to false
 
-            if (salinityValues.Any() && temperatureValues.Any()) // if both Salinity and Temperature components have values
+            if (temperatureEnabled && !salinityEnabled) // Temperature values will have been imported into the Salinity Component
             {
-                if (!salinityEnabled) salinityComponent.Values.Clear();
-                if (!temperatureEnabled) temperatureComponent.Values.Clear();
+                temperatureComponent.Values.Clear();
+                var salinityValues = ((MultiDimensionalArray<double>)salinityComponent.Values).ToList();
+                temperatureComponent.Values.AddRange(salinityValues);
+                salinityComponent.Values.Clear();
             }
-            else // either one of the components have values or none of them
-            {
-                if (salinityEnabled && temperatureValues.Any()) // so Salinity values were imported into the Temperature Component
-                {
-                    salinityComponent.Values.Clear();
-                    salinityComponent.Values.AddRange(temperatureValues);
-                    temperatureComponent.Values.Clear();
-                }
-                else if (temperatureEnabled && salinityValues.Any()) // so Temperature values were imported into the Salinity Component
-                {
-                    temperatureComponent.Values.Clear();
-                    temperatureComponent.Values.AddRange(salinityValues);
-                    salinityComponent.Values.Clear();
-                }
-            }
+
+            if (!salinityEnabled) salinityComponent.Values.Clear();
+            if (!temperatureEnabled) temperatureComponent.Values.Clear();
         }
 
         private static void ValidateComponentValues<T>(IVariable componentVariable, int numExpectedValues)

@@ -12,13 +12,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     [TestFixture()]
     public class TimFileImporterTest
     {
-        [TestCase(false, false)] // None
-        [TestCase(true, false)] // Salinity only
-        [TestCase(false, true)] // Temperature only
-        [TestCase(true, true)] // Both
-        public void TestImportItem_SourceAndSinks(bool useSalinity, bool useTemperature)
+        [TestCase(@"timFiles\NoSalinityOrTemperature.tim", false, false)] // None
+        [TestCase(@"timFiles\SalinityOnly.tim", true, false)] // Salinity only
+        [TestCase(@"timFiles\TemperatureOnly.tim", false, true)] // Temperature only
+        [TestCase(@"timFiles\BothSalinityAndTemperature.tim", true, true)] // Both
+
+        [TestCase(@"timFiles\testFile.tim", false, false)] // None
+        [TestCase(@"timFiles\testFile.tim", true, false)] // Salinity only
+        [TestCase(@"timFiles\testFile.tim", false, true)] // Temperature only
+        [TestCase(@"timFiles\testFile.tim", true, true)] // Both
+
+
+        public void TestImportItem_SourceAndSinks(string testFile, bool useSalinity, bool useTemperature)
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"timFiles\testFile.tim");
+            var testFilePath = TestHelper.GetTestFilePath(testFile);
 
             // setup
             var sourceAndSink = new SourceAndSink();
