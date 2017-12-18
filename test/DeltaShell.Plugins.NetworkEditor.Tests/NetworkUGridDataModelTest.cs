@@ -69,23 +69,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        public void GivenNetworkWithMultipleCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
+        public void GivenNetworkWithOneCompartmentInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
-            var network = new HydroNetwork { Name = "my Network" };
-            var manhole = new Manhole("myManhole")
-            {
-                Geometry = new Point(10, 10)
-            };
-            manhole.Compartments.Add(new Compartment("cmp1"));
-            manhole.Compartments.Add(new Compartment("cmp2"));
-            network.Nodes.Add(manhole);
+            var networkDataModel = GetNetworkUGridDataModel(1);
+            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(1));
+            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 10.0 }));
+            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10 }));
+            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1" }));
+            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty }));
+        }
 
-            var networkDataModel = new NetworkUGridDataModel(network);
+        [Test]
+        public void GivenNetworkWithTwoCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
+        {
+            var networkDataModel = GetNetworkUGridDataModel(2);
             Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(2));
             Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.5, 10.5 }));
             Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10, 10 }));
             Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2" }));
             Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty }));
+        }
+
+        [Test]
+        public void GivenNetworkWithThreeCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
+        {
+            var networkDataModel = GetNetworkUGridDataModel(3);
+            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(3));
+            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.0, 10.0, 11.0 }));
+            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10.0, 10.0, 10.0 }));
+            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2", "cmp3" }));
+            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty, string.Empty }));
         }
 
         [Test]
@@ -151,5 +164,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.AreEqual(reconstructedBranch.Target.Network, reconstructedNetwork);
             }
         }
+
+        #region Test helpers
+
+        private static NetworkUGridDataModel GetNetworkUGridDataModel(int numberOfCompartments)
+        {
+            var network = new HydroNetwork {Name = "my Network"};
+            var manhole = new Manhole("myManhole")
+            {
+                Geometry = new Point(10, 10)
+            };
+
+            for (var i = 0; i < numberOfCompartments; i++)
+            {
+                manhole.Compartments.Add(new Compartment("cmp" + (i+1)));
+            }
+            network.Nodes.Add(manhole);
+
+            return new NetworkUGridDataModel(network);
+        }
+
+        #endregion
     }
 }
