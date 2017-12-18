@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 network.Manholes.ForEach(m =>
                 {
                     var numOfCompartments = m.Compartments.Count;
-                    var offset = (compartmentCount - 1) * 0.5;
+                    var offset = (m.Compartments.Count - 1) * 0.5;
                     for (var i = 0; i < numOfCompartments; i++)
                     {
                         compartmentsX.Add(m.Geometry.Coordinate.X - offset + i);
