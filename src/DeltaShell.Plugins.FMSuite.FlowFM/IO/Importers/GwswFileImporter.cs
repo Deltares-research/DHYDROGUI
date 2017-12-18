@@ -487,8 +487,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public static bool IsValidAttribute(this GwswAttribute gwswAttribute)
         {
             if (gwswAttribute == null) return false;
-
-            if (!String.IsNullOrEmpty(gwswAttribute.ValueAsString) &&
+            
+            if (gwswAttribute.ValueAsString != null &&
                 gwswAttribute.GwswAttributeType != null &&
                 gwswAttribute.GwswAttributeType.AttributeType != null)
             {
@@ -532,7 +532,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public static bool TryGetValueAsDouble(this GwswAttribute gwswAttribute, out double value)
         {
             value = default(double);
-            if (!gwswAttribute.IsValidAttribute()) return false;
+            if (!gwswAttribute.IsValidAttribute() || gwswAttribute.ValueAsString == string.Empty) return false;
             if( !gwswAttribute.IsNumerical())
             {
                 gwswAttribute.LogErrorParseType(typeof(double));

@@ -370,6 +370,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
         }
 
+        [Test]
+        public void GivenGwswAttributeWithEmptyStringAsValue_WhenTryGetDoubleValue_ThenReturnFalseAndDefaultValue()
+        {
+            var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0, "attributeName", "double", "testCode", "test definition", "mandatory", string.Empty, "remarks");
+            var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = string.Empty};
+
+            double doubleValue;
+            var gettingValueSucceeded = attribute.TryGetValueAsDouble(out doubleValue);
+            Assert.IsFalse(gettingValueSucceeded);
+            Assert.That(doubleValue, Is.EqualTo(0.0));
+        }
+
         #endregion
 
         [Test]
