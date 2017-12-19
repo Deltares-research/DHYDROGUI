@@ -115,12 +115,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 {
                     SnapRules = { }
                 };
-            else if (feature is INode)
+            else if (feature is IManhole)
                 featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
+            else if (feature is INode)
+                featureInteractor = new ManholeInteractor(layer, feature, vectorStyle, Network);
             else if (feature is IChannel)
                 featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
             else if (feature is ISewerConnection)
-                featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
+                featureInteractor = new SewerConnectionInteractor(layer, feature, vectorStyle, Network);
             else if (feature is INetworkLocation)
                 featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
             else if (feature is LateralSource)
