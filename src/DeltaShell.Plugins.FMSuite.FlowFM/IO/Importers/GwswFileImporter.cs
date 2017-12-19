@@ -488,6 +488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public static class GwswElementExtensions
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswElementExtensions));
+        private const string UniqueId = "UNIQUE_ID";
 
         public static bool IsNumerical(this GwswAttribute gwswAttribute)
         {
@@ -529,14 +530,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             return line;
         }
-
+        
         public static GwswAttribute GetAttributeFromList(this GwswElement element, string attributeName)
         {
             var attribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(attributeName));
             if (attribute != null)
                 return attribute;
 
-            var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals("UNIQUE_ID"));
+            var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(UniqueId));
             Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
             return null;
         }
