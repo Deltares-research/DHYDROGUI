@@ -9,7 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
     [Entity]
     public class DelimeterSelectorViewModel
     {
-        public ObservableCollection<DelimeterOption> DelimeterOptions { get; set; }
         public Action<bool> CloseAction { get; set; }
 
         public bool TabChecked { get; set; }
@@ -21,19 +20,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
 
         public char SelectedDelimeter { get; set; }
 
-        #region
+        public DelimeterSelectorViewModel()
+        {
+            OtherValue = ' ';
+            SemicolonChecked = true;
+        }
+
+        #region Commands
 
         public ICommand OnUpdateDelimeter
         {
             get { return new RelayCommand(param => UpdateDelimeter()); }
         }
 
-        public DelimeterSelectorViewModel()
+        public ICommand OnSetOptionChecked
         {
-            OtherValue = ' ';
-            SemicolonChecked = true;
+            get { return new RelayCommand(param => SetOptionChecked());}
         }
-        
+
+        public ICommand OnCancel
+        {
+            get { return new RelayCommand(param => CloseAction(false)); }
+        }
+
+        #endregion
+
+        #region Privat methods
+
         private void UpdateDelimeter()
         {
             if (TabChecked)
@@ -50,16 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             CloseAction?.Invoke(true);
         }
 
-        public ICommand OnSetOptionChecked
-        {
-            get { return new RelayCommand(param => SetOptionChecked());}
-        }
-
-        public ICommand OnCancel
-        {
-            get { return new RelayCommand(param => CloseAction(false)); }
-        }
-
         private void SetOptionChecked()
         {
             TabChecked = SelectedDelimeter == '\t';
@@ -73,13 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             OtherChecked = true;
         }
 
-
         #endregion
-    }
-
-    public class DelimeterOption
-    {
-        public char Delimeter { get; set; }
-        public string Name { get; set; }
     }
 }

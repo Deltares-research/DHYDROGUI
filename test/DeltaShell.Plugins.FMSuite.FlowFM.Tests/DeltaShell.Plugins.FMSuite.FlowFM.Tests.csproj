@@ -244,6 +244,7 @@
     <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
+    <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
     <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />

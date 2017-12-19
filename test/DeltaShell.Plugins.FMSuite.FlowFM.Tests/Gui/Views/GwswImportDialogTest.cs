@@ -6,7 +6,6 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Views;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using NUnit.Framework;
 
@@ -15,17 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
     [TestFixture]
     public class GwswImportDialogTest
     {
-        [Category(TestCategory.WindowsForms)]
-        [Test]
-        public void ShowDelimeterUserControl()
-        {
-            /*For some reason it crashes (sometimes) when closing it. For what I could read online it's due to the way we call the modal.
-             It should be .Show, instead of .ShowModal*/
-            var selector = new DelimeterSelector();
-            selector.Data = '\t';
-            WpfTestHelper.ShowModal(selector);
-        }
-
         [Category(TestCategory.WindowsForms)]
         [Test]
         public void ShowUserControl()
