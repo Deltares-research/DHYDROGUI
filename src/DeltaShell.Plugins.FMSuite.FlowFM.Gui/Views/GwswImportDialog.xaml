@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels"
         mc:Ignorable="d"
-        Title="Gwsw Feature Importer" Height="429" Width="550" WindowStartupLocation="CenterOwner" SizeToContent="Height" ResizeMode="CanResizeWithGrip" ScrollViewer.CanContentScroll="True">
+        Title="Gwsw Feature Importer" Height="494" Width="550" WindowStartupLocation="CenterOwner" SizeToContent="Height" ResizeMode="CanResizeWithGrip" ScrollViewer.CanContentScroll="True">
     <Window.DataContext>
         <vm:GwswImportDialogViewModel x:Name="ViewModel"/>
     </Window.DataContext>
@@ -18,19 +18,28 @@
             </Grid.RowDefinitions>
             <GroupBox Grid.Row="0" Header="Gwsw Definition file">
                 <Grid >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" VerticalAlignment="Center" Margin="3" Padding="3"
-                             IsEnabled="False" 
-                             TextWrapping="WrapWithOverflow"
-                             Text="{Binding SelectedDefinitionFilePath, UpdateSourceTrigger=PropertyChanged}"
-                             ToolTip="{Binding SelectedDefinitionFilePath}" VerticalScrollBarVisibility="Auto"/>
-                    <Button Grid.Column="1" Margin="5" Padding="3" VerticalAlignment="Center"
-                            Content="Load Definition" 
-                            Click="Click_LoadDefinitionFile"
-                            Command="{Binding OnLoadDefinitionFile}"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Row="0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" VerticalAlignment="Center" Margin="3" Padding="3"
+                                 IsEnabled="False" 
+                                 TextWrapping="WrapWithOverflow"
+                                 Text="{Binding SelectedDefinitionFilePath, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="{Binding SelectedDefinitionFilePath}" VerticalScrollBarVisibility="Auto"/>
+                        <Button Grid.Column="1" Margin="5" Padding="3" VerticalAlignment="Center"
+                                Content="Load Definition" 
+                                Click="Click_LoadDefinitionFile"
+                                Command="{Binding OnLoadDefinitionFile}"/>
+                    </Grid>
+                    <Button Grid.Row="1" Width="200" HorizontalAlignment="Left"
+                            Content="Definition delimeter" 
+                            Command="{Binding Path=OnSetDefinitionDelimeter}"/>
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Row="1" Header="Feature files" 
@@ -39,6 +48,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ListView Grid.Row="0" Margin="5" ItemsSource="{Binding GwswFeatureFiles}" Height="200">
                         <ListView.View>
@@ -61,13 +71,17 @@
                         </ListView.View>
                     </ListView>
                     <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Margin="5" Padding="3" VerticalAlignment="Center"  
-                            Content="Add File" 
-                            Command="{Binding Path=OnAddCustomFeatureFile}"
-                            Click="Click_AddFeatureFile" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Margin="5" Padding="3" VerticalAlignment="Center"  
+                                Content="Add File" 
+                                Command="{Binding Path=OnAddCustomFeatureFile}"
+                                Click="Click_AddFeatureFile" />
+                        <Button Grid.Column="1" Margin="5" Padding="3" VerticalAlignment="Center"
+                                Content="Feature list delimeter" 
+                                Command="{Binding Path=OnSetFeatureDelimeter}"/>
                     </Grid>
                 </Grid>
             </GroupBox>

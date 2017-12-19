@@ -390,6 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var gwswImporter = new GwswFileImporter();
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             var message = string.Format(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, filePath);
+            gwswImporter.CsvDelimeter = ';';
             TestHelper.AssertAtLeastOneLogMessagesContains(() => gwswImporter.ImportGwswElementList(filePath), message);
             Assert.IsNull(gwswImporter.ImportGwswElementList(filePath));
         }
@@ -398,10 +399,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void TestImport_UnknownFeature_FromGwsw_WithPreviousMapping_Fails_AndLogMessageIsShown()
         {
             var gwswImporter = new GwswFileImporter();
+            gwswImporter.CsvDelimeter = ',';
             gwswImporter.LoadDefinitionFile(GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"));
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\UnknownFeature.csv");
             var message = string.Format(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, filePath);
             var importedList = new List<GwswElement>();
+            gwswImporter.CsvDelimeter = ';';
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
             Assert.IsFalse(importedList.Any());
         }
@@ -410,7 +413,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void TestImportFeature_WithUnknownAttribute_FromGwsw_WithPreviousMapping_DoesNotFail_AndLogMessageIsShown()
         {
             var gwswImporter = new GwswFileImporter();
-            gwswImporter.LoadDefinitionFile(GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"));
+            var definitionPath = @"gwswFiles\GWSW.hydx_Definitie_DM.csv";
+            gwswImporter.CsvDelimeter = ',';
+            gwswImporter.LoadDefinitionFile(GetFileAndCreateLocalCopy(definitionPath));
 
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\WithUnknownAttribute\Verbinding.csv");
             var message = string.Format(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, 0, 0, filePath);
@@ -544,6 +549,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var importer = new GwswFileImporter();
 
+            importer.CsvDelimeter = ',';
             importer.LoadDefinitionFile(definitionPath);
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
 
@@ -557,6 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var importer = new GwswFileImporter();
 
+            importer.CsvDelimeter = ',';
             importer.LoadDefinitionFile(definitionPath);
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
@@ -575,6 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var importer = new GwswFileImporter();
 
+            importer.CsvDelimeter = ',';
             importer.LoadDefinitionFile(definitionPath);
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
             var importedFeatures = importer.ImportItem(null);
@@ -592,6 +600,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var importer = new GwswFileImporter();
 
+            importer.CsvDelimeter = ',';
             importer.LoadDefinitionFile(definitionPath);
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
             var importedFeatures = importer.ImportItem(string.Empty);
@@ -616,7 +625,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             try
             {
+                //Definition file is 'comma' separated, but the features are 'semicolon', so we need to change the delimeter.
+                gwswImporter.CsvDelimeter = ',';
                 gwswImporter.LoadDefinitionFile(filePath);
+                gwswImporter.CsvDelimeter = ';';
                 gwswImporter.ImportItem(null, model);
             }
             catch (Exception e)
@@ -702,6 +714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var gwswImporter = new GwswFileImporter();
+            gwswImporter.CsvDelimeter = ',';
             var attributeTable = gwswImporter.LoadDefinitionFile(filePath);
             Assert.IsNotNull(attributeTable);
 
@@ -718,6 +731,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             // Import Csv Definition.
             var gwswImporter = new GwswFileImporter();
+            gwswImporter.CsvDelimeter = ',';
             var definitionTable = gwswImporter.LoadDefinitionFile(filePath);
             Assert.IsNotNull(definitionTable);
 
@@ -849,6 +863,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(network.Pipes.Any());
 
             var gwswImporter = GetImporterWithLoadedDefinition();
+            gwswImporter.CsvDelimeter = ';';
             var importedItems = gwswImporter.ImportItem(filePath, model);
             Assert.IsNotNull(importedItems);
             Assert.IsTrue(network.SewerConnections.Any());
@@ -889,6 +904,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var gwswImporter = GetImporterWithLoadedDefinition();
             //Load pipes.
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            gwswImporter.CsvDelimeter = ';';
             var importedConnections = gwswImporter.ImportItem(filePath, model);
             Assert.IsNotNull(importedConnections);
 
@@ -913,6 +929,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var gwswImporter = GetImporterWithLoadedDefinition();
             //Load pipes.
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            gwswImporter.CsvDelimeter = ';';
             var importedPipes = gwswImporter.ImportItem(filePath, model);
             Assert.IsNotNull(importedPipes);
 
@@ -936,6 +953,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             //Load structures.
             var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
+            gwswImporter.CsvDelimeter = ';';
             var importedStructures = gwswImporter.ImportItem(structuresPath, model);
             Assert.IsNotNull(importedStructures);
 
@@ -969,6 +987,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var gwswImporter = GetImporterWithLoadedDefinition();
             //Load structures.
             var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
+            gwswImporter.CsvDelimeter = ';';
             var importedStructures = gwswImporter.ImportItem(structuresPath, model);
             Assert.IsNotNull(importedStructures);
 
@@ -1006,6 +1025,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var gwswImporter = GetImporterWithLoadedDefinition();
             //Load sewer profiles
+            gwswImporter.CsvDelimeter = ';';
             var sewerProfilesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Profiel.csv");
             var importedProfiles = gwswImporter.ImportItem(sewerProfilesPath, model) as List<INetworkFeature>;
             Assert.IsEmpty(importedProfiles);
@@ -1057,6 +1077,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var gwswImporter = GetImporterWithLoadedDefinition();
             //Load connections
+            gwswImporter.CsvDelimeter = ';';
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             var importedConnections = gwswImporter.ImportItem(connectionsPath, model) as List<INetworkFeature>;
             Assert.IsNotNull(importedConnections);
@@ -1159,6 +1180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Load Sewer Connections
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             var gwswImporter = GetImporterWithLoadedDefinition();
+            gwswImporter.CsvDelimeter = ';';
             var importedConnections = gwswImporter.ImportItem(filePath, model);
             Assert.IsNotNull(importedConnections);
 

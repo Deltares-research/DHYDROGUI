@@ -313,6 +313,7 @@
     <Compile Include="Forms\GridWizard.Designer.cs">
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\DelimeterSelectorViewModel.cs" />
     <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />
     <Compile Include="Views\GwswImportDialog.xaml.cs">
       <DependentUpon>GwswImportDialog.xaml</DependentUpon>
@@ -359,6 +360,9 @@
     </Compile>
     <Compile Include="Editors\WindFieldListView.Designer.cs">
       <DependentUpon>WindFieldListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DelimeterSelector.xaml.cs">
+      <DependentUpon>DelimeterSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="WaterFlowFM1D2DLinkFeatureCollection.cs" />
   </ItemGroup>
@@ -571,6 +575,10 @@
     <Page Include="Ribbon\Ribbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DelimeterSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup />

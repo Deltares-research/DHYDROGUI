@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Views;
 using Image = System.Drawing.Image;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -32,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 ViewModel.Importer = (GwswFileImporter) value;
                 ViewModel.MessageAction = ShowMessageDialog;
+                ViewModel.GetDelimeter = GetDelimeter;
             }
         }
 
@@ -82,6 +84,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         private void Click_AddFeatureFile(object sender, RoutedEventArgs e)
         {
             ViewModel.SelectedFeatureFilePath = BrowseFiles();
+        }
+
+        private char GetDelimeter(char delimeter)
+        {
+            var selector = new DelimeterSelector();
+            selector.Data = delimeter;
+
+            var value = selector.ShowModal(this);
+            if (value == DelftDialogResult.OK)
+                return (char)selector.Data;
+
+            return delimeter;
         }
 
         private string BrowseFiles()

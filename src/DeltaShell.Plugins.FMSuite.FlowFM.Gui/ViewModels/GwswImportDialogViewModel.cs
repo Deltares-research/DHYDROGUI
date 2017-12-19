@@ -27,6 +27,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
 
         public bool IsDefinitionFileLoaded { get; set; }
 
+        public char SelectedDelimeter { get; set; }
+
+        public char DefinitionDelimeter { get; set; }
+        public char FeatureDelimeter { get; set; }
+
         public string SelectedDefinitionFilePath { get; set; }
 
         private string DefinitionFilePath
@@ -52,12 +57,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
 
         public Action<bool> CloseAction { get; set; }
 
+        public Func<char, char> GetDelimeter { get; set; }
+
         public Func<string, string, MessageBoxButtons, MessageBoxIcon, bool> MessageAction { get; set; }
 
         public GwswImportDialogViewModel()
         {
             GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
             definitionFilePath = null;
+            //Default Delimeters
+            DefinitionDelimeter = ',';
+            FeatureDelimeter = ';';
         }
 
         #region Commands
@@ -87,9 +97,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             get { return new RelayCommand(param => CloseAction(false)); }
         }
 
+        public ICommand OnSetDefinitionDelimeter
+        {
+            get { return new RelayCommand(param => SetDefinitionDelimeter()); }
+        }
+
+
+        public ICommand OnSetFeatureDelimeter
+        {
+            get { return new RelayCommand(param => SetFeatureDelimeter()); }
+        }
+
+
         #endregion
 
         #region Commands Private methods
+
+        private void SetDefinitionDelimeter()
+        {
+            DefinitionDelimeter = GetDelimeter?.Invoke(DefinitionDelimeter) ?? DefinitionDelimeter;
+        }
+
+        private void SetFeatureDelimeter()
+        {
+            FeatureDelimeter = GetDelimeter?.Invoke(FeatureDelimeter) ?? FeatureDelimeter;
+        }
 
         private void SelectAll()
         {
@@ -120,6 +152,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
                 return;
             }
 
+            //Set delimeter.
+            if (Importer != null)
+                Importer.CsvDelimeter = DefinitionDelimeter;
+
+            //Load definition file if possible.
             var loadResult = Importer?.LoadDefinitionFile(SelectedDefinitionFilePath);
             if (loadResult == null || Importer.GwswDefaultFeatures == null )
             {
@@ -195,6 +232,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             
             //Add the files to import to the importer property, close the window and then launch the importer.
             Importer.FilesToImport = new EventedList<string>(pathList);
+            //Set delimeter.
+            Importer.CsvDelimeter = FeatureDelimeter;
             CloseAction?.Invoke(true);
         }
 

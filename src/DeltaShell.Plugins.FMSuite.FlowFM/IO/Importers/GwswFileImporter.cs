@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -24,9 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class GwswFileImporter: IFileImporter
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporter));
-        private const char CsvDelimeterComma = ',';
-        private const char CsvDelimeterSemiColon = ';';
+//        private const char CsvDelimeterComma = ',';
+//        private const char CsvDelimeterSemiColon = ';';
         private CsvSettings csvSettings;
+
+        public char CsvDelimeter { get; set; }
 
         public IList<string> FilesToImport;
 
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 return csvSettings ?? (csvSettings = new CsvSettings
                 {
-                    Delimiter = CsvDelimeterSemiColon,
+                    Delimiter = CsvDelimeter,
                     FirstRowIsHeader = true,
                     SkipEmptyLines = true
                 });
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// </summary>
         public IDictionary<string, List<string>> GwswDefaultFeatures { get; private set; }
 
-        private static CsvMappingData CsvMappingData
+        private CsvMappingData CsvMappingData
         {
             get
             {
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     Settings = new CsvSettings
                     {
-                        Delimiter = CsvDelimeterComma,
+                        Delimiter = CsvDelimeter,
                         FirstRowIsHeader = true,
                         SkipEmptyLines = true
                     },
@@ -128,6 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             FilesToImport = new List<string>();
             GwswAttributesDefinition = new EventedList<GwswAttributeType>();
             GwswDefaultFeatures = new Dictionary<string, List<string>>();
+            CsvDelimeter = ';'; //Default value, can be changed.
         }
 
         /// <summary>

@@ -79,7 +79,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var importer = new GwswFileImporter();
             Assert.IsNotNull(importer);
-            var defFile = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"); ;
+            importer.CsvDelimeter = ',';
+            var defFile = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             importer.LoadDefinitionFile(defFile);
 
             return importer;
