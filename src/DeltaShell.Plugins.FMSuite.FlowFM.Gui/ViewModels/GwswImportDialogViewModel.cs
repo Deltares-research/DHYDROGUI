@@ -120,22 +120,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
                 return;
             }
 
-            var showErrorWindow = false;
-            try
+            var loadResult = Importer?.LoadDefinitionFile(SelectedDefinitionFilePath);
+            if (loadResult == null || Importer.GwswDefaultFeatures == null )
             {
-                Importer.LoadDefinitionFile(SelectedDefinitionFilePath);
-            }
-            catch (Exception)
-            {
+                //Log message in DeltaShell
                 Log.ErrorFormat(Resources.GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__could_not_be_imported__Path___1_, Path.GetFileName(SelectedDefinitionFilePath), SelectedDefinitionFilePath);
-                showErrorWindow = true;
-            }
-
-            if (showErrorWindow || Importer.GwswDefaultFeatures == null)
-            {
+                
+                //Display a message window informing the user
                 var message = "A problem was found while importing the Definition File, please check the log messages for further details.";
                 MessageAction?.Invoke("Error importing Definition File.", message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                SelectedDefinitionFilePath = DefinitionFilePath ?? string.Empty;
+                //Clean Definition file path, GwswFeatureFiles and Importer mappings.
+                SelectedDefinitionFilePath = string.Empty;
+                GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
+                IsDefinitionFileLoaded = false;
                 return;
             }
 

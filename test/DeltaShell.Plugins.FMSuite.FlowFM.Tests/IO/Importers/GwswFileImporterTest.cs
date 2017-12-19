@@ -395,6 +395,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
+        public void TestImport_UnknownFeature_FromGwsw_WithPreviousMapping_Fails_AndLogMessageIsShown()
+        {
+            var gwswImporter = new GwswFileImporter();
+            gwswImporter.LoadDefinitionFile(GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"));
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\UnknownFeature.csv");
+            var message = string.Format(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, filePath);
+            var importedList = new List<GwswElement>();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
+            Assert.IsFalse(importedList.Any());
+        }
+
+        [Test]
+        public void TestImportFeature_WithUnknownAttribute_FromGwsw_WithPreviousMapping_DoesNotFail_AndLogMessageIsShown()
+        {
+            var gwswImporter = new GwswFileImporter();
+            gwswImporter.LoadDefinitionFile(GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"));
+
+            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\WithUnknownAttribute\Verbinding.csv");
+            var message = string.Format(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, 0, 0, filePath);
+
+            var importedList = new List<GwswElement>();
+            //Known bug.
+            // We map the files based on the GwswDefinitionFile, but we do not check whether the header / column of the csv has its attribute
+            // in it (at least not correctly).
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
+            Assert.IsTrue(importedList.Any());
+        }
+
+        [Test]
         public void ImportCsvDebietFileUsingGwswFileImporterAndHardcodedMapping()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Debiet.csv");

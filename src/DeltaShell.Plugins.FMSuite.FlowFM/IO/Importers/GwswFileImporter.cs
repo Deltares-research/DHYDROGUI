@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -200,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             // Import definition file with predefined CSV columns.
             var mappingData = CsvMappingData;
             var importedTable = ImportFileAsDataTable(path, mappingData);
-            if (importedTable == null)
+            if (importedTable == null || importedTable.Rows.Count == 0)
             {
                 Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_, path);
                 return null;
@@ -250,7 +251,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             GwswAttributesDefinition = attributeList;
             Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, GwswAttributesDefinition.Count);
 
-            GwswDefaultFeatures = GetDefinitionFeatureFiles(path);
+            try
+            {
+                GwswDefaultFeatures = GetDefinitionFeatureFiles(path);
+            }
+            catch (Exception)
+            {
+                GwswAttributesDefinition = new EventedList<GwswAttributeType>();
+                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_, path);
+                return null;
+            }
+
             FilesToImport = new EventedList<string>(GwswDefaultFeatures?.Select( f => f.Value[2]));
 
             return importedTable;
@@ -279,6 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             else
             {
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, path);
+                return elementList;
             }
             
             foreach (DataRow dataRow in importedDataTable.Rows)

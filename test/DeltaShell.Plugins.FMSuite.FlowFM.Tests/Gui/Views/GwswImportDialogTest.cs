@@ -197,6 +197,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
         }
 
+        [Test]
+        public void GivenOverwriteGwswFeatureFiles_FailedBecauseBadDefinitionFile_GwswFeatureFilesAndDefinitionFile_AreCleaned()
+        {
+            var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter()};
+            Assert.IsNotNull(viewModel);
+            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
+
+            //First load a valid definition file.
+            viewModel.SelectedDefinitionFilePath = GetValidDefinitionFile();
+            viewModel.OnLoadDefinitionFile.Execute(null);
+            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
+
+            //Loading a Feature File as Definition will, in most of the cases, result in a failed Loading.
+            viewModel.OverwriteGwswFeatureFiles = true;
+            var filePath = TestHelper.GetTestFilePath(@"gwswFiles\Knoppunten.csv");
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            Assert.IsNotNull(filePath);
+            viewModel.SelectedDefinitionFilePath = filePath;
+
+            viewModel.OnLoadDefinitionFile.Execute(null);
+            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
+            Assert.IsNullOrEmpty(viewModel.SelectedDefinitionFilePath);
+        }
+
         #endregion
 
         #region OnAddCustomFeatureFile
@@ -351,6 +375,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
             //in any case, testFile should no longer be in files to import
             Assert.IsFalse(importer.FilesToImport.Any(f => f == testfile));
             Assert.AreEqual(selectedFiles, importer.FilesToImport.Any());
+        }
+
+        [Test]
+        public void GivenOverwriteGwswFeatureFiles_FailedBecauseBadDefinitionFile_NothingIsImported()
+        {
+            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
+            Assert.IsNotNull(viewModel);
+            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
+
+            //First load a valid definition file.
+            viewModel.SelectedDefinitionFilePath = GetValidDefinitionFile();
+            viewModel.OnLoadDefinitionFile.Execute(null);
+            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
+
+            //Loading a Feature File as Definition will, in most of the cases, result in a failed Loading.
+            viewModel.OverwriteGwswFeatureFiles = true;
+            var filePath = TestHelper.GetTestFilePath(@"gwswFiles\Knoppunten.csv");
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            Assert.IsNotNull(filePath);
+            viewModel.SelectedDefinitionFilePath = filePath;
+
+            viewModel.OnLoadDefinitionFile.Execute(null);
+            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
+            Assert.IsNullOrEmpty(viewModel.SelectedDefinitionFilePath);
+
+            //Now Try to Configure the import and import.
+            try
+            {
+                viewModel.OnConfigureImporter.Execute(null);
+
+                Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
+                Assert.IsFalse(viewModel.Importer.FilesToImport.Any());
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Should not throw exception.");
+            }
         }
 
         #endregion
