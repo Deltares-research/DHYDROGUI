@@ -364,7 +364,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MapLayers\Tools\MapToolTest.cs" />
     <Compile Include="UGridToNetworkAdapterIntegrationTest.cs" />
-
     <Compile Include="WeirViewWpfTest.cs" />
     <Compile Include="WpfConverters\BooleanToVisibleHiddenConverterTest.cs" />
     <Compile Include="WpfConverters\EnumToDescriptionConverterTest.cs" />

@@ -68,6 +68,8 @@ namespace DeltaShell.Plugins.NetworkEditor
             if (network == null) return;
             Name = network.Name ?? string.Empty;
 
+            var compartmentCoordinateDictionary = new Dictionary<string, Coordinate>();
+
             if (network.Nodes != null)
             {
                 var compartments = new List<Compartment>();
@@ -79,6 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                 var nonManholeNetworkNodes = network.Nodes.Where(n => n.GetType() != typeof(Manhole)).ToList();
 
+                // The compartment coordinates are adjusted slightly for writing to UGRID
                 var compartmentsX = new List<double>();
                 var compartmentsY = new List<double>();
                 network.Manholes.ForEach(m =>
@@ -87,8 +90,11 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var offset = (m.Compartments.Count - 1) * 0.5;
                     for (var i = 0; i < numOfCompartments; i++)
                     {
-                        compartmentsX.Add(m.Geometry.Coordinate.X - offset + i);
-                        compartmentsY.Add(m.Geometry.Coordinate.Y);
+                        var compartmentX = m.Geometry.Coordinate.X - offset + i;
+                        var compartmentY = m.Geometry.Coordinate.Y;
+                        compartmentsX.Add(compartmentX);
+                        compartmentsY.Add(compartmentY);
+                        compartmentCoordinateDictionary.Add(m.Compartments[i].Name, new Coordinate(compartmentX, compartmentY));
                     }
                 });
 
@@ -107,23 +113,28 @@ namespace DeltaShell.Plugins.NetworkEditor
                 BranchLengths = network.Branches.Select(b => b.Length).ToArray();
 
                 NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
-                NumberOfBranchGeometryPoints = network.Branches.Select(b =>
-                    {
-                        if (b.Geometry != null && b.Geometry.Coordinates != null)
-                        {
-                            return b.Geometry.Coordinates.Length;
-                        }
-                        return 0;
-                    }
-                ).ToArray();
+                NumberOfBranchGeometryPoints = network.Branches.Select(b => b.Geometry?.Coordinates?.Length ?? 0).ToArray();
 
                 BranchNames = network.Branches.Select(b => b.Name).ToArray();
                 BranchDescriptions = network.Branches.Select(b => b.Description).ToArray();
-
                 BranchOrderNumbers = network.Branches.Select(b => b.OrderNumber).ToArray();
+                
+                var nonSewerConnections = network.Branches.Where(b => !(b is SewerConnection)).ToArray();
 
-                GeopointsX = network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X).ToArray()).ToArray();
-                GeopointsY = network.Branches.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y).ToArray()).ToArray();
+                // Determine the end points of the sewer connections,
+                // because the compartment coordinates are adjusted slightly
+                var sourceAndTargetCompartments = new List<string>();
+                network.SewerConnections.ForEach(sc =>
+                {
+                    sourceAndTargetCompartments.Add(sc.SourceCompartment.Name);
+                    sourceAndTargetCompartments.Add(sc.TargetCompartment.Name);
+                });
+
+                var compartmentXCoordinates = sourceAndTargetCompartments.Select(name => compartmentCoordinateDictionary[name].X);
+                var compartmentYCoordinates = sourceAndTargetCompartments.Select(name => compartmentCoordinateDictionary[name].Y);
+
+                GeopointsX = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X)).Concat(compartmentXCoordinates).ToArray();
+                GeopointsY = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y)).Concat(compartmentYCoordinates).ToArray();
             }
         }
 

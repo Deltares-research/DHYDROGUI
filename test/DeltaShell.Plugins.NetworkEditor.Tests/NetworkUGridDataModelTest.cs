@@ -1,5 +1,8 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -71,34 +74,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         public void GivenNetworkWithOneCompartmentInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
+            // Check network node properties
             var networkDataModel = GetNetworkUGridDataModel(1);
-            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(1));
-            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 10.0 }));
-            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10 }));
-            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1" }));
-            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty }));
+            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(4));
+            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 10.0, 11.5, 12.5, 8.0 }));
+            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10.0, 15.0, 15.0, 8.0 }));
+            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp11", "cmp12", "cmp21" }));
+            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty, string.Empty, string.Empty }));
+
+            CheckNetworkBranchProperties(networkDataModel, new[] { 10.0, 11.5, 8.0, 10.0 });
         }
 
         [Test]
         public void GivenNetworkWithTwoCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
+            // Check network node properties
             var networkDataModel = GetNetworkUGridDataModel(2);
-            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(2));
-            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.5, 10.5 }));
-            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10, 10 }));
-            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2" }));
-            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty }));
+            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(5));
+            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.5, 10.5, 11.5, 12.5, 8.0 }));
+            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10.0, 10.0, 15.0, 15.0, 8.0 }));
+            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2", "cmp11", "cmp12", "cmp21" }));
+            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }));
+
+            CheckNetworkBranchProperties(networkDataModel, new[] { 9.5, 11.5, 8.0, 9.5 });
         }
 
         [Test]
         public void GivenNetworkWithThreeCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
+            // Check network node properties
             var networkDataModel = GetNetworkUGridDataModel(3);
-            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(3));
-            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.0, 10.0, 11.0 }));
-            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10.0, 10.0, 10.0 }));
-            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2", "cmp3" }));
-            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty, string.Empty }));
+            Assert.That(networkDataModel.NumberOfNodes, Is.EqualTo(6));
+            Assert.That(networkDataModel.NodesX, Is.EqualTo(new[] { 9.0, 10.0, 11.0, 11.5, 12.5, 8.0 }));
+            Assert.That(networkDataModel.NodesY, Is.EqualTo(new[] { 10.0, 10.0, 10.0, 15.0, 15.0, 8.0 }));
+            Assert.That(networkDataModel.NodesNames, Is.EqualTo(new[] { "cmp1", "cmp2", "cmp3", "cmp11", "cmp12", "cmp21" }));
+            Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }));
+
+            CheckNetworkBranchProperties(networkDataModel, new[] { 9.0, 11.5, 8.0, 9.0 });
         }
 
         [Test]
@@ -167,21 +179,67 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         #region Test helpers
 
-        private static NetworkUGridDataModel GetNetworkUGridDataModel(int numberOfCompartments)
+        private static NetworkUGridDataModel GetNetworkUGridDataModel(int numberOfCompartments1)
         {
             var network = new HydroNetwork {Name = "my Network"};
-            var manhole = new Manhole("myManhole")
-            {
-                Geometry = new Point(10, 10)
-            };
 
-            for (var i = 0; i < numberOfCompartments; i++)
+            var manhole1 = new Manhole("myManhole1") { Geometry = new Point(10, 10) };
+            for (var i = 0; i < numberOfCompartments1; i++)
             {
-                manhole.Compartments.Add(new Compartment("cmp" + (i+1)));
+                manhole1.Compartments.Add(new Compartment("cmp" + (i+1)));
             }
-            network.Nodes.Add(manhole);
+            network.Nodes.Add(manhole1);
+
+            var manhole2 = new Manhole("myManhole2")
+            {
+                Geometry = new Point(12, 15),
+                Compartments = new EventedList<Compartment> { new Compartment("cmp11"), new Compartment("cmp12") }
+            };
+            network.Nodes.Add(manhole2);
+
+            var manhole3 = new Manhole("myManhole3")
+            {
+                Geometry = new Point(8, 8),
+                Compartments = new EventedList<Compartment> { new Compartment("cmp21") }
+            };
+            network.Nodes.Add(manhole3);
+
+            var source1 = manhole1.Compartments.FirstOrDefault(c => c.Name == "cmp1");
+            var target1 = manhole2.Compartments.FirstOrDefault(c => c.Name == "cmp11");
+            var sewerConnection1 = new SewerConnection
+            {
+                Name = "mySewerConnection1",
+                SourceCompartment = source1,
+                TargetCompartment = target1,
+                Geometry = new LineString(new [] { source1?.ParentManhole.Geometry.Coordinate, target1?.ParentManhole.Geometry.Coordinate })
+            };
+            network.Branches.Add(sewerConnection1);
+
+            var source2 = manhole3.Compartments.FirstOrDefault(c => c.Name == "cmp21");
+            var target2 = manhole1.Compartments.FirstOrDefault(c => c.Name == "cmp1");
+            var sewerConnection2 = new SewerConnection
+            {
+                Name = "mySewerConnection2",
+                SourceCompartment = source2,
+                TargetCompartment = target2,
+                Geometry = new LineString(new[] { source2?.ParentManhole.Geometry.Coordinate, target2?.ParentManhole.Geometry.Coordinate })
+            };
+            network.Branches.Add(sewerConnection2);
 
             return new NetworkUGridDataModel(network);
+        }
+
+        private static void CheckNetworkBranchProperties(NetworkUGridDataModel networkDataModel, IEnumerable geopointsX)
+        {
+            Assert.That(networkDataModel.NumberOfBranches, Is.EqualTo(2));
+            Assert.That(networkDataModel.SourceNodeIds.Length, Is.EqualTo(2));
+            Assert.That(networkDataModel.TargedNodesIds.Length, Is.EqualTo(2));
+            Assert.That(networkDataModel.BranchLengths, Is.EqualTo(new[] { 0, 0 }));
+            Assert.That(networkDataModel.NumberOfGeometryPoints, Is.EqualTo(4));
+            Assert.That(networkDataModel.NumberOfBranchGeometryPoints, Is.EqualTo(new[] { 2, 2 }));
+            Assert.That(networkDataModel.BranchNames, Is.EqualTo(new[] { "mySewerConnection1", "mySewerConnection2" }));
+            Assert.That(networkDataModel.GeopointsX, Is.EqualTo(geopointsX));
+            Assert.That(networkDataModel.GeopointsY, Is.EqualTo(new[] { 10.0, 15.0, 8.0, 10.0 }));
         }
 
         #endregion
