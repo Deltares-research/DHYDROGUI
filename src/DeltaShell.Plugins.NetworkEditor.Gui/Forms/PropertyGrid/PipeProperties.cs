@@ -185,19 +185,94 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
+        [Category("Cross section properties")]
+        [PropertyOrder(5)]
+        [DisplayName("Arch height")]
+        [DynamicVisible]
+        public double ArcHeight
+        {
+            get
+            {
+                switch (data.SewerProfileDefinition.Shape)
+                {
+                    case CrossSectionStandardShapeArch archShape:
+                        return Math.Round(archShape.ArcHeight, 2, MidpointRounding.AwayFromZero);
+                    default:
+                        return double.NaN;
+                }
+            }
+        }
+
+        [Category("Cross section properties")]
+        [PropertyOrder(6)]
+        [DynamicVisible]
+        public double Slope
+        {
+            get
+            {
+                switch (data.SewerProfileDefinition.Shape)
+                {
+                    case CrossSectionStandardShapeTrapezium trapezoidShape:
+                        return Math.Round(trapezoidShape.Slope, 2, MidpointRounding.AwayFromZero);
+                    default:
+                        return double.NaN;
+                }
+            }
+        }
+
+        [Category("Cross section properties")]
+        [PropertyOrder(7)]
+        [DynamicVisible]
+        public double BottomWidthB
+        {
+            get
+            {
+                switch (data.SewerProfileDefinition.Shape)
+                {
+                    case CrossSectionStandardShapeTrapezium trapezoidShape:
+                        return Math.Round(trapezoidShape.BottomWidthB, 2, MidpointRounding.AwayFromZero);
+                    default:
+                        return double.NaN;
+                }
+            }
+        }
+
+        [Category("Cross section properties")]
+        [PropertyOrder(8)]
+        [DynamicVisible]
+        public double MaximumFlowWidth
+        {
+            get
+            {
+                switch (data.SewerProfileDefinition.Shape)
+                {
+                    case CrossSectionStandardShapeTrapezium trapezoidShape:
+                        return Math.Round(trapezoidShape.MaximumFlowWidth, 2, MidpointRounding.AwayFromZero);
+                    default:
+                        return double.NaN;
+                }
+            }
+        }
+
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
-            if (propertyName == "CrossSectionDiameter")
+            switch (propertyName)
             {
-                return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeRound;
+                case "CrossSectionDiameter":
+                    return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeRound;
+                case "CrossSectionWidth":
+                case "CrossSectionHeight":
+                    var shape = data.SewerProfileDefinition.Shape;
+                    return shape is CrossSectionStandardShapeWidthHeightBase || shape is CrossSectionStandardShapeArch;
+                case "ArcHeight":
+                    return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeArch;
+                case "Slope":
+                case "BottomWidthB":
+                case "MaximumFlowWidth":
+                    return data.SewerProfileDefinition.Shape is CrossSectionStandardShapeTrapezium;
             }
-            if (propertyName == "CrossSectionWidth" || propertyName == "CrossSectionHeight")
-            {
-                var shape = data.SewerProfileDefinition.Shape;
-                return shape is CrossSectionStandardShapeWidthHeightBase || shape is CrossSectionStandardShapeArch;
-            }
-            return false;
+            return true;
         }
 
         #endregion
