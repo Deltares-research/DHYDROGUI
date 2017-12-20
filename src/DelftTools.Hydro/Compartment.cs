@@ -67,6 +67,15 @@ namespace DelftTools.Hydro
         {
             return this is OutletCompartment;
         }
+
+        /// <summary>
+        /// Returns the name of the Compartment object.
+        /// </summary>
+        /// <returns>The object name.</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public enum CompartmentShape

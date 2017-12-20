@@ -5,7 +5,6 @@ namespace DelftTools.Hydro
 {
     public interface ISewerConnection : IBranch
     {
-        string ConnectionId { get; set; }
         double Length { get; set; }
         double LevelSource { get; set; }
         double LevelTarget { get; set; }

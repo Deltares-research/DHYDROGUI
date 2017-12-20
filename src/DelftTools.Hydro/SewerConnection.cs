@@ -52,8 +52,6 @@ namespace DelftTools.Hydro
         #endregion
 
         #region SewerConnection specific
-
-        public string ConnectionId { get; set; }
         public double LevelSource { get; set; }
         public double LevelTarget { get; set; }
         protected IEventedList<IBranchFeature> branchFeatures;
