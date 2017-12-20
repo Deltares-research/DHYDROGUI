@@ -153,15 +153,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                switch (data.SewerProfileDefinition.Shape)
-                {
-                    case CrossSectionStandardShapeWidthHeightBase widthBasedShape:
-                        return Math.Round(widthBasedShape.Width, 2, MidpointRounding.AwayFromZero);
-                    case CrossSectionStandardShapeArch archShape:
-                        return Math.Round(archShape.Width, 2, MidpointRounding.AwayFromZero);
-                    default:
-                        return double.NaN;
-                }
+                var shape = data.SewerProfileDefinition.Shape;
+                var widthBasedShape = shape as CrossSectionStandardShapeWidthHeightBase;
+                if(widthBasedShape != null) return Math.Round(widthBasedShape.Width, 2, MidpointRounding.AwayFromZero);
+
+                var archShape = shape as CrossSectionStandardShapeArch;
+                if (archShape != null) return Math.Round(archShape.Width, 2, MidpointRounding.AwayFromZero);
+
+                return double.NaN;
             }
         }
 
@@ -173,15 +172,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                switch (data.SewerProfileDefinition.Shape)
-                {
-                    case CrossSectionStandardShapeWidthHeightBase widthBasedShape:
-                        return Math.Round(widthBasedShape.Height, 2, MidpointRounding.AwayFromZero);
-                    case CrossSectionStandardShapeArch archShape:
-                        return Math.Round(archShape.Height, 2, MidpointRounding.AwayFromZero);
-                    default:
-                        return double.NaN;
-                }
+                var shape = data.SewerProfileDefinition.Shape;
+                var widthBasedShape = shape as CrossSectionStandardShapeWidthHeightBase;
+                if (widthBasedShape != null) return Math.Round(widthBasedShape.Height, 2, MidpointRounding.AwayFromZero);
+
+                var archShape = shape as CrossSectionStandardShapeArch;
+                return archShape != null ? Math.Round(archShape.Height, 2, MidpointRounding.AwayFromZero) : double.NaN;
             }
         }
 
@@ -193,13 +189,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                switch (data.SewerProfileDefinition.Shape)
-                {
-                    case CrossSectionStandardShapeArch archShape:
-                        return Math.Round(archShape.ArcHeight, 2, MidpointRounding.AwayFromZero);
-                    default:
-                        return double.NaN;
-                }
+                var archShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeArch;
+                return archShape != null ? Math.Round(archShape.Height, 2, MidpointRounding.AwayFromZero) : double.NaN;
             }
         }
 
@@ -210,13 +201,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                switch (data.SewerProfileDefinition.Shape)
-                {
-                    case CrossSectionStandardShapeTrapezium trapezoidShape:
-                        return Math.Round(trapezoidShape.Slope, 2, MidpointRounding.AwayFromZero);
-                    default:
-                        return double.NaN;
-                }
+                var trapezoidShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeTrapezium;
+                return trapezoidShape != null ? Math.Round(trapezoidShape.Slope, 2, MidpointRounding.AwayFromZero) : double.NaN;
             }
         }
 
@@ -227,13 +213,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                switch (data.SewerProfileDefinition.Shape)
-                {
-                    case CrossSectionStandardShapeTrapezium trapezoidShape:
-                        return Math.Round(trapezoidShape.BottomWidthB, 2, MidpointRounding.AwayFromZero);
-                    default:
-                        return double.NaN;
-                }
+                var trapezoidShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeTrapezium;
+                return trapezoidShape != null ? Math.Round(trapezoidShape.BottomWidthB, 2, MidpointRounding.AwayFromZero) : double.NaN;
             }
         }
 
@@ -244,13 +225,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                switch (data.SewerProfileDefinition.Shape)
-                {
-                    case CrossSectionStandardShapeTrapezium trapezoidShape:
-                        return Math.Round(trapezoidShape.MaximumFlowWidth, 2, MidpointRounding.AwayFromZero);
-                    default:
-                        return double.NaN;
-                }
+                var trapezoidShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeTrapezium;
+                return trapezoidShape != null ? Math.Round(trapezoidShape.MaximumFlowWidth, 2, MidpointRounding.AwayFromZero) : double.NaN;
             }
         }
 
