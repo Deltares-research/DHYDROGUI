@@ -33,12 +33,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category("Manhole properties")]
-        [Description("All the (custom) attributes for this object.")]
+        [Description("All compartments on this manhole location.")]
         [PropertyOrder(3)]
-        [TypeConverter(typeof(ExpandableArrayConverter))]
-        public string[] Compartments
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public CompartmentListProperties Compartments
         {
-            get { return data.Compartments.Select(c => c.Name).ToArray(); }
+            get { return new CompartmentListProperties(data.Compartments.ToList()); }
         }
 
 
