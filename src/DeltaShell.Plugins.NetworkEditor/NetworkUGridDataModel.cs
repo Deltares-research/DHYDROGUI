@@ -78,8 +78,8 @@ namespace DeltaShell.Plugins.NetworkEditor
                     compartments.AddRange(m.Compartments);
                 });
                 var compartmentCount = compartments.Count;
-
-                var nonManholeNetworkNodes = network.Nodes.Where(n => n.GetType() != typeof(Manhole)).ToList();
+                
+                var nonManholeNetworkNodes = network.Nodes.Where(n => !(n is IManhole)).ToList();
 
                 // The compartment coordinates are adjusted slightly for writing to UGRID
                 var compartmentsX = new List<double>();
