@@ -196,7 +196,6 @@
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
-    <Compile Include="Forms\PropertyGrid\CompartmentListProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">

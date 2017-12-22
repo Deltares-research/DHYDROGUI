@@ -1,14 +1,17 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
+using DelftTools.Utils.ComponentModel;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     public class ManholeProperties : ObjectProperties<Manhole>
     {
-        [Category("Manhole properties")]
+        [Category("General")]
         [PropertyOrder(0)]
         public string Name
         {
@@ -16,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Name = value; }
         }
 
-        [Category("Manhole properties")]
+        [Category("General")]
         [PropertyOrder(1)]
         public double X
         {
@@ -24,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Geometry.Coordinate.X = value; }
         }
 
-        [Category("Manhole properties")]
+        [Category("General")]
         [PropertyOrder(2)]
         public double Y
         {
@@ -32,16 +35,97 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Geometry.Coordinate.Y = value; }
         }
 
-        [Category("Manhole properties")]
-        [Description("All compartments on this manhole location.")]
-        [PropertyOrder(3)]
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public CompartmentListProperties Compartments
+        private int manholeOneIndex = 0;
+        private int manholeTwoIndex = 1;
+        private int manholeThreeIndex = 2;
+
+        [Category("Manhole 1")]
+        [PropertyOrder(0)]
+        [DynamicVisible]
+        public string CompartmentOneName
         {
-            get { return new CompartmentListProperties(data.Compartments.ToList()); }
+            get { return GetStringPropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.Name); }
+            set { data.Compartments[manholeOneIndex].Name = value; }
         }
 
+        [Category("Manhole 1")]
+        [PropertyOrder(1)]
+        [DisplayName("Bottom level (m)")]
+        [DynamicVisible]
+        public double CompartmentOneBottomLevel
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.BottomLevel); }
+            set { data.Compartments[manholeOneIndex].BottomLevel = value; }
+        }
 
+        [Category("Manhole 2")]
+        [PropertyOrder(0)]
+        [DynamicVisible]
+        public string CompartmentTwoName
+        {
+            get { return GetStringPropertyFromCompartmentAtIndex(manholeTwoIndex, comp => comp.Name); }
+            set { data.Compartments[manholeTwoIndex].Name = value; }
+        }
 
+        [Category("Manhole 2")]
+        [PropertyOrder(1)]
+        [DisplayName("Bottom level (m)")]
+        [DynamicVisible]
+        public double CompartmentTwoBottomLevel
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeTwoIndex, comp => comp.BottomLevel); }
+            set { data.Compartments[manholeTwoIndex].BottomLevel = value; }
+        }
+
+        [Category("Manhole 3")]
+        [PropertyOrder(0)]
+        [DynamicVisible]
+        public string CompartmentThreeName
+        {
+            get { return GetStringPropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.Name); }
+            set { data.Compartments[manholeThreeIndex].Name = value; }
+        }
+
+        [Category("Manhole 3")]
+        [PropertyOrder(1)]
+        [DisplayName("Bottom level (m)")]
+        [DynamicVisible]
+        public double CompartmentThreeBottomLevel
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.BottomLevel); }
+            set { data.Compartments[manholeThreeIndex].BottomLevel = value; }
+        }
+
+        [DynamicVisibleValidationMethod]
+        public bool IsVisible(string propertyName)
+        {
+            var compartmentCount = data.Compartments.Count;
+            switch (propertyName)
+            {
+                case "CompartmentOneName":
+                case "CompartmentOneBottomLevel":
+                    return compartmentCount > 0;
+                case "CompartmentTwoName":
+                case "CompartmentTwoBottomLevel":
+                    return compartmentCount > 1;
+                case "CompartmentThreeName":
+                case "CompartmentThreeBottomLevel":
+                    return compartmentCount > 2;
+                default:
+                    return false;
+            }
+        }
+
+        private string GetStringPropertyFromCompartmentAtIndex(int index, Func<Compartment, string> function)
+        {
+            var compartments = data.Compartments;
+            return compartments.Count > index ? function(compartments[index]) : string.Empty;
+        }
+
+        private double GetDoublePropertyFromCompartmentAtIndex(int index, Func<Compartment, double> function)
+        {
+            var compartments = data.Compartments;
+            return compartments.Count > index ? function(compartments[index]) : double.NaN;
+        }
     }
 }
