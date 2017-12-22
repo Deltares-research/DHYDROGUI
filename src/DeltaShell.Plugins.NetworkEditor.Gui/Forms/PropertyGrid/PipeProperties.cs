@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(5)]
-        [DisplayName("Invert level begin")]
+        [DisplayName("Invert level begin (m)")]
         public double LevelStart
         {
             get { return data?.LevelSource ?? double.NaN; }
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(6)]
-        [DisplayName("Invert level end")]
+        [DisplayName("Invert level end (m)")]
         public double LevelTarget
         {
             get { return data?.LevelTarget ?? double.NaN; }
@@ -78,6 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(8)]
+        [DisplayName("Length (m)")]
         [Description("Length used for simulation when IsLengthCustom is true")]
         public string Length
         {
@@ -123,7 +124,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(2)]
-        [DisplayName("Diameter")]
+        [DisplayName("Diameter (m)")]
         [DynamicVisible]
         public double CrossSectionDiameter
         {
@@ -132,7 +133,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(3)]
-        [DisplayName("Width")]
+        [DisplayName("Width (m)")]
         [DynamicVisible]
         public double CrossSectionWidth
         {
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(4)]
-        [DisplayName("Height")]
+        [DisplayName("Height (m)")]
         [DynamicVisible]
         public double CrossSectionHeight
         {
@@ -150,7 +151,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(5)]
-        [DisplayName("Arch height")]
+        [DisplayName("Arch height (m)")]
         [DynamicVisible]
         public double ArcHeight
         {
@@ -167,6 +168,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(7)]
+        [DisplayName("Bottom width (m)")]
         [DynamicVisible]
         public double BottomWidthB
         {
@@ -175,6 +177,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Cross section properties")]
         [PropertyOrder(8)]
+        [DisplayName("Maximum flow width (m)")]
         [DynamicVisible]
         public double MaximumFlowWidth
         {
