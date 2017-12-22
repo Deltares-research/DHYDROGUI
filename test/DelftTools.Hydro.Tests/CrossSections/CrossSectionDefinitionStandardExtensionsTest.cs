@@ -284,6 +284,8 @@ namespace DelftTools.Hydro.Tests.CrossSections
 
         #endregion
 
+        #region Test helpers
+
         private static CrossSectionDefinitionStandard GetCsDefRectangleShape()
         {
             var csDef = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle
@@ -324,5 +326,7 @@ namespace DelftTools.Hydro.Tests.CrossSections
             });
             return csDef;
         }
+
+        #endregion
     }
 }
