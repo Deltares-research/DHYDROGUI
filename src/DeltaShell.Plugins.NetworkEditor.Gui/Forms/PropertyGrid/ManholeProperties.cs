@@ -39,6 +39,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         private int manholeTwoIndex = 1;
         private int manholeThreeIndex = 2;
 
+        #region Compartment 1
+
         [Category("Manhole 1")]
         [PropertyOrder(0)]
         [DynamicVisible]
@@ -57,6 +59,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return GetDoublePropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.BottomLevel); }
             set { data.Compartments[manholeOneIndex].BottomLevel = value; }
         }
+
+        [Category("Manhole 1")]
+        [PropertyOrder(2)]
+        [DisplayName("Street level (m)")]
+        [DynamicVisible]
+        public double CompartmentOneStreetLevel
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.SurfaceLevel); }
+            set { data.Compartments[manholeOneIndex].SurfaceLevel = value; }
+        }
+
+        #endregion
+
+        #region Compartment 2
 
         [Category("Manhole 2")]
         [PropertyOrder(0)]
@@ -77,6 +93,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeTwoIndex].BottomLevel = value; }
         }
 
+        #endregion
+
+        #region Compartment 3
+
         [Category("Manhole 3")]
         [PropertyOrder(0)]
         [DynamicVisible]
@@ -95,6 +115,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return GetDoublePropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.BottomLevel); }
             set { data.Compartments[manholeThreeIndex].BottomLevel = value; }
         }
+
+        #endregion
 
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
