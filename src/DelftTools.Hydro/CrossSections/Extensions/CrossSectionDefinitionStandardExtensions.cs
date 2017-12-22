@@ -7,52 +7,48 @@ namespace DelftTools.Hydro.CrossSections.Extensions
     {
         public static double GetProfileDiameter(this CrossSectionDefinitionStandard csDefinition)
         {
-            var roundShape = csDefinition?.Shape as CrossSectionStandardShapeRound;
-            return roundShape?.Diameter ?? double.NaN;
+            return csDefinition.GetPropertyValue<CrossSectionStandardShapeRound>(shape => shape.Diameter);
         }
 
         public static double GetProfileWidth(this CrossSectionDefinitionStandard csDefinition)
         {
-            var shape = csDefinition?.Shape;
-            var widthBasedShape = shape as CrossSectionStandardShapeWidthHeightBase;
-            if (widthBasedShape != null) return Math.Round(widthBasedShape.Width, 2, MidpointRounding.AwayFromZero);
-
-            var archShape = shape as CrossSectionStandardShapeArch;
-            return archShape != null ? Math.Round(archShape.Width, 2, MidpointRounding.AwayFromZero) : double.NaN;
+            var value = csDefinition.GetPropertyValue<CrossSectionStandardShapeWidthHeightBase>(shape => shape.Width);
+            return double.IsNaN(value) ? csDefinition.GetPropertyValue<CrossSectionStandardShapeArch>(shape => shape.Width) : value;
         }
 
         public static double GetProfileHeight(this CrossSectionDefinitionStandard csDefinition)
         {
-            var shape = csDefinition?.Shape;
-            var widthBasedShape = shape as CrossSectionStandardShapeWidthHeightBase;
-            if (widthBasedShape != null) return Math.Round(widthBasedShape.Height, 2, MidpointRounding.AwayFromZero);
-
-            var archShape = shape as CrossSectionStandardShapeArch;
-            return archShape != null ? Math.Round(archShape.Height, 2, MidpointRounding.AwayFromZero) : double.NaN;
+            var value = csDefinition.GetPropertyValue<CrossSectionStandardShapeWidthHeightBase>(shape => shape.Height);
+            return double.IsNaN(value) ? csDefinition.GetPropertyValue<CrossSectionStandardShapeArch>(shape => shape.Height) : value;
         }
 
         public static double GetProfileArchHeight(this CrossSectionDefinitionStandard csDefinition)
         {
-            var archShape = csDefinition?.Shape as CrossSectionStandardShapeArch;
-            return archShape != null ? Math.Round(archShape.ArcHeight, 2, MidpointRounding.AwayFromZero) : double.NaN;
+            return csDefinition.GetPropertyValue<CrossSectionStandardShapeArch>(shape => shape.ArcHeight);
         }
 
         public static double GetProfileSlope(this CrossSectionDefinitionStandard csDefinition)
         {
-            var trapezoidShape = csDefinition?.Shape as CrossSectionStandardShapeTrapezium;
-            return trapezoidShape != null ? Math.Round(trapezoidShape.Slope, 2, MidpointRounding.AwayFromZero) : double.NaN;
+            return csDefinition.GetPropertyValue<CrossSectionStandardShapeTrapezium>(shape => shape.Slope);
         }
 
         public static double GetProfileBottomWidthB(this CrossSectionDefinitionStandard csDefinition)
         {
-            var trapezoidShape = csDefinition?.Shape as CrossSectionStandardShapeTrapezium;
-            return trapezoidShape != null ? Math.Round(trapezoidShape.BottomWidthB, 2, MidpointRounding.AwayFromZero) : double.NaN;
+            return csDefinition.GetPropertyValue<CrossSectionStandardShapeTrapezium>(shape => shape.BottomWidthB);
         }
 
         public static double GetProfileMaximumFlowWidth(this CrossSectionDefinitionStandard csDefinition)
         {
-            var trapezoidShape = csDefinition?.Shape as CrossSectionStandardShapeTrapezium;
-            return trapezoidShape != null ? Math.Round(trapezoidShape.MaximumFlowWidth, 2, MidpointRounding.AwayFromZero) : double.NaN;
+            return csDefinition.GetPropertyValue<CrossSectionStandardShapeTrapezium>(shape => shape.MaximumFlowWidth);
+        }
+
+        private static double GetPropertyValue<T>(this CrossSectionDefinitionStandard csDefinition, Func<T, double> function) 
+            where T : CrossSectionStandardShapeBase
+        {
+            var shape = csDefinition?.Shape as T;
+            return shape != null
+                ? Math.Round(function(shape), 2, MidpointRounding.AwayFromZero)
+                : double.NaN;
         }
     }
 }
