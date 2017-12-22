@@ -48,6 +48,7 @@
     <Compile Include="CrossSectionSectionTest.cs" />
     <Compile Include="CrossSectionStandardShapeArchTest.cs" />
     <Compile Include="CrossSectionStandardShapeTrapeziumTest.cs" />
+    <Compile Include="CrossSections\CrossSectionDefinitionStandardExtensionsTest.cs" />
     <Compile Include="CrossSectionTest.cs" />
     <Compile Include="DataSets\FastDataTableTestHelper.cs" />
     <Compile Include="DataSets\FastXYZDataTableTest.cs" />

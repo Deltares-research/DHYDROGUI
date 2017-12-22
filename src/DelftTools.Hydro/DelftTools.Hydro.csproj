@@ -162,6 +162,7 @@
     <Compile Include="CrossSections\CrossSectionDefinitionZw.cs" />
     <Compile Include="CrossSections\DataSets\CrossSectionDataSetNew.cs" />
     <Compile Include="CrossSections\DataSets\LightDataTable.cs" />
+    <Compile Include="CrossSections\Extensions\CrossSectionDefinitionStandardExtensions.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeArch.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeBase.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeCunette.cs" />

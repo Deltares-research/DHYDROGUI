@@ -1,5 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
@@ -8,7 +8,6 @@ using DelftTools.Utils.ComponentModel;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
-    //[DisplayName("Pipe information")]
     public class PipeProperties : ObjectProperties<Pipe>
     {
         #region Connection properties
@@ -17,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
+            get { return data?.Name ?? string.Empty; }
             set { data.Name = value; }
         }
 
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Source manhole")]
         public string FromManhole
         {
-            get { return data.Source.ToString(); }
+            get { return data?.Source?.ToString() ?? string.Empty; }
         }
 
         [Category("Connection properties")]
@@ -34,7 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Target manhole")]
         public string ToManhole
         {
-            get { return data.Target.ToString(); }
+            get { return data?.Target?.ToString() ?? string.Empty; }
         }
 
         [Category("Connection properties")]
@@ -42,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Source compartment")]
         public string FromCompartment
         {
-            get { return data.SourceCompartment.ToString(); }
+            get { return data?.SourceCompartment?.ToString() ?? string.Empty; }
         }
 
         [Category("Connection properties")]
@@ -50,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Target compartment")]
         public string ToCompartment
         {
-            get { return data.TargetCompartment.ToString(); }
+            get { return data?.TargetCompartment?.ToString() ?? string.Empty; }
         }
 
         [Category("Connection properties")]
@@ -58,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Level source")]
         public double LevelStart
         {
-            get { return data.LevelSource; }
+            get { return data?.LevelSource ?? double.NaN; }
         }
 
         [Category("Connection properties")]
@@ -66,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Level target")]
         public double LevelTarget
         {
-            get { return data.LevelTarget; }
+            get { return data?.LevelTarget ?? double.NaN; }
         }
 
         [Category("Connection properties")]
@@ -74,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Water type")]
         public string WaterType
         {
-            get { return data.WaterType.ToString(); }
+            get { return data?.WaterType.ToString() ?? string.Empty; }
         }
 
         [Category("Connection properties")]
@@ -108,7 +107,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Order number will be used for interpolation over branches. A chain of branches with the same order number will be treated as one.")]
         public int OrderNumber
         {
-            get { return data.OrderNumber; }
+            get { return data?.OrderNumber ?? -1; }
             set { data.OrderNumber = value; }
         }
 
@@ -121,7 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Name")]
         public string CrossSectionName
         {
-            get { return data.SewerProfileDefinition.ToString(); }
+            get { return data?.SewerProfileDefinition?.ToString() ?? string.Empty; }
         }
 
         [Category("Cross section properties")]
@@ -129,7 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Shape")]
         public string CrossSectionShape
         {
-            get { return data.SewerProfileDefinition.Shape.Type.ToString(); }
+            get { return data?.SewerProfileDefinition?.Shape?.Type.ToString() ?? string.Empty; }
         }
 
         [Category("Cross section properties")]
@@ -138,11 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionDiameter
         {
-            get
-            {
-                var roundShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeRound;
-                return roundShape?.Diameter ?? double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileDiameter() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -151,17 +146,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionWidth
         {
-            get
-            {
-                var shape = data.SewerProfileDefinition.Shape;
-                var widthBasedShape = shape as CrossSectionStandardShapeWidthHeightBase;
-                if(widthBasedShape != null) return Math.Round(widthBasedShape.Width, 2, MidpointRounding.AwayFromZero);
-
-                var archShape = shape as CrossSectionStandardShapeArch;
-                if (archShape != null) return Math.Round(archShape.Width, 2, MidpointRounding.AwayFromZero);
-
-                return double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileWidth() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -170,15 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionHeight
         {
-            get
-            {
-                var shape = data.SewerProfileDefinition.Shape;
-                var widthBasedShape = shape as CrossSectionStandardShapeWidthHeightBase;
-                if (widthBasedShape != null) return Math.Round(widthBasedShape.Height, 2, MidpointRounding.AwayFromZero);
-
-                var archShape = shape as CrossSectionStandardShapeArch;
-                return archShape != null ? Math.Round(archShape.Height, 2, MidpointRounding.AwayFromZero) : double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileHeight() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -187,11 +164,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double ArcHeight
         {
-            get
-            {
-                var archShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeArch;
-                return archShape != null ? Math.Round(archShape.Height, 2, MidpointRounding.AwayFromZero) : double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileArchHeight() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -199,11 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double Slope
         {
-            get
-            {
-                var trapezoidShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeTrapezium;
-                return trapezoidShape != null ? Math.Round(trapezoidShape.Slope, 2, MidpointRounding.AwayFromZero) : double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileSlope() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -211,11 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double BottomWidthB
         {
-            get
-            {
-                var trapezoidShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeTrapezium;
-                return trapezoidShape != null ? Math.Round(trapezoidShape.BottomWidthB, 2, MidpointRounding.AwayFromZero) : double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileBottomWidthB() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -223,11 +188,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double MaximumFlowWidth
         {
-            get
-            {
-                var trapezoidShape = data.SewerProfileDefinition.Shape as CrossSectionStandardShapeTrapezium;
-                return trapezoidShape != null ? Math.Round(trapezoidShape.MaximumFlowWidth, 2, MidpointRounding.AwayFromZero) : double.NaN;
-            }
+            get { return data?.SewerProfileDefinition?.GetProfileMaximumFlowWidth() ?? double.NaN; }
         }
 
         [DynamicVisibleValidationMethod]
