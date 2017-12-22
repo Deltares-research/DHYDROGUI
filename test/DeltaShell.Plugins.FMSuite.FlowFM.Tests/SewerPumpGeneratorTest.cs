@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var connectionType = SewerConnectionMapping.ConnectionType.Pump;
             var connectionTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(connectionType);
 
-            var waterType = SewerConnectionWaterType.MixedWasteWater;
+            var waterType = SewerConnectionWaterType.Combined;
             var waterTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
 
             var flowDirectionString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(flowDirection);

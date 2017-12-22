@@ -16,8 +16,8 @@ namespace DelftTools.Hydro
     public enum SewerConnectionWaterType
     {
         [Description("NVT")] None,
-        [Description("HWA")] FlowingRainWater,
-        [Description("DWA")] DryWeatherRainage,
-        [Description("GMD")] MixedWasteWater,
+        [Description("HWA")] StormWater,
+        [Description("DWA")] DWF,
+        [Description("GMD")] Combined
     }
 }

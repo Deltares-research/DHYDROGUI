@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var levelEnd = 2.5;
             var length = 5.0;
 
-            var waterType = SewerConnectionWaterType.DryWeatherRainage;
+            var waterType = SewerConnectionWaterType.DWF;
             var waterTypeString = EnumDescriptionAttributeTypeConverter.GetEnumDescription(waterType);
             #endregion
             //Non value given

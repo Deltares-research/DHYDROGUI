@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(1)]
-        [DisplayName("Source manhole")]
+        [DisplayName("Begin manhole")]
         public string FromManhole
         {
             get { return data?.Source?.ToString() ?? string.Empty; }
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(2)]
-        [DisplayName("Target manhole")]
+        [DisplayName("End manhole")]
         public string ToManhole
         {
             get { return data?.Target?.ToString() ?? string.Empty; }
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(3)]
-        [DisplayName("Source compartment")]
+        [DisplayName("Begin compartment")]
         public string FromCompartment
         {
             get { return data?.SourceCompartment?.ToString() ?? string.Empty; }
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(4)]
-        [DisplayName("Target compartment")]
+        [DisplayName("End compartment")]
         public string ToCompartment
         {
             get { return data?.TargetCompartment?.ToString() ?? string.Empty; }
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(5)]
-        [DisplayName("Level source")]
+        [DisplayName("Invert level begin")]
         public double LevelStart
         {
             get { return data?.LevelSource ?? double.NaN; }
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category("Connection properties")]
         [PropertyOrder(6)]
-        [DisplayName("Level target")]
+        [DisplayName("Invert level end")]
         public double LevelTarget
         {
             get { return data?.LevelTarget ?? double.NaN; }
@@ -99,16 +99,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string GeometryLength
         {
             get { return string.Format("{0:0.##}", data.Geometry.Length); }
-        }
-
-        [Category("Connection properties")]
-        [PropertyOrder(10)]
-        [DisplayName("Order number")]
-        [Description("Order number will be used for interpolation over branches. A chain of branches with the same order number will be treated as one.")]
-        public int OrderNumber
-        {
-            get { return data?.OrderNumber ?? -1; }
-            set { data.OrderNumber = value; }
         }
 
         #endregion

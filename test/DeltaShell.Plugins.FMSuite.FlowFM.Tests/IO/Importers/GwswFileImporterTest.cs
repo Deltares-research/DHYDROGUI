@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
             };
 
-            SewerConnectionWaterType value = SewerConnectionWaterType.FlowingRainWater;
+            SewerConnectionWaterType value = SewerConnectionWaterType.StormWater;
             //Just to make sure the test is setting the default value later on.
             Assert.AreNotEqual(default(SewerConnectionWaterType), value);
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>();
             Assert.IsNotNull(value);
-            Assert.AreEqual(SewerConnectionWaterType.DryWeatherRainage, value);
+            Assert.AreEqual(SewerConnectionWaterType.DWF, value);
         }
 
         [Test]
