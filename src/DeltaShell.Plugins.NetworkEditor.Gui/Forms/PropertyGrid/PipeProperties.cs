@@ -93,15 +93,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
-        [Category("Connection properties")]
-        [PropertyOrder(9)]
-        [Description("Length of the channel on the map.")]
-        [DisplayName("Geometry length")]
-        public string GeometryLength
-        {
-            get { return string.Format("{0:0.##}", data.Geometry.Length); }
-        }
-
         #endregion
 
         #region Cross section
