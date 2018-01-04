@@ -81,6 +81,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not export data for SourceAndSink: {0}, no Function was found.
+        /// </summary>
+        public static string Could_not_export_data_for_SourceAndSink___0___no_Function_was_found {
+            get {
+                return ResourceManager.GetString("Could_not_export_data_for_SourceAndSink___0___no_Function_was_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap down {
@@ -117,6 +126,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
                 return ResourceManager.GetString("ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__" +
                         "could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__f" +
                         "or_Spatial_Varying_Sediments_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File import failed: {0}.
+        /// </summary>
+        public static string File_import_failed___0_ {
+            get {
+                return ResourceManager.GetString("File_import_failed___0_", resourceCulture);
             }
         }
         
@@ -247,6 +265,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Variables detected in imported SourceAndSink Function: {0}.
+        /// </summary>
+        public static string Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_ {
+            get {
+                return ResourceManager.GetString("Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copied file at location &apos;{0}&apos; to location &apos;{1}&apos;,
         ///because the file existed outside of the project folder of model &apos;{2}&apos;..
         /// </summary>
@@ -360,6 +387,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}.
+        /// </summary>
+        public static string Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_ {
+            get {
+                return ResourceManager.GetString("Read_SourceAndSink_values_failed__could_not_determine_component_values_for_Source" +
+                        "AndSink__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read SourceAndSink values failed: no function detected for SourceAndSink {0}.
+        /// </summary>
+        public static string Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_ {
+            get {
+                return ResourceManager.GetString("Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create xyz file for spatial varying initial condition {0} because it is a value spatial operation. Please interpolate the operation to the grid or click the &quot;Copy to spatial data&quot;-button to generate the xyz file..
         /// </summary>
         public static string SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or {
@@ -413,12 +459,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tim-file import failed: {0}.
+        /// </summary>
+        public static string Tim_file_import_failed___0_ {
+            get {
+                return ResourceManager.GetString("Tim_file_import_failed___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tim-file import failed: could not determine component values for imported SourceAndSink {0}.
+        /// </summary>
+        public static string Tim_file_import_failed__could_not_determine_component_values_for_imported_SourceAndSink__0_ {
+            get {
+                return ResourceManager.GetString("Tim_file_import_failed__could_not_determine_component_values_for_imported_SourceA" +
+                        "ndSink__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tim-file import failed: could not retrieve function for SourceAndSink: {0}.
+        /// </summary>
+        public static string Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_ {
+            get {
+                return ResourceManager.GetString("Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tim-file import failed: could not retrieve model for SourceAndSink: {0}.
+        /// </summary>
+        public static string Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_ {
+            get {
+                return ResourceManager.GetString("Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap TimeSeries {
             get {
                 object obj = ResourceManager.GetObject("TimeSeries", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export data to {0}: {1}.
+        /// </summary>
+        public static string TimFileExporter_Export_Failed_to_export_data_to__0____1_ {
+            get {
+                return ResourceManager.GetString("TimFileExporter_Export_Failed_to_export_data_to__0____1_", resourceCulture);
             }
         }
         

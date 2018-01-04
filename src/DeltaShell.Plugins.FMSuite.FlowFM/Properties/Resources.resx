@@ -301,4 +301,34 @@ Change this group name and save the project again to write these features to a s
     <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
 File import of structures file '{1}' has failed.</value>
   </data>
+  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
+    <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
+  </data>
+  <data name="TimFileExporter_Export_Failed_to_export_data_to__0____1_" xml:space="preserve">
+    <value>Failed to export data to {0}: {1}</value>
+  </data>
+  <data name="Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_" xml:space="preserve">
+    <value>Invalid Variables detected in imported SourceAndSink Function: {0}</value>
+  </data>
+  <data name="File_import_failed___0_" xml:space="preserve">
+    <value>File import failed: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed___0_" xml:space="preserve">
+    <value>Tim-file import failed: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_" xml:space="preserve">
+    <value>Tim-file import failed: could not retrieve model for SourceAndSink: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_" xml:space="preserve">
+    <value>Tim-file import failed: could not retrieve function for SourceAndSink: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_determine_component_values_for_imported_SourceAndSink__0_" xml:space="preserve">
+    <value>Tim-file import failed: could not determine component values for imported SourceAndSink {0}</value>
+  </data>
+  <data name="Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_" xml:space="preserve">
+    <value>Read SourceAndSink values failed: no function detected for SourceAndSink {0}</value>
+  </data>
+  <data name="Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_" xml:space="preserve">
+    <value>Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}</value>
+  </data>
 </root>

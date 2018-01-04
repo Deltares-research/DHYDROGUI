@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 .Select((component, index) => new { component, index })
                 .FirstOrDefault(cig => cig.component.Name.Equals(componentName, StringComparison.InvariantCultureIgnoreCase));
 
-            return componentIndexGrouping == null ? -1 : componentIndexGrouping.index;
+            return componentIndexGrouping?.index ?? -1;
         }
     }
 }

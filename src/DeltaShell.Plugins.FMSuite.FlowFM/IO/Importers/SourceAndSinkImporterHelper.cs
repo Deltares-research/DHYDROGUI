@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             if (timeVariable?.Values == null || dischargeComponent?.Values == null || salinityComponent?.Values == null || temperatureComponent?.Values == null)
             {    
-                Log.ErrorFormat("Invalid Variables detected in imported SourceAndSink Function: {0}", readFunction.Name);
+                Log.ErrorFormat(Resources.Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_, readFunction.Name);
                 return false;
             }
            

@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
@@ -40,19 +41,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             var sourceAndSink = item as SourceAndSink;
             if (sourceAndSink != null)
             {
-                data = (IFunction)sourceAndSink.Function.Clone(true);
+                var function = sourceAndSink.Function;
+                if (function == null)
+                {
+                    Log.ErrorFormat(Resources.Could_not_export_data_for_SourceAndSink___0___no_Function_was_found, sourceAndSink.Name);
+                    return false;
+                }
+
+                data = (IFunction)function.Clone(true);
 
                 var model = GetModelForSourceAndSink(sourceAndSink);
                 if (model != null)
                 {
                     refDate = model.ReferenceTime;
-
-                    if (data == null)
-                    {
-                        Log.ErrorFormat("Could not export data for SourceAndSink: {0}, no Function was found", sourceAndSink.Name);
-                        return false;
-                    }
-
+                    
                     if (!model.UseSalinity) data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
                     if (!model.UseTemperature) data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
                 }
@@ -78,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             }
             catch (Exception e)
             {
-                Log.ErrorFormat("Failed to export data to {0}: {1}", path, e.Message);
+                Log.ErrorFormat(Resources.TimFileExporter_Export_Failed_to_export_data_to__0____1_, path, e.Message);
                 return false;
             }
         }

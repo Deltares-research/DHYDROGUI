@@ -28,9 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var timeValues = timeArgument.Values.ToArray();
 
                     var components = timeSeries.Components.OfType<IVariable<double>>().ToList();
-
-                    //var values = timeSeries.Components[0].Values.Cast<double>().ToArray();
-                    
+                   
                     for (int i = 0; i < timeValues.Length; i++)
                     {
                         var timeString = modelReferenceDate == null
@@ -52,11 +50,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public void Read(string timFilePath, IFunction function, DateTime refDate)
         {
-            if (!(function.Arguments.Count == 1 && function.Arguments.First() is IVariable<DateTime>))
+            if (function == null || !(function.Arguments.Count == 1 && function.Arguments.First() is IVariable<DateTime>))
             {
                 throw new ArgumentException(
                     string.Format("Cannot import time series data from {0} onto non-timeseries function {1}",
-                        timFilePath, function.Name));
+                        timFilePath, function == null ? string.Empty : function.Name));
             }
             var minutes = new List<double>();
             var componentValues = new List<List<double>>();

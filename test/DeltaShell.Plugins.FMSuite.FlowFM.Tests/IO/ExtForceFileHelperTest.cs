@@ -5,9 +5,12 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -74,6 +77,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var temperatureValues = ((MultiDimensionalArray<double>)temperatureVariable.Values).ToList();
             Assert.AreEqual(useTemperature, temperatureValues.All(v => v >= double.Epsilon));
             Assert.AreEqual(!useTemperature, temperatureValues.All(v => v < double.Epsilon));
+        }
+
+        [Test]
+        public void TestReadSourceAndSinkValues_HandlesNullFunction()
+        {
+            var sourceAndSink = new SourceAndSink { Data = null };
+            var arguments = new object[] { sourceAndSink, string.Empty, DateTime.MinValue, new WaterFlowFMModelDefinition() };
+            var expectedError = string.Format(Resources.Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_, sourceAndSink.Name);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+            {
+                TypeUtils.CallPrivateStaticMethod(typeof(ExtForceFileHelper), "ReadSourceAndSinkValues", arguments );
+            }, 
+            expectedError);
+        }
+
+        [Test]
+        public void TestReadSourceAndSinkValues_HandlesNullComponent()
+        {
+            var testFilePath = TestHelper.GetTestFilePath(@"timFiles\testFile.tim");
+
+            var sourceAndSink = new SourceAndSink();
+            // Remove temperatureComponent
+            sourceAndSink.Function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            Assert.NotNull(useSalinityProperty);
+            useSalinityProperty.Value = true;
+
+            var useTemperatureProperty = modelDefinition.GetModelProperty(GuiProperties.UseTemperature);
+            Assert.NotNull(useTemperatureProperty);
+            useTemperatureProperty.Value = true;
+
+            var arguments = new object[] { sourceAndSink, testFilePath, DateTime.Now, modelDefinition };
+            var expectedError = string.Format(Resources.Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_, sourceAndSink.Name);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+            {
+                TypeUtils.CallPrivateStaticMethod(typeof(ExtForceFileHelper), "ReadSourceAndSinkValues", arguments);
+            },
+            expectedError);
         }
 
         [TestCase(false, false, "NoSalinityOrTemperature.tim")]
@@ -143,5 +189,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(exportedFile);
         }
 
+        [Test]
+        public void TestWriteSourceAndSinkData_HandlesNullFunction()
+        {
+            // setup
+            var sourceAndSink = new SourceAndSink
+            {
+                Feature = new Feature2D { Geometry = new Point(0.0, 0.0) },
+                Data = null
+            };
+
+            var fmModel = new WaterFlowFMModel();
+            fmModel.SourcesAndSinks.Add(sourceAndSink);
+            var modelDefinition = fmModel.ModelDefinition;
+
+            var exportedFile = Path.Combine(FileUtils.CreateTempDirectory(), "test.tim");
+            FileUtils.DeleteIfExists(exportedFile);
+            var extForceFileItem = new ExtForceFileItem(ExtForceQuantNames.SourceAndSink) { FileName = "test.pli" };
+
+            // do the export
+            ExtForceFileHelper.WriteSourceAndSinkData(exportedFile, sourceAndSink, fmModel.ReferenceTime, extForceFileItem, true, modelDefinition);
+        }
     }
 }

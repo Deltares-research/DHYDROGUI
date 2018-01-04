@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -203,9 +204,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> {sourceAndSink.Feature});
                 var dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
 
-                var function = (IFunction)sourceAndSink.Function.Clone(true);
-                if (function == null) return extForceFileItem;
+                var originalFunction = sourceAndSink.Function;
+                if (originalFunction == null) return extForceFileItem;
 
+                var function = (IFunction)originalFunction.Clone(true);
+                
                 var useSalinityProperty = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
                 var salinityEnabled = useSalinityProperty != null
                     ? (bool)useSalinityProperty.Value
@@ -560,7 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var data = sourceAndSink.Data;
             if (data == null)
             {
-                log.ErrorFormat("Read SourceAndSink values failed: no function detected for SourceAndSink {0}", sourceAndSink.Name);
+                log.ErrorFormat(Resources.Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_, sourceAndSink.Name);
                 return;
             }
             var readFunction = (IFunction)data.Clone(true);
@@ -588,7 +591,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                log.ErrorFormat("Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}", sourceAndSink.Name);
+                log.ErrorFormat(Resources.Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_, sourceAndSink.Name);
             }
         }
 
