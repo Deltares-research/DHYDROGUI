@@ -20,9 +20,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private DateTime startTime;
         private DateTime stopTime;
         private TimeSpan timeStep;
-        private bool startTimeEnabled = true;
-        private bool stopTimeEnabled = true;
-        private bool timeStepEnabled = true;
+        private bool startTimeSynchronisationEnabled = true;
+        private bool stopTimeSynchronisationEnabled = true;
+        private bool timeStepSynchronisationEnabled = true;
         private ICommand deleteModelCommand;
         private ICommand addModelCommand;
         private HydroModel hydroModel;
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public DateTime StartTime
         {
-            get{ return startTime; }
+            get { return startTime; }
             set
             {
                 startTime = value;
@@ -116,38 +116,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             set
             {
                 timeStep = value;
-
                 SyncTimesAfterAction(() => HydroModel.TimeStep = value);
             }
         }
 
-        public bool StartTimeEnabled
+        public bool StartTimeSynchronisationEnabled
         {
-            get { return startTimeEnabled; }
+            get { return startTimeSynchronisationEnabled; }
             set
             {
-                startTimeEnabled = value;
-                
+                startTimeSynchronisationEnabled = value;
                 SyncTimesAfterAction(() => HydroModel.OverrideStartTime = value);
             }
         }
 
-        public bool StopTimeEnabled
+        public bool StopTimeSynchronisationEnabled
         {
-            get { return stopTimeEnabled; }
+            get { return stopTimeSynchronisationEnabled; }
             set
             {
-                stopTimeEnabled = value;
+                stopTimeSynchronisationEnabled = value;
                 SyncTimesAfterAction(() => HydroModel.OverrideStopTime = value);
             }
         }
 
-        public bool TimeStepEnabled
+        public bool TimeStepSynchronisationEnabled
         {
-            get { return timeStepEnabled; }
+            get { return timeStepSynchronisationEnabled; }
             set
             {
-                timeStepEnabled = value;
+                timeStepSynchronisationEnabled = value;
                 SyncTimesAfterAction(() => HydroModel.OverrideTimeStep = value);
             }
         }
@@ -252,21 +250,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private void SyncTimesAfterAction(Action action = null)
         {
             if (isUpdatingModel) return;
-
             isUpdatingModel = true;
 
-            if (action != null)
-            {
-                action();
-            }
+            action?.Invoke();
 
             StartTime = HydroModel.StartTime;
             StopTime = HydroModel.StopTime;
             TimeStep = HydroModel.TimeStep;
 
-            StartTimeEnabled = HydroModel.OverrideStartTime;
-            StopTimeEnabled = HydroModel.OverrideStopTime;
-            TimeStepEnabled = HydroModel.OverrideTimeStep;
+            if (StartTimeSynchronisationEnabled) Models?.Where(vm => vm.StartTime != StartTime).ForEach(vm => vm.StartTime = StartTime);
+            if (StopTimeSynchronisationEnabled) Models?.Where(vm => vm.StopTime != StopTime).ForEach(vm => vm.StopTime = StopTime);
+            if (TimeStepSynchronisationEnabled) Models?.Where(vm => vm.TimeStep != TimeStep).ForEach(vm => vm.TimeStep = TimeStep);
+
+            StartTimeSynchronisationEnabled = HydroModel.OverrideStartTime;
+            StopTimeSynchronisationEnabled = HydroModel.OverrideStopTime;
+            TimeStepSynchronisationEnabled = HydroModel.OverrideTimeStep;
 
             UpdateDurationText();
 

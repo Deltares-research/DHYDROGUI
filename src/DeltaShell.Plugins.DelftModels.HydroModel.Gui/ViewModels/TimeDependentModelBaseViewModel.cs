@@ -91,13 +91,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private void SyncTimesAfterAction(Action action = null)
         {
             if (isUpdatingModel) return;
-
             isUpdatingModel = true;
 
-            if (action != null)
-            {
-                action();
-            }
+            action?.Invoke();
 
             StartTime = Model.StartTime;
             StopTime = Model.StopTime;

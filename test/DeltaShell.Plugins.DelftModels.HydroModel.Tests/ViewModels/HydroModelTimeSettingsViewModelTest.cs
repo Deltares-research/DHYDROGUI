@@ -7,6 +7,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
@@ -26,9 +27,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(hydroModel.StartTime, viewModel.StartTime);
             Assert.AreEqual(hydroModel.StopTime, viewModel.StopTime);
             Assert.AreEqual(hydroModel.TimeStep, viewModel.TimeStep);
-            Assert.AreEqual(hydroModel.OverrideStartTime, viewModel.StartTimeEnabled);
-            Assert.AreEqual(hydroModel.OverrideStopTime, viewModel.StopTimeEnabled);
-            Assert.AreEqual(hydroModel.OverrideTimeStep, viewModel.TimeStepEnabled);
+            Assert.AreEqual(hydroModel.OverrideStartTime, viewModel.StartTimeSynchronisationEnabled);
+            Assert.AreEqual(hydroModel.OverrideStopTime, viewModel.StopTimeSynchronisationEnabled);
+            Assert.AreEqual(hydroModel.OverrideTimeStep, viewModel.TimeStepSynchronisationEnabled);
         }
 
         [Test]
@@ -44,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(defaultStartDateTime, viewModel.StartTime);
             Assert.AreEqual(defaultStopDateTime, viewModel.StopTime);
             Assert.AreEqual(defaultTimeStep, viewModel.TimeStep);
-            Assert.AreEqual(true, viewModel.StartTimeEnabled);
-            Assert.AreEqual(true, viewModel.StopTimeEnabled);
-            Assert.AreEqual(true, viewModel.TimeStepEnabled);
+            Assert.AreEqual(true, viewModel.StartTimeSynchronisationEnabled);
+            Assert.AreEqual(true, viewModel.StopTimeSynchronisationEnabled);
+            Assert.AreEqual(true, viewModel.TimeStepSynchronisationEnabled);
         }
 
         [Test]
@@ -136,14 +137,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var hydroModel = new HydroModel();
             var viewModel = new HydroModelTimeSettingsViewModel(hydroModel)
             {
-                StartTimeEnabled = true
+                StartTimeSynchronisationEnabled = true
             };
 
-            Assert.IsTrue(viewModel.StartTimeEnabled);
+            Assert.IsTrue(viewModel.StartTimeSynchronisationEnabled);
             Assert.IsTrue(hydroModel.OverrideStartTime);
 
-            viewModel.StartTimeEnabled = false;
-            Assert.IsFalse(viewModel.StartTimeEnabled);
+            viewModel.StartTimeSynchronisationEnabled = false;
+            Assert.IsFalse(viewModel.StartTimeSynchronisationEnabled);
             Assert.IsFalse(hydroModel.OverrideStartTime);
         }
 
@@ -154,14 +155,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var hydroModel = new HydroModel();
             var viewModel = new HydroModelTimeSettingsViewModel(hydroModel)
             {
-                StopTimeEnabled = true
+                StopTimeSynchronisationEnabled = true
             };
 
-            Assert.IsTrue(viewModel.StopTimeEnabled);
+            Assert.IsTrue(viewModel.StopTimeSynchronisationEnabled);
             Assert.IsTrue(hydroModel.OverrideStopTime);
 
-            viewModel.StopTimeEnabled = false;
-            Assert.IsFalse(viewModel.StopTimeEnabled);
+            viewModel.StopTimeSynchronisationEnabled = false;
+            Assert.IsFalse(viewModel.StopTimeSynchronisationEnabled);
             Assert.IsFalse(hydroModel.OverrideStopTime);
         }
 
@@ -172,14 +173,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var hydroModel = new HydroModel();
             var viewModel = new HydroModelTimeSettingsViewModel(hydroModel)
             {
-                TimeStepEnabled = true
+                TimeStepSynchronisationEnabled = true
             };
 
-            Assert.IsTrue(viewModel.TimeStepEnabled);
+            Assert.IsTrue(viewModel.TimeStepSynchronisationEnabled);
             Assert.IsTrue(hydroModel.OverrideTimeStep);
 
-            viewModel.TimeStepEnabled = false;
-            Assert.IsFalse(viewModel.TimeStepEnabled);
+            viewModel.TimeStepSynchronisationEnabled = false;
+            Assert.IsFalse(viewModel.TimeStepSynchronisationEnabled);
             Assert.IsFalse(hydroModel.OverrideTimeStep);
         }
 
@@ -204,6 +205,169 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 
             hydroModel.Activities.Add(fmModel);
             hydroModel.Activities.Add(waveModel);
+
+            return hydroModel;
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenIntegratedModelWithRtcModelAtTheEnd_WhenChangingIntegratedModelStartTime_ThenAllModelsAndViemModelsHaveSynchronized()
+        {
+            var initialStartTime = DateTime.Now;
+            var stopTime = initialStartTime.AddDays(3);
+            var timeStep = new TimeSpan(1, 0, 0);
+            const string fmModelName = "FM Model";
+            const string rtcModelName = "RTC Model";
+
+            var hydroModel = GetHydroModelWithRTC(fmModelName, rtcModelName, initialStartTime, stopTime, timeStep);
+
+            // Check initial FM Model
+            var fmModel = hydroModel.Activities.FirstOrDefault(m => m.Name == fmModelName) as WaterFlowFMModel;
+            Assert.IsNotNull(fmModel);
+            Assert.That(fmModel.StartTime, Is.EqualTo(initialStartTime));
+
+            // Check initial RTC Model
+            var rtcModel = hydroModel.Activities.FirstOrDefault(m => m.Name == rtcModelName) as RealTimeControlModel;
+            Assert.IsNotNull(rtcModel);
+            Assert.That(rtcModel.StartTime, Is.EqualTo(initialStartTime));
+
+            // Check initial Integrated model View Model
+            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            Assert.That(viewModel.StartTime, Is.EqualTo(initialStartTime));
+            Assert.That(viewModel.Models.Count, Is.EqualTo(2));
+
+            // Check initial FM Model View Model
+            var fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
+            Assert.IsNotNull(fmModelViewModel);
+            Assert.That(fmModelViewModel.StartTime, Is.EqualTo(initialStartTime));
+
+            // Check initial RTC Model View Model
+            var rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
+            Assert.IsNotNull(rtcModelViewModel);
+            Assert.That(rtcModelViewModel.StartTime, Is.EqualTo(initialStartTime));
+
+            // Change VM Start time and check for synchronisation
+            var newStartTime = initialStartTime.AddDays(1);
+            viewModel.StartTime = newStartTime;
+            Assert.That(fmModel.StartTime, Is.EqualTo(newStartTime));
+            Assert.That(rtcModel.StartTime, Is.EqualTo(newStartTime));
+            Assert.That(fmModelViewModel.StartTime, Is.EqualTo(newStartTime));
+            Assert.That(rtcModelViewModel.StartTime, Is.EqualTo(newStartTime));
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenIntegratedModelWithRtcModelAtTheEnd_WhenChangingIntegratedModelStopTime_ThenAllModelsAndViemModelsHaveSynchronized()
+        {
+            var startTime = DateTime.Now;
+            var initialStopTime = startTime.AddDays(3);
+            var timeStep = new TimeSpan(1, 0, 0);
+            const string fmModelName = "FM Model";
+            const string rtcModelName = "RTC Model";
+
+            var hydroModel = GetHydroModelWithRTC(fmModelName, rtcModelName, startTime, initialStopTime, timeStep);
+
+            // Check initial FM Model
+            var fmModel = hydroModel.Activities.FirstOrDefault(m => m.Name == fmModelName) as WaterFlowFMModel;
+            Assert.IsNotNull(fmModel);
+            Assert.That(fmModel.StopTime, Is.EqualTo(initialStopTime));
+
+            // Check initial RTC Model
+            var rtcModel = hydroModel.Activities.FirstOrDefault(m => m.Name == rtcModelName) as RealTimeControlModel;
+            Assert.IsNotNull(rtcModel);
+            Assert.That(rtcModel.StopTime, Is.EqualTo(initialStopTime));
+
+            // Check initial Integrated model View Model
+            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            Assert.That(viewModel.StopTime, Is.EqualTo(initialStopTime));
+            Assert.That(viewModel.Models.Count, Is.EqualTo(2));
+
+            // Check initial FM Model View Model
+            var fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
+            Assert.IsNotNull(fmModelViewModel);
+            Assert.That(fmModelViewModel.StopTime, Is.EqualTo(initialStopTime));
+
+            // Check initial RTC Model View Model
+            var rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
+            Assert.IsNotNull(rtcModelViewModel);
+            Assert.That(rtcModelViewModel.StopTime, Is.EqualTo(initialStopTime));
+
+            // Change VM Stop time and check for synchronisation
+            var newStopTime = initialStopTime.AddDays(1);
+            viewModel.StopTime = newStopTime;
+            Assert.That(fmModel.StopTime, Is.EqualTo(newStopTime));
+            Assert.That(rtcModel.StopTime, Is.EqualTo(newStopTime));
+            Assert.That(fmModelViewModel.StopTime, Is.EqualTo(newStopTime));
+            Assert.That(rtcModelViewModel.StopTime, Is.EqualTo(newStopTime));
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenIntegratedModelWithRtcModelAtTheEnd_WhenChangingIntegratedModelTimeStep_ThenAllModelsAndViemModelsHaveSynchronized()
+        {
+            var startTime = DateTime.Now;
+            var stopTime = startTime.AddDays(3);
+            var initialTimeStep = new TimeSpan(1, 0, 0);
+            const string fmModelName = "FM Model";
+            const string rtcModelName = "RTC Model";
+
+            var hydroModel = GetHydroModelWithRTC(fmModelName, rtcModelName, startTime, stopTime, initialTimeStep);
+
+            // Check initial FM Model
+            var fmModel = hydroModel.Activities.FirstOrDefault(m => m.Name == fmModelName) as WaterFlowFMModel;
+            Assert.IsNotNull(fmModel);
+            Assert.That(fmModel.TimeStep, Is.EqualTo(initialTimeStep));
+
+            // Check initial RTC Model
+            var rtcModel = hydroModel.Activities.FirstOrDefault(m => m.Name == rtcModelName) as RealTimeControlModel;
+            Assert.IsNotNull(rtcModel);
+            Assert.That(rtcModel.TimeStep, Is.EqualTo(initialTimeStep));
+
+            // Check initial Integrated model View Model
+            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            Assert.That(viewModel.TimeStep, Is.EqualTo(initialTimeStep));
+            Assert.That(viewModel.Models.Count, Is.EqualTo(2));
+
+            // Check initial FM Model View Model
+            var fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
+            Assert.IsNotNull(fmModelViewModel);
+            Assert.That(fmModelViewModel.TimeStep, Is.EqualTo(initialTimeStep));
+
+            // Check initial RTC Model View Model
+            var rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
+            Assert.IsNotNull(rtcModelViewModel);
+            Assert.That(rtcModelViewModel.TimeStep, Is.EqualTo(initialTimeStep));
+
+            // Change VM Stop time and check for synchronisation
+            var newTimeStep = initialTimeStep.Add(new TimeSpan(1, 30, 0));
+            viewModel.TimeStep = newTimeStep;
+            Assert.That(fmModel.TimeStep, Is.EqualTo(newTimeStep));
+            Assert.That(rtcModel.TimeStep, Is.EqualTo(newTimeStep));
+            Assert.That(fmModelViewModel.TimeStep, Is.EqualTo(newTimeStep));
+            Assert.That(rtcModelViewModel.TimeStep, Is.EqualTo(newTimeStep));
+        }
+
+        private HydroModel GetHydroModelWithRTC(string fmModelName, string rtcModelName, DateTime initialStartTime, DateTime initialStopTime, TimeSpan timeStep)
+        {
+            // Initialization
+            var hydroModel = new HydroModel();
+            var fmModel = new WaterFlowFMModel
+            {
+                Name = fmModelName,
+                StartTime = initialStartTime,
+                StopTime = initialStopTime,
+                TimeStep = timeStep
+            };
+            var rtcModel = new RealTimeControlModel
+            {
+                Name = rtcModelName,
+                StartTime = initialStartTime,
+                StopTime = initialStopTime,
+                TimeStep = timeStep
+            };
+
+            hydroModel.Activities.Add(fmModel);
+            hydroModel.Activities.Add(rtcModel);
 
             return hydroModel;
         }
@@ -237,15 +401,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(initialStartTime, waveModel.StartTime);
             Assert.AreEqual(newStartTime, hydroModel.StartTime);
             Assert.AreEqual(newStartTime, viewModel.StartTime);
-            Assert.AreEqual(false, viewModel.StartTimeEnabled);
+            Assert.AreEqual(false, viewModel.StartTimeSynchronisationEnabled);
             Assert.AreEqual(false, hydroModel.OverrideStartTime);
 
-            viewModel.StartTimeEnabled = true;
+            viewModel.StartTimeSynchronisationEnabled = true;
             Assert.AreEqual(newStartTime, fmModel.StartTime);
             Assert.AreEqual(newStartTime, waveModel.StartTime);
             Assert.AreEqual(newStartTime, hydroModel.StartTime);
             Assert.AreEqual(newStartTime, viewModel.StartTime);
-            Assert.AreEqual(true, viewModel.StartTimeEnabled);
+            Assert.AreEqual(true, viewModel.StartTimeSynchronisationEnabled);
             Assert.AreEqual(true, hydroModel.OverrideStartTime);
         }
 
@@ -278,15 +442,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(initialStopTime, waveModel.StopTime);
             Assert.AreEqual(newStopTime, hydroModel.StopTime);
             Assert.AreEqual(newStopTime, viewModel.StopTime);
-            Assert.AreEqual(false, viewModel.StopTimeEnabled);
+            Assert.AreEqual(false, viewModel.StopTimeSynchronisationEnabled);
             Assert.AreEqual(false, hydroModel.OverrideStopTime);
 
-            viewModel.StopTimeEnabled = true;
+            viewModel.StopTimeSynchronisationEnabled = true;
             Assert.AreEqual(newStopTime, fmModel.StopTime);
             Assert.AreEqual(newStopTime, waveModel.StopTime);
             Assert.AreEqual(newStopTime, hydroModel.StopTime);
             Assert.AreEqual(newStopTime, viewModel.StopTime);
-            Assert.AreEqual(true, viewModel.StopTimeEnabled);
+            Assert.AreEqual(true, viewModel.StopTimeSynchronisationEnabled);
             Assert.AreEqual(true, hydroModel.OverrideStopTime);
         }
 
@@ -319,15 +483,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(newTimeStep, waveModel.TimeStep);
             Assert.AreEqual(newTimeStep, hydroModel.TimeStep);
             Assert.AreEqual(newTimeStep, viewModel.TimeStep);
-            Assert.AreEqual(false, viewModel.TimeStepEnabled);
+            Assert.AreEqual(false, viewModel.TimeStepSynchronisationEnabled);
             Assert.AreEqual(false, hydroModel.OverrideTimeStep);
 
-            viewModel.TimeStepEnabled = true;
+            viewModel.TimeStepSynchronisationEnabled = true;
             Assert.AreEqual(newTimeStep, fmModel.TimeStep);
             Assert.AreEqual(newTimeStep, waveModel.TimeStep);
             Assert.AreEqual(newTimeStep, hydroModel.TimeStep);
             Assert.AreEqual(newTimeStep, viewModel.TimeStep);
-            Assert.AreEqual(true, viewModel.TimeStepEnabled);
+            Assert.AreEqual(true, viewModel.TimeStepSynchronisationEnabled);
             Assert.AreEqual(true, hydroModel.OverrideTimeStep);
         }
 
@@ -525,8 +689,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
 
             var mocks = new MockRepository();
-            var timeDependentModel1 = mocks.StrictMultiMock<ITimeDependentModel>(new[] { typeof(INotifyPropertyChanged) });
-            var timeDependentModel2 = mocks.StrictMultiMock<ITimeDependentModel>(new[] { typeof(INotifyPropertyChanged) });
+            var timeDependentModel1 = mocks.StrictMultiMock<ITimeDependentModel>(typeof(INotifyPropertyChanged));
+            var timeDependentModel2 = mocks.StrictMultiMock<ITimeDependentModel>(typeof(INotifyPropertyChanged));
 
             // Expectations
             timeDependentModel1.Expect(a => a.Name).Return(name1).Repeat.Times(6);
