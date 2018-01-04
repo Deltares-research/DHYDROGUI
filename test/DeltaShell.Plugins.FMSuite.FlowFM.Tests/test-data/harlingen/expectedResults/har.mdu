@@ -1,17 +1,18 @@
-# Generated on 02/02/2016 14:39:17
-# Deltares, FM-Suite DFlowFM Model Version 1.1.0.33927, DFlow FM Version 1.1.171.44306
+# Generated on 01/04/2018 15:58:40
+# Deltares, FM-Suite DFlowFM Model Version 1.4.0.38999, DFlow FM Version 1.1.267.53713
 
 [model]
 Program           = D-Flow FM
-Version           = 1.1.171.44306
+Version           = 1.1.267.53713
 MDUFormatVersion  = 1.02
-GuiVersion        = 1.1.0.33927
+GuiVersion        = 1.4.0.38999
 AutoStart         = 0                   # Autostart simulation after loading MDU or not (0=no, 1=autostart, 2=autostartstop).
 
 [geometry]
 NetFile           = fm_003_net.nc       # *_net.nc
 BathymetryFile    =                     # *.xyb
 DryPointsFile     =
+DryAreasFile      =
 EnclosureFile     =
 WaterLevIniFile   =                     # Initial water levels sample file *.xyz
 LandBoundaryFile  = Harlingen_haven.ldb # Only for plotting

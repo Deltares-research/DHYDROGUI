@@ -76,6 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary = new Dictionary<string, string>
         {
             { KnownProperties.DryPointsFile, "DryPointsFile" },
+            { KnownProperties.DryAreasFile, "DryAreasFile" },
             { KnownProperties.EnclosureFile, "EnclosureFile" },
             { KnownProperties.LandBoundaryFile, "LandBoundaryFile" },
             { KnownProperties.ThinDamFile, "ThinDamFile" },
@@ -564,21 +565,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
                 ref structuresFile, StructuresExtension);
 
-            if (hydroArea.DryAreas.Any())
-            {
-                WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea.DryAreas,
+            WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.DryAreasFile, hydroArea.DryAreas,
                 ref dryAreaFile, DryAreaExtension);
-
-                if (hydroArea.DryPoints.Any())
-                {
-                    Log.WarnFormat("Cannot serialize both dry points and dry polygons to mdu. Discarded dry points");
-                }
-            }
-            else
-            {
-                WriteDryPoints(targetMduFilePath, modelDefinition, hydroArea.DryPoints);
-            }
-
+            
+            WriteDryPoints(targetMduFilePath, modelDefinition, hydroArea.DryPoints);
+            
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
                 ref enclosureFile, EnclosureExtension);
         }
@@ -867,6 +858,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadFeatures(filePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs, ref fixedWeirFile, FixedWeirExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, ObsExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections, ref obsCrsFile, ObsCrossExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.DryAreasFile, hydroArea.DryAreas, ref dryAreaFile, DryAreaExtension);
 
             var structures = new List<IStructure>();
 
@@ -918,7 +910,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadFeaturesDryPoints(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey, HydroArea hydroArea)
         {
-            Dictionary<string, string> replacedFilePaths = new Dictionary<string, string>();
+            var replacedFilePaths = new Dictionary<string, string>();
             var modelProperty = modelDefinition.GetModelProperty(propertyKey);
             var dryPointsFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
             if (dryPointsFilePaths.GroupBy(fp => System.IO.Path.GetExtension(fp)).ToList().Count > 1)

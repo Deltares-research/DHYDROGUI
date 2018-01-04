@@ -38,7 +38,8 @@ model,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
 model,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
-geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
+geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values)"
+geometry,DryAreasFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry areas polygon file *.pol (third column 1/-1: inside/outside)"
 geometry,EnclosureFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Enclosure polygon file *.pol (third column 1/-1: inside/outside)"
 geometry,WaterLevIniFile,,,,FileName,,,,TRUE,,,,,,Initial water levels sample file *.xyz
 geometry,LandBoundaryFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Land boundaries file *.ldb, used for visualization"

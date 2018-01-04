@@ -1406,7 +1406,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var property = ModelDefinition.GetModelProperty(pair.Key);
                     var propertyValue = property.GetValueAsString();
                     if (pair.Key != KnownProperties.NetFile && pair.Key != KnownProperties.ExtForceFile &&
-                        String.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
+                        string.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
                     {
                         continue;
                     }

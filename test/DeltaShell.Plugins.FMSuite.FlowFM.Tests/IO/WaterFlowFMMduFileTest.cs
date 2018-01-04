@@ -862,6 +862,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void GivenModelWithOneDryAreaAndOneDryPoint_WhenWritingAndReadingMduFile_ThenBothFeaturesArePresent()
+        {
+            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            var mduFile = new MduFile();
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(Path.GetFileNameWithoutExtension(mduFilePath));
+            Assert.IsNotNull(mduDir);
+
+            var area = new HydroArea();
+            var dryPointsGroupName = @"featureFiles/myDryPoints";
+            area.DryPoints.Add(WaterFlowFMMduFileTestHelper.GetNewGroupablePointFeature(dryPointsGroupName));
+            var dryAreasGroupName = @"featureFiles/myDryAreas";
+            area.DryAreas.Add(WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPolygon(dryAreasGroupName, "Polygon01"));
+
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            mduFile.Write(mduFilePath, modelDefinition, area);
+
+            var newArea = new HydroArea();
+            mduFile.Read(mduFilePath, modelDefinition, newArea);
+            Assert.That(newArea.DryAreas.Count, Is.EqualTo(1));
+            Assert.That(newArea.DryPoints.Count, Is.EqualTo(1));
+
+            var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
+
+            FileUtils.DeleteIfExists(mduFilePath);
+            FileUtils.DeleteIfExists(mduFilePath.Replace(".mdu", string.Empty));
+            DeleteAllFilesAndFoldersInSubDirectory(new DirectoryInfo(Path.GetDirectoryName(Path.Combine(mduDir, dryPointsFileNameWithExtension))));
+        }
+
+        [Test]
+        public void GivenModelWithOneDryAreaAndOneDryPoint_WhenWritingMduFile_ThenBothFeatureFileReferencesAreWrittenToMduFile()
+        {
+            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            var mduFile = new MduFile();
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            var modelName = Path.GetFileName(Path.GetFileNameWithoutExtension(mduFilePath));
+            Assert.IsNotNull(mduDir);
+
+            var area = new HydroArea();
+            var dryPointsGroupName = @"featureFiles/myDryPoints";
+            area.DryPoints.Add(WaterFlowFMMduFileTestHelper.GetNewGroupablePointFeature(dryPointsGroupName));
+            var dryAreasGroupName = @"featureFiles/myDryAreas";
+            area.DryAreas.Add(WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPolygon(dryAreasGroupName, "Polygon01"));
+
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            mduFile.Write(mduFilePath, modelDefinition, area);
+
+            var readAllText = File.ReadAllText(mduFilePath);
+
+            var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
+            var dryAreasFileNameWithExtension = dryAreasGroupName + MduFile.DryAreaExtension;
+
+            var expectedDryPointsFileText = GetExpectedFileText("DryPointsFile", dryPointsFileNameWithExtension);
+            var expectedDryAreasFileText = GetExpectedFileText("DryAreasFile", dryAreasFileNameWithExtension);
+
+            Assert.IsTrue(readAllText.Contains(expectedDryPointsFileText), "Expected {0} \n Generated: {1}", expectedDryPointsFileText, readAllText);
+            Assert.IsTrue(readAllText.Contains(expectedDryAreasFileText), "Expected {0} \n Generated: {1}", expectedDryAreasFileText, readAllText);
+
+            Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryPointsFileNameWithExtension)));
+            Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryAreasFileNameWithExtension)));
+
+            FileUtils.DeleteIfExists(mduFilePath);
+            FileUtils.DeleteIfExists(mduFilePath.Replace(".mdu", string.Empty));
+            DeleteAllFilesAndFoldersInSubDirectory(new DirectoryInfo(Path.GetDirectoryName(Path.Combine(mduDir, dryPointsFileNameWithExtension))));
+        }
+
+        [Test]
         public void GivenFeaturesWithGroupNamesThatPointToSubFolders_WhenWriting_ThenMduFileAndFeatureFilesAreBeingWritten()
         {
             var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
