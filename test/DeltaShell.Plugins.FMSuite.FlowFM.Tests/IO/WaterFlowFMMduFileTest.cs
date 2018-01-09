@@ -289,37 +289,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void MduFileShowsLogWarningWhenDryPointsAndDryAreasFeatureAreImportedInOneLine()
-        {
-            var nameWithoutExtension = Path.GetTempFileName();
-            var mduFilePath = string.Concat(nameWithoutExtension, ".mdu");
-            /* Build MDU content */
-            var propertyName = "DryPointsFile";
-            var rawValuesAndComments = "= Test1.xyz Test2.pol";
-            var fileCategoryName = "geometry";
-            var mduFileText = string.Concat(propertyName, rawValuesAndComments);
-            mduFileText = string.Concat("[", fileCategoryName, "]", "\n", mduFileText);
-            /* Write MDU */
-            File.WriteAllText(mduFilePath, mduFileText);
-            try
-            {
-                var mduFile = new MduFile();
-                var modelDefinition = new WaterFlowFMModelDefinition();
-                var property = modelDefinition.GetModelProperty(KnownProperties.DryPointsFile);
-                //Read
-                TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => mduFile.Read(mduFilePath, modelDefinition, new HydroArea()),
-                    string.Format(Resources.MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_,
-                        "Test1.xyz, Test2.pol"));
-                Assert.AreEqual("Test1.xyz Test2.pol", property.GetValueAsString());
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(mduFilePath);
-            }
-        }
-
-        [Test]
         public void ImportDryPointFeatureAssignsGroupName()
         {
             /* This class is located in the framework and fails to import correctly dry points. */
@@ -420,6 +389,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(fileObsPointsGroup1);
                 FileUtils.DeleteIfExists(fileObsPointsGroup2);
             }
+        }
+
+        [Test]
+        public void GivenMduFileWithDryPointsAndDryAreasFilesBothOnDryPointsFileCategory_WhenReadingMdu_ThenBothFilesAreCorrectlyRead()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryPointsAndAreasInModel.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            mduFile.Read(mduFilePath, modelDefinition, area);
+
+            Assert.That(area.DryPoints.Count, Is.EqualTo(6));
+            Assert.That(area.DryAreas.Count, Is.EqualTo(2));
         }
 
         [Test] /* Roundtrip test */
@@ -914,11 +901,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var dryPointsFileNameWithExtension = dryPointsGroupName + MduFile.DryPointExtension;
             var dryAreasFileNameWithExtension = dryAreasGroupName + MduFile.DryAreaExtension;
 
-            var expectedDryPointsFileText = GetExpectedFileText("DryPointsFile", dryPointsFileNameWithExtension);
-            var expectedDryAreasFileText = GetExpectedFileText("DryAreasFile", dryAreasFileNameWithExtension);
+            var expectedDryPointsFileText = GetExpectedFileText("DryPointsFile", dryPointsFileNameWithExtension + " " + dryAreasFileNameWithExtension);
 
             Assert.IsTrue(readAllText.Contains(expectedDryPointsFileText), "Expected {0} \n Generated: {1}", expectedDryPointsFileText, readAllText);
-            Assert.IsTrue(readAllText.Contains(expectedDryAreasFileText), "Expected {0} \n Generated: {1}", expectedDryAreasFileText, readAllText);
 
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryPointsFileNameWithExtension)));
             Assert.IsTrue(File.Exists(Path.Combine(mduDir, dryAreasFileNameWithExtension)));
