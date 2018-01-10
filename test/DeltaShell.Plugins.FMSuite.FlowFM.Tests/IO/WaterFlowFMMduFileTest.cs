@@ -8,7 +8,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.Import;
@@ -407,6 +406,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.That(area.DryPoints.Count, Is.EqualTo(6));
             Assert.That(area.DryAreas.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void GivenMduFileWithOnlyOneDryPointsFileReferenceInMdu_WhenReadingMdu_ThenFileIsCorrectlyRead()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\OnlyDryPointsInModel.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            mduFile.Read(mduFilePath, modelDefinition, area);
+
+            Assert.That(area.DryPoints.Count, Is.EqualTo(3));
+            Assert.IsEmpty(area.DryAreas); //Check this, because dry areas and dry points are read in the same method (MduFile.ReadDryPointsAndDryAreas)
+        }
+
+        [Test]
+        public void GivenMduFileWithOnlyOneDryAreasFileReferenceInMdu_WhenReadingMdu_ThenFileIsCorrectlyRead()
+        {
+            var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\OnlyDryAreasInModel.mdu");
+            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
+            var mduDir = Path.GetDirectoryName(mduFilePath);
+            Assert.NotNull(mduDir);
+            var modelName = Path.GetFileName(mduFilePath);
+
+            var mduFile = new MduFile();
+            var area = new HydroArea();
+            var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
+            mduFile.Read(mduFilePath, modelDefinition, area);
+
+            Assert.IsEmpty(area.DryPoints); //Check this, because dry areas and dry points are read in the same method (MduFile.ReadDryPointsAndDryAreas)
+            Assert.That(area.DryAreas.Count, Is.EqualTo(1));
         }
 
         [Test] /* Roundtrip test */
