@@ -22,16 +22,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     [Category(TestCategory.Slow)]
     public class WaveModelSaveLoadTest
     {
+        private static void LoadRequiredPlugins(DeltaShellApplication app)
+        {
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Plugins.Add(new WaveApplicationPlugin());
+        }
+
         [Test]
         public void SaveLoadEmptyWaveModel()
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 var path = "mdw.dsproj";
@@ -58,11 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 var path = "coords.dsproj";
@@ -91,11 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 var path = "mdw.dsproj";
@@ -125,11 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 var path = "mdw.dsproj";
@@ -169,15 +162,138 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void SaveLoadWaveModelPersistsIsCoupledToDFlowFM(bool isCoupled)
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                //Plugins needed to save the project
+                LoadRequiredPlugins(app);
+                app.Run();
+
+                var path = "mdw.dsproj";
+                app.SaveProjectAs(path); // save to initialize file repository..
+
+                var model = new WaveModel();
+                app.Project.RootFolder.Add(model);
+
+                //Set parameter to desired value.
+                model.IsCoupledToFlow = isCoupled;
+                app.SaveProjectAs(path);
+
+                app.CloseProject();
+                app.OpenProject(path);
+
+                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                //Check persistance
+                Assert.IsNotNull(retrievedModel);
+                Assert.AreEqual(isCoupled, retrievedModel.IsCoupledToFlow);
+            }
+        }
+
+        [Test]
+        public void SaveLoadWaveModelPersistsCoupledStartTime()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                //Plugins needed to save the project
+                LoadRequiredPlugins(app);
+                app.Run();
+
+                var path = "mdw.dsproj";
+                app.SaveProjectAs(path); // save to initialize file repository..
+
+                var model = new WaveModel();
+                app.Project.RootFolder.Add(model);
+
+                //Set parameter to desired value.
+                var newStartTime = DateTime.Today;
+                if (model.StartTime == newStartTime)
+                    newStartTime = newStartTime.AddDays(1);
+                model.StartTime = newStartTime;
+                app.SaveProjectAs(path);
+
+                app.CloseProject();
+                app.OpenProject(path);
+
+                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                //Check persistance
+                Assert.IsNotNull(retrievedModel);
+                Assert.AreEqual(newStartTime, retrievedModel.StartTime);
+            }
+        }
+
+        [Test]
+        public void SaveLoadWaveModelPersistsCoupledEndTime()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                //Plugins needed to save the project
+                LoadRequiredPlugins(app);
+                app.Run();
+
+                var path = "mdw.dsproj";
+                app.SaveProjectAs(path); // save to initialize file repository..
+
+                var model = new WaveModel();
+                app.Project.RootFolder.Add(model);
+
+                //Set parameter to desired value.
+                var newStopTime = DateTime.Today;
+                if (model.StopTime == newStopTime)
+                    newStopTime = newStopTime.AddDays(1);
+                model.StopTime = newStopTime;
+                app.SaveProjectAs(path);
+
+                app.CloseProject();
+                app.OpenProject(path);
+
+                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                //Check persistance
+                Assert.IsNotNull(retrievedModel);
+                Assert.AreEqual(newStopTime, retrievedModel.StopTime);
+            }
+        }
+
+        [Test]
+        public void SaveLoadWaveModelPersistsCoupledTimeStep()
+        {
+            using (var app = new DeltaShellApplication())
+            {
+                //Plugins needed to save the project
+                LoadRequiredPlugins(app);
+                app.Run();
+
+                var path = "mdw.dsproj";
+                app.SaveProjectAs(path); // save to initialize file repository..
+
+                var model = new WaveModel();
+                app.Project.RootFolder.Add(model);
+
+                //Set parameter to desired value.
+                var newTimeStep = TimeSpan.FromHours(1);
+                if (model.TimeStep == newTimeStep)
+                    newTimeStep = newTimeStep.Add(TimeSpan.FromHours(1));
+                model.TimeStep = newTimeStep;
+                app.SaveProjectAs(path);
+
+                app.CloseProject();
+                app.OpenProject(path);
+
+                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                //Check persistance
+                Assert.IsNotNull(retrievedModel);
+                Assert.AreEqual(newTimeStep, retrievedModel.TimeStep);
+            }
+        }
+
+        [Test]
         public void CreateFromScratchAddBoundarySaveAndReload()
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 string path = "modelSaveTest.dsproj";
@@ -206,11 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 string path = "mdw_grid.dsproj";
@@ -239,11 +351,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 string projPath = "modelSaveLoadDomainsTest.dsproj";
@@ -278,11 +386,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication())
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
                 const string projPath = "bathySaveLoadTest.dsproj";
@@ -309,11 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
             {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
+                LoadRequiredPlugins(app);
                 app.Run();
 
 

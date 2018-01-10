@@ -352,9 +352,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             disposableItems.ForEach(d => d.Dispose());
             disposableItems.Clear();
 
-            StartTime = CurrentTime;
-            StopTime = CurrentTime;
-
             creationCode(this);
             if (loading && !Equals(OuterDomain, ModelDefinition.OuterDomain))
             {
