@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void SaveLoadWaveModelPersistsCoupledEndTime()
+        public void SaveLoadWaveModelPersistsCoupledStopTime()
         {
             using (var app = new DeltaShellApplication())
             {
