@@ -439,6 +439,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
+        /// </summary>
+        public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {
+            get {
+                return ResourceManager.GetString("SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_" +
+                        "values_detected_for_one_or_more_physical_processes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {
@@ -468,12 +478,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tim-file import failed: could not determine component values for imported SourceAndSink {0}.
+        ///   Looks up a localized string similar to Tim-file import failed: could not determine physical processes for imported SourceAndSink {0}.
         /// </summary>
-        public static string Tim_file_import_failed__could_not_determine_component_values_for_imported_SourceAndSink__0_ {
+        public static string Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_ {
             get {
-                return ResourceManager.GetString("Tim_file_import_failed__could_not_determine_component_values_for_imported_SourceA" +
-                        "ndSink__0_", resourceCulture);
+                return ResourceManager.GetString("Tim_file_import_failed__could_not_determine_physical_processes_for_imported_Sourc" +
+                        "eAndSink__0_", resourceCulture);
             }
         }
         

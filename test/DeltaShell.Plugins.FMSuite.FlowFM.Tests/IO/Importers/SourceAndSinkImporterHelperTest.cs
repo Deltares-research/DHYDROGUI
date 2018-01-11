@@ -22,23 +22,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.False(SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(function, null));
         }
 
-        [TestCase(3, true, true, 10)]
-        [TestCase(3, true, false, 10)]
-        [TestCase(3, false, true, 10)]
-        [TestCase(3, false, false, 10)]
+        [TestCase(true, 3, true, true, 10)]
+        [TestCase(false, 3, true, false, 10)]
+        [TestCase(false, 3, false, true, 10)]
+        [TestCase(false, 3, false, false, 10)]
 
-        [TestCase(2, true, true, 10)]
-        [TestCase(2, true, false, 10)]
-        [TestCase(2, false, true, 10)]
-        [TestCase(2, false, false, 10)]
+        [TestCase(true, 2, true, true, 10)]
+        [TestCase(true, 2, true, false, 10)]
+        [TestCase(true, 2, false, true, 10)]
+        [TestCase(false, 2, false, false, 10)]
 
-        [TestCase(1, true, true, 10)]
-        [TestCase(1, true, false, 10)]
-        [TestCase(1, false, true, 10)]
-        [TestCase(1, false, false, 10)]
-        
+        [TestCase(true, 1, true, true, 10)]
+        [TestCase(true, 1, true, false, 10)]
+        [TestCase(true, 1, false, true, 10)]
+        [TestCase(true, 1, false, false, 10)]
+
         public void TestAdaptComponentValuesFromFileToSourceAndSinkFunction_CorrectlyProcessesSalinityAndTemperatureComponents(
-            int numComponentsWithValues, bool salinityEnabled, bool temperatureEnabled, int numValues)
+            bool expectedResult, int numComponentsWithValues, bool salinityEnabled, bool temperatureEnabled, int numValues)
         {
             var sourceAndSink = new SourceAndSink();
             var originalFunction = sourceAndSink.Function;
@@ -48,9 +48,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var adaptedFunction = (IFunction)originalFunction.Clone(true);
             var componentSettings = GetComponentSettings(salinityEnabled, temperatureEnabled);
-            Assert.True(SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(adaptedFunction, componentSettings));
+            Assert.AreEqual(expectedResult, SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(adaptedFunction, componentSettings));
 
-            VerifyComponentValues(salinityEnabled, temperatureEnabled, numValues, originalFunction, adaptedFunction);
+            if (expectedResult)
+            {
+                VerifyComponentValues(salinityEnabled, temperatureEnabled, numValues, originalFunction, adaptedFunction);
+            }
         }
 
         [Test]

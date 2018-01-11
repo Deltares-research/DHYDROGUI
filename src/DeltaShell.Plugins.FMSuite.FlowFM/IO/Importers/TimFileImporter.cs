@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     }
                     else
                     {
-                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_determine_component_values_for_imported_SourceAndSink__0_, sourceAndSink.Name);
+                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_, sourceAndSink.Name);
                     }
                     return sourceAndSink;
                 }

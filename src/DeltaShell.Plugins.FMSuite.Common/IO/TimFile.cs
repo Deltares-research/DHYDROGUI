@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 try
                 {
                     var line = GetNextLine();
-                    var missingValuesDetected = false;
                     var additionalValuesDetected = false;
 
                     while (line != null)
@@ -94,7 +93,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         var expectedNumberOfValueColumns = values.Count;
 
                         if (expectedNumberOfValueColumns < actualNumberOfValueColumns) additionalValuesDetected = true;
-                        if (actualNumberOfValueColumns < expectedNumberOfValueColumns) missingValuesDetected = true;
 
                         var numberOfValuesRead = Math.Min(actualNumberOfValueColumns, expectedNumberOfValueColumns);
                         
@@ -112,12 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         line = GetNextLine();
                     }
 
-                    if (missingValuesDetected)
-                    {
-                        Log.WarnFormat("Missing values detected when reading file: {0}." +
-                                       "{1}All missing values have been substituted with default values (zeroes).",
-                                       timFilePath, Environment.NewLine);
-                    }
                     if (additionalValuesDetected)
                     {
                         Log.WarnFormat("Additional values detected when reading file: {0}." +
