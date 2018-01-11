@@ -12,7 +12,6 @@ AutoStart         = 0                   # Autostart simulation after loading MDU
 NetFile           = fm_003_net.nc       # *_net.nc
 BathymetryFile    =                     # *.xyb
 DryPointsFile     =
-DryAreasFile      =
 EnclosureFile     =
 WaterLevIniFile   =                     # Initial water levels sample file *.xyz
 LandBoundaryFile  = Harlingen_haven.ldb # Only for plotting
