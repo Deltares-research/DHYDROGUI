@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.WindowsForms)]
         public void GivenWAQModelWithDefaultProcessDefinitionFilePath_WhenOpeningTheModel_ThenTheCurrentDefaultProcessDefinitionPathIsChosen()
         {
             var dsprojFileName = "WAQ model.dsproj";
