@@ -8,10 +8,12 @@ using System.Xml.Schema;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
@@ -19,7 +21,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
 
@@ -181,7 +182,59 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.IsNotNull(resultString);
             ValidateXml(xmlDocument);
         }
- 
+
+        [Test]
+        public void WriteDocument_RTC_1D_HasLoggerElement()
+        {
+            var hydroModel = BuildCoupledDemo1DModel();
+            var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
+            var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
+
+            Assert.IsTrue(couplers.Any());
+            foreach (var coupler in couplers)
+            {
+                var couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
+                Assert.IsNotNull(couplerName);
+                Assert.IsNotNull(couplerName.Value);
+
+                var logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
+                Assert.IsNotNull(logger);
+                Assert.IsTrue(logger.HasElements);
+
+                var outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
+                Assert.IsNotNull(outputFileElement);
+
+                var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
+                Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
+            }
+        }
+
+        [Test]
+        public void WriteDocument_RTC_FM_HasLoggerElement2()
+        {
+            var hydroModel = BuildCoupledDemoModel();
+            var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
+            var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
+
+            Assert.IsTrue(couplers.Any());
+            foreach (var coupler in couplers)
+            {
+                var couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
+                Assert.IsNotNull(couplerName);
+                Assert.IsNotNull(couplerName.Value);
+
+                var logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
+                Assert.IsNotNull(logger);
+                Assert.IsTrue(logger.HasElements);
+
+                var outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
+                Assert.IsNotNull(outputFileElement);
+
+                var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
+                Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
+            }
+        }
+
         private static void ValidateXml(XDocument xmlDocument, bool expectedToFail = false, Action<string> assertFailMessage = null)
         {
             if(assertFailMessage == null)

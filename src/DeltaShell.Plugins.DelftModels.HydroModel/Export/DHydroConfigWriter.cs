@@ -133,9 +133,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 coupler.Add(itemNode);
             }
 
-            if (modelCoupler.AddOptionalCouplerInfo != null)
+            if (modelCoupler.AddOptionalCouplerInfo)
             {
-                coupler = modelCoupler.AddOptionalCouplerInfo(coupler, DHyd);
+                var loggerNode = new XElement(DHyd + "logger");
+                //set attributes.
+                var workingDir = string.Empty; /*We need to figure out how the working directory gets dettermined*/
+                var workingDirNode = new XElement(DHyd + "workingDir", workingDir);
+                var outputFileNode = new XElement(DHyd + "outputFile", string.Concat(modelCoupler.Name, ".nc"));
+                loggerNode.Add(workingDirNode, outputFileNode);
+                coupler.Add(loggerNode);
             }
 
             return coupler;

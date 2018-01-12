@@ -12,9 +12,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public IDimrConfigModelCoupler CreateCoupler(IModel source, IModel target, ICompositeActivity sourceCoupler,
             ICompositeActivity targetCoupler)
         {
-            if (source is IRainfallRunoffModel || target is IRainfallRunoffModel)
+            var sourceRtcModel = source as IRainfallRunoffModel;
+            var targetRtcModel = target as IRainfallRunoffModel;
+            if (sourceRtcModel != null || targetRtcModel != null)
             {
-                return new RRFlowDimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler);
+                return new RRFlowDimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
+                {
+                    AddOptionalCouplerInfo = true
+                };
             }
             return null;
         }
