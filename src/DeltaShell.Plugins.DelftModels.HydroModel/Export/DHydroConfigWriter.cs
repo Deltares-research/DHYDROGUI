@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             {
                 var loggerNode = new XElement(DHyd + "logger");
                 //set attributes.
-                var workingDir = string.Empty; /*We need to figure out how the working directory gets dettermined*/
+                var workingDir = ".";
                 var workingDirNode = new XElement(DHyd + "workingDir", workingDir);
                 var outputFileNode = new XElement(DHyd + "outputFile", string.Concat(modelCoupler.Name, ".nc"));
                 loggerNode.Add(workingDirNode, outputFileNode);

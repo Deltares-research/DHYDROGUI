@@ -12,7 +12,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -242,52 +241,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void WriteDocument_RTC_1D_HasLoggerElement()
         {
             var hydroModel = BuildCoupledDemo1DModel();
-            var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
-            var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
-
-            Assert.IsTrue(couplers.Any());
-            foreach (var coupler in couplers)
-            {
-                var couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
-                Assert.IsNotNull(couplerName);
-                Assert.IsNotNull(couplerName.Value);
-
-                var logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
-                Assert.IsNotNull(logger);
-                Assert.IsTrue(logger.HasElements);
-
-                var outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
-                Assert.IsNotNull(outputFileElement);
-
-                var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
-                Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
-            }
+            CheckCouplerXml(hydroModel);
         }
 
         [Test]
         public void WriteDocument_RTC_FM_HasLoggerElement()
         {
             var hydroModel = BuildCoupledDemoModel();
-            var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
-            var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
-
-            Assert.IsTrue(couplers.Any());
-            foreach (var coupler in couplers)
-            {
-                var couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
-                Assert.IsNotNull(couplerName);
-                Assert.IsNotNull(couplerName.Value);
-
-                var logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
-                Assert.IsNotNull(logger);
-                Assert.IsTrue(logger.HasElements);
-
-                var outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
-                Assert.IsNotNull(outputFileElement);
-
-                var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
-                Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
-            }
+            CheckCouplerXml(hydroModel);
         }
 
         [Test]
@@ -299,6 +260,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.CurrentWorkflow =
                 hydroModel.Workflows.FirstOrDefault(w => w is ParallelActivity && w.Activities.Count == 2);
 
+            CheckCouplerXml(hydroModel);
+        }
+
+        private static void CheckCouplerXml(HydroModel hydroModel)
+        {
             var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
 
@@ -319,6 +285,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
                 Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
             }
+            ValidateXml(xml);
         }
 
         private static void ValidateXml(XDocument xmlDocument, bool expectedToFail = false, Action<string> assertFailMessage = null)
