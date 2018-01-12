@@ -1,0 +1,1024 @@
+ Deltares, DELWAQ2 Version 5.03.00.4551, Dec 19 2014, 12:02:02
+ Execution start: 2015/01/22 10:30:51 
+
+ Parallel processing with   1 processor(s)
+
+ total real      array space:       2031
+ total integer   array space:       2408
+ total character array space:        352
+ grand total in 4-byte words:       4791 =   0-GB   0-MB  19-KB 164-Byte.
+1                                                            
+                                                             
+
+                                                             
+                     T0: 1992.08.31 00:00:00  (scu=       1s)
+
+                     Initialisation from system file completed.
+
+ No process decomposition active
+ partit: noseg,nolay=          12           1 , nseghr=          12
+ partit: npart=  1, assigning all segments to part "npart", none to other parts
+ 
+ CONSTANT ON UNIT:        26, READING: ../waqtest.len                                                                                                                                                                                                                                                 
+ SIMULATION TIME :    0D  0H  0M  0S ! 
+ TIME IN FILE    :    0D  0H  0M 20S ! 
+  Closure error correction enabled
+ 
+ Initialising numerical options for method 15...18
+ 
+ Preconditioner switch not found, using default
+ switch = 3, corrections based on lower and upper 
+ 
+ Maximum number of iterations found in input
+ Maximum number of iterations set to :   100
+ Maximum number of vectors is:    15
+ 
+ Relative tolerance found in input
+ Relative tolerance set to : 0.100E-06
+ 
+ Scaling switch not found, using default
+ switch = 1, scaling is switched on
+ 
+ Iteration report switch found in input
+ switch = 0, iteration report is switched off
+ 
+ Extra functionality DLWQTR
+ End extra functionality DLWQTR
+  using default dll : d3dwaq_openpb.dll
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+   0.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.0000E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 1)             1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 4)             5.0000E+01 5.0000E+00 0.0000E+00
+ (Cell 3)             5.0000E+01 5.0000E+00 0.0000E+00
+ (Cell 8)             5.0000E+01 5.0000E+00 0.0000E+00
+ (Cell 5)             5.0000E+01 5.0000E+00 0.0000E+00
+ (Cell 7)             1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 6)             1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 10)            1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 9)             1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 12)            1.0000E+02 5.0000E+00 0.0000E+00
+ (Cell 11)            1.0000E+02 5.0000E+00 0.0000E+00
+ 
+   5.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  1M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6624E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     9.6758E+03
+ BOUNDARY OUTFLOWS    9.0133E+03
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9964E+00 9.5872E-01
+ (Cell 1)             1.0000E+02 5.9964E+00 9.5872E-01
+ (Cell 4)             5.0000E+01 5.8900E+00 9.5872E-01
+ (Cell 3)             5.0000E+01 5.8900E+00 9.5872E-01
+ (Cell 8)             5.0000E+01 5.6619E+00 9.5872E-01
+ (Cell 5)             5.0000E+01 5.6619E+00 9.5872E-01
+ (Cell 7)             1.0000E+02 5.5237E+00 9.5827E-01
+ (Cell 6)             1.0000E+02 5.5237E+00 9.5827E-01
+ (Cell 10)            1.0000E+02 5.5111E+00 9.1265E-01
+ (Cell 9)             1.0000E+02 5.5111E+00 9.1265E-01
+ (Cell 12)            1.0000E+02 5.5051E+00 9.0991E-01
+ (Cell 11)            1.0000E+02 5.5051E+00 9.0991E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  10.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  2M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2420E+04
+ BOUNDARY OUTFLOWS    1.2423E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6111E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6111E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6245E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6245E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6245E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6245E-01
+ (Cell 7)             1.0000E+02 5.5184E+00 9.6245E-01
+ (Cell 6)             1.0000E+02 5.5184E+00 9.6245E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2460E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2460E-01
+ (Cell 12)            1.0000E+02 5.5032E+00 9.2349E-01
+ (Cell 11)            1.0000E+02 5.5032E+00 9.2349E-01
+ 
+  15.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  3M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  20.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  4M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  25.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  5M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  30.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  6M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  35.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  7M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  40.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  8M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  45.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H  9M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  50.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 10M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  55.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 11M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  60.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 12M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  65.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 13M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  70.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 14M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  75.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  80.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 16M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  85.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 17M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+  90.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 18M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+  95.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 19M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6604E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.9983E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.8907E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.6587E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.5183E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.5073E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.5031E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.5031E+00 9.2367E-01
+ 
+
+ REWIND ON       UNIT:  20, READING: ../waqtest.vol
+ AT SIMULATION TIME:    0D  0H 20M  0S !
+ TIME IN FILE:          0D  0H 20M  0S !
+Performing closure error correction
+Total volume before rewind:     0.5660359741211E+04
+Total volume after rewind :     0.5000000000000E+04
+Total correction factor   :     0.8833360826162E+00
+
+ REWIND ON       UNIT:  23, READING: ../waqtest.are
+ AT SIMULATION TIME:    0D  0H 20M  0S !
+ TIME IN FILE:          0D  0H 20M  0S !
+
+ REWIND ON       UNIT:  24, READING: ../waqtest.flo
+ AT SIMULATION TIME:    0D  0H 20M  0S !
+ TIME IN FILE:          0D  0H 20M  0S !
+1
+                                                                                     
+                                                                                     
+                                                                                     
+                                             T0: 1992.08.31 00:00:00  (scu=       1s)
+ 100.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME =   0D  0H 20M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.0000E+03
+ CHANGES BY PROCESSES 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00
+ BOUNDARY INFLOWS     1.2446E+04
+ BOUNDARY OUTFLOWS    1.2446E+04
+                      Continuity 
+                                 
+ CONCENTRATION                           
+ (Cell 2)             1.0000E+00
+ (Cell 1)             1.0000E+00
+ (Cell 4)             1.0000E+00
+ (Cell 3)             1.0000E+00
+ (Cell 8)             1.0000E+00
+ (Cell 5)             1.0000E+00
+ (Cell 7)             1.0000E+00
+ (Cell 6)             1.0000E+00
+ (Cell 10)            1.0000E+00
+ (Cell 9)             1.0000E+00
+ (Cell 12)            1.0000E+00
+ (Cell 11)            1.0000E+00
+ 
+                      SURF       LocalDepth Theta      
+                                                       
+ VALUE                                   
+ (Cell 2)             1.0000E+02 5.0000E+00 9.6118E-01
+ (Cell 1)             1.0000E+02 5.0000E+00 9.6118E-01
+ (Cell 4)             5.0000E+01 5.0000E+00 9.6254E-01
+ (Cell 3)             5.0000E+01 5.0000E+00 9.6254E-01
+ (Cell 8)             5.0000E+01 5.0000E+00 9.6254E-01
+ (Cell 5)             5.0000E+01 5.0000E+00 9.6254E-01
+ (Cell 7)             1.0000E+02 5.0000E+00 9.6254E-01
+ (Cell 6)             1.0000E+02 5.0000E+00 9.6254E-01
+ (Cell 10)            1.0000E+02 5.0000E+00 9.2480E-01
+ (Cell 9)             1.0000E+02 5.0000E+00 9.2480E-01
+ (Cell 12)            1.0000E+02 5.0000E+00 9.2367E-01
+ (Cell 11)            1.0000E+02 5.0000E+00 9.2367E-01
+ 
+ 
+ Simulation ended normal
+ Execution stop : 2015/01/22 10:30:51 
