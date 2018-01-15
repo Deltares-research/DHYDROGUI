@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             {
                 return new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
                 {
-                    AddOptionalCouplerInfo = true
+                    AddCouplerLoggerInfo = true
                 };
             }
             return null;

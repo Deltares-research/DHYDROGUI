@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public bool SourceIsMasterTimeStep { get; private set; }
 
         public string Name { get; set; }
-        public bool AddOptionalCouplerInfo { get; set; }
+        public bool AddCouplerLoggerInfo { get; set; }
 
         private IEnumerable<DimrCoupleInfo> coupleInfos;
         public IEnumerable<DimrCoupleInfo> CoupleInfos

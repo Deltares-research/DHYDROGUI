@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         bool SourceIsMasterTimeStep { get; }
         IEnumerable<DimrCoupleInfo> CoupleInfos { get; }
         string Name { get; set; }
-        bool AddOptionalCouplerInfo { get; set; }
+        bool AddCouplerLoggerInfo { get; set; }
         void UpdateModel(IModel sourceModel, IModel targetModel, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler);
     }
 }

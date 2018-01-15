@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 coupler.Add(itemNode);
             }
 
-            if (modelCoupler.AddOptionalCouplerInfo)
+            if (modelCoupler.AddCouplerLoggerInfo)
             {
                 var loggerNode = new XElement(DHyd + "logger");
                 //set attributes.

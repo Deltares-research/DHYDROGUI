@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         }
 
         public string Name { get; set; }
-        public bool AddOptionalCouplerInfo { get; set; }
+        public bool AddCouplerLoggerInfo { get; set; }
 
         public DimrConfigModelCoupler(IModel sourceModel, IModel targetModel, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler)
         {

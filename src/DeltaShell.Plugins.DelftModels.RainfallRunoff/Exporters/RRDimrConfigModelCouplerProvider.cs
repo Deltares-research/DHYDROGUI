@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             {
                 return new RRFlowDimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
                 {
-                    AddOptionalCouplerInfo = true
+                    AddCouplerLoggerInfo = true
                 };
             }
             return null;
