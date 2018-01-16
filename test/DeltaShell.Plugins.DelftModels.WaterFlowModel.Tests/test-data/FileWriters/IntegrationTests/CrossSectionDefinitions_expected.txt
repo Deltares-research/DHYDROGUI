@@ -52,6 +52,7 @@
     sd_baseLevel          = 0.500               
     main                  = 50.000              
     floodPlain1           = 100.000             
+    floodPlain2           = 50.000              
     groundlayerUsed       = 0                   
     groundlayer           = 0.000               
 
@@ -165,6 +166,7 @@
     sd_baseLevel          = 0.000               
     main                  = 50.000              
     floodPlain1           = 100.000             
+    floodPlain2           = 50.000              
     groundlayerUsed       = 1                   
     groundlayer           = 1.216               
 
@@ -182,6 +184,7 @@
     sd_baseLevel          = 0.500               
     main                  = 50.000              
     floodPlain1           = 100.000             
+    floodPlain2           = 50.000              
     groundlayerUsed       = 1                   
     groundlayer           = 1.216               
 

@@ -33,6 +33,7 @@
     sd_baseLevel          = 0.000               
     main                  = 0.000               
     floodPlain1           = 0.000               
+    floodPlain2           = 0.000               
     groundlayerUsed       = 0                   
     groundlayer           = 0.000               
 
