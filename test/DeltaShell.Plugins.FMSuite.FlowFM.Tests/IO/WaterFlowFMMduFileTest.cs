@@ -312,6 +312,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void ImportDryPointFeatureWithWrongFormatShowsLogMessage()
+        {
+            /* This class is located in the framework and fails to import correctly dry points. */
+            var xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\badFormatFile.xyz");
+            Assert.IsTrue(File.Exists(xyzFilePath));
+            xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
+            try
+            {
+                var importer = new GroupablePointCloudImporter();
+                var dryPoints = new List<GroupablePointFeature>();
+                //This logMssg should be a resource matching the one in GroupablePointCloudImporter
+                var logMssg = NetworkEditor.Properties.Resources.GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_;
+                TestHelper.AssertAtLeastOneLogMessagesContains( () => importer.ImportItem(xyzFilePath, dryPoints), logMssg);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(xyzFilePath);
+            }
+        }
+
+        [Test]
+        public void ImportDryPointFeatureWithWrongFormatReturnsNull()
+        {
+            /* This class is located in the framework and fails to import correctly dry points. */
+            var xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\badFormatFile.xyz");
+            Assert.IsTrue(File.Exists(xyzFilePath));
+            xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
+            try
+            {
+                var importer = new GroupablePointCloudImporter();
+                var dryPoints = new List<GroupablePointFeature>();
+
+                Assert.IsNull(importer.ImportItem(xyzFilePath, dryPoints));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(xyzFilePath);
+            }
+        }
+
+        [Test]
         public void WritePropertyWhenMultipleFileIsTrue()
         {
             var nameWithoutExtension = Path.GetTempFileName();

@@ -202,4 +202,7 @@
   <data name="NetworkEditorApplicationPlugin_HandleSubRegionCollectionChanged__0__is_not_supported_on_the_hydro_region_collection" xml:space="preserve">
     <value>{0} is not supported on the hydro region collection</value>
   </data>
+  <data name="GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_" xml:space="preserve">
+    <value>Wrong content format. Only allowed (three) columns space-separated.</value>
+  </data>
 </root>
