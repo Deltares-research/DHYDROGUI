@@ -674,6 +674,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error reading log file: {0}, {1}.
+        /// </summary>
+        public static string WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>
         public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {

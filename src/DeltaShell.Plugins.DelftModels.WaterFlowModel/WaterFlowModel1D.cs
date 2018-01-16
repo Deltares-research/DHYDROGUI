@@ -55,6 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowModel1D));
         internal static readonly string SalinityFileName = "Salinity.ini";
+        public static readonly string SobekLogfileDataItemTag = "SobekLog";
 
         private readonly DimrRunner runner;
         /// <summary>
@@ -3490,8 +3491,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public virtual void ConnectOutput(string outputPath)
         {
-            DirectoryInfo outputDirectory = new DirectoryInfo(Path.Combine(outputPath, DirectoryName, "output"));
-            if (!outputDirectory.Exists) return;
+            var outputDirectory = Path.Combine(outputPath, DirectoryName);
+            ConnectOutputNetFiles(outputDirectory);
+            UpdateCoordinateSystemInOutputFeatureCoverages();
+            ReadSobekLogFile(outputDirectory);
+        }
+
+        private void ConnectOutputNetFiles(string outputDirectory)
+        {
+            DirectoryInfo netCdfOutputDirectory = new DirectoryInfo(Path.Combine(outputDirectory, "output"));
+            if (!netCdfOutputDirectory.Exists) return;
 
             var dataItemsForOutputFunctionsWithFileBasedStores = DataItems.Where(
                     di => (di.Role & DataItemRole.Output) == DataItemRole.Output
@@ -3505,7 +3514,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 .Distinct()
                 .ToList();
 
-            foreach (var netFile in outputDirectory.EnumerateFiles("*.nc"))
+            foreach (var netFile in netCdfOutputDirectory.EnumerateFiles("*.nc"))
             {
                 try
                 {
@@ -3572,8 +3581,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 }
 
             }
-            UpdateCoordinateSystemInOutputFeatureCoverages();
+
             OutputIsEmpty = false;
+        }
+
+        private void ReadSobekLogFile(string outputDirectory)
+        {
+            const string SobekLogFileName = "sobek.log";
+
+            var logDataItem = DataItems.FirstOrDefault(di => di.Tag == SobekLogfileDataItemTag);
+            if (logDataItem == null)
+            {
+                // add logfile dataitem if not exists
+                var textDocument = new TextDocument(true) { Name = SobekLogFileName };
+                logDataItem = new DataItem(textDocument, DataItemRole.Output, SobekLogfileDataItemTag);
+                DataItems.Add(logDataItem);
+            }
+
+            var sobekLogFilePath = Path.Combine(outputDirectory, SobekLogFileName);
+            if (File.Exists(sobekLogFilePath))
+            {
+                try
+                {
+                    var log = File.ReadAllText(sobekLogFilePath);
+                    ((TextDocument)logDataItem.Value).Content = log;
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat(Resources.WaterFlowModel1D_ReadSobekLogFile_Error_reading_log_file___0____1_, SobekLogFileName, ex.Message);
+                }
+            }
+            else
+            {
+                Log.WarnFormat(Resources.WaterFlowModel1D_ReadSobekLogFile_Could_not_find_log_file___0__at_expected_path___1_, SobekLogFileName, sobekLogFilePath);
+            }
         }
 
         private void UpdateCoordinateSystemInOutputFeatureCoverages()
@@ -3686,6 +3727,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
         protected override void OnInitialize()
         {
+            DataItems.RemoveAllWhere(di => di.Tag == SobekLogfileDataItemTag);
+
             SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "UseRestart", UseRestart ? "true" : "false");
             SetOrAddModelApiParameter(ParameterCategory.SimulationOptions, "WriteSamples",WriteRestart ? "true" : "false");
 

@@ -500,6 +500,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
+        /// </summary>
+        public static string WaterFlowModel1D_ReadSobekLogFile_Could_not_find_log_file___0__at_expected_path___1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1D_ReadSobekLogFile_Could_not_find_log_file___0__at_expected_path__" +
+                        "_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error reading log file: {0}, {1}.
+        /// </summary>
+        public static string WaterFlowModel1D_ReadSobekLogFile_Error_reading_log_file___0____1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1D_ReadSobekLogFile_Error_reading_log_file___0____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows to simulate 1D flow of water in open water systems, such as rivers and irrigation &amp; drainage channels..
         /// </summary>
         public static string WaterFlowModel1DApplicationPlugin_Description {

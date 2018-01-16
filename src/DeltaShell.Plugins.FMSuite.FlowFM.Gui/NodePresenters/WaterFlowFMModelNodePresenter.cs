@@ -210,6 +210,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             var dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
             if (dimrLogDataItem != null) yield return dimrLogDataItem;
 
+            var diaLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
+            if (diaLogDataItem != null) yield return diaLogDataItem;
 
             foreach (var p in GetOutputDataItemsCore(model))
             {

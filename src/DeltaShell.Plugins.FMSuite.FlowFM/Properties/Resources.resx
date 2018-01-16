@@ -337,4 +337,10 @@ File import of structures file '{1}' has failed.</value>
   <data name="CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_" xml:space="preserve">
     <value>Unknown key {0} from file {1}. It will not be imported.</value>
   </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_" xml:space="preserve">
+    <value>Error reading log file: {0}, {1}</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
+    <value>Could not find log file: {0} at expected path: {1}</value>
+  </data>
 </root>

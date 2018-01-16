@@ -412,4 +412,10 @@
   <data name="WaterFlowModel1DSalinityValidator_ValidateSalinityForKuijperVanRijnPrismaticIsValid_No_Estuary_mouth_node_specified_" xml:space="preserve">
     <value>No Estuary mouth node specified.</value>
   </data>
+  <data name="WaterFlowModel1D_ReadSobekLogFile_Error_reading_log_file___0____1_" xml:space="preserve">
+    <value>Error reading log file: {0}, {1}</value>
+  </data>
+  <data name="WaterFlowModel1D_ReadSobekLogFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
+    <value>Could not find log file: {0} at expected path: {1}</value>
+  </data>
 </root>
