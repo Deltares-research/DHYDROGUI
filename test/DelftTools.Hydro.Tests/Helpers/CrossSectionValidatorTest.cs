@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             var csdZw = GetSimpleCrossSectionDefinitionZw();
 
             csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
-            Assert.That(CrossSectionValidator.ValidateCrossSectionSections(csdZw), Is.EqualTo(expectedResult));
+            Assert.That(CrossSectionValidator.IsCrossSectionSectionValid(csdZw), Is.EqualTo(expectedResult));
         }
 
         private static CrossSectionDefinitionZW GetSimpleCrossSectionDefinitionZw()
@@ -42,7 +42,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
             csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
 
-            Assert.That(CrossSectionValidator.ValidateCrossSectionSections(csdZw), Is.EqualTo(expectedResult));
+            Assert.That(CrossSectionValidator.IsCrossSectionSectionValid(csdZw), Is.EqualTo(expectedResult));
         }
 
         [TestCase(10.0, 20.0, 10.0, false)]
@@ -65,7 +65,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
             csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, floodPlain2Width);
 
-            Assert.That(CrossSectionValidator.ValidateCrossSectionSections(csdZw), Is.EqualTo(expectedResult));
+            Assert.That(CrossSectionValidator.IsCrossSectionSectionValid(csdZw), Is.EqualTo(expectedResult));
         }
 
     [Test]

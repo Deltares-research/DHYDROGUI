@@ -123,7 +123,7 @@ namespace DelftTools.Hydro.Helpers
             return false;
         }
 
-        public static bool ValidateCrossSectionSections(ICrossSectionDefinition crossSectionDefinition)
+        public static bool IsCrossSectionSectionValid(ICrossSectionDefinition crossSectionDefinition)
         {
             var crossSectionZw = crossSectionDefinition as CrossSectionDefinitionZW;
             if (crossSectionZw != null)

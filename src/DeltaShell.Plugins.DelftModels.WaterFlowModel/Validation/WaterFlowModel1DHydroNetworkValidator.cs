@@ -224,12 +224,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 if (crossSection.Definition.CrossSectionType == CrossSectionType.ZW)
                 {
                     yield return new ValidationIssue(crossSection, ValidationSeverity.Error,  
-                        String.Format("tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection));
+                        String.Format("Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection));
                 }
                 else
                 {
                     yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "Invalid flow profile", network);
                 }
+            }
+
+            if (!CrossSectionValidator.IsCrossSectionSectionValid(crossSection.Definition))
+            {
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
+                    "The maximum flow width of this cross section does not match the total width of all its sections.", crossSection);
             }
         }
 

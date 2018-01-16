@@ -17,6 +17,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -626,6 +627,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                                         extres.Name, secondChannel.Target.Name)));
         }
 
+        #region WaterFlowModel1DHydroNetworkValidator
+
         [Test]
         public void BranchesWithTheSameOrderNumberNeedJustOneCS()
         {
@@ -810,6 +813,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
                                  string.Format("tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", zwcs.Name)));
 
         }
+
+        [Test]
+        public void ZWCrossSectionsShouldHaveTheirMaximumFlowWidthEqualToTheTotalLengthOfItsSections()
+        {
+            // Create network
+            var network = new HydroNetwork();
+            INode node1 = new HydroNode { Name = "Node1", Network = network, Geometry = new Point(0.0, 0.0) };
+            INode node2 = new HydroNode { Name = "Node2", Network = network, Geometry = new Point(100.0, 0.0) };
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+            var branch = new Channel("branch1", node1, node2, 100.0)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(50, 0),
+                    new Coordinate(100, 0)
+                })
+            };
+            network.Branches.Add(branch);
+
+            // Create Cross Section of type ZW and add it to the branch
+            var crossSectionDef = new CrossSectionDefinitionZW("myCrossSectionDefinition");
+            crossSectionDef.ZWDataTable.AddCrossSectionZWRow(10.0, 50.0, 5.0);
+            crossSectionDef.ZWDataTable.AddCrossSectionZWRow(2.0, 30.0, 2.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, 20.0);
+            crossSectionDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 10.0);
+            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSectionDef, 50);
+
+            // Check if the Validation Report contains the desired error message
+            var expectedMessage =
+                "The maximum flow width of this cross section does not match the total width of all its sections.";
+            Assert.IsTrue(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network), expectedMessage));
+        }
+
+        #endregion
 
         [Test]
         public void ValidateFlowModelWithTimestepsEqualToZero()
