@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,26 @@ namespace DelftTools.Hydro.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not add CrossSectionSection with duplicate name &apos;{0}&apos;.
+        /// </summary>
+        internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__ {
+            get {
+                return ResourceManager.GetString("CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectio" +
+                        "nSection_with_duplicate_name___0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not add CrossSectionSection with negative length {0} to cross section definition &apos;{1}&apos; .
+        /// </summary>
+        internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_negative_length__0__to_cross_section_definition___1___ {
+            get {
+                return ResourceManager.GetString("CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectio" +
+                        "nSection_with_negative_length__0__to_cross_section_definition___1___", resourceCulture);
             }
         }
         

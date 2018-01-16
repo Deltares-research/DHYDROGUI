@@ -37,20 +37,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             crossSectionSectionTypes.Add(fp1);
             crossSectionSectionTypes.Add(fp2);
 
-            var crossSectionSections = new EventedList<CrossSectionSection>
-                                           {
-                                               new CrossSectionSection
-                                                   {SectionType = main, MinY = 0, MaxY = 5},
-                                               new CrossSectionSection
-                                                   {SectionType = fp1, MinY = 5, MaxY = 7},
-                                               new CrossSectionSection
-                                                   {SectionType = fp2, MinY = 7, MaxY = 15}
-                                           };
-
             var crossSection = new CrossSectionDefinitionZW();
-            crossSection.Sections.Add(crossSectionSections[0]);
-            crossSection.Sections.Add(crossSectionSections[1]);
-            crossSection.Sections.Add(crossSectionSections[2]);
+            crossSection.AddSection(main, 10);
+            crossSection.AddSection(fp1, 4);
+            crossSection.AddSection(fp2, 16);
 
             var crossSectionZWSectionsViewModel = new ZWSectionsViewModel(crossSection, crossSectionSectionTypes);
             var view = new ZWSectionsView

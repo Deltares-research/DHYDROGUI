@@ -24,7 +24,7 @@ namespace DelftTools.Hydro.Helpers
                 {
                     var zeroWidthEntries =
                         crossSectionZw.ZWDataTable.Rows.Where(c => Comparer.AlmostEqual2sComplement(c.Width, 0.0)).ToList();
-                    switch (zeroWidthEntries.Count())
+                    switch (zeroWidthEntries.Count)
                     {
                         case 0:
                             return true;
@@ -121,6 +121,17 @@ namespace DelftTools.Hydro.Helpers
             }
 
             return false;
+        }
+
+        public static bool ValidateCrossSectionSections(ICrossSectionDefinition crossSectionDefinition)
+        {
+            var crossSectionZw = crossSectionDefinition as CrossSectionDefinitionZW;
+            if (crossSectionZw != null)
+            {
+                var sectionsTotalWidth = crossSectionZw.SectionsTotalWidth();
+                return sectionsTotalWidth.Equals(crossSectionZw.FlowWidth());
+            }
+            return true;
         }
     }
 }

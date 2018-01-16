@@ -36,7 +36,7 @@ namespace DelftTools.Hydro.CrossSections
             }
             return 0;
         }
-        
+
         public CrossSectionDefinitionZW(string name) : base(name)
         {
             SummerDike = new SummerDike

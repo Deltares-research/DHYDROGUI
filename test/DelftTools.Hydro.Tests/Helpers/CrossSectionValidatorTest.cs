@@ -8,7 +8,67 @@ namespace DelftTools.Hydro.Tests.Helpers
     [TestFixture]
     public class CrossSectionValidatorTest
     {
-        [Test]
+        [TestCase(20.0, false)]
+        [TestCase(45.0, true)]
+        [TestCase(50.0, false)]
+        public void GivenCrossSectionDefinitionZWWithOnlyMainSection_WhenValidatingSections_ThenMainSectionIsValidWhenItsWidthIsEqualToMaxFlowWidth(double mainSectionWidth, bool expectedResult)
+        {
+            var csdZw = GetSimpleCrossSectionDefinitionZw();
+
+            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
+            Assert.That(CrossSectionValidator.ValidateCrossSectionSections(csdZw), Is.EqualTo(expectedResult));
+        }
+
+        private static CrossSectionDefinitionZW GetSimpleCrossSectionDefinitionZw()
+        {
+            var csdZw = new CrossSectionDefinitionZW();
+            csdZw.ZWDataTable.AddCrossSectionZWRow(10.0, 50.0, 5.0);
+            csdZw.ZWDataTable.AddCrossSectionZWRow(2.0, 30.0, 2.0);
+            Assert.That(csdZw.FlowWidth(), Is.EqualTo(45.0));
+            return csdZw;
+        }
+
+        [TestCase(20.0, 20.0, false)]
+        [TestCase(0.0, 20.0, false)]
+        [TestCase(20.0, 0.0, false)]
+        [TestCase(45.0, 0.0, true)]
+        [TestCase(0.0, 45.0, true)]
+        [TestCase(30.0, 15.0, true)]
+        [TestCase(45.0, 5.0, false)]
+        public void GivenCrossSectionDefinitionZWWithMainSectionAndFloodPlain1_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, bool expectedResult)
+        {
+            var csdZw = GetSimpleCrossSectionDefinitionZw();
+
+            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
+            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
+
+            Assert.That(CrossSectionValidator.ValidateCrossSectionSections(csdZw), Is.EqualTo(expectedResult));
+        }
+
+        [TestCase(10.0, 20.0, 10.0, false)]
+        [TestCase(10.0, 20.0, 0.0, false)]
+        [TestCase(10.0, 0.0, 10.0, false)]
+        [TestCase(0.0, 20.0, 10.0, false)]
+        [TestCase(15.0, 20.0, 10.0, true)]
+        [TestCase(15.0, 30.0, 0.0, true)]
+        [TestCase(15.0, 0.0, 30.0, true)]
+        [TestCase(0.0, 35.0, 10.0, true)]
+        [TestCase(45.0, 0.0, 0.0, true)]
+        [TestCase(0.0, 45.0, 0.0, true)]
+        [TestCase(0.0, 0.0, 45.0, true)]
+        [TestCase(10.0, 20.0, 45.0, false)]
+        public void GivenCrossSectionDefinitionZWWithThreeSectionsDefined_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, double floodPlain2Width, bool expectedResult)
+        {
+            var csdZw = GetSimpleCrossSectionDefinitionZw();
+
+            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
+            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
+            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, floodPlain2Width);
+
+            Assert.That(CrossSectionValidator.ValidateCrossSectionSections(csdZw), Is.EqualTo(expectedResult));
+        }
+
+    [Test]
         public void CrossSectionTypeTabulatedZWZeroWidthOptions()
         {
             // cross section of ZW type is valid if:

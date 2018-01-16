@@ -684,13 +684,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
             CrossSectionHelper.SetDefaultThalweg(crossSectionDefinitionYZ);
             
-            var crossSectionSection0 = new CrossSectionSection {MinY = 0, MaxY = 1, SectionType = fp1Type};
-            var crossSectionSection1 = new CrossSectionSection {MinY = 1, MaxY = 5, SectionType = mainType};
-            var crossSectionSection2 = new CrossSectionSection {MinY = 5, MaxY = 6, SectionType = fp2Type};
-
-            crossSectionDefinitionYZ.Sections.Add(crossSectionSection0);
-            crossSectionDefinitionYZ.Sections.Add(crossSectionSection1);
-            crossSectionDefinitionYZ.Sections.Add(crossSectionSection2);
+            crossSectionDefinitionYZ.AddSection(fp1Type, 2);
+            crossSectionDefinitionYZ.AddSection(mainType, 8);
+            crossSectionDefinitionYZ.AddSection(fp2Type, 2);
 
             var crossSectionView = new CrossSectionDefinitionView
             {
@@ -724,13 +720,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             crossSection.ZWDataTable.AddCrossSectionZWRow(5, 13, 1);
             crossSection.ZWDataTable.AddCrossSectionZWRow(7, 17, 1);
 
-            var crossSectionSection0 = new CrossSectionSection {MinY = 0, MaxY = 5, SectionType = mainType};
-            var crossSectionSection1 = new CrossSectionSection { MinY = 5, MaxY = 6, SectionType = fp1Type };
-            var crossSectionSection2 = new CrossSectionSection {MinY = 6, MaxY = 8.5, SectionType = fp2Type};
-
-            crossSection.Sections.Add(crossSectionSection0);
-            crossSection.Sections.Add(crossSectionSection1);
-            crossSection.Sections.Add(crossSectionSection2);
+            crossSection.AddSection(mainType, 10.0);
+            crossSection.AddSection(fp1Type, 2.0);
+            crossSection.AddSection(fp2Type, 5.0);
 
             var crossSectionView = new CrossSectionDefinitionView
             {
