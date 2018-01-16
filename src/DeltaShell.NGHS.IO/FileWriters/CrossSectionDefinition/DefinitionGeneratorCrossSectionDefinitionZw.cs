@@ -41,6 +41,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             {
                 IniCategory.AddProperty(DefinitionRegion.Main.Key, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName), DefinitionRegion.Main.Description, DefinitionRegion.Main.Format);
                 IniCategory.AddProperty(DefinitionRegion.FloodPlain1.Key, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName), DefinitionRegion.FloodPlain1.Description, DefinitionRegion.FloodPlain1.Format);    
+                IniCategory.AddProperty(DefinitionRegion.FloodPlain2.Key, crossSectionDefinitionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName), DefinitionRegion.FloodPlain2.Description, DefinitionRegion.FloodPlain2.Format);    
             }
             else // crossSectionDefinition came from a Culvert or Bridge
             {

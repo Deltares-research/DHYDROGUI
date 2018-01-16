@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             {
                 LongName = string.Empty,
                 OrderNumber = 0,
-                Geometry = new LineString(new Coordinate[]
+                Geometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),
                     new Coordinate(100, 0)
@@ -73,7 +73,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             return crossSection;
         }
 
-        private static void AddCrossSectionDefinitionSection(ICrossSectionDefinition crossSectionDefinition, string name, double yMin, double yMax)
+        public static void AddCrossSectionDefinitionSection(ICrossSectionDefinition crossSectionDefinition, string name, double yMin, double yMax)
         {
             crossSectionDefinition.Sections.Add(new CrossSectionSection
             {

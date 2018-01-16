@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             AddCulvertWithCrossSection(CulvertGeometryType.Tabulated, branches[0], 75.0,
                 100.0, 200.0);
 
-            AddCrossSectionTrapazium(branches[3], 14, 30.0, 100.0, 200.0, 150.0);
+            AddCrossSectionTrapezium(branches[3], 14, 30.0, 100.0, 200.0, 150.0);
 
         }
 
@@ -211,7 +211,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             crossSectionDefinitionArchShape.ArcHeight = archHeight; 
         }
 
-        public static void AddCrossSectionTrapazium(IBranch branch, int csId, double chainage, double slope, double maximumFlowWidth, double bottomWidth)
+        public static void AddCrossSectionTrapezium(IBranch branch, int csId, double chainage, double slope, double maximumFlowWidth, double bottomWidth)
         {
             var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;

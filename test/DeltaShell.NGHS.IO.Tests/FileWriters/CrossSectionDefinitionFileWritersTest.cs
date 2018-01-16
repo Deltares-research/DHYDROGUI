@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 8, 30.0, 100.0, 200.0, 150.0);
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 9, 30.0, 100.0);
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 10, 30.0, 100.0, 50.0, 100.0, 50.0, 100.0, 45.0, 135.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapazium(branch, 11, 30.0, 100.0, 200.0, 150.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 11, 30.0, 100.0, 200.0, 150.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -300,7 +300,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         public void TestCrossSectionDefinitionFileWriterGivesExpectedResults_Zw()
         {
             var branch = network.Branches.FirstOrDefault();
-            Assert.NotNull(branch, "No branched added to the network");
+            Assert.NotNull(branch, "No branch was added to the network");
 
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 1, 30.0, -2.0, 100.0, 200.0, 0.5);
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 2, 80.0, -3.0, 200.0, 300.0, 1.5);
@@ -314,7 +314,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionRegion.Header));
 
             var content = categories.Where(c => c.Name == DefinitionRegion.Header).ToList().First();
-            Assert.AreEqual(13, content.Properties.Count);
+            Assert.AreEqual(14, content.Properties.Count);
             var idProperty = content.Properties.First(p => p.Name == DefinitionRegion.Id.Key);
             Assert.AreEqual("CrossSection1", idProperty.Value);
 
@@ -354,8 +354,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var floodPlain1Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain1.Key);
             Assert.AreEqual("100.000", floodPlain1Property.Value);
 
+            var floodPlain2Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain2.Key);
+            Assert.AreEqual("50.000", floodPlain2Property.Value);
+
             content = categories.Where(c => c.Name == DefinitionRegion.Header).ToList().Last();
-            Assert.AreEqual(13, content.Properties.Count);
+            Assert.AreEqual(14, content.Properties.Count);
             idProperty = content.Properties.First(p => p.Name == DefinitionRegion.Id.Key);
             Assert.AreEqual("CrossSection2", idProperty.Value);
 
@@ -394,6 +397,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             floodPlain1Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain1.Key);
             Assert.AreEqual("100.000", floodPlain1Property.Value);
+
+            floodPlain2Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain2.Key);
+            Assert.AreEqual("50.000", floodPlain2Property.Value);
         }
         
         [Test]
@@ -905,9 +911,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapazium(branch, 1, 30.0, 100.0, 200.0, 150.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 1, 30.0, 100.0, 200.0, 150.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapazium(branch, 2, 40.0, 200.0, 400.0, 300.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 2, 40.0, 200.0, 400.0, 300.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
