@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     if (!defaultAstroComponent && dataType != null &&
                         dataType.Value == BoundaryConditionDataType.AstroComponents)
                     {
-                        log.WarnFormat("Unknown key {0} from file {1}. It will not be imported.", key, cmpFilePath);
+                        log.WarnFormat(Resources.CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_, key, cmpFilePath);
                         line = GetNextLine();
                         continue;
                     }

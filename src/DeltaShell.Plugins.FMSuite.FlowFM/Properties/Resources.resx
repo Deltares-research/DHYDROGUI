@@ -334,4 +334,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes" xml:space="preserve">
     <value>Additional values detected for one or more physical processes</value>
   </data>
+  <data name="CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_" xml:space="preserve">
+    <value>Unknown key {0} from file {1}. It will not be imported.</value>
+  </data>
 </root>

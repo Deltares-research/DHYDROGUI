@@ -81,6 +81,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown key {0} from file {1}. It will not be imported..
+        /// </summary>
+        public static string CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_ {
+            get {
+                return ResourceManager.GetString("CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not export data for SourceAndSink: {0}, no Function was found.
         /// </summary>
         public static string Could_not_export_data_for_SourceAndSink___0___no_Function_was_found {
