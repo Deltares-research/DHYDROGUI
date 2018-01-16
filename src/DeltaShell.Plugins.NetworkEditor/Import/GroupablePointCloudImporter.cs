@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             }
             catch (FormatException e)
             {
-                //Please resource this string once we apply this patch.
                 Log.Error(e.Message);
                 Log.Error(Resources.GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_);
             }
