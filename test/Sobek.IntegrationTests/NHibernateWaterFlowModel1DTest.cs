@@ -669,12 +669,17 @@ namespace Sobek.IntegrationTests
         public void SplitChannelForgetCrossSectionAndSave()
         {
             //reproduces issue 5277
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
             projectRepository.Create(path);
             var project = projectRepository.GetProject();
 
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new[] { new Point(0, 0), new Point(100, 0) });
+            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
             var crossSection1 = CrossSectionDefinitionZW.CreateDefault();
+            crossSection1.Sections.Add(new CrossSectionSection
+            {
+                MinY = 0.0,
+                MaxY = crossSection1.FlowWidth() / 2
+            });
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(hydroNetwork.Branches[0], crossSection1, 1.0);
             
             var networkDiscretization = new Discretization
@@ -685,7 +690,7 @@ namespace Sobek.IntegrationTests
             };
             HydroNetworkHelper.GenerateDiscretization(networkDiscretization, true, false, 200, false,
                                                       0.5, false, false, true, 200);
-            DateTime startTime = DateTime.Now;
+            var startTime = DateTime.Now;
             var flowModel1D = new WaterFlowModel1D
             {
                 NetworkDiscretization = networkDiscretization,
