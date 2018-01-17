@@ -805,12 +805,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
             #endregion
 
             Assert.IsFalse(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
-                                         string.Format("tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", zwcs.Name)));
+                                         string.Format(Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_, zwcs.Name)));
 
             ((CrossSectionDefinitionZW)zwcs.Definition).ZWDataTable.AddCrossSectionZWRow(-20.0, 0.0, 0.0); // add second row of zero width (no points in between)
 
             Assert.IsTrue(ContainsError(WaterFlowModel1DHydroNetworkValidator.Validate(network),
-                                 string.Format("tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", zwcs.Name)));
+                                 string.Format(Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_, zwcs.Name)));
 
         }
 

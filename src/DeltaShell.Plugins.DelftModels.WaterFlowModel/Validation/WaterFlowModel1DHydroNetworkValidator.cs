@@ -6,6 +6,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
@@ -224,7 +225,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 if (crossSection.Definition.CrossSectionType == CrossSectionType.ZW)
                 {
                     yield return new ValidationIssue(crossSection, ValidationSeverity.Error,  
-                        String.Format("Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection));
+                        String.Format(Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_, crossSection));
                 }
                 else
                 {

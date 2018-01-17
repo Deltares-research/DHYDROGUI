@@ -418,4 +418,7 @@
   <data name="WaterFlowModel1D_ReadSobekLogFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
     <value>Could not find log file: {0} at expected path: {1}</value>
   </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_" xml:space="preserve">
+    <value>Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.</value>
+  </data>
 </root>
