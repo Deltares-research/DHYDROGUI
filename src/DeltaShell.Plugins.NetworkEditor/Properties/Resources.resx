@@ -203,6 +203,6 @@
     <value>{0} is not supported on the hydro region collection</value>
   </data>
   <data name="GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_" xml:space="preserve">
-    <value>Wrong content format. Only allowed (three) columns space-separated.</value>
+    <value>Wrong format, only three space-separated columns are allowed in xyz files.</value>
   </data>
 </root>

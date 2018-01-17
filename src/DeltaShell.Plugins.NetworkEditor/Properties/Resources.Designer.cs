@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wrong content format. Only allowed (three) columns space-separated..
+        ///   Looks up a localized string similar to Wrong format, only three space-separated columns are allowed in xyz files..
         /// </summary>
         public static string GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_ {
             get {

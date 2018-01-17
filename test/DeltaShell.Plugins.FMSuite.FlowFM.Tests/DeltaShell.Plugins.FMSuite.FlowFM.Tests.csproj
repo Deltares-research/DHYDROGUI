@@ -277,6 +277,7 @@
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
+    <Compile Include="IO\GroupableCloudImporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
