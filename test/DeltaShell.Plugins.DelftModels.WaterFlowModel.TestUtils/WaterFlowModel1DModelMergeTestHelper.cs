@@ -37,7 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils
                 new Coordinate(to, 0)
             };
             channel.Geometry = GeometryFactory.Default.CreateLineString(vertices.ToArray());
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, CrossSectionDefinitionZW.CreateDefault(), (to - from)/2);
+            var crossSection = CrossSectionDefinitionZW.CreateDefault();
+            crossSection.AddSection(new CrossSectionSectionType {Name = CrossSectionDefinitionZW.MainSectionName}, 100.0);
+            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSection, (to - from)/2);
 
             network.Branches.Add(channel);
 

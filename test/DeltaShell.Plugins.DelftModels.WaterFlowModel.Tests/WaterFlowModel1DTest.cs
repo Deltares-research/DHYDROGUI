@@ -1290,7 +1290,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                                   calculationPointsBranch1)
                         );
                     var sumValuesHGridpoints = valuesHGridpoints.Sum();
-                    Assert.AreEqual(lateralH, (sumValuesHGridpoints / calculationPointsBranch1.Length), 0.00000001);
+                    Assert.AreEqual(lateralH, sumValuesHGridpoints / calculationPointsBranch1.Length, 0.00000001);
                 }
             }
         }
@@ -3011,7 +3011,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // Add network features
             var crossSection1 = CrossSection.CreateDefault(CrossSectionType.ZW, branch1, branchLength / 2);
+            var csDef = crossSection1.Definition as CrossSectionDefinitionZW;
             crossSection1.Name = "crs1";
+            csDef.AddSection(new CrossSectionSectionType(), csDef.FlowWidth());
             branch1.BranchFeatures.Add(crossSection1);
 
             var waterFlowModel1D = new WaterFlowModel1D("flow waterFlowModel1D")

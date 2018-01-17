@@ -352,12 +352,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             var locationMiddleBranch2 = flowModel1D.NetworkDiscretization.Locations.Values[16];
 
-            var waterlevelValues = flowModel1D.OutputWaterLevel.GetValues<double>(
-                    new IVariableValueFilter[]{
-                        new VariableValueFilter<DateTime>(flowModel1D.OutputWaterLevel.Arguments[0], timeStep2),
-                        new VariableValueFilter<INetworkLocation>(flowModel1D.OutputWaterLevel.Arguments[1], locationMiddleBranch2)
-                        }
-                    );
+            var waterlevelValues = flowModel1D.OutputWaterLevel.GetValues<double>
+            (
+                new VariableValueFilter<DateTime>(flowModel1D.OutputWaterLevel.Arguments[0], timeStep2), 
+                new VariableValueFilter<INetworkLocation>(flowModel1D.OutputWaterLevel.Arguments[1], locationMiddleBranch2)
+            );
 
             //check if filter gives just one value
             Assert.AreEqual(1, waterlevelValues.Count);
@@ -512,13 +511,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var offset = 50.0;
 
             var cs1 = CrossSection.CreateDefault(CrossSectionType.Standard, branch1, offset);
-            var cs1Definition = ((CrossSectionDefinitionStandard) cs1.Definition);
+            var cs1Definition = (CrossSectionDefinitionStandard) cs1.Definition;
             ((CrossSectionDefinitionStandard)cs1.Definition).ShapeType = CrossSectionStandardShapeType.Rectangle;
             ((CrossSectionStandardShapeRectangle) cs1Definition.Shape).Width = 20;
             ((CrossSectionStandardShapeRectangle)cs1Definition.Shape).Height = 10;
             cs1Definition.ShiftLevel(0 - cs1Definition.LevelShift);
 
-            ((CrossSectionDefinitionStandard)cs1.Definition).Sections.Add(new CrossSectionSection { SectionType = new CrossSectionSectionType() });
+            ((CrossSectionDefinitionStandard)cs1.Definition).Sections.Add(new CrossSectionSection
+            {
+                SectionType = new CrossSectionSectionType(),
+                MinY = 0.0,
+                MaxY = 10.0
+            });
             branch1.BranchFeatures.Add(cs1);
 
             var heightFlowStorageWidthData = new List<HeightFlowStorageWidth>
@@ -551,12 +555,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             var locationMiddleBranch2 = flowModel1D.NetworkDiscretization.Locations.Values[16];
 
-            var waterlevelValues = flowModel1D.OutputWaterLevel.GetValues<double>(
-                    new IVariableValueFilter[]{
-                        new VariableValueFilter<DateTime>(flowModel1D.OutputWaterLevel.Arguments[0], timeStep2),
-                        new VariableValueFilter<INetworkLocation>(flowModel1D.OutputWaterLevel.Arguments[1], locationMiddleBranch2)
-                        }
-                    );
+            var waterlevelValues = flowModel1D.OutputWaterLevel.GetValues<double>
+            (
+                new VariableValueFilter<DateTime>(flowModel1D.OutputWaterLevel.Arguments[0], timeStep2), 
+                new VariableValueFilter<INetworkLocation>(flowModel1D.OutputWaterLevel.Arguments[1], locationMiddleBranch2)
+            );
 
             //check if filter gives just one value
             Assert.AreEqual(1, waterlevelValues.Count);
