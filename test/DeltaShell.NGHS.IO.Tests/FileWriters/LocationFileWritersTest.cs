@@ -29,9 +29,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var expectedId = "CrossSection1";
             var expectedChainage = 20.0;
 
-            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, 1, expectedChainage, 1.5, true);
-            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.GeometryBased, 2, 80.0);
-            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.ZW, 3, 30.0, 2.5, true);
+            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, expectedChainage, 1.5, true);
+            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.GeometryBased, 80.0);
+            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.ZW, 30.0, 2.5, true);
 
             LocationFileWriter.WriteFileCrossSectionLocations(FileWriterTestHelper.ModelFileNames.CrossSectionLocations, network.CrossSections);
 

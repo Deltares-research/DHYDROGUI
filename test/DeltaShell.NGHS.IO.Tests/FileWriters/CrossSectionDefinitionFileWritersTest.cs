@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                                new[] { 950.0, 910.0, 870.0, 830.0, 790.0, 750.0 }, 
                                new[] { 10.0, 6.5, 2.5, 2.5, 6.5, 10.0 });
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 3, 30.0, -2.0, 100.0, 200.0, 0.5);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 30.0, -2.0, 100.0, 200.0, 0.5);
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 4, 30.0, 100.0, 80.0);
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 5, 30.0, 100.0, 80.0);
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 6, 30.0, 200.0);
@@ -73,7 +73,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.NotNull(branch, "No branched added to the network");
 
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionYz(branch, 1, 20.0);
-            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, 2, 80.0, 1.5, true);//+ a shift to check if z values ARE NOT shifted
+            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, 80.0, 1.5, true);//+ a shift to check if z values ARE NOT shifted
             
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
@@ -302,8 +302,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branch was added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 1, 30.0, -2.0, 100.0, 200.0, 0.5);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 2, 80.0, -3.0, 200.0, 300.0, 1.5);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 30.0, -2.0, 100.0, 200.0, 0.5);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 80.0, -3.0, 200.0, 300.0, 1.5);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 

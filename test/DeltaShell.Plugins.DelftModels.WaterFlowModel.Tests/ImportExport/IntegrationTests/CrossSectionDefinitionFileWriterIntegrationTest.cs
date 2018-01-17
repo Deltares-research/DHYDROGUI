@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         [Category(TestCategory.Integration)]
         public void TestIntegrationFileWriterGivesExpectedResults_CrossSectionDefinitions_MultipleTypes()
         {
-            using (var waterFlowModel1D = new WaterFlowModel1D()
+            using (var waterFlowModel1D = new WaterFlowModel1D
             {
                 // use a valid network for the calculation
                 Network = HydroNetworkHelper.GetSnakeHydroNetwork(4)
