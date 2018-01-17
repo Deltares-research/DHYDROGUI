@@ -349,13 +349,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual("0.500", sdBaseLevelProperty.Value);
 
             var mainProperty = content.Properties.First(p => p.Name == DefinitionRegion.Main.Key);
-            Assert.AreEqual("50.000", mainProperty.Value);
+            Assert.AreEqual("12.500", mainProperty.Value);
 
             var floodPlain1Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain1.Key);
-            Assert.AreEqual("100.000", floodPlain1Property.Value);
+            Assert.AreEqual("25.000", floodPlain1Property.Value);
 
             var floodPlain2Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain2.Key);
-            Assert.AreEqual("50.000", floodPlain2Property.Value);
+            Assert.AreEqual("62.500", floodPlain2Property.Value);
 
             content = categories.Where(c => c.Name == DefinitionRegion.Header).ToList().Last();
             Assert.AreEqual(14, content.Properties.Count);
@@ -393,13 +393,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual("1.500", sdBaseLevelProperty.Value);
 
             mainProperty = content.Properties.First(p => p.Name == DefinitionRegion.Main.Key);
-            Assert.AreEqual("50.000", mainProperty.Value);
+            Assert.AreEqual("12.500", mainProperty.Value);
 
             floodPlain1Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain1.Key);
-            Assert.AreEqual("100.000", floodPlain1Property.Value);
+            Assert.AreEqual("25.000", floodPlain1Property.Value);
 
             floodPlain2Property = content.Properties.First(p => p.Name == DefinitionRegion.FloodPlain2.Key);
-            Assert.AreEqual("50.000", floodPlain2Property.Value);
+            Assert.AreEqual("62.500", floodPlain2Property.Value);
         }
         
         [Test]
