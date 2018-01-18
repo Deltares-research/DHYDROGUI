@@ -307,7 +307,6 @@
     <EmbeddedResource Include="FileWriter\Fixed\SoilData.Dat" />
     <EmbeddedResource Include="FileWriter\Fixed\UNSA_SIM.INP" />
     <None Include="packages.config" />
-    <None Include="Uml\RainfallRunoff.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
