@@ -131,16 +131,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wrong format, only three space-separated columns are allowed in xyz files..
-        /// </summary>
-        public static string GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_ {
-            get {
-                return ResourceManager.GetString("GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__thre" +
-                        "e__columns_space_separated_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap guide {

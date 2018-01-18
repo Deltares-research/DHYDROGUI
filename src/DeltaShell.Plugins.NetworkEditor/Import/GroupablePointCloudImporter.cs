@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.NetworkEditor.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
 
@@ -29,11 +28,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 pointFeatureList.ForEach(pf => pf.GroupName = path);
 
                 return onImportItem;
-            }
-            catch (FormatException e)
-            {
-                Log.Error(e.Message);
-                Log.Error(Resources.GroupablePointCloudImporter_OnImportItem_Wrong_content_format__Only_allowed__three__columns_space_separated_);
             }
             catch (Exception e)
             {
