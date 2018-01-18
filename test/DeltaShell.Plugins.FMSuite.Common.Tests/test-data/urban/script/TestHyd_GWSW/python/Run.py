@@ -2,7 +2,7 @@ import os
 from GWSWreader import GWSWreader
 from FMwriter import FMwriter
 
-p = 'D:\\source\\delta-shell\\Products\\NGHS\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\urban\\script\\TestHyd_GWSW\\'
+p = 'D:\\source\\nghs-1d2dflooding\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\urban\\script\\TestHyd_GWSW\\'
 dirPath = os.path.abspath(p)
 
 

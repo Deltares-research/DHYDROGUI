@@ -8,24 +8,50 @@ from datetime import *
 class FMwriter:
     """Writer for FM files"""
 
-    deltaGateHeightTopLevel = 0.3
+    deltaGateHeightTopLevel = 0.10
 
     def __init__(self, model):
         self.model = model
 
     def writeAll(self, dirPath):  # write all fm files from GWSW model
-        self.writeBoundaries(dirPath)
+        self.rewriteGeometryOfManholeCompartments()
         self.writeRetentions(dirPath)
         self.writePipes(dirPath)
         self.writeProfiles(dirPath)
         self.writeStructures(dirPath)
-        self.writeLaterals(dirPath)
+        #self.writeBoundaries(dirPath)
+        #self.writeLaterals(dirPath)
+        self.writeExternalForcingFiles(dirPath)
         self.writeFMnetwork(dirPath, "ugrid")
         return True
 
     def to2Dec(selfselft, strValue):
         result = str("%.2f" % round(float(strValue),2))
         return result;
+
+    def rewriteGeometryOfManholeCompartments(self): # on the supernode (manhole with compartments) we rewrite the geometry. Each compartment is set one meter to the east. (structure polygon from south to north)
+        manholes = {} #key manholeId: array nodeIds
+
+        for keyvalue in self.model.nodes.items():
+
+            value = keyvalue[1]
+            id = value[0]
+            manholeId = value[2]
+
+            if str(value[14]) == 'UIT': # is a boundary
+                continue
+
+            if manholeId in manholes:
+                #set coordinate 1 meter to east
+                lastId = manholes[manholeId][-1]
+                xLastId = self.model.nodes[lastId][3]
+                xNext = float(xLastId) + 1.0 # 1 meter to the east
+                self.model.nodes[id][3] = self.to2Dec(xNext)
+                #add to list
+                manholes[manholeId].append(id)
+            else:
+                manholes[manholeId] = [id]
+
 
     def writeBoundaries(self, dirPath):  # write boundaries ini and bc
 
@@ -54,8 +80,8 @@ class FMwriter:
         defaultWaterlevelOut = '-100.00' # low value needed
         defaultDischargeIn = '0.01' # m3/s from street
 
-        filePathIni = os.path.join(dirPath, 'output_inputFM', 'BoundaryLocations.ini')
-        filePathBc = os.path.join(dirPath, 'output_inputFM', 'BoundaryConditions.bc')
+        filePathIni = os.path.join(dirPath, 'output_inputFM', 'boundary_locations.ini')
+        filePathBc = os.path.join(dirPath, 'output_inputFM', 'boundary_conditions.bc')
 
         fileLocs = open(filePathIni, 'w')
         fileBc = open(filePathBc, 'w')
@@ -97,7 +123,7 @@ class FMwriter:
             fileBc.write(defaultWaterlevelOut + '\n')
             fileBc.write('\n')
 
-        for keyvalue in self.model.nodes.items():
+        for keyvalue in self.model.inlets.items():
             value = keyvalue[1]
             #laterals
             fileBc.write('[lateraldischarge]\n')
@@ -106,7 +132,7 @@ class FMwriter:
             fileBc.write('time-interpolation = linear-extrapolate\n')
             fileBc.write('quantity = water_discharge\n')
             fileBc.write('unit = m3/s\n')
-            fileBc.write(defaultDischargeIn + ' #surface of ' + str(value[1]) + '  m2\n')
+            fileBc.write(defaultDischargeIn + ' #surface of ' + str(value[1]) + ' m2\n')
             fileBc.write('\n')
 
         fileLocs.close()
@@ -114,6 +140,117 @@ class FMwriter:
 
         return True
 
+    def writeExternalForcingFiles(self, dirPath):  # write boundaries and laterals as external force files
+        #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
+        #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
+        #KNP_XCO	X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO	Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #CMP_IDE	Identificatie (naam, nummer, code) van het compartiment
+        #MVD_NIV	Niveau maaiveld t.o.v. NAP
+        #MVD_SCH	Type maaiveldschematisering
+        #WOS_OPP	Oppervlak water op straat
+        #KNP_MAT	Materiaal put
+        #KNP_VRM	Vorm put
+        #KNP_BOK	Niveau binnenonderkant put t.o.v. NAP
+        #KNP_BRE	Breedte/diameter putbodem
+        #KNP_LEN	Lengte putbodem
+        #KNP_TYP	Type knooppunt
+        #INZ_TYP	Type afvalwater dat wordt ingezameld
+        #INI_NIV	Initiële waterstand t.o.v. NAP
+        #STA_OBJ	Status van het object
+        #AAN_MVD	Aanname maaiveldhoogte
+        #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
+        #ALG_TOE	Toelichting bij deze regel
+
+        inflowBC = 'sewer_system_inflow.bc'
+        outflowBC = 'sewer_system_outflow.bc'
+        filePathInflow = os.path.join(dirPath, 'output_inputFM', inflowBC)
+        filePathOutflow = os.path.join(dirPath, 'output_inputFM', outflowBC)
+        filePathEF = os.path.join(dirPath, 'output_inputFM', 'ext_force_file.ini')
+
+        fileExternalForce = open(filePathEF, 'w')
+        fileBcIn = open(filePathInflow, 'w')
+        fileBcOut = open(filePathOutflow, 'w')
+
+        for keyvalue in self.model.nodes.items():
+
+            value = keyvalue[1]
+
+            if str(value[14]) != 'UIT': # is not an out boundary
+                continue
+
+            name = str(value[0])
+            bndName = 'bnd_' + name
+
+            #relation
+            fileExternalForce.write('[boundary]\n')
+            fileExternalForce.write('quantity=waterlevelbnd\n')
+            fileExternalForce.write('locationfile=' + bndName + '.pli\n')
+            fileExternalForce.write('forcingfile=' + outflowBC + '\n')
+            fileExternalForce.write('\n')
+
+            #location
+            xyz = self.getGeometryBoundary(name,False)
+            self.writePliFile(dirPath,bndName,xyz)
+
+            #boundary data
+            l = self.getBcOutBlock(bndName)
+            fileBcOut.write(l)
+
+        for keyvalue in self.model.inlets.items():
+            value = keyvalue[1]
+            name = str(value[0])
+            bndName = 'bnd_' + name
+
+            #relation
+            fileExternalForce.write('[boundary]\n')
+            fileExternalForce.write('quantity=dischargebnd\n')
+            fileExternalForce.write('locationfile=' + bndName + '.pli\n')
+            fileExternalForce.write('forcingfile=' + inflowBC + '\n')
+            fileExternalForce.write('\n')
+
+            #location
+            xyz = self.getGeometryBoundary(name,True)
+            self.writePliFile(dirPath,bndName,xyz)
+
+            #boundary data
+            l = self.getBcInBlock(bndName)
+            fileBcIn.write(l)
+
+        fileExternalForce.close()
+        fileBcIn.close()
+        fileBcOut.close()
+
+        return True
+
+    def getBcInBlock(self, name):
+        result = ''
+        result += '[forcing]\n'
+        result += 'Name                            = ' + name + '_0001\n'
+        result += 'Function                        = timeseries\n'
+        result += 'Time-interpolation              = linear\n'
+        result += 'Quantity                        = time\n'
+        result += 'Unit                            = years since 1900-01-01 00:00:00\n'
+        result += 'Quantity                        = dischargebnd\n'
+        result += 'Unit                            = m³/s\n'
+        result += '0        0.01\n'
+        result += '200      0.01\n\n'
+        return result
+
+    def getBcOutBlock(self, name):
+        result = ''
+        result += '[forcing]\n'
+        result += 'Name                            = ' + name + '_0001\n'
+        result += 'Function                        = timeseries\n'
+        result += 'Time-interpolation              = linear\n'
+        result += 'Quantity                        = time\n'
+        result += 'Unit                            = years since 1900-01-01 00:00:00\n'
+        result += 'Quantity                        = waterlevelbnd\n'
+        result += 'Unit                            = m\n'
+        result += '0        -100.0\n'
+        result += '200      -100.0\n\n'
+        return result
 
     def writeRetentions(self, dirPath):  # write all manholes from GWSW model
 
@@ -139,7 +276,9 @@ class FMwriter:
         #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
         #ALG_TOE	Toelichting bij deze regel
 
-        filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
+        defaultStreetArea = 100.0
+        #filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
+        filePath = os.path.join(dirPath, 'output_inputFM', 'node.ini')
         file = open(filePath, 'w')
 
         #header
@@ -165,12 +304,13 @@ class FMwriter:
             # bedLevel=0.0
             # area=0.0
             # streetLevel=0.0
-            file.write('[retention]\n')
+            # file.write('[retention]\n')
+            file.write('[node]\n')
             file.write('id = ' + str(value[0]) + '\n')
             file.write('name = ' + str(value[2]) + '\n')
             file.write('nodeId = ' + str(value[0]) + '\n')
             file.write('manholeId = ' + str(value[2]) + '\n')
-            file.write('storageType = Closed\n')
+            file.write('storageType = Reservoir\n')
             file.write('useTable = 0\n')
             file.write('bedLevel = ' + str(value[11]) + '\n')
 
@@ -186,7 +326,11 @@ class FMwriter:
             areaStr  = self.to2Dec(area)
 
             file.write('area = ' + areaStr + '\n')
-            file.write('streetLevel = ' + str(value[6]) + '\n')
+            file.write('streetLevel = ' + self.to2Dec(value[6]) + '\n')
+            street_Area = defaultStreetArea
+            if str(value[8]) != '' and float(value[8]) > 0.0:
+                street_Area = float(value[8])
+            file.write('streetStorageArea = ' + self.to2Dec(street_Area) + '\n')
             file.write('\n')
         file.close()
         return True
@@ -215,8 +359,8 @@ class FMwriter:
         #INI_NIV	Initiële waterstand t.o.v. NAP
         #ALG_TOE	Toelichting bij deze regel
 
-        fileCSLoc = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionLocations.ini'), 'w')
-        fileRough = open(os.path.join(dirPath, 'output_inputFM', 'Roughness_SewerSystem.ini'), 'w')
+        fileCSLoc = open(os.path.join(dirPath, 'output_inputFM', 'cross_section_locations.ini'), 'w')
+        fileRough = open(os.path.join(dirPath, 'output_inputFM', 'roughness_sewer_system.ini'), 'w')
 
         #header location
         fileCSLoc.write('[general]\n')
@@ -232,7 +376,7 @@ class FMwriter:
         fileRough.write('fileType = roughness\n')
         fileRough.write('\n')
         fileRough.write('[content]\n')
-        fileRough.write('sectionId = SewerSystem\n')
+        fileRough.write('sectionId = sewer_system\n')
         fileRough.write('flowDirection = False\n')
         fileRough.write('interpolate = 1\n')
         fileRough.write('globalType = 7\n')
@@ -292,7 +436,7 @@ class FMwriter:
         #AAN_PBR	Aanname profielbreedte
         #ALG_TOE	Toelichting bij deze regel
 
-        fileCSDef = open(os.path.join(dirPath, 'output_inputFM', 'CrossSectionsDefinitions.ini'), 'w')
+        fileCSDef = open(os.path.join(dirPath, 'output_inputFM', 'cross_section_definitions.ini'), 'w')
 
         #header
         fileCSDef.write('[general]\n')
@@ -327,7 +471,7 @@ class FMwriter:
 
             fileCSDef.write('closed = 1\n')
             fileCSDef.write('groundlayerUsed = 0\n')
-            fileCSDef.write('roughnessNames = SewerSystem\n')
+            fileCSDef.write('roughnessNames = sewer_system\n')
             fileCSDef.write('\n')
 
         fileCSDef.close()
@@ -358,7 +502,7 @@ class FMwriter:
         #AAN_AFS	Aanname waarde PMP_AFS
         #ALG_TOE	Toelichting bij deze regel
 
-        fileStructures = open(os.path.join(dirPath, 'output_inputFM', 'Structures.ini'), 'w')
+        fileStructures = open(os.path.join(dirPath, 'output_inputFM', 'structures.ini'), 'w')
 
         #header
         fileStructures.write('[general]\n')
@@ -372,13 +516,15 @@ class FMwriter:
             value = keyvalue[1]
             type = value[1]
             writePliz = False
+            name = value[0]
+            pliName = 'str_' + name
 
             if type == 'DRL':
                 writePliz = True
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = orifice\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+                fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 
                 direction = self.getDirectionOfStructure(value[0])
                 if direction == '1_2':
@@ -401,7 +547,7 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = gate\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+                fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 
                 fileStructures.write('sill_level = ' + self.to2Dec(value[7]) + '\n')
                 fileStructures.write('door_height = ' + self.to2Dec(self.deltaGateHeightTopLevel) + '\n')
@@ -416,9 +562,9 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = pump\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('polylinefile = ' + value[0] + '.pli\n')
+                fileStructures.write('polylinefile = ' + pliName + '.pli\n')
                 valuePerSecond = float(value[9])/3600
-                fileStructures.write('capacity = ' + str("%.2f" % round(float(valuePerSecond),6)) + '  #m3/s\n')
+                fileStructures.write('capacity = ' + str("%.4f" % round(float(valuePerSecond),4)) + '  #m3/s\n')
 
                 direction = self.getDirectionOfStructure(value[0])
                 if direction == '1_2':
@@ -440,18 +586,17 @@ class FMwriter:
                 fileStructures.write('\n')
 
             if writePliz:
-                xyz = self.getXYZofStructure(value[0])
-                self.writePliFile(dirPath,value[0],xyz)
+                xyz = self.getGeometryOfStructure(value[0])
+                name = value[0]
+                self.writePliFile(dirPath,name,xyz, pliName)
 
         fileStructures.close()
         return True
 
     def writeLaterals(self, dirPath):  # write all inlets from GWSW model
 
-        #_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
-        #_Opp
 
-        fileLateral = open(os.path.join(dirPath, 'output_inputFM', 'LateralLocations.ini'), 'w')
+        fileLateral = open(os.path.join(dirPath, 'output_inputFM', 'lateral_locations.ini'), 'w')
 
         #header
         fileLateral.write('[general]\n')
@@ -471,22 +616,50 @@ class FMwriter:
         fileLateral.close()
         return True
 
-    def writePliFile(self, dirPath, name, xyz):
-        plizFile = open(os.path.join(dirPath, 'output_inputFM', name + '.pli'), 'w')
+    def writePliFile(self, dirPath, name, xyz, fileName = None):
+        if fileName is None:
+            fileName = name
+        plizFile = open(os.path.join(dirPath, 'output_inputFM', fileName + '.pli'), 'w')
         plizFile.write(name + '\n')
-        plizFile.write('1    2\n')
-        plizFile.write(xyz[0] + '    ' + xyz[1] + '\n')
+        plizFile.write(str(len(xyz)) + '    2\n')
+        for p in xyz:
+            x = p[0]
+            y = p[1]
+            plizFile.write(self.to2Dec(x) + '    ' + self.to2Dec(y) + '\n')
         plizFile.close()
         return True
 
-    def getXYZofStructure(self, id):
-        xyz = [0.0,0.0,0.0]
+    def getGeometryBoundary(self, nodeId, clockWise = True):
+        xyz = []
+        node = self.model.nodes[nodeId]
+        z = 0.0;
+        x = float(node[3])
+        y = float(node[4])
+        if clockWise:
+            xyz.append([x - 0.5, y, z])
+            xyz.append([x, y - 0.5, z])
+            xyz.append([x + 0.5, y, z])
+            xyz.append([x, y + 0.5, z])
+            xyz.append([x - 0.5, y, z])
+        else:
+            xyz.append([x + 0.5, y, z])
+            xyz.append([x, y + 0.5, z])
+            xyz.append([x - 0.5, y, z])
+            xyz.append([x, y - 0.5, z])
+            xyz.append([x + 0.5, y, z])
+        return xyz
+
+    def getGeometryOfStructure(self, id): #0,5 meter from node, 1 meter south -> north
+        xyz = []
         connection = self.model.connections[id]
         nodeId = connection[1]
         node = self.model.nodes[nodeId]
-        xyz[0] = node[3]
-        xyz[1] = node[4]
-        xyz[2] = connection[5]
+        z = connection[5]
+        x = float(node[3]) + 0.5
+        y0 = float(node[4]) - 0.5
+        y1 = y0 + 1.0
+        xyz.append([x, y0, z])
+        xyz.append([x, y1, z])
         return xyz
 
     def getDirectionOfStructure(self, id):
@@ -522,7 +695,7 @@ class FMwriter:
         output_file = os.path.join(dirPath, 'output_inputFM', name + "_net.nc")
 
         # File format:
-        outformat = "NETCDF4"  #"NETCDF3_CLASSIC"
+        outformat = "NETCDF4" #"NETCDF3_CLASSIC"
         # File where we going to write
         ncfile = Dataset(output_file, 'w', format=outformat)
 
