@@ -209,6 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionIssue(ICrossSection crossSection, IHydroNetwork network)
         {
             string errorMessage;
+            var crossSectionDefinition = crossSection.Definition;
 
             if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection) crossSection, out errorMessage))
             {
@@ -220,9 +221,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "No profile defined", network);
             }
 
-            if (!CrossSectionValidator.IsFlowProfileValid(crossSection.Definition))
+            if (!CrossSectionValidator.IsFlowProfileValid(crossSectionDefinition))
             {
-                if (crossSection.Definition.CrossSectionType == CrossSectionType.ZW)
+                if (crossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
                 {
                     yield return new ValidationIssue(crossSection, ValidationSeverity.Error,  
                         String.Format(Resources.WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_, crossSection));
@@ -233,10 +234,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 }
             }
 
-            if (!CrossSectionValidator.IsCrossSectionSectionValid(crossSection.Definition))
+            if (!CrossSectionValidator.AreCrossSectionsLengthsMatchingTheFlowWidth(crossSectionDefinition))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
                     "The maximum flow width of this cross section does not match the total width of all its sections.", crossSection);
+            }
+
+            if (!CrossSectionValidator.AreFloodPlain1AndFloodPlain2WidthsValid(crossSectionDefinition))
+            {
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
+                    "FloodPlain2 width may not be larger than zero if FloodPlain1 width is equal to zero.", crossSection);
             }
         }
 
