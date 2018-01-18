@@ -3,7 +3,7 @@
   <documentation>
     <fileVersion>1.00</fileVersion>
     <createdBy>Deltares, Coupling Team</createdBy>
-    <creationDate>2017-11-21T10:05:21.63527Z</creationDate>
+    <creationDate>2018-01-18T10:42:49.8123826Z</creationDate>
   </documentation>
   <!--<control>
           The <control> specifies the workflow of the deltaresHydro executable.
@@ -62,8 +62,8 @@
       <targetName>pumps/Pump1/structure_setpoint</targetName>
     </item>
     <logger>
-      <workingDir>C:\Users\prevel\Desktop\TestOutputStuff\Flow1D_WithRtcOutput.dsproj_data\Integrated_Model_output\rtc</workingDir>
-      <outputFile>rtcOutput.nc</outputFile>
+      <workingDir>.</workingDir>
+      <outputFile>rtc_to_flow1d.nc</outputFile>
     </logger>
   </coupler>
   <coupler name="flow1d_to_rtc">
@@ -78,8 +78,8 @@
       <targetName>input_ObservationPoint2_Water level (op)</targetName>
     </item>
     <logger>
-      <workingDir>C:\Users\prevel\Desktop\TestOutputStuff\Flow1D_WithRtcOutput.dsproj_data\Integrated_Model_output\rtc</workingDir>
-      <outputFile>rtcOutput.nc</outputFile>
+      <workingDir>.</workingDir>
+      <outputFile>flow1d_to_rtc.nc</outputFile>
     </logger>
   </coupler>
 </dimrConfig>

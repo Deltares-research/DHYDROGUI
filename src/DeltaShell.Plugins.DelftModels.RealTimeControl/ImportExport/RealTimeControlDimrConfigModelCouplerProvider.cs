@@ -12,10 +12,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var targetRtcModel = target as IRealTimeControlModel;
             if (sourceRtcModel != null || targetRtcModel != null)
             {
-                return new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
+                var coupler =  new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
                 {
                     AddCouplerLoggerInfo = true
                 };
+
+                var rtcModel = sourceRtcModel as RealTimeControlModel;
+                if (rtcModel != null)
+                {
+                    rtcModel.OutputFileName = coupler.Name;
+                }
+
+                return coupler;
             }
             return null;
         }

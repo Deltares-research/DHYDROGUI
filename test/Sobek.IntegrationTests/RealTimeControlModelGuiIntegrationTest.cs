@@ -791,8 +791,6 @@ namespace Sobek.IntegrationTests
 
         private void GetSimpleHydroModelWithRealTimeControlOutputFileFunctionStore(out RealTimeControlOutputFileFunctionStore outputFunctionStore, out HydroModel hydroModel)
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"RtcOutput\" + RealTimeControlModel.OutputFileName);
-
             // create flow1d model
             var observationPoint = new ObservationPoint() { Name = "Near pipe", Geometry = new Point(new Coordinate(10, 0)) };
             var from = new HydroNode() { Geometry = new Point(new Coordinate(0, 0)) };
@@ -827,6 +825,7 @@ namespace Sobek.IntegrationTests
             target.LinkTo(source);
 
             // Connect output
+            var testFilePath = TestHelper.GetTestFilePath(@"RtcOutput\" + rtcModel.OutputFileName);
             TypeUtils.CallPrivateMethod(rtcModel, "ReconnectOutputFiles", new[] { testFilePath });
 
             outputFunctionStore = rtcModel.OutputFileFunctionStore;
