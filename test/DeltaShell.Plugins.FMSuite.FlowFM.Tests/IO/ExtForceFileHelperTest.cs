@@ -32,13 +32,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(expectedFileName, item.FileName);
         }
 
-        [TestCase(false, false)] // None
-        [TestCase(true, false)] // Salinity only
-        [TestCase(false, true)] // Temperature only
-        [TestCase(true, true)] // Both
-        public void TestReadSourceAndSinkData(bool useSalinity, bool useTemperature)
+        [TestCase(false, false, "NoSalinityOrTemperature.tim")]
+        [TestCase(true, false, "SalinityOnly.tim")]
+        [TestCase(false, true, "TemperatureOnly.tim")]
+        [TestCase(true, true, "BothSalinityAndTemperature.tim")]
+        public void TestReadSourceAndSinkData(bool useSalinity, bool useTemperature, string fileName)
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"timFiles\testFile.tim");
+            var testFilePath = TestHelper.GetTestFilePath(Path.Combine(@"timFiles", fileName));
             
             // setup
             var feature = new Feature2D();
