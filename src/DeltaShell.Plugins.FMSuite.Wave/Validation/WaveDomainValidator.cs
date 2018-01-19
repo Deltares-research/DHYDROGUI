@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
@@ -8,10 +9,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
     {
         public static ValidationReport Validate(WaveModel model)
         {
-            return new ValidationReport("Waves Model Domain",
-                                        WaveDomainHelper.GetAllDomains(model.OuterDomain)
-                                                        .Select(ValidateDomain)
-                                                        .ToList());
+            return new ValidationReport("Waves Model Domain", ValidateAllDomains(model));
+        }
+
+        private static IEnumerable<ValidationReport> ValidateAllDomains(WaveModel model)
+        {
+            var reportList = new List<ValidationReport>();
+            reportList.Add(ValidateAllDomainsShareCoordinateSystem(model));
+            reportList.AddRange(WaveDomainHelper.GetAllDomains(model.OuterDomain)
+                .Select(ValidateDomain)
+                .ToList());
+            return reportList;
+        }
+
+        private static ValidationReport ValidateAllDomainsShareCoordinateSystem(WaveModel model)
+        {
+            var issues = new List<ValidationIssue>();
+
+            var domain = model.OuterDomain;
+            var domains = WaveDomainHelper.GetAllDomains(domain);
+            var sphericalDomains = domains.Where(d => CheckDomainGrid( d, "Spherical")).ToList();
+            if (sphericalDomains.Any() && domains.Any(d => CheckDomainGrid(d, "Cartesian")))
+            {
+                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian, domain));
+            }
+            else if (sphericalDomains.Count == domains.Count)
+            {
+                if (model.ModelDefinition.WaveSetup)
+                {
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_));
+                }
+            }
+            return new ValidationReport("Model domains", issues);
+        }
+
+        private static bool CheckDomainGrid(WaveDomainData domain, string coordinateSystemName)
+        {
+            if (domain.Grid == null) return false;
+
+            string coordinateSystem;
+            if (domain.Grid.Attributes.TryGetValue("CoordinateSystem", out coordinateSystem))
+                return coordinateSystem == coordinateSystemName;
+            return false;
         }
 
         private static ValidationReport ValidateDomain(WaveDomainData domain)

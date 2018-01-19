@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -114,6 +115,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.AreEqual(coordinatesAfter[i].X, coordinates[i].X, 1e-05);
                 Assert.AreEqual(coordinatesAfter[i].Y, coordinates[i].Y, 1e-05);
             }
+        }
+
+        [Test]
+        public void WaveModel_WaveSetup_DefaultValue_IsFalse()
+        {
+            var waveModel = new WaveModel();
+            Assert.IsFalse(waveModel.ModelDefinition.WaveSetup);
+        }
+
+        [Test]
+        public void WaveModel_LogMessage_IsShown_When_WaveSetup_SetsValue_True()
+        {
+            var waveModel = new WaveModel();
+            var expectedMssg = Resources
+                .WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_;
+            TestHelper.AssertAtLeastOneLogMessagesContains( () => waveModel.ModelDefinition.WaveSetup = true, expectedMssg);
+            Assert.IsTrue(waveModel.ModelDefinition.WaveSetup);
         }
     }
 

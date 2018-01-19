@@ -426,6 +426,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 app.Project.RootFolder.Add(model);
 
+                var report = model.Validate();
+
                 ActivityRunner.RunActivity(model);
 
                 app.SaveProjectAs(projPath);

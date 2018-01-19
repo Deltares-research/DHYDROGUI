@@ -24,6 +24,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Api;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -178,6 +179,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             set
             {
                 // only used for event bubbling
+            }
+        }
+
+        public bool WaveSetup
+        {
+            get
+            {
+                return (bool)ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
+            }
+            set
+            {
+                //only used for event bubbling
             }
         }
 
@@ -511,6 +524,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     BeginEdit(new DefaultEditAction("Switching BedFriction"));
                     BedFriction = BedFriction;
+                    EndEdit();
+                }
+                else if(prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WaveSetup, 
+                                                                        StringComparison.InvariantCultureIgnoreCase))
+                { 
+                    BeginEdit(new DefaultEditAction("Switching WaveSetup"));
+                    WaveSetup = WaveSetup;
+                    if ((bool)prop.Value)
+                        Log.WarnFormat(Resources.WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_);
                     EndEdit();
                 }
             }
