@@ -16,8 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         private const string Encoding = "UTF-8";
         private const string Documentation = "documentation";
         private const string TeamName = "Deltares, Coupling Team";
-        private const string FileVersion = "1.00";
-        private const string SchemaLocation = "http://content.oss.deltares.nl/schemas/dimr-1.0.xsd";
+        private const string FileVersion = "1.2";
+        private const string SchemaLocation = "http://content.oss.deltares.nl/schemas/dimr-1.2.xsd";
 
         private static readonly XNamespace Xsi = "http://www.w3.org/2001/XMLSchema-instance";
         private static readonly XNamespace DHyd = "http://schemas.deltares.nl/dimr";
