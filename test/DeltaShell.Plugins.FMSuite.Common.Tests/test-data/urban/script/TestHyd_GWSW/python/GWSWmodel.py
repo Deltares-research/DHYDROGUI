@@ -10,3 +10,4 @@ class GWSWmodel:
     structures = {}     # structures
 
     inlets = {}         # inlets
+

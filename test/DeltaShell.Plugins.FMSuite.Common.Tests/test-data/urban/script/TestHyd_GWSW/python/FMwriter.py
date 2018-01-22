@@ -13,16 +13,17 @@ class FMwriter:
     def __init__(self, model):
         self.model = model
 
-    def writeAll(self, dirPath, outputDir):  # write all fm files from GWSW model
+    def writeAll(self, dirPath):  # write all fm files from GWSW model
         self.rewriteGeometryOfManholeCompartments()
-        self.writeRetentions(dirPath,outputDir)
-        self.writePipes(dirPath,outputDir)
-        self.writeProfiles(dirPath,outputDir)
-        self.writeStructures(dirPath,outputDir)
-        #self.writeBoundaries(dirPath,outputDir)
-        #self.writeLaterals(dirPath,outputDir)
-        self.writeExternalForcingFiles(dirPath,outputDir)
-        self.writeFMnetwork(dirPath,outputDir, "ugrid")
+        self.writeRetentions(dirPath)
+        self.writePipes(dirPath)
+        self.writeProfiles(dirPath)
+        self.writeStructures(dirPath)
+        #self.writeBoundaries(dirPath)
+        #self.writeLaterals(dirPath)
+        self.writeExternalForcingFiles(dirPath)
+        self.writeXYZStreetlevel(dirPath)
+        self.writeFMnetwork(dirPath, "sewer_system")
         return True
 
     def to2Dec(selfselft, strValue):
@@ -51,9 +52,9 @@ class FMwriter:
                 manholes[manholeId].append(id)
             else:
                 manholes[manholeId] = [id]
+        return True
 
-
-    def writeBoundaries(self, dirPath, outputDir):  # write boundaries ini and bc
+    def writeBoundaries(self, dirPath):  # write boundaries ini and bc
 
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
@@ -80,8 +81,8 @@ class FMwriter:
         defaultWaterlevelOut = '-100.00' # low value needed
         defaultDischargeIn = '0.01' # m3/s from street
 
-        filePathIni = os.path.join(dirPath, outputDir, 'boundary_locations.ini')
-        filePathBc = os.path.join(dirPath, outputDir, 'boundary_conditions.bc')
+        filePathIni = os.path.join(dirPath, 'output_inputFM', 'boundary_locations.ini')
+        filePathBc = os.path.join(dirPath, 'output_inputFM', 'boundary_conditions.bc')
 
         fileLocs = open(filePathIni, 'w')
         fileBc = open(filePathBc, 'w')
@@ -140,7 +141,7 @@ class FMwriter:
 
         return True
 
-    def writeExternalForcingFiles(self, dirPath, outputDir):  # write boundaries and laterals as external force files
+    def writeExternalForcingFiles(self, dirPath):  # write boundaries and laterals as external force files
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
@@ -165,9 +166,9 @@ class FMwriter:
 
         inflowBC = 'sewer_system_inflow.bc'
         outflowBC = 'sewer_system_outflow.bc'
-        filePathInflow = os.path.join(dirPath, outputDir, inflowBC)
-        filePathOutflow = os.path.join(dirPath, outputDir, outflowBC)
-        filePathEF = os.path.join(dirPath, outputDir, 'ext_force_file.ini')
+        filePathInflow = os.path.join(dirPath, 'output_inputFM', inflowBC)
+        filePathOutflow = os.path.join(dirPath, 'output_inputFM', outflowBC)
+        filePathEF = os.path.join(dirPath, 'output_inputFM', 'ext_force_file.ext')
 
         fileExternalForce = open(filePathEF, 'w')
         fileBcIn = open(filePathInflow, 'w')
@@ -192,7 +193,7 @@ class FMwriter:
 
             #location
             xyz = self.getGeometryBoundary(name,False)
-            self.writePliFile(dirPath,outputDir,bndName,xyz)
+            self.writePliFile(dirPath,bndName,xyz)
 
             #boundary data
             l = self.getBcOutBlock(bndName)
@@ -212,7 +213,7 @@ class FMwriter:
 
             #location
             xyz = self.getGeometryBoundary(name,True)
-            self.writePliFile(dirPath,outputDir,bndName,xyz)
+            self.writePliFile(dirPath,bndName,xyz)
 
             #boundary data
             l = self.getBcInBlock(bndName)
@@ -252,7 +253,47 @@ class FMwriter:
         result += '200      -100.0\n\n'
         return result
 
-    def writeRetentions(self, dirPath, outputDir):  # write all manholes from GWSW model
+    def  writeXYZStreetlevel(self, dirPath):  # write streetlevel as a xyz file
+
+        #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
+        #PUT_IDE	Identificatie (naam, nummer, code) van de put of het bouwwerk
+        #KNP_XCO	X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO	Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #CMP_IDE	Identificatie (naam, nummer, code) van het compartiment
+        #MVD_NIV	Niveau maaiveld t.o.v. NAP
+        #MVD_SCH	Type maaiveldschematisering
+        #WOS_OPP	Oppervlak water op straat
+        #KNP_MAT	Materiaal put
+        #KNP_VRM	Vorm put
+        #KNP_BOK	Niveau binnenonderkant put t.o.v. NAP
+        #KNP_BRE	Breedte/diameter putbodem
+        #KNP_LEN	Lengte putbodem
+        #KNP_TYP	Type knooppunt
+        #INZ_TYP	Type afvalwater dat wordt ingezameld
+        #INI_NIV	Initiële waterstand t.o.v. NAP
+        #STA_OBJ	Status van het object
+        #AAN_MVD	Aanname maaiveldhoogte
+        #ITO_IDE	Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
+        #ALG_TOE	Toelichting bij deze regel
+
+        filePath = os.path.join(dirPath, 'output_inputFM', 'street_level.xyz')
+        file = open(filePath, 'w')
+        tab = '     '
+
+        for keyvalue in self.model.nodes.items():
+
+            value = keyvalue[1]
+            x = self.to2Dec(value[3])
+            y = self.to2Dec(value[4])
+            z = self.to2Dec(value[6])
+
+            file.write(x + tab + y + tab + z)
+            file.write('\n')
+        file.close()
+        return True
+
+    def writeRetentions(self, dirPath):  # write all manholes from GWSW model
 
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE	Identificatie (naam, nummer, code) van het rioolstelsel
@@ -277,8 +318,8 @@ class FMwriter:
         #ALG_TOE	Toelichting bij deze regel
 
         defaultStreetArea = 100.0
-        #filePath = os.path.join(dirPath, outputDir, 'Retention.ini')
-        filePath = os.path.join(dirPath, outputDir, 'node.ini')
+        #filePath = os.path.join(dirPath, 'output_inputFM', 'Retention.ini')
+        filePath = os.path.join(dirPath, 'output_inputFM', 'node.ini')
         file = open(filePath, 'w')
 
         #header
@@ -294,8 +335,6 @@ class FMwriter:
             if str(value[14]) == 'UIT': # is a boundary
                 continue
 
-            id = str(value[0])
-
             # [Retention]
             # id=''
             # name=''
@@ -308,43 +347,27 @@ class FMwriter:
             # streetLevel=0.0
             # file.write('[retention]\n')
             file.write('[node]\n')
-            file.write('id = ' + id + '\n')
+            file.write('id = ' + str(value[0]) + '\n')
             file.write('name = ' + str(value[2]) + '\n')
-            file.write('nodeId = ' + id + '\n')
+            file.write('nodeId = ' + str(value[0]) + '\n')
             file.write('manholeId = ' + str(value[2]) + '\n')
             file.write('storageType = Reservoir\n')
             file.write('useTable = 0\n')
             file.write('bedLevel = ' + str(value[11]) + '\n')
 
             area = 0.0
-
-            try:
-                br = (float(value[12]) / 100)
-            except ValueError:
-                print("Missing data for area " + id)
-                br = 0.0
+            br = (float(value[12]) / 100)
+            l = (float(value[13]) / 100)
 
             if str(value[11]) == 'RND':
                 area = pi * br**2
             else:
-                try:
-                    l = (float(value[13]) / 100)
-                except ValueError:
-                    print("Missing data for area " + id)
-                    l = br
-
                 area = br * l
 
             areaStr  = self.to2Dec(area)
 
-            try:
-                streetLevel = float(value[6])
-            except ValueError:
-                print("Missing data for street level " + id)
-                streetLevel = 0.0
-
             file.write('area = ' + areaStr + '\n')
-            file.write('streetLevel = ' + self.to2Dec(streetLevel) + '\n')
+            file.write('streetLevel = ' + self.to2Dec(value[6]) + '\n')
             street_Area = defaultStreetArea
             if str(value[8]) != '' and float(value[8]) > 0.0:
                 street_Area = float(value[8])
@@ -353,7 +376,7 @@ class FMwriter:
         file.close()
         return True
 
-    def writePipes(self, dirPath, outputDir):  # write pipes described as crossections from GWSW model
+    def writePipes(self, dirPath):  # write pipes described as crossections from GWSW model
 
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KN1_IDE	Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
@@ -377,8 +400,8 @@ class FMwriter:
         #INI_NIV	Initiële waterstand t.o.v. NAP
         #ALG_TOE	Toelichting bij deze regel
 
-        fileCSLoc = open(os.path.join(dirPath, outputDir, 'cross_section_locations.ini'), 'w')
-        fileRough = open(os.path.join(dirPath, outputDir, 'roughness_sewer_system.ini'), 'w')
+        fileCSLoc = open(os.path.join(dirPath, 'output_inputFM', 'cross_section_locations.ini'), 'w')
+        fileRough = open(os.path.join(dirPath, 'output_inputFM', 'roughness_sewer_system.ini'), 'w')
 
         #header location
         fileCSLoc.write('[general]\n')
@@ -438,7 +461,7 @@ class FMwriter:
         fileRough.close()
         return True
 
-    def writeProfiles(self, dirPath, outputDir):  # write all profiles from GWSW model
+    def writeProfiles(self, dirPath):  # write all profiles from GWSW model
 
         #PRO_IDE	Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
         #PRO_MAT	Materiaal profiel
@@ -454,7 +477,7 @@ class FMwriter:
         #AAN_PBR	Aanname profielbreedte
         #ALG_TOE	Toelichting bij deze regel
 
-        fileCSDef = open(os.path.join(dirPath, outputDir, 'cross_section_definitions.ini'), 'w')
+        fileCSDef = open(os.path.join(dirPath, 'output_inputFM', 'cross_section_definitions.ini'), 'w')
 
         #header
         fileCSDef.write('[general]\n')
@@ -495,7 +518,7 @@ class FMwriter:
         fileCSDef.close()
         return True
 
-    def writeStructures(self, dirPath, outputDir):
+    def writeStructures(self, dirPath):
 
         #UNI_IDE	Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KWK_TYP	Type hydraulisch component in het kunstwerk
@@ -520,7 +543,7 @@ class FMwriter:
         #AAN_AFS	Aanname waarde PMP_AFS
         #ALG_TOE	Toelichting bij deze regel
 
-        fileStructures = open(os.path.join(dirPath, outputDir, 'structures.ini'), 'w')
+        fileStructures = open(os.path.join(dirPath, 'output_inputFM', 'structures.ini'), 'w')
 
         #header
         fileStructures.write('[general]\n')
@@ -606,15 +629,15 @@ class FMwriter:
             if writePliz:
                 xyz = self.getGeometryOfStructure(value[0])
                 name = value[0]
-                self.writePliFile(dirPath, outputDir, name,xyz, pliName)
+                self.writePliFile(dirPath,name,xyz, pliName)
 
         fileStructures.close()
         return True
 
-    def writeLaterals(self, dirPath, outputDir):  # write all inlets from GWSW model
+    def writeLaterals(self, dirPath):  # write all inlets from GWSW model
 
 
-        fileLateral = open(os.path.join(dirPath, outputDir, 'lateral_locations.ini'), 'w')
+        fileLateral = open(os.path.join(dirPath, 'output_inputFM', 'lateral_locations.ini'), 'w')
 
         #header
         fileLateral.write('[general]\n')
@@ -634,10 +657,10 @@ class FMwriter:
         fileLateral.close()
         return True
 
-    def writePliFile(self, dirPath, outputDir,  name, xyz, fileName = None):
+    def writePliFile(self, dirPath, name, xyz, fileName = None):
         if fileName is None:
             fileName = name
-        plizFile = open(os.path.join(dirPath, outputDir, fileName + '.pli'), 'w')
+        plizFile = open(os.path.join(dirPath, 'output_inputFM', fileName + '.pli'), 'w')
         plizFile.write(name + '\n')
         plizFile.write(str(len(xyz)) + '    2\n')
         for p in xyz:
@@ -647,21 +670,17 @@ class FMwriter:
         plizFile.close()
         return True
 
-    def getGeometryBoundary(self, nodeId, clockWise = True):
+    def getGeometryBoundary(self, nodeId, isInlet = True):
         xyz = []
         node = self.model.nodes[nodeId]
         z = 0.0;
         x = float(node[3])
         y = float(node[4])
-        if clockWise:
-            xyz.append([x - 0.5, y, z])
-            xyz.append([x, y - 0.5, z])
-            xyz.append([x + 0.5, y, z])
-            xyz.append([x, y + 0.5, z])
-            xyz.append([x - 0.5, y, z])
+        if isInlet:
+            xyz.append([x - 0.5, y + 0.5, z])
+            xyz.append([x, y, z])
+            xyz.append([x + 0.5, y + 0.5, z])
         else:
-            xyz.append([x + 0.5, y, z])
-            xyz.append([x, y + 0.5, z])
             xyz.append([x - 0.5, y, z])
             xyz.append([x, y - 0.5, z])
             xyz.append([x + 0.5, y, z])
@@ -693,17 +712,13 @@ class FMwriter:
 
     def getGateHeight(self, id):
         connection = self.model.connections[id]
-        result = 0.0
-        try:
-            cmp1Level = float(self.model.nodes[connection[1]][6])
-            cmp2Level = float(self.model.nodes[connection[2]][6])
-            if cmp1Level < cmp2Level:
-                result = cmp1Level - self.deltaGateHeightTopLevel
-            else:
-                result = cmp2Level - self.deltaGateHeightTopLevel
-        except ValueError:
-            print("Missing data for gateheight " + id)
-        return result
+        cmp1Level = float(self.model.nodes[connection[1]][6])
+        cmp2Level = float(self.model.nodes[connection[2]][6])
+        if cmp1Level < cmp2Level:
+            result = cmp1Level - self.deltaGateHeightTopLevel
+        else:
+            result = cmp2Level - self.deltaGateHeightTopLevel
+        return result;
 
     ## writeFMnetwork documentation
     # This fuction is going to prepare 1D Ugrid files
@@ -712,9 +727,9 @@ class FMwriter:
         # This fuction is going to prepare 1D Ugrid files
         # Following code is not a piece of art so please do improve it
 
-    def writeFMnetwork(self, dirPath, outputDir, name):
+    def writeFMnetwork(self, dirPath, name):
         ### NETCDF approach
-        output_file = os.path.join(dirPath, outputDir, name + "_net.nc")
+        output_file = os.path.join(dirPath, 'output_inputFM', name + "_net.nc")
 
         # File format:
         outformat = "NETCDF4" #"NETCDF3_CLASSIC"
@@ -724,6 +739,20 @@ class FMwriter:
         # dimensions of the network
         nodes_nr = len(self.model.nodes)
         edges_nr = len(self.model.connections)
+
+        # dimensions of the street grid
+        min_x = -10000000 #sys.float_info.max
+        max_x = 10000000 #sys.float_info.min
+        min_y = -10000000 #sys.float_info.max
+        max_y = 10000000 #sys.float_info.min
+        for keyvalue in self.model.nodes.items():
+            node = keyvalue[1]
+            x = float(node[3])
+            y = float(node[4])
+            if x < min_x :  min_x = x
+            if x > max_x :  max_x = x
+            if y < min_y :  min_y = y
+            if y > max_y :  max_y = y
 
         # Temporary dictionary to store the id number of the nodes and branches
         node_order = OrderedDict()
