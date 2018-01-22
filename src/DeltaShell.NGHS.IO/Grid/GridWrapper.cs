@@ -234,7 +234,7 @@ namespace DeltaShell.NGHS.IO.Grid
         #endregion
         #region 1d2d Links
         /// <summary>
-        /// 
+        /// Gets the 1d2d grid.
         /// </summary>
         /// <param name="ioncid"></param>
         /// <param name="meshId"></param>
@@ -246,7 +246,7 @@ namespace DeltaShell.NGHS.IO.Grid
         private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In, Out] ref meshgeom meshgeom, ref bool includeArrays);
 
         /// <summary>
-        /// 
+        /// Gets the dimension of the 1d2d grid.
         /// </summary>
         /// <param name="ioncid"></param>
         /// <param name="meshId"></param>
