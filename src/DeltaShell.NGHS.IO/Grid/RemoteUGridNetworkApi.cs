@@ -1,5 +1,6 @@
 using System;
 using DelftTools.Utils.Remoting;
+using DeltaShell.Dimr;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -8,10 +9,10 @@ namespace DeltaShell.NGHS.IO.Grid
     
         public RemoteUGridNetworkApi()
         {
-            // DeltaShell is 32bit, however we still want to take advantage of the 64bit dflowfm.dll if the system can use it, 
-            // so we need to start the 64bit worker. This works as long as the data send over the IFlexibleMeshModelApi border 
-            // is not bit dependent, eg IntPtr and the like.
-            api = RemoteInstanceContainer.CreateInstance<IUGridNetworkApi, UGridNetworkApi>(Environment.Is64BitOperatingSystem);
+            // We need to pass the Dimr Assembly here, in order to get the SharedDllPath
+            var dimrDllAssembly = typeof(DimrRunner).Assembly;
+
+            api = RemoteInstanceContainer.CreateInstance<IUGridNetworkApi, UGridNetworkApi>(Environment.Is64BitOperatingSystem, null, false, dimrDllAssembly);
         }
 
         public virtual int CreateNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int nwId)

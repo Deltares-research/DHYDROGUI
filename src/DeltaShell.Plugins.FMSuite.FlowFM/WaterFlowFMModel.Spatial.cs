@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         var originalBathymetry = GetOriginalCoverage(Bathymetry);
                         originalBathymetry.Arguments[0].Clear();
                         originalBathymetry.Components[0].Clear(); //HACK: signals the interpolation method to use the grid node z-values...
-                        double ndv ;
+                        double ndv;
                         if (!double.TryParse(originalBathymetry.Components[0].NoDataValue.ToString(), out ndv))
                         {
                             bathymetryNoDataValue = -999.0d;
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
                         {
                             bathymetryNoDataValue = -999.0d;
-                            return ;
+                            return;
                         }
                         uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(1);
 
