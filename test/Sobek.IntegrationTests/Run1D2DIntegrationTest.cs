@@ -380,10 +380,10 @@ namespace Sobek.IntegrationTests
                 
                 Assert.IsTrue(exporter.Export(hydroModel, null));
                 Assert.IsTrue(File.Exists(exportFilePath));
-                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? "", f1dModel.DirectoryName)));
-                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? "", fmModel.DirectoryName)));
-                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? "", rtcModel.DirectoryName)));
-                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? "", new Iterative1D2DCoupler().DirectoryName)));
+                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? string.Empty, f1dModel.DirectoryName)));
+                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? string.Empty, fmModel.DirectoryName)));
+                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? string.Empty, rtcModel.DirectoryName)));
+                Assert.IsTrue(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportFilePath) ?? string.Empty, new Iterative1D2DCoupler().DirectoryName)));
                 // Open File
                 XDocument exportedDocument = XDocument.Load(exportFilePath);
                 XmlReaderSettings settings = new XmlReaderSettings();
@@ -454,12 +454,31 @@ namespace Sobek.IntegrationTests
                 Assert.That(targetComponent.Value, Is.EqualTo("RTC Model"));
                 //Fetch coupler component items.
                     var componentItems = targetComponent.ElementsAfterSelf().ToList();
-                    Assert.That(componentItems.Count(), Is.EqualTo(2));
+                    Assert.That(componentItems.Count(), Is.EqualTo(3));
                     XElement firstComponentItem = componentItems.First();
                     xmlDimrCheckCouplerItemNode(firstComponentItem, nameSpace, "FlowFM/observations/ObservationFM/water_level", "input_ObservationFM_water_level");
                     XElement secondComponentItem = firstComponentItem.ElementsAfterSelf().First();
                     xmlDimrCheckCouplerItemNode(secondComponentItem, nameSpace, "Flow1D/observations/ObservationF1D/water_level", "input_ObservationF1D_Water level (op)");
+                    XElement thirdComponentCoupler = secondComponentItem.ElementsAfterSelf().First();
+                    /*Logger for the coupler, the '.' will be replaced in the future by a relative path. So the test is expected to fail here.*/
+                    xmlDimrCheckCouplerLoggerNode(thirdComponentCoupler, nameSpace, ".", "1d2d_to_rtc.nc");  
             }
+        }
+
+        private void xmlDimrCheckCouplerLoggerNode(XElement couplerItem, XNamespace nameSpace, string workngDirValue, string outputFileValue)
+        {
+            Assert.NotNull(couplerItem);
+            Assert.That(couplerItem.Name, Is.EqualTo(nameSpace + "logger"));
+            var couplerWorkingDirAndOutputFile = couplerItem.Elements().ToList();
+            Assert.That(couplerWorkingDirAndOutputFile.Count(), Is.EqualTo(2));
+            XElement workingDir = couplerWorkingDirAndOutputFile.First();
+            Assert.NotNull(workingDir);
+            Assert.That(workingDir.Name, Is.EqualTo(nameSpace + "workingDir"));
+            Assert.That(workingDir.Value, Is.EqualTo(workngDirValue));
+            XElement outputFile = workingDir.ElementsAfterSelf().First();
+            Assert.NotNull(outputFile);
+            Assert.That(outputFile.Name, Is.EqualTo(nameSpace + "outputFile"));
+            Assert.That(outputFile.Value, Is.EqualTo(outputFileValue));
         }
 
         private void xmlDimrCheckCouplerItemNode(XElement couplerItem, XNamespace nameSpace, string sourceNameValue, string targetNameValue)
