@@ -42,18 +42,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         [Category(TestCategory.Integration)]
         public void VariousSpatialRoughnessesFromDsProj()
         {
-            string testDataDirName = "VariousRoughnesses";
+            const string testDataDirName = "VariousRoughnesses";
 
-            string sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
+            var sourcePath = Path.GetFullPath(Path.Combine(TestHelper.GetDataDir(), @"FileWriters\IntegrationTests", testDataDirName));
             FileUtils.CopyDirectory(sourcePath, testDataDirName, ".svn");
             var relativePathSpatialRoughnessesExpectedFile =
                     TestHelper.GetTestFilePath(
                         @"FileWriters/IntegrationTests/VariousRoughnesses/SpatialRoughnesses_expected.txt");
                 
-            string dsProjPath = Path.Combine(testDataDirName, "VariousSpatialRoughnesses.dsproj");
+            var dsProjPath = Path.Combine(testDataDirName, "VariousSpatialRoughnesses.dsproj");
             app.OpenProject(dsProjPath);
 
-            WaterFlowModel1D waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().ToList()[0];
+            var waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().ToList()[0];
             waterFlowModel1D.Initialize();
             string errorMessage;
             var actualDirectory = Path.Combine(waterFlowModel1D.WorkingDirectory, waterFlowModel1D.DirectoryName);

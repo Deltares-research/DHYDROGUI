@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             {
                 LongName = string.Empty,
                 OrderNumber = 0,
-                Geometry = new LineString(new Coordinate[]
+                Geometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),
                     new Coordinate(100, 0)
@@ -47,11 +47,10 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// </summary>
         /// <param name="branch"></param>
         /// <param name="csType"></param>
-        /// <param name="csId"></param>
         /// <param name="chainage"></param>
         /// <param name="levelShift"></param>
         /// <param name="makeProxy"></param>
-        public static ICrossSection AddCrossSection(IBranch branch, CrossSectionType csType, int csId, double chainage, double levelShift = 0.0, bool makeProxy = false)
+        public static ICrossSection AddCrossSection(IBranch branch, CrossSectionType csType, double chainage, double levelShift = 0.0, bool makeProxy = false)
         {
             // By default cross section width = 100 and this is divided over 6 points (see: SetDefaultYZTableAndUpdateThalWeg)
             var crossSection = CrossSection.CreateDefault(csType, branch, chainage);
@@ -64,16 +63,16 @@ namespace DeltaShell.NGHS.IO.TestUtils
             {
                 crossSection.ShareDefinitionAndChangeToProxy();
                 var crossSectionDefinitionProxy = crossSection.Definition as CrossSectionDefinitionProxy;
-                if (crossSectionDefinitionProxy != null) crossSectionDefinitionProxy.LevelShift = levelShift;    
+                if (crossSectionDefinitionProxy != null) crossSectionDefinitionProxy.LevelShift = levelShift;
             }
-
+            
             AddCrossSectionDefinitionSection(crossSection.Definition, CrossSectionDefinitionZW.MainSectionName, 0.0, 25.0);
             AddCrossSectionDefinitionSection(crossSection.Definition, CrossSectionDefinitionZW.Floodplain1SectionTypeName, 25.0, 75.0);
             AddCrossSectionDefinitionSection(crossSection.Definition, CrossSectionDefinitionZW.Floodplain2SectionTypeName, 75.0, 100.0);
             return crossSection;
         }
 
-        private static void AddCrossSectionDefinitionSection(ICrossSectionDefinition crossSectionDefinition, string name, double yMin, double yMax)
+        public static void AddCrossSectionDefinitionSection(ICrossSectionDefinition crossSectionDefinition, string name, double yMin, double yMax)
         {
             crossSectionDefinition.Sections.Add(new CrossSectionSection
             {

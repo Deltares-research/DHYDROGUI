@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rtcRuntimeConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\Users\prevel\Desktop\TestOutputStuff\Flow1D_WithRtcOutput.dsproj_data\Integrated_Model_output\rtc\rtcRuntimeConfig.xsd">
+<rtcRuntimeConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews D:\Issues\DELFT3DFM-1373\Flow1D_WithRtcOutput.dsproj_data\Integrated_Model_output\rtc\rtcRuntimeConfig.xsd">
   <period>
     <userDefined>
       <startDate date="2017-11-20" time="00:00:00" />

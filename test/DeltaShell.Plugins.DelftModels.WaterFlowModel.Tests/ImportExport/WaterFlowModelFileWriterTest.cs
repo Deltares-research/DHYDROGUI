@@ -133,8 +133,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
                     new HeightFlowStorageWidth(10.0, width1, width1)
                 };
 
-                var csDef = new CrossSectionDefinitionZW(){};
-                csDef.Sections.Add(new CrossSectionSection() { SectionType = new CrossSectionSectionType() { Name = "Main" } });
+                var csDef = new CrossSectionDefinitionZW();
+                csDef.Sections.Add(new CrossSectionSection { SectionType = new CrossSectionSectionType { Name = "Main" } });
                 csDef.ZWDataTable.Set(heightWidthFlowData1);
                 
                 var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, csDef, 2.0);

@@ -349,4 +349,16 @@
   <data name="WaterQualityModelGuiPlugin_GetContextMenu_Generate_Fractions_Data" xml:space="preserve">
     <value>Generate Fractions Data</value>
   </data>
+  <data name="WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def" xml:space="preserve">
+    <value>Process definition file (*.def)|*.def</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_files_could_not_be_found__Please_refer_to_the___def_file_" xml:space="preserve">
+    <value>Process definition files could not be found. Please refer to the *.def file.</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0_" xml:space="preserve">
+    <value>Could not find process definition files: {0}</value>
+  </data>
+  <data name="WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0___but_now_using__1_" xml:space="preserve">
+    <value>Could not find process definition files: {0}, but now using {1}</value>
+  </data>
 </root>

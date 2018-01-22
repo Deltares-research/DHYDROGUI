@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     [Entity(FireOnCollectionChange=false)]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
     {
-        public const string OutputFileName = "rtcOutput.nc";
+        private string outputFileName = "rtcOutput.nc";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModel));
         private readonly DimrRunner runner;
@@ -1250,8 +1250,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual IEnumerable<IModelMerge> DependendModels { get { return ControlledModels.OfType<IModelMerge>(); }}
 
+        public virtual string OutputFileName
+        {
+            get { return outputFileName; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    outputFileName = value + ".nc";
+                }
+            }
+        }
+
         #endregion
-        
+
         public void Dispose()
         {
             // Ensure all stores are closed

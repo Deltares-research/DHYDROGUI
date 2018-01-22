@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
@@ -162,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public bool SourceIsMasterTimeStep { get; private set; }
 
         public string Name { get; set; }
-        public Func<XElement, XNamespace, XElement> AddOptionalCouplerInfo { get; set; }
+        public bool AddCouplerLoggerInfo { get; set; }
 
         private IEnumerable<DimrCoupleInfo> coupleInfos;
         public IEnumerable<DimrCoupleInfo> CoupleInfos

@@ -342,6 +342,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void TestDiaFileIsRetrievedAfterModelRun()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+
+            var model = new WaterFlowFMModel(mduPath);
+
+            ActivityRunner.RunActivity(model);
+
+            var diaFileDataItem = model.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
+            Assert.NotNull(diaFileDataItem, "DiaFile not retrieved after model run, check WaterFlowFMModel.DiaFileDataItemTag");
+            Assert.NotNull(diaFileDataItem.Value, "DiaFile not retrieved after model run, check WaterFlowFMModel.DiaFileDataItemTag");
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void TestWarningGivenIfDiaFileFileNotFound()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            mduPath = TestHelper.CreateLocalCopy(mduPath);
+
+            var model = new WaterFlowFMModel(mduPath);
+
+            var outputDirectory = FileUtils.CreateTempDirectory();
+            var diaFileName = string.Format("{0}.dia", model.Name);
+            var diaFilePath = Path.Combine(outputDirectory, diaFileName);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                TypeUtils.CallPrivateMethod(model, "ReadDiaFile", new[] { outputDirectory }),
+                string.Format(Properties.Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_, diaFileName, diaFilePath)
+            );
+        }
+
+        [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void SetCoordinateSystemOnModelAndExportAdjustsNetFile()

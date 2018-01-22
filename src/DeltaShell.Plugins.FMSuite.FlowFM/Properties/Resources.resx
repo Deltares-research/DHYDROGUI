@@ -334,7 +334,48 @@ Change this group name and save the project again to write these features to a s
     <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
 File import of structures file '{1}' has failed.</value>
   </data>
-  <data name="GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_" xml:space="preserve">
+  <data name="Could_not_export_data_for_SourceAndSink___0___no_Function_was_found" xml:space="preserve">
+    <value>Could not export data for SourceAndSink: {0}, no Function was found</value>
+  </data>
+  <data name="TimFileExporter_Export_Failed_to_export_data_to__0____1_" xml:space="preserve">
+    <value>Failed to export data to {0}: {1}</value>
+  </data>
+  <data name="Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_" xml:space="preserve">
+    <value>Invalid Variables detected in imported SourceAndSink Function: {0}</value>
+  </data>
+  <data name="File_import_failed___0_" xml:space="preserve">
+    <value>File import failed: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed___0_" xml:space="preserve">
+    <value>Tim-file import failed: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_" xml:space="preserve">
+    <value>Tim-file import failed: could not retrieve model for SourceAndSink: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_" xml:space="preserve">
+    <value>Tim-file import failed: could not retrieve function for SourceAndSink: {0}</value>
+  </data>
+  <data name="Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_" xml:space="preserve">
+    <value>Tim-file import failed: could not determine physical processes for imported SourceAndSink {0}</value>
+  </data>
+  <data name="Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_" xml:space="preserve">
+    <value>Read SourceAndSink values failed: no function detected for SourceAndSink {0}</value>
+  </data>
+  <data name="Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_" xml:space="preserve">
+    <value>Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}</value>
+  </data>
+  <data name="SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes" xml:space="preserve">
+    <value>Additional values detected for one or more physical processes</value>
+  </data>
+  <data name="CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_" xml:space="preserve">
+    <value>Unknown key {0} from file {1}. It will not be imported.</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_" xml:space="preserve">
+    <value>Error reading log file: {0}, {1}</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_" xml:space="preserve">
+    <value>Could not find log file: {0} at expected path: {1}</value>
+  </data>  <data name="GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_" xml:space="preserve">
     <value>Not possible to import {0}</value>
   </data>
   <data name="GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_" xml:space="preserve">
@@ -427,5 +468,4 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__" xml:space="preserve">
     <value>Attribute {0} was not found for element {1} of type {2}.</value>
-  </data>
-</root>
+  </data></root>

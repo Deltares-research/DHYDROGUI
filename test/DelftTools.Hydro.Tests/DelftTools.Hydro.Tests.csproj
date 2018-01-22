@@ -40,6 +40,7 @@
     <Compile Include="ChannelTest.cs" />
     <Compile Include="CompartmentTest.cs" />
     <Compile Include="CrossSectionBranchFeatureTest.cs" />
+    <Compile Include="CrossSectionDefinitionExtensionsTest.cs" />
     <Compile Include="CrossSectionDefinitionProxyTest.cs" />
     <Compile Include="CrossSectionDefinitionStandardTest.cs" />
     <Compile Include="CrossSectionDefinitionXYZTest.cs" />

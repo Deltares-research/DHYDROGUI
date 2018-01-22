@@ -532,6 +532,8 @@ namespace DelftTools.Hydro.Helpers
         {
 
             var csDef = new CrossSectionDefinitionZW();
+            csDef.ZWDataTable.Set(heightWidthFlowStorage);
+            csDef.AddSection(new CrossSectionSectionType(), csDef.FlowWidth());
 
             var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, csDef, chainage);
 
@@ -541,9 +543,6 @@ namespace DelftTools.Hydro.Helpers
                 name = HydroNetworkHelper.GetUniqueFeatureName(branch.HydroNetwork, cs);
             }
             cs.Name = name;
-
-            csDef.ZWDataTable.Set(heightWidthFlowStorage);
-
             csDef.Thalweg = 0.0;
 
             return cs;

@@ -862,7 +862,7 @@ namespace Sobek.IntegrationTests
                                                       });
 
 
-            tabulatedCrossSection.Sections.Add(new CrossSectionSection { SectionType = csTypeFpMain, MinY = 0, MaxY = 109 });
+            tabulatedCrossSection.AddSection(csTypeFpMain, 218);
             return tabulatedCrossSection;
         }
 

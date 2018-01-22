@@ -57,12 +57,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
         {
             CrossSectionDefinitionZW crossSectionDefinitionZW = standardDefinition.Shape.GetTabulatedDefinition();
             crossSectionDefinitionZW.ShiftLevel(standardDefinition.LevelShift);
-            crossSectionDefinitionZW.Sections.Add(new CrossSectionSection
-                                                      {
-                                                          SectionType = standardDefinition.Sections[0].SectionType,
-                                                          MinY = 0,
-                                                          MaxY = crossSectionDefinitionZW.Width / 2
-                                                      });
+            crossSectionDefinitionZW.AddSection(standardDefinition.Sections[0].SectionType, crossSectionDefinitionZW.Width);
+            
             //var isClosed = (standardDefinition.ShapeType == CrossSectionStandardShapeType.Round || standardDefinition.ShapeType == CrossSectionStandardShapeType.Egg);
             //Wait for implementation closed branches
 

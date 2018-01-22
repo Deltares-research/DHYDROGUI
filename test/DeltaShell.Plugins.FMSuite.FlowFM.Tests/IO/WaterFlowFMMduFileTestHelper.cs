@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     {
         public static GroupableFeature2DPoint GetNewGroupableFeature2DPoint(string groupName, string featureName, bool isDefaultGroup = true)
         {
-            return new GroupableFeature2DPoint()
+            return new GroupableFeature2DPoint
             {
                 GroupName = groupName,
                 Name = featureName,
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         public static GroupablePointFeature GetNewGroupablePointFeature(string groupName)
         {
-            return new GroupablePointFeature()
+            return new GroupablePointFeature
             {
                 GroupName = groupName,
                 Geometry = new Point(new Coordinate(0, 100))
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         public static GroupableFeature2DPolygon GetNewGroupableFeature2DPolygon(string groupName, string featureName)
         {
-            return new GroupableFeature2DPolygon()
+            return new GroupableFeature2DPolygon
             {
                 GroupName = groupName,
                 Name = featureName,
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         public static LandBoundary2D GetNewLandBoundary2D(string groupName, string featureName)
         {
-            return new LandBoundary2D()
+            return new LandBoundary2D
             {
                 GroupName = groupName,
                 Name = featureName,
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         public static Gate2D GetNewGate2D(string groupName, string featureName)
         {
-            return new Gate2D()
+            return new Gate2D
             {
                 GroupName = groupName,
                 Name = featureName,

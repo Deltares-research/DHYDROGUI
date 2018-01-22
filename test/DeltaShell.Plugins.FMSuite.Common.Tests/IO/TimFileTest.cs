@@ -199,5 +199,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             Assert.AreEqual(50, readFunction.Components[0].GetValues<double>().Count);
         }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ReadTimFile_HandlesNullFunction()
+        {
+            var fileReader = new TimFile();
+            fileReader.Read(string.Empty, null, DateTime.MinValue);
+        }
     }
 }

@@ -51,7 +51,7 @@ Constants,WaterDensity,Physical Parameters,Constants,Water density,Double,1025.0
 Constants,NorthDir,Physical Parameters,Constants,North direction,Double,90.0,,,,,,,,,Direction of north relative to x axis,
 Constants,MinimumDepth,Physical Parameters,Constants,Minimum water depth,Double,0.05,,,,,,,,,Minimum water depth below which points are excluded from the computation (m),
 Processes,GenModePhys,Physical Parameters,Constants,Physics mode:first generation|second generation|third generation,1|2|3,3,,,,,,,,,Physics generation mode,
-Processes,WaveSetup,Processes,,Wave setup,true|false,true,,,,,,,,,Include wave setup,
+Processes,WaveSetup,Processes,,Wave setup,true|false,false,,,,,,,,,Include wave setup,
 Processes,Breaking,Processes,,Depth indured breaking,true|false,true,,,,,,,,,Depth indured breaking,
 Processes,BreakAlpha,Physical Parameters,Breaking,Alpha,Double,1.0,,,,,Breaking,,,,Alpha coefficient for wave breaking,
 Processes,BreakGamma,Physical Parameters,Breaking,Gamma,Double,0.73,,,,,Breaking,,,,Gamma coefficient for wave breaking,

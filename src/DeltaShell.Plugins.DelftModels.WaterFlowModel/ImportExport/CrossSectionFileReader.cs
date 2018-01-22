@@ -153,46 +153,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 var mainCrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.MainSectionName, model.Network);
                 var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain1SectionTypeName, model.Network);
-                var floodPlain2mainCrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain2SectionTypeName, model.Network);
+                var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(CrossSectionDefinitionZW.Floodplain2SectionTypeName, model.Network);
 
-                var main = csdDefinitionCategory.ReadProperty<double>(DefinitionRegion.Main.Key);
-                var floodPlain1 = csdDefinitionCategory.ReadProperty<double>(DefinitionRegion.FloodPlain1.Key,true);
+                var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionRegion.Main.Key);
+                var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionRegion.FloodPlain1.Key,true);
                 var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionRegion.FlowWidths.Key);
             
-                var floodPlain2 = flowWidths.Max() - main - floodPlain1; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
+                var floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
                 double offset = 0.0d;
 
                 readCrossSectionDefinition.Sections.Clear();
-
-                readCrossSectionDefinition.Sections.Add(
-                    new CrossSectionSection()
-                    {
-                        SectionType = mainCrossSectionSectionType,
-                        MinY = offset,
-                        MaxY = offset+main / 2
-                    }
-                    );
-                
-                offset += main/2;
-
-                readCrossSectionDefinition.Sections.Add(
-                    new CrossSectionSection()
-                    {
-                        SectionType = floodPlain1CrossSectionSectionType,
-                        MinY = offset,
-                        MaxY = offset+floodPlain1 / 2
-                    }
-                    );
-                offset += floodPlain1 / 2;
-                readCrossSectionDefinition.Sections.Add(
-                    new CrossSectionSection()
-                    {
-                        SectionType = floodPlain2mainCrossSectionSectionType,
-                        MinY = offset,
-                        MaxY = offset+floodPlain2 / 2
-                    }
-                    );
+                readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
+                readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
+                readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
             }
             
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)

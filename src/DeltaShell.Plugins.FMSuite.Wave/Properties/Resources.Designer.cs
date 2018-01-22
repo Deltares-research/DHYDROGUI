@@ -71,6 +71,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cardesian.
+        /// </summary>
+        public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {
+            get {
+                return ResourceManager.GetString("WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordin" +
+                        "ate_System_should_be_the_same__either_Spherical_or_Cardesian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WaveSetup should be false when using Spherical Coordinate Systems..
+        /// </summary>
+        public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_ {
+            get {
+                return ResourceManager.GetString("WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_f" +
+                        "alse_when_using_Spherical_Coordinate_Systems_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values..
+        /// </summary>
+        public static string WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_ {
+            get {
+                return ResourceManager.GetString("WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_ru" +
+                        "ns_with_lakes_will_produce_unreliable_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Waves Model Properties.
         /// </summary>
         public static string WavePropertiesValidator_Validate_Waves_Model_Properties {

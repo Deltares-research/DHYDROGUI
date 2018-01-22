@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private readonly DimrRunner runner;
 
         public const string CellsToFeaturesName = "CellsToFeatures";
-        
+        public const string DiaFileDataItemTag = "DiaFile";
 
         public const string IsPartOf1D2DModelPropertyName = "IsPartOf1D2DModel";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
@@ -1461,7 +1461,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var property = ModelDefinition.GetModelProperty(pair.Key);
                     var propertyValue = property.GetValueAsString();
                     if (pair.Key != KnownProperties.NetFile && pair.Key != KnownProperties.ExtForceFile &&
-                        String.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
+                        string.IsNullOrEmpty(propertyValue)) //skip default (empty) paths
                     {
                         continue;
                     }
@@ -2624,8 +2624,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual void ConnectOutput(string outputPath)
         {
-            ReconnectOutputFiles(Path.Combine(outputPath, DirectoryName));
+            var outputDirectory = Path.Combine(outputPath, DirectoryName);
+            ReconnectOutputFiles(outputDirectory);
+            ReadDiaFile(outputDirectory);
         }
+
+        private void ReadDiaFile(string outputDirectory)
+        {
+            var diaFileName = string.Format("{0}.dia", Name);
+
+            var logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
+            if (logDataItem == null)
+            {
+                // add logfile dataitem if not exists
+                var textDocument = new TextDocument(true) { Name = diaFileName };
+                logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
+                DataItems.Add(logDataItem);
+            }
+
+            var diaFilePath = Path.Combine(outputDirectory, diaFileName);
+            if (File.Exists(diaFilePath))
+            {
+                try
+                {
+                    var log = File.ReadAllText(diaFilePath);
+                    ((TextDocument)logDataItem.Value).Content = log;
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat(Resources.WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_, diaFileName, ex.Message);
+                }
+            }
+            else
+            {
+                Log.WarnFormat(Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_, diaFileName, diaFilePath);
+            }
+        }
+
         public virtual ValidationReport Validate()
         {
             return ValidateBeforeRun ? WaterFlowFmModelValidationExtensions.Validate(this) : null;
@@ -2716,6 +2751,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         protected override void OnInitialize()
         {
+            DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
+
             var mduPath = Path.Combine(WorkingDirectory, Path.GetFileName(MduFilePath));
             ExportTo(mduPath, false);
             InitializeRunTimeGridOperationApi();

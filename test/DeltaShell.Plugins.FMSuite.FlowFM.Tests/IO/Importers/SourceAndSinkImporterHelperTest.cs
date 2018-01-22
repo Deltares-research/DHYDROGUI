@@ -22,39 +22,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.False(SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(function, null));
         }
 
-        [TestCase(true, true, true, true, 10)]
-        [TestCase(true, true, true, false, 10)]
-        [TestCase(true, true, false, true, 10)]
-        [TestCase(true, true, false, false, 10)]
+        [TestCase(true, 3, true, true, 10)]
+        [TestCase(false, 3, true, false, 10)]
+        [TestCase(false, 3, false, true, 10)]
+        [TestCase(false, 3, false, false, 10)]
 
-        [TestCase(true, false, true, true, 10)]
-        [TestCase(true, false, true, false, 10)]
-        [TestCase(true, false, false, true, 10)]
-        [TestCase(true, false, false, false, 10)]
+        [TestCase(true, 2, true, true, 10)]
+        [TestCase(true, 2, true, false, 10)]
+        [TestCase(true, 2, false, true, 10)]
+        [TestCase(false, 2, false, false, 10)]
 
-        [TestCase(false, true, true, true, 10)]
-        [TestCase(false, true, true, false, 10)]
-        [TestCase(false, true, false, true, 10)]
-        [TestCase(false, true, false, false, 10)]
-
-        [TestCase(false, false, true, true, 10)]
-        [TestCase(false, false, true, false, 10)]
-        [TestCase(false, false, false, true, 10)]
-        [TestCase(false, false, false, false, 10)]
+        [TestCase(true, 1, true, true, 10)]
+        [TestCase(true, 1, true, false, 10)]
+        [TestCase(true, 1, false, true, 10)]
+        [TestCase(true, 1, false, false, 10)]
 
         public void TestAdaptComponentValuesFromFileToSourceAndSinkFunction_CorrectlyProcessesSalinityAndTemperatureComponents(
-            bool generateSalinityValues, bool generateTemperatureValues, bool salinityEnabled, bool temperatureEnabled, int numValues)
+            bool expectedResult, int numComponentsWithValues, bool salinityEnabled, bool temperatureEnabled, int numValues)
         {
             var sourceAndSink = new SourceAndSink();
             var originalFunction = sourceAndSink.Function;
 
-            AddValuesToSourceAndSinkFunction(originalFunction, numValues, generateSalinityValues, generateTemperatureValues);
+            // simulate reading from file
+            AddValuesToSourceAndSinkFunction(originalFunction, numValues, numComponentsWithValues);
 
             var adaptedFunction = (IFunction)originalFunction.Clone(true);
             var componentSettings = GetComponentSettings(salinityEnabled, temperatureEnabled);
-            Assert.True(SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(adaptedFunction, componentSettings));
+            Assert.AreEqual(expectedResult, SourceAndSinkImporterHelper.AdaptComponentValuesFromFileToSourceAndSinkFunction(adaptedFunction, componentSettings));
 
-            VerifyComponentValues(salinityEnabled, temperatureEnabled, numValues, originalFunction, adaptedFunction);
+            if (expectedResult)
+            {
+                VerifyComponentValues(salinityEnabled, temperatureEnabled, numValues, originalFunction, adaptedFunction);
+            }
         }
 
         [Test]
@@ -64,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var originalFunction = sourceAndSink.Function;
 
             var numValues = 10;
-            AddValuesToSourceAndSinkFunction(originalFunction, numValues, false, false);
+            AddValuesToSourceAndSinkFunction(originalFunction, numValues, 1);
 
             // simulate missing values
             originalFunction.Components[0].Values.Clear();
@@ -80,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual(numValues, adaptedFunction.Components[2].Values.Count);
         }
 
-        private static void AddValuesToSourceAndSinkFunction(IFunction function, int numValues, bool generateSalinityValues, bool generateTemperatureValues)
+        private static void AddValuesToSourceAndSinkFunction(IFunction function, int numValues, int numComponentsWithValues)
         {
             var timeArgument = function.Arguments.FirstOrDefault(
                 a => a.Name.Equals(SourceAndSink.TimeVariableName, StringComparison.InvariantCultureIgnoreCase))
@@ -88,32 +87,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             Assert.NotNull(timeArgument);
             SetValuesOfSourceAndSinkVariable(timeArgument, numValues);
-            
-            var dischargeComponent = function.Components.FirstOrDefault(
-                a => a.Name.Equals(SourceAndSink.DischargeVariableName, StringComparison.InvariantCultureIgnoreCase))
-                as Variable<double>;
 
-            Assert.NotNull(dischargeComponent);
-            SetValuesOfSourceAndSinkVariable(dischargeComponent, numValues);
-
-            if (generateSalinityValues) // else DefaultValues will remain
+            for (var i = 0; i < numComponentsWithValues; i++)
             {
-                var salinityComponent = function.Components.FirstOrDefault(
-                    a => a.Name.Equals(SourceAndSink.SalinityVariableName, StringComparison.InvariantCultureIgnoreCase))
-                    as Variable<double>;
+                Assert.IsTrue(function.Components.Count > i);
+                var component = function.Components[i] as Variable<double>;
 
-                Assert.NotNull(salinityComponent);
-                SetValuesOfSourceAndSinkVariable(salinityComponent, numValues);
-            }
-
-            if (generateTemperatureValues) // else DefaultValues will remain
-            {
-                var temperatureComponent = function.Components.FirstOrDefault(
-                    a => a.Name.Equals(SourceAndSink.TemperatureVariableName, StringComparison.InvariantCultureIgnoreCase))
-                    as Variable<double>;
-
-                Assert.NotNull(temperatureComponent);
-                SetValuesOfSourceAndSinkVariable(temperatureComponent, numValues);
+                Assert.NotNull(component);
+                SetValuesOfSourceAndSinkVariable(component, numValues);
             }
         }
 
@@ -143,6 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         private static void VerifyComponentValues(bool salinityEnabled, bool temperatureEnabled, int numValues,
             IFunction originalFunction, IFunction adaptedFunction)
         {
+            var originalTemperatureValuesComponentIndex = salinityEnabled ? 2 : 1;
             for (var i = 0; i < numValues; i++)
             {
                 Assert.AreEqual(originalFunction.Arguments[0].Values[i], adaptedFunction.Arguments[0].Values[i]);
@@ -155,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.AreEqual(expectedSalinityValue, adaptedFunction.Components[1].Values[i]);
 
                 var expectedTemperatureValue = temperatureEnabled
-                    ? originalFunction.Components[2].Values[i]
+                    ? originalFunction.Components[originalTemperatureValuesComponentIndex].Values[i]
                     : adaptedFunction.Components[2].DefaultValue;
 
                 Assert.AreEqual(expectedTemperatureValue, adaptedFunction.Components[2].Values[i]);

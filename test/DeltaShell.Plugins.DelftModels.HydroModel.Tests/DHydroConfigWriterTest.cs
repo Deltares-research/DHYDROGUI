@@ -8,10 +8,12 @@ using System.Xml.Schema;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
@@ -19,7 +21,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Point = NetTopologySuite.Geometries.Point;
 
@@ -124,6 +125,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
          * we will be able to detect it, (discuss it) and fix it.
          */
 
+        private static HydroModel CreateSimpleCoupledModelWithOneCatchment(CatchmentType catchmentType, double bedlevel = 1.3)
+        {
+            // create full hydro model
+            var builder = new HydroModelBuilder();
+            var hydroModel = builder.BuildModel(ModelGroup.All);
+
+            // remove non Flow/RR activities
+            foreach (var activity in hydroModel.Activities.ToList())
+            {
+                if (!(activity is WaterFlowModel1D) && !(activity is RainfallRunoffModel))
+                {
+                    hydroModel.Activities.Remove(activity);
+                }
+            }
+
+            var rr = hydroModel.Activities.OfType<RainfallRunoffModel>().First();
+            var flow = hydroModel.Activities.OfType<WaterFlowModel1D>().First();
+
+            // add catchment to rr
+            var c1 = new Catchment
+            {
+                Name = "C1",
+                CatchmentType = catchmentType,
+                Geometry = new Point(100, 500),
+                IsGeometryDerivedFromAreaSize = true
+            };
+            c1.SetAreaSize(1000.0);
+            rr.Basin.Catchments.Add(c1);
+
+            // add channel to flow
+            var n1 = new HydroNode("N1") { Geometry = new Point(0, 0) };
+            var n2 = new HydroNode("N2") { Geometry = new Point(200, 0) };
+            flow.Network.Nodes.Add(n1);
+            flow.Network.Nodes.Add(n2);
+            var channel = new Channel(n1, n2)
+            {
+                Name = "B1",
+                Geometry = new LineString(new[] { n1.Geometry.Coordinate, n2.Geometry.Coordinate })
+            };
+            flow.Network.Branches.Add(channel);
+
+            // add simple cross section to channel
+            CrossSectionHelper.AddCrossSection(channel, 50, bedlevel);
+
+            // add lateral to flow
+            var l1 = new LateralSource { Name = "L1", Geometry = new Point(100, 0) };
+            channel.BranchFeatures.Add(l1);
+
+            // link catchment c1 to lateral l1
+            c1.LinkTo(l1);
+
+            return hydroModel;
+        }
+
         [Test]
         public void WriteAndCheckEmptyDocumentIsNotValid()
         {
@@ -181,7 +236,58 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.IsNotNull(resultString);
             ValidateXml(xmlDocument);
         }
- 
+
+        [Test]
+        public void WriteDocument_RTC_1D_HasLoggerElement()
+        {
+            var hydroModel = BuildCoupledDemo1DModel();
+            CheckCouplerXml(hydroModel);
+        }
+
+        [Test]
+        public void WriteDocument_RTC_FM_HasLoggerElement()
+        {
+            var hydroModel = BuildCoupledDemoModel();
+            CheckCouplerXml(hydroModel);
+        }
+
+        [Test]
+        public void WriteDocument_RR_1D_HasLoggerElement()
+        {
+            var hydroModel = CreateSimpleCoupledModelWithOneCatchment(CatchmentType.Paved);
+            Assert.IsNotNull(hydroModel);
+
+            hydroModel.CurrentWorkflow =
+                hydroModel.Workflows.FirstOrDefault(w => w is ParallelActivity && w.Activities.Count == 2);
+
+            CheckCouplerXml(hydroModel);
+        }
+
+        private static void CheckCouplerXml(HydroModel hydroModel)
+        {
+            var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
+            var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
+
+            Assert.IsTrue(couplers.Any());
+            foreach (var coupler in couplers)
+            {
+                var couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
+                Assert.IsNotNull(couplerName);
+                Assert.IsNotNull(couplerName.Value);
+
+                var logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
+                Assert.IsNotNull(logger);
+                Assert.IsTrue(logger.HasElements);
+
+                var outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
+                Assert.IsNotNull(outputFileElement);
+
+                var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
+                Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
+            }
+            ValidateXml(xml);
+        }
+
         private static void ValidateXml(XDocument xmlDocument, bool expectedToFail = false, Action<string> assertFailMessage = null)
         {
             if(assertFailMessage == null)

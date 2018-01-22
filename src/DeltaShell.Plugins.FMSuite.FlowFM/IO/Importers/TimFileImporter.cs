@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorFormat("File import failed: {0}", e.Message);
+                    Log.ErrorFormat(Resources.File_import_failed___0_, e.Message);
                     return windItem;
                 }
 
@@ -123,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorFormat("Tim-file import failed: {0}", e.Message);
+                    Log.ErrorFormat(Resources.Tim_file_import_failed___0_, e.Message);
                     return boundaryCondition;
                 }
             }
@@ -137,14 +138,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     var model = GetModelForSourceAndSink(sourceAndSink);
                     if (model == null)
                     {
-                        Log.ErrorFormat("Tim-file import failed: could not retrieve model for SourceAndSink: {0}", sourceAndSink.Name);
+                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_retrieve_model_for_SourceAndSink___0_, sourceAndSink.Name);
                         return sourceAndSink;
                     }
                     
                     var sourceAndSinkFunction = sourceAndSink.Function;
                     if (sourceAndSinkFunction == null)
                     {
-                        Log.ErrorFormat("Tim-file import failed: could not retrieve function for SourceAndSink: {0}", sourceAndSink.Name);
+                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_, sourceAndSink.Name);
                         return sourceAndSink;
                     }
 
@@ -163,13 +164,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     }
                     else
                     {
-                        Log.ErrorFormat("Tim-file import failed: could not determine component values for imported SourceAndSink {0}", sourceAndSink.Name);
+                        Log.ErrorFormat(Resources.Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_, sourceAndSink.Name);
                     }
                     return sourceAndSink;
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorFormat("Tim-file import failed: {0}", e.Message);
+                    Log.ErrorFormat(Resources.Tim_file_import_failed___0_, e.Message);
                     return sourceAndSink;
                 }
             }
@@ -184,12 +185,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorFormat("Tim-file import failed: {0}", e.Message);
+                    Log.ErrorFormat(Resources.Tim_file_import_failed___0_, e.Message);
                     return heatFluxModel;
                 }
             }
-
-            
 
             return target;
         }

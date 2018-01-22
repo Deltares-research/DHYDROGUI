@@ -336,13 +336,12 @@ namespace DelftTools.Hydro
             var clonedLocalDefinitions = clone.CrossSections.Select(cs => cs.Definition).Where(def => !def.IsProxy);
             var allClonedSections = clone.SharedCrossSectionDefinitions.Concat(clonedLocalDefinitions).SelectMany(def => def.Sections);
 
-            foreach (var crossSectionSection in allClonedSections)
+            foreach (var clonedSection in allClonedSections)
             {
                 //is this a valid situation???
-                if (crossSectionSection.SectionType != null)
+                if (clonedSection.SectionType != null)
                 {
-                    var index = CrossSectionSectionTypes.IndexOf(crossSectionSection.SectionType);
-                    crossSectionSection.SectionType = clone.CrossSectionSectionTypes[index];   
+                    clonedSection.SectionType = clone.CrossSectionSectionTypes.FirstOrDefault(type => type.Name == clonedSection.SectionType.Name);
                 }
             }
 

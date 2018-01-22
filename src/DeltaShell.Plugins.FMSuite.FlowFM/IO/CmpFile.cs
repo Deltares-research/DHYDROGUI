@@ -5,11 +5,15 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class CmpFile : FMSuiteFileBase
     {
+        private readonly ILog log = LogManager.GetLogger(typeof(CmpFile));
         public void Write(string cmpFilePath, IEnumerable<HarmonicComponent> astroComponents)
         {
             using (CultureUtils.SwitchToInvariantCulture())
@@ -97,7 +101,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var amplitude = GetDouble(lineFields[1], "amplitude");
                     var phase = GetDouble(lineFields[2], "phase");
 
-                    var harmonicComponent = HarmonicComponent.DefaultAstroComponentsRadPerHour.ContainsKey(key)
+                    var defaultAstroComponent = HarmonicComponent.DefaultAstroComponentsRadPerHour.ContainsKey(key);
+                    if (!defaultAstroComponent && dataType != null &&
+                        dataType.Value == BoundaryConditionDataType.AstroComponents)
+                    {
+                        log.WarnFormat(Resources.CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_, key, cmpFilePath);
+                        line = GetNextLine();
+                        continue;
+                    }
+
+                    var harmonicComponent = defaultAstroComponent
                         ? new HarmonicComponent(key, amplitude, phase)
                         : new HarmonicComponent(
                             FlowBoundaryCondition.GetFrequencyInDegPerHour(GetDouble(key, "period")), amplitude, phase);

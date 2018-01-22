@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -717,6 +717,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         internal static string WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___ {
             get {
                 return ResourceManager.GetString("WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find process definition files: {0}.
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_proces" +
+                        "s_definition_files___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find process definition files: {0}, but now using {1}.
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0___but_now_using__1_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_proces" +
+                        "s_definition_files___0___but_now_using__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process definition file (*.def)|*.def.
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_fi" +
+                        "le____def____def", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process definition files could not be found. Please refer to the *.def file..
+        /// </summary>
+        internal static string WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_files_could_not_be_found__Please_refer_to_the___def_file_ {
+            get {
+                return ResourceManager.GetString("WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_fi" +
+                        "les_could_not_be_found__Please_refer_to_the___def_file_", resourceCulture);
             }
         }
         

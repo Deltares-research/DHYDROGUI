@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             { KnownProperties.FixedWeirFile, "FixedWeirFile" },
             { KnownProperties.StructuresFile, "StructureFile" },
             { KnownProperties.ObsFile, "ObsFile" },
-            { KnownProperties.ObsCrsFile, "CrsFile" },
+            { KnownProperties.ObsCrsFile, "CrsFile" }
         };
 
         public MduFile()
@@ -478,37 +478,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             waterFlowFMProperty.SetValueAsString(string.Join(" ", writeToRelativeFilePaths.Select(f => System.IO.Path.HasExtension(f) ? f : string.Concat(f, extension))));
         }
 
-        private void WriteDryPoints(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IList<GroupablePointFeature> dryPoints)
+        private static void AddDryAreasToWriter(string targetMduFilePath, IList<GroupableFeature2DPolygon> features, string extension,
+            WaterFlowFMProperty waterFlowFMProperty, out List<IGrouping<string, IGroupableFeature>> grouping)
+        {
+            var defaultGroup = System.IO.Path.GetFileNameWithoutExtension(targetMduFilePath);
+            MduFileHelper.UpdateFeatures(features, extension, defaultGroup);
+            var writeToRelativeFilePaths = MduFileHelper.GetUniqueFilePathsForWindows(targetMduFilePath, features, extension).Where(fp => MduFileHelper.IsValidFilePath(fp, targetMduFilePath)).ToList();
+
+            grouping = features.OfType<IGroupableFeature>().GroupBy(f => f.GroupName, StringComparer.InvariantCultureIgnoreCase).ToList();
+
+            if (writeToRelativeFilePaths.Any())
+            {
+                var currentStringValue = waterFlowFMProperty.GetValueAsString();
+                waterFlowFMProperty.SetValueAsString(currentStringValue + " " + string.Join(" ", writeToRelativeFilePaths.Select(f => System.IO.Path.HasExtension(f)
+                                                                 ? f
+                                                                 : string.Concat(f, extension))));
+            }
+        }
+
+        private void WriteDryPointsAndDryAreas(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IList<GroupablePointFeature> dryPoints, IList<GroupableFeature2DPolygon> dryAreas)
         {
             var waterFlowFMProperty = modelDefinition.GetModelProperty(KnownProperties.DryPointsFile);
-            if (dryPoints.Any())
+            if (dryPoints.Any() || dryAreas.Any())
             {
-                List<IGrouping<string, IGroupableFeature>> grouping;
-                InitializeFeatureWriter(targetMduFilePath, dryPoints, DryPointExtension, waterFlowFMProperty, out grouping);
+                List<IGrouping<string, IGroupableFeature>> dryPointsPerGroup;
+                List<IGrouping<string, IGroupableFeature>> dryAreasPerGroup;
+                InitializeFeatureWriter(targetMduFilePath, dryPoints, DryPointExtension, waterFlowFMProperty, out dryPointsPerGroup);
+                AddDryAreasToWriter(targetMduFilePath, dryAreas, DryAreaExtension, waterFlowFMProperty, out dryAreasPerGroup);
+
                 var featuresFilePaths = MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
                 featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
-                
-                if (dryPointFile == null)
-                {
-                    dryPointFile = new XyzFile();
-                }
 
-                foreach (var filePath in featuresFilePaths)
+                if (dryPointFile == null) dryPointFile = new XyzFile();
+                if (dryAreaFile == null) dryAreaFile = new PolFile<GroupableFeature2DPolygon>();
+                foreach (var featuresFilePath in featuresFilePaths)
                 {
-                    // Create the directory to which the file is being written, because XyzFile class does not handle this.
-                    var writeDirectory = System.IO.Path.GetDirectoryName(filePath);
-                    if (!string.IsNullOrEmpty(writeDirectory) && !Directory.Exists(writeDirectory))
+                    if (featuresFilePath.EndsWith(DryPointExtension))
                     {
-                        Directory.CreateDirectory(writeDirectory);
-                    }
+                        // Create the directory to which the file is being written, because XyzFile class does not handle this.
+                        var writeDirectory = System.IO.Path.GetDirectoryName(featuresFilePath);
+                        if (!string.IsNullOrEmpty(writeDirectory) && !Directory.Exists(writeDirectory))
+                        {
+                            Directory.CreateDirectory(writeDirectory);
+                        }
 
-                    var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), filePath, true);
-                    var fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
-                    var groupFeatures = grouping.FirstOrDefault(g => g.Key.Equals(fileName) || g.Key.Equals(fileNameWithoutExtension));
-                    var featuresToWrite = dryPoints.Count > 0 && groupFeatures != null
-                        ? groupFeatures.Cast<GroupablePointFeature>().ToList()
-                        : dryPoints;
-                    dryPointFile.Write(filePath, featuresToWrite.Select(p => new PointValue { X = p.X, Y = p.Y, Value = 0 }));
+                        var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), featuresFilePath, true);
+                        var fileNameWithoutExtension = fileName.Replace(DryPointExtension, string.Empty);
+                        var groupFeatures = GetAllGroupadFeaturesFromFile<GroupablePointFeature>(dryPointsPerGroup, fileName, fileNameWithoutExtension);
+                        var featuresToWrite = dryPoints.Count > 0 && groupFeatures != null ? groupFeatures : dryPoints;
+                        dryPointFile.Write(featuresFilePath, featuresToWrite.Select(p => new PointValue { X = p.X, Y = p.Y, Value = 0 }));
+                    }
+                    else if (featuresFilePath.EndsWith(DryAreaExtension))
+                    {
+                        var fileName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(targetMduFilePath), featuresFilePath, true);
+                        var fileNameWithoutExtension = fileName.Replace(DryAreaExtension, string.Empty);
+                        var groupFeatures = GetAllGroupadFeaturesFromFile<GroupableFeature2DPolygon>(dryAreasPerGroup, fileName, fileNameWithoutExtension);
+                        var featuresToWrite = dryAreas.Count > 0 && groupFeatures != null ? groupFeatures : dryAreas;
+                        dryAreaFile.Write(featuresFilePath, featuresToWrite);
+                    }
                 }
             }
             else
@@ -563,22 +590,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
                 ref structuresFile, StructuresExtension);
-
-            if (hydroArea.DryAreas.Any())
-            {
-                WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea.DryAreas,
-                ref dryAreaFile, DryAreaExtension);
-
-                if (hydroArea.DryPoints.Any())
-                {
-                    Log.WarnFormat("Cannot serialize both dry points and dry polygons to mdu. Discarded dry points");
-                }
-            }
-            else
-            {
-                WriteDryPoints(targetMduFilePath, modelDefinition, hydroArea.DryPoints);
-            }
-
+            
+            WriteDryPointsAndDryAreas(targetMduFilePath, modelDefinition, hydroArea.DryPoints, hydroArea.DryAreas);
+            
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
                 ref enclosureFile, EnclosureExtension);
         }
@@ -592,6 +606,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static string ReplaceMduExtension(string mduFilePath, string newExtension)
         {
             return mduFilePath.Substring(0, mduFilePath.Length - MduExtension.Length) + newExtension;
+        }
+
+        private static List<TFeat> GetAllGroupadFeaturesFromFile<TFeat>(IEnumerable<IGrouping<string, IGroupableFeature>> grouping, string fileName, string fileNameWithoutExtension)
+            where TFeat : IGroupableFeature
+        {
+            var groupFeatures = 
+                grouping.FirstOrDefault(g => g.Key.ToLowerInvariant().Equals(fileName.ToLowerInvariant())
+                                             || g.Key.ToLowerInvariant().Equals(fileNameWithoutExtension.ToLowerInvariant())
+                                             || g.Key.ToLowerInvariant().Replace(System.IO.Path.GetExtension(DryAreaExtension), string.Empty).Equals(fileNameWithoutExtension.ToLowerInvariant()));
+            if (groupFeatures == null) return null;
+
+            try
+            {
+                var groupFeaturesList = groupFeatures.Cast<TFeat>().ToList();
+                return groupFeaturesList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #endregion
@@ -891,8 +925,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     throw new NotImplementedException();
                 }
             }
-
-            ReadFeaturesDryPoints(filePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea);
+            
+            ReadDryPointsAndDryAreas(filePath, modelDefinition, hydroArea);
 
             var enclosureMultipleFilePath = MduFileHelper.GetMultipleSubfilePath(filePath,
                 modelDefinition.GetModelProperty(KnownProperties.EnclosureFile));
@@ -916,47 +950,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private void ReadFeaturesDryPoints(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, string propertyKey, HydroArea hydroArea)
+        private void ReadDryPointsAndDryAreas(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
         {
-            Dictionary<string, string> replacedFilePaths = new Dictionary<string, string>();
-            var modelProperty = modelDefinition.GetModelProperty(propertyKey);
-            var dryPointsFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
-            if (dryPointsFilePaths.GroupBy(fp => System.IO.Path.GetExtension(fp)).ToList().Count > 1)
-            {
-                Log.WarnFormat(
-                    Resources.MduFile_ReadFeaturesDryPoints_DryPoints_parameter_contains_more_than_one_file_format__Only_one_format__Area_or_Points__is_allowed___0_,
-                    string.Join(", ", dryPointsFilePaths.Select( fp => System.IO.Path.GetFileName(fp))));
-            }
-            else if (dryPointsFilePaths.Count > 0)
-            {
-                RemoveBadFilePaths(ref dryPointsFilePaths, mduFilePath, modelDefinition, propertyKey);
-                CopyFilesToProjectFolderIfNeeded(dryPointsFilePaths, mduFilePath, modelDefinition, propertyKey, ref replacedFilePaths);
-                if(!dryPointsFilePaths.Any()) return;
+            var replacedFilePaths = new Dictionary<string, string>();
+            var dryPointsPropertyKey = KnownProperties.DryPointsFile;
+            var mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
 
-                var groupName = System.IO.Path.GetExtension(dryPointsFilePaths.First());
-                if (groupName.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension))
+            var modelProperty = modelDefinition.GetModelProperty(dryPointsPropertyKey);
+            var featureFilePaths = MduFileHelper.GetMultipleSubfilePath(mduFilePath, modelProperty);
+            RemoveBadFilePaths(ref featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey);
+            CopyFilesToProjectFolderIfNeeded(featureFilePaths, mduFilePath, modelDefinition, dryPointsPropertyKey, ref replacedFilePaths);
+            if (!featureFilePaths.Any()) return;
+
+            if (dryPointFile == null) dryPointFile = new XyzFile();
+            if (dryAreaFile == null) dryAreaFile = new PolFile<GroupableFeature2DPolygon>();
+            foreach (var featureFilePath in featureFilePaths)
+            {
+                var groupName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), featureFilePath, true);
+                if (featureFilePath.EndsWith(DryPointExtension))
                 {
-                    ReadFeatures(mduFilePath, modelDefinition, KnownProperties.DryPointsFile, hydroArea.DryAreas, ref dryAreaFile,
-                        DryAreaExtension);
+                    var dryPointsToAdd = dryPointFile.Read(featureFilePath).Select(p => new GroupablePointFeature
+                    {
+                        Geometry = p.Geometry,
+                        GroupName = groupName,
+                        IsDefaultGroup = groupName != null && groupName.Replace(DryPointExtension, string.Empty).Trim().Equals(mduPathName)
+                    });
+                    hydroArea.DryPoints.AddRange(dryPointsToAdd);
                 }
-                else if (groupName.EndsWith(XyzFile.Extension))
+                else if(featureFilePath.EndsWith(DryAreaExtension))
                 {
-                    dryPointFile = new XyzFile();
-                    hydroArea.DryPoints.Clear();
-                    dryPointsFilePaths.ForEach(
-                        fp =>
-                        {
-                            var dryPointGroupName = FileUtils.GetRelativePath(System.IO.Path.GetDirectoryName(mduFilePath), fp, true);
-                            var mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
-                            hydroArea.DryPoints.AddRange(
-                                dryPointFile.Read(fp).Select(p => new GroupablePointFeature()
-                                {
-                                    Geometry = p.Geometry,
-                                    GroupName = dryPointGroupName,
-                                    IsDefaultGroup = dryPointGroupName != null &&
-                                                     dryPointGroupName.Replace(DryPointExtension, string.Empty).Trim().Equals(mduPathName)
-                                }));
-                        });
+                    var dryAreasToAdd = dryAreaFile.Read(featureFilePath);
+                    dryAreasToAdd.ForEach(f =>
+                    {
+                        f.GroupName = groupName;
+                        f.IsDefaultGroup = groupName != null && groupName.Replace(DryAreaExtension, string.Empty).Trim().Equals(mduPathName);
+                    });
+                    hydroArea.DryAreas.AddRange(dryAreasToAdd);
                 }
             }
         }

@@ -70,26 +70,26 @@
                 </Label>
                 <ListView ItemsSource="{Binding ErrorTexts}" Focusable="False" FontWeight="Normal" BorderBrush="Transparent" Background="Transparent" Foreground="Red" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="4"/>
 
-                <CheckBox IsChecked="{Binding StartTimeEnabled}"
+                <CheckBox IsChecked="{Binding StartTimeSynchronisationEnabled}"
                           Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <CheckBox IsChecked="{Binding StopTimeEnabled}"
+                <CheckBox IsChecked="{Binding StopTimeSynchronisationEnabled}"
                           Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <CheckBox IsChecked="{Binding TimeStepEnabled}"
+                <CheckBox IsChecked="{Binding TimeStepSynchronisationEnabled}"
                           Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 <xctk:DateTimePicker Text="{Binding StartTime}"
                                      Value="{Binding StartTime}"
-                                     IsEnabled="{Binding StartTimeEnabled}"
+                                     IsEnabled="{Binding StartTimeSynchronisationEnabled}"
                                      Style="{StaticResource DateTimePickerStyle}"
                                      Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,1,28,1"/>
                 <xctk:DateTimePicker Text="{Binding StopTime}"
                                      Value="{Binding StopTime}"
-                                     IsEnabled="{Binding StopTimeEnabled}"
+                                     IsEnabled="{Binding StopTimeSynchronisationEnabled}"
                                      Style="{StaticResource DateTimePickerStyle}"
                                      Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,1,28,1"/>
                 <xctk:MaskedTextBox Mask="00:00:00"
                                     Text="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    IsEnabled="{Binding TimeStepEnabled}"
+                                    IsEnabled="{Binding TimeStepSynchronisationEnabled}"
                                     Grid.Column="2" Grid.Row="2"/>
 
             </Grid>

@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
@@ -28,11 +29,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             if (timeVariable?.Values == null || dischargeComponent?.Values == null || salinityComponent?.Values == null || temperatureComponent?.Values == null)
             {    
-                Log.ErrorFormat("Invalid Variables detected in imported SourceAndSink Function: {0}", readFunction.Name);
+                Log.ErrorFormat(Resources.Invalid_Variables_detected_in_imported_SourceAndSink_Function___0_, readFunction.Name);
                 return false;
             }
            
-            ProcessSalinityAndTemperatureComponents(salinityComponent, temperatureComponent, componentSettings);
+            if (!TryAdjustSalinityAndTemperatureComponents(salinityComponent, temperatureComponent, componentSettings))
+            {
+                return false;
+            }
 
             var numTimeSteps = timeVariable.Values.Count;
             ValidateComponentValues<double>(dischargeComponent, numTimeSteps);
@@ -42,11 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return true;
         }
 
-        private static void ProcessSalinityAndTemperatureComponents(IVariable salinityComponent, IVariable temperatureComponent, IDictionary<string, bool> componentSettings)
+        private static bool TryAdjustSalinityAndTemperatureComponents(IVariable salinityComponent, IVariable temperatureComponent, IDictionary<string, bool> componentSettings)
         {          
-            var salinityValues = ((MultiDimensionalArray<double>)salinityComponent.Values).ToList();
-            var temperatureValues = ((MultiDimensionalArray<double>)temperatureComponent.Values).ToList();
-
             bool salinityEnabled;
             if (!componentSettings.TryGetValue(SourceAndSink.SalinityVariableName, out salinityEnabled))
                 salinityEnabled = true; // Assume enabled by default, only disabled if explicitly set to false
@@ -55,26 +56,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             if (!componentSettings.TryGetValue(SourceAndSink.TemperatureVariableName, out temperatureEnabled))
                 temperatureEnabled = true; // Assume enabled by default, only disabled if explicitly set to false
 
-            if (salinityValues.Any() && temperatureValues.Any()) // if both Salinity and Temperature components have values
+            var additionalValuesDetected = false;
+
+            if (temperatureEnabled && !salinityEnabled) // Temperature values will have been imported into the Salinity Component
             {
-                if (!salinityEnabled) salinityComponent.Values.Clear();
-                if (!temperatureEnabled) temperatureComponent.Values.Clear();
+                additionalValuesDetected |= !VariableContainsDefaultValuesOnly(temperatureComponent);
+                temperatureComponent.Values.Clear();
+
+                var salinityValues = ((MultiDimensionalArray<double>)salinityComponent.Values).ToList();
+                temperatureComponent.Values.AddRange(salinityValues);
+                salinityComponent.Values.Clear();
             }
-            else // either one of the components have values or none of them
+
+            if (!salinityEnabled)
             {
-                if (salinityEnabled && temperatureValues.Any()) // so Salinity values were imported into the Temperature Component
-                {
-                    salinityComponent.Values.Clear();
-                    salinityComponent.Values.AddRange(temperatureValues);
-                    temperatureComponent.Values.Clear();
-                }
-                else if (temperatureEnabled && salinityValues.Any()) // so Temperature values were imported into the Salinity Component
-                {
-                    temperatureComponent.Values.Clear();
-                    temperatureComponent.Values.AddRange(salinityValues);
-                    salinityComponent.Values.Clear();
-                }
+                additionalValuesDetected |= !VariableContainsDefaultValuesOnly(salinityComponent);
+                salinityComponent.Values.Clear();
             }
+            if (!temperatureEnabled)
+            {
+                additionalValuesDetected |= !VariableContainsDefaultValuesOnly(temperatureComponent);
+                temperatureComponent.Values.Clear();
+            }
+
+            if (additionalValuesDetected)
+            {
+                Log.Error(Resources.SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes);
+            }
+
+            return !additionalValuesDetected;
+        }
+
+        private static bool VariableContainsDefaultValuesOnly(IVariable variable)
+        {
+            if (variable == null) return false;
+
+            return ((MultiDimensionalArray<double>)variable.Values)
+                .All(v => Math.Abs(v - (double)variable.DefaultValue) < double.Epsilon);
         }
 
         private static void ValidateComponentValues<T>(IVariable componentVariable, int numExpectedValues)

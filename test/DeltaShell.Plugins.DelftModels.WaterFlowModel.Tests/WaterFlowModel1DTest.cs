@@ -16,6 +16,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -432,6 +433,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 Assert.AreEqual(10, timeStepCount, "expected number of timesteps should be 10");
                 Assert.AreEqual(11, waterFlowModel1D.OutputFlow.Arguments[0].Values.Count,
                                 "expected number of results is 11 (timesteps)");
+            }
+        }
+
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void TestSobekLogIsRetrievedAfterModelRun()
+        {
+            using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
+            {
+                ActivityRunner.RunActivity(waterFlowModel1D);
+
+                var sobekLogDataItem = waterFlowModel1D.DataItems.FirstOrDefault(di => di.Tag == WaterFlowModel1D.SobekLogfileDataItemTag);
+                Assert.NotNull(sobekLogDataItem, "SobekLog not retrieved after model run, check WaterFlowModel1D.SobekLogfileDataItemTag");
+                Assert.NotNull(sobekLogDataItem.Value, "SobekLog not retrieved after model run, check WaterFlowModel1D.SobekLogfileDataItemTag");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void TestWarningGivenIfSobekLogFileNotFound()
+        {
+            using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
+            {
+                var outputDirectory = FileUtils.CreateTempDirectory();
+                const string SobekLogFileName = "sobek.log";
+                var sobekLogFilePath = Path.Combine(outputDirectory, SobekLogFileName);
+
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => 
+                    TypeUtils.CallPrivateMethod(waterFlowModel1D, "ReadSobekLogFile", new[] { outputDirectory }),
+                    string.Format(WaterFlowModel.Properties.Resources.WaterFlowModel1D_ReadSobekLogFile_Could_not_find_log_file___0__at_expected_path___1_, SobekLogFileName, sobekLogFilePath)
+                );
             }
         }
 
@@ -1256,7 +1290,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                                   calculationPointsBranch1)
                         );
                     var sumValuesHGridpoints = valuesHGridpoints.Sum();
-                    Assert.AreEqual(lateralH, (sumValuesHGridpoints / calculationPointsBranch1.Length), 0.00000001);
+                    Assert.AreEqual(lateralH, sumValuesHGridpoints / calculationPointsBranch1.Length, 0.00000001);
                 }
             }
         }
@@ -2977,7 +3011,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // Add network features
             var crossSection1 = CrossSection.CreateDefault(CrossSectionType.ZW, branch1, branchLength / 2);
+            var csDef = crossSection1.Definition as CrossSectionDefinitionZW;
             crossSection1.Name = "crs1";
+            csDef.AddSection(new CrossSectionSectionType(), csDef.FlowWidth());
             branch1.BranchFeatures.Add(crossSection1);
 
             var waterFlowModel1D = new WaterFlowModel1D("flow waterFlowModel1D")

@@ -7,6 +7,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
@@ -70,6 +71,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             // final cleanup
             FileUtils.DeleteIfExists(exportedFile);
+        }
+
+        [Test]
+        public void TestExport_SourceAndSinks_WithMissingFunction()
+        {
+            // setup
+            var sourceAndSink = new SourceAndSink() { Data = null };
+            var fmModel = new WaterFlowFMModel();
+            fmModel.SourcesAndSinks.Add(sourceAndSink);
+
+            // do the export
+            var exporter = new TimFileExporter()
+            {
+                GetModelForSourceAndSink = input => fmModel
+            };
+            Assert.IsFalse(exporter.Export(sourceAndSink, string.Empty));
+            // check results
+            var expectedLogMessage = string.Format(Resources.Could_not_export_data_for_SourceAndSink___0___no_Function_was_found, sourceAndSink.Name);
+            TestHelper.AssertAtLeastOneLogMessagesContains(()=> exporter.Export(sourceAndSink, string.Empty), expectedLogMessage);
         }
     }
 }

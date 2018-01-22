@@ -1,0 +1,130 @@
+** DEBUG  :            8  0.1000020     NOD(KMAX)
+** DEBUG  :           14  0.7000140     XK (KMAX), YK (KMAX), ZK (KMAX), KC (KMAX), NMK (KMAX), RNOD(KMAX)
+** DEBUG  :           14  1.4400000E-03 xsp(maxspl, maxsplen)
+** DEBUG  :           14  1.4400000E-03 ysp(maxspl, maxsplen)
+** DEBUG  :           14  1.4400000E-03 xsp2(maxspl, maxsplen)
+** DEBUG  :           14  1.4400000E-03 ysp2(maxspl, maxsplen)
+** DEBUG  :           14  9.9999998E-03 XS(NSMAX),YS(NSMAX),ZS(NSMAX),IPSAM(NSMAX)
+** DEBUG  :           14  5.9999999E-02 xlan(maxlan)
+** DEBUG  :           15  5.9999999E-02 ylan(maxlan)
+** DEBUG  :           15  5.9999999E-02 zlan(maxlan)
+** DEBUG  :           16  2.9999999E-02 nclan(maxlan)
+** WARNING: TimeSplitInterval invalid, disabling time partitioning of output. Got: 0X
+** DEBUG  : Opened 'nonunif5x2r_net.nc' as #         3.
+** DEBUG  : Closed NetCDF file 'nonunif5x2r_net.nc.
+** INFO   : Opened file : wq_obs.xyn
+** INFO   : Closed file : wq_obs.xyn
+** INFO   : Opened file : inoutflow.ext
+** INFO   : Opened file : left.pli
+** INFO   : Closed file : left.pli
+** INFO   : boundary: 'left.pli' opened 2 cells.
+** INFO   : waterlevelbnd left.pli       2 nr of open bndcells
+** INFO   : Opened file : right.pli
+** INFO   : Closed file : right.pli
+** INFO   : boundary: 'right.pli' opened 2 cells.
+** INFO   : waterlevelbnd right.pli       2 nr of open bndcells
+** INFO   : Opened file : leftsal.pli
+** INFO   : Closed file : leftsal.pli
+** INFO   : boundary: 'leftsal.pli' opened 2 cells.
+** INFO   : salinitybndleftsal.pli       2nr of salinity bndcells
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'left.pli'.
+** INFO   : External Forcing or Initialising 'waterlevelbnd' from file 'right.pli'.
+** INFO   : External Forcing or Initialising 'salinitybnd' from file 'leftsal.pli'.
+** INFO   : Closed file : inoutflow.ext
+** INFO   : No wind, so waves is switched off
+** INFO   : nogauss , nocg :             16             0
+** INFO   : Modelinit finished   at: 12:03:45, 05-02-2015
+** INFO   : * Active Model definition:
+** INFO   : **
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_waqtest\waqtest_his.nc' as #         3.
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_waqtest\waqtest_map.nc' as #         4.
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_waqtest\waqtest_19920831_000000_rst.nc' as #         5.
+** DEBUG  : Closed NetCDF file 'DFM_OUTPUT_waqtest\waqtest_19920831_000000_rst.nc.
+** INFO   : In waq_wri_model_files().
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.hyd
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.hyd
+** DEBUG  : Opened NetCDF file 'DFM_DELWAQ_waqtest\waqtest_flowgeom.nc' as #         5.
+** DEBUG  : Closed NetCDF file 'DFM_DELWAQ_waqtest\waqtest_flowgeom.nc.
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.bnd
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.bnd
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.poi
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.len
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.srf
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.srfold
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.atr
+** INFO   :  In waq_wri_couple_files: #           0, time:   0.000000000000000E+000
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.vol
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.sal
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.tau
+** INFO   :  In waq_wri_couple_files: #           1, time:    60.0000000000000
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.are
+** INFO   : Opened file : DFM_DELWAQ_waqtest\waqtest.flo
+** INFO   :  In waq_wri_couple_files: #           2, time:    120.000000000000
+** INFO   :  In waq_wri_couple_files: #           3, time:    180.000000000000
+** INFO   :  In waq_wri_couple_files: #           4, time:    240.000000000000
+** INFO   :  In waq_wri_couple_files: #           5, time:    300.000000000000
+** INFO   :  In waq_wri_couple_files: #           6, time:    360.000000000000
+** INFO   :  In waq_wri_couple_files: #           7, time:    420.000000000000
+** INFO   :  In waq_wri_couple_files: #           8, time:    480.000000000000
+** INFO   :  In waq_wri_couple_files: #           9, time:    540.000000000000
+** INFO   :  In waq_wri_couple_files: #          10, time:    600.000000000000
+** INFO   :  In waq_wri_couple_files: #          11, time:    660.000000000000
+** INFO   :  In waq_wri_couple_files: #          12, time:    720.000000000000
+** INFO   :  In waq_wri_couple_files: #          13, time:    780.000000000000
+** INFO   :  In waq_wri_couple_files: #          14, time:    840.000000000000
+** INFO   :  In waq_wri_couple_files: #          15, time:    900.000000000000
+** INFO   :  In waq_wri_couple_files: #          16, time:    960.000000000000
+** INFO   :  In waq_wri_couple_files: #          17, time:    1020.00000000000
+** INFO   :  In waq_wri_couple_files: #          18, time:    1080.00000000000
+** INFO   :  In waq_wri_couple_files: #          19, time:    1140.00000000000
+** DEBUG  : Opened NetCDF file 'DFM_OUTPUT_waqtest\waqtest_19920831_002000_rst.nc' as #         5.
+** DEBUG  : Closed NetCDF file 'DFM_OUTPUT_waqtest\waqtest_19920831_002000_rst.nc.
+** INFO   :  In waq_wri_couple_files: #          20, time:    1200.00000000000
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : nr of netnodes        ( )  :                       21
+** INFO   : nr of netlinks        ( )  :                       32
+** INFO   : nr of flownodes       ( )  :                       16
+** INFO   : nr of openbnd cells   ( )  :                        4
+** INFO   : nr of 1D-flownodes    ( )  :                        0
+** INFO   : model area            (m2) :          1400.0000000000
+** INFO   : model volume          (m3) :          7960.6445217208
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : simulation period     (s)  :          1200.0000000000
+** INFO   : nr of timesteps       ( )  :           640.0000000000
+** INFO   : average timestep      (s)  :             1.8750000000
+** INFO   : time inistep          (s)  :             0.7879999999
+** INFO   : time setumod          (s)  :             0.5470000000
+** INFO   : time solve            (s)  :             0.0140000000
+** INFO   : time setexternalforc. (s)  :             0.0700000000
+** INFO   : time steps            (s)  :             1.1500000000
+** INFO   : time steps + plots    (s)  :             1.8500000000
+** INFO   : fraction solve/steps  ( )  :             0.0121739130
+** INFO   : total/(dnt*ndx)       (s)  :             0.0001806641
+** INFO   : av nr of cont. it s1it( )  :             0.0000000000
+** INFO   : time transport [s]         :             0.1550000000
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : Computation started  at: 12:03:45, 05-02-2015
+** INFO   : Computation finished at: 12:03:47, 05-02-2015
+** INFO   : 
+** INFO   : MPI    : no.
+** INFO   : OpenMP : yes.         #threads max : 8
+** INFO   : 
+** INFO   : 
+** INFO   : 
+** INFO   : Opened file : waqtest_19920831_002000
+** INFO   : Closed file : waqtest_19920831_002000
+** INFO   : Opened file : DFM_OUTPUT_waqtest\waqtest__salbot.xyz
+** INFO   : Closed file : DFM_OUTPUT_waqtest\waqtest__salbot.xyz
+** INFO   : Opened file : numlimdt.xyz
+** INFO   : Closed file : numlimdt.xyz
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.flo
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.are
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.tau
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.sal
+** INFO   : Closed file : DFM_DELWAQ_waqtest\waqtest.vol

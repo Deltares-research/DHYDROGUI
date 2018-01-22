@@ -316,7 +316,7 @@ namespace DelftTools.Hydro.CrossSections
 
             var index = sections.IndexOf(crossSectionSection);
 
-            if ((e.PropertyName == "MinY"))
+            if (e.PropertyName == "MinY")
             {
                 if (index > 0)
                 {
@@ -330,7 +330,7 @@ namespace DelftTools.Hydro.CrossSections
                     }
                 }
             }
-            else if ((e.PropertyName == "MaxY"))
+            else if (e.PropertyName == "MaxY")
             {
                 if (index < sections.Count - 1)
                 {

@@ -251,6 +251,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             }
         }
 
+        public bool WaveSetup
+        {
+            get
+            {
+                return (bool)GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
+            }
+            set
+            {
+                GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value = value;
+            }
+        }
+
         #endregion
 
 

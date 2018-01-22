@@ -1,0 +1,55 @@
+
+
+--------------------------------------------------------------------
+Delft3D-WAQ/SED/ECO (version 3.32.15)
+
+Session started: 22 January 2015, 10:28
+
+Current directory: d:\projects\NGHS - D-WQ GUI\Examples hyd-file\FM_c01_waqtest_2D\test_delwaq
+
+Importing hydrodynamic description file:
+   D:\projects\NGHS - D-WQ GUI\Examples hyd-file\FM_c01_waqtest_2D\waqtest.hyd
+   --- other files will be imported from the
+       same directory
+
+
+scenario data changed!
+
+Current directory: D:\projects\NGHS - D-WQ GUI\Examples hyd-file\FM_c01_waqtest_2D\test_delwaq
+
+Writing Delft3D-WAQ scenario file:
+   test_delwaq.scn
+
+Writing Delft3D-WAQ input file:
+   test_delwaq.inp
+
+
+--------------------------------------------------------------------
+Delft3D-WAQ/SED/ECO (version 3.32.15)
+
+Session started: 22 January 2015, 10:30
+
+Current directory: d:\projects\NGHS - D-WQ GUI\Examples hyd-file\FM_c01_waqtest_2D\test_delwaq
+
+Reading the scenario file:
+   test_delwaq.scn
+   --- other files will be imported as well
+
+Importing hydrodynamic description file:
+   D:\projects\NGHS - D-WQ GUI\Examples hyd-file\FM_c01_waqtest_2D\waqtest.hyd
+   --- other files will be imported from the
+       same directory
+
+
+Scenario file has been read
+
+
+scenario data changed!
+
+Current directory: D:\projects\NGHS - D-WQ GUI\Examples hyd-file\FM_c01_waqtest_2D\test_delwaq
+
+Writing Delft3D-WAQ scenario file:
+   test_delwaq.scn
+
+Writing Delft3D-WAQ input file:
+   test_delwaq.inp

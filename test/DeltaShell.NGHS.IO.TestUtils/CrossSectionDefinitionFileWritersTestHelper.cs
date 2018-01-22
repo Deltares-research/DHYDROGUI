@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
@@ -26,7 +27,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 new[] { 10.0, 6.5, 2.5, 2.5, 6.5, 10.0 });
 
 
-            AddCrossSectionZw(branches[2], 3, 30.0, -2.0,
+            AddCrossSectionZw(branches[2], 30.0, -2.0,
                 100.0, 200.0, 0.5);
             AddCulvertWithCrossSection(CulvertGeometryType.Rectangle, branches[0], 35.0,
                 100.0, 80.0);
@@ -49,7 +50,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             AddCulvertWithCrossSection(CulvertGeometryType.Tabulated, branches[0], 75.0,
                 100.0, 200.0);
 
-            AddCrossSectionTrapazium(branches[3], 14, 30.0, 100.0, 200.0, 150.0);
+            AddCrossSectionTrapezium(branches[3], 14, 30.0, 100.0, 200.0, 150.0);
 
         }
 
@@ -68,12 +69,12 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void AddCrossSectionYz(IBranch branch, int csId, double chainage)
         {
-            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, csId, chainage);
+            FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, chainage);
         }
 
         public static void AddCrossSectionXyz(IBranch branch, int csId, double chainage, double[] xCoors, double[] yCoors, double[] zCoors)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.GeometryBased, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.GeometryBased, chainage);
 
             var csd = crossSection.Definition as CrossSectionDefinitionXYZ;
             if (csd != null)
@@ -86,26 +87,38 @@ namespace DeltaShell.NGHS.IO.TestUtils
             }
         }
 
-        public static void AddCrossSectionZw(IBranch branch, int csId, double chainage, 
+        public static void AddCrossSectionZw(IBranch branch, double chainage, 
             double crestLevel, double floodSurface, double totalSurface, double floodPlainLevel)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.ZW, csId, chainage);
-
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.ZW, chainage);
             var csd = crossSection.Definition as CrossSectionDefinitionZW;
-            if (csd != null)
+
+            if (csd == null) return;
+
+            // Adjust the section widths to match the maximum flow width of the cross section
+            var sectionsTotalWidth = csd.SectionsTotalWidth();
+            var flowWidth = csd.FlowWidth();
+            if (!sectionsTotalWidth.Equals(flowWidth))
             {
-                csd.SummerDike = new SummerDike
+                var factor = flowWidth / sectionsTotalWidth;
+                csd.Sections.ForEach(section =>
                 {
-                    CrestLevel = crestLevel,
-                    FloodSurface = floodSurface,
-                    TotalSurface = totalSurface,
-                    FloodPlainLevel = floodPlainLevel
-                };
+                    section.MinY *= factor;
+                    section.MaxY *= factor;
+                });
             }
+
+            csd.SummerDike = new SummerDike
+            {
+                CrestLevel = crestLevel,
+                FloodSurface = floodSurface,
+                TotalSurface = totalSurface,
+                FloodPlainLevel = floodPlainLevel
+            };
         }
         public static void AddCrossSectionRectangle(IBranch branch, int csId, double chainage, double width, double height)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Rectangle;
@@ -117,7 +130,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void AddCrossSectionElliptical(IBranch branch, int csId, double chainage, double width, double height)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Elliptical;
@@ -129,7 +142,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void AddCrossSectionCircle(IBranch branch, int csId, double chainage, double diameter)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Round;
@@ -140,7 +153,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void AddCrossSectionEgg(IBranch branch, int csId, double chainage, double width)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Egg;
@@ -200,7 +213,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void AddCrossSectionArch(IBranch branch, int csId, double chainage, double width, double height, double archHeight)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Arch;
@@ -211,9 +224,9 @@ namespace DeltaShell.NGHS.IO.TestUtils
             crossSectionDefinitionArchShape.ArcHeight = archHeight; 
         }
 
-        public static void AddCrossSectionTrapazium(IBranch branch, int csId, double chainage, double slope, double maximumFlowWidth, double bottomWidth)
+        public static void AddCrossSectionTrapezium(IBranch branch, int csId, double chainage, double slope, double maximumFlowWidth, double bottomWidth)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Trapezium;
@@ -226,7 +239,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
         public static void AddCrossSectionCunette(IBranch branch, int csId, double chainage, double width)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.Cunette;
@@ -238,7 +251,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public static void AddCrossSectionSteelCunette(IBranch branch, int csId, double chainage,
             double height, double r, double r1, double r2, double r3, double a, double a1)
         {
-            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, csId, chainage);
+            var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
             if (crossSectionDefinitionStandard == null) return;
             crossSectionDefinitionStandard.ShapeType = CrossSectionStandardShapeType.SteelCunette;

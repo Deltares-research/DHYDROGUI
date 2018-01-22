@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.CrossSections
         public const string MainSectionName = "Main";
         public const string Floodplain1SectionTypeName = "FloodPlain1";
         public const string Floodplain2SectionTypeName = "FloodPlain2";
-        private bool skipValidation = false;
+        private bool skipValidation;
 
         public CrossSectionDefinitionZW() : this("")
         {
@@ -36,13 +36,13 @@ namespace DelftTools.Hydro.CrossSections
             }
             return 0;
         }
-        
+
         public CrossSectionDefinitionZW(string name) : base(name)
         {
             SummerDike = new SummerDike
-                             {
-                                 Active = false
-                             };
+            {
+                Active = false
+            };
         }
 
         private FastZWDataTable zwDataTable;
@@ -133,7 +133,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public override Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
         {
-            double value = double.NaN;
+            var value = double.NaN;
 
             if (cellValue is double)
             {
@@ -317,8 +317,8 @@ namespace DelftTools.Hydro.CrossSections
         /// </summary>
         public virtual void RemoveInvalidSections()
         {
-            var validNames = new string[] {MainSectionName, Floodplain1SectionTypeName, Floodplain2SectionTypeName};
-            List<CrossSectionSection> crossSectionSections = Sections.ToList();
+            var validNames = new[] {MainSectionName, Floodplain1SectionTypeName, Floodplain2SectionTypeName};
+            var crossSectionSections = Sections.ToList();
             foreach (var section in crossSectionSections)
             {
                 if (!validNames.Contains(section.SectionType.Name))

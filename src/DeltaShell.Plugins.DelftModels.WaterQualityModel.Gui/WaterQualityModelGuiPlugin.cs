@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -73,16 +74,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         private BloomInfo bloomInfo;
 
+        [ExcludeFromCodeCoverage]
         public override string Name
         {
             get { return "Water quality model (UI)"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public override string DisplayName
         {
             get { return "D-Water Quality Plugin (UI)"; }
         }
 
+        [ExcludeFromCodeCoverage]
         public override string Description
         {
             get { return "Allows to simulate water quality in rivers and channels."; }
@@ -93,6 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
+        [ExcludeFromCodeCoverage]
         public override string FileFormatVersion
         {
             get { return "1.1.0.0"; }
@@ -169,34 +174,43 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         [InvokeRequired]
         private void OnProcessDefinitionFilesNotFound(WaterQualityModel model, string processDefinitionPath)
         {
-            
-            FileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = Path.GetDirectoryName(processDefinitionPath);
-            dialog.Filter = "Process definition file (*.def)|*.def";
-            dialog.Title = "Process definition files could not be found. Please refer to the *.def file.";
-
-            if (dialog.ShowDialog() != DialogResult.OK)
+            string newProcessDefinitionFilesPath;
+            var defaultRelativeProcessFilePath = @"DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def";
+            if (model.SubstanceProcessLibrary.ProcessDefinitionFilesPath.EndsWith(defaultRelativeProcessFilePath))
             {
-                Log.ErrorFormat("Could not find process definition files: {0}", processDefinitionPath);
-                return;
+                newProcessDefinitionFilesPath = SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
             }
-             
-
-
-            var processDefinitionFilePath = Path.GetDirectoryName(dialog.FileName);
-            var processDefinitionFileName = Path.GetFileNameWithoutExtension(dialog.FileName);
-            
-            if (string.IsNullOrEmpty(processDefinitionFilePath) ||
-                string.IsNullOrEmpty(processDefinitionFileName))
+            else
             {
-                Log.ErrorFormat("Could not find process definition files: {0}", processDefinitionPath);
-                return;
-            };
+                FileDialog dialog = new OpenFileDialog
+                {
+                    InitialDirectory = Path.GetDirectoryName(processDefinitionPath),
+                    Filter = Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def,
+                    Title = Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_files_could_not_be_found__Please_refer_to_the___def_file_
+                };
 
-            var newProcessDefinitionFilesPath = Path.Combine(processDefinitionFilePath, processDefinitionFileName);
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    Log.ErrorFormat(Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0_, 
+                        processDefinitionPath);
+                    return;
+                }
+
+                var processDefinitionFilePath = Path.GetDirectoryName(dialog.FileName);
+                var processDefinitionFileName = Path.GetFileNameWithoutExtension(dialog.FileName);
+
+                if (string.IsNullOrEmpty(processDefinitionFilePath) ||
+                    string.IsNullOrEmpty(processDefinitionFileName))
+                {
+                    Log.ErrorFormat(Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0_
+                        , processDefinitionPath);
+                    return;
+                }
+                newProcessDefinitionFilesPath = Path.Combine(processDefinitionFilePath, processDefinitionFileName);
+            }
             
-            Log.WarnFormat("Could not find process definition files: {0}, but now using {1}", processDefinitionPath, newProcessDefinitionFilesPath);
-            
+            Log.WarnFormat(Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0___but_now_using__1_, 
+                processDefinitionPath, newProcessDefinitionFilesPath);
             model.SubstanceProcessLibrary.ProcessDefinitionFilesPath = newProcessDefinitionFilesPath;
         }
 

@@ -74,7 +74,7 @@ namespace DelftTools.Hydro.Tests
         {
             var type = new CrossSectionSectionType {Name = "Main"};
             var sourceDefinition = new CrossSectionDefinitionYZ();
-            sourceDefinition.Sections.Add(new CrossSectionSection { MinY = 0, MaxY = 10, SectionType = type });
+            sourceDefinition.AddSection(type, 20);
 
             var sourceCrossSection = new CrossSection(sourceDefinition);
 
@@ -94,7 +94,7 @@ namespace DelftTools.Hydro.Tests
                 Thalweg = 3.0,
             };
             var type = new CrossSectionSectionType();
-            crossSection.Sections.Add(new CrossSectionSection { MinY = 0, MaxY = 10, SectionType = type });
+            crossSection.AddSection(type, 20);
 
             var clone = (TestCrossSectionDefinition)crossSection.Clone();
             

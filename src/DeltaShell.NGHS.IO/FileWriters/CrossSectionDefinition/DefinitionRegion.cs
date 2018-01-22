@@ -40,6 +40,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         
         public static readonly ConfigurationSetting Main = new ConfigurationSetting(key: "main", description: "Width of main secion. (m)");
         public static readonly ConfigurationSetting FloodPlain1 = new ConfigurationSetting(key: "floodPlain1", description: "Width of Floodplain 1 (m)");
+        public static readonly ConfigurationSetting FloodPlain2 = new ConfigurationSetting(key: "floodPlain2", description: "Width of Floodplain 2 (m)");
 
         public static readonly ConfigurationSetting SectionCount = new ConfigurationSetting(key: "sectionCount", description: "Number of friction sections");
         public static readonly ConfigurationSetting RoughnessNames = new ConfigurationSetting(key: "roughnessNames", description: "Names of the roughness sections.");
