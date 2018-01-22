@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -124,6 +124,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct {
             get {
                 return ResourceManager.GetString("ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported quantity type: {0}, in the .ext file {1} detected. It will not be imported..
+        /// </summary>
+        public static string ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_ {
+            get {
+                return ResourceManager.GetString("ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1" +
+                        "__detected__It_will_not_be_imported_", resourceCulture);
             }
         }
         
@@ -758,7 +768,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             }
         }
         
-        /// <summary>        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {
             get {
@@ -1000,7 +1011,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             }
         }
         
-        /// <summary>        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
+        /// <summary>
+        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>
         public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
             get {

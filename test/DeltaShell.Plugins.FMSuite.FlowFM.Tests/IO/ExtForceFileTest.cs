@@ -118,6 +118,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void ReadExtFileWithUnknownQuantityShowsLogMessage()
+        {
+            var def = new WaterFlowFMModelDefinition();
+            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withOnlyUnknownQuantity.ext");
+            Assert.IsTrue(File.Exists(extPath));
+
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+
+            string expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var extForceFile = new ExtForceFile();
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadExtFileWithUnknownQuantityImportsTheOtherQuantities()
+        {
+            var def = new WaterFlowFMModelDefinition();
+            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withUnknownAndKnownQuantities.ext");
+            Assert.IsTrue(File.Exists(extPath));
+
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+
+            string expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var extForceFile = new ExtForceFile();
+
+            Assert.IsFalse(def.BoundaryConditions.Any());
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
+            Assert.IsTrue(def.BoundaryConditions.Any());
+
+            /* Just check the boundary has been imported. */
+            var boundaryCondition = def.BoundaryConditions.First();
+            Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
+            Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadCorrectSpatialVaryingPropertiesShouldBeOk()
         {
             //LogHelper.ConfigureLogging(|Level);

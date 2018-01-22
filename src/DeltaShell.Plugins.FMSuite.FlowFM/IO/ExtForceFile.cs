@@ -690,7 +690,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out quantityType) &&
                     !isSourceAndSink)
                 {
-                    throw new NotSupportedException("Unsupported quantity type: " + extForceFileItem.Quantity + ". Remove the entry and try again.");
+                    log.ErrorFormat(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, extForceFileItem.Quantity, FilePath);
+                    continue;
                 }
 
                 // read the pli file
