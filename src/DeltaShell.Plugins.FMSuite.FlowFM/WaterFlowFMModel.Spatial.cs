@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
@@ -170,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         var originalBathymetry = GetOriginalCoverage(Bathymetry);
                         originalBathymetry.Arguments[0].Clear();
                         originalBathymetry.Components[0].Clear(); //HACK: signals the interpolation method to use the grid node z-values...
-                        double ndv ;
+                        double ndv;
                         if (!double.TryParse(originalBathymetry.Components[0].NoDataValue.ToString(), out ndv))
                         {
                             bathymetryNoDataValue = -999.0d;
@@ -182,7 +181,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                     {
-                        bathymetryNoDataValue = uGridAdaptor.uGrid.zCoordinateFillValue;
+                        if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
+                        {
+                            bathymetryNoDataValue = -999.0d;
+                            return;
+                        }
+                        uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(1);
+
+                        bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
                     });
                     Grid = newGrid;
                 }

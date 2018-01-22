@@ -20,7 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.That(gridApi.GetConvention(netFilePath), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_OTHER));
+                GridApiDataSet.DataSetConventions convention;
+                var ierr = gridApi.GetConvention(netFilePath, out convention);
+                Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_OTHER));
             }
             var grid = NetFileImporter.ImportGrid(netFilePath);
             
@@ -52,7 +54,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.That(gridApi.GetConvention(netFilePath), Is.EqualTo(GridApiDataSet.DataSetConventions.IONC_CONV_UGRID));
+                GridApiDataSet.DataSetConventions convention;
+                var ierr = gridApi.GetConvention(netFilePath, out convention);
+                Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
             }
 
             // get original grid
@@ -80,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.RewriteGridCoordinates(1, grid.Vertices.Select(v => v.X).ToArray(), grid.Vertices.Select(v => v.Y).ToArray());
+                uGrid.RewriteGridCoordinatesForMeshId(1, grid.Vertices.Select(v => v.X).ToArray(), grid.Vertices.Select(v => v.Y).ToArray());
             }
 
             // read new grid

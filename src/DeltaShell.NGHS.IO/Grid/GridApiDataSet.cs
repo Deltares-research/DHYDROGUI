@@ -1,11 +1,10 @@
-using System;
 using System.IO;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class GridApiDataSet
+    public static class GridApiDataSet
     {
-        public class UGridAttributeConstants
+        public static class UGridAttributeConstants
         {
             public class LocationValues
             {
@@ -17,33 +16,51 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public class Names
             {
-                public const string Location = "location";    
+                public const string Location = "location";
             }
         }
 
+        public static class UGridApiConstants
+        {
+            public const string Altitude = "altitude";
+            public const string NodeZ = "node_z";
+            public const string NetNodeZ = "NetNode_z";
+            public const string FaceZ = "face_z";
+            public const string M = "m";
+            public const string DiscretisationPointIds = "node_ids";
+        }
         
-        public class GridConstants
+        public static class GridConstants
         {
             public const int MAXDIMS = 6;
             public const int MAXSTRLEN = 255; // Must be equal to MAXSTRLEN in io_netcdf.dll (kernel)
             
-            public const int NUMBER_OF_NODES_ON_A_EDGE = 2;
+            public const int NUMBER_OF_NODES_ON_AN_EDGE = 2;
            
-            public const int IONC_NOERR = 0;
+            public const int NOERR = 0;
+            public const int GENERAL_FATAL_ERR = -1000;
+            public const int GENERAL_ARRAY_LENGTH_FATAL_ERR = -1001;
 
             public const double UG_CONV_MIN_VERSION = 1.0d;
 
             public const string UG_CONV_CF = "CF-1.6";
             public const string UG_CONV_UGRID = "UGRID-1.0";
+
+            public const int TESTING_ERROR = -9999;
+
+            public const int NF90_DOUBLE = 6;
+            public const double DEFAULT_FILL_VALUE = -999.0;
+
         }
 
         public enum DataSetConventions
         {
-            IONC_CONV_NULL = 0,//Dataset conventions not yet detected
-            IONC_CONV_CF = 1,
-            IONC_CONV_UGRID = 2,//Dataset based on UGRID-conventions
-            IONC_CONV_SGRID = 4,//Dataset based on SGRID-conventions
-            IONC_CONV_OTHER = -99//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
+            CONV_NULL = 0,//Dataset conventions not yet detected
+            CONV_CF = 1,
+            CONV_UGRID = 2,//Dataset based on UGRID-conventions
+            CONV_SGRID = 4,//Dataset based on SGRID-conventions
+            CONV_OTHER = -99,//Dataset based on unknown or unsupported conventions (user should fall back to NetCDF native API calls)
+            CONV_TEST = -111111 //Dataset Id for testing
         }
 
         public enum NetcdfOpenMode
@@ -59,7 +76,7 @@ namespace DeltaShell.NGHS.IO.Grid
             nf90_share          = 2048 
         }
 
-        public enum Locations
+        public enum LocationType
         {
             UG_LOC_NONE = 0,
             UG_LOC_NODE = 1,
@@ -75,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             get
             {
-                return Path.Combine(Path.GetDirectoryName(typeof(GridApi).Assembly.Location), "Kernels");
+                return Path.Combine(Path.GetDirectoryName(typeof(UGridApi).Assembly.Location), "Kernels");
             }
         }
 

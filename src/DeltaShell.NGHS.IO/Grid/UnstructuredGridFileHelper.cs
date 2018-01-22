@@ -31,12 +31,12 @@ namespace DeltaShell.NGHS.IO.Grid
 
             switch (GetConvention(path))
             {
-                case GridApiDataSet.DataSetConventions.IONC_CONV_UGRID:
+                case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var fmUGridAdaptor = new UGridToUnstructuredGridAdaptor(path))
                     {
                         return fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
                     }
-                case GridApiDataSet.DataSetConventions.IONC_CONV_OTHER:
+                case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     return loadFlowLinksAndCells
                         ? NetFileImporter.ImportModelGrid(path)
                         : NetFileImporter.ImportGrid(path);
@@ -49,14 +49,14 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             switch (GetConvention(path))
             {
-                case GridApiDataSet.DataSetConventions.IONC_CONV_UGRID:
+                case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
                     {
                         switch (location)
                         {
                             case BedLevelLocation.Faces:
                             case BedLevelLocation.FacesMeanLevFromNodes:
-                                uGrid.WriteZValuesAtFaces(1, values);
+                                uGrid.WriteZValuesAtFacesForMeshId(1, values);
                                 break;
                             case BedLevelLocation.CellEdges:
                                 Log.WarnFormat("Unable to Write z-values at this location, CellEdges are not currently supported");
@@ -64,14 +64,14 @@ namespace DeltaShell.NGHS.IO.Grid
                             case BedLevelLocation.NodesMeanLev:
                             case BedLevelLocation.NodesMinLev:
                             case BedLevelLocation.NodesMaxLev:
-                                uGrid.WriteZValuesAtNodes(1, values);
+                                uGrid.WriteZValuesAtNodesForMeshId(1, values);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException("location", location, null);
                         }
                     }
                     break;
-                case GridApiDataSet.DataSetConventions.IONC_CONV_OTHER:
+                case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     NetFile.WriteZValues(path, values);
                     break;
             }
@@ -81,12 +81,12 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             switch (GetConvention(path))
             {
-                case GridApiDataSet.DataSetConventions.IONC_CONV_UGRID:
+                case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path))
                     {
                         return uGrid.CoordinateSystem;
                     }
-                case GridApiDataSet.DataSetConventions.IONC_CONV_OTHER:
+                case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     return NetFile.ReadCoordinateSystem(path);
                 default:
                     return null;
@@ -96,15 +96,15 @@ namespace DeltaShell.NGHS.IO.Grid
         public static void SetCoordinateSystem(string path, ICoordinateSystem coordinateSystem)
         {
             var convention = GetConvention(path);
-            if (convention == GridApiDataSet.DataSetConventions.IONC_CONV_NULL) return;
+            if (convention == GridApiDataSet.DataSetConventions.CONV_NULL) return;
 
             // Note: Temporary solution - UGrid v2 will likely change the way the coordinate systems are written in the NetFile
-            if (convention == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+            if (convention == GridApiDataSet.DataSetConventions.CONV_UGRID)
             {
                 string meshName;
                 using (var uGrid = new UGrid(path))
                 {
-                    meshName = uGrid.NameOfMesh(1);
+                    meshName = uGrid.GetMeshName(1);
                 }
                 if (string.IsNullOrEmpty(meshName))
                     return;
@@ -142,7 +142,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             var convention = GetConvention(path);
 
-            if (convention == GridApiDataSet.DataSetConventions.IONC_CONV_OTHER)
+            if (convention == GridApiDataSet.DataSetConventions.CONV_OTHER)
             {
                 if (!File.Exists(path))
                 {
@@ -167,13 +167,13 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             switch (GetConvention(path))
             {
-                case GridApiDataSet.DataSetConventions.IONC_CONV_OTHER:
+                case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     NetFile.RewriteGridCoordinates(path, unstructuredGrid);
                     break;
-                case GridApiDataSet.DataSetConventions.IONC_CONV_UGRID:
+                case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
                     {
-                        uGrid.RewriteGridCoordinates(1, unstructuredGrid.Vertices.Select(v => v.X).ToArray(),
+                        uGrid.RewriteGridCoordinatesForMeshId(1, unstructuredGrid.Vertices.Select(v => v.X).ToArray(),
                             unstructuredGrid.Vertices.Select(v => v.Y).ToArray());
                     }
                     break;
@@ -183,7 +183,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public static void DoIfUgrid(string path, Action<UGridToUnstructuredGridAdaptor> ugridAction)
         {
             var convention = GetConvention(path);
-            if (convention != GridApiDataSet.DataSetConventions.IONC_CONV_UGRID)
+            if (convention != GridApiDataSet.DataSetConventions.CONV_UGRID)
                 return;
 
             using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(path))
@@ -197,15 +197,19 @@ namespace DeltaShell.NGHS.IO.Grid
             var gridApi = GridApiFactory.CreateNew();
             if (gridApi == null)
             {
-                return GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+                return GridApiDataSet.DataSetConventions.CONV_NULL;
             }
 
-            GridApiDataSet.DataSetConventions convention;
             using (gridApi)
             {
-                convention = gridApi.GetConvention(path);
+                GridApiDataSet.DataSetConventions convention;
+                var ierr = gridApi.GetConvention(path, out convention);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    throw new Exception("Couldn't get the grid convention because of error number: " + ierr);
+                }
+                return convention;
             }
-            return convention;
         }
     }
 }

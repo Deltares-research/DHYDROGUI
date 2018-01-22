@@ -21,7 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.AreEqual(gridApi.GetConvention(netFilePath), GridApiDataSet.DataSetConventions.IONC_CONV_OTHER);
+                GridApiDataSet.DataSetConventions convention;
+                gridApi.GetConvention(netFilePath, out convention);
+                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_OTHER);
             }
             var grid = NetFileImporter.ImportGrid(netFilePath);
 
@@ -43,7 +45,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.AreEqual(gridApi.GetConvention(netFilePath), GridApiDataSet.DataSetConventions.IONC_CONV_UGRID);
+                GridApiDataSet.DataSetConventions convention;
+                gridApi.GetConvention(netFilePath, out convention);
+                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_UGRID);
             }
 
             // get original grid
@@ -57,11 +61,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             // generate new z values
             var currentZValues = grid.Vertices.Select(v => v.Z);
             var newZValues = currentZValues.Select(z => { z = 123.456; return z; }).ToArray();
-            
+
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.WriteZValuesAtNodes(1, newZValues);
+                uGrid.WriteZValuesAtNodesForMeshId(1, newZValues);
             }
 
             // read new grid
@@ -85,7 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                Assert.AreEqual(gridApi.GetConvention(netFilePath), GridApiDataSet.DataSetConventions.IONC_CONV_UGRID);
+                GridApiDataSet.DataSetConventions convention;
+                gridApi.GetConvention(netFilePath, out convention);
+                Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_UGRID);
             }
 
             // get original grid
@@ -98,11 +104,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             // generate new z values
             var newZValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
-            
+
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
             {
-                uGrid.WriteZValuesAtFaces(1, newZValues);
+                uGrid.WriteZValuesAtFacesForMeshId(1, newZValues);
             }
 
             using (var ncFile = new NetCdfFileWrapper(netFilePath))

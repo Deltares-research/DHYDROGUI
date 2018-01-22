@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Dimr;
-using log4net;
+using DeltaShell.NGHS.IO.Properties;
+using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class GridApi : IGridApi
+    public abstract class GridApi : IGridApi
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GridApi));
-        private int ioncid;
-        private double convversion;
-        private GridApiDataSet.DataSetConventions iconvtype;
-        private double fillValue;
-        private bool disposed;
-
-        private const int StartIndex = 0;
-        private const int NF90_DOUBLE = 6;
+        protected int ioncId;
+        protected double convversion;
+        protected GridApiDataSet.DataSetConventions iconvtype;
+        protected GridWrapper wrapper;
 
         static GridApi()
         {
+            RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
             NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
         }
 
         public GridApi()
         {
-            fillValue = 0.0d;
+            wrapper = new GridWrapper();
         }
 
         #region Backwards compatibility
@@ -36,48 +32,54 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Read the convention from the grid nc file via the io_netcdf.dll
         /// </summary>
         /// <param name="file">The grid nc file</param>
-        /// <returns>The convention in the grid nc file (or other)</returns>
-        public GridApiDataSet.DataSetConventions GetConvention(string file)
+        /// <param name="convention">The convention in the grid nc file (or other) (out)</param>
+        /// <returns>Error code</returns>
+        public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
         {
-            if (file == null) return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+            if (string.IsNullOrEmpty(file))
+            {
+                convention = GridApiDataSet.DataSetConventions.CONV_OTHER;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
 
             GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
             string filename = file;
 
-            try
-            {
-                Open(filename, mode);
-            }
-            catch (Exception ex_ionc)
+            var ierr = Open(filename, mode);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 try
                 {
                     filename = file;
-                    return GetConventionViaDSFramework(filename);
+                    convention = GetConventionViaDSFramework(filename);
+                    return GridApiDataSet.GridConstants.NOERR;
                 }
-                catch (Exception ex_dsfw)
+                catch
                 {
-                    Log.Warn("Couldn't open nc grid file : " + filename +
-                             " to determine what the convention in the nc file was. " + ex_dsfw.Message +
-                             ex_ionc.Message);
+                    convention = GridApiDataSet.DataSetConventions.CONV_OTHER;
+                    return GridApiDataSet.GridConstants.NOERR;
                 }
             }
-            try
+
+            var ierrClose = Close();
+            if (ierrClose != GridApiDataSet.GridConstants.NOERR)
             {
-                Close();
-            }
-            catch (Exception e)
-            {
-                Log.Warn(e.Message);
+                convention = iconvtype;
+                return GridApiDataSet.GridConstants.NOERR;
             }
             
-            if (iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_NULL)
-                return GetConventionViaDSFramework(file);
-            if (iconvtype == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID && convversion < 1.0d)
+            if (iconvtype == GridApiDataSet.DataSetConventions.CONV_NULL)
             {
-                return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                convention = GetConventionViaDSFramework(file);
+                return GridApiDataSet.GridConstants.NOERR;
             }
-            return iconvtype;
+            if (iconvtype == GridApiDataSet.DataSetConventions.CONV_UGRID && convversion < 1.0d)
+            {
+                convention = GridApiDataSet.DataSetConventions.CONV_OTHER;
+                return GridApiDataSet.GridConstants.NOERR;
+            }
+            convention = iconvtype;
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="file">The grid nc file</param>
         /// <returns>The convention in the grid nc file (or other)</returns>
-        private GridApiDataSet.DataSetConventions GetConventionViaDSFramework(string file)
+        public virtual GridApiDataSet.DataSetConventions GetConventionViaDSFramework(string file)
         {
             try
             {
@@ -94,392 +96,299 @@ namespace DeltaShell.NGHS.IO.Grid
                 var conventions = netCdfFile.GetGlobalAttribute("Conventions");
                 return conventions != null &&
                        conventions.Value.ToString().Contains(GridApiDataSet.GridConstants.UG_CONV_UGRID)
-                    ? GridApiDataSet.DataSetConventions.IONC_CONV_UGRID
-                    : GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                    ? GridApiDataSet.DataSetConventions.CONV_UGRID
+                    : GridApiDataSet.DataSetConventions.CONV_OTHER;
             }
             catch
             {
-                return GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                return GridApiDataSet.DataSetConventions.CONV_OTHER;
             }
         }
 
-        public double zCoordinateFillValue
-        {
-            get { return fillValue; }
-            set { fillValue = value; }
-        }
-
-        public void WriteXYCoordinateValues(int meshid, double[] xValues, double[] yValues)
-        {
-            if(!Initialized()) return;
-            int nNode = GetNumberOfNodes(meshid);
-            IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-
-            try
-            {
-                Marshal.Copy(xValues, 0, xPtr, nNode);
-                Marshal.Copy(yValues, 0, yPtr, nNode);
-                var ierr = GridWrapper.ionc_put_node_coordinates(ref ioncid, ref meshid, ref xPtr, ref yPtr, ref nNode);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new Exception("Couldn't save x and y coordinates because of err nr: " + ierr);
-                }
-            }
-            finally
-            {
-                if (xPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(xPtr);
-                xPtr = IntPtr.Zero;
-                if (yPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(yPtr);
-                yPtr = IntPtr.Zero;
-            }
-        }
-        
-        public void WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues)
-        {           
-            if(!Initialized()) return;
-            
-            var nVal = zValues.Length;
-            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nVal);
-
-            try
-            {
-                const string StandardName = "altitude";
-                int varId = 0;
-
-                GridWrapper.ionc_inq_varid_by_standard_name(ref ioncid, ref meshId, ref locationId, StandardName, ref varId);
-
-                // Testing...
-                GridWrapper.ionc_inq_varid(ref ioncid, ref meshId, varName, ref varId);
-
-                if (varId == -1) // does not exist
-                {
-                    const string Unit = "m";
-                    var type = NF90_DOUBLE;
-                    double fillValue = -999.0; // explicitly set to this value
-
-                    GridWrapper.ionc_def_var(ref ioncid, ref meshId, ref varId, ref type, ref locationId, varName, StandardName, longName, Unit, ref fillValue);
-                }
-
-                Marshal.Copy(zValues, 0, zPtr, nVal);
-
-                // Eventually then idea is to change put_var to use varId rather than varName
-                var ierr = GridWrapper.ionc_put_var(ref ioncid, ref meshId, ref locationId, varName, ref zPtr, ref nVal);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                {
-                    throw new Exception("Couldn't save x and y coordinates because of err nr: " + ierr);
-                }
-            }
-            finally
-            {
-                if (zPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(zPtr);
-                zPtr = IntPtr.Zero;
-            }
-        }
-
-        public string GetMeshName(int mesh)
-        {
-            var name = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
-            var ierr = GridWrapper.ionc_get_mesh_name(ref ioncid, ref mesh, name);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get meshname because of err nr: " + ierr);
-            return name.ToString();
-        }
         #endregion
-        
-                                
-           
 
-
-        
-               
-
-        public int ionc_write_geom_ugrid(string filename)
-        {
-            return GridWrapper.ionc_write_geom_ugrid(filename);
-        }
-        
-        public int ionc_write_map_ugrid(string filename)
-        {
-            return GridWrapper.ionc_write_map_ugrid(filename);
-        }
-        
-        public int Initialize()
-        {
-            GridWrapper.IO_NetCDF_Message_Callback message_callback = (int level, string message) =>
-            {
-                Console.WriteLine("Level: {0}. message = {1}", level, message);
-            };
-            GridWrapper.IO_NetCDF_Progress_Callback progress_callback = (string message, ref double progress) =>
-            {
-                Console.WriteLine("Progress: {0:P2}. message = {1}", progress, message);
-            };
-            var ierr = GridWrapper.ionc_initialize(message_callback, progress_callback);
-            return ierr;
-        }
-        
-        public void Dispose()
-        {
-            if (disposed) return;
-            try
-            {
-                if(Initialized()) Close();
-                disposed = true;
-            }
-            finally
-            {
-                // Must always ensure this happens to prevent GC deadlock on project close!
-                GC.SuppressFinalize(this);
-            }
-        }
 
         #region Implementation of IGridApi
-        
+
         public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
         {
-            if (!Initialized()) return convtype == GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
-            var iconvtypeApi = (int) convtype;
-            return GridWrapper.ionc_adheresto_conventions(ref ioncid, ref iconvtypeApi);
+            if (!Initialized) return convtype == GridApiDataSet.DataSetConventions.CONV_NULL;
+            var iconvtypeApi = (int)convtype;
+            return wrapper.AdherestoConventions(ioncId, iconvtypeApi);
         }
 
-        public void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
+        public virtual int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
-            if (c_path == null)
-                c_path = string.Empty;
+            if (Initialized)
+                Close();
+            if (filePath == null)
+                filePath = string.Empty;
             var imode = (int)mode;
             var iconvtypeApi = 0;
-            var ierr = GridWrapper.ionc_open(c_path, ref imode, ref ioncid, ref iconvtypeApi, ref convversion);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't open grid nc file : " + c_path + " because of err nr : " + ierr);
+            var ierr = wrapper.Open(filePath, imode, ref ioncId, ref iconvtypeApi, ref convversion);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                return ierr;
+            }
 
             iconvtype = typeof(GridApiDataSet.DataSetConventions).IsEnumDefined(iconvtypeApi)
                 ? (GridApiDataSet.DataSetConventions)iconvtypeApi
-                : GridApiDataSet.DataSetConventions.IONC_CONV_OTHER;
+                : GridApiDataSet.DataSetConventions.CONV_OTHER;
+            iconvtype = iconvtype == GridApiDataSet.DataSetConventions.CONV_UGRID && convversion < 1.0d
+                ? GridApiDataSet.DataSetConventions.CONV_OTHER
+                : iconvtype;
+
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
-        public bool Initialized()
+        public virtual bool Initialized
         {
-            return ioncid > 0;
+            get { return ioncId > 0; }
         }
 
-        public void Close()
+        public virtual int Close()
         {
-            if (!Initialized()) return;
-            var ierr = GridWrapper.ionc_close(ref ioncid);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
-            ioncid = 0;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            try
+            {
+                var ierr = wrapper.Close(ioncId);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+                ioncId = 0;
+                return GridApiDataSet.GridConstants.NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
         }
 
-        public int GetMeshCount()
+        public int GetMeshCount(out int numberOfMeshes)
         {
-            var nmesh = 0;
-            var ierr = GridWrapper.ionc_get_mesh_count(ref ioncid, ref nmesh);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get number of meshes because of err nr : " + ierr);
-            return nmesh;
+            numberOfMeshes = 0;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+
+            try
+            {
+                var ierr = wrapper.GetMeshCount(ioncId, ref numberOfMeshes);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+                return GridApiDataSet.GridConstants.NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
         }
 
-        public int GetCoordinateSystemCode()
+        public int GetNumberOfNetworks(out int numberOfNetworks)
         {
-            var epsg_code = 0;
-            var ierr = GridWrapper.ionc_get_coordinate_system(ref ioncid, ref epsg_code);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't close grid nc file because of err nr : " + ierr);
-            return epsg_code;
+            numberOfNetworks = 0;
+
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+
+            try
+            {
+                int nNetworks = 0;
+                var ierr = wrapper.GetNumberOfNetworks(ioncId, ref nNetworks);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+                numberOfNetworks = nNetworks;
+                return GridApiDataSet.GridConstants.NOERR;
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+        }
+
+        public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
+        {
+            numberOfMesh = 0;
+
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+
+            int ierr;
+            try
+            {
+                var type = (int)meshType;
+                int nMesh = 0;
+                ierr = wrapper.GetNumberOfMeshes(ioncId, type, ref nMesh);
+                if(ierr == GridApiDataSet.GridConstants.NOERR) numberOfMesh = nMesh;
+            }
+            catch
+            {
+                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            return ierr;
+        }
+
+        public int GetNetworkIds(out int[] networkIds)
+        {
+            networkIds = new int[0];
+            int numberOfNetworks = 0;
+            IntPtr networkIdsPtr = IntPtr.Zero;
+            int ierr;
+
+            try
+            {
+                ierr = GetNumberOfNetworks(out numberOfNetworks);
+            }
+            catch
+            {
+                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            if (numberOfNetworks != 0) networkIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNetworks);
+
+            try
+            {
+                ierr = wrapper.GetNetworkIds(ioncId, ref networkIdsPtr, numberOfNetworks);
+                if (ierr == GridApiDataSet.GridConstants.NOERR)
+                {
+                    networkIds = new int[numberOfNetworks];
+                    Marshal.Copy(networkIdsPtr, networkIds, 0, numberOfNetworks);
+                    return GridApiDataSet.GridConstants.NOERR;
+                }
+            }
+            catch
+            {
+                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                if (networkIdsPtr != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(networkIdsPtr);
+                networkIdsPtr = IntPtr.Zero;
+            }
+            return ierr;
+        }
+
+        public int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
+        {
+            meshIds = new int[0];
+            IntPtr meshIdsPtr = IntPtr.Zero;
+            int ierr;
+            try
+            {
+                meshIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfMeshes);
+                ierr = wrapper.GetMeshIds(ioncId, meshType, ref meshIdsPtr, numberOfMeshes);
+                if (ierr == GridApiDataSet.GridConstants.NOERR)
+                {
+                    meshIds = new int[numberOfMeshes];
+                    Marshal.Copy(meshIdsPtr, meshIds, 0, numberOfMeshes);
+                }
+            }
+            catch
+            {
+                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                if (meshIdsPtr != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(meshIdsPtr);
+                meshIdsPtr = IntPtr.Zero;
+            }
+            return ierr;
+        }
+        
+        public int GetCoordinateSystemCode(out int epsg_code)
+        {
+            epsg_code = 0;
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            try
+            {
+                var ierr = wrapper.GetCoordinateSystem(ioncId, ref epsg_code);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+                return GridApiDataSet.GridConstants.NOERR;
+
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
         }
 
         public GridApiDataSet.DataSetConventions GetConvention()
         {
-            return !Initialized() ? GridApiDataSet.DataSetConventions.IONC_CONV_NULL : iconvtype;
+            return !Initialized ? GridApiDataSet.DataSetConventions.CONV_NULL : iconvtype;
         }
 
         public double GetVersion()
         {
-            return !Initialized() ? double.NaN : convversion;
+            return !Initialized ? double.NaN : convversion;
         }
 
-        public int GetNumberOfNodes(int meshid)
+        public int CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
-            var nodes = 0;
-            var ierr = GridWrapper.ionc_get_node_count(ref ioncid, ref meshid, ref nodes);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get nodes count because of err nr : " + ierr);
-            return nodes;
-        }
-
-        public int GetNumberOfEdges(int meshid)
-        {
-            var edges = 0;
-            var ierr = GridWrapper.ionc_get_edge_count(ref ioncid, ref meshid, ref edges);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get edges count because of err nr : " + ierr);
-            return edges;
-        }
-        
-        public int GetNumberOfFaces(int meshid)
-        {
-            var faces = 0;
-            var ierr = GridWrapper.ionc_get_face_count(ref ioncid, ref meshid, ref faces);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get faces count because of err nr : " + ierr);
-            return faces;
-        }
-        
-        public int GetMaxFaceNodes(int meshid)
-        {
-            var maxFaceNodes = 0;
-            var ierr = GridWrapper.ionc_get_max_face_nodes(ref ioncid, ref meshid, ref maxFaceNodes);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get max face nodes count because of err nr : " + ierr);
-            return maxFaceNodes;
-        }
-
-        public double[] GetNodeXCoordinates(int meshId)
-        {
-            if(!Initialized()) return new double[0];
-            double[] xCoordinates, yCoordinates;
-            var ierr = GetNodeXYCoordinates(meshId, GetNumberOfNodes(meshId), out xCoordinates, out yCoordinates);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get x and y node coordinates because of err nr : " + ierr);
-            return xCoordinates;
-        }
-        
-
-        public double[] GetNodeYCoordinates(int meshId)
-        {
-            if(!Initialized()) return new double[0];
-            double[] xCoordinates, yCoordinates;
-            var ierr = GetNodeXYCoordinates(meshId, GetNumberOfNodes(meshId), out xCoordinates, out yCoordinates);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get x and y node coordinates because of err nr : " + ierr);
-            return yCoordinates;
-        }
-
-        public double[] GetNodeZCoordinates(int meshId)
-        {
-            int nNode = GetNumberOfNodes(meshId);
-            int locationId = (int)GridApiDataSet.Locations.UG_LOC_NODE;
-            string varname = "node_z";
-            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            try
+            var imode = (int)mode;
+            int netcdfId = 0;
+            var ierr = wrapper.create(filePath, imode, ref netcdfId);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
-                
-                var ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref zPtr, ref nNode, ref fillValue);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || zPtr == IntPtr.Zero)
-                {
-                    varname = "NetNode_z";
-                    ierr = GridWrapper.ionc_get_var(ref ioncid, ref meshId, ref locationId, varname, ref zPtr, ref nNode, ref fillValue);
-                    if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || zPtr == IntPtr.Zero)
-                    {
-                        throw new Exception("Couldn't get z node coordinates because of err nr : " + ierr);   
-                    }
-                }
-                var zCoordinates = new double[nNode];
-                Marshal.Copy(zPtr, zCoordinates, 0, nNode);
-                return zCoordinates;
+                return ierr;
             }
-            finally
+
+            ierr = CreateAndWriteDefaultNetCdfMetaData(globalMetaData, netcdfId);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
-                if (zPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(zPtr);
-                zPtr = IntPtr.Zero;
+                return ierr;
             }
+
+            // close the file after creation
+            ierr = wrapper.Close(netcdfId);
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                return ierr;
+            }
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
-        public int[,] GetEdgeNodesForMesh(int meshId)
+        private int CreateAndWriteDefaultNetCdfMetaData(UGridGlobalMetaData globalMetaData, int netcdfId)
         {
-            if (!Initialized()) return new int[0,0];
-            var nEdges = GetNumberOfEdges(meshId);
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nEdges * GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
+            GridWrapper.interop_metadata metadata;
+            metadata.institution = ToDataSizeCharArray("Deltares");
+            metadata.source = ToDataSizeCharArray(globalMetaData.Source);
+            metadata.references = ToDataSizeCharArray("https://github.com/ugrid-conventions/ugrid-conventions");
+            metadata.version = ToDataSizeCharArray(globalMetaData.Version);
+            metadata.modelname = ToDataSizeCharArray(globalMetaData.Modelname);
 
-            try
-            {
-                // Note: startIndex should always be the same for both GetEdgeNodesForMesh and GetFaceNodesForMesh
-                var startIndex = StartIndex; // always update the const StartIndex!
-
-                var ierr = GridWrapper.ionc_get_edge_nodes(ref ioncid, ref meshId, ref ptr, ref nEdges, ref startIndex);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
-                {
-                    throw new Exception("Couldn't get edge nodes list");
-                }
-
-                // ptr now points to unmanaged 2D array.             
-                return MarshalDataTo2DArray(ptr, nEdges, GridApiDataSet.GridConstants.NUMBER_OF_NODES_ON_A_EDGE);
-            }
-            finally
-            {
-                if (ptr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(ptr);
-            }
-        }
-        public int[,] GetFaceNodesForMesh(int meshId)
-        {
-            int nFaces = GetNumberOfFaces(meshId);
-            int nMaxFaceNodes = GetMaxFaceNodes(meshId);
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFaces * nMaxFaceNodes);
-            int nfillValue = 0;
-            try
-            {
-                // Note: startIndex should always be the same for both GetFaceNodesForMesh and GetEdgeNodesForMesh
-                var startIndex = StartIndex; // always update the const StartIndex!
-
-                var ierr = GridWrapper.ionc_get_face_nodes(ref ioncid, ref meshId, ref ptr, ref nFaces, ref nMaxFaceNodes, ref nfillValue, ref startIndex);
-
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
-                {
-                    throw new Exception("Couldn't get face nodes list");
-                }
-
-                // ptr now points to unmanaged 2D array.             
-                return MarshalDataTo2DArray(ptr, nFaces, nMaxFaceNodes);
-            }
-            finally
-            {
-                if (ptr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(ptr);
-            }
-        }
-        public int GetVarCount(int meshId, int locationId)
-        {
-            var nCount = 0;
-            if (!Initialized()) return nCount;
-            var ierr = GridWrapper.ionc_get_var_count(ref ioncid, ref meshId, ref locationId, ref nCount);
-            if (ierr != GridApiDataSet.GridConstants.IONC_NOERR)
-                throw new Exception("Couldn't get the nr of number of names at location because of err nr : " + ierr);
-            return nCount;
+            var ierr = wrapper.AddGlobalAttributes(netcdfId, metadata);
+            return ierr;
         }
 
-        public int[] GetVarNames(int meshId, int locationId)
+        private static char[] ToDataSizeCharArray(string value)
         {
-            if(!Initialized()) return new int[0];
-            int nVar = GetVarCount(meshId, locationId);
-            IntPtr ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nVar);
-            try
+            return value.PadRight(GridWrapper.metadatasize, ' ').ToCharArray(0, GridWrapper.metadatasize);
+        }
+
+        public int Initialize()
+        {
+            GridWrapper.IO_NetCDF_Message_Callback message_callback = (int level, string message) =>
             {
-                var ierr = GridWrapper.ionc_inq_varids(ref ioncid, ref meshId, ref locationId, ref ptr, ref nVar);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || ptr == IntPtr.Zero)
-                {
-                    throw new Exception("Couldn't get the names at location because of err nr : " + ierr);
-                }
-                var varIds = new int[nVar];
-                Marshal.Copy(ptr, varIds, 0, nVar);
-                return varIds;
-            }
-            finally
+                Console.WriteLine(Resources.GridApi_Initialize_Level_0__Message_1_, level, message);
+            };
+            GridWrapper.IO_NetCDF_Progress_Callback progress_callback = (string message, ref double progress) =>
             {
-                if (ptr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(ptr);
-                ptr = IntPtr.Zero;
-            }
-        }      
-        
+                Console.WriteLine(Resources.GridApi_Initialize_Progress_0_Message_1_, progress, message);
+            };
+            var ierr = wrapper.initialize(message_callback, progress_callback);
+            return ierr;
+        }
         #endregion
 
-        private static int[,] MarshalDataTo2DArray(IntPtr ptr, int numElements, int numValuesPerElement)
+        protected static int[,] MarshalDataTo2DArray(IntPtr ptr, int numElements, int numValuesPerElement)
         {
             var elements = new int[numElements, numValuesPerElement];
             for (var i = 0; i < numElements; i++)
@@ -500,34 +409,68 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             return elements;
         }
-        private int GetNodeXYCoordinates(int meshId, int nNode, out double[] xCoordinates, out double[] yCoordinates)
+
+        protected void ThrowIfError(int ierr)
         {
-            IntPtr xPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            IntPtr yPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nNode);
-            xCoordinates = new double[nNode];
-            yCoordinates = new double[nNode];
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                throw new Exception();
+            }
+        }
+
+        public int GetMeshGeom(ref int ioncid, ref int meshId, ref GridWrapper.meshgeom mesh, int nodes2D, bool includeArrays, ref double[] rc_twodnodex, ref double[] rc_twodnodey, ref double[] rc_twodnodez)
+        {
+            mesh.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
+            mesh.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
+            mesh.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
+            mesh.edge_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nodes2D * 2);
+
             try
             {
-                var ierr = GridWrapper.ionc_get_node_coordinates(ref ioncid, ref meshId, ref xPtr, ref yPtr, ref nNode);
-                if (ierr != GridApiDataSet.GridConstants.IONC_NOERR || xPtr == IntPtr.Zero || yPtr == IntPtr.Zero)
+                var ierr = wrapper.get_meshgeom(ref ioncid, ref meshId, ref mesh, includeArrays);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
-                Marshal.Copy(xPtr, xCoordinates, 0, nNode);
-                Marshal.Copy(yPtr, yCoordinates, 0, nNode);
             }
-            finally
+            catch
             {
-                if (xPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(xPtr);
-                xPtr = IntPtr.Zero;
-                if (yPtr != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(yPtr);
-                yPtr = IntPtr.Zero;
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
-            return GridApiDataSet.GridConstants.IONC_NOERR;
+
+            Marshal.Copy(mesh.nodex, rc_twodnodex, 0, nodes2D);
+            Marshal.Copy(mesh.nodey, rc_twodnodey, 0, nodes2D);
+            Marshal.Copy(mesh.nodez, rc_twodnodez, 0, nodes2D);
+
+            //Free memory
+//            Marshal.FreeCoTaskMem(mesh.nodex);
+//            Marshal.FreeCoTaskMem(mesh.nodey);
+//            Marshal.FreeCoTaskMem(mesh.nodez);
+//            Marshal.FreeCoTaskMem(mesh.edge_nodes);
+//
+//            mesh.nodex = IntPtr.Zero;
+//            mesh.nodey = IntPtr.Zero;
+//            mesh.nodez = IntPtr.Zero;
+//            mesh.edge_nodes = IntPtr.Zero;
+
+            return GridApiDataSet.GridConstants.NOERR;
         }
 
-        
+        public int GetMeshGeomDim(ref int ioncid, ref int meshId, ref GridWrapper.meshgeomdim meshgeomdim)
+        {
+            try
+            {
+                var ierr = wrapper.get_meshgeom_dim(ref ioncid, ref meshId, ref meshgeomdim);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            return GridApiDataSet.GridConstants.NOERR;
+        }
     }
 }

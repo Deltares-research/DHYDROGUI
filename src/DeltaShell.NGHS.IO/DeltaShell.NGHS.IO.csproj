@@ -89,6 +89,10 @@
       <HintPath>..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ProtoBufRemote">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38677\lib\net40\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38677\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
@@ -169,20 +173,29 @@
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
     <Compile Include="Grid\GridApi.cs" />
+    <Compile Include="Grid\IGridApi.cs" />
+    <Compile Include="Grid\RemoteGridApi.cs" />
+    <Compile Include="Grid\UGridGlobalMetaData.cs" />
+    <Compile Include="Grid\UGridApi.cs" />
     <Compile Include="Grid\AGrid.cs" />
     <Compile Include="Grid\GridApiDataSet.cs" />
     <Compile Include="Grid\GridApiFactory.cs" />
     <Compile Include="Grid\GridWrapper.cs" />
-    <Compile Include="Grid\IGrid.cs" />
-    <Compile Include="Grid\IGridApi.cs" />
-    <Compile Include="Grid\IUGrid.cs" />
-    <Compile Include="Grid\RemoteGridApi.cs" />
+    <Compile Include="Grid\IUGridApi.cs" />
+    <Compile Include="Grid\RemoteUGridApi.cs" />
     <Compile Include="Grid\UGrid.cs" />
+    <Compile Include="Grid\UGridMeshType.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
     <Compile Include="NGHSFileBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -203,8 +216,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.hbm.xml" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

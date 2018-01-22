@@ -98,8 +98,16 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38677\lib\net40\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="SharpMap.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.38677\lib\net40\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMapTestUtils">
+      <HintPath>..\..\packages\DeltaShell.TestProject.1.3.0.38116\lib\net40\SharpMapTestUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -117,9 +125,14 @@
     <Compile Include="FileWriters\StructureFileWriterTest.cs" />
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />
+    <Compile Include="Grid\AGridTests.cs" />
+    <Compile Include="Grid\GridApiTests.cs" />
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
+    <Compile Include="Grid\UGrid2DIntegrationTests.cs" />
+    <Compile Include="Grid\UGridApiTests.cs" />
     <Compile Include="Grid\UGridStub.cs" />
     <Compile Include="Grid\UGridTest.cs" />
+    <Compile Include="Grid\UGridUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

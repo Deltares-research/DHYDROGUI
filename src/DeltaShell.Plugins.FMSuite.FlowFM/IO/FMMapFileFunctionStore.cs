@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             boundaryCellValues.Clear();
             UpdateGrid();
-            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
+            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
 
             var functions = GetFunctions(dataVariables, isUgridConvention);
             if (!isUgridConvention)
@@ -351,7 +351,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     using (api)
                     {
-                        return api.GetConvention(netCdfFile.Path);
+                        GridApiDataSet.DataSetConventions convention;
+                        var ierr = api.GetConvention(netCdfFile.Path, out convention);
+                        if (ierr != GridApiDataSet.GridConstants.NOERR)
+                        {
+                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
+                        }
+                        return convention;
                     }
                 }
             }
@@ -360,7 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 log.ErrorFormat(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData, e.Message);
             }
 
-            return GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            return GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName, string unitSymbol, string refDate, IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes = null)
@@ -450,7 +456,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var convention = GetNcFileConvention();
 
-            var location = convention == GridApiDataSet.DataSetConventions.IONC_CONV_UGRID
+            var location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
                 ? netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location)
                 : secondDimensionName; // backwards compatibility
 

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -264,6 +264,187 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The type value {0} on line {1} file {2}, could not be parsed. Please check it is correctly written..
+        /// </summary>
+        public static string GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_ {
+            get {
+                return ResourceManager.GetString("GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___" +
+                        "could_not_be_parsed__Please_check_it_is_correctly_written_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} was not found for element {1} of type {2}..
+        /// </summary>
+        public static string GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_elemen" +
+                        "t__1__of_type__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, line {1}, element {2}. It was not possible to parse attribute {3} with value {4} from type {5} to type {6}..
+        /// </summary>
+        public static string GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_n" +
+                        "ot_possible_to_parse_attribute__3__from_type__4__to_type__5__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, line {1}. Attribute {2} contains an invalid value and will not be imported..
+        /// </summary>
+        public static string GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_not_valid_and_will_not_be_imported_ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Attribute__2__is_no" +
+                        "t_valid_and_will_not_be_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, line {1}. Column {2} ({3}) contains invalid value &apos;{4}&apos; and will not be imported..
+        /// </summary>
+        public static string GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_ {
+            get {
+                return ResourceManager.GetString("GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___co" +
+                        "ntains_invalid_value___4___and_will_not_be_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot import sewer profile(s) without profile id. Please check &apos;Profiel.csv&apos; for empty profile id&apos;s.
+        /// </summary>
+        public static string GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profile_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s {
+            get {
+                return ResourceManager.GetString("GwswElementValidationExtensions_IsValidGwswSewerProfile_Cannot_import_sewer_profi" +
+                        "le_s__without_profile_id__Please_check__Profiel_csv__for_empty_profile_id_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot import sewer structure(s) without a unique id. Please check &apos;Kunstwerk.csv&apos; for empty unique id&apos;s.
+        /// </summary>
+        public static string GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structure_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s {
+            get {
+                return ResourceManager.GetString("GwswElementValidationExtensions_IsValidGwswStructure_Cannot_import_sewer_structur" +
+                        "e_s__without_a_unique_id__Please_check__Kunstwerk_csv__for_empty_unique_id_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No mapping was found to import Gwsw Files..
+        /// </summary>
+        public static string GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not possible to import {0}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is a mismatch for File Name {0}, currently mapped to different element names {1}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___" +
+                        "currently_mapped_to_different_element_names__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attributes mapped {0}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find file {0}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing sub files..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import file {0}. Reason: {1}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, imported {1} features..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_File__0__imported__1__features_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_File__0__imported__1__features_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mapping file {0} as element {1}.
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Mapping_file__0__as_element__1_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Mapping_file__0__as_element__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No mapping was found to import File {0}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occurrences on file {0} will not be mapped to any element..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any" +
+                        "_element_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row {0} column {1} of file {2} was not mapped correctly..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_cor" +
+                        "rectly_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap hurricane2 {
@@ -448,6 +629,126 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} in line {1} does not have a name and has been created as {2}.
+        /// </summary>
+        public static string SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_has_been_created_as__2_ {
+            get {
+                return ResourceManager.GetString("SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a" +
+                        "_name_and_has_been_created_as__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manhole with manhole id &apos;{0}&apos; could not be created, because one of its compartments misses its unique id..
+        /// </summary>
+        public static string SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_not_be_created__because_one_of_its_compartments_misses_its_unique_id_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreateManHoleCompartment_Manhole_with_manhole_id___0___could_" +
+                        "not_be_created__because_one_of_its_compartments_misses_its_unique_id_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are lines in &apos;Knooppunt.csv&apos; that do not contain a Manhole Id. These lines are not imported..
+        /// </summary>
+        public static string SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_not_contain_a_Manhole_Id__These_lines_are_not_imported_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreateManholeNode_There_are_lines_in__Knooppunt_csv__that_do_" +
+                        "not_contain_a_Manhole_Id__These_lines_are_not_imported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not possible to parse value {0} into {1}.
+        /// </summary>
+        public static string SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreatePipe_Not_possible_to_parse_value__0__into__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shape was not defined for sewer profile &apos;{0}&apos; in &apos;Profiel.csv&apos;. A default round profile with diameter of 400 mm is used for this profile..
+        /// </summary>
+        public static string SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_for_this_profile_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_CreateSewerProfile_Shape_was_not_defined_for_sewer_profile___" +
+                        "0___in__Profiel_csv___A_default_round_profile_with_diameter_of_400_mm_is_used_fo" +
+                        "r_this_profile_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} was not found for element {1}.
+        /// </summary>
+        public static string SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element__1_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_GetAttributeFromList_Attribute__0__was_not_found_for_element_" +
+                        "_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created Manhole {0} and compartment {1} with default values as they were not found in the network..
+        /// </summary>
+        public static string SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartment__1__with_default_values_as_they_were_not_found_in_the_network_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_GetNewManholeForCompartment_Created_Manhole__0__and_compartme" +
+                        "nt__1__with_default_values_as_they_were_not_found_in_the_network_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type {0} is not recognized, please check the syntax.
+        /// </summary>
+        public static string SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_ch" +
+                        "eck_the_syntax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot import sewer connection(s) without Source and Target nodes. Please check the file for said empty fields.
+        /// </summary>
+        public static string SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__without_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_SewerConnectionFactory_Cannot_import_sewer_connection_s__with" +
+                        "out_Source_and_Target_nodes__Please_check_the_file_for_said_empty_fields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manhole with unique id &apos;{0}&apos; has a wrong {1} format for &apos;{2}&apos;: &apos;{3}&apos;.
+        ///Manhole with unique id &apos;{4}&apos; is not imported..
+        /// </summary>
+        public static string SewerFeatureFactory_ThrowException_ {
+            get {
+                return ResourceManager.GetString("SewerFeatureFactory_ThrowException_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pump(s) cannot be created without a network previously defined..
+        /// </summary>
+        public static string SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_a_network_previously_defined_ {
+            get {
+                return ResourceManager.GetString("SewerPumpGenerator_CreatePumpFromGwswStructure_Pump_s__cannot_be_created_without_" +
+                        "a_network_previously_defined_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weir(s) cannot be created without a network defined..
+        /// </summary>
+        public static string SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_a_network_defined_ {
+            get {
+                return ResourceManager.GetString("SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_" +
+                        "a_network_defined_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
         /// </summary>
         public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {
@@ -457,8 +758,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// <summary>        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {
             get {
@@ -674,6 +974,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid is empty.
+        /// </summary>
+        public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
+            get {
+                return ResourceManager.GetString("WaterFlowFMGridValidator_Validate_Grid_is_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {
@@ -691,13 +1000,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
+        /// <summary>        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>
         public static string WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morphology_properties_and___or_sediments__Removing_these_properties_from_the_model {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_SetVar_FM_Model__0__is_part_of_a_1D2D_model_and_can_t_have_morph" +
                         "ology_properties_and___or_sediments__Removing_these_properties_from_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not enough grid points defined for branch {0}. Make sure you have at least gridpoints at start and end of branch..
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_points_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_and_end_of_branch_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_CheckBranchLocations_Not_enough_grid_p" +
+                        "oints_defined_for_branch__0___Make_sure_you_have_at_least_gridpoints_at_start_an" +
+                        "d_end_of_branch_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_" +
+                        "points_defined_between_structure__0__and__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original discretization is invalid: structure {0} is on a grid point.
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPo" +
+                        "ints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No computational grid cells defined for branch {0}; can not start calculation..
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_d" +
+                        "efined_for_branch__0___can_not_start_calculation_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No computational grid defined. Either a Flow1D or a 2D grid needs to be created..
+        /// </summary>
+        public static string WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined" +
+                        "_", resourceCulture);
             }
         }
         
@@ -738,6 +1097,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModelDefinitionValidator_Validate_ {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelDefinitionValidator_Validate_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than two branches with the same ordernumber &apos;{0}&apos; are connected to node {1}; can not start calculation..
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branches_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calculation_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetBranchOrderNumbersAtNode_More_than_two_branch" +
+                        "es_with_the_same_ordernumber___0___are_connected_to_node__1___can_not_start_calc" +
+                        "ulation_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Branch &apos;{0}&apos; has an order number of &apos;{1}&apos;. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 .
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_order_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_greater_than_or_equal_to_0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Branch___0___has_an_or" +
+                        "der_number_of___1____Ordernumber_can_be__1__no_interpolation_over_node__or_great" +
+                        "er_than_or_equal_to_0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target and source node of branch &apos;{0}&apos; have the same id, &apos;{1}&apos;. Circular branch?.
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node_of_branch___0___have_the_same_id____1____Circular_branch_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetBranchValidationIssues_Target_and_source_node" +
+                        "_of_branch___0___have_the_same_id____1____Circular_branch_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0}).
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_cross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_supported___0__ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCorrectCrossSectionsOnChannelIssue_Multiple_c" +
+                        "ross_section_types__mix_of_Standard_ZW_and_Geometry_YZ__per_branch_es__not_suppo" +
+                        "rted___0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No CrossSection defined, all channels will be using the default values..
+        /// </summary>
+        public static string WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_defined__all_channels_will_be_using_the_default_values_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_" +
+                        "defined__all_channels_will_be_using_the_default_values_", resourceCulture);
             }
         }
         

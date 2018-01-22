@@ -1,196 +1,139 @@
 using System;
 using System.Threading;
 using DelftTools.Utils.Remoting;
-using DeltaShell.Dimr;
+using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public class RemoteGridApi : IGridApi
+    public abstract class RemoteGridApi : IGridApi
     {
-        private bool disposed; 
-        private IGridApi api;
+        protected bool disposed;
+        protected IGridApi api;
 
-        public RemoteGridApi()
+        static RemoteGridApi()
         {
-            // DeltaShell is 32bit, however we still want to take advantage of the 64bit dflowfm.dll if the system can use it, 
-            // so we need to start the 64bit worker. This works as long as the data send over the IFlexibleMeshModelApi border 
-            // is not bit dependent, eg IntPtr and the like.
-            api = RemoteInstanceContainer.CreateInstance<IGridApi, GridApi>(Environment.Is64BitOperatingSystem, null, false, typeof(DimrApi).Assembly);
+            RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
         }
-        
-        public GridApiDataSet.DataSetConventions GetConvention(string file)
+
+        public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
         {
-            return api != null ? api.GetConvention(file) : GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            convention = GridApiDataSet.DataSetConventions.CONV_NULL;
+            return api != null ? api.GetConvention(file, out convention) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
         {
             return api != null && api.adherestoConventions(convtype);
         }
-        
-        public void Open(string c_path, GridApiDataSet.NetcdfOpenMode mode)
+
+        public int CreateFile(string filePath, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
-            if(api != null)
-                api.Open(c_path, mode) ;
+            return api != null
+                ? api.CreateFile(filePath, uGridGlobalMetaData, mode)
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
-        public bool Initialized()
+        public int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
-            return api != null && api.Initialized();
+            return api != null ? api.Open(filePath, mode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
-        public void Close()
+        public bool Initialized
         {
-            if(api != null)
-                api.Close();
+            get{ return api != null && api.Initialized;}
         }
 
-        public int GetMeshCount()
+        public int Close()
         {
-            return api != null ? api.GetMeshCount() : 0;
+            return api != null ? api.Close() : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
-        public int GetCoordinateSystemCode()
+        public int GetMeshCount(out int numberOfMeshes)
         {
-            return api != null ? api.GetCoordinateSystemCode() : 0;
+            numberOfMeshes = 0;
+            return api != null ? api.GetMeshCount(out numberOfMeshes) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+        }
+
+        public int GetCoordinateSystemCode(out int coordinateSystemCode)
+        {
+            coordinateSystemCode = 0;
+            return api != null ? api.GetCoordinateSystemCode(out coordinateSystemCode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public GridApiDataSet.DataSetConventions GetConvention()
         {
-            return api != null ? api.GetConvention() : GridApiDataSet.DataSetConventions.IONC_CONV_NULL;
+            return api != null ? api.GetConvention() : GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         public double GetVersion()
         {
             return api != null ? api.GetVersion() : double.NaN;
         }
-
-        public int GetNumberOfNodes(int meshid)
-        {
-            return api != null ? api.GetNumberOfNodes(meshid) : 0;
-        }
         
-        public int GetNumberOfEdges(int meshid)
-        {
-            return api != null ? api.GetNumberOfEdges(meshid) : 0;
-        }
 
-        public int GetNumberOfFaces(int meshid)
-        {
-            return api != null ? api.GetNumberOfFaces(meshid) : 0;
-        }
-
-        public int GetMaxFaceNodes(int meshid)
-        {
-            return api != null ? api.GetMaxFaceNodes(meshid) : 0;
-        }
-
-        public double[] GetNodeXCoordinates(int meshId)
-        {
-            return api != null ? api.GetNodeXCoordinates(meshId) : new double[0];
-        }
-
-        public double[] GetNodeYCoordinates(int meshId)
-        {
-            return api != null ? api.GetNodeYCoordinates(meshId) : new double[0];
-        }
-        
-        public double[] GetNodeZCoordinates(int meshId)
-        {
-            return api != null ? api.GetNodeZCoordinates(meshId) : new double[0];
-        }
-
-        public double zCoordinateFillValue
-        {
-            get
-            {
-                return api != null ? api.zCoordinateFillValue : double.NaN;
-            }
-            set
-            {
-                if (api != null)
-                    api.zCoordinateFillValue = value;
-            }
-        }
-
-        public int[,] GetEdgeNodesForMesh(int meshId)
-        {
-            return api != null ? api.GetEdgeNodesForMesh(meshId) : new int[0,0];
-        }
-
-        public int[,] GetFaceNodesForMesh(int meshId)
-        {
-            return api != null ? api.GetFaceNodesForMesh(meshId) : new int[0, 0];
-        }
-
-        public int GetVarCount(int meshId, int locationId)
-        {
-            return api != null ? api.GetVarCount(meshId, locationId) : 0;
-        }
-
-        public int[] GetVarNames(int meshId, int locationId)
-        {
-            return api != null ? api.GetVarNames(meshId, locationId) : new int[0];
-        }
-
-        public void WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues)
-        {
-            if(api != null)
-                api.WriteXYCoordinateValues(meshId, xValues, yValues);
-        }
-        
-        public void WriteZCoordinateValues(int meshId, int locationId, string varName, string longName, double[] zValues)
-        {
-            if(api != null)
-                api.WriteZCoordinateValues(meshId, locationId, varName, longName, zValues);
-        }
-
-        public string GetMeshName(int meshId)
-        {
-            return api != null ? api.GetMeshName(meshId) : string.Empty;
-        }
-        
-        public int ionc_write_geom_ugrid(string filename)
-        {
-            return api != null ? api.ionc_write_geom_ugrid(filename) : 0;
-        }
-
-        public int ionc_write_map_ugrid(string filename)
-        {
-            return api != null ? api.ionc_write_map_ugrid(filename) : 0;
-        }
-
-        
         public int Initialize()
         {
             return api != null ? api.Initialize() : 0;
         }
 
-        
+        public int GetNumberOfNetworks(out int numberOfNetworks)
+        {
+            numberOfNetworks = 0;
+            return api != null ? api.GetNumberOfNetworks(out numberOfNetworks) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+        }
+
+        public int GetNetworkIds(out int[] networkIds)
+        {
+            networkIds = new int[0];
+            return api != null ? api.GetNetworkIds(out networkIds) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+        }
+
+        public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
+        {
+            numberOfMesh = 0;
+            return api != null
+                ? api.GetNumberOfMeshByType(meshType, out numberOfMesh)
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+        }
+
+        public int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
+        {
+            meshIds = new int[0];
+            return api != null
+                ? api.GetMeshIdsByMeshType(meshType, numberOfMeshes, out meshIds)
+                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+        }
+
+
         ~RemoteGridApi()
         {
             // in case someone forgets to dispose..
-            DisposeInternal();
+            Dispose(false);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-            if (disposed)
-                return;
-
-            DisposeInternal();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void DisposeInternal()
+        protected virtual void Dispose(bool disposing)
         {
-            if (api != null)
+            if (!disposed)
             {
-                RemoteInstanceContainer.RemoveInstance(api);
+                if (disposing)
+                {
+                    if (api != null)
+                    {
+                        Close();
+                        RemoteInstanceContainer.RemoveInstance(api);
+                        Thread.Sleep(100); // wait for process to truly exit
+                    }
+                    api = null;
+                }
+                disposed = true;
             }
-            api = null;
-            disposed = true;
-            Thread.Sleep(100); // wait for process to truly exit
         }
+       
     }
 }

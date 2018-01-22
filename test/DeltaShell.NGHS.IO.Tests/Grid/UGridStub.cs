@@ -1,4 +1,3 @@
-using System;
 using DeltaShell.NGHS.IO.Grid;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
@@ -9,7 +8,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         public bool IsValidViaApi()
         {
-            var ioncConvUgrid = GridApiDataSet.DataSetConventions.IONC_CONV_UGRID;
+            var ioncConvUgrid = GridApiDataSet.DataSetConventions.CONV_UGRID;
             bool isValidViaApi;
             using (var gridApi = GridApiFactory.CreateNew())
             {
@@ -23,9 +22,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int ierr;
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                ierr = gridApi.ionc_write_geom_ugrid(file);
+                ierr = gridApi.write_geom_ugrid(file);
             }
-            return ierr == GridApiDataSet.GridConstants.IONC_NOERR;
+            return ierr == GridApiDataSet.GridConstants.NOERR;
         }
         
         public static bool TestWriteMap(string file)
@@ -33,9 +32,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int ierr;
             using (var gridApi = GridApiFactory.CreateNew())
             {
-                ierr = gridApi.ionc_write_map_ugrid(file);
+                ierr = gridApi.write_map_ugrid(file);
             }
-            return ierr == GridApiDataSet.GridConstants.IONC_NOERR;
+            return ierr == GridApiDataSet.GridConstants.NOERR;
         }
     }
 }

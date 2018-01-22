@@ -7,18 +7,27 @@ namespace DeltaShell.NGHS.IO.Adaptors
 {
     public class UGridToUnstructuredGridAdaptor : IDisposable
     {
-        public IUGrid uGrid { get; set; }
+        public UGrid uGrid { get; set; }
 
         public UGridToUnstructuredGridAdaptor(string filename)
         {
            uGrid = new UGrid(filename);
         }
         
-        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int mesh)
+        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId)
         {
-            if (mesh > uGrid.NumberOfMesh() || mesh <=0 ) return null;
+            if (meshId > uGrid.GetNumberOf2DMeshes() || meshId <=0 ) return null;
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(uGrid.NodeCoordinates[mesh-1].ToList(), uGrid.EdgeNodes[mesh-1], uGrid.FaceNodes[mesh-1], oneBased: false);
+            uGrid.GetAllNodeCoordinatesForMeshId(meshId);
+            uGrid.GetEdgeNodesForMeshId(meshId);
+            uGrid.GetFaceNodesForMeshId(meshId);
+
+            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(
+                uGrid.NodeCoordinatesByMeshId[meshId-1].ToList(), 
+                uGrid.EdgeNodesByMeshId[meshId-1], 
+                uGrid.FaceNodesByMeshId[meshId-1], 
+                oneBased: false);
+
             if (grid != null) grid.CoordinateSystem = uGrid.CoordinateSystem;
             return grid;
         }
