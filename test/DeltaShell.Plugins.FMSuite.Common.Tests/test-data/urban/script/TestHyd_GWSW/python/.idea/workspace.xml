@@ -124,10 +124,10 @@
         <option value="$PROJECT_DIR$/resources/FMmdu" />
         <option value="$PROJECT_DIR$/resources/FMmd1d" />
         <option value="$PROJECT_DIR$/UgridWriter.py" />
-        <option value="$PROJECT_DIR$/FMwriter.py" />
         <option value="$PROJECT_DIR$/Logger.py" />
         <option value="$PROJECT_DIR$/Run.py" />
         <option value="$PROJECT_DIR$/GWSWreader.py" />
+        <option value="$PROJECT_DIR$/FMwriter.py" />
       </list>
     </option>
   </component>
