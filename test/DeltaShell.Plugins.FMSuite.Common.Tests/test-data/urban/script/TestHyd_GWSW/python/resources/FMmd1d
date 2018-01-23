@@ -1,27 +1,27 @@
 [General]
-    majorVersion          = 1                   # Major file version. Do not edit this.
-    minorVersion          = 0                   # Minor file version. Do not edit this.
-    fileType              = modelDef            # File type. Do not edit this.
+    majorVersion          = 1                    # Major file version. Do not edit this.
+    minorVersion          = 0                    # Minor file version. Do not edit this.
+    fileType              = modelDef             # File type. Do not edit this.
 
 [Files]
-    networkFile           = NetworkDefinition.ini# #Name and location of the network file
-    crossLocFile          = CrossSectionLocations.ini# Name and location of the file containing the locations of the cross sections
-    crossDefFile          = CrossSectionDefinitions.ini# Name and location of the file containing the definitions of the cross sections
-    structureFile         = Structures.ini      # Name and location of the structure file
-    obsPointsFile         = ObservationPoints.ini# Name and location of the observation points file
-    initialWaterLevelFile = InitialWaterLevel.ini# Name and location of the file containing the spatial definition of the initial water level
-    initialWaterDepthFile = InitialWaterDepth.ini# Name and location of the file containing the spatial definition of the initial water depth
-    initialDischargeFile  = InitialDischarge.ini# Name and location of the file containing the spatial definition of the initial discharge
-    initialSalinityFile   = InitialSalinity.ini # Name and location of the file containing the spatial definition of the initial salinity
-    initialTemperatureFile= InitialTemperature.ini# Name and location of the file containing the spatial definition of the initial temperature
-    windShieldingFile     = WindShielding.ini   # Name and location of the file containing the spatial definition of the wind shielding
-    roughnessFile         = roughness-Main.ini;roughness-FloodPlain1.ini# Name and location of the file containing the roughness data
-    boundLocFile          = BoundaryLocations.ini# Name and location of the file containing the boundary locations
-    latDischargeLocFile   = LateralDischargeLocations.ini# Name and location of the file containing the lateral discharge locations
-    boundCondFile         = BoundaryConditions.bc# Name and location of the file containing the boundary conditions and lateral discharges
-    sobekSimIniFile       = SobekSim.ini        # Name of the sobek sim ini file containing also model parameter which are not in here. Will be phased out later
-    retentionFile         = Retention.ini       # Name of the retention ini file containing the values of the retention areas
-    logFile               = sobek.log           # Name of the log file
+    networkFile           = sewer_system_net.nc  # #Name and location of the network file
+    crossLocFile          = cross_section_locations.ini  # Name and location of the file containing the locations of the cross sections
+    crossDefFile          = cross_section_definitions.ini  # Name and location of the file containing the definitions of the cross sections
+    structureFile         =                      # Name and location of the structure file
+    obsPointsFile         =                      # Name and location of the observation points file
+    initialWaterLevelFile =                      # Name and location of the file containing the spatial definition of the initial water level
+    initialWaterDepthFile =                      # Name and location of the file containing the spatial definition of the initial water depth
+    initialDischargeFile  =                      # Name and location of the file containing the spatial definition of the initial discharge
+    initialSalinityFile   =                      # Name and location of the file containing the spatial definition of the initial salinity
+    initialTemperatureFile=                      # Name and location of the file containing the spatial definition of the initial temperature
+    windShieldingFile     =                      # Name and location of the file containing the spatial definition of the wind shielding
+    roughnessFile         = roughness_sewer_system.ini # Name and location of the file containing the roughness data
+    boundLocFile          =                      # Name and location of the file containing the boundary locations
+    latDischargeLocFile   =                      # Name and location of the file containing the lateral discharge locations
+    boundCondFile         =                      # Name and location of the file containing the boundary conditions and lateral discharges
+    sobekSimIniFile       =                      # Name of the sobek sim ini file containing also model parameter which are not in here. Will be phased out later
+    retentionFile         =                      # Name of the retention ini file containing the values of the retention areas
+    logFile               = sobek.log            # Name of the log file
 
 [ResultsNodes]
     Density               = None                # GridpointsOnBranches Output Density
@@ -137,11 +137,11 @@
     InitialEmptyWells     = 0                   # 0=false, 1=true
 
 [Time]
-    StartTime             = 2014-01-01 00:00:00 # yyyy-MM-dd HH:mm:ss
-    StopTime              = 2014-01-05 00:00:00 # yyyy-MM-dd HH:mm:ss
-    TimeStep              = 600.000             # in seconds
-    OutTimeStepGridPoints = 3600.000            # in seconds
-    OutTimeStepStructures = 3600.000            # in seconds
+    StartTime             =                      # yyyy-MM-dd HH:mm:ss
+    StopTime              =                      # yyyy-MM-dd HH:mm:ss
+    TimeStep              =                      # in seconds
+    OutTimeStepGridPoints =                      # in seconds
+    OutTimeStepStructures =                      # in seconds
 
 [Sediment]
 
@@ -198,22 +198,22 @@
     Longitude             = 4.3555600e+000
 
 [Salinity]
-    SaltComputation       = 0                   # 0=false, 1=true
-    DiffusionAtBoundaries = 1                   # 0=false, 1=true
+    SaltComputation       = 0                    # 0=false, 1=true
+    DiffusionAtBoundaries = 1                    # 0=false, 1=true
 
 [Temperature]
-    BackgroundTemperature = 0.0000000e+000
-    SurfaceArea           = 1.0000000e+006      # Exposed surface area (used in Excess model)
-    AtmosphericPressure   = 1.0000000e+005      # Atmospheric pressure
-    DaltonNumber          = 1.3000000e-003      # Dalton number
-    StantonNumber         = 1.3000000e-003      # Stanton number
-    HeatCapacityWater     = 3.9300000e+003      # Heat capacity of water
+    BackgroundTemperature =
+    SurfaceArea           =                     # Exposed surface area (used in Excess model)
+    AtmosphericPressure   =                     # Atmospheric pressure
+    DaltonNumber          =                     # Dalton number
+    StantonNumber         =                     # Stanton number
+    HeatCapacityWater     =                     # Heat capacity of water
 
 [Morphology]
-    CalculateMorphology   = 1                   # 0=false, 1=true
-    AdditionalOutput      = 1                   # 0=false, 1=true
-    SedimentInputFile     = test007.sed         # Name of sediment input file
-    MorphologyInputFile   = test007.mor         # Name of morphology description file
+    CalculateMorphology   = 0                   # 0=false, 1=true
+    AdditionalOutput      = 0                   # 0=false, 1=true
+    SedimentInputFile     =                     # Name of sediment input file
+    MorphologyInputFile   =                     # Name of morphology description file
 
 [Observations]
     InterpolationType     = Nearest             # Interpolation type (linear or nearest)

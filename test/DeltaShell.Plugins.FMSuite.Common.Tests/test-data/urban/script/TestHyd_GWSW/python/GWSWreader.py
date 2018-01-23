@@ -10,9 +10,10 @@ class GWSWreader:
     dirPath = ''
     inputDir = ''
 
-    def readAll(self, dirPath, inputDir):   # path directory files
+    def readAll(self, dirPath, inputDir, oppervlakOnNode = False):   # path directory files
         self.dirPath = dirPath
         self.inputDir = inputDir
+        self.oppervlakOnNode = oppervlakOnNode
         model = GWSWmodel()
         model.nodes = self.readNodes2Dict()
         model.connections = self.readConnections2Dict()
@@ -184,17 +185,30 @@ class GWSWreader:
             firstLine = True
             for line in file:
                 if not firstLine:
-                    node = line[0]
-                    if node in model.connections:
-                        connection = model.connections[node]
-                        if float(connection[6]) > float(connection[5]):
-                            node = connection[2]
+                    if self.oppervlakOnNode:
+                        nodeId = line[0]
+                        if nodeId in model.nodes:
+                            node =  model.nodes[nodeId]
+                            if nodeId in dict:
+                                dict[nodeId][1] += float(line[4])
+                            else:
+                                dict[nodeId] = [nodeId,float(line[4])]
                         else:
-                            node = connection[1]
-
-                    if node in dict:
-                        dict[node][1] += float(line[4])
+                             print("Node " + nodeId + " not found from Oppervlak.csv")
                     else:
-                        dict[node] = [node,float(line[4])]
+                        connectionId = line[0]
+                        if connectionId in model.connections:
+                            connection = model.connections[connectionId]
+                            if float(connection[6]) > float(connection[5]):
+                                nodeId = connection[2]
+                            else:
+                                nodeId = connection[1]
+
+                            if nodeId in dict:
+                                dict[nodeId][1] += float(line[4])
+                            else:
+                                dict[nodeId] = [nodeId,float(line[4])]
+                        else:
+                            print("Connection " + connectionId + " not found from Oppervlak.csv")
                 firstLine = False
         return dict
