@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             get
             {
-                return (bool)ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup).Value;
+                return ModelDefinition.WaveSetup;
             }
             set
             {

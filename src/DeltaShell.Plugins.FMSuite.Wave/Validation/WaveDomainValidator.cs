@@ -28,16 +28,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             var domain = model.OuterDomain;
             var domains = WaveDomainHelper.GetAllDomains(domain);
-            var sphericalDomains = domains.Where(d => CheckDomainGrid( d, "Spherical")).ToList();
-            if (sphericalDomains.Any() && domains.Any(d => CheckDomainGrid(d, "Cartesian")))
+            var sphericalDomains = domains.Where(d => CheckDomainGrid( d, WaveModel.CoordinateSystemType.Spherical)).ToList();
+            if (sphericalDomains.Any() && domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Cartesian)))
             {
-                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian, domain));
+                issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian));
             }
             else if (sphericalDomains.Count == domains.Count)
             {
                 if (model.ModelDefinition.WaveSetup)
                 {
-                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_));
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, Resources.WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_false_when_using_Spherical_Coordinate_Systems_, model));
                 }
             }
             return new ValidationReport("Model domains", issues);
