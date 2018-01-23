@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            string expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
             var extForceFile = new ExtForceFile();
             TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), expectedMessage);
         }
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            string expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
+            var expectedMessage = string.Format(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, "generalstructure", extPath);
             var extForceFile = new ExtForceFile();
 
             Assert.IsFalse(def.BoundaryConditions.Any());
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
             var sedConcXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
             var customPropXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_IniSedThick." + XyzFile.Extension);
-            string fileCopyName = "";
+            var fileCopyName = string.Empty;
             try
             {
                 /* Define new model */
