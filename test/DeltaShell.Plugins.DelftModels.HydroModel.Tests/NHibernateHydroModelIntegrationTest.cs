@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.IO;
+using DeltaShell.Core;
+using DeltaShell.Dimr;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -15,6 +23,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
@@ -217,6 +226,94 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             converterAfterLoad.OriginalValue.Should().Not.Be.Null();
             converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
             converterAfterLoad.HydroRegion.Should().Not.Be.Null();
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RunFailingIntegratedModelConnectsOutputFromDimrCorrectly()
+        {
+            var projectPath = TestHelper.GetTestFilePath(@"integratedModel\modelRunFails.dsproj");
+            projectPath = TestHelper.CreateLocalCopy(projectPath);
+            Assert.IsTrue(File.Exists(projectPath));
+
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new RealTimeControlApplicationPlugin());
+
+                app.Run();
+                app.OpenProject(projectPath);
+                var hydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                Assert.IsNotNull(hydroModel);
+                Assert.IsTrue(hydroModel.Activities.Any());
+                var flowFM = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(flowFM);
+
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.AreEqual(ActivityStatus.Failed, hydroModel.Status);
+
+                //Check if the dia file has been generated.
+                var diaFileDataItem = flowFM.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
+                Assert.IsNotNull(diaFileDataItem);
+                Assert.IsNotNull(diaFileDataItem.Value);
+                var textDiaFile = ((TextDocument)diaFileDataItem.Value).Content;
+                Assert.IsNotNull(textDiaFile);
+
+                var logFileDataItem = hydroModel.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+                Assert.IsNotNull(logFileDataItem);
+                Assert.IsNotNull(logFileDataItem.Value);
+                var textLogFile = ((TextDocument)logFileDataItem.Value).Content;
+                Assert.IsNotNull(textLogFile);
+            }
+            var directoryPath = Path.GetDirectoryName(projectPath);
+            FileUtils.DeleteIfExists(directoryPath);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RunFailingFlowFMFromIntegratedModelConnectsOutputFromDimrCorrectly()
+        {
+            /* Issue DELFT3DFM-838, when this model is executed directly from the FlowFM it fails (and it's expected to fail)
+                 the problem, however, is that FlowFM is not generating any log file because it crashes while initializing. */
+
+            var projectPath = TestHelper.GetTestFilePath(@"integratedModel\modelRunFails.dsproj");
+            projectPath = TestHelper.CreateLocalCopy(projectPath);
+            Assert.IsTrue(File.Exists(projectPath));
+
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new RealTimeControlApplicationPlugin());
+
+                app.Run();
+                app.OpenProject(projectPath);
+                var hydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                Assert.IsNotNull(hydroModel);
+                Assert.IsTrue(hydroModel.Activities.Any());
+                var flowFM = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(flowFM);
+
+                ActivityRunner.RunActivity(flowFM);
+
+                //Check if the dia file has been generated.
+                var diaFileDataItem = flowFM.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
+                Assert.IsNotNull(diaFileDataItem);
+                Assert.IsNotNull(diaFileDataItem.Value);
+                var textDiaFile = ((TextDocument)diaFileDataItem.Value).Content;
+                Assert.IsNotNull(textDiaFile);
+            }
+            var directoryPath = Path.GetDirectoryName(projectPath);
+            FileUtils.DeleteIfExists(directoryPath);
         }
     }
 }

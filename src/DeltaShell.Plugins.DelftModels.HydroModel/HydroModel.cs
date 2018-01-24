@@ -792,8 +792,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (dimrApi != null)
             {
-                dimrApi.Dispose();
-                dimrApi = null;
+                try
+                {
+                    dimrApi.Dispose();
+                    dimrApi = null;
+                }
+                catch (Exception e)
+
+                {
+                    Log.Debug(e.Message);
+                }
             }
 
             if (DoDimrRun())
@@ -803,7 +811,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 foreach (var dimrModel in currentWorkflow.GetActivitiesOfType<IDimrModel>())
                 {
-                    dimrModel.ConnectOutput(validPath);
+                    var outputDirectory = Path.Combine(validPath, dimrModel.DirectoryName);
+                    dimrModel.ConnectOutput(outputDirectory);
                     dimrModel.IsRunByDimr = false;
                 }
                 var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;

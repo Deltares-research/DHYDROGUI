@@ -2545,29 +2545,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual void ConnectOutput(string outputPath)
         {
-            var outputDirectory = Path.Combine(outputPath, DirectoryName);
-            ReconnectOutputFiles(outputDirectory);
-            ReadDiaFile(outputDirectory);
+            ReconnectOutputFiles(outputPath);
+            ReadDiaFile(outputPath);
         }
 
         private void ReadDiaFile(string outputDirectory)
         {
             var diaFileName = string.Format("{0}.dia", Name);
 
-            var logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
-            if (logDataItem == null)
-            {
-                // add logfile dataitem if not exists
-                var textDocument = new TextDocument(true) { Name = diaFileName };
-                logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
-                DataItems.Add(logDataItem);
-            }
-
             var diaFilePath = Path.Combine(outputDirectory, diaFileName);
             if (File.Exists(diaFilePath))
             {
                 try
                 {
+                    var logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
+                    if (logDataItem == null)
+                    {
+                        // add logfile dataitem if not exists
+                        var textDocument = new TextDocument(true) { Name = diaFileName };
+                        logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
+                        DataItems.Add(logDataItem);
+                    }
+
                     var log = File.ReadAllText(diaFilePath);
                     ((TextDocument)logDataItem.Value).Content = log;
                 }
