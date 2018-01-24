@@ -23,18 +23,18 @@ namespace DelftTools.Hydro.CrossSections
 
         }
         /// <summary>
-        /// Returns width of section with given type name
+        /// Returns width of section with given type name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public virtual double GetSectionWidth(string name)
         {
-            var section = Sections.FirstOrDefault(s => s.SectionType.Name == name);
-            if (section != null)
-            {
-                return 2*(section.MaxY - section.MinY);
-            }
-            return 0;
+            return GetSection(name)?.Width ?? 0.0;
+        }
+
+        protected virtual CrossSectionSection GetSection(string name)
+        {
+            return Sections.FirstOrDefault(s => s.SectionType.Name == name);
         }
 
         public CrossSectionDefinitionZW(string name) : base(name)
@@ -342,6 +342,20 @@ namespace DelftTools.Hydro.CrossSections
             crossSectionZW.SetDefaultZWTable();
             crossSectionZW.Name = name;
             return crossSectionZW;
+        }
+
+        public virtual void RefreshSectionsWidths()
+        {
+            var widthDifference = this.FlowWidth() - this.SectionsTotalWidth();
+            GetSection(MainSectionName).MaxY += 0.5 * widthDifference;
+
+            var floodPlain1 = GetSection(Floodplain1SectionTypeName);
+            if (floodPlain1 == null) return;
+            floodPlain1.MaxY += 0.5 * widthDifference;
+
+            var floodPlain2 = GetSection(Floodplain2SectionTypeName);
+            if (floodPlain2 == null) return;
+            floodPlain2.MaxY += 0.5 * widthDifference;
         }
     }
 }
