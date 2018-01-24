@@ -3491,10 +3491,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public virtual void ConnectOutput(string outputPath)
         {
-            var outputDirectory = Path.Combine(outputPath, DirectoryName);
-            ConnectOutputNetFiles(outputDirectory);
+            ConnectOutputNetFiles(outputPath);
             UpdateCoordinateSystemInOutputFeatureCoverages();
-            ReadSobekLogFile(outputDirectory);
+            ReadSobekLogFile(outputPath);
         }
 
         private void ConnectOutputNetFiles(string outputDirectory)

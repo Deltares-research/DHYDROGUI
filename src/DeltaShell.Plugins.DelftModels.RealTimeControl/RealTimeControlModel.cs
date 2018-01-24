@@ -499,7 +499,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (string.IsNullOrEmpty(outputPath)) return;
 
-            var outputFilePath = Path.Combine(outputPath, DirectoryName, OutputFileName);
+            var outputFilePath = Path.Combine(outputPath, OutputFileName);
             ReconnectOutputFiles(outputFilePath);
         }
 

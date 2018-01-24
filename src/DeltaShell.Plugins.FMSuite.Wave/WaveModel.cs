@@ -1479,7 +1479,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void ConnectOutput(string outputPath)
         {
-            ReconnectWavmFile(Path.Combine(outputPath, DirectoryName));
+            ReconnectWavmFile(outputPath);
         }
         public new virtual ActivityStatus Status
         {
