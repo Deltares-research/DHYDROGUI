@@ -1,0 +1,29 @@
+﻿<Window x:Class="DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms.RefreshMainSectionWidthsDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms"
+             mc:Ignorable="d" 
+             Title="Refresh main sections" Height="300" Width="300" WindowStartupLocation="CenterOwner" SizeToContent="Height" ResizeMode="CanResizeWithGrip">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" MaxWidth="280" TextAlignment="Center" Margin="20,10,20,0" TextWrapping="Wrap">
+            Do you want to correct the main section width on all incorrect cross sections, such that the total width of all sections matches
+            the maximum flow width on each cross section?
+        </TextBlock>
+        <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,15,0,10">
+            <Button IsDefault="True" MinWidth="60" Margin="0,0,50,0" Click="OkButton_OnClick">Ok</Button>
+            <Button IsCancel="True" MinWidth="60">Cancel</Button>
+        </WrapPanel>
+    </Grid>
+</Window>

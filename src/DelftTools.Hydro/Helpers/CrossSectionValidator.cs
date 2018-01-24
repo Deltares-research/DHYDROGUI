@@ -17,7 +17,7 @@ namespace DelftTools.Hydro.Helpers
             {
                 if (crossSectionDefinition.IsProxy)
                 {
-                    crossSectionDefinition = ((CrossSectionDefinitionProxy) crossSectionDefinition).GetUnProxiedDefinition();
+                    crossSectionDefinition = GetUnProxiedCrossSectionDefinition(crossSectionDefinition);
                 }
                 var crossSectionZw = crossSectionDefinition as CrossSectionDefinitionZW;
                 if (crossSectionZw != null)
@@ -125,20 +125,17 @@ namespace DelftTools.Hydro.Helpers
 
         public static bool AreCrossSectionsLengthsMatchingTheFlowWidth(ICrossSectionDefinition crossSectionDefinition)
         {
-            var crossSectionZw = crossSectionDefinition as CrossSectionDefinitionZW;
-            if (crossSectionZw != null)
-            {
-                var sectionsTotalWidth = crossSectionZw.SectionsTotalWidth();
-                return sectionsTotalWidth.Equals(crossSectionZw.FlowWidth());
-            }
-            return true;
+            var csDefToCheck = crossSectionDefinition.IsProxy ? GetUnProxiedCrossSectionDefinition(crossSectionDefinition) : crossSectionDefinition;
+            var crossSectionZw = csDefToCheck as CrossSectionDefinitionZW;
+            return crossSectionZw == null || IsTotalSectionsWidthEqualToFlowWidth(crossSectionZw);
         }
 
         public static bool AreFloodPlain1AndFloodPlain2WidthsValid(ICrossSectionDefinition crossSectionDefinition)
         {
             if (crossSectionDefinition.Sections.Count != 3) return true;
 
-            var crossSectionZw = crossSectionDefinition as CrossSectionDefinitionZW;
+            var csDefToCheck = crossSectionDefinition.IsProxy ? GetUnProxiedCrossSectionDefinition(crossSectionDefinition) : crossSectionDefinition;
+            var crossSectionZw = csDefToCheck as CrossSectionDefinitionZW;
             if (crossSectionZw == null) return true;
 
             var floodPlain1Width = crossSectionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
@@ -146,6 +143,17 @@ namespace DelftTools.Hydro.Helpers
 
             var floodPlain2Width = crossSectionZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName);
             return !(floodPlain2Width > 0.0);
+        }
+
+        private static bool IsTotalSectionsWidthEqualToFlowWidth(CrossSectionDefinitionZW crossSectionZw)
+        {
+            var sectionsTotalWidth = crossSectionZw.SectionsTotalWidth();
+            return sectionsTotalWidth.Equals(crossSectionZw.FlowWidth());
+        }
+
+        private static ICrossSectionDefinition GetUnProxiedCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)
+        {
+            return ((CrossSectionDefinitionProxy) crossSectionDefinition).GetUnProxiedDefinition();
         }
     }
 }

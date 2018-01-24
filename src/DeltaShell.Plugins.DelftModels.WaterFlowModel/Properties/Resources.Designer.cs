@@ -528,6 +528,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FloodPlain2 width may not be larger than 0.0, if FloodPlain1 width is equal to 0.0.
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_wid" +
+                        "th_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid flow profile.
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Invalid_flow_profile {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Invalid_flow_pr" +
+                        "ofile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No profile defined.
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_No_profile_defined {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_No_profile_defi" +
+                        "ned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition..
         /// </summary>
         public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_ {
@@ -535,6 +565,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
                 return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross" +
                         "_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definit" +
                         "ion_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The maximum flow width of one or more cross section does not match the total width of all its sections..
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_sections_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_widt" +
+                        "h_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_section" +
+                        "s_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The maximum flow width of this cross section does not match the total width of all its sections..
+        /// </summary>
+        public static string WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_widt" +
+                        "h_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_", resourceCulture);
             }
         }
         
