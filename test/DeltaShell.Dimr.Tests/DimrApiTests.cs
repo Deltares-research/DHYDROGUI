@@ -1,10 +1,7 @@
 ﻿using NUnit.Framework;
-using DeltaShell.Dimr;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -82,6 +79,7 @@ namespace DeltaShell.Dimr.Tests
         }
 
         [Test()]
+        [Category(TestCategory.WorkInProgress)]
         public void TestInitializeUpdateFinishAndGetValues()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
