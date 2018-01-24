@@ -79,12 +79,12 @@ namespace DeltaShell.Dimr.Tests
         }
 
         [Test()]
-        [Category(TestCategory.WorkInProgress)]
         public void TestInitializeUpdateFinishAndGetValues()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
+            Assert.Fail("Test failing because of thread abort during dimrApi.Initialize , requires further investigation. ");
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 var exporter = new WaterFlowFMFileExporter();
