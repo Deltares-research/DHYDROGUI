@@ -125,6 +125,7 @@
     <Compile Include="IO\WavmFileFunctionStore.cs" />
     <Compile Include="Layers\WaveModelLayerStyles.cs" />
     <Compile Include="Layers\WaveSnappedFeaturesGroupLayerData.cs" />
+    <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Validation\WaveBoundaryConditionValidator.cs" />
     <Compile Include="Validation\WaveCouplingValidator.cs" />
     <Compile Include="Validation\WavePropertiesValidator.cs" />
