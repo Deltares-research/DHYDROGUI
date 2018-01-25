@@ -258,17 +258,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.AreEqual(ActivityStatus.Failed, hydroModel.Status);
 
                 //Check if the dia file has been generated.
-                var diaFileDataItem = flowFM.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
-                Assert.IsNotNull(diaFileDataItem);
-                Assert.IsNotNull(diaFileDataItem.Value);
-                var textDiaFile = ((TextDocument)diaFileDataItem.Value).Content;
-                Assert.IsNotNull(textDiaFile);
-
-                var logFileDataItem = hydroModel.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
-                Assert.IsNotNull(logFileDataItem);
-                Assert.IsNotNull(logFileDataItem.Value);
-                var textLogFile = ((TextDocument)logFileDataItem.Value).Content;
-                Assert.IsNotNull(textLogFile);
+                CheckLogFileGeneratedForHydroModel(flowFM, WaterFlowFMModel.DiaFileDataItemTag);
+                CheckLogFileGeneratedForHydroModel(hydroModel, DimrRunner.DimrRunLogfileDataItemTag);
             }
             var directoryPath = Path.GetDirectoryName(projectPath);
             FileUtils.DeleteIfExists(directoryPath);
@@ -306,14 +297,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 ActivityRunner.RunActivity(flowFM);
 
                 //Check if the dia file has been generated.
-                var diaFileDataItem = flowFM.DataItems.FirstOrDefault(di => di.Tag == WaterFlowFMModel.DiaFileDataItemTag);
-                Assert.IsNotNull(diaFileDataItem);
-                Assert.IsNotNull(diaFileDataItem.Value);
-                var textDiaFile = ((TextDocument)diaFileDataItem.Value).Content;
-                Assert.IsNotNull(textDiaFile);
+                CheckLogFileGeneratedForHydroModel(hydroModel, DimrRunner.DimrRunLogfileDataItemTag);
             }
             var directoryPath = Path.GetDirectoryName(projectPath);
             FileUtils.DeleteIfExists(directoryPath);
+        }
+
+        private static void CheckLogFileGeneratedForHydroModel(IHydroModel model, string logTag)
+        {
+            var logFileDataItem = model.DataItems.FirstOrDefault(di => di.Tag == logTag);
+            Assert.IsNotNull(logFileDataItem, "No log item was created.");
+            Assert.IsNotNull(logFileDataItem.Value);
+            var textLogFile = ((TextDocument) logFileDataItem.Value).Content;
+            Assert.IsNotNull(textLogFile);
         }
     }
 }
