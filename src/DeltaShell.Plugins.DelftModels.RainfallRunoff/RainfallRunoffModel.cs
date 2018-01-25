@@ -1038,20 +1038,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public virtual void DisconnectOutput()
         {
             ClearOutput();
-            /*OutputCoverages.Select(c => c.Store).AsParallel().OfType<ReadOnlyMapHisFileFunctionStore>().ForAll(store =>
-            {
-                store.Close();
-                store.Path = null;
-            }); */
         }
 
         public virtual void ConnectOutput(string outputPath)
         {
-            //OutputFunctions.AsParallel().ForAll(SetReadOnlyMapHisFileFunctionStoreLookups);
             OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
-            //OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
-            SetPathsOfFunctionStores(Path.Combine(outputPath, DirectoryName));
+            SetPathsOfFunctionStores(outputPath);
             OutputIsEmpty = false;
         }
         public virtual ValidationReport Validate()
