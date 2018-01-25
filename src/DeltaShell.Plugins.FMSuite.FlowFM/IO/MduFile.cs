@@ -303,8 +303,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OpenOutputFile(filePath);
             try
             {
-                WriteLine("# Generated on " + DateTime.Now);
-                WriteLine("# Deltares, FM-Suite DFlowFM Model Version " + FMSuiteFlowModelVersion + ", DFlow FM Version " + FMDllVersion);
+                WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                WriteLine("# Deltares, D-Flow FM user interface version " + FMSuiteFlowModelVersion + ", D-Flow FM kernel version " + FMDllVersion);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.Version, FMDllVersion);
                 SetValueToPropertyIfExists(modelDefinition, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
                 var propertiesByGroup = modelDefinition.Where(p => p.PropertyDefinition.FileCategoryName != "GUIOnly"
