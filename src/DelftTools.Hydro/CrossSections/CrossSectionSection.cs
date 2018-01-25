@@ -8,6 +8,18 @@ namespace DelftTools.Hydro.CrossSections
     [Entity(FireOnCollectionChange=false)]
     public class CrossSectionSection : Unique<long>
     {
+        //    Explanation of cross section sections
+        //
+        //    \                               /
+        //     \                             /
+        //      \                           /
+        //       \                         /
+        //        \_______________________/
+        //      |         |   |   |         |
+        //    -MaxY     -MinY 0  MinY     MaxY
+        //       _________         _________
+        //      | Section |       | Section |               
+        
         public virtual double MinY { get; set; }
 
         public virtual double MaxY { get; set; }
@@ -15,6 +27,10 @@ namespace DelftTools.Hydro.CrossSections
         [Aggregation]
         public virtual CrossSectionSectionType SectionType { get; set; }
 
+        /// <summary>
+        /// The Width is equal to the total width of the cross section that is covered by this
+        /// cross section section. See the drawing above for an explanation.
+        /// </summary>
         public double Width
         {
             get { return 2 * (MaxY - MinY); }
