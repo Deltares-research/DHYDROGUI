@@ -773,25 +773,10 @@ namespace Sobek.IntegrationTests
                 toNetworkImported.ImportItem(modelPath);
                 
                 // add cross sections which were not imported correctly so that our model is valid
-                var branch = network.Channels.FirstOrDefault(channel => channel.Name == "2");
-                Assert.NotNull(branch);
-                var crossSection = CrossSection.CreateDefault(CrossSectionType.ZW, branch, branch.Length/2);
-                branch.BranchFeatures.Add(crossSection);
-
-                branch = network.Channels.FirstOrDefault(channel => channel.Name == "CH120");
-                Assert.NotNull(branch);
-                crossSection = CrossSection.CreateDefault(CrossSectionType.ZW, branch, branch.Length/2);
-                branch.BranchFeatures.Add(crossSection);
-
-                branch = network.Channels.FirstOrDefault(channel => channel.Name == "CH410");
-                Assert.NotNull(branch);
-                crossSection = CrossSection.CreateDefault(CrossSectionType.ZW, branch, branch.Length/2);
-                branch.BranchFeatures.Add(crossSection);
-
-                branch = network.Channels.FirstOrDefault(channel => channel.Name == "CH479");
-                Assert.NotNull(branch);
-                crossSection = CrossSection.CreateDefault(CrossSectionType.ZW, branch, branch.Length/2);
-                branch.BranchFeatures.Add(crossSection);
+                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "2");
+                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH120");
+                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH410");
+                AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(network, "CH479");
 
                 var validation = model.Validate();
                 Assert.AreEqual(0, validation.ErrorCount);
@@ -805,6 +790,15 @@ namespace Sobek.IntegrationTests
                 Assert.IsTrue(File.Exists(filepath));
 
             }
+        }
+
+        private static void AddNewDefaultCrossSectionZWWithDefaultSectionToBranch(IHydroNetwork network, string channelName)
+        {
+            var branch = network.Channels.FirstOrDefault(channel => channel.Name == channelName);
+            Assert.NotNull(branch);
+            var crossSection = CrossSection.CreateDefault(CrossSectionType.ZW, branch, branch.Length / 2);
+            crossSection.Definition.AddSection(new CrossSectionSectionType(), 100);
+            branch.BranchFeatures.Add(crossSection);
         }
 
         [Test]
