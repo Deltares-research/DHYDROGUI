@@ -171,6 +171,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void Given1d2dCoupledModelWhenDimrExportThenDimrExportedFile()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
@@ -279,6 +280,7 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Category(TestCategory.Slow)]
         public void Given1d2dCoupledModelWithRTCWhenDimrExportThenDimrExportedFile()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })

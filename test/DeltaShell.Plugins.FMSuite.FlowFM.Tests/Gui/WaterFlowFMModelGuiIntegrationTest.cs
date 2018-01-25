@@ -330,6 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         [Category(TestCategory.WindowsForms)]
         public void ShowSnappedFeatureLayersInMap()
         {
@@ -372,6 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.VerySlow)]
         public void RunningFMModelShouldGiveVectorVelocityLayer()
         {
             var mduPath =
