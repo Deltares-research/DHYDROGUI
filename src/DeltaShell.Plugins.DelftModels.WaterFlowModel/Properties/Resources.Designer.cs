@@ -569,13 +569,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The maximum flow width of one or more cross section does not match the total width of all its sections..
+        ///   Looks up a localized string similar to The maximum flow width of one or more cross sections is larger than the total width of all its sections..
         /// </summary>
-        public static string WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_sections_ {
+        public static string WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_ {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_widt" +
-                        "h_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_section" +
-                        "s_", resourceCulture);
+                        "h_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sectio" +
+                        "ns_", resourceCulture);
             }
         }
         
