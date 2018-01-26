@@ -114,6 +114,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
         public void GivenSourceWFM1DAndDestinationWFM1DAreMergedWhenMergedThenDuringSaveNoExceptionShouldThrow()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
