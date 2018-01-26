@@ -1053,7 +1053,7 @@ namespace Sobek.IntegrationTests
                 var exporter = new WaterFlowModel1DExporter();
 
                 string filepath = TestHelper.GetTestDataPath(typeof(WaterFlowModel1DGuiIntegrationTest).Assembly, "BridgeExport_SOBEK3-54.md1d"); 
-                TestHelper.AssertIsFasterThan(5000, () => exporter.Export(model, filepath));
+                TestHelper.AssertIsFasterThan(6000, () => exporter.Export(model, filepath));
 
                 Assert.IsTrue(File.Exists(filepath));
                 
