@@ -1,4 +1,4 @@
-import os
+import os, sys
 from netCDF4 import Dataset
 from collections import OrderedDict
 from datetime import *
@@ -11,54 +11,21 @@ class UgridWriter:
         self.model = model
 
     def write(self, dirPath, outputDir):  # write ugrid file from GWSW model
-        self.writeFMnetwork(dirPath, outputDir, "sewer_system")
+        ncfile = self.create_netcdf(dirPath, outputDir, "sewer_system")
+        data_2dmesh = self.generate_2dmesh_data()
+        self.init_1dnetwork(ncfile)
+        self.init_2dmesh(ncfile,data_2dmesh)
+        self.set_1dnetwork(ncfile)
+        self.set_2dmesh(ncfile,data_2dmesh)
         return True
 
-    ## writeFMnetwork documentation
-    # This fuction is going to prepare 1D Ugrid files
-    # Following code is just a DRAFT AND NEEDS SIGNIFICANT IMPROVEMENTS
-    ## writeFMnetwork documentation
-    # This fuction is going to prepare 1D Ugrid files
-    # Following code is not a piece of art so please do improve it
+    def create_netcdf(self,dirPath, outputDir, name):
 
-    def writeFMnetwork(self, dirPath, outputDir, name):
-        ### NETCDF approach
         output_file = os.path.join(dirPath, outputDir, name + "_net.nc")
-
         # File format:
         outformat = "NETCDF4" #"NETCDF3_CLASSIC"
         # File where we going to write
         ncfile = Dataset(output_file, 'w', format=outformat)
-
-        # dimensions of the network
-        nodes_nr = len(self.model.nodes)
-        edges_nr = len(self.model.connections)
-
-        # Temporary dictionary to store the id number of the nodes and branches
-        node_order = OrderedDict()
-        con_order = OrderedDict()
-
-        # Definition of the network dimensions
-        ncfile.createDimension("nNetworkBranches", edges_nr)
-        ncfile.createDimension("nNetworkNodes", nodes_nr)
-        ncfile.createDimension("nGeometryNodes", nodes_nr)
-        ncfile.createDimension("nMesh1DEdges", edges_nr)
-        ncfile.createDimension("nMesh1DNodes", edges_nr + 1)
-        ncfile.createDimension("Two", 2)
-
-        # dimensions of the street grid
-        min_x = -10000000 #sys.float_info.max
-        max_x = 10000000 #sys.float_info.min
-        min_y = -10000000 #sys.float_info.max
-        max_y = 10000000 #sys.float_info.min
-        for keyvalue in self.model.nodes.items():
-            node = keyvalue[1]
-            x = float(node[3])
-            y = float(node[4])
-            if x < min_x :  min_x = x
-            if x > max_x :  max_x = x
-            if y < min_y :  min_y = y
-            if y > max_y :  max_y = y
 
         # global attributes
         ncfile.Conventions = "CF-1.8 UGRID-1.0/Deltares-0.91"
@@ -67,7 +34,42 @@ class UgridWriter:
         ncfile.reference = "http://www.deltares.nl"
         ncfile.source = "Python script to prepare D-Flow FM 1D network"
 
-        # geometry
+        return ncfile
+
+    def init_1dnetwork(self, ncfile):
+
+        # dimensions of the network
+        nodes_nr = len(self.model.nodes)
+        edges_nr = len(self.model.connections)
+
+        ncfile.createDimension("time", None)
+        ncfile.createDimension("nNetworkBranches", edges_nr)
+        ncfile.createDimension("nNetworkNodes", nodes_nr)
+        ncfile.createDimension("nGeometryNodes", nodes_nr)
+        ncfile.createDimension("nMesh1DEdges", edges_nr)
+        ncfile.createDimension("nMesh1DNodes", edges_nr + 1)
+        ncfile.createDimension("Two", 2)
+
+    def init_2dmesh(self, ncfile, data_2dmesh):
+
+        # dimensions 2d mesh
+        edges_2d = len(data_2dmesh["edge_x"])
+        faces_2d = len(data_2dmesh["face_node"])
+        nodes_2d = len(data_2dmesh["node_x"])
+
+        ncfile.createDimension("max_nMesh2D_face_nodes", 4)
+        ncfile.createDimension("nMesh2D_edge", edges_2d)
+        ncfile.createDimension("nMesh2D_face", faces_2d)
+        ncfile.createDimension("nMesh2D_node", nodes_2d)
+
+
+    def set_1dnetwork(self, ncfile):
+
+        # Temporary dictionary to store the id number of the nodes and branches
+        node_order = OrderedDict()
+        con_order = OrderedDict()
+
+         # geometry
         ntw = ncfile.createVariable("network1D", "u4", ())
         ntw.cf_role = 'mesh_topology'
         ntw.edge_dimension = 'nNetworkBranches'
@@ -189,3 +191,91 @@ class UgridWriter:
 
         # END OF THE NTWORK WRITER
         return True
+
+
+    def set_2d_mesh(self, netcdf, data_2dmesh):
+
+    # generate a street grid based on the manholes
+    def generate_2dmesh_data(self):
+        grid = {}
+        rasterSize = 10.0
+        margin = 5.0
+        minX = sys.float_info.max
+        minY = sys.float_info.max
+        maxX = sys.float_info.min
+        maxY = sys.float_info.min
+
+        for keyvalue in self.model.nodes.items():
+            value = keyvalue[1]
+            x = value[3]
+            y = value[4]
+            if x < minX: minX = x
+            if y < minY: minY = y
+            if x > maxX: maxX = x
+            if y > maxY: maxY = y
+
+        minX = round(minX -margin)
+        minY = round(minY -margin)
+        maxX = round(maxX -margin)
+        maxY = round(maxY -margin)
+        xElements = range(minX, maxX, rasterSize)
+        yElements = range(minY, maxY, rasterSize)
+        n_xElements = len(xElements)
+        n_yElements = len(yElements)
+        n_nodes = n_xElements * n_yElements
+
+        grid["node_x"] = []
+        grid["node_y"] = []
+        grid["edge_node"] = []
+        grid["edge_x"] = []
+        grid["edge_y"] = []
+        grid["face_node"] = []
+        grid["face_edge"] = []
+
+        for y in yElements:
+            grid["node_x"].extend(xElements)
+            grid["node_y"].extend([y]*n_xElements)
+
+        iy = 1
+        while iy < n_yElements:
+            y0 = yElements[iy-1]
+            y1 = yElements[iy]
+            ix = 1
+            while ix < n_xElements:
+                x0 = xElements[ix-1]
+                x1 = xElements[ix]
+                inode0 = (((iy-1) * n_xElements) + ix)
+                inode1 = inode0 + 1
+                inode2 = inode1 + n_yElements
+                inode3 = inode0 + n_yElements
+
+                if ix == 1:
+                    grid["edge_node"].extend([inode0,inode3])
+                    grid["edge_x"].append([x0])
+                    grid["edge_y"].append([y0 + (0.5 * rasterSize)])
+
+                grid["edge_node"].extend([inode0,inode1,inode1, inode2])
+                grid["edge_x"].extend([x0 + (0.5 * rasterSize),x1])
+                grid["edge_y"].extend([y0, y0 + (0.5 * rasterSize)])
+                grid["face_node"].extend([inode0, inode1, inode2, inode3])
+
+        # finish edges on top of the raster
+        ix = 1
+        while ix < n_xElements:
+            x0 = xElements[ix-1]
+            x1 = xElements[ix]
+            inode0 = (iy* n_xElements) + ix
+            inode1 = inode0 + 1
+            grid["edge_node"].extend([inode0, inode1])
+            grid["edge_x"].append(x0 + (0.5 * rasterSize))
+            grid["edge_y"].append(y1)
+
+
+        return grid
+
+    # generate a street grid based on the manholes and street grid
+    def generate_1d2dlinks(self):
+        return True
+
+
+

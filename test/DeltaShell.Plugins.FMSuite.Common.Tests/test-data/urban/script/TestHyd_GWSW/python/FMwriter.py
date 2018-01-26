@@ -13,6 +13,10 @@ class FMwriter:
 
     def writeAll(self, dirPath, outputDir):  # write all fm files from GWSW model
         self.rewriteGeometryOfManholeCompartments()
+
+        ugridWriter = UgridWriter(self.model)
+        ugridWriter.write(dirPath, outputDir)
+
         self.writeRetentions(dirPath, outputDir)
         self.writePipes(dirPath, outputDir)
         self.writeProfiles(dirPath, outputDir)
@@ -21,8 +25,7 @@ class FMwriter:
         #self.writeLaterals(dirPath, outputDir)
         self.writeExternalForcingFiles(dirPath, outputDir)
         self.writeXYZStreetlevel(dirPath, outputDir)
-        ugridWriter = UgridWriter(self.model)
-        ugridWriter.write(dirPath, outputDir)
+
         print("********************************************")
         print("                 THE END                    ")
         print("********************************************")
