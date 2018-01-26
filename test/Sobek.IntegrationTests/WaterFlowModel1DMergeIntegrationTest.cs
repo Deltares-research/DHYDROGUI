@@ -13,12 +13,12 @@ using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
-using System.Windows.Forms;
-using DelftTools.Utils.Reflection;
+using DelftTools.TestUtils;
 
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
+    [Category(TestCategory.Integration)]
     public class WaterFlowModel1DMergeIntegrationTest
     {
         [Test]
@@ -112,6 +112,7 @@ namespace Sobek.IntegrationTests
                 Assert.DoesNotThrow(() =>  app.SaveProject(), "Cannot save because weirformulas have same nhibernate ids");
             }
         }
+
         [Test]
         public void GivenSourceWFM1DAndDestinationWFM1DAreMergedWhenMergedThenDuringSaveNoExceptionShouldThrow()
         {
