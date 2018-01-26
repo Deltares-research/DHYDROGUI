@@ -3588,20 +3588,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             const string SobekLogFileName = "sobek.log";
 
-            var logDataItem = DataItems.FirstOrDefault(di => di.Tag == SobekLogfileDataItemTag);
-            if (logDataItem == null)
-            {
-                // add logfile dataitem if not exists
-                var textDocument = new TextDocument(true) { Name = SobekLogFileName };
-                logDataItem = new DataItem(textDocument, DataItemRole.Output, SobekLogfileDataItemTag);
-                DataItems.Add(logDataItem);
-            }
-
             var sobekLogFilePath = Path.Combine(outputDirectory, SobekLogFileName);
             if (File.Exists(sobekLogFilePath))
             {
                 try
                 {
+                    var logDataItem = DataItems.FirstOrDefault(di => di.Tag == SobekLogfileDataItemTag);
+                    if (logDataItem == null)
+                    {
+                        // add logfile dataitem if not exists
+                        var textDocument = new TextDocument(true) { Name = SobekLogFileName };
+                        logDataItem = new DataItem(textDocument, DataItemRole.Output, SobekLogfileDataItemTag);
+                        DataItems.Add(logDataItem);
+                    }
+
                     var log = File.ReadAllText(sobekLogFilePath);
                     ((TextDocument)logDataItem.Value).Content = log;
                 }
