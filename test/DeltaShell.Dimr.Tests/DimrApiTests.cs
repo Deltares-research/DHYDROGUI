@@ -84,7 +84,6 @@ namespace DeltaShell.Dimr.Tests
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            Assert.Fail("Test failing because of thread abort during dimrApi.Initialize , requires further investigation. ");
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 var exporter = new WaterFlowFMFileExporter();
@@ -95,6 +94,8 @@ namespace DeltaShell.Dimr.Tests
                 {
 
                     dimrApi.KernelDirs = model.KernelDirectoryLocation;
+                    var report = model.Validate();
+                    Assert.AreEqual(0, report.ErrorCount, "Errors found during model validation");
                     dimrApi.Initialize(dimrConfig);
                     TestHelper.AssertAtLeastOneLogMessagesContains(dimrApi.ProcessMessages, "Run");
                     dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
