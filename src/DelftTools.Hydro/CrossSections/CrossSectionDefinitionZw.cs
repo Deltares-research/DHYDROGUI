@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
@@ -349,8 +350,10 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual void RefreshSectionsWidths()
         {
+            ((INotifyPropertyChanged)sections).PropertyChanged -= SectionsPropertyChanged;
+
             var widthDifference = this.FlowWidth() - this.SectionsTotalWidth();
-            if (Math.Abs(widthDifference) < 0.0000001) return;
+            if (Math.Abs(widthDifference) < 1e-10) return;
 
             // Change main section width
             var mainSection = GetSection(MainSectionName);
@@ -363,12 +366,16 @@ namespace DelftTools.Hydro.CrossSections
             // Change floodplain1 section width
             var floodPlain1 = GetSection(Floodplain1SectionTypeName);
             if (floodPlain1 == null) return;
+            floodPlain1.MinY += 0.5 * widthDifference;
             floodPlain1.MaxY += 0.5 * widthDifference;
 
             // Change floodplain2 section width
             var floodPlain2 = GetSection(Floodplain2SectionTypeName);
             if (floodPlain2 == null) return;
+            floodPlain2.MinY += 0.5 * widthDifference;
             floodPlain2.MaxY += 0.5 * widthDifference;
+
+            ((INotifyPropertyChanged)sections).PropertyChanged += SectionsPropertyChanged;
         }
     }
 }
