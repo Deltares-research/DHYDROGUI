@@ -624,7 +624,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// </summary>
         /// <param name="crossSectionDefinition"></param>
         /// <param name="add"></param>
-        /// <param name="roughnessSection"></param>
+        /// <param name="crossSectionSectionType"></param>
         /// <param name="offset"></param>
         /// <param name="sectionWidth"></param>
         private static void AddFriction(ICrossSectionDefinition crossSectionDefinition, bool add, CrossSectionSectionType crossSectionSectionType,
@@ -652,8 +652,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var width = mainWidth + fpl1Width + fpl2Width;
             
             crossSectionDefinition.AddSection(main, mainWidth);
-            crossSectionDefinition.AddSection(floodPlain1, fpl1Width);
-            crossSectionDefinition.AddSection(floodPlain2, fpl2Width);
+            if (fpl1Width > 0.0) crossSectionDefinition.AddSection(floodPlain1, fpl1Width);
+            if (fpl2Width > 0.0) crossSectionDefinition.AddSection(floodPlain2, fpl2Width);
 
             var flowWidth = crossSectionDefinition.FlowWidth();
             if (width < flowWidth && Math.Abs(width - flowWidth) > 1e-10)
