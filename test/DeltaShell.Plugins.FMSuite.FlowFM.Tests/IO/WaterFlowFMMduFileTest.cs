@@ -1343,6 +1343,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.Integration)]
+        public void GivenWaterFlowFMModelDefinitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown(bool useMorphology)
+        {
+            var testDirectory = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(testDirectory, "myMdu.mdu");
+            try
+            {
+                var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, "myModel") { UseMorphologySediment = useMorphology };
+
+                new MduFile().Write(mduFilePath, modelDefinition, new HydroArea());
+                Action action = () => new MduFile().Read(mduFilePath, new WaterFlowFMModelDefinition(mduFilePath, "myModel"), new HydroArea());
+                const string warningMessage = "The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.";
+
+                if (useMorphology)
+                {
+                    TestHelper.AssertLogMessageIsGenerated(action, warningMessage);
+                }
+                else
+                {
+                    TestHelper.AssertLogMessageIsNotGenerated(action, warningMessage);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDirectory);
+            }
+        }
+
+        [Test]
+        public void GivenWaterFlowFMModelDefinition_WhenEnablingUsingMorphology_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var expectedMessage =
+                "The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.";
+            TestHelper.AssertLogMessageIsGenerated(() => modelDefinition.UseMorphologySediment = true, expectedMessage, 1);
+        }
+
 
         #region TestHelpers
 

@@ -557,15 +557,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed);
         }
 
-        public override void AddPoint(int i)
-        {
-            if (DataPointIndices.Any())
-            {
-                Log.Warn("The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.");
-            }
-            base.AddPoint(i);
-        }
-
         protected override IFunction CreateFunction()
         {
             if (DataType == BoundaryConditionDataType.Qh)
