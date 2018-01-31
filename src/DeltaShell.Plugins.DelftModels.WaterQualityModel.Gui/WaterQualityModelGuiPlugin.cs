@@ -175,8 +175,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private void OnProcessDefinitionFilesNotFound(WaterQualityModel model, string processDefinitionPath)
         {
             string newProcessDefinitionFilesPath;
-            var defaultRelativeProcessFilePath = @"DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def";
-            if (model.SubstanceProcessLibrary.ProcessDefinitionFilesPath.EndsWith(defaultRelativeProcessFilePath))
+            var oldWaqProjectName = "DeltaShell.Plugins.WaterQualityModel"; // backwards compatibility
+            var newWaqProjectName = "DeltaShell.Plugins.DelftModels.WaterQualityModel";
+            var relativePathToProcessDefinitionFile = @"waq_kernel\Data\Default\proc_def";
+            var currentProcessDefinitionFilePath = model.SubstanceProcessLibrary.ProcessDefinitionFilesPath;
+            if (currentProcessDefinitionFilePath.EndsWith(Path.Combine(oldWaqProjectName, relativePathToProcessDefinitionFile)) || 
+                currentProcessDefinitionFilePath.EndsWith(Path.Combine(newWaqProjectName, relativePathToProcessDefinitionFile)))
             {
                 newProcessDefinitionFilesPath = SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath;
             }

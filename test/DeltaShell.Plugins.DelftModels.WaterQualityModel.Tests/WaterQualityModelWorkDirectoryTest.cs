@@ -99,11 +99,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        [Test]
+        [TestCase(@"C:\DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def")]
+        [TestCase(@"C:\DeltaShell.Plugins.DelftModels.WaterQualityModel\waq_kernel\Data\Default\proc_def")]
         [Category(TestCategory.Integration)]
-        public void GivenWAQModelWithDefaultProcessDefinitionFilePath_WhenOpeningTheModel_ThenTheCurrentDefaultProcessDefinitionPathIsChosen()
+        [Category(TestCategory.Slow)]
+        public void GivenWAQModelWithDefaultProcessDefinitionFilePath_WhenOpeningTheModel_ThenTheCurrentDefaultProcessDefinitionPathIsChosen(string processDefinitionFilePath)
         {
-            const string procDefFilePath = @"C:\DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def";
             var originalHydDirectory = TestHelper.GetTestFilePath(@"Models\FM_c01_waqtest_2D");
             var testHydFilePath = Path.Combine(TestHelper.CreateLocalCopy(originalHydDirectory), "waqtest.hyd");
             var testModelDirectory = FileUtils.CreateTempDirectory();
@@ -124,11 +125,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     var waqModel = new WaterQualityModel();
                     var importer = new HydFileImporter();
                     importer.ImportItem(testHydFilePath);
-                    waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath = procDefFilePath;
+                    waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath = processDefinitionFilePath;
 
                     app.Project.RootFolder.Add(waqModel);
                     app.SaveProjectAs(testModelDsproj);
-                    Assert.IsFalse(File.Exists(procDefFilePath));
+                    Assert.IsFalse(File.Exists(processDefinitionFilePath));
 
                     app.OpenProject(testModelDsproj);
                     var modelsInProject = app.GetAllModelsInProject().ToList();
@@ -137,8 +138,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     waqModel = modelsInProject.FirstOrDefault() as WaterQualityModel;
                     Assert.IsNotNull(waqModel);
 
-                    // The original ProcessDefinitionFilesPath of the WAQ-model was: "C:\\DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def"
-                    // As the file path ends with "DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def", this is the default file path to the process definition path on another PC.
+                    // The original ProcessDefinitionFilesPath of the WAQ-model was: "C:\\DeltaShell.Plugins.WaterQualityModel\waq_kernel\Data\Default\proc_def" 
+                    //                                                                or "C:\DeltaShell.Plugins.DelftModels.WaterQualityModel\waq_kernel\Data\Default\proc_def"
+                    // As the file path ends with "DeltaShell.Plugins(.DelftModels).WaterQualityModel\waq_kernel\Data\Default\proc_def", this is the default file path to the process 
+                    // definition path on another PC or DeltaShell build.
                     // Here, we check that this process definition file path is set to the one that is default on the current build of DeltaShell.
                     Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath,
                         Is.EqualTo(SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath));
@@ -147,6 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             finally
             {
                 FileUtils.DeleteIfExists(testModelDirectory);
+                FileUtils.DeleteIfExists(Directory.GetParent(testHydFilePath).FullName);
             }
         }
 
