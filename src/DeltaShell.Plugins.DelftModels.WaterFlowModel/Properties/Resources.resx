@@ -428,7 +428,7 @@
     <value>The maximum flow width of one or more cross sections is larger than the total width of all its sections.</value>
   </data>
   <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_" xml:space="preserve">
-    <value>FloodPlain2 width may not be larger than 0.0, if FloodPlain1 width is equal to 0.0</value>
+    <value>FloodPlain2 width cannot be larger than 0.0, if FloodPlain1 width is equal to 0.0</value>
   </data>
   <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Invalid_flow_profile" xml:space="preserve">
     <value>Invalid flow profile</value>

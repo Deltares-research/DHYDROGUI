@@ -528,7 +528,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FloodPlain2 width may not be larger than 0.0, if FloodPlain1 width is equal to 0.0.
+        ///   Looks up a localized string similar to FloodPlain2 width cannot be larger than 0.0, if FloodPlain1 width is equal to 0.0.
         /// </summary>
         public static string WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_ {
             get {
