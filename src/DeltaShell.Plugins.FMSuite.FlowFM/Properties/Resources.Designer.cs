@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1069,6 +1069,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined" +
                         "_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The model will not validate with boundary data in more than one point of a Morphology Boundary Condition..
+        /// </summary>
+        public static string WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_validate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condition_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_v" +
+                        "alidate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condi" +
+                        "tion_", resourceCulture);
             }
         }
         

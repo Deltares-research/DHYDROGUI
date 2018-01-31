@@ -10,6 +10,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -1343,29 +1344,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
+        [Test]
         [Category(TestCategory.Integration)]
-        public void GivenWaterFlowFMModelDefinitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown(bool useMorphology)
+        public void GivenWaterFlowFMModelDefinitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
         {
             var testDirectory = FileUtils.CreateTempDirectory();
             var mduFilePath = Path.Combine(testDirectory, "myMdu.mdu");
             try
             {
-                var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, "myModel") { UseMorphologySediment = useMorphology };
-
+                var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, "myModel") { UseMorphologySediment = true };
                 new MduFile().Write(mduFilePath, modelDefinition, new HydroArea());
                 Action action = () => new MduFile().Read(mduFilePath, new WaterFlowFMModelDefinition(mduFilePath, "myModel"), new HydroArea());
-                const string warningMessage = "The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.";
+                TestHelper.AssertLogMessageIsGenerated(action, Resources.WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_validate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condition_);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDirectory);
+            }
+        }
 
-                if (useMorphology)
-                {
-                    TestHelper.AssertLogMessageIsGenerated(action, warningMessage);
-                }
-                else
-                {
-                    TestHelper.AssertLogMessageIsNotGenerated(action, warningMessage);
-                }
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenWaterFlowFMModelDefiwdqadnitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
+        {
+            var testDirectory = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(testDirectory, "myMdu.mdu");
+            try
+            {
+                var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, "myModel") { UseMorphologySediment = false };
+                new MduFile().Write(mduFilePath, modelDefinition, new HydroArea());
+                Action action = () => new MduFile().Read(mduFilePath, new WaterFlowFMModelDefinition(mduFilePath, "myModel"), new HydroArea());
+                TestHelper.AssertLogMessageIsNotGenerated(action, Resources.WaterFlowFMModelDefinition_LogMessageWhenMorphologyIsEnabled_The_model_will_not_validate_with_boundary_data_in_more_than_one_point_of_a_Morphology_Boundary_Condition_);
             }
             finally
             {
