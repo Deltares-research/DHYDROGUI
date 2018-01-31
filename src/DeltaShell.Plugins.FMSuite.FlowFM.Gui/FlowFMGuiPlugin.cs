@@ -37,6 +37,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
+using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -251,6 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             }
                         }
                         model.ReloadGrid(false);
+                        new MapZoomToExtentsCommand().Execute();
                     }
                     catch (Exception exception)
                     {
