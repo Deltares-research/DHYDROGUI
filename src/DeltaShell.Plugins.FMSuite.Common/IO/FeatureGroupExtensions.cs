@@ -12,5 +12,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             groupableFeature.GroupName = filePath;
         }
+
+        public static bool HasDefaultGroupName(this IGroupableFeature feature, string featureExtension, string defaultGroupName)
+        {
+            var featureGroupName = feature.GroupName;
+            return string.IsNullOrEmpty(featureGroupName) || featureGroupName.Replace(featureExtension, string.Empty).Equals(defaultGroupName);
+        }
     }
 }
