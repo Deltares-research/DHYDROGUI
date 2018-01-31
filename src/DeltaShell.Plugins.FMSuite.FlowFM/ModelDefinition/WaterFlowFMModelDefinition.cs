@@ -279,12 +279,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnMorphologySedimentPropertyChanged(WaterFlowFMProperty prop)
         {
+            if(prop.PropertyDefinition.MduPropertyName != GuiProperties.UseMorSed) return;
             SetMapFormatPropertyValue();
-            var useMorphology = prop.Value is bool ? (bool) prop.Value : false;
-            if (useMorphology)
-            {
-                Log.Warn("The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.");
-            }
+            LogMessageWhenMorphologyIsEnabled(prop);
+        }
+
+        private void LogMessageWhenMorphologyIsEnabled(WaterFlowFMProperty prop)
+        {
+            var useMorphology = prop.Value is bool && (bool) prop.Value;
+            if (!useMorphology) return;
+
+            Log.Warn("The model will not validate with boundary data in more than one point of a Morphology Boundary Condition.");
         }
 
         private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
