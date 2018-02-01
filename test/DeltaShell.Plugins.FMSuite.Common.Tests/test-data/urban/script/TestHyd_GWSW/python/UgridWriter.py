@@ -12,11 +12,24 @@ class UgridWriter:
 
     def write(self, dirPath, outputDir):  # write ugrid file from GWSW model
         ncfile = self.create_netcdf(dirPath, outputDir, "sewer_system")
+
+        print("start generating 2d data")
         data_2dmesh = self.generate_2dmesh_data()
+
+        print("init ugrid 1d")
         self.init_1dnetwork(ncfile)
+
+        print("init ugrid 2d")
         self.init_2dmesh(ncfile,data_2dmesh)
+
+        print("set ugrid 1d data")
         self.set_1dnetwork(ncfile)
+
+        print("set ugrid 2d data")
         self.set_2dmesh(ncfile,data_2dmesh)
+
+        print("finished ugrid section")
+
         return True
 
     def create_netcdf(self,dirPath, outputDir, name):
@@ -70,6 +83,7 @@ class UgridWriter:
         con_order = OrderedDict()
 
          # geometry
+        #ntw = ncfile.createVariable("network1D", "u4", ())
         ntw = ncfile.createVariable("network1D", "u4", ())
         ntw.cf_role = 'mesh_topology'
         ntw.edge_dimension = 'nNetworkBranches'
@@ -192,8 +206,66 @@ class UgridWriter:
         # END OF THE NTWORK WRITER
         return True
 
+    # set 2d mesh data to netcdf file
+    def set_2dmesh(self, ncfile, data_2dmesh):
 
-    def set_2d_mesh(self, netcdf, data_2dmesh):
+        mesh2d = ncfile.createVariable("Mesh2D", "u4", ())
+        mesh2d.cf_role = 'mesh_topology'
+        mesh2d.edge_coordinates = 'Mesh2D_edge_x Mesh2D_edge_y'
+        mesh2d.edge_dimension = 'nMesh2D_edge'
+        mesh2d.edge_face_connectivity = 'Mesh2D_edge_faces'
+        mesh2d.edge_node_connectivity = 'Mesh2D_edge_nodes'
+        mesh2d.face_coordinates = 'Mesh2D_face_x Mesh2D_face_y'
+        mesh2d.face_dimension = 'nMesh2D_face'
+        mesh2d.face_edge_connectivity = 'Mesh2D_face_edges'
+        mesh2d.face_face_connectivity = 'Mesh2D_face_face'
+        mesh2d.face_node_connectivity = 'Mesh2D_face_nodes'
+        mesh2d.long_name = "Mesh 2D"
+        mesh2d.max_face_nodes_dimension = 'max_nMeshFaceNodes'
+        mesh2d.node_coordinates = 'Mesh2D_node_x Mesh2D_node_y'
+        mesh2d.node_dimension = 'nMesh2D_node'
+        mesh2d.topology_dimension = 2
+
+        mesh2d_x = ncfile.createVariable("Mesh2D_node_x", "f8", ("nMesh2D_node"))
+        mesh2d_y = ncfile.createVariable("Mesh2D_node_y", "f8", ("nMesh2D_node"))
+        mesh2d_x.standard_name = 'projection_x_coordinate'
+        mesh2d_x.units = 'm'
+        mesh2d_y.standard_name = 'projection_y_coordinate'
+        mesh2d_y.units = 'm'
+        mesh2d_x[:] = data_2dmesh["node_x"]
+        mesh2d_y[:] = data_2dmesh["node_y"]
+
+        mesh2d_xu = ncfile.createVariable("Mesh2D_edge_x", "f8", ("nMesh2D_edge"))
+        mesh2d_yu = ncfile.createVariable("Mesh2D_edge_y", "f8", ("nMesh2D_edge"))
+        mesh2d_xu.standard_name = 'projection_x_coordinate'
+        mesh2d_xu.units = 'm'
+        mesh2d_yu.standard_name = 'projection_y_coordinate'
+        mesh2d_yu.units = 'm'
+        mesh2d_xu = data_2dmesh["edge_x"]
+        mesh2d_yu = data_2dmesh["node_y"]
+
+        mesh2d_en = ncfile.createVariable("Mesh2D_edge_nodes", "u4", ("nMesh2D_edge", "Two"))
+        mesh2d_en.cf_role = 'edge_node_connectivity'
+        mesh2d_en.long_name = 'maps every edge to the two nodes that it connects'
+        mesh2d_en.start_index = 1
+        mesh2d_en = data_2dmesh["edge_node"]
+
+        mesh2d_fn = ncfile.createVariable("Mesh2D_face_nodes", "u4", ("nMesh2D_face", "max_nMesh2D_face_nodes"), fill_value=0)
+        mesh2d_fn.cf_role = 'face_node_connectivity'
+        mesh2d_fn.long_name = 'maps every face to the nodes that it defines'
+        mesh2d_fn.start_index = 1
+        mesh2d_fn = data_2dmesh["face_node"]
+
+        #cm = ncfile.createVariable("composite_mesh", "u4", ())
+        #cm.cf_role = 'mesh_topology_parent'
+        #cm.meshes= 'mesh1D mesh2D'
+        #cm.mesh_contact = 'link1d2d'
+
+        #link1d2d = ncfile.createVariable("link1d2d", "u4", ("nlinks_1d2d", "Two"))
+        #link1d2d.cf_role = 'mesh_topology_contact'
+        #link1d2d.contact= 'mesh1D:node mesh2D:face'
+        #link1d2d.start_index = 1
+        #link1d2d[:,:] = None
 
     # generate a street grid based on the manholes
     def generate_2dmesh_data(self):
@@ -207,19 +279,19 @@ class UgridWriter:
 
         for keyvalue in self.model.nodes.items():
             value = keyvalue[1]
-            x = value[3]
-            y = value[4]
+            x = float(value[3])
+            y = float(value[4])
             if x < minX: minX = x
             if y < minY: minY = y
             if x > maxX: maxX = x
             if y > maxY: maxY = y
 
-        minX = round(minX -margin)
-        minY = round(minY -margin)
-        maxX = round(maxX -margin)
-        maxY = round(maxY -margin)
-        xElements = range(minX, maxX, rasterSize)
-        yElements = range(minY, maxY, rasterSize)
+        minX = int(round(minX -margin))
+        minY = int(round(minY -margin))
+        maxX = int(round(maxX -margin))
+        maxY = int(round(maxY -margin))
+        xElements = range(minX, maxX, int(rasterSize))
+        yElements = range(minY, maxY, int(rasterSize))
         n_xElements = len(xElements)
         n_yElements = len(yElements)
         n_nodes = n_xElements * n_yElements
@@ -258,6 +330,8 @@ class UgridWriter:
                 grid["edge_x"].extend([x0 + (0.5 * rasterSize),x1])
                 grid["edge_y"].extend([y0, y0 + (0.5 * rasterSize)])
                 grid["face_node"].extend([inode0, inode1, inode2, inode3])
+                ix += 1
+            iy += 1
 
         # finish edges on top of the raster
         ix = 1
@@ -269,6 +343,7 @@ class UgridWriter:
             grid["edge_node"].extend([inode0, inode1])
             grid["edge_x"].append(x0 + (0.5 * rasterSize))
             grid["edge_y"].append(y1)
+            ix += 1
 
 
         return grid
