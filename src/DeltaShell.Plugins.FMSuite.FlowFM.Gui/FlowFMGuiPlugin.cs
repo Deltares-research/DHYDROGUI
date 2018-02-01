@@ -252,7 +252,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             }
                         }
                         model.ReloadGrid(false);
-                        new MapZoomToExtentsCommand().Execute();
                     }
                     catch (Exception exception)
                     {
@@ -276,6 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     }
                     finally
                     {
+                        new MapZoomToExtentsCommand().Execute();
                         if (SharpMapGisGuiPlugin.Instance != null)
                         {
                             SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
