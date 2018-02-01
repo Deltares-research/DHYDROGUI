@@ -231,11 +231,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         {
                             SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
                         }
-                        // D3DFMIQ-16: This if-statement becomes redundant when RGFGRID asks the user to save the grid on exit (when grid was not saved)
+                        // D3DFMIQ-16: This if-statement should be removed after the fix in DELFT3DFM-1413, where the user should be 
+                        // prompted by RGFGRID if he/she wants to save the grid.
                         if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
                         {
                             throw new FileFormatException(new Uri(model.NetFilePath),
-                                Properties.Resources.FlowFMGuiPlugin_GetViewInfoObjects_Empty_file_detected__Changes_in_the_grid_were_not_saved);
+                                "Empty file detected.Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
                         }
                         if (!File.Exists(model.NetFilePath))
                         {
@@ -256,7 +257,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         }
                         model.ReloadGrid(false);
                     }
-                    // D3DFMIQ-16: This catch block becomes redundant when RGFGRID asks the user to save the grid on exit (when grid was not saved)
+                    // D3DFMIQ-16: This catch block should be removed after the fix in DELFT3DFM-1413, where the user should be 
+                    // prompted by RGFGRID if he/she wants to save the grid.
                     catch (FileFormatException exception) 
                     {
                         MessageBox.Show(exception.Message, "Grid was not saved in RGFGRID", MessageBoxButtons.OK);

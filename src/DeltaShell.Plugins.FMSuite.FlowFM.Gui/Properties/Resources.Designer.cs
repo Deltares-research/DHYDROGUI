@@ -251,17 +251,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Empty file detected. Changes in the grid were not saved.
-        ///Please save your project before exiting RGFGRID..
-        /// </summary>
-        public static string FlowFMGuiPlugin_GetViewInfoObjects_Empty_file_detected__Changes_in_the_grid_were_not_saved {
-            get {
-                return ResourceManager.GetString("FlowFMGuiPlugin_GetViewInfoObjects_Empty_file_detected__Changes_in_the_grid_were_" +
-                        "not_saved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap FunctionGrid2D {
