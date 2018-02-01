@@ -21,6 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 
     public static class RgfGridEditor
     {
+        public const string MfeAppProcessName = "mfe_app";
+
         private static string FMGridKeyword = "DFLOW_FM";
         private const string GrdKeyword = "RGF";
         private const string GrdNetCdfKeyword = "RGF_NETCDF";
@@ -194,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             return CopyFilesToDirectory(tempDir, grids).ToArray();
         }
 
-        public static void StartRgfGridFrom(string tempDir, IEnumerable<IPolygon> polygons = null, string polFileName = null)
+        private static void StartRgfGridFrom(string tempDir, IEnumerable<IPolygon> polygons = null, string polFileName = null)
         {
             var previousDir = Environment.CurrentDirectory;
             try
@@ -203,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 
                 // start mfe app with rgfgrid
                 var rgfGridProcess = new Process();
-                rgfGridProcess.StartInfo = new ProcessStartInfo(".\\bin\\mfe_app.exe", "rgfgrid.dll rgfgrid");
+                rgfGridProcess.StartInfo = new ProcessStartInfo(string.Format(@".\bin\{0}.exe", MfeAppProcessName), "rgfgrid.dll rgfgrid");
                 rgfGridProcess.StartInfo.UseShellExecute = false;
                 rgfGridProcess.StartInfo.EnvironmentVariables["WL_PLUGINS_HOME"] = ".";
 
@@ -241,9 +243,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             if (!Directory.Exists("rgfgrid")) // exists in tests, but not in real application
                 rootDir = Path.GetDirectoryName(typeof (RgfGridEditor).Assembly.Location);
 
-            string environment = Environment.Is64BitProcess ? "x64" : "x86";
+            const string environment = "x64"; // we no longer have rgfgrid in 32bits
+            const string rgfGridNugetDir = "plugins-qt"; // folder name provided by rgfGrid nuget package
 
-            FileUtils.CopyDirectory(Path.Combine(rootDir, "rgfgrid", environment), tempDir);
+            FileUtils.CopyDirectory(Path.Combine(rootDir, rgfGridNugetDir, environment), tempDir);
         }
 
         private static List<string> CopyFilesToDirectory(string targetDir, IEnumerable<string> sourcePaths)

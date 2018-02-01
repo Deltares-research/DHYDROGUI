@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
@@ -11,22 +15,25 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 {
-    [TestFixture]
+    [TestFixture, Timeout(MaxTimeOut)]
     [Category(TestCategory.WindowsForms)]
+    [Category(TestCategory.Slow)]
     public class RgfGridEditorTest
     {
-        [Test]
-        [Ignore("blocks; local only")]
+        private const int MaxTimeOut = 60000; // 1 minute
+
+        [Test, RequiresMTA]
         public void ShowWithData()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
-            RgfGridEditor.OpenGrid(model.NetFilePath);
+
+            PerformActionWithCancellationThread(MaxTimeOut, () => 
+                RgfGridEditor.OpenGrid(model.NetFilePath));
         }
 
-        [Test]
-        [Ignore("blocks; local only")]
+        [Test, RequiresMTA]
         public void ShowWithEmptyGrid()
         {
             var model = new WaterFlowFMModel();
@@ -34,24 +41,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
                 .SetValueAsString(model.Name + "_net.nc");
 
-            RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]);
+            PerformActionWithCancellationThread(MaxTimeOut, () => 
+                RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]));
         }
 
-        [Test]
-        [Ignore("blocks; local only")]
+        [Test, RequiresMTA]
         public void ShowWithDataAndLandBoundary()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
-            RgfGridEditor.OpenGrid(model.NetFilePath, false, new[] {TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb")});
+
+            PerformActionWithCancellationThread(MaxTimeOut, () => 
+                RgfGridEditor.OpenGrid(model.NetFilePath, false, new[] {TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb")}));
         }
 
-        [Test]
-        [Ignore("blocks; local only")]
+        [Test, RequiresMTA]
         public void GeneratePolygonsForEmbankments()
         {
-            var pointList = new []
+            var pointList = new[]
             {
                 new Coordinate {X = 10, Y = 10},
                 new Coordinate {X = 30, Y = 10},
@@ -64,20 +72,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
             var gridPath = TestHelper.GetTestFilePath(@"grid_generation\empty_grid.nc");
             gridPath = TestHelper.CreateLocalCopy(gridPath);
+
+            // perform operation
             RgfGridEditor.OpenGrid(gridPath, false, polygons, "polygon.pol");
 
             Assert.IsTrue(new FileInfo(gridPath).Length > 0, "Generated grid file is empty, RGFGrid generation failed.");
 
-            NetCdfFile netCdfFile = NetCdfFile.OpenExisting(gridPath);
-            var netlinks = netCdfFile.GetVariableByName("NetLink");
-            Assert.IsTrue(netCdfFile.GetSize(netlinks) == 24); // 2 columns, 12 new rows. 
+            using (var uGrid = new UGrid(gridPath))
+            {
+                var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
+                Assert.AreEqual(12, numEdges); // 12 new rows. 
+            }
         }
 
-        [Test]
-        [Ignore("blocks; local only")]
+        [Test, RequiresMTA]
         public void GenerateAnExtraGrid()
         {
-            var pointList = new []
+            var pointList = new[]
             {
                 new Coordinate {X = 110, Y = 10},
                 new Coordinate {X = 130, Y = 10},
@@ -87,16 +98,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 new Coordinate {X = 100, Y = 30},
                 new Coordinate {X = 110, Y = 10},
             };
-            var polygons = new List<IPolygon>{new Polygon(new LinearRing(pointList))};
+            var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
             var gridPath = TestHelper.GetTestFilePath(@"grid_generation\existing_grid.nc");
             gridPath = TestHelper.CreateLocalCopy(gridPath);
+
+            // perform operation
             RgfGridEditor.OpenGrid(gridPath, false, polygons, "polygon.pol");
 
             Assert.IsTrue(new FileInfo(gridPath).Length > 0, "Generated grid file is empty, RGFGrid generation failed.");
 
-            NetCdfFile netCdfFile = NetCdfFile.OpenExisting(gridPath);
-            var netlinks = netCdfFile.GetVariableByName("NetLink");
-            Assert.IsTrue(netCdfFile.GetSize(netlinks) == 48); // 2 columns, 12 existing + 12 new rows. 
+            using (var uGrid = new UGrid(gridPath))
+            {
+                var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
+                Assert.AreEqual(24, numEdges); // 12 existing + 12 new rows.
+            }
+        }
+
+        private static void PerformActionWithCancellationThread(int timeout, Action action)
+        {
+            // Action waits for rgfgrid to close, we do this manually from another thread
+            var cancellationThread = new Thread(() => CloseRgfGrid(timeout));
+            cancellationThread.Start();
+
+            // Invoke action
+            action.Invoke();
+        }
+
+        private static void CloseRgfGrid(int maxTimeout)
+        {
+            Thread.Sleep(500); // Give action time to get started
+            const int millisecondsToSleep = 100;
+
+            // Get active rgfGrid processes (there should only be one)
+            var rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
+            while (!rgfGridProcesses.Any())
+            {
+                Thread.Sleep(millisecondsToSleep);
+                rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
+            }
+
+            foreach (var process in rgfGridProcesses)
+            {
+                var totalTimeWaiting = 0;
+                // attempt to close rgfGrid (may not be successful straight away)
+                while (!process.CloseMainWindow())
+                {
+                    totalTimeWaiting += millisecondsToSleep;
+                    Thread.Sleep(millisecondsToSleep);
+
+                    if (totalTimeWaiting > maxTimeout)
+                    {
+                        return;
+                    }
+                }
+            }
         }
     }
 }
