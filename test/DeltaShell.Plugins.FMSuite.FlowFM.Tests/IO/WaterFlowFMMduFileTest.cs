@@ -1345,7 +1345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
         public void GivenWaterFlowFMModelDefinitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
         {
             var testDirectory = FileUtils.CreateTempDirectory();
@@ -1364,7 +1364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
         public void GivenWaterFlowFMModelDefiwdqadnitionUsingMorphology_WhenReadingWithMdu_ThenLogWarningMessageAboutBoundaryConditionsIsShown()
         {
             var testDirectory = FileUtils.CreateTempDirectory();
