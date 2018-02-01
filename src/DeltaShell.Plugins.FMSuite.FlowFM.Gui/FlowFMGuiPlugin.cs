@@ -231,10 +231,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         {
                             SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
                         }
+                        // D3DFMIQ-16: This if-statement becomes redundant when RGFGRID asks the user to save the grid on exit (when grid was not saved)
                         if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
                         {
                             throw new FileFormatException(new Uri(model.NetFilePath),
-                                "invalid empty file detected. Please save your project after editing in RGFGrid.");
+                                Properties.Resources.FlowFMGuiPlugin_GetViewInfoObjects_Empty_file_detected__Changes_in_the_grid_were_not_saved);
                         }
                         if (!File.Exists(model.NetFilePath))
                         {
@@ -246,12 +247,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         {
                             var netfile = new ImportedFMNetFile(model.NetFilePath);
                             var coordinates = netfile.Grid.Vertices;
-                            if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
+                            if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates,
+                                model.CoordinateSystem))
                             {
-                                throw new Exception("Grid coordinates are incompatible with current model coordinate system");
+                                throw new Exception(
+                                    "Grid coordinates are incompatible with current model coordinate system");
                             }
                         }
                         model.ReloadGrid(false);
+                    }
+                    // D3DFMIQ-16: This catch block becomes redundant when RGFGRID asks the user to save the grid on exit (when grid was not saved)
+                    catch (FileFormatException exception) 
+                    {
+                        MessageBox.Show(exception.Message, "Grid was not saved in RGFGRID", MessageBoxButtons.OK);
+                        model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
                     }
                     catch (Exception exception)
                     {
@@ -266,10 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         }
                         else
                         {
-                            if (File.Exists(model.NetFilePath))
-                            {
-                                File.Delete(model.NetFilePath);
-                            }
+                            if (File.Exists(model.NetFilePath)) File.Delete(model.NetFilePath);
                             model.WriteNetFile(model.NetFilePath);
                         }
                     }
