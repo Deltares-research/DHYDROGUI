@@ -15,14 +15,13 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 {
-    [TestFixture, Timeout(MaxTimeOut)]
     [Category(TestCategory.WindowsForms)]
-    [Category(TestCategory.Slow)]
     public class RgfGridEditorTest
     {
-        private const int MaxTimeOut = 60000; // 1 minute
+        private const int MaxTimeOut = 120000; // 2 minutes
 
-        [Test, RequiresMTA]
+        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Category(TestCategory.VerySlow)]
         public void ShowWithData()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -33,7 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 RgfGridEditor.OpenGrid(model.NetFilePath));
         }
 
-        [Test, RequiresMTA]
+        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Category(TestCategory.VerySlow)]
         public void ShowWithEmptyGrid()
         {
             var model = new WaterFlowFMModel();
@@ -45,7 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]));
         }
 
-        [Test, RequiresMTA]
+        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Category(TestCategory.VerySlow)]
         public void ShowWithDataAndLandBoundary()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -57,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         }
 
         [Test, RequiresMTA]
+        [Category(TestCategory.Slow)]
         public void GeneratePolygonsForEmbankments()
         {
             var pointList = new[]
@@ -86,6 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         }
 
         [Test, RequiresMTA]
+        [Category(TestCategory.Slow)]
         public void GenerateAnExtraGrid()
         {
             var pointList = new[]
