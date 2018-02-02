@@ -16,7 +16,7 @@ class FMwriter:
 
         ugridWriter = UgridWriter(self.model)
         ugridWriter.write(dirPath, outputDir)
-
+        return True
         self.writeRetentions(dirPath, outputDir)
         self.writePipes(dirPath, outputDir)
         self.writeProfiles(dirPath, outputDir)
