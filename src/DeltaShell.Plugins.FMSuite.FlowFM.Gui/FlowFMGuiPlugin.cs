@@ -18,6 +18,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -37,7 +38,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
@@ -49,6 +49,7 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
+using LdbFile = SharpMap.Extensions.Data.Providers.LdbFile;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
@@ -81,6 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             get { return "1.1.0.0"; }
         }
+
+        public Action<string, bool, IEnumerable<string>> GridHandler;
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
@@ -198,17 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.Gui = Gui;
 
                     var model = FlowModels.First(m => Equals(m.Grid, o));
-
-                    var paths = new List<string>();
-                    if (v.Layer != null)
-                    {
-                        var additionalLayers = v.Layer.Map.Layers.OfType<VectorLayer>().ToList();
-                        var shapeFiles = additionalLayers.Select(l => l.DataSource).OfType<ShapeFile>();
-                        var ldbFiles =
-                            additionalLayers.Select(l => l.DataSource)
-                                .OfType<SharpMap.Extensions.Data.Providers.LdbFile>();
-                        paths.AddRange(shapeFiles.Select(s => s.Path).Concat(ldbFiles.Select(l => l.Path)));
-                    }
+                    var paths = GetLbdAndShapeFilePaths(v);
 
                     var writer = new MduFile();
                     var targetMduFilePath = model.MduFilePath;
@@ -222,73 +215,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         paths.Add(landBoundariesFilePath);
                     }
 
-                    RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
-
-                    // reload grid..
-                    try
-                    {
-                        if (SharpMapGisGuiPlugin.Instance != null)
-                        {
-                            SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
-                        }
-                        // D3DFMIQ-16: This if-statement should be removed after the fix in DELFT3DFM-1413, where the user should be 
-                        // prompted by RGFGRID if he/she wants to save the grid.
-                        if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
-                        {
-                            throw new FileFormatException(new Uri(model.NetFilePath),
-                                "Empty file detected. Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
-                        }
-                        if (!File.Exists(model.NetFilePath))
-                        {
-                            model.RemoveGrid();
-                            return;
-                        }
-
-                        if (model.CoordinateSystem != null)
-                        {
-                            var netfile = new ImportedFMNetFile(model.NetFilePath);
-                            var coordinates = netfile.Grid.Vertices;
-                            if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates,
-                                model.CoordinateSystem))
-                            {
-                                throw new Exception(
-                                    "Grid coordinates are incompatible with current model coordinate system");
-                            }
-                        }
-                        model.ReloadGrid(false);
-                    }
-                    // D3DFMIQ-16: This catch block should be removed after the fix in DELFT3DFM-1413, where the user should be 
-                    // prompted by RGFGRID if he/she wants to save the grid.
-                    catch (FileFormatException exception) 
-                    {
-                        MessageBox.Show(exception.Message, "Grid was not saved in RGFGRID", MessageBoxButtons.OK);
-                        model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
-                    }
-                    catch (Exception exception)
-                    {
-                        var dialogResult =
-                            MessageBox.Show(
-                                "Failed to reload grid after RGFGrid edits: " + exception.Message +
-                                Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
-                                MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
-                        }
-                        else
-                        {
-                            if (File.Exists(model.NetFilePath)) File.Delete(model.NetFilePath);
-                            model.WriteNetFile(model.NetFilePath);
-                        }
-                    }
-                    finally
-                    {
-                        v.Layer?.Map.ZoomToFit(v.Layer.Envelope);
-                        if (SharpMapGisGuiPlugin.Instance != null)
-                        {
-                            SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
-                        }
-                    }
+                    //Unless specified otherwise (declared in the FlowFMGuiPlugin constructor), this will execute the following: 
+                    //            RgfGridEditor.OpenGrid(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
+                    GridHandler?.Invoke(model.NetFilePath, model.Grid == null || model.Grid.IsEmpty, paths);
+                    ReloadGrid(model, v);
                 }
             };
             yield return gridViewInfo;
@@ -488,6 +418,90 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.CoordinateSystem = model.CoordinateSystem;
                 }
             };
+        }
+
+        private static void ReloadGrid(WaterFlowFMModel model, WaterFlowFMModelView modelView)
+        {
+            try
+            {
+                if (SharpMapGisGuiPlugin.Instance != null)
+                {
+                    SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
+                }
+                // D3DFMIQ-16: This if-statement should be removed after the fix in DELFT3DFM-1413, where the user should be 
+                // prompted by RGFGRID if he/she wants to save the grid.
+                if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
+                {
+                    throw new FileFormatException(new Uri(model.NetFilePath),
+                        "Empty file detected.Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
+                }
+                if (!File.Exists(model.NetFilePath))
+                {
+                    model.RemoveGrid();
+                    return;
+                }
+
+                if (model.CoordinateSystem != null)
+                {
+                    var netfile = new ImportedFMNetFile(model.NetFilePath);
+                    var coordinates = netfile.Grid.Vertices;
+                    if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates,
+                        model.CoordinateSystem))
+                    {
+                        throw new Exception(
+                            "Grid coordinates are incompatible with current model coordinate system");
+                    }
+                }
+                model.ReloadGrid(false);
+            }
+            // D3DFMIQ-16: This catch block should be removed after the fix in DELFT3DFM-1413, where the user should be 
+            // prompted by RGFGRID if he/she wants to save the grid.
+            catch (FileFormatException exception)
+            {
+                DelftTools.Controls.Swf.MessageBox.Show(exception.Message, "Grid was not saved in RGFGRID",
+                    MessageBoxButtons.OK);
+                model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
+            }
+            catch (Exception exception)
+            {
+                var dialogResult =
+                    DelftTools.Controls.Swf.MessageBox.Show(
+                        "Failed to reload grid after RGFGrid edits: " + exception.Message +
+                        Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
+                        MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
+                }
+                else
+                {
+                    if (File.Exists(model.NetFilePath)) File.Delete(model.NetFilePath);
+                    model.WriteNetFile(model.NetFilePath);
+                }
+            }
+            finally
+            {
+                modelView.Layer?.Map.ZoomToFit(modelView.Layer.Envelope);
+                if (SharpMapGisGuiPlugin.Instance != null)
+                {
+                    SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
+                }
+            }
+        }
+
+        private static List<string> GetLbdAndShapeFilePaths(WaterFlowFMModelView v)
+        {
+            if (v.Layer == null) return new List<string>();
+
+            var featureProviders = v.Layer.Map.Layers
+                .OfType<VectorLayer>()
+                .Select(l => l.DataSource)
+                .ToList();
+
+            var shapeFiles = featureProviders.OfType<ShapeFile>().OfType<IFileBased>();
+            var ldbFiles = featureProviders.OfType<LdbFile>().OfType<IFileBased>();
+
+            return shapeFiles.Concat(ldbFiles).Select(s => s.Path).ToList();
         }
 
         private object GetPipesFromSourcesAndSinks(FlowFMTreeShortcut treeShortCut)
@@ -836,6 +850,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public FlowFMGuiPlugin()
         {
             getActiveMapViewFunc = GetActiveMapView;
+            GridHandler = RgfGridEditor.OpenGrid;
         }
 
         private static Func<MapView> getActiveMapViewFunc;
