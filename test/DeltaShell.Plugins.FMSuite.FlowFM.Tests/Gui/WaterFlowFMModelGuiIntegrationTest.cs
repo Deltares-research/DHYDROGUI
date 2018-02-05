@@ -34,6 +34,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -712,29 +713,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                     Action mainWindowShown = delegate
                     {
-                        // Add water flow model to project
-                        var project = app.Project;
-                        project.RootFolder.Add(new WaterFlowFMModel());
-
-                        // Check model name
-                        var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-                        Assert.IsNotNull(targetModel);
-                        Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
-
-                        // Import Land boundaries
-                        var importerLDB = app.FileImporters.OfType<LdbFileImporterExporter>().FirstOrDefault();
-                        Assert.IsNotNull(importerLDB);
-
-                        var ldbImported = importerLDB.ImportItem(landBoundaryPath, targetModel.Area.LandBoundaries);
-                        Assert.IsNotNull(ldbImported as IList<LandBoundary2D>);
-                        Assert.IsTrue((ldbImported as IList<LandBoundary2D>).Any());
-                        Assert.IsTrue(targetModel.Area.LandBoundaries.Any());
-
-                        //Import grid
-                        var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
-                        Assert.IsNotNull(importerGrid);
-                        var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
-                        Assert.IsNotNull(gridImported);
+                        var targetModel = ImportLdbAndGrid(app, landBoundaryPath, netFile);
 
                         //Open grid
                         /* Before fixes from rev 39122 (D3DFMIQ-16) performance was between 160 and 190 seconds. */
@@ -776,37 +755,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.Plugins.Add(new FlowFMApplicationPlugin());
 
                     app.Run();
-                    // Add water flow model to project
-                    var project = app.Project;
-                    project.RootFolder.Add(new WaterFlowFMModel());
 
-                    // Check model name
-                    var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-                    Assert.IsNotNull(targetModel);
-                    Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
+                    var targetModel = ImportLdbAndGrid(app, landBoundaryPath, netFile);
 
-                    // Import Land boundaries
-                    var importerLDB = app.FileImporters.OfType<LdbFileImporterExporter>().FirstOrDefault();
-                    Assert.IsNotNull(importerLDB);
-
-                    var ldbImported = importerLDB.ImportItem(landBoundaryPath, targetModel.Area.LandBoundaries);
-                    Assert.IsNotNull(ldbImported as IList<LandBoundary2D>);
-                    Assert.IsTrue((ldbImported as IList<LandBoundary2D>).Any());
-                    Assert.IsTrue(targetModel.Area.LandBoundaries.Any());
-
-                    //Import grid
-                    var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
-                    Assert.IsNotNull(importerGrid);
-                    var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
-                    Assert.IsNotNull(gridImported);
-
-                    var writer = new MduFile();
-                    var targetMduFilePath = targetModel.MduFilePath;
                     /* Personal machine : 330ms avg. */
                     /* x1.5 factor acceptance factor */
                     /* x3 factor TeamCity acceptance factor */
                     TestHelper.AssertIsFasterThan(1500,
-                        () => writer.WriteLandBoundaries(targetMduFilePath, targetModel.ModelDefinition,
+                        () => new MduFile().WriteLandBoundaries(targetModel.MduFilePath, targetModel.ModelDefinition,
                             targetModel.Area));
                 }
             }
@@ -820,6 +776,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 FileUtils.DeleteIfExists(landBoundaryPath);
                 FileUtils.DeleteIfExists(netFile);
             }
+        }
+
+        private static WaterFlowFMModel ImportLdbAndGrid(IApplication app, string landBoundaryPath, string netFile)
+        {
+            // Add water flow model to project
+            var project = app.Project;
+            project.RootFolder.Add(new WaterFlowFMModel());
+
+            // Check model name
+            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+            Assert.IsNotNull(targetModel);
+            Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
+
+            // Import Land boundaries
+            var importerLDB = app.FileImporters.OfType<LdbFileImporterExporter>().FirstOrDefault();
+            Assert.IsNotNull(importerLDB);
+
+            var ldbImported = importerLDB.ImportItem(landBoundaryPath, targetModel.Area.LandBoundaries);
+            Assert.IsNotNull(ldbImported as IList<LandBoundary2D>);
+            Assert.IsTrue((ldbImported as IList<LandBoundary2D>).Any());
+            Assert.IsTrue(targetModel.Area.LandBoundaries.Any());
+
+            //Import grid
+            var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+            Assert.IsNotNull(importerGrid);
+            var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
+            Assert.IsNotNull(gridImported);
+
+            return targetModel;
         }
     }
 }
