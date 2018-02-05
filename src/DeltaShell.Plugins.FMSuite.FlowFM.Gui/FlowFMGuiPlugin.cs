@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
                         {
                             throw new FileFormatException(new Uri(model.NetFilePath),
-                                "Empty file detected.Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
+                                "Empty file detected. Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
                         }
                         if (!File.Exists(model.NetFilePath))
                         {
