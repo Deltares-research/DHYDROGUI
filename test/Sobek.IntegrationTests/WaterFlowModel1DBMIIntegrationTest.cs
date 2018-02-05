@@ -101,7 +101,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.ObservationPoints,
                                                     OBSERVATION_POINT_ID.ToString(),
                                                     FunctionAttributes.StandardNames.WaterDischarge,
-                                                    14993.34));
+                                                    14993.663));
 
         }
 
@@ -2618,7 +2618,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterVolume,
-                                                    7467.546));
+                                                    7467.690));
         }
         
         [Test]
@@ -2684,7 +2684,7 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(CheckAfterModelExecution(WaterFlowParametersCategories.Retentions,
                                                     retention1.Name,
                                                     FunctionAttributes.StandardNames.WaterVolume,
-                                                    7467.546));
+                                                    7467.690));
         }
 
         #endregion
