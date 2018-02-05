@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
@@ -9,19 +8,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.Mode
 {
     public static class Flow1DApiDll
     {
-        private const string CF_FOLDER_NAME = "dflow1d";
-        private const string CF_BINFOLDER_NAME = "bin";
         public const string CF_DLL_NAME = "cf_dll.dll";
-
-        public static string DllPath
-        {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", CF_FOLDER_NAME, CF_BINFOLDER_NAME); }
-        }
-
+        
         static Flow1DApiDll()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(CF_DLL_NAME, DllPath);
+            NativeLibrary.LoadNativeDll(CF_DLL_NAME, DimrApiDataSet.CfDllPath);
         }
 
         [DllImport(CF_DLL_NAME, EntryPoint = "getMessage", CallingConvention = CallingConvention.Cdecl)]

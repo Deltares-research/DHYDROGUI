@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
@@ -14,20 +13,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         //repos/ds/trunk/additional/unstruc/src/unstruc_bmi.f90
         public const int MAXDIMS = 6;
         public const int MAXSTRLEN = 1024; // Must be equal to MAXSTRLEN in
-        private const string DFLOWFM_FOLDER_NAME = "dflowfm";
-        private const string DFLOWFM_BINFOLDER_NAME = "bin";
         public const string DFLOWFM_DLL_NAME = "dflowfm.dll";
-
-
-        public static string DllPath
-        {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", DFLOWFM_FOLDER_NAME, DFLOWFM_BINFOLDER_NAME); }
-        }
 
         static FlexibleMeshModelDll()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(DFLOWFM_DLL_NAME, DllPath);
+            NativeLibrary.LoadNativeDll(DFLOWFM_DLL_NAME, DimrApiDataSet.DFlowFmDllPath);
         }
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]

@@ -2062,7 +2062,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         {
             get
             {
-                var file = Path.Combine(Flow1DApiDll.DllPath, Flow1DApiDll.CF_DLL_NAME);
+                var file = Path.Combine(DimrApiDataSet.CfDllPath, Flow1DApiDll.CF_DLL_NAME);
                 if (!File.Exists(file))
                     return "";
 
@@ -3467,7 +3467,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         public virtual string KernelDirectoryLocation
         {
-            get { return Flow1DApiDll.DllPath; }
+            get { return DimrApiDataSet.CfDllPath; }
         }
 
         public new virtual ActivityStatus Status

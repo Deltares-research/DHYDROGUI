@@ -40,12 +40,12 @@ namespace DeltaShell.Dimr
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         ErrorDialog = false,
-                        FileName = DimrApiDataSet.ExePath,
+                        FileName = DimrApiDataSet.DimrExePath,
                         Arguments = Path.GetFileName(xmlFile)
                     };
 
                 dimrProcInfo.EnvironmentVariables["PATH"] = KernelDirs + ";" +
-                                                            Path.GetDirectoryName(DimrApiDataSet.ExePath) + ";" +
+                                                            Path.GetDirectoryName(DimrApiDataSet.DimrExePath) + ";" +
                                                             dimrProcInfo.EnvironmentVariables["PATH"];
 
                 Log.Info(string.Format("Path used: {0}", dimrProcInfo.EnvironmentVariables["PATH"]));

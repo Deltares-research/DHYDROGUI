@@ -4,9 +4,9 @@ using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [Test]
         public void CheckIfXsdFileAreAtCorrectLocation()
         {
-            Assert.AreEqual(13, Directory.GetFiles(RealTimeControlModelDll.DllPath).Count(f => f.EndsWith("xsd"))); // check x64
+            Assert.AreEqual(13, Directory.GetFiles(DimrApiDataSet.RtcToolsDllPath).Count(f => f.EndsWith("xsd"))); // check x64
         }
 
 
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             mocks.ReplayAll();
 
-            var result = RealTimeControlXmlWriter.GetDataConfigXml(RealTimeControlModelDll.DllPath, stubTimeDependentModel, new List<ControlGroup> {controlGroup}, null);
+            var result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath, stubTimeDependentModel, new List<ControlGroup> {controlGroup}, null);
 
             mocks.VerifyAll();
 

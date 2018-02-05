@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers
         static RemoteModelApiWrapper()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(Flow1DApiDll.CF_DLL_NAME, Flow1DApiDll.DllPath);
+            NativeLibrary.LoadNativeDll(Flow1DApiDll.CF_DLL_NAME, DimrApiDataSet.CfDllPath);
         }
 
         public void NetworkSetBoundaryValues(int[] irefs, double time, double[] values)

@@ -518,11 +518,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             get { return null; }
         }
 
-        public virtual string KernelDirectoryLocation {
-            get
-            {
-                return Iterative1d2dApi.DllPath;
-            }
+        public virtual string KernelDirectoryLocation
+        {
+            get { return DimrApiDataSet.Iterative1D2DDllPath; }
         }
 
         public virtual void DisconnectOutput()

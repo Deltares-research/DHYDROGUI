@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
@@ -9,19 +7,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel
 {
     public class RRModelEngineDll : IRRModelEngineDll
     {
-        private const string RR_FOLDER_NAME = "drr";
-        private const string RR_BINFOLDER_NAME = "bin";
         public const string RR_DLL_NAME = "rr_dll.dll";
-
-        public static string DllPath
-        {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, "x64", RR_FOLDER_NAME, RR_BINFOLDER_NAME); }
-        }
 
         static RRModelEngineDll()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(RR_DLL_NAME, DllPath);
+            NativeLibrary.LoadNativeDll(RR_DLL_NAME, DimrApiDataSet.RrDllPath);
         }
 
         #region PInvoke

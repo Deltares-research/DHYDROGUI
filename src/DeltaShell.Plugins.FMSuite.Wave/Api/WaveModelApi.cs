@@ -125,17 +125,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             private readonly string esmfScriptPath;
 
             public WaveDllHelper(string workDir)
-            {
-                var arch = WaveModelDll.Arch;
-                
-                var d3DhomeDir = DimrApiDataSet.DllDirectory;
+            {              
+                var d3DhomeDir = DimrApiDataSet.KernelsDirectory;
 
-                waveExeDir = Path.Combine(d3DhomeDir, arch, WaveModelDll.WAVE_FOLDER_NAME, WaveModelDll.WAVE_BINFOLDER_NAME);
-                swanExeDir = Path.Combine(d3DhomeDir, arch, WaveModelDll.SWAN_FOLDER_NAME, WaveModelDll.SWAN_BINFOLDER_NAME);
-                swanScriptDir = Path.Combine(d3DhomeDir, arch, WaveModelDll.SWAN_FOLDER_NAME, WaveModelDll.SWAN_SCRIPTFOLDER_NAME);
+                waveExeDir = DimrApiDataSet.WaveExePath;
+                swanExeDir = DimrApiDataSet.SwanExePath;
+                swanScriptDir = DimrApiDataSet.SwanScriptPath;
 
-                esmfPath = Path.Combine(d3DhomeDir, arch, WaveModelDll.ESMF_FOLDER_NAME, WaveModelDll.ESMF_BINFOLDER_NAME);
-                esmfScriptPath = Path.Combine(d3DhomeDir, arch, WaveModelDll.ESMF_FOLDER_NAME, WaveModelDll.ESMF_SCRIPTFOLDER_NAME);
+                esmfPath = DimrApiDataSet.EsmfExePath;
+                esmfScriptPath = DimrApiDataSet.EsmfScriptPath;
 
                 oldPath = Environment.GetEnvironmentVariable("PATH");
                 oldDelft3DDirectory = Environment.GetEnvironmentVariable("D3D_HOME");
@@ -146,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
                 Environment.SetEnvironmentVariable("D3D_HOME", d3DhomeDir);
                 Environment.SetEnvironmentVariable("PATH", waveExeDir + ";" + swanExeDir + ";" + swanScriptDir + ";" + esmfPath + ";" + esmfScriptPath + ";" + oldPath);
-                Environment.SetEnvironmentVariable("ARCH", arch, EnvironmentVariableTarget.Process);
+                Environment.SetEnvironmentVariable("ARCH", "x64", EnvironmentVariableTarget.Process);
                 if (workDir != string.Empty)
                     Directory.SetCurrentDirectory(workDir);
             }
