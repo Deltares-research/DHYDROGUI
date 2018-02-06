@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     }
                 }
                 
-                var listFileTextDocument = model.DataItems.Select(d => d.Value).OfType<TextDocumentFromFile>().ToList().FirstOrDefault(t => t.Name == "List file");
+                var listFileTextDocument = model.DataItems.Select(d => d.Value).OfType<TextDocumentFromFile>().ToList().FirstOrDefault(t => t.Name == WaqFileBasedPreProcessor.ListFileTag);
                 Assert.IsNotNull(listFileTextDocument);
                 Assert.IsTrue(listFileTextDocument.Content.Length > 0);
                 Assert.IsFalse(listFileTextDocument.Content.Contains("Test file")); // Previous list file output should be removed

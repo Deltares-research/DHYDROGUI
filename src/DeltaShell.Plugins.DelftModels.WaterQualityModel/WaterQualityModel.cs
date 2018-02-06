@@ -1090,7 +1090,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var textDocumentOutputDataItems = DataItems.Where(di =>
                 di.Role == DataItemRole.Output &&
                 di.ValueType == typeof(TextDocumentFromFile) &&
-                di.Tag != "List fileTag")
+                di.Tag != WaqFileBasedPreProcessor.ListFileTag)
                 .ToList();
 
             textDocumentOutputDataItems.ForEach(di => DataItems.Remove(di));
