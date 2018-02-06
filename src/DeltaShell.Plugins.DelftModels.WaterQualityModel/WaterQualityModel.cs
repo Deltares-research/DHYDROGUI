@@ -1081,7 +1081,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnInitialize()
         {
             Log.Info(KernelVersions);
+            RemoveOutputDataItems();
             InvokeAndRestoreDirectory(OnInitializeCore);
+        }
+
+        private void RemoveOutputDataItems()
+        {
+            var textDocumentOutputDataItems = DataItems.Where(di =>
+                di.Role == DataItemRole.Output &&
+                di.ValueType == typeof(TextDocumentFromFile) &&
+                di.Tag != "List fileTag")
+                .ToList();
+
+            textDocumentOutputDataItems.ForEach(di => DataItems.Remove(di));
         }
 
         private void OnInitializeCore()

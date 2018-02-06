@@ -1,7 +1,11 @@
+using System;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -10,15 +14,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {
     [TestFixture]
     [Category(TestCategory.Integration)]
+    [Category(TestCategory.DataAccess)]
     public class WaterQualityModelIntegrationTest
     {
         [Test]
         public void ImportSobekHydFileAndRun()
         {
-            string dataDir = TestHelper.GetDataDir();
-            string hydFile = Path.Combine(dataDir, "IntegrationTests", "Flow1D", "sobek.hyd");
+            var dataDir = TestHelper.GetDataDir();
+            var hydFile = Path.Combine(dataDir, "IntegrationTests", "Flow1D", "sobek.hyd");
 
-            WaterQualityModel model = new WaterQualityModel();
+            var model = new WaterQualityModel();
 
             new HydFileImporter().ImportItem(hydFile, model);
 
@@ -46,10 +51,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void ImportFMHydFileAndRun()
         {
-            string dataDir = TestHelper.GetDataDir();
-            string hydFile = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
+            var dataDir = TestHelper.GetDataDir();
+            var hydFile = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
 
-            WaterQualityModel model = new WaterQualityModel();
+            var model = new WaterQualityModel();
 
             new HydFileImporter().ImportItem(hydFile, model);
 
@@ -78,10 +83,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void ImportUgridHydFileAndRun()
         {
-            string dataDir = TestHelper.GetDataDir();
-            string hydFile = Path.Combine(dataDir, "IntegrationTests", "UGrid", "f34.hyd");
+            var dataDir = TestHelper.GetDataDir();
+            var hydFile = Path.Combine(dataDir, "IntegrationTests", "UGrid", "f34.hyd");
 
-            WaterQualityModel model = new WaterQualityModel();
+            var model = new WaterQualityModel();
 
             new HydFileImporter().ImportItem(hydFile, model);
 
@@ -106,5 +111,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void GivenValidWaqModel_WhenRunningWithInvalidData_ThenOutputDataItemsAreRemovedFromModel()
+        {
+            var testDir = FileUtils.CreateTempDirectory();
+            var originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
+            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(testDir), string.Empty);
+
+            var hydFilePath = Path.Combine(testDir, "flow-model", "westernscheldt01.hyd");
+            var subFilePath = Path.Combine(testDir, "waq", "sub-files", "bacteria.sub");
+            var boundaryConditionsFilePath = Path.Combine(testDir, "waq", "boundary-conditions", "bacteria.csv");
+
+            Func<IDataItem, bool> isWaqOutputFileDataItem = di => di.Role == DataItemRole.Output &&
+                                                                  di.ValueType == typeof(TextDocumentFromFile) &&
+                                                                  di.Tag != "List fileTag";
+
+            try
+            {
+                // model setup
+                var model = new WaterQualityModel();
+                new HydFileImporter().ImportItem(hydFilePath, model);
+                new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
+                new DataTableImporter().ImportItem(boundaryConditionsFilePath, model.BoundaryDataManager);
+                Assert.IsEmpty(model.DataItems.Where(di => isWaqOutputFileDataItem(di)));
+
+                // Run the model successfully and check that the output data items connected to the .lsp & .mor-files
+                // are added to the model.
+                ActivityRunner.RunActivity(model);
+                Assert.That(model.DataItems.Count(di => isWaqOutputFileDataItem(di)), Is.EqualTo(2));
+
+
+                // Put incorrect data in the boundary conditions file
+                var dataFile = model.BoundaryDataManager.DataTables.FirstOrDefault()?.DataFile;
+                Assert.IsNotNull(dataFile);
+                dataFile.Content = dataFile.Content.Replace("2014/01/01-00:00:00 0.1", "2014/01/01-00:00:00 wrongValue");
+
+                // Run the model again (which will fail) and check that the output data items connected to the .lsp & .mor-files
+                // are removed from the model.
+                ActivityRunner.RunActivity(model);
+                Assert.IsEmpty(model.DataItems.Where(di => isWaqOutputFileDataItem(di)));
+                model.Dispose();
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir); // cleanup of created files
+            }
+        }
     }
 }
