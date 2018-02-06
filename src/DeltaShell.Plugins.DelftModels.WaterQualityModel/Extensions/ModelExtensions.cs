@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-
-using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-
-using GeoAPI.Extensions.Coverages;
-
 using log4net;
 
 using NetTopologySuite.Extensions.Coverages;
@@ -21,29 +14,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
     public static class ModelExtensions
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ModelExtensions));
-
+        
         /// <summary>
         /// Adds a text document to the <param name="model"/> output with the content of the file described by <param name="filePath"/>
         /// </summary>
         /// <param name="model">The water quality model to add the text document to</param>
-        /// <param name="displayName">The name of the output text document in the water quality model</param>
+        /// <param name="dataItemTag">The name of the output text document in the water quality model</param>
         /// <param name="filePath">The path to the file to read</param>
         /// <param name="insertIndex">The data item index at which the text document must be inserted</param>
-        /// <remarks>The <paramref name="insertIndex"/> is ignored when a text document with <paramref name="displayName"/> already exists</remarks>
-        public static void AddTextDocument(this WaterQualityModel model, string displayName, string filePath, int insertIndex = -1)
+        /// <remarks>The <paramref name="insertIndex"/> is ignored when a text document with <paramref name="dataItemTag"/> already exists</remarks>
+        public static void AddTextDocument(this WaterQualityModel model, string dataItemTag, string filePath, int insertIndex = -1)
         {
             if (!File.Exists(filePath))
             {
-                Log.WarnFormat("Could not add {0} ({1})", displayName, filePath);
+                Log.WarnFormat("Could not add {0} ({1})", dataItemTag, filePath);
                 return;
             }
-
-            var dataItemTag = displayName + "Tag";
+            
             var dataItem = ((IModel) model).DataItems.FirstOrDefault(di => di.Tag == dataItemTag);
             if (dataItem == null)
             {
                 var textDocumentFromFile = ((Func<string, TextDocumentBase>) CreateTextDocumentFromFile)(filePath);
-                dataItem = new DataItem(textDocumentFromFile, displayName, textDocumentFromFile.GetType(), DataItemRole.Output,
+                dataItem = new DataItem(textDocumentFromFile, WaterQualityModel.GetDataItemNameFromTag(dataItemTag), textDocumentFromFile.GetType(), DataItemRole.Output,
                     dataItemTag);
 
                 if (insertIndex > ((IModel) model).DataItems.Count || insertIndex < 0)

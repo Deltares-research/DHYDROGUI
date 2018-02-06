@@ -7,7 +7,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
@@ -126,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Func<IDataItem, bool> isWaqOutputFileDataItem = di => di.Role == DataItemRole.Output &&
                                                                   di.ValueType == typeof(TextDocumentFromFile) &&
-                                                                  di.Tag != WaqFileBasedPreProcessor.ListFileTag + "Tag";
+                                                                  di.Tag != WaterQualityModel.ListFileTag;
 
             try
             {
