@@ -818,6 +818,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                     var layerEnvelope = targetView.Layer.Envelope;
                     var mapEnvelope = targetView.Layer.Map.Envelope;
+                    
+                    //Either the map width or the height needs to be the same as the layer's.
                     Assert.IsTrue(layerEnvelope.Width.Equals(mapEnvelope.Width) || layerEnvelope.Height.Equals(mapEnvelope.Height));
                 };
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
