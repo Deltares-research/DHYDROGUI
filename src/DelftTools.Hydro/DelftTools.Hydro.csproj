@@ -155,6 +155,7 @@
     <Compile Include="Catchment.cs" />
     <Compile Include="CatchmentType.cs" />
     <Compile Include="Channel.cs" />
+    <Compile Include="CompartmentShape.cs" />
     <Compile Include="CrossSections\CrossSection.cs" />
     <Compile Include="CrossSections\CrossSectionDefinitionExtensions.cs" />
     <Compile Include="CrossSections\CrossSectionDefinitionProxy.cs" />
@@ -197,7 +198,9 @@
     <Compile Include="ISewerConnection.cs" />
     <Compile Include="Compartment.cs" />
     <Compile Include="OutletCompartment.cs" />
+    <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionOrifice.cs" />
+    <Compile Include="SewerConnectionWaterType.cs" />
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
@@ -309,6 +312,7 @@
     <None Include="Uml\HydroArea.cd" />
     <None Include="Uml\HydroNetwork.cd" />
     <None Include="Uml\HydroRegion.cd" />
+    <None Include="Uml\SewerFeaturesImplementation.cd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

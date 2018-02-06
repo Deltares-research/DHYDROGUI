@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro
@@ -8,7 +7,6 @@ namespace DelftTools.Hydro
     public class Compartment
     {
         private Manhole parentManhole;
-        private bool settingParentManhole;
 
         public Compartment() : this("compartment")
         {
@@ -20,6 +18,7 @@ namespace DelftTools.Hydro
         }
 
         public string Name { get; set; }
+
         /// <summary>
         /// The manhole that contains this compartment.
         /// </summary>
@@ -76,12 +75,5 @@ namespace DelftTools.Hydro
         {
             return Name;
         }
-    }
-
-    public enum CompartmentShape
-    {
-        [Description("Unknown")] Unknown,
-        [Description("RHK")] Rectangular,
-        [Description("RND")] Square
     }
 }

@@ -16,7 +16,8 @@ namespace DelftTools.Hydro
     [Entity]
     public class SewerConnection : Branch, ISewerConnection
     {
-        private static ILog Log = LogManager.GetLogger(typeof(SewerConnection));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
+
         #region Constructors
 
         public SewerConnection() : this(null, null)
@@ -39,24 +40,27 @@ namespace DelftTools.Hydro
         public SewerConnection(string name, INode fromNode, INode toNode, double length) :
             base(name, fromNode, toNode, length)
         {
-            if (fromNode != null && toNode != null)
+            if (fromNode == null || toNode == null) return;
+
+            if (fromNode.Geometry != null && fromNode.Geometry.IsValid &&
+                toNode.Geometry != null && toNode.Geometry.IsValid)
             {
-                if (fromNode.Geometry != null && fromNode.Geometry.IsValid &&
-                    toNode.Geometry != null && toNode.Geometry.IsValid)
-                {
-                    Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate });
-                }
+                Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate });
             }
         }
 
         #endregion
 
         #region SewerConnection specific
-        public double LevelSource { get; set; }
-        public double LevelTarget { get; set; }
+
         protected IEventedList<IBranchFeature> branchFeatures;
         private Compartment sourceCompartment;
         private Compartment targetCompartment;
+
+        public double LevelSource { get; set; }
+
+        public double LevelTarget { get; set; }
+        
         public SewerConnectionWaterType WaterType { get; set; }
 
         public Compartment SourceCompartment
@@ -151,39 +155,6 @@ namespace DelftTools.Hydro
                     notifyCollectionChangingEventArgs.Cancel = true;
                 }
             }
-        }
-    }
-
-    public static class SewerConnectionExtensionMethods
-    {
-        /// <summary>
-        /// Add structure to branch, additionaly makes certain the geometry is set.
-        /// </summary>
-        /// <param name="sewerConnection"></param>
-        /// <param name="structure"></param>
-        public static ICompositeBranchStructure AddStructureToBranch(this ISewerConnection sewerConnection, IStructure structure)
-        {
-            structure.Branch = sewerConnection;
-            structure.Network = sewerConnection.Network;
-            structure.Chainage = 0;
-
-            if (sewerConnection.Geometry != null && sewerConnection.Geometry.Coordinates.Any())
-            {
-                structure.Geometry = new Point(sewerConnection.Geometry.Coordinates[0]);
-            }
-            structure.Name = sewerConnection.Name;
-
-            return HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, sewerConnection);
-        }
-
-        public static bool IsOrifice(this ISewerConnection sewerConnection)
-        {
-            return sewerConnection is SewerConnectionOrifice;
-        }
-
-        public static bool IsPipe(this ISewerConnection sewerConnection)
-        {
-            return sewerConnection is Pipe;
         }
     }
 }

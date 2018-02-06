@@ -1,150 +1,119 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="DelftTools.Hydro.Compartment" Collapsed="true">
-    <Position X="2.25" Y="5.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AABEMAAAAAAAIIAAAAAAAAQAAACAAAAQACAACAAAAAA=</HashCode>
-      <FileName>Compartment.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DelftTools.Hydro.SewerConnectionOrifice">
-    <Position X="13.75" Y="4" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAhAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>SewerConnectionOrifice.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DelftTools.Hydro.SewerConnection">
-    <Position X="11" Y="3.5" Width="1.5" />
-    <AssociationLine Name="sourceCompartment" Type="DelftTools.Hydro.Compartment" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="11" Y="5.912" />
-        <Point X="7.375" Y="5.912" />
-        <Point X="7.375" Y="5.812" />
-        <Point X="3.75" Y="5.812" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.652" Y="-0.273" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="targetCompartment" Type="DelftTools.Hydro.Compartment">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.714" Y="0.06" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAACEAAAAAAAIAggAAAQAAAAAAgAAAAACAAQAEgASgA=</HashCode>
-      <FileName>SewerConnection.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="sourceCompartment" />
-      <Field Name="targetCompartment" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.OutletCompartment" Collapsed="true">
-    <Position X="2" Y="6.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>OutletCompartment.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DelftTools.Hydro.Structures.Pipe">
-    <Position X="13.75" Y="6.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAQiA=</HashCode>
-      <FileName>Structures\Pipe.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="SewerProfile" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.Structures.Pump" Collapsed="true">
-    <Position X="9.75" Y="9.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>BAAQAAAMAAAAACCMAAAAAIACICAgACAAAgBAAAAAQAA=</HashCode>
-      <FileName>Structures\Pump.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.Structures.Weir" Collapsed="true">
-    <Position X="12.25" Y="9.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>ACYwSEAAAAAAACAAAQABgABABSQAACAAAABACAACQIg=</HashCode>
-      <FileName>Structures\Weir.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.Structures.Manhole">
-    <Position X="2.5" Y="2.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAAAQAIAAEAAAAAAAgAAAAgAAAAAIAA=</HashCode>
-      <FileName>Structures\Manhole.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="compartments" />
-    </ShowAsCollectionAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.HydroNetwork" Collapsed="true">
-    <Position X="12.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QIAoACAAMAAJAAgEEMARTKFoBEAGAIiACAyAkCgAFDE=</HashCode>
-      <FileName>HydroNetwork.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.CrossSections.CrossSection" Collapsed="true">
-    <Position X="17" Y="6.75" Width="3" />
-    <TypeIdentifier>
-      <HashCode>BAABAFgASEkACCAIAAAAAEQIASAQAEFxAAgAAAgggFA=</HashCode>
-      <FileName>CrossSections\CrossSection.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DelftTools.Hydro.BranchStructure" Collapsed="true">
-    <Position X="11" Y="8.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAQAEAABAEgAGQAAAAAAAAABAAAAABAAAAAAAAAAEA=</HashCode>
-      <FileName>BranchStructure.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Interface Name="DelftTools.Hydro.Structures.IManhole" Collapsed="true">
-    <Position X="2.75" Y="1" Width="1.5" />
+    <Position X="12" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAgAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAIAA=</HashCode>
       <FileName>Structures\IManhole.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="DelftTools.Hydro.Structures.IPipe" Collapsed="true">
-    <Position X="9.75" Y="2" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
-      <FileName>Structures\IPipe.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="DelftTools.Hydro.ISewerConnection" Collapsed="true">
-    <Position X="9.75" Y="1" Width="1.5" />
+    <Position X="18.25" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAIAAgAAAQAABAAAAAAAAACAAQAEAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAIAAAAAAQAABAAAAAAAAACAAQAEAAAAA=</HashCode>
       <FileName>ISewerConnection.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Enum Name="DelftTools.Hydro.CompartmentShape" Collapsed="true">
-    <Position X="0.75" Y="3.25" Width="1.5" />
+  <Interface Name="DelftTools.Hydro.CrossSections.ICrossSection" Collapsed="true">
+    <Position X="25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgIAAAABA=</HashCode>
-      <FileName>Compartment.cs</FileName>
+      <HashCode>AAAAABgAAEAACAAAAAAAAAAAACAAAABgAAAAAAAAAAA=</HashCode>
+      <FileName>CrossSections\ICrossSection.cs</FileName>
     </TypeIdentifier>
-  </Enum>
-  <Enum Name="DelftTools.Hydro.SewerConnectionWaterType" Collapsed="true">
-    <Position X="9.25" Y="3.5" Width="1.5" />
+  </Interface>
+  <Interface Name="GeoAPI.Extensions.Networks.INode" Collapsed="true">
+    <Position X="11" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="GeoAPI.Extensions.Networks.IBranch" Collapsed="true">
+    <Position X="19.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Hydro.IHydroNetwork" Collapsed="true">
+    <Position X="14.75" Y="7" Width="2.5" />
+    <AssociationLine Name="Manholes" Type="DelftTools.Hydro.Structures.IManhole" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.091" Y="7.83" />
+        <Point X="15.091" Y="8.125" />
+        <Point X="13.5" Y="8.125" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="SewerConnections" Type="DelftTools.Hydro.ISewerConnection" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.023" Y="7.83" />
+        <Point X="17.023" Y="8.125" />
+        <Point X="18.25" Y="8.125" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.038" Y="0.111" Height="0.162" Width="1.191" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Channels" Type="DelftTools.Hydro.IChannel" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.312" Y="7.83" />
+        <Point X="16.312" Y="8.699" />
+        <Point X="20.375" Y="8.699" />
+        <Point X="20.375" Y="8.188" />
+        <Point X="20.75" Y="8.188" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.376" Y="-0.852" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="HydroNodes" Type="DelftTools.Hydro.IHydroNode" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.773" Y="7.83" />
+        <Point X="15.773" Y="8.699" />
+        <Point X="11.875" Y="8.699" />
+        <Point X="11.875" Y="8.438" />
+        <Point X="11.5" Y="8.438" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.593" Y="-0.579" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAAAIAAAAAAAAAEAAAAAAAAEAAAA=</HashCode>
-      <FileName>ISewerConnection.cs</FileName>
+      <HashCode>QAAIAAAAMAAIAAgAEMAQBCEAAAAEAIgAAAQAgAAAFCE=</HashCode>
+      <FileName>IHydroNetwork.cs</FileName>
     </TypeIdentifier>
-  </Enum>
+    <ShowAsCollectionAssociation>
+      <Property Name="Manholes" />
+      <Property Name="SewerConnections" />
+      <Property Name="Channels" />
+      <Property Name="HydroNodes" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="GeoAPI.Extensions.Networks.INetwork">
+    <Position X="15.25" Y="3" Width="1.5" />
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Branches" />
+      <Property Name="Nodes" />
+      <Property Name="BranchFeatures" />
+      <Property Name="NodeFeatures" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="GeoAPI.Extensions.Networks.IBranchFeature" Collapsed="true">
+    <Position X="21.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="GeoAPI.Extensions.Networks.INodeFeature" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DelftTools.Hydro.IChannel" Collapsed="true">
+    <Position X="20.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAEgEAAAAAAAAAACVAAAAEAAgAAAAAgAAABCA=</HashCode>
+      <FileName>IChannel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DelftTools.Hydro.IHydroNode" Collapsed="true">
+    <Position X="10" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IHydroNode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

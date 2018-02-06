@@ -2,7 +2,10 @@
 {
     public class OutletCompartment : Compartment
     {
-        public OutletCompartment() : this("outletCompartment") { }
+        public OutletCompartment() : this("outletCompartment")
+        {
+        }
+
         public OutletCompartment(string uniqueId) : base(uniqueId)
         {
         }
