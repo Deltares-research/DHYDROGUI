@@ -137,6 +137,6 @@
     <value>With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values.</value>
   </data>
   <data name="WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian" xml:space="preserve">
-    <value>All the grids Coordinate System should be the same, either Spherical or Cardesian</value>
+    <value>All the grids Coordinate System should be the same, either Spherical or Cartesian</value>
   </data>
 </root>

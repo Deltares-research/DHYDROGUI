@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
@@ -125,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
                 Assert.IsTrue((bool)waveSetup.Value);
 
-                Assert.IsTrue(CheckDomainGrid(model.OuterDomain, "Spherical"));
+                Assert.IsTrue(CheckDomainGrid(model.OuterDomain, WaveModel.CoordinateSystemType.Spherical));
 
                 var validationReport = WaveDomainValidator.Validate(model);
                 Assert.IsTrue(validationReport.AllErrors.Any());
@@ -147,8 +146,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             using (var model = new WaveModel(fileCopy))
             {
                 var domains = WaveDomainHelper.GetAllDomains(model.OuterDomain);
-                Assert.IsTrue(domains.Any(d => CheckDomainGrid(d, "Spherical")));
-                Assert.IsTrue(domains.Any(d => CheckDomainGrid(d, "Cartesian")));
+                Assert.IsTrue(domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Spherical)));
+                Assert.IsTrue(domains.Any(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Cartesian)));
 
                 var validationReport = WaveDomainValidator.Validate(model);
                 Assert.IsTrue(validationReport.AllErrors.Any());
@@ -175,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 waveSetup = model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
                 Assert.IsFalse((bool)waveSetup.Value);
 
-                Assert.IsTrue(CheckDomainGrid(model.OuterDomain, "Spherical"));
+                Assert.IsTrue(CheckDomainGrid(model.OuterDomain, WaveModel.CoordinateSystemType.Spherical));
 
                 var validationReport = WaveDomainValidator.Validate(model);
                 Assert.IsFalse(validationReport.AllErrors.Any());

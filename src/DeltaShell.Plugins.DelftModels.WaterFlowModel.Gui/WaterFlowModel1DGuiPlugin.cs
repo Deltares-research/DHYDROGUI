@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -40,6 +40,7 @@ using Mono.Addins;
 using NetTopologySuite.Extensions.Actions;
 using SharpMap.UI.Tools;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
+using Size = System.Drawing.Size;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
 {
@@ -162,10 +163,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
                 {
                     Description = "Validation report",
                     AfterCreate = (v, o) =>
-                        {
-                            v.Gui = Gui;
-                            v.OnValidate = d => new WaterFlowModel1DModelValidator().Validate(d as WaterFlowModel1D);
-                        }
+                    {
+                        v.Gui = Gui;
+                        v.OnValidate = d => new WaterFlowModel1DModelValidator().Validate(d as WaterFlowModel1D);
+                    }
+                };
+            yield return new ViewInfo<IEnumerable<ICrossSection>, RefreshMainSectionWidthsDialog>
+                {
+                    Description = "Refresh Main Section Width View (Cross sections in Flow1D)"
                 };
         }
 
@@ -541,5 +546,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui
 
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
         }
+    }
+
+    public interface IHydroModelGuiPlugin
+    {
+        Window GetValidationReportControl(object o);
     }
 }

@@ -190,20 +190,20 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="generateDataInSeriesToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALggAA
-        C4IBvvripQAAAlxJREFUOE99kd1LU3Ecxp/WC+wPSMjeCF9YU8OtTExMUFOUmrPpEnWFlk7DduZ2fJmp
-        OPDlQsrojRDKmyAvigIrmFE3dRHYZZigRVhSDCm6KKHEp+/Zps1aPg8P53d+v/N8fud3DqLVe6ubdn85
-        y302Ng03MTIdWx4cgxe1kbuwcrty2PrCJVFY2mn5P8CFzTiFUdRjLDIT1j5fKntet4WS4jTGBijYiBrc
-        QBF+ohIfI7NhpZ03sm+ui/1z3dxt3/EvQMEWOHAHebgAK/zyBvdhqjOzcCSX5feO8vTzavbMq/R/7mDl
-        XStbJs7SFWhkvrPwu5Q3yM6jOIKbIVidAByYQEptGsueFvHMbCX9C230zbvY/cnD9vfn6HunsGNaodmZ
-        vgg7RmTnBZRhTwjgQJ8kgL01qdx/zcich2YBlbB6ysKaqVJWPJLrkwpWPbAxu+XQksltoq5U91a+e0II
-        UC2AZgEUNFqCJuVAML3fHNw2sJU5L9NCMfgMPD5sD1r6bD+qemtZslhC3UndjBQTQ4AmAXgFEK3tg3Es
-        mMyQHOSuhgSiGFdtF20sFuMLiBOYkbOHAV4BqH8BdrbGL2eOpVJLotNA65CVh8VSpZyeUp6BOwJQYwAM
-        DuNyUn0ykxqSmaFk/ylr/ipxC0BdBxBSOi7ldeUxU7xa1vxN4lkP0Cz/uRiXs5SstTuveAWwojUALzbp
-        G/VXLNctzBevlqL9S+LBdLggUtEpeawN7LJwO64tLvrx2PZiKVLXeq8kb7SBWxbG9e36D/FD8bMYwCwG
-        Y6RfohVUPJMEJJNQEfgNuaNBC2gm2WIAAAAASUVORK5CYII=
-</value>
+      iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+      YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALggAA
+      C4IBvvripQAAAlxJREFUOE99kd1LU3Ecxp/WC+wPSMjeCF9YU8OtTExMUFOUmrPpEnWFlk7DduZ2fJmp
+      OPDlQsrojRDKmyAvigIrmFE3dRHYZZigRVhSDCm6KKHEp+/Zps1aPg8P53d+v/N8fud3DqLVe6ubdn85
+      y302Ng03MTIdWx4cgxe1kbuwcrty2PrCJVFY2mn5P8CFzTiFUdRjLDIT1j5fKntet4WS4jTGBijYiBrc
+      QBF+ohIfI7NhpZ03sm+ui/1z3dxt3/EvQMEWOHAHebgAK/zyBvdhqjOzcCSX5feO8vTzavbMq/R/7mDl
+      XStbJs7SFWhkvrPwu5Q3yM6jOIKbIVidAByYQEptGsueFvHMbCX9C230zbvY/cnD9vfn6HunsGNaodmZ
+      vgg7RmTnBZRhTwjgQJ8kgL01qdx/zcich2YBlbB6ysKaqVJWPJLrkwpWPbAxu+XQksltoq5U91a+e0II
+      UC2AZgEUNFqCJuVAML3fHNw2sJU5L9NCMfgMPD5sD1r6bD+qemtZslhC3UndjBQTQ4AmAXgFEK3tg3Es
+      mMyQHOSuhgSiGFdtF20sFuMLiBOYkbOHAV4BqH8BdrbGL2eOpVJLotNA65CVh8VSpZyeUp6BOwJQYwAM
+      DuNyUn0ykxqSmaFk/ylr/ipxC0BdBxBSOi7ldeUxU7xa1vxN4lkP0Cz/uRiXs5SstTuveAWwojUALzbp
+      G/VXLNctzBevlqL9S+LBdLggUtEpeawN7LJwO64tLvrx2PZiKVLXeq8kb7SBWxbG9e36D/FD8bMYwCwG
+      Y6RfohVUPJMEJJNQEfgNuaNBC2gm2WIAAAAASUVORK5CYII=
+    </value>
   </data>
   <data name="WaterFlowModel1DApplicationPlugin_Description" xml:space="preserve">
     <value>Allows to simulate 1D flow of water in open water systems, such as rivers and irrigation &amp; drainage channels.</value>
@@ -420,6 +420,23 @@
   </data>
   <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Tabulated_cross_section__0__cannot_have_zero_width_at_levels_above_deepest_point_of_its_definition_" xml:space="preserve">
     <value>Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.</value>
-  </data>  <data name="WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin" xml:space="preserve">
+  </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_" xml:space="preserve">
+    <value>The maximum flow width of this cross section does not match the total width of all its sections.</value>
+  </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_sections_" xml:space="preserve">
+    <value>The maximum flow width of one or more cross section does not match the total width of all its sections.</value>
+  </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_FloodPlain2_width_may_not_be_larger_than_zero_if_FloodPlain1_width_is_equal_to_zero_" xml:space="preserve">
+    <value>FloodPlain2 width may not be larger than 0.0, if FloodPlain1 width is equal to 0.0</value>
+  </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_Invalid_flow_profile" xml:space="preserve">
+    <value>Invalid flow profile</value>
+  </data>
+  <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_No_profile_defined" xml:space="preserve">
+    <value>No profile defined</value>
+  </data>
+  <data name="WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin" xml:space="preserve">
     <value>D-Flow1D Plugin</value>
-  </data></root>
+  </data>
+</root>

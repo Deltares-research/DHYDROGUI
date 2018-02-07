@@ -1,10 +1,7 @@
 ﻿using NUnit.Framework;
-using DeltaShell.Dimr;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -87,6 +84,7 @@ namespace DeltaShell.Dimr.Tests
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             var localCopy = TestHelper.CreateLocalCopy(mduPath);
 
+            Assert.Fail("Test failing because of thread abort during dimrApi.Initialize , requires further investigation. ");
             using (var model = new WaterFlowFMModel(localCopy))
             {
                 var exporter = new WaterFlowFMFileExporter();

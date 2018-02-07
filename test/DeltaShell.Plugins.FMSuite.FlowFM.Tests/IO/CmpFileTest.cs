@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ReadCmpFileWithUnknownKeyShowsLogMessage()
         {
-            //cmpWithUnknownN4Key.cmp
             var cmpFile = new CmpFile();
             var cmpPath = TestHelper.GetTestFilePath(@"CmpFileTest\cmpWithUnknownN4Key.cmp");
             var returnObjc = new List<HarmonicComponent>();

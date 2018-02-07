@@ -139,7 +139,7 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionZW
             {
-                SummerDike = new SummerDike()
+                SummerDike = new SummerDike
                 {
                     CrestLevel = 1,
                     FloodSurface = 2,
@@ -272,5 +272,133 @@ namespace DelftTools.Hydro.Tests
             Assert.IsFalse(validationResult.Second);
             Assert.AreEqual("Storage Width cannot exceed Total Width.", validationResult.First);
         }
+
+        #region GetSectionWidth
+
+        [Test]
+        public void GivenCrossSectionZwWithSections_WhenGettingSectionWidthByName_ThenCorrectSectionWidthIsReturned()
+        {
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(2);
+
+            var mainSectionWidth = csDefZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName);
+            Assert.That(mainSectionWidth, Is.EqualTo(60.0));
+
+            var fp1SectionWidth = csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+            Assert.That(fp1SectionWidth, Is.EqualTo(16.0));
+        }
+
+        [Test]
+        public void GivenCrossSectionZwWithSections_WhenGettingSectionWidthByNameWithUnexistingName_ThenZeroIsReturned()
+        {
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(3);
+
+            var width = csDefZw.GetSectionWidth("NoExistingSectionTypeName");
+            Assert.That(width, Is.EqualTo(0.0));
+        }
+
+        #endregion
+
+        #region RefreshSectionWidths
+
+        [Test]
+        public void GivenCrossSectionZwWithMaximumFlowWidthHigherThanMainSectionWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        {
+            var numberOfFloodPlains = 1;
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
+            var fp1Width = 0.0;
+            var fp2Width = 0.0;
+
+            CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
+            csDefZw.RefreshSectionsWidths();
+            CheckResultingSectionWidths(csDefZw, 110.0, fp1Width, fp2Width, numberOfFloodPlains);
+        }
+
+        [Test]
+        public void GivenCrossSectionZwWithMaximumFlowWidthHigherThanTotalSectionWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        {
+            var numberOfFloodPlains = 2;
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
+            var fp1Width = 16.0;
+            var fp2Width = 0.0;
+
+            CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
+            csDefZw.RefreshSectionsWidths();
+            CheckResultingSectionWidths(csDefZw, 94.0, fp1Width, fp2Width, numberOfFloodPlains);
+        }
+
+        [Test]
+        public void GivenCrossSectionZwWithMaximumFlowWidthHigherThanTotalSectionsWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        {
+            var numberOfFloodPlains = 3;
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
+            var fp1Width = 16.0;
+            var fp2Width = 14.0;
+            
+            CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
+            csDefZw.RefreshSectionsWidths();
+            CheckResultingSectionWidths(csDefZw, 80.0, fp1Width, fp2Width, numberOfFloodPlains);
+        }
+
+        [Test]
+        public void GivenCrossSectionZwWithMaximumFlowWidthLessThanTotalSectionsWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        {
+            var numberOfFloodPlains = 3;
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
+            csDefZw.Sections[2].MaxY = 70.0;
+            var fp1Width = 16.0;
+            var fp2Width = 64.0;
+
+            CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
+            csDefZw.RefreshSectionsWidths();
+            CheckResultingSectionWidths(csDefZw, 30.0, fp1Width, fp2Width, numberOfFloodPlains);
+        }
+
+        private static void CheckInitialSectionWidths(CrossSectionDefinitionZW csDefZw, double fp1Width, double fp2Width, int numberOfFloodPlains)
+        {
+            Assert.That(csDefZw.FlowWidth(), Is.EqualTo(110.0));
+            Assert.That(csDefZw.SectionsTotalWidth(), Is.Not.EqualTo(csDefZw.FlowWidth()));
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName), Is.EqualTo(60.0));
+            if (numberOfFloodPlains >= 2) Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName), Is.EqualTo(fp1Width));
+            if (numberOfFloodPlains >= 3) Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName), Is.EqualTo(fp2Width));
+        }
+
+        private static void CheckResultingSectionWidths(CrossSectionDefinitionZW csDefZw, double mainWidth, double fp1Width, double fp2Width, int numberOfFloodPlains)
+        {
+            Assert.That(csDefZw.SectionsTotalWidth(), Is.EqualTo(csDefZw.FlowWidth()));
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName), Is.EqualTo(mainWidth));
+            if (numberOfFloodPlains >= 2) Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName), Is.EqualTo(fp1Width));
+            if (numberOfFloodPlains >= 3) Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName), Is.EqualTo(fp2Width));
+        }
+
+        #endregion
+
+        #region General test helpers
+
+        private static CrossSectionDefinitionZW GetDefaultCrossSectionDefinitionZw(int numberOfSections)
+        {
+            var csDefZw = new CrossSectionDefinitionZW
+            {
+                Sections =
+                {
+                    new CrossSectionSection
+                    {
+                        MinY = 0.0,
+                        MaxY = 30.0,
+                        SectionType = new CrossSectionSectionType {Name = CrossSectionDefinitionZW.MainSectionName}
+                    }
+                }
+            };
+
+            if (numberOfSections >= 2) csDefZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 16.0);
+            if (numberOfSections >= 3) csDefZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, 14.0);
+
+            csDefZw.ZWDataTable.AddCrossSectionZWRow(10, 150, 40);
+            csDefZw.ZWDataTable.AddCrossSectionZWRow(6, 50, 40);
+            csDefZw.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
+
+            return csDefZw;
+        }
+
+        #endregion
     }
 }

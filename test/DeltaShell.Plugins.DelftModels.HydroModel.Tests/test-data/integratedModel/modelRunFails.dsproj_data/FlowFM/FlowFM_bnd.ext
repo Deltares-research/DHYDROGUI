@@ -1,0 +1,20 @@
+
+[boundary]
+quantity=
+locationfile=boundary 1.pli
+
+[boundary]
+quantity=
+locationfile=boundary 2.pli
+
+[boundary]
+quantity=
+locationfile=boundary drypoint discharge.pli
+
+[boundary]
+quantity=
+locationfile=boundary thinpoint discharge.pli
+
+[boundary]
+quantity=
+locationfile=boundary dry area discharge.pli
