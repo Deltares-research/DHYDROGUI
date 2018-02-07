@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         private int errorValue = -1;
         private int noErrorValue = GridApiDataSet.GridConstants.NOERR;
 
-        private static void DoWithMockedUGridApi(Action<IUGridApi> addExpectations, Action<UGrid> gridActon)
+        private static void DoWithMockedUGridApi(Action<IUGridApi> addExpectations, Action<UGrid> gridAction)
         {
             var uGridApi = MockRepository.GenerateMock<IUGridApi>();
             
@@ -33,9 +33,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     
                 addExpectations?.Invoke(uGridApi);
                 uGridApi.Replay();
-                    
+
                 //Replay
-                gridActon?.Invoke(grid);
+                gridAction?.Invoke(grid);
 
                 Assert.IsNotNull(uGridApi);
                 Assert.IsTrue(uGridApi.Initialized);
