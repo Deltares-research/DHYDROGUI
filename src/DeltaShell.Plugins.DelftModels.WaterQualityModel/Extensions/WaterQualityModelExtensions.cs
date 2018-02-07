@@ -11,9 +11,9 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
 {
-    public static class ModelExtensions
+    public static class WaterQualityModelExtensions
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ModelExtensions));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModelExtensions));
 
         /// <summary>
         /// Adds a text document to the <param name="model"/> output with the content of the file described by <param name="filePath"/>

@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    public class ModelExtensionsTest
+    public class WaterQualityModelExtensionsTest
     {
         [Test]
         public void AddTextDocument_WaterQualityModel_OpenTextDocument()

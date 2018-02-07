@@ -91,7 +91,7 @@
     <Compile Include="ObservationAreas\OverwriteLabelOperationTest.cs" />
     <Compile Include="ObservationAreas\WaterQualityObservationAreaCoverageTest.cs" />
     <Compile Include="Extensions\LocationAliasesExtensionsTest.cs" />
-    <Compile Include="Extensions\ModelExtensionsTest.cs" />
+    <Compile Include="Extensions\WaterQualityModelExtensionsTest.cs" />
     <Compile Include="Extensions\WaterQualityFunctionExtensionsTest.cs" />
     <Compile Include="FeatureEditing\WaterQualityFeatureEditorTest.cs" />
     <Compile Include="Forms\DataSetManager\DataTableManagerViewTest.cs" />

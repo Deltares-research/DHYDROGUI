@@ -85,7 +85,7 @@
     <Compile Include="ObservationAreas\OverwriteLabelOperation.cs" />
     <Compile Include="ObservationAreas\WaterQualityObservationAreaCoverage.cs" />
     <Compile Include="Extensions\LocationAliasesExtensions.cs" />
-    <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="Extensions\WaterQualityModelExtensions.cs" />
     <Compile Include="IO\AttributesFileData.cs" />
     <Compile Include="IO\AttributesFileReader.cs" />
     <Compile Include="IO\DataTableCsvFileReader.cs" />
