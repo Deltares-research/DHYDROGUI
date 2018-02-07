@@ -31,45 +31,31 @@
   </Interface>
   <Interface Name="DelftTools.Hydro.IHydroNetwork" Collapsed="true">
     <Position X="14.75" Y="7" Width="2.5" />
-    <AssociationLine Name="Manholes" Type="DelftTools.Hydro.Structures.IManhole" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="HydroNodes" Type="DelftTools.Hydro.IHydroNode" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="15.091" Y="7.83" />
-        <Point X="15.091" Y="8.125" />
-        <Point X="13.5" Y="8.125" />
+        <Point X="15.25" Y="7.82" />
+        <Point X="15.25" Y="9.075" />
+        <Point X="11.062" Y="9.075" />
+        <Point X="11.062" Y="8.7" />
       </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.593" Y="-0.579" />
+      </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="SewerConnections" Type="DelftTools.Hydro.ISewerConnection" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="17.023" Y="7.83" />
-        <Point X="17.023" Y="8.125" />
-        <Point X="18.25" Y="8.125" />
-      </Path>
+    <AssociationLine Name="SewerConnections" Type="DelftTools.Hydro.ISewerConnection">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
         <Position X="0.038" Y="0.111" Height="0.162" Width="1.191" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="Channels" Type="DelftTools.Hydro.IChannel" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="16.312" Y="7.83" />
-        <Point X="16.312" Y="8.699" />
-        <Point X="20.375" Y="8.699" />
-        <Point X="20.375" Y="8.188" />
-        <Point X="20.75" Y="8.188" />
+        <Point X="16.375" Y="7.82" />
+        <Point X="16.375" Y="9.075" />
+        <Point X="21" Y="9.075" />
+        <Point X="21" Y="8.7" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.376" Y="-0.852" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="HydroNodes" Type="DelftTools.Hydro.IHydroNode" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="15.773" Y="7.83" />
-        <Point X="15.773" Y="8.699" />
-        <Point X="11.875" Y="8.699" />
-        <Point X="11.875" Y="8.438" />
-        <Point X="11.5" Y="8.438" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.593" Y="-0.579" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -77,10 +63,10 @@
       <FileName>IHydroNetwork.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
+      <Property Name="HydroNodes" />
       <Property Name="Manholes" />
       <Property Name="SewerConnections" />
       <Property Name="Channels" />
-      <Property Name="HydroNodes" />
     </ShowAsCollectionAssociation>
   </Interface>
   <Interface Name="GeoAPI.Extensions.Networks.INetwork">

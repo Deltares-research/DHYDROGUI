@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
@@ -18,15 +19,19 @@ namespace DelftTools.Hydro
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
 
-        #region Constructors
+        protected IEventedList<IBranchFeature> branchFeatures;
+        private Compartment sourceCompartment;
+        private Compartment targetCompartment;
 
         public SewerConnection() : this(null, null)
         {
         }
+
         public SewerConnection(string name)
             : this(name, null, null, 0)
         {
         }
+
         public SewerConnection(INode fromNode, INode toNode)
             : this("sewerConnection", fromNode, toNode, 0)
         {
@@ -40,23 +45,14 @@ namespace DelftTools.Hydro
         public SewerConnection(string name, INode fromNode, INode toNode, double length) :
             base(name, fromNode, toNode, length)
         {
-            if (fromNode == null || toNode == null) return;
+            if (fromNode?.Geometry == null || toNode?.Geometry == null) return;
 
-            if (fromNode.Geometry != null && fromNode.Geometry.IsValid &&
-                toNode.Geometry != null && toNode.Geometry.IsValid)
+            if (fromNode.Geometry.IsValid && toNode.Geometry.IsValid)
             {
                 Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate });
             }
         }
-
-        #endregion
-
-        #region SewerConnection specific
-
-        protected IEventedList<IBranchFeature> branchFeatures;
-        private Compartment sourceCompartment;
-        private Compartment targetCompartment;
-
+        
         public double LevelSource { get; set; }
 
         public double LevelTarget { get; set; }
@@ -90,15 +86,12 @@ namespace DelftTools.Hydro
                 }
             }
         }
-
-        #endregion
-
+        
         public override bool IsLengthCustom
         {
             get { return true; }
         }
-
-
+        
         public override IEventedList<IBranchFeature> BranchFeatures
         {
             get { return branchFeatures; }
