@@ -61,6 +61,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DataItemMetaData\ADataItemMetaData.cs" />
+    <Compile Include="DataItemMetaData\KnownWaqDataItemMetaData.cs" />
     <Compile Include="DataObjects\BloomInfo.cs" />
     <Compile Include="DataObjects\BoundaryData\DataTable.cs" />
     <Compile Include="DataObjects\BoundaryData\DataTableManager.cs" />

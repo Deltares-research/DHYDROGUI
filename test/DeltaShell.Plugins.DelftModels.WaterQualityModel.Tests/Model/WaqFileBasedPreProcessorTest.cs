@@ -15,7 +15,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Properties;
 using NUnit.Framework;
@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     .Select(d => d.Value)
                     .OfType<TextDocumentFromFile>()
                     .ToList()
-                    .FirstOrDefault(t => t.Name == WaterQualityModel.GetDataItemNameFromTag(WaterQualityModel.ListFileTag));
+                    .FirstOrDefault(t => t.Name == WaterQualityModel.ListFileDataItemMetaData.Name);
                 Assert.IsNotNull(listFileTextDocument);
                 Assert.IsTrue(listFileTextDocument.Content.Length > 0);
                 Assert.IsFalse(listFileTextDocument.Content.Contains("Test file")); // Previous list file output should be removed

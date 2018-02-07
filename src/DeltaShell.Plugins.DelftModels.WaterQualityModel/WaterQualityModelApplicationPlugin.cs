@@ -11,7 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 var model =
                     Application.Project.RootFolder.Models.OfType<WaterQualityModel>()
                         .First(m => Equals(m.ObservationAreas, oberservationAreas));
-                var observationAreasDataItem = model.GetDataItemByTag(WaterQualityModel.ObservationAreasTag);
+                var observationAreasDataItem = model.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag);
 
                 observationAreaImporter.GetDataItemForTarget = coverage => observationAreasDataItem;
                 observationAreaImporter.ModelCoordinateSystem = model.CoordinateSystem;

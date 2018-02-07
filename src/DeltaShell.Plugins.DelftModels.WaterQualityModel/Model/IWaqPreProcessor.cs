@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
@@ -11,6 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <param name="addTextDocumentAction">Action for adding text documents generated after preprocessing</param>
         /// <exception cref="NullReferenceException">Throws when <param name="initSettings"></param> is null</exception>
         /// <returns>Initialization completed successfully</returns>
-        bool InitializeWaq(WaqInitializationSettings initSettings, Action<string, string> addTextDocumentAction);
+        bool InitializeWaq(WaqInitializationSettings initSettings, Action<ADataItemMetaData, string> addTextDocumentAction);
     }
 }
