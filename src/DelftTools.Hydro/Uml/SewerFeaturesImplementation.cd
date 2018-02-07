@@ -11,7 +11,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="DelftTools.Hydro.SewerConnectionOrifice">
-    <Position X="19.25" Y="14.25" Width="2.5" />
+    <Position X="19.25" Y="14" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAhAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>SewerConnectionOrifice.cs</FileName>
