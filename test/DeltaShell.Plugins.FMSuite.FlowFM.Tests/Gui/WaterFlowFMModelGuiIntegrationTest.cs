@@ -804,7 +804,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = delegate
                 {
                     var fmModel = AddFMModelToProject(app);
-                    ImportGrid(app, netFile, fmModel);
+
+                    //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                    //We don't want to use the NetFileImporter for the same reason.
+                    File.Copy(netFile, fmModel.NetFilePath, true);
+                    fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
 
                     //First call to initialize the view.
                     gui.CommandHandler.OpenView(fmModel, typeof(WaterFlowFMModelView));
@@ -812,15 +816,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     //Open grid
                     gui.CommandHandler.OpenView(fmModel.Grid, typeof(WaterFlowFMModelView));
                     gui.DocumentViews.AllViews.OfType<WaterFlowFMModelView>().FirstOrDefault();
+                    
                     //Get the view
                     var targetView = gui.DocumentViews.AllViews.OfType<WaterFlowFMModelView>().FirstOrDefault();
                     Assert.IsNotNull(targetView);
 
-                    var layerEnvelope = targetView.Layer.Envelope;
-                    var mapEnvelope = targetView.Layer.Map.Envelope;
-                    
-                    //Either the map width or the height needs to be the same as the layer's.
-                    Assert.IsTrue(layerEnvelope.Width.Equals(mapEnvelope.Width) || layerEnvelope.Height.Equals(mapEnvelope.Height));
+                    // Get the height and Width we got from the map after the above actions.
+                    var map = targetView.Layer.Map;
+                    var orHeight = targetView.Layer.Map.Envelope.Height;
+                    var orWidth = targetView.Layer.Map.Envelope.Width;
+
+                    // Changing the zoom will modify the height and width of the map.
+                    map.Zoom = 1000;
+                    Assert.AreNotEqual(orHeight, map.Envelope.Height);
+                    Assert.AreNotEqual(orWidth, map.Envelope.Width);
+
+                    //Apply the zoom to extents and check the height and width match the original values.
+                    map.ZoomToExtents();
+                    Assert.AreEqual(orHeight, map.Envelope.Height);
+                    Assert.AreEqual(orWidth, map.Envelope.Width);
                 };
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }

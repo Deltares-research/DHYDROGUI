@@ -481,7 +481,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
             finally
             {
-                modelView.Layer?.Map.ZoomToFit(modelView.Layer?.Envelope);
+                modelView.Layer?.Map.ZoomToExtents();
                 if (SharpMapGisGuiPlugin.Instance != null)
                 {
                     SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOff();
