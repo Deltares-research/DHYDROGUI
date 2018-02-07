@@ -301,56 +301,81 @@ namespace DelftTools.Hydro.Tests
         #region RefreshSectionWidths
 
         [Test]
-        public void GivenCrossSectionZwWithMaximumFlowWidthHigherThanMainSectionWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        public void GivenCrossSectionDefZwWithMaximumFlowWidthHigherThanMainSectionWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSizeWithLogMessage()
         {
             var numberOfFloodPlains = 1;
             var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
             var fp1Width = 0.0;
             var fp2Width = 0.0;
+            var expectedMessage = string.Format("The Main section width of cross section {0} has been changed from {1} m to {2} m.", CrossSectionDefinitionName, 60.0, 110.0);
 
             CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
-            csDefZw.RefreshSectionsWidths();
+            TestHelper.AssertLogMessageIsGenerated(() => csDefZw.RefreshSectionsWidths(), expectedMessage);
             CheckResultingSectionWidths(csDefZw, 110.0, fp1Width, fp2Width, numberOfFloodPlains);
         }
 
         [Test]
-        public void GivenCrossSectionZwWithMaximumFlowWidthHigherThanTotalSectionWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        public void GivenCrossSectionDefZwWithMaximumFlowWidthHigherThanTotalSectionWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSizeWithLogMessage()
         {
             var numberOfFloodPlains = 2;
             var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
             var fp1Width = 16.0;
             var fp2Width = 0.0;
+            var expectedMessage = string.Format("The Main section width of cross section {0} has been changed from {1} m to {2} m.", CrossSectionDefinitionName, 60.0, 94.0);
 
             CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
-            csDefZw.RefreshSectionsWidths();
+            TestHelper.AssertLogMessageIsGenerated(() => csDefZw.RefreshSectionsWidths(), expectedMessage);
             CheckResultingSectionWidths(csDefZw, 94.0, fp1Width, fp2Width, numberOfFloodPlains);
         }
 
         [Test]
-        public void GivenCrossSectionZwWithMaximumFlowWidthHigherThanTotalSectionsWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        public void GivenCrossSectionDefZwWithMaximumFlowWidthHigherThanTotalSectionsWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSizeWithLogMessage()
         {
             var numberOfFloodPlains = 3;
             var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
             var fp1Width = 16.0;
             var fp2Width = 14.0;
-            
+            var expectedMessage = string.Format("The Main section width of cross section {0} has been changed from {1} m to {2} m.", CrossSectionDefinitionName, 60.0, 80.0);
+
             CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
-            csDefZw.RefreshSectionsWidths();
+            TestHelper.AssertLogMessageIsGenerated(() => csDefZw.RefreshSectionsWidths(), expectedMessage);
             CheckResultingSectionWidths(csDefZw, 80.0, fp1Width, fp2Width, numberOfFloodPlains);
         }
 
         [Test]
-        public void GivenCrossSectionZwWithMaximumFlowWidthLessThanTotalSectionsWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSize()
+        public void GivenCrossSectionDefZwWithMaximumFlowWidthLessThanTotalSectionsWidth_WhenRefreshingSectionsWidths_ThenMainSectionWidthIsAdjustedToCorrectSizeWithLogMessage()
         {
             var numberOfFloodPlains = 3;
             var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
             csDefZw.Sections[2].MaxY = 70.0;
             var fp1Width = 16.0;
             var fp2Width = 64.0;
+            var expectedMessage = string.Format("The Main section width of cross section {0} has been changed from {1} m to {2} m.", CrossSectionDefinitionName, 60.0, 30.0);
 
             CheckInitialSectionWidths(csDefZw, fp1Width, fp2Width, numberOfFloodPlains);
-            csDefZw.RefreshSectionsWidths();
+            TestHelper.AssertLogMessageIsGenerated(() => csDefZw.RefreshSectionsWidths(), expectedMessage);
             CheckResultingSectionWidths(csDefZw, 30.0, fp1Width, fp2Width, numberOfFloodPlains);
+        }
+
+        [Test]
+        public void GivenCrossSectionDefZwWithTotalSectionsWidthEqualToMaxFlowWidth_WhenRefreshingSectionWidths_ThenNoLogMessageAndChangeToSectionWidths()
+        {
+            var numberOfFloodPlains = 3;
+            var csDefZw = GetDefaultCrossSectionDefinitionZw(numberOfFloodPlains);
+            csDefZw.Sections[2].MaxY = 55.0;
+            var mainSectionWidth = 60.0;
+            var fp1Width = 16.0;
+            var fp2Width = 34.0;
+            
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName), Is.EqualTo(mainSectionWidth));
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName), Is.EqualTo(fp1Width));
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName), Is.EqualTo(fp2Width));
+
+            TestHelper.AssertLogMessagesCount(() => csDefZw.RefreshSectionsWidths(), 0);
+
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.MainSectionName), Is.EqualTo(mainSectionWidth));
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName), Is.EqualTo(fp1Width));
+            Assert.That(csDefZw.GetSectionWidth(CrossSectionDefinitionZW.Floodplain2SectionTypeName), Is.EqualTo(fp2Width));
         }
 
         private static void CheckInitialSectionWidths(CrossSectionDefinitionZW csDefZw, double fp1Width, double fp2Width, int numberOfFloodPlains)
@@ -374,9 +399,10 @@ namespace DelftTools.Hydro.Tests
 
         #region General test helpers
 
+        private const string CrossSectionDefinitionName = "MyCrossSectionDefinition";
         private static CrossSectionDefinitionZW GetDefaultCrossSectionDefinitionZw(int numberOfSections)
         {
-            var csDefZw = new CrossSectionDefinitionZW
+            var csDefZw = new CrossSectionDefinitionZW(CrossSectionDefinitionName)
             {
                 Sections =
                 {

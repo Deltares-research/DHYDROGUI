@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Properties;
+using DelftTools.Utils.Collections;
 using GeoAPI.Geometries;
 using log4net;
 
@@ -37,7 +38,7 @@ namespace DelftTools.Hydro.CrossSections
         public static double SectionsTotalWidth(this CrossSectionDefinition crossSectionDefinition)
         {
             var sectionsTotalWidth = 0.0;
-            crossSectionDefinition.Sections.ToList().ForEach(s =>
+            crossSectionDefinition.Sections.ForEach(s =>
             {
                 sectionsTotalWidth += 2 * (s.MaxY - s.MinY);
             });
@@ -60,8 +61,8 @@ namespace DelftTools.Hydro.CrossSections
                 return;
             }
 
-            var sections = crossSectionDefinition.Sections.ToList();
-            var sectionNames = sections.Select(s => s.SectionType.Name).ToList();
+            var sections = crossSectionDefinition.Sections;
+            var sectionNames = sections.Select(s => s.SectionType.Name);
             if (sectionNames.Contains(crossSectionType.Name))
             {
                 Log.WarnFormat(Resources.CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__, crossSectionType.Name);

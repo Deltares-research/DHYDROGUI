@@ -121,7 +121,6 @@
     <Content Include="Resources\Welcome.htm" />
     <Content Include="Resources\WindowLayout_normal.en-US.xml" />
     <Content Include="RGFGrid_x64.wxi" />
-    <Content Include="RGFGrid_x86.wxi" />
     <Content Include="UtilityShortcuts.wxi" />
   </ItemGroup>
   <ItemGroup>

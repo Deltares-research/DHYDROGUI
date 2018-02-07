@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.RegularExpressions;
@@ -15,10 +16,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedProcessor));
         private static readonly IDictionary<string, string> OutputFiles = new Dictionary<string, string>
-                                                                       {
-                                                                           { "Balance output", "deltashell-bal.prn" },
-                                                                           { "Monitoring file", "deltashell.mon" }
-                                                                       };
+        {
+            { WaterQualityModel.BalanceOutputTag, "deltashell-bal.prn" },
+            { WaterQualityModel.MonitoringFileTag, "deltashell.mon" }
+        };
 
         private const int NoDataValue = -999;
 
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             var optionalDuflowSwitch = !string.IsNullOrEmpty(initializationSettings.SubstanceProcessLibrary.ProcessDllFilePath)
                             ? "-openpb \"" + initializationSettings.SubstanceProcessLibrary.ProcessDllFilePath + "\""
-                            : String.Empty;
+                            : string.Empty;
 
             Log.Debug("Started delwaq2.exe.");
             WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq2ExePath(),
@@ -90,7 +91,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             if (addTextDocument == null)
             {
-                Log.ErrorFormat("Could not read output files : {0}", string.Join(", ", OutputFiles.Keys));
+                Log.ErrorFormat("Could not read output files : {0}", string.Join(", ", 
+                    OutputFiles.Keys.Select(key => WaterQualityModel.GetDataItemNameFromTag(key))));
                 return;
             }
 

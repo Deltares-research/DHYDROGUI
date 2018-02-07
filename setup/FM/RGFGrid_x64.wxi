@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <Directory Id='fm_rgfgrid_x64' Name='rgfgrid'>
-    <?define FMGuiRgfgridSourceDir ="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.Common.Gui\rgfgrid\x64" ?>
+  <Directory Id='fm_rgfgrid_x64' Name='plugins-qt'>
+    <?define FMGuiRgfgridSourceDir ="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.Common.Gui\plugins-qt\x64" ?>
     <Directory Id='rgfgrid_x64' Name='x64'>
       <Directory Id='rgfgrid_bin_x64' Name='bin'>
         <Component Id='FM_rgfgrid_bin_x64' Guid="7A755C8C-2918-4FB6-BDD6-B2BE0DAD7722"> 
@@ -14,7 +14,6 @@
           <File Id="f64E3D27E16D3E9B2B597DE1E2F90C1D8D2" Source="$(var.FMGuiRgfgridSourceDir)\bin\mfe_app.exe" />
           <File Id="f647EA1F96953B08313831CA5A48134E0B5" Source="$(var.FMGuiRgfgridSourceDir)\bin\netcdf.dll" />
           <File Id="f645D99EF7C24114E6D83C761EAA76D8E55" Source="$(var.FMGuiRgfgridSourceDir)\bin\pthreadVC2.dll" />
-          <File Id="f64fd7c7c4c510f4de9951f3bbb6eb281fe" Source="$(var.FMGuiRgfgridSourceDir)\bin\pthreadVCE2.dll" />
           <File Id="f64BE1800B4B099797484571E708326A89A" Source="$(var.FMGuiRgfgridSourceDir)\bin\qt58_canvas_window.dll" />
           <File Id="f6475CACCEEBCBAD4D703BDD50864873F47" Source="$(var.FMGuiRgfgridSourceDir)\bin\qt58_commands_dialog.dll" />
           <File Id="f64994814D5A824A8AC7CE4386439405E4B" Source="$(var.FMGuiRgfgridSourceDir)\bin\qt58_common_dialogs.dll" />
@@ -79,15 +78,11 @@
           <File Id="f646CBE93976FBAF80CE2B3836782508AF8" Source="$(var.FMGuiRgfgridSourceDir)\icons\delete_exterior.png" />
           <File Id="f64337B7FAC3352B7189D354E0D57F571D6" Source="$(var.FMGuiRgfgridSourceDir)\icons\delete_interior.png" />
           <File Id="f64940270150E032FF25817018231A5C0A7" Source="$(var.FMGuiRgfgridSourceDir)\icons\deltares.ico" />
-          <File Id="f64B5EF6D79EDBA54505D296DEE07DC3B86" Source="$(var.FMGuiRgfgridSourceDir)\icons\dido_icon.ico" />
-          <File Id="f6424AFEA455822060020BD62C7826A6400" Source="$(var.FMGuiRgfgridSourceDir)\icons\dido_icon.png" />
           <File Id="f64DD2B79199979D0CF04D22941BAC9DB02" Source="$(var.FMGuiRgfgridSourceDir)\icons\edit_depth.png" />
           <File Id="f640CDBED04ADD7BF99DF13ECE2DBF6FCAC" Source="$(var.FMGuiRgfgridSourceDir)\icons\file_new.png" />
           <File Id="f64ED3D52CD9A0F11038DED35DD369CE388" Source="$(var.FMGuiRgfgridSourceDir)\icons\file_open.png" />
           <File Id="f64E24938E82DAA8A166E7AC6618EAF58D2" Source="$(var.FMGuiRgfgridSourceDir)\icons\file_save.png" />
           <File Id="f641C4EC9157A83AD082A4BC49E408FCAEE" Source="$(var.FMGuiRgfgridSourceDir)\icons\full_extend.xpm" />
-          <File Id="f6410E89EB972D59C2CB304D2D74E076313" Source="$(var.FMGuiRgfgridSourceDir)\icons\gisview_icon.ico" />
-          <File Id="f64244F68E9EF76BF06B5AB2C95621CF8F1" Source="$(var.FMGuiRgfgridSourceDir)\icons\gisview_icon.png" />
           <File Id="f6445AA5EC89BC75944B2B12CDD9ABC9DE0" Source="$(var.FMGuiRgfgridSourceDir)\icons\grid_delete_point.png" />
           <File Id="f646968BE84A337627F4762EDA2C3F309A0" Source="$(var.FMGuiRgfgridSourceDir)\icons\grid_insert_point.png" />
           <File Id="f643D9EE45A742C08B61B359AA55980A121" Source="$(var.FMGuiRgfgridSourceDir)\icons\grid_move_point.png" />
@@ -105,11 +100,7 @@
           <File Id="f64D822BC991ACED3EEA43E1F226DE3AED0" Source="$(var.FMGuiRgfgridSourceDir)\icons\polygon_new.png" />
           <File Id="f64D4832E34C74DB6EB41EE0C7C16E833CB" Source="$(var.FMGuiRgfgridSourceDir)\icons\print_small.xpm" />
           <File Id="f64A7FF90C5DF7312E03DD7F43C0EA3A11F" Source="$(var.FMGuiRgfgridSourceDir)\icons\properties.png" />
-          <File Id="f6436BCA7A988C5BC93F7F8274D6990098B" Source="$(var.FMGuiRgfgridSourceDir)\icons\quickin_icon.ico" />
-          <File Id="f647EB3AFCB5ECB65BA93B012AC7D2A62E1" Source="$(var.FMGuiRgfgridSourceDir)\icons\quickin_icon.png" />
           <File Id="f6496C70FCC23A8B7E60A05700E241D90C0" Source="$(var.FMGuiRgfgridSourceDir)\icons\refresh.png" />
-          <File Id="f6444CE936C7D5CF5EA4659677115CB3852" Source="$(var.FMGuiRgfgridSourceDir)\icons\remoteolv_icon.ico" />
-          <File Id="f64A7740B328440AF7A6B8A692158742B03" Source="$(var.FMGuiRgfgridSourceDir)\icons\remoteolv_icon.png" />
           <File Id="f64A576590FA398E8458247F84C437DCDD9" Source="$(var.FMGuiRgfgridSourceDir)\icons\repeat.png" />
           <File Id="f64D03788BDB2EE7F056B74BE154D92F489" Source="$(var.FMGuiRgfgridSourceDir)\icons\rgfgrid_icon.ico" />
           <File Id="f6406C840784A0384802C0AA295EA4851BA" Source="$(var.FMGuiRgfgridSourceDir)\icons\rgfgrid_icon.png" />

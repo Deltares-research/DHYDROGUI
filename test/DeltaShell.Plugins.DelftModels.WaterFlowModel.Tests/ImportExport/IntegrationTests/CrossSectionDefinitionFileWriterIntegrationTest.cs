@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestIntegrationFileWriterGivesExpectedResults_CrossSectionDefinitions_MultipleTypes()
         {
             using (var waterFlowModel1D = new WaterFlowModel1D

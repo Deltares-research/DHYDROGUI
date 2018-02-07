@@ -14,20 +14,10 @@
   <ComponentRef Id="fm_scripts_examples_files"/>
   <ComponentRef Id="fm_scripts_libraries_files"/>
   
-
   <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
   <ComponentRef Id="HydroModelPlugin"/>
-
-  <?ifndef var.NOKERNELS?>
-  <?endif?>
   
-  <ComponentRef Id="FM_toolboxes"/>
-  <ComponentRef Id="FM_rgfgrid_bin_x86"/>
-  <ComponentRef Id="FM_rgfgrid_platforms_x86"/>
-  <ComponentRef Id="FM_rgfgrid_colormaps_x86"/>
-  <ComponentRef Id="FM_rgfgrid_icons_x86"/>
-  <ComponentRef Id="FM_rgfgrid_manuals_x86"/>
-  
+  <ComponentRef Id="FM_toolboxes"/> 
 
   <Feature Id="FM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
@@ -36,9 +26,6 @@
     <ComponentRef Id="FM_rgfgrid_manuals_x64"/>
     <ComponentRef Id="FM_rgfgrid_colormaps_x64"/>
     <ComponentRef Id="FM_rgfgrid_bin_x64"/>
-    
-    <?ifndef var.NOKERNELS?>
-    <?endif?>
   </Feature>
   
 </Include>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -124,11 +125,11 @@ namespace DelftTools.Hydro.Helpers
             return false;
         }
 
-        public static bool AreCrossSectionsLengthsMatchingTheFlowWidth(ICrossSectionDefinition crossSectionDefinition)
+        public static bool AreCrossSectionsLengthsLargerThanTheFlowWidth(ICrossSectionDefinition crossSectionDefinition)
         {
             var csDefToCheck = crossSectionDefinition.IsProxy ? GetUnProxiedCrossSectionDefinition(crossSectionDefinition) : crossSectionDefinition;
             var crossSectionZw = csDefToCheck as CrossSectionDefinitionZW;
-            return crossSectionZw == null || IsTotalSectionsWidthEqualToFlowWidth(crossSectionZw);
+            return crossSectionZw == null || IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(crossSectionZw);
         }
 
         public static bool AreFloodPlain1AndFloodPlain2WidthsValid(ICrossSectionDefinition crossSectionDefinition)
@@ -146,10 +147,10 @@ namespace DelftTools.Hydro.Helpers
             return !(floodPlain2Width > 0.0);
         }
 
-        private static bool IsTotalSectionsWidthEqualToFlowWidth(CrossSectionDefinitionZW crossSectionZw)
+        private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinitionZW crossSectionZw)
         {
             var sectionsTotalWidth = crossSectionZw.SectionsTotalWidth();
-            return sectionsTotalWidth.Equals(crossSectionZw.FlowWidth());
+            return sectionsTotalWidth - crossSectionZw.FlowWidth() >= -1e-10;
         }
 
         private static ICrossSectionDefinition GetUnProxiedCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)

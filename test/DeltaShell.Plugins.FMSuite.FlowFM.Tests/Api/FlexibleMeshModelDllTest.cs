@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             // We use a hacky but effective way to check if the current dll is xp compatible, namely we check
             // for the occurance of 'GetTickCount64' in the dll imports. This method is only available on Vista
             // and above.
-            var dllVersion = Path.Combine(FlexibleMeshModelDll.DllPath, FlexibleMeshModelDll.DFLOWFM_DLL_NAME);
+            var dllVersion = Path.Combine(DimrApiDataSet.DFlowFmDllPath, FlexibleMeshModelDll.DFLOWFM_DLL_NAME);
             
             foreach (var line in File.ReadLines(dllVersion))
             {

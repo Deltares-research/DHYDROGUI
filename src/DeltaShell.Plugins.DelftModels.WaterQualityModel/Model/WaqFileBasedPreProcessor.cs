@@ -18,8 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         private static readonly IDictionary<string, string> OutputFiles = new Dictionary<string, string>
         {
-            { "List file", "deltashell.lst" },
-            { "Process file", "deltashell.lsp" }
+            { WaterQualityModel.ListFileTag, "deltashell.lst" },
+            { WaterQualityModel.ProcessFileTag, "deltashell.lsp" }
         };
 
         private const string WorkFilesPrefix = "deltashell";
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         // save the work directory, because you cannot know it anymore in Cleanup phase.
         private string workDirectory;
-
+        
         public bool InitializeWaq(WaqInitializationSettings initSettings, Action<string, string> addTextDocumentAction)
         {
             CheckInput(initSettings);

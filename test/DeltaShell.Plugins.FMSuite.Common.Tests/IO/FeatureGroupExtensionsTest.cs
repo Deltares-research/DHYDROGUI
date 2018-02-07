@@ -37,5 +37,42 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             Assert.That(groupableFeature.GroupName, Is.EqualTo(filePath));
         }
+
+        [Test]
+        public void GivenIGroupableFeatureWithEmptyGroupName_ThenFeatureHasDefaultGroupName()
+        {
+            var groupableFeature = mocks.DynamicMock<IGroupableFeature>();
+            groupableFeature.Expect(gf => gf.GroupName).Return(string.Empty).Repeat.Any();
+            mocks.ReplayAll();
+
+            Assert.IsTrue(groupableFeature.HasDefaultGroupName(Arg<string>.Is.Anything, Arg<string>.Is.Anything));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void GivenIGroupableFeatureWithDefaultGroupName_ThenFeatureHasDefaultGroupNameWhenRequested(bool featureGroupNameWithExtension)
+        {
+            var extension = ".ext";
+            var defaultGroupName = "myDefaultGroupName";
+            var featureGroupName = defaultGroupName + (featureGroupNameWithExtension ? extension : string.Empty);
+            var groupableFeature = mocks.DynamicMock<IGroupableFeature>();
+            groupableFeature.Expect(gf => gf.GroupName).Return(featureGroupName).Repeat.Any();
+            mocks.ReplayAll();
+
+            Assert.IsTrue(groupableFeature.HasDefaultGroupName(extension, defaultGroupName));
+        }
+
+        [Test]
+        public void GivenIGroupableFeatureWithNonDefaultGroupName_ThenFeatureDoesNotHasDefaultGroupNameWhenRequested()
+        {
+            var extension = ".ext";
+            var defaultGroupName = "myDefaultGroupName";
+            var featureGroupName = "SomethingTotallyDifferent";
+            var groupableFeature = mocks.DynamicMock<IGroupableFeature>();
+            groupableFeature.Expect(gf => gf.GroupName).Return(featureGroupName).Repeat.Any();
+            mocks.ReplayAll();
+
+            Assert.IsFalse(groupableFeature.HasDefaultGroupName(extension, defaultGroupName));
+        }
     }
 }

@@ -13,7 +13,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
@@ -160,10 +159,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                         pc => waqGuiPlugin.BloomInfo.AllParameters.Any(
                         par => string.Equals(par, pc.Name, StringComparison.InvariantCultureIgnoreCase))))
                 {
+                    var dataItemName = WaterQualityModel.GetDataItemNameFromTag(WaterQualityModel.BloomAlgaeTag);
                     inputItems.Add(
                         new DataItem(new WaterQualityBloomFunctionWrapper(waterQualityModel.ProcessCoefficients),
-                            "Bloom Parameters", typeof (WaterQualityBloomFunctionWrapper), DataItemRole.Input,
-                            WaterQualityModel.BloomAlgaeTag) {Owner = waterQualityModel});
+                            dataItemName, typeof (WaterQualityBloomFunctionWrapper), DataItemRole.Input, WaterQualityModel.BloomAlgaeTag) {Owner = waterQualityModel});
                 }
 
                 // Add a function data wrapper data item for dispersion

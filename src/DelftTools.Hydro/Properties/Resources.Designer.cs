@@ -81,6 +81,16 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Main section width of cross section {0} has been changed from {1} m to {2} m..
+        /// </summary>
+        internal static string CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_ {
+            get {
+                return ResourceManager.GetString("CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_se" +
+                        "ction__0__has_been_changed_from__1__m_to__2__m_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap greenhouse {

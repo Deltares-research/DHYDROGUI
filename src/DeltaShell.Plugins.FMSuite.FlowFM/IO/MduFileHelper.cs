@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void UpdateIsDefaultGroupFlag<TFeat>(IList<TFeat> features, string extension,
             string defaultGroupName)
         {
-            features.OfType<IGroupableFeature>().Where(f => !string.IsNullOrEmpty(f.GroupName) && !f.GroupName.Replace(extension, string.Empty).Equals(defaultGroupName))
+            features.OfType<IGroupableFeature>().Where(f => f.IsDefaultGroup && !f.HasDefaultGroupName(extension, defaultGroupName))
                 .ForEach(f => f.IsDefaultGroup = false);
         }
 
@@ -113,14 +114,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 });
         }
 
-        private static void ReplaceUndesiredCharactersInGroupNames<TFeat>(IList<TFeat> features, string extension,
-            string defaultGroupName)
+        private static void ReplaceUndesiredCharactersInGroupNames<TFeat>(IList<TFeat> features, string extension, string defaultGroupName)
         {
-            features.OfType<IGroupableFeature>().Where(f => !string.IsNullOrEmpty(f.GroupName))
+            features.OfType<IGroupableFeature>().Where(f => f.GroupName.Contains(" ") || f.GroupName.Contains(@"\"))
                 .ForEach(f =>
                 {
                     f.GroupName = f.GroupName.Replace(" ", "_").Replace(@"\", "/");
-                    if (f.GroupName.Replace(extension, string.Empty).Equals(defaultGroupName)) f.IsDefaultGroup = true;
+                    if (f.HasDefaultGroupName(extension, defaultGroupName)) f.IsDefaultGroup = true;
                 });
         }
 

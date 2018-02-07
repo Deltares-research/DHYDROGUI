@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
+using log4net;
 
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionZW : CrossSectionDefinition, ISummerDikeEnabledDefinition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionZW));
         public const string MainSectionName = "Main";
         public const string Floodplain1SectionTypeName = "FloodPlain1";
         public const string Floodplain2SectionTypeName = "FloodPlain2";
@@ -346,16 +350,32 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual void RefreshSectionsWidths()
         {
-            var widthDifference = this.FlowWidth() - this.SectionsTotalWidth();
-            GetSection(MainSectionName).MaxY += 0.5 * widthDifference;
+            ((INotifyPropertyChanged)sections).PropertyChanged -= SectionsPropertyChanged;
 
+            var widthDifference = this.FlowWidth() - this.SectionsTotalWidth();
+            if (Math.Abs(widthDifference) < 1e-10) return;
+
+            // Change main section width
+            var mainSection = GetSection(MainSectionName);
+            if(mainSection == null) return;
+            var oldWidth = mainSection.Width;
+            mainSection.MaxY += 0.5 * widthDifference;
+            Log.InfoFormat(Resources.CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_, 
+                Name, oldWidth, mainSection.Width);
+
+            // Change floodplain1 section width
             var floodPlain1 = GetSection(Floodplain1SectionTypeName);
             if (floodPlain1 == null) return;
+            floodPlain1.MinY += 0.5 * widthDifference;
             floodPlain1.MaxY += 0.5 * widthDifference;
 
+            // Change floodplain2 section width
             var floodPlain2 = GetSection(Floodplain2SectionTypeName);
             if (floodPlain2 == null) return;
+            floodPlain2.MinY += 0.5 * widthDifference;
             floodPlain2.MaxY += 0.5 * widthDifference;
+
+            ((INotifyPropertyChanged)sections).PropertyChanged += SectionsPropertyChanged;
         }
     }
 }

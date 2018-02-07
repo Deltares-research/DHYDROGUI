@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
@@ -23,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
         {
             get
             {
-                return RealTimeControlModelDll.DllPath;
+                return DimrApiDataSet.RtcToolsDllPath;
             }
         }
 

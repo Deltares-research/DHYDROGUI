@@ -145,7 +145,11 @@ namespace DeltaShell.Dimr
             }
             var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
-            model.ConnectOutput(validPath);
+
+            var outputDirectory = Path.Combine(validPath, model.DirectoryName);
+            if (!Directory.Exists(outputDirectory)) return;
+
+            model.ConnectOutput(outputDirectory);
             ConnectDimrRunLogFile(model);
         }
 

@@ -1,15 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

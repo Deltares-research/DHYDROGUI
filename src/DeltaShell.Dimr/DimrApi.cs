@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace DeltaShell.Dimr
         static DimrApi()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(DimrApiDataSet.DIMR_DLL_NAME, DimrApiDataSet.DllPath);
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.DIMR_DLL_NAME, DimrApiDataSet.DimrDllPath);
         }
         public DimrApi():this(true){}
 
@@ -159,7 +158,7 @@ namespace DeltaShell.Dimr
                 var path = Environment.GetEnvironmentVariable("PATH");
 
                 path = KernelDirs + ";" +
-                       DimrApiDataSet.DllPath + ";" +
+                       DimrApiDataSet.DimrDllPath + ";" +
                        path;
                 Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
                 

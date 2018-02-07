@@ -18,7 +18,7 @@ namespace DelftTools.Hydro.CrossSections
     public abstract class CrossSectionDefinition : EditableObjectUnique<long>, ICrossSectionDefinition
     {
         private double thalweg;
-        private IEventedList<CrossSectionSection> sections;
+        protected IEventedList<CrossSectionSection> sections;
         private bool inSectionsPropertyChanged;
         private IGeometry cachedGeometry;
 
@@ -301,7 +301,7 @@ namespace DelftTools.Hydro.CrossSections
         }
 
         [EditAction]
-        private void SectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected void SectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (inSectionsPropertyChanged)
                 return;
@@ -334,9 +334,9 @@ namespace DelftTools.Hydro.CrossSections
             {
                 if (index < sections.Count - 1)
                 {
-                    double oldValue = sections[index + 1].MinY;
+                    var oldValue = sections[index + 1].MinY;
                     sections[index + 1].MinY = crossSectionSection.MaxY;
-                    while ((index < sections.Count - 2) && (oldValue == sections[index + 2].MinY))
+                    while (index < sections.Count - 2 && Math.Abs(oldValue - sections[index + 2].MinY) < double.Epsilon)
                     {
                         sections[index + 1].MaxY = crossSectionSection.MaxY;
                         sections[index + 2].MinY = crossSectionSection.MaxY;

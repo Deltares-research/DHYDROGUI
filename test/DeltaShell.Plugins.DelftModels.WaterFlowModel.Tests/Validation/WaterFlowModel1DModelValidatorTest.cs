@@ -834,7 +834,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
 
             // Check if the Validation Report contains the desired error message
             var expectedMessage =
-                Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_sections_;
+                Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_;
             var validationReport = WaterFlowModel1DHydroNetworkValidator.Validate(network);
             Assert.IsTrue(ContainsError(validationReport, expectedMessage));
         }

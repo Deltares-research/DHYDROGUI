@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return definitionIDToDefinition;
         }
 
-        private static void SetSectionsToDefinition(ICrossSectionDefinition definition, SobekCrossSectionDefinition sobekDefinition,IHydroNetwork hydroNetwork)
+        private static void SetSectionsToDefinition(ICrossSectionDefinition definition, SobekCrossSectionDefinition sobekDefinition, IHydroNetwork hydroNetwork)
         {
             if (definition.CrossSectionType == CrossSectionType.ZW)
             {
@@ -624,7 +624,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// </summary>
         /// <param name="crossSectionDefinition"></param>
         /// <param name="add"></param>
-        /// <param name="roughnessSection"></param>
+        /// <param name="crossSectionSectionType"></param>
         /// <param name="offset"></param>
         /// <param name="sectionWidth"></param>
         private static void AddFriction(ICrossSectionDefinition crossSectionDefinition, bool add, CrossSectionSectionType crossSectionSectionType,
@@ -646,24 +646,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private static void SetBedFrictionToTabulatedProfile(CrossSectionSectionType main, CrossSectionSectionType floodPlain1, CrossSectionSectionType floodPlain2, CrossSectionDefinitionZW crossSectionDefinition, SobekCrossSectionDefinition sobekCrossSectionDefinition)
         {
-            var width = sobekCrossSectionDefinition.MainChannelWidth +
-                        (sobekCrossSectionDefinition.FloodPlain2Width) +
-                        (sobekCrossSectionDefinition.FloodPlain1Width);
-            var fpl2Width = sobekCrossSectionDefinition.FloodPlain2Width / 2;
-            var fpl1Width = sobekCrossSectionDefinition.FloodPlain1Width / 2;
-
-            var offset = 0.0;
+            var mainWidth = sobekCrossSectionDefinition.MainChannelWidth;
+            var fpl1Width = sobekCrossSectionDefinition.FloodPlain1Width;
+            var fpl2Width = sobekCrossSectionDefinition.FloodPlain2Width;
+            var width = mainWidth + fpl1Width + fpl2Width;
+            
+            crossSectionDefinition.AddSection(main, mainWidth);
+            if (fpl1Width > 0.0) crossSectionDefinition.AddSection(floodPlain1, fpl1Width);
+            if (fpl2Width > 0.0) crossSectionDefinition.AddSection(floodPlain2, fpl2Width);
 
             var flowWidth = crossSectionDefinition.FlowWidth();
-
-            if (width != flowWidth)
+            if (width < flowWidth && Math.Abs(width - flowWidth) > 1e-10)
             {
-                log.WarnFormat("The main / floodplain definitions of cross section '{0}' does not cover its entire flow width.", crossSectionDefinition.Name);
+                crossSectionDefinition.RefreshSectionsWidths();
             }
-
-            AddFriction(crossSectionDefinition, true, main, ref offset, sobekCrossSectionDefinition.MainChannelWidth / 2.0);
-            AddFriction(crossSectionDefinition, fpl1Width > 0, floodPlain1, ref offset, fpl1Width);
-            AddFriction(crossSectionDefinition, fpl2Width > 0, floodPlain2, ref offset, fpl2Width);
         }
 
         /// <summary>

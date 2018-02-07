@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 
@@ -8,34 +6,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 {
     public static class WaveModelDll
     {
-        public const string WAVE_FOLDER_NAME = "dwaves";
-        public const string WAVE_BINFOLDER_NAME = "bin";
-        public const string SWAN_FOLDER_NAME = "swan";
-        public const string SWAN_BINFOLDER_NAME = "bin";
-        public const string SWAN_SCRIPTFOLDER_NAME = "scripts";
-        public const string ESMF_FOLDER_NAME = "esmf";
-        public const string ESMF_BINFOLDER_NAME = "bin";
-        public const string ESMF_SCRIPTFOLDER_NAME = "scripts";
         private const string WAVE_DLL_NAME = "wave.dll";
-
-        public static string DllPath
-        {
-            get { return Path.Combine(DimrApiDataSet.DllDirectory, Arch, WAVE_FOLDER_NAME, WAVE_BINFOLDER_NAME); }
-        }
-
+        
         static WaveModelDll()
         {
             using (new WaveModelApi.WaveDllHelper(string.Empty))
             {
                 DimrApiDataSet.SetSharedPath();
-                NativeLibrary.LoadNativeDll(WAVE_DLL_NAME, DllPath);
+                NativeLibrary.LoadNativeDll(WAVE_DLL_NAME, DimrApiDataSet.WaveDllPath);
             }
             
-        }
-
-        public static string Arch
-        {
-            get { return "x64"; } // wave is only 64b
         }
 
         [DllImport(WAVE_DLL_NAME, EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]

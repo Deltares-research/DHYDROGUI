@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,13 +10,16 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
@@ -30,10 +34,12 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
+using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -330,6 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         [Category(TestCategory.WindowsForms)]
         public void ShowSnappedFeatureLayersInMap()
         {
@@ -372,6 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.VerySlow)]
         public void RunningFMModelShouldGiveVectorVelocityLayer()
         {
             var mduPath =
@@ -674,6 +682,190 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var anotherModel = new WaterFlowFMModel(tempPath2+@"\temp2.dsproj_data\har\har.mdu");
                 Assert.IsFalse(anotherModel.Bathymetry.GetValues<double>().All(v => Math.Abs(v - (-999.0d)) < 0.01));
             }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Performance)]
+        [Category(TestCategory.WindowsForms)]
+        public void GivenEmptyFMModel_Import_LandBoundaries_And_Grid_Then_Open_RGFGrid_ShouldBeFast()
+        {
+            var landBoundaryPath = TestHelper.GetTestFilePath(@"D3DFMIQ-16\sealand.ldb");
+            landBoundaryPath = TestHelper.CreateLocalCopy(landBoundaryPath);
+            var netFile = TestHelper.GetTestFilePath(@"D3DFMIQ-16\westerscheldt04_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+
+            try
+            {
+                using (var gui = new DeltaShellGui())
+                {
+                    var app = gui.Application;
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                    gui.Plugins.Add(new FlowFMGuiPlugin(){GridHandler = null}); /* Using an extension to override the method. */
+                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+                    gui.Run();
+
+                    Action mainWindowShown = delegate
+                    {
+                        var targetModel = ImportLdbAndGrid(app, landBoundaryPath, netFile);
+
+                        //Open grid
+                        /* Before fixes from rev 39122 (D3DFMIQ-16) performance was between 160 and 190 seconds. */
+                        /* Personal machine : 5000ms avg.(5secs) */
+                        /* x1.5 factor acceptance factor */
+                        /* x3 factor TeamCity acceptance factor */
+                        TestHelper.AssertIsFasterThan(22500, () => gui.CommandHandler.OpenView(targetModel.Grid, typeof(WaterFlowFMModelView)));
+                    };
+                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                }
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Unexpected exception: {0}", e.Message);
+            }
+            finally
+            {
+                //Clean directory
+                FileUtils.DeleteIfExists(landBoundaryPath);
+                FileUtils.DeleteIfExists(netFile);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Performance)]
+        public void GivenEmptyFMModel_Import_LandBoundaries_And_Grid_Then_WriteLandBoundaries_ShouldBeFast()
+        {
+            var landBoundaryPath = TestHelper.GetTestFilePath(@"D3DFMIQ-16\sealand.ldb");
+            landBoundaryPath = TestHelper.CreateLocalCopy(landBoundaryPath);
+            var netFile = TestHelper.GetTestFilePath(@"D3DFMIQ-16\westerscheldt04_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+            try
+            {
+                using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+                {
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                    app.Run();
+
+                    var targetModel = ImportLdbAndGrid(app, landBoundaryPath, netFile);
+
+                    /* Personal machine : 330ms avg. */
+                    /* x1.5 factor acceptance factor */
+                    /* x3 factor TeamCity acceptance factor */
+                    TestHelper.AssertIsFasterThan(1500,
+                        () => new MduFile().WriteLandBoundaries(targetModel.MduFilePath, targetModel.ModelDefinition,
+                            targetModel.Area));
+                }
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Unexpected exception: {0}", e.Message);
+            }
+            finally
+            {
+                //Clean directory
+                FileUtils.DeleteIfExists(landBoundaryPath);
+                FileUtils.DeleteIfExists(netFile);
+            }
+        }
+
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.WindowsForms)]
+        public void AfterLoading_Grid_Map_Is_ZoomToFit()
+        {
+            var netFile = TestHelper.GetTestFilePath(@"D3DFMIQ-16\westerscheldt04_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var fmModel = AddFMModelToProject(app);
+                    ImportGrid(app, netFile, fmModel);
+
+                    //First call to initialize the view.
+                    gui.CommandHandler.OpenView(fmModel, typeof(WaterFlowFMModelView));
+
+                    //Open grid
+                    gui.CommandHandler.OpenView(fmModel.Grid, typeof(WaterFlowFMModelView));
+                    gui.DocumentViews.AllViews.OfType<WaterFlowFMModelView>().FirstOrDefault();
+                    //Get the view
+                    var targetView = gui.DocumentViews.AllViews.OfType<WaterFlowFMModelView>().FirstOrDefault();
+                    Assert.IsNotNull(targetView);
+
+                    var layerEnvelope = targetView.Layer.Envelope;
+                    var mapEnvelope = targetView.Layer.Map.Envelope;
+                    
+                    //Either the map width or the height needs to be the same as the layer's.
+                    Assert.IsTrue(layerEnvelope.Width.Equals(mapEnvelope.Width) || layerEnvelope.Height.Equals(mapEnvelope.Height));
+                };
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+            //Clean directory
+            FileUtils.DeleteIfExists(netFile);
+        }
+
+        private static WaterFlowFMModel ImportLdbAndGrid(IApplication app, string landBoundaryPath, string netFile)
+        {
+            var targetModel = AddFMModelToProject(app);
+
+            // Import Land boundaries
+            var importerLDB = app.FileImporters.OfType<LdbFileImporterExporter>().FirstOrDefault();
+            Assert.IsNotNull(importerLDB);
+
+            var ldbImported = importerLDB.ImportItem(landBoundaryPath, targetModel.Area.LandBoundaries);
+            Assert.IsNotNull(ldbImported as IList<LandBoundary2D>);
+            Assert.IsTrue((ldbImported as IList<LandBoundary2D>).Any());
+            Assert.IsTrue(targetModel.Area.LandBoundaries.Any());
+
+            ImportGrid(app, netFile, targetModel);
+
+            return targetModel;
+        }
+
+        private static WaterFlowFMModel AddFMModelToProject(IApplication app)
+        {
+            // Add water flow model to project
+            var project = app.Project;
+            project.RootFolder.Add(new WaterFlowFMModel());
+
+            // Check model name
+            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+            Assert.IsNotNull(targetModel);
+            Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
+            return targetModel;
+        }
+
+        private static void ImportGrid(IApplication app, string netFile, WaterFlowFMModel targetModel)
+        {
+            //Import grid
+            var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+            Assert.IsNotNull(importerGrid);
+            var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
+            Assert.IsNotNull(gridImported);
         }
     }
 }

@@ -2593,10 +2593,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string KernelDirectoryLocation
         {
-            get
-            {
-                return FlexibleMeshModelDll.DllPath;
-            }
+            get { return DimrApiDataSet.DFlowFmDllPath; }
         }
 
         public virtual void DisconnectOutput()

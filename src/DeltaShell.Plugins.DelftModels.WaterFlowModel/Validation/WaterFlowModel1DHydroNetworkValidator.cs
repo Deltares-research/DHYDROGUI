@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -149,12 +148,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             var channelsCheckedOnInterpolationBranches = new HashSet<string>();
             var issues = network?.Channels.SelectMany(b => GetCrossSectionValidationIssues(b, network, channelsCheckedOnInterpolationBranches)).ToList() ?? new List<ValidationIssue>();
 
-            var issuesContainSectionIssues = issues.Any(i => i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_));
+            var issuesContainSectionIssues = issues.Where(i => i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)).ToList();
             var finalIssues = issues.Where(i => !i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)).ToList();
-            if (issuesContainSectionIssues)
+            if (issuesContainSectionIssues.Any())
             {
+                var crossSectionsToCorrect = issuesContainSectionIssues.Select(issue => issue.ViewData as ICrossSection);
                 finalIssues.Add(new ValidationIssue("Cross section sections", ValidationSeverity.Error,
-                    Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_section_does_not_match_the_total_width_of_all_its_sections_, network?.CrossSections));
+                    Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_, crossSectionsToCorrect));
             }
 
             return new ValidationReport("Cross sections", finalIssues);
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                 }
             }
 
-            if (!CrossSectionValidator.AreCrossSectionsLengthsMatchingTheFlowWidth(crossSectionDefinition))
+            if (!CrossSectionValidator.AreCrossSectionsLengthsLargerThanTheFlowWidth(crossSectionDefinition))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
                     Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_, crossSection);

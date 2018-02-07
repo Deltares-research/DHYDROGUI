@@ -548,8 +548,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 var entryAssembly = GetType().Assembly;
                 if (entryAssembly == null) return "";
-                var file = Path.Combine(RRModelEngineDll.RR_DLL_NAME, RRModelEngineDll.DllPath);
-                if (!File.Exists(RRModelEngineDll.DllPath))
+                var file = Path.Combine(RRModelEngineDll.RR_DLL_NAME, DimrApiDataSet.RrDllPath);
+                if (!File.Exists(DimrApiDataSet.RrDllPath))
                     return "";
 
                 return "Kernel: " + Path.GetFileName(RRModelEngineDll.RR_DLL_NAME) + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
@@ -1034,24 +1034,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             return directoryName;
         }
-        public virtual string KernelDirectoryLocation { get { return RRModelEngineDll.DllPath; } }
+
+        public virtual string KernelDirectoryLocation
+        {
+            get { return DimrApiDataSet.RrDllPath; }
+        }
         public virtual void DisconnectOutput()
         {
             ClearOutput();
-            /*OutputCoverages.Select(c => c.Store).AsParallel().OfType<ReadOnlyMapHisFileFunctionStore>().ForAll(store =>
-            {
-                store.Close();
-                store.Path = null;
-            }); */
         }
 
         public virtual void ConnectOutput(string outputPath)
         {
-            //OutputFunctions.AsParallel().ForAll(SetReadOnlyMapHisFileFunctionStoreLookups);
             OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
-            //OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
-            SetPathsOfFunctionStores(Path.Combine(outputPath, DirectoryName));
+            SetPathsOfFunctionStores(outputPath);
             OutputIsEmpty = false;
         }
         public virtual ValidationReport Validate()

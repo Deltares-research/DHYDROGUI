@@ -146,6 +146,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void TestRtcOutput_LoadRunSaveAsLoad()
         {
             // TestSetup is not sufficient for this test... so we do things a little differently
@@ -570,6 +571,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void CopyPasteModelLinkedToExternalNetworkInProject()
         {
             var network = new HydroNetwork();
