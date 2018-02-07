@@ -782,7 +782,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
-        public void AfterLoading_Grid_Map_Is_ZoomToFit()
+        public void AfterLoading_Grid_Map_Is_ZoomToExtents()
         {
             var netFile = TestHelper.GetTestFilePath(@"D3DFMIQ-16\westerscheldt04_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
