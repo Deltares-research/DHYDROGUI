@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DarkSlateGray, 3)
+                    Line = new Pen(Color.DimGray, 3)
                     {
                         CustomEndCap = new AdjustableArrowCap(5, 5, true)
                         {
@@ -261,10 +261,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     EnableOutline = false
                 };
 
-                var customBranchStyle = new VectorStyle
-                {
+                 var stormWaterConnectionStyle = new VectorStyle
+                    {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DimGray, 5)
+                    Line = new Pen(Color.RoyalBlue, 5)
                     {
                         CustomEndCap = new AdjustableArrowCap(4, 4, true)
                         {
@@ -274,7 +274,60 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     EnableOutline = false
                 };
 
+                var dryWaterConnectionStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.IndianRed, 5)
+                    {
+                        CustomEndCap = new AdjustableArrowCap(4, 4, true)
+                        {
+                            BaseCap = LineCap.Triangle
+                        }
+                    },
+                    EnableOutline = false
+                };
+
+                var combinedWaterConnectionStyle = new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.DarkSlateGray, 5)
+                    {
+                        CustomEndCap = new AdjustableArrowCap(4, 4, true)
+                        {
+                            BaseCap = LineCap.Triangle
+                        }
+                    },
+                    EnableOutline = false
+                };
+
+
+                 /* var customBranchStyle = new VectorStyle
+                 {
+                     GeometryType = typeof(ILineString),
+                     Line = new Pen(Color.RoyalBlue, 5)
+                     {
+                         CustomEndCap = new AdjustableArrowCap(4, 4, true)
+                         {
+                             BaseCap = LineCap.Triangle
+                         }
+                     },
+                     EnableOutline = false
+                 };*/
+
                 return new CategorialTheme
+                {
+                    AttributeName = "WaterType",
+                    DefaultStyle = branchStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("Default", branchStyle, null, SewerConnectionWaterType.None),
+                        new CategorialThemeItem("Storm water", stormWaterConnectionStyle, null, SewerConnectionWaterType.StormWater),
+                        new CategorialThemeItem("Dry water", dryWaterConnectionStyle, null, SewerConnectionWaterType.DryWater),
+                        new CategorialThemeItem("Combined", combinedWaterConnectionStyle, null, SewerConnectionWaterType.Combined),
+                    }
+                };
+                // TODO This was the previous styling, based on IsLengthCustom. Might be required at a later stage again.
+                /* return new CategorialTheme
                 {
                     AttributeName = "IsLengthCustom",
                     DefaultStyle = branchStyle,
@@ -283,7 +336,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         new CategorialThemeItem("True", customBranchStyle, null, true),
                         new CategorialThemeItem("False", branchStyle, null, false)
                     }
-                };
+                };*/
             }
 
             var pumps = networkObjects as IEnumerable<IPump>;

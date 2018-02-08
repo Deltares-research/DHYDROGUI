@@ -485,6 +485,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
     #region Gwsw Types
 
+
+    // TODO Sil move these classes to seperate files
     public static class GwswElementExtensions
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswElementExtensions));
@@ -641,11 +643,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class GwswAttributeType
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswAttributeType));
-
-        public string Name { get; set; }
-
         private string elementName;
 
+        public string Name { get; set; }
+        
         public string ElementName
         {
             get

@@ -167,7 +167,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     Assert.That(tmpstring.Trim(), Is.EqualTo(branchids[i]));
                     tmpstring = new string(branchinfo[i].longnames);
                     Assert.That(tmpstring.Trim(), Is.EqualTo(branchlongNames[i]));
-                    Assert.That(rc_targetnodeid[i], Is.EqualTo(targetnodeid[i]));
+                    Assert.That(rc_targetnodeid[i], Is.EqualTo(targetnodeid[i])); // TODO Test deltaShellClones2dMesh fails here.
                     Assert.That(rc_sourcenodeid[i], Is.EqualTo(sourcenodeid[i]));
                     Assert.That(rc_branchlengths[i], Is.EqualTo(branchlengths[i]));
                     Assert.That(rc_nbranchgeometrypoints[i], Is.EqualTo(nbranchgeometrypoints[i]));

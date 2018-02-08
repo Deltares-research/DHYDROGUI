@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>();
             Assert.IsNotNull(value);
-            Assert.AreEqual(SewerConnectionWaterType.DWF, value);
+            Assert.AreEqual(SewerConnectionWaterType.DryWater, value);
         }
 
         [Test]
