@@ -74,11 +74,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException]
         public void TestIfFilenameIsEmptyStringUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid(""))
+            using (var uGrid = new UGrid(string.Empty))
             {
                 uGrid.Initialize();
             }
-
         }
 
         [Test]

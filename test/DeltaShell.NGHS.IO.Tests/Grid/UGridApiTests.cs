@@ -10,6 +10,7 @@ using Rhino.Mocks.Interfaces;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
+    [Category("DoNotRunForCodeCoverage")]
     public class UGridApiTests
     {
         // UGridApi field names
@@ -33,6 +34,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridApi.VerifyAllExpectations();
             uRemoteGridApi.VerifyAllExpectations();
         }
+
         [Test]
         public void UGridApiTest()
         {
