@@ -607,7 +607,7 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = orifice\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('branchid = ' + branchId + '\n')
+                fileStructures.write('branch_id = ' + branchId + '\n')
                 fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 

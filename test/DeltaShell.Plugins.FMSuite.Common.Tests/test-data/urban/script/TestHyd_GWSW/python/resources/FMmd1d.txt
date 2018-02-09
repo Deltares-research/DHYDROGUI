@@ -4,7 +4,7 @@
     fileType              = modelDef             # File type. Do not edit this.
 
 [Files]
-    networkFile           = sewer_system_net.nc  # #Name and location of the network file
+    networkFile           =                      #Name and location of the network file
     crossLocFile          = cross_section_locations.ini  # Name and location of the file containing the locations of the cross sections
     crossDefFile          = cross_section_definitions.ini  # Name and location of the file containing the definitions of the cross sections
     structureFile         =                      # Name and location of the structure file
@@ -137,9 +137,9 @@
     InitialEmptyWells     = 0                   # 0=false, 1=true
 
 [Time]
-    StartTime             =                      # yyyy-MM-dd HH:mm:ss
-    StopTime              =                      # yyyy-MM-dd HH:mm:ss
-    TimeStep              =                      # in seconds
+    StartTime             =   2000-01=01 00:00:00   # yyyy-MM-dd HH:mm:ss
+    StopTime              =   2000-01=01 00:00:00  # yyyy-MM-dd HH:mm:ss
+    TimeStep              =   20                   # in seconds
     OutTimeStepGridPoints =                      # in seconds
     OutTimeStepStructures =                      # in seconds
 

@@ -46,7 +46,7 @@ class UgridWriter:
         ncfile = Dataset(output_file, 'w', format=outformat)
 
         # global attributes
-        ncfile.Conventions = "CF-1.8 UGRID-1.0/Deltares-0.91"
+        ncfile.Conventions = "CF-1.8 UGRID-1.0"
         ncfile.history = "Created on {} D-Flow 1D, D-Flow FM".format(datetime.now())
         ncfile.institution = "Deltares"
         ncfile.reference = "http://www.deltares.nl"
@@ -61,11 +61,11 @@ class UgridWriter:
         ncfile.createDimension("time", None)
         ncfile.createDimension("nnetworkBranches", len(data["branch_ids"]))
         ncfile.createDimension("nnetworkNodes", len(data["node_ids"]))
-        ncfile.createDimension("nnetworkGeometry", len(data["node_ids"]))
+        ncfile.createDimension("nnetworkGeometry", len(data["geom_x"]))
         ncfile.createDimension("idstrlength", self.idstrlength)
         ncfile.createDimension("longstrlength", self.longstrlength)
-        ncfile.createDimension("n1dmeshEdges", len(data["edge_node"]))
-        ncfile.createDimension("n1dmeshNodes", len(data["point_branch_id"]))
+        ncfile.createDimension("nmesh1dEdges", len(data["edge_node"]))
+        ncfile.createDimension("nmesh1dNodes", len(data["point_branch_id"]))
         ncfile.createDimension("Two", 2)
 
     def init_2dmesh(self, ncfile, data_2dmesh):
@@ -90,38 +90,59 @@ class UgridWriter:
         ntw.edge_geometry = 'network_geometry'
         ntw.edge_node_connectivity = 'network_edge_nodes'
         ntw.long_name = "Network topology"
-        ntw.node_coordinates = 'network_nodes_x network_nodes_y'
+        ntw.node_coordinates = 'network_node_x network_node_y'
         ntw.node_dimension = 'nnetworkNodes'
         ntw.topology_dimension = 1
         ntw.node_ids = "network_node_ids"
-        ntw.node_long_names = "network_nodes_long_names"
+        ntw.node_long_names = "network_node_long_names"
         ntw.branch_ids = "network_branch_ids"
         ntw.branch_long_names = "network_branch_long_names"
         ntw.branch_lengths = "network_branch_lengths"
+        ntw.branch_order = "network_branch_order"
 
-        ntw_nodes_id = ncfile.createVariable("network_node_ids", "c", ("nnetworkNodes", "idstrlength"))
-        ntw_nodes_id.standard_name = 'network_node_ids'
-        ntw_nodes_id.long_name = "The identification name of the node"
-        ntw_nodes_id[:] = data["node_ids"]
+        ntw_node_id = ncfile.createVariable("network_node_ids", "c", ("nnetworkNodes", "idstrlength"))
+        ntw_node_id.standard_name = 'network_node_ids'
+        ntw_node_id.long_name = "The identification name of the node"
+        ntw_node_id[:] = data["node_ids"]
 
-        ntw_nodes_longname = ncfile.createVariable("network_node_longnames", "c", ("nnetworkNodes", "longstrlength"))
-        ntw_nodes_longname.standard_name = 'network_node_longname'
-        ntw_nodes_longname.long_name = "The long name of the node"
-        ntw_nodes_longname[:] = data["node_longnames"]
+        ntw_node_longname = ncfile.createVariable("network_node_long_names", "c", ("nnetworkNodes", "longstrlength"))
+        ntw_node_longname.standard_name = 'network_node_longname'
+        ntw_node_longname.long_name = "The long name of the node"
+        ntw_node_longname[:] = data["node_longnames"]
 
-        ntw_nodes_x = ncfile.createVariable("network_nodes_x", "f8", "nnetworkNodes")
-        ntw_nodes_x.standard_name = 'projection_x_coordinate'
-        ntw_nodes_x.long_name = "x coordinates of the network connection nodes"
-        ntw_nodes_x.units = 'm'
-        ntw_nodes_x[:] = data["node_x"]
+        ntw_node_x = ncfile.createVariable("network_node_x", "f8", "nnetworkNodes")
+        ntw_node_x.standard_name = 'projection_x_coordinate'
+        ntw_node_x.long_name = "x coordinates of the network connection nodes"
+        ntw_node_x.units = 'm'
+        ntw_node_x[:] = data["node_x"]
 
-        ntw_nodes_y = ncfile.createVariable("network_nodes_y", "f8", "nnetworkNodes")
-        ntw_nodes_y.standard_name = 'projection_y_coordinate'
-        ntw_nodes_y.long_name = "y coordinates of the network connection nodes"
-        ntw_nodes_y.units = 'm'
-        ntw_nodes_y[:] = data["node_y"]
+        ntw_node_y = ncfile.createVariable("network_node_y", "f8", "nnetworkNodes")
+        ntw_node_y.standard_name = 'projection_y_coordinate'
+        ntw_node_y.long_name = "y coordinates of the network connection nodes"
+        ntw_node_y.units = 'm'
+        ntw_node_y[:] = data["node_y"]
 
-        ntw_edge_node = ncfile.createVariable("network_edge_nodes", "i4", ("n1dmeshEdges", "Two"))
+        ntw_branch_id_name = ncfile.createVariable("network_branch_ids", "c", ("nnetworkBranches", "idstrlength"))
+        ntw_branch_id_name.standard_name = 'network_branch_id_name'
+        ntw_branch_id_name.long_name = "The identification name of the branch"
+        ntw_branch_id_name[:] = data["branch_names"]
+
+        ntw_branch_id_longname = ncfile.createVariable("network_branch_long_names", "c", ("nnetworkBranches", "longstrlength"))
+        ntw_branch_id_longname.standard_name = 'network_branch_longname'
+        ntw_branch_id_longname.long_name = "The long name of the branch"
+        ntw_branch_id_longname[:] = data["branch_longnames"]
+
+        ntw_branch_length = ncfile.createVariable("network_branch_lengths", "f8", "nnetworkBranches")
+        ntw_branch_length.standard_name = 'network_branch_length'
+        ntw_branch_length.long_name = "The calculation length of the branch"
+        ntw_branch_length[:] = data["branch_length"]
+
+        ntw_branch_order = ncfile.createVariable("network_branch_order", "i4", "nnetworkBranches")
+        ntw_branch_order.standard_name = 'network branch order'
+        ntw_branch_order.long_name = "The order of the branches for interpolation"
+        ntw_branch_order[:] = data["branch_order"]
+
+        ntw_edge_node = ncfile.createVariable("network_edge_nodes", "i4", ("nmesh1dEdges", "Two"))
         ntw_edge_node.cf_role = 'edge_node_connectivity'
         ntw_edge_node.long_name = 'start and end nodes of each branch in the network'
         ntw_edge_node.start_index = 1
@@ -151,46 +172,48 @@ class UgridWriter:
 
         # mesh1D
 
-        mesh1d = ncfile.createVariable("1dmesh", "i4", ())
+        mesh1d = ncfile.createVariable("mesh1d", "i4", ())
         mesh1d.cf_role = 'mesh_topology'
         mesh1d.coordinate_space = 'network'
-        mesh1d.edge_dimension = 'n1dmeshEdges'
-        mesh1d.edge_node_connectivity = '1dmesh_edge_nodes'
+        mesh1d.edge_dimension = 'nmesh1dEdges'
+        mesh1d.edge_node_connectivity = 'mesh1d_edge_nodes'
         mesh1d.long_name = "1D Mesh"
-        mesh1d.node_coordinates = '1dmesh_nodes_branch_id 1dmesh_nodes_branch_offset'
-        mesh1d.node_dimension = 'n1dmeshNodes'
+        mesh1d.node_coordinates = 'mesh1d_nodes_branch_id mesh1d_nodes_branch_offset'
+        mesh1d.node_dimension = 'nmesh1dNodes'
+        mesh1d.node_ids = "mesh1d_node_ids"
+        mesh1d.node_long_names = "mesh1d_node_long_names"
         mesh1d.topology_dimension = 1
 
-        mesh1d_branch_id_name = ncfile.createVariable("network_branch_ids", "c", ("nnetworkBranches", "idstrlength"))
-        mesh1d_branch_id_name.standard_name = 'network_branch_id_name'
-        mesh1d_branch_id_name.long_name = "The identification name of the branch"
-        mesh1d_branch_id_name[:] = data["branch_names"]
+        mesh1d_node_count = ncfile.createVariable("network_part_node_count", "i4", "nnetworkBranches")
+        mesh1d_node_count.standard_name = 'network part node count'
+        mesh1d_node_count.long_name = "The number of nodes in per branch"
+        mesh1d_node_count[:] = data["branch_ngeometrypoints"]
 
-        mesh1d_branch_id_longname = ncfile.createVariable("network_branch_longnames", "c", ("nnetworkBranches", "longstrlength"))
-        mesh1d_branch_id_longname.standard_name = 'network_branch_longname'
-        mesh1d_branch_id_longname.long_name = "The long name of the branch"
-        mesh1d_branch_id_longname[:] = data["branch_longnames"]
+        mesh1d_node_id = ncfile.createVariable("mesh1d_node_ids", "c", ("nmesh1dNodes", "idstrlength"))
+        mesh1d_node_id.standard_name = 'mesh1d_node_ids'
+        mesh1d_node_id.long_name = "The name of the calculation points"
+        mesh1d_node_id[:] = data["point_ids"]
 
-        mesh1d_branch_length = ncfile.createVariable("network_branch_lengths", "f8", "nnetworkBranches")
-        mesh1d_branch_length.standard_name = 'network_branch_length'
-        mesh1d_branch_length.long_name = "The calculation length of the branch"
-        mesh1d_branch_length[:] = data["branch_length"]
+        mesh1d_node_longname = ncfile.createVariable("mesh1d_node_long_names", "c", ("nmesh1dNodes", "longstrlength"))
+        mesh1d_node_longname.standard_name = 'mesh1d_node_longname'
+        mesh1d_node_longname.long_name = "The long name of calculation points"
+        mesh1d_node_longname[:] = data["point_longnames"]
 
-        mesh1d_point_branch_id = ncfile.createVariable("1dmesh_nodes_branch_id", "i4", "n1dmeshNodes")
+        mesh1d_edge_node = ncfile.createVariable("mesh1d_edge_nodes", "i4", ("nmesh1dEdges", "Two"))
+        mesh1d_edge_node.cf_role = 'edge_node_connectivity'
+        mesh1d_edge_node.long_name = 'start and end nodes of each branch in the 1d mesh'
+        mesh1d_edge_node.start_index = 1
+        mesh1d_edge_node[:] = data["edge_point"]
+
+        mesh1d_point_branch_id = ncfile.createVariable("mesh1d_nodes_branch_id", "i4", "nmesh1dNodes")
         mesh1d_point_branch_id.standard_name = 'network calculation point branch id'
         mesh1d_point_branch_id.long_name = "The identification the branch of the calculation point"
         mesh1d_point_branch_id[:] = data["point_branch_id"]
 
-        mesh1d_point_branch_offset = ncfile.createVariable("1dmesh_nodes_branch_offset", "f8", "n1dmeshNodes")
+        mesh1d_point_branch_offset = ncfile.createVariable("mesh1d_nodes_branch_offset", "f8", "nmesh1dNodes")
         mesh1d_point_branch_offset.standard_name = 'network calculation point branch offset'
         mesh1d_point_branch_offset.long_name = "The offset of the calculation point on the branch"
         mesh1d_point_branch_offset[:] = data["point_branch_offset"]
-
-        mesh1d_geom_offset = ncfile.createVariable("mesh1D_nodes_branch_offset", "f8", "n1dmeshNodes")
-        mesh1d_geom_offset.cf_role = 'coordinate_on_feature'
-        mesh1d_geom_offset.long_name = 'offset along the branch at which the node is located'
-        mesh1d_geom_offset.units = 'm'
-        mesh1d_geom_offset[:] = data["point_branch_offset"]
 
         # END OF THE NTWORK WRITER
         return True
@@ -289,11 +312,16 @@ class UgridWriter:
         networkdata["branch_ids"] = []
         networkdata["branch_names"] = []
         networkdata["edge_node"] = []
+        networkdata["point_ids"] = []
+        networkdata["point_longnames"] = []
         networkdata["point_branch_id"] = []
         networkdata["point_branch_offset"] = []
+        networkdata["edge_point"] = []
         networkdata["node_longnames"] = []
         networkdata["branch_longnames"] = []
         networkdata["branch_length"] = []
+        networkdata["branch_order"] = []
+        networkdata["branch_ngeometrypoints"] = []
 
         # Temporary dictionary to store the id number of the nodes and branches
         node_order = OrderedDict()
@@ -305,21 +333,26 @@ class UgridWriter:
             networkdata["node_longnames"].append(self.str2chars(str(value[0]) + " longname",self.longstrlength))
             networkdata["node_x"].append(value[3])
             networkdata["node_y"].append(value[4])
-            networkdata["geom_x"].append(value[3])
-            networkdata["geom_y"].append(value[4])
             node_order[key] = i + 1
             i += 1
 
-        i = 0
+        i = 1
         for key,value in self.model.connections.items():
             con_order[key] = i
             networkdata["branch_ids"].append(i)
             networkdata["branch_names"].append(self.str2chars(key,self.idstrlength))
             networkdata["branch_longnames"].append(self.str2chars(str(key) + " longname",self.longstrlength))
+            networkdata["branch_order"].append(-1)
+            networkdata["branch_ngeometrypoints"].append(2)
 
             #2 claculation points - start & end branch
+            networkdata["point_ids"].extend([self.str2chars('calc ' + key + ' begin',self.idstrlength),self.str2chars('calc ' + key + ' end',self.idstrlength)])
+            networkdata["point_longnames"].extend([self.str2chars('calc ' + key + ' begin longname',self.longstrlength),self.str2chars('calc ' + key + ' end longname',self.longstrlength)])
             networkdata["point_branch_id"].extend([i]*2)
             networkdata["point_branch_offset"].append(0.0)
+            i_edge = 2 * i
+            networkdata["edge_point"].append([i_edge-1,i_edge])
+
             try:
                 length = float(value[8])
                 networkdata["point_branch_offset"].append(length)
@@ -329,9 +362,21 @@ class UgridWriter:
                 networkdata["point_branch_offset"].append(1.0)
                 networkdata["branch_length"].append(1.0)
 
-            node1 = node_order[value[1]]
-            node2 = node_order[value[2]]
-            networkdata["edge_node"].append([node1, node2])
+            node1Id = value[1]
+            node1 = self.model.nodes[node1Id]
+            node1Index = node_order[node1Id]
+            node2Id = value[2]
+            node2 = self.model.nodes[node2Id]
+            node2Index = node_order[node2Id]
+
+            #edge-nodes (
+            networkdata["edge_node"].append([node1Index, node2Index])
+            #node1
+            networkdata["geom_x"].append(node1[3])
+            networkdata["geom_y"].append(node1[4])
+            #node2
+            networkdata["geom_x"].append(node2[3])
+            networkdata["geom_y"].append(node2[4])
             i += 1
 
         return networkdata
