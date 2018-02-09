@@ -428,7 +428,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                var ierr = wrapper.get_meshgeom(ref ioncid, ref meshId, ref mesh, includeArrays);
+                int startIndex = 0;
+                var ierr = wrapper.get_meshgeom(ref ioncid, ref meshId, ref mesh, ref startIndex, includeArrays);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

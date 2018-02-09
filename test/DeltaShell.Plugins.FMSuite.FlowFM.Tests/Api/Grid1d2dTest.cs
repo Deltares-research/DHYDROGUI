@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             NativeLibrary.LoadNativeDll(GridApiDataSet.GRIDDLL_NAME, DimrApiDataSet.SharedDllPath);
             NativeLibrary.LoadNativeDll(GridGeomApi.LIB_DLL_NAME, DimrApiDataSet.SharedDllPath);
         }
-
+        
         [Test]
         public void CreateLinksFrom2dFileGridGeomWrapper()
         {
@@ -41,6 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             int twodmaxnumfacenodes = 4;
             int twodnumlayer = 0;
             int twodlayertype = 0;
+            int startIndex = 1; // the indexes in the array are zero based
+
 
             //mesh1d
             //discretization points information
@@ -51,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             double[] meshYCoords = { 22, 16, 16, 7 };
             double[] branchoffset = { 0, 10, 20, 100 }; /// important are the first and last offset
             double[] branchlength = { 100 };
-
             int[] sourcenodeid = { 1 };
             int[] targetnodeid = { 2 };
 
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
             //5. get the meshgeom arrays
             bool includeArrays = true;
-            ierr = gridWrapper.get_meshgeom(ref ioncid, ref meshid, ref meshtwod, includeArrays);
+            ierr = gridWrapper.get_meshgeom(ref ioncid, ref meshid, ref meshtwod, ref startIndex, includeArrays);
             Assert.That(ierr, Is.EqualTo(0));
             double[] rc_twodnodex = new double[twodnumnode];
             double[] rc_twodnodey = new double[twodnumnode];
@@ -149,7 +150,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks);
             Assert.That(ierr, Is.EqualTo(0));
 
-//this is a complex case, the valid links needs to be determined, are not equal to the previous cases
+
+            int[] rc_arrayfrom = new int[n1d2dlinks];
+            int[] rc_arrayto = new int[n1d2dlinks];
+            Marshal.Copy(c_arrayfrom, rc_arrayfrom, 0, n1d2dlinks);
+            Marshal.Copy(c_arrayto, rc_arrayto, 0, n1d2dlinks);
+            for (int i = 0; i < n1d2dlinks; i++)
+            {
+                Assert.That(rc_arrayfrom[i], Is.EqualTo(arrayfrom[i]));
+                Assert.That(rc_arrayto[i], Is.EqualTo(arrayto[i]));
+            }
             //for writing the links look io_netcdf ionc_def_mesh_contact, ionc_put_mesh_contact 
 
             //Free 2d arrays

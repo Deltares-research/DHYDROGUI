@@ -114,7 +114,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 //5. get the meshgeom arrays
                 bool includeArrays = true;
-                ierr = gridWrapper.get_meshgeom(ref ioncId, ref meshId, ref meshtwod, includeArrays);
+                int startIndex = 0;
+                ierr = gridWrapper.get_meshgeom(ref ioncId, ref meshId, ref meshtwod, ref startIndex, includeArrays); 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

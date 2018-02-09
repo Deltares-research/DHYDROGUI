@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
-using Is = Rhino.Mocks.Constraints.Is;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {

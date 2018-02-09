@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
-            
+
             if (branchIdx.Length < 0
                 || offset.Length != branchIdx.Length)
             {
@@ -60,14 +60,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
             IntPtr branchIdxPtr = IntPtr.Zero;
             IntPtr offsetPtr = IntPtr.Zero;
-            
+            IntPtr edgeNodesPtr = IntPtr.Zero;
+
             try
             {
                 discretisationPointIds.ReplaceSpacesInString();
                 discretisationPointLongnames.ReplaceSpacesInString();
 
+                const int startIndex = 0; // TODO Sil: What are the start index and the numberOfEdgeNodes? How do I obtain them here?
+                var numberOfEdgeNodes = 0;
+
                 branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
                 offsetPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfDiscretisationPoints);
+                edgeNodesPtr = Marshal.AllocCoTaskMem(2 * Marshal.SizeOf(typeof(int)) * numberOfEdgeNodes);
 
                 Marshal.Copy(branchIdx, 0, branchIdxPtr, numberOfDiscretisationPoints);
                 Marshal.Copy(offset, 0, offsetPtr, numberOfDiscretisationPoints);
@@ -84,9 +89,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
 
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-                /* The call below needs to be adapted to the new dll. */
-                //return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr,
-                //    offsetPtr, idInfo, numberOfDiscretisationPoints);
+                /* The call below needs to be adapted to the new dll. */ // TODO Sil: Fix the startIndex and numberOfEdgeNodes. How do I get them here? -> Luca is looking in to this method on the kernel side
+                /*return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, edgeNodesPtr, offsetPtr, idInfo, numberOfEdgeNodes, numberOfDiscretisationPoints, startIndex);*/
             }
             catch
             {
@@ -102,7 +106,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 offsetPtr = IntPtr.Zero;
             }
         }
-        
+
         #endregion
 
         #region Read Network Discretisation
@@ -152,7 +156,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             numberOfDiscretisationPoints = 0;
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-   
+
             try
             {
                 return wrapper.Get1DMeshDiscretisationPointsCount(ioncId, meshId, ref numberOfDiscretisationPoints);
