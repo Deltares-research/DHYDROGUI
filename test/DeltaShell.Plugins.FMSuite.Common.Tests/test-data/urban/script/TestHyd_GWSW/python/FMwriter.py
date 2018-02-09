@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from math import pi
 from UgridWriter import UgridWriter
 
@@ -16,7 +16,7 @@ class FMwriter:
 
         ugridWriter = UgridWriter(self.model)
         ugridWriter.write(dirPath, outputDir)
-        return True
+        self.writeMdFiles(dirPath, outputDir)
         self.writeRetentions(dirPath, outputDir)
         self.writePipes(dirPath, outputDir)
         self.writeProfiles(dirPath, outputDir)
@@ -57,6 +57,17 @@ class FMwriter:
                 manholes[manholeId].append(id)
             else:
                 manholes[manholeId] = [id]
+        return True
+
+    def writeMdFiles(self, dirPath, outputDir):
+        srcMdu = os.path.join(dirPath, 'python','resources', 'FMmdu.txt')
+        targetMdu = os.path.join(dirPath, outputDir, 'sewer_system.mdu')
+        srcMd1d = os.path.join(dirPath, 'python','resources', 'FMmd1d.txt')
+        targetMd1d = os.path.join(dirPath, outputDir, 'sewer_system.md1d')
+
+        shutil.copy2(srcMdu, targetMdu)
+        shutil.copy2(srcMd1d, targetMd1d)
+
         return True
 
     def writeBoundaries(self, dirPath, outputDir):  # write boundaries ini and bc
@@ -173,7 +184,7 @@ class FMwriter:
         outflowBC = 'sewer_system_outflow.bc'
         filePathInflow = os.path.join(dirPath, outputDir, inflowBC)
         filePathOutflow = os.path.join(dirPath, outputDir, outflowBC)
-        filePathEF = os.path.join(dirPath, outputDir, 'ext_force_file.ini')
+        filePathEF = os.path.join(dirPath, outputDir, 'ext_force_file.ext')
 
         fileExternalForce = open(filePathEF, 'w')
         fileBcIn = open(filePathInflow, 'w')
@@ -191,7 +202,8 @@ class FMwriter:
 
             #relation
             fileExternalForce.write('[boundary]\n')
-            fileExternalForce.write('quantity=waterlevelbnd\n')
+            fileExternalForce.write('quantity=outflowbnd\n')
+            fileExternalForce.write('nodeId = ' + str(value[0]) + '\n')
             fileExternalForce.write('locationfile=' + bndName + '.pli\n')
             fileExternalForce.write('forcingfile=' + outflowBC + '\n')
             fileExternalForce.write('\n')
@@ -212,6 +224,7 @@ class FMwriter:
             #relation
             fileExternalForce.write('[boundary]\n')
             fileExternalForce.write('quantity=dischargebnd\n')
+            fileExternalForce.write('nodeId = ' + str(value[0]) + '\n')
             fileExternalForce.write('locationfile=' + bndName + '.pli\n')
             fileExternalForce.write('forcingfile=' + inflowBC + '\n')
             fileExternalForce.write('\n')
@@ -252,7 +265,7 @@ class FMwriter:
         result += 'Time-interpolation              = linear\n'
         result += 'Quantity                        = time\n'
         result += 'Unit                            = years since 1900-01-01 00:00:00\n'
-        result += 'Quantity                        = waterlevelbnd\n'
+        result += 'Quantity                        = outflowbnd\n'
         result += 'Unit                            = m\n'
         result += '0        -100.0\n'
         result += '200      -100.0\n\n'
@@ -479,7 +492,7 @@ class FMwriter:
 
             #roughness
             fileRough.write('[definition]\n')
-            fileRough.write('branchId = ' + str(value[0]) + '\n')
+            fileRough.write('branchid = ' + str(value[0]) + '\n')
             fileRough.write('chainage = 0.00\n')
             fileRough.write('value = 3.000\n')
             fileRough.write('\n')
@@ -586,12 +599,16 @@ class FMwriter:
             writePliz = False
             name = value[0]
             pliName = 'str_' + name
+            branchId = name
+            branchOffset = '0.5'
 
             if type == 'DRL':
                 writePliz = True
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = orifice\n')
                 fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('branchid = ' + branchId + '\n')
+                fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 
                 direction = self.getDirectionOfStructure(value[0])
@@ -615,6 +632,8 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = gate\n')
                 fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('branchid = ' + branchId + '\n')
+                fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 
                 fileStructures.write('sill_level = ' + self.to2Dec(value[7]) + '\n')
@@ -630,6 +649,8 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = pump\n')
                 fileStructures.write('id = ' + value[0] + '\n')
+                fileStructures.write('branchid = ' + branchId + '\n')
+                fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
                 valuePerSecond = float(value[9])/3600
                 fileStructures.write('capacity = ' + str("%.4f" % round(float(valuePerSecond),4)) + '  #m3/s\n')

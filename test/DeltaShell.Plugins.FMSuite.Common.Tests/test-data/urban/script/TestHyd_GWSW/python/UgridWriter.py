@@ -75,16 +75,16 @@ class UgridWriter:
         faces_2d = len(data_2dmesh["face_node"])
         nodes_2d = len(data_2dmesh["node_x"])
 
-        ncfile.createDimension("max_nmesh2D_face_nodes", 4)
-        ncfile.createDimension("nmesh2D_edge", edges_2d)
-        ncfile.createDimension("nmesh2D_face", faces_2d)
-        ncfile.createDimension("nmesh2D_node", nodes_2d)
+        ncfile.createDimension("max_nmesh2d_face_nodes", 4)
+        ncfile.createDimension("nmesh2d_edge", edges_2d)
+        ncfile.createDimension("nmesh2d_face", faces_2d)
+        ncfile.createDimension("nmesh2d_node", nodes_2d)
 
     def set_1dnetwork(self, ncfile, data):
 
-         # geometry
+        # geometry
         #ntw = ncfile.createVariable("network1D", "u4", ())
-        ntw = ncfile.createVariable("network1D", "i4", ())
+        ntw = ncfile.createVariable("network", "i4", ())
         ntw.cf_role = 'mesh_topology'
         ntw.edge_dimension = 'nnetworkNodes'
         ntw.edge_geometry = 'network_geometry'
@@ -103,6 +103,11 @@ class UgridWriter:
         ntw_nodes_id.standard_name = 'network_node_ids'
         ntw_nodes_id.long_name = "The identification name of the node"
         ntw_nodes_id[:] = data["node_ids"]
+
+        ntw_nodes_longname = ncfile.createVariable("network_node_longnames", "c", ("nnetworkNodes", "longstrlength"))
+        ntw_nodes_longname.standard_name = 'network_node_longname'
+        ntw_nodes_longname.long_name = "The long name of the node"
+        ntw_nodes_longname[:] = data["node_longnames"]
 
         ntw_nodes_x = ncfile.createVariable("network_nodes_x", "f8", "nnetworkNodes")
         ntw_nodes_x.standard_name = 'projection_x_coordinate'
@@ -157,9 +162,19 @@ class UgridWriter:
         mesh1d.topology_dimension = 1
 
         mesh1d_branch_id_name = ncfile.createVariable("network_branch_ids", "c", ("nnetworkBranches", "idstrlength"))
-        mesh1d_branch_id_name.standard_name = 'network1D_branch_id_name'
+        mesh1d_branch_id_name.standard_name = 'network_branch_id_name'
         mesh1d_branch_id_name.long_name = "The identification name of the branch"
         mesh1d_branch_id_name[:] = data["branch_names"]
+
+        mesh1d_branch_id_longname = ncfile.createVariable("network_branch_longnames", "c", ("nnetworkBranches", "longstrlength"))
+        mesh1d_branch_id_longname.standard_name = 'network_branch_longname'
+        mesh1d_branch_id_longname.long_name = "The long name of the branch"
+        mesh1d_branch_id_longname[:] = data["branch_longnames"]
+
+        mesh1d_branch_length = ncfile.createVariable("network_branch_lengths", "f8", "nnetworkBranches")
+        mesh1d_branch_length.standard_name = 'network_branch_length'
+        mesh1d_branch_length.long_name = "The calculation length of the branch"
+        mesh1d_branch_length[:] = data["branch_length"]
 
         mesh1d_point_branch_id = ncfile.createVariable("1dmesh_nodes_branch_id", "i4", "n1dmeshNodes")
         mesh1d_point_branch_id.standard_name = 'network calculation point branch id'
@@ -183,26 +198,23 @@ class UgridWriter:
     # set 2d mesh data to netcdf file
     def set_2dmesh(self, ncfile, data_2dmesh):
 
-        mesh2d = ncfile.createVariable("mesh2D", "i4", ())
-        mesh2d.long_name = "Mesh 2D"
+        mesh2d = ncfile.createVariable("mesh2d", "i4", ())
+        mesh2d.long_name = "Topology data of 2D network"
         mesh2d.topology_dimension = 2
         mesh2d.cf_role = 'mesh_topology'
-        mesh2d.node_coordinates = 'mesh2D_node_x mesh2D_node_y'
-        mesh2d.node_dimension = 'nmesh2D_node'
-        mesh2d.edge_coordinates = 'mesh2D_edge_x mesh2D_edge_y'
+        mesh2d.node_coordinates = 'mesh2d_node_x mesh2d_node_y'
+        mesh2d.node_dimension = 'nmesh2d_node'
+        mesh2d.edge_coordinates = 'mesh2d_edge_x mesh2d_edge_y'
         mesh2d.edge_dimension = 'nmesh2D_edge'
-        mesh2d.edge_face_connectivity = 'mesh2D_edge_faces'
-        mesh2d.edge_node_connectivity = 'mesh2D_edge_nodes'
-        mesh2d.face_node_connectivity = 'mesh2D_face_nodes'
+        mesh2d.edge_node_connectivity = 'mesh2d_edge_nodes'
+        mesh2d.face_node_connectivity = 'mesh2d_face_nodes'
         mesh2d.max_face_nodes_dimension = 'max_nmesh2d_face_nodes'
-        #mesh2d.face_coordinates = 'Mesh2D_face_x Mesh2D_face_y'
-        #mesh2d.face_dimension = 'nMesh2D_face'
-        #mesh2d.face_edge_connectivity = 'Mesh2D_face_edges'
-        #mesh2d.face_face_connectivity = 'Mesh2D_face_face'
+        mesh2d.face_dimension = "nmesh2d_face"
+        mesh2d.edge_face_connectivity = "mesh2d_edge_faces"
+        mesh2d.face_coordinates = "mesh2d_face_x mesh2d_face_y"
 
-
-        mesh2d_x = ncfile.createVariable("mesh2D_node_x", "f8", ("nmesh2D_node"))
-        mesh2d_y = ncfile.createVariable("mesh2D_node_y", "f8", ("nmesh2D_node"))
+        mesh2d_x = ncfile.createVariable("mesh2d_node_x", "f8", "nmesh2d_node")
+        mesh2d_y = ncfile.createVariable("mesh2d_node_y", "f8", "nmesh2d_node")
         mesh2d_x.standard_name = 'projection_x_coordinate'
         mesh2d_x.units = 'm'
         mesh2d_y.standard_name = 'projection_y_coordinate'
@@ -210,8 +222,8 @@ class UgridWriter:
         mesh2d_x[:] = data_2dmesh["node_x"]
         mesh2d_y[:] = data_2dmesh["node_y"]
 
-        mesh2d_xu = ncfile.createVariable("mesh2D_edge_x", "f8", "nmesh2D_edge")
-        mesh2d_yu = ncfile.createVariable("mesh2D_edge_y", "f8", "nmesh2D_edge")
+        mesh2d_xu = ncfile.createVariable("mesh2d_edge_x", "f8", "nmesh2d_edge")
+        mesh2d_yu = ncfile.createVariable("mesh2d_edge_y", "f8", "nmesh2d_edge")
         mesh2d_xu.standard_name = 'projection_x_coordinate'
         mesh2d_xu.units = 'm'
         mesh2d_yu.standard_name = 'projection_y_coordinate'
@@ -219,17 +231,41 @@ class UgridWriter:
         mesh2d_xu[:] = data_2dmesh["edge_x"]
         mesh2d_yu[:] = data_2dmesh["edge_y"]
 
-        mesh2d_en = ncfile.createVariable("mesh2D_edge_nodes", "i4", ("nmesh2D_edge", "Two"))
+        mesh2d_en = ncfile.createVariable("mesh2d_edge_nodes", "i4", ("nmesh2d_edge", "Two"))
         mesh2d_en.cf_role = 'edge_node_connectivity'
         mesh2d_en.long_name = 'maps every edge to the two nodes that it connects'
         mesh2d_en.start_index = 1
         mesh2d_en[:] = data_2dmesh["edge_node"]
 
-        mesh2d_fn = ncfile.createVariable("mesh2D_face_nodes", "i4", ("nmesh2D_face", "max_nmesh2D_face_nodes"), fill_value=0)
+        mesh2d_fn = ncfile.createVariable("mesh2d_face_nodes", "i4", ("nmesh2d_face", "max_nmesh2d_face_nodes"), fill_value=0)
         mesh2d_fn.cf_role = 'face_node_connectivity'
         mesh2d_fn.long_name = 'maps every face to the nodes that it defines'
         mesh2d_fn.start_index = 1
         mesh2d_fn[:] = data_2dmesh["face_node"]
+
+        #mesh2d_edge_faces = ncfile.createVariable("mesh2d_edge_faces", "i4", ("nmesh2d_edge", "Two"), fill_value=-1)
+		#mesh2d_edge_faces.cf_role = "edge_face_connectivity"
+		#mesh2d_edge_faces.long_name = "Mapping from every edge to the two faces that it separates"
+		#mesh2d_edge_faces.start_index = 1
+        #mesh2d_edge_faces[:] = data_2dmesh["edge_faces"]
+
+        mesh2d_face_x = ncfile.createVariable("mesh2d_face_x", "f8", "nmesh2d_face")
+        mesh2d_face_x.units = "m"
+        mesh2d_face_x.standard_name = "projection_x_coordinate"
+        mesh2d_face_x.long_name = "Characteristic x-coordinate of mesh face"
+        mesh2d_face_x.mesh = "mesh2d"
+        mesh2d_face_x.location = "face"
+        #mesh2d_face_x.bounds = "mesh2d_face_x_bnd"
+        mesh2d_face_x[:] = data_2dmesh["face_x"]
+
+        mesh2d_face_y = ncfile.createVariable("mesh2d_face_y", "f8", "nmesh2d_face")
+        mesh2d_face_y.units = "m"
+        mesh2d_face_y.standard_name = "projection_y_coordinate"
+        mesh2d_face_y.long_name = "Characteristic y-coordinate of mesh face"
+        mesh2d_face_y.mesh = "mesh2d"
+        mesh2d_face_y.location = "face"
+        #mesh2d_face_y.bounds = "mesh2d_face_y_bnd"
+        mesh2d_face_y[:] = data_2dmesh["face_y"]
 
         #cm = ncfile.createVariable("composite_mesh", "u4", ())
         #cm.cf_role = 'mesh_topology_parent'
@@ -255,6 +291,9 @@ class UgridWriter:
         networkdata["edge_node"] = []
         networkdata["point_branch_id"] = []
         networkdata["point_branch_offset"] = []
+        networkdata["node_longnames"] = []
+        networkdata["branch_longnames"] = []
+        networkdata["branch_length"] = []
 
         # Temporary dictionary to store the id number of the nodes and branches
         node_order = OrderedDict()
@@ -263,6 +302,7 @@ class UgridWriter:
         i = 0
         for key, value in self.model.nodes.items():
             networkdata["node_ids"].append(self.str2chars(value[0],self.idstrlength))
+            networkdata["node_longnames"].append(self.str2chars(str(value[0]) + " longname",self.longstrlength))
             networkdata["node_x"].append(value[3])
             networkdata["node_y"].append(value[4])
             networkdata["geom_x"].append(value[3])
@@ -275,6 +315,7 @@ class UgridWriter:
             con_order[key] = i
             networkdata["branch_ids"].append(i)
             networkdata["branch_names"].append(self.str2chars(key,self.idstrlength))
+            networkdata["branch_longnames"].append(self.str2chars(str(key) + " longname",self.longstrlength))
 
             #2 claculation points - start & end branch
             networkdata["point_branch_id"].extend([i]*2)
@@ -282,9 +323,11 @@ class UgridWriter:
             try:
                 length = float(value[8])
                 networkdata["point_branch_offset"].append(length)
+                networkdata["branch_length"].append(length)
             except:
                 # print("Empty or not a number in a cell")
                 networkdata["point_branch_offset"].append(1.0)
+                networkdata["branch_length"].append(1.0)
 
             node1 = node_order[value[1]]
             node2 = node_order[value[2]]
@@ -328,7 +371,9 @@ class UgridWriter:
         grid["edge_x"] = []
         grid["edge_y"] = []
         grid["face_node"] = []
-        grid["face_edge"] = []
+        grid["face_x"] = []
+        grid["face_y"] = []
+        grid["edge_faces"] = []
 
         for y in yElements:
             grid["node_x"].extend(xElements)
@@ -356,6 +401,8 @@ class UgridWriter:
                 grid["edge_x"].extend([x0 + (0.5 * rasterSize),x1])
                 grid["edge_y"].extend([y0, y0 + (0.5 * rasterSize)])
                 grid["face_node"].append([inode0, inode1, inode2, inode3])
+                grid["face_x"].append(x0 + (0.5 * rasterSize))
+                grid["face_y"].append(y0 + (0.5 * rasterSize))
                 ix += 1
             iy += 1
 
@@ -370,6 +417,8 @@ class UgridWriter:
             grid["edge_x"].append(x0 + (0.5 * rasterSize))
             grid["edge_y"].append(y1)
             ix += 1
+
+        # fill edge - face
 
         return grid
 
