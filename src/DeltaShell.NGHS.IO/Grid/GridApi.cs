@@ -390,17 +390,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
         protected static int[,] MarshalDataTo2DArray(IntPtr ptr, int numElements, int numValuesPerElement)
         {
+            var startPos = Environment.Is64BitProcess ? (Int64)ptr : (int)ptr;
             var elements = new int[numElements, numValuesPerElement];
+
             for (var i = 0; i < numElements; i++)
             {
-                // Navigate through ptr to obtain the pointer                  
-                // To the first element of every new dimension of the array.                 
-                IntPtr pIntArray = (IntPtr)((int)ptr + (Marshal.SizeOf(typeof(int)) * (numValuesPerElement * i)));
+                // Navigate through ptr to obtain the pointer
+                // To the first element of every new dimension of the array.
+                IntPtr pIntArray = (IntPtr)(startPos + (Marshal.SizeOf(typeof(int)) * (numValuesPerElement * i)));
 
-                // OneDArrayOfInt will hold values ​​of one dimension of the 2D array,                  
+                // OneDArrayOfInt will hold values ​​of one dimension of the 2D array,
                 int[] OneDArrayOfInt = new int[numValuesPerElement];
 
-                // Copy the values ​​of this dimension.                 
+                // Copy the values ​​of this dimension.
                 Marshal.Copy(pIntArray, OneDArrayOfInt, 0, numValuesPerElement);
                 for (var j = 0; j < numValuesPerElement; j++)
                 {
