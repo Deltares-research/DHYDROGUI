@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Extensions.CoordinateSystems;
@@ -12,6 +11,7 @@ namespace DeltaShell.NGHS.IO.Grid
         protected readonly string filename;
         private readonly GridApiDataSet.NetcdfOpenMode mode;
         private bool disposed;
+        private T gridApi;
 
         public AGrid()
         {
@@ -29,7 +29,21 @@ namespace DeltaShell.NGHS.IO.Grid
             if(GlobalMetaData != null) GlobalMetaData = globalMetaData;
         }
 
-        public virtual T GridApi { get; set; }
+        public virtual T GridApi
+        {
+            get { return gridApi; }
+            set
+            {
+                var disposableGridApi = gridApi as IDisposable;
+                if (disposableGridApi != null)
+                {
+                    disposableGridApi.Dispose();
+                }
+
+                gridApi = value;
+            }
+        }
+
         public virtual ICoordinateSystem CoordinateSystem { get; private set; }
         public UGridGlobalMetaData GlobalMetaData { get; private set; }
 
@@ -172,26 +186,37 @@ namespace DeltaShell.NGHS.IO.Grid
         private void CleanUp()
         {
             if (disposed) return;
-            if (!IsInitialized())
-            {
-                disposed = true;
-                return;
-            }
+
             try
             {
                 if (GridApi != null)
                 {
-                    var ierr = GridApi.Close();
+                    var ierr = GridApiDataSet.GridConstants.NOERR;
+
+                    if (IsInitialized())
+                    {
+                        ierr = GridApi.Close();
+                    }
+
                     ThrowIfError(ierr, Resources.AGrid_CleanUp_Couldn_t_close_grid_nc_file);
-                    GridApi = null;
                 }
             }
             catch
             {
                 // ignored
             }
+            finally
+            {
+                // dispose GridApi if IDisposable
+                var disposableGridApi = GridApi as IDisposable;
+                if (disposableGridApi != null)
+                {
+                    disposableGridApi.Dispose();
+                }
+                GridApi = null;
+            }
+
             disposed = true;
-            Thread.Sleep(100); // wait for process to truly exit
         }
     }
 }

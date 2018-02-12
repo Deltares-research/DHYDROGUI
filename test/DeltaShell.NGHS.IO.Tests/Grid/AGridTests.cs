@@ -180,7 +180,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
+            grid.Expect(g => g.IsInitialized()).Return(true);
             TypeUtils.SetField(grid, "disposed", false);
             mocks.ReplayAll();
 
@@ -193,8 +193,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
-            grid.Expect(g => g.IsInitialized()).Return(false).Repeat.Once();
+
             TypeUtils.SetField(grid, "disposed", false);
             mocks.ReplayAll();
 
@@ -207,7 +206,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             grid.Expect(g => g.Initialize())
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
-            grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Twice();
+            grid.Expect(g => g.IsInitialized()).Return(true);
             TypeUtils.SetField(grid, "disposed", false);
             var gridApi = mocks.DynamicMock<IGridApi>();
             gridApi.Expect(a => a.Close()).Repeat.Once();

@@ -8,7 +8,6 @@ using Rhino.Mocks;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
-    [Category("DoNotRunForCodeCoverage")]
     public class UGridUnitTests
     {
         private const string UGRID_TEST_FILE = @"ugrid\Dummy.nc";

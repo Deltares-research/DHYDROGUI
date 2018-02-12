@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Remoting;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -21,8 +22,16 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var gridApi = MockRepository.GenerateMock<GridApi>();
             var remoteGridApi = MockRepository.GenerateMock<RemoteUGridApi>();
+
+            // get old api field value for disposing (killing remote process)
+            var oldApiField = (IGridApi)TypeUtils.GetField(remoteGridApi, ApiVarName);
+
             TypeUtils.SetField(remoteGridApi, ApiVarName, gridApi);
 
+            // dispose old api instance
+            oldApiField.Close();
+            RemoteInstanceContainer.RemoveInstance(oldApiField);
+            
             gridApi.Expect(a => a.Initialized).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             gridApiAction?.Invoke(gridApi);

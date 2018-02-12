@@ -131,15 +131,9 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Data.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml">
-      <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\System.Xml.dll</HintPath>
-    </Reference>
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
       <Private>False</Private>

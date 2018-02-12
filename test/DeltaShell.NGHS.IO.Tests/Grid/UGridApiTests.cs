@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Remoting;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -10,7 +11,6 @@ using Rhino.Mocks.Interfaces;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
-    [Category("DoNotRunForCodeCoverage")]
     public class UGridApiTests
     {
         // UGridApi field names
@@ -22,8 +22,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var uGridApi = MockRepository.GenerateMock<UGridApi>();
             var uRemoteGridApi = MockRepository.GenerateMock<RemoteUGridApi>();
+            
+            // get old api field value for disposing (killing remote process)
+            var oldApiField = (IGridApi)TypeUtils.GetField(uRemoteGridApi, ApiVarName);
 
             TypeUtils.SetField(uRemoteGridApi, ApiVarName, uGridApi);
+
+            // dispose old api instance
+            oldApiField.Close();
+            RemoteInstanceContainer.RemoveInstance(oldApiField);
 
             uGridApiAction?.Invoke(uGridApi);
             uRemoteGridApiAction?.Invoke(uRemoteGridApi);
