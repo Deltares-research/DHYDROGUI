@@ -154,15 +154,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
             var finalIssues = issues.Where(i => !i.Message.Equals(Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_this_cross_section_does_not_match_the_total_width_of_all_its_sections_)).ToList();
             if (issuesContainSectionIssues.Any())
             {
-                var crossSectionsToCorrect = issuesContainSectionIssues.Select(issue => issue.ViewData as ICrossSection);
-                finalIssues.Add(new ValidationIssue("Cross section sections", ValidationSeverity.Error,
+                var crossSectionsToCorrect = issuesContainSectionIssues.Select(issue => issue.ViewData as ICrossSection).ToList();
+                finalIssues.Add(new ValidationIssue($"Cross section sections issues ({crossSectionsToCorrect.Count})", ValidationSeverity.Error,
                     Resources.WaterFlowModel1DHydroNetworkValidator_ValidateCrossSections_The_maximum_flow_width_of_one_or_more_cross_sections_is_larger_than_the_total_width_of_all_its_sections_, crossSectionsToCorrect));
             }
 
             return new ValidationReport("Cross sections", finalIssues);
         }
 
-        public static IEnumerable<ValidationIssue> GetCrossSectionValidationIssues(IChannel channel, IHydroNetwork network, HashSet<string> channelsCheckedOnInterpolationBranches)
+        private static IEnumerable<ValidationIssue> GetCrossSectionValidationIssues(IChannel channel, IHydroNetwork network, HashSet<string> channelsCheckedOnInterpolationBranches)
         {
             foreach (var issue in channel.CrossSections.SelectMany(cs => GetCorrectCrossSectionIssue(cs, network)))
             {
