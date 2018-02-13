@@ -68,58 +68,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 
             CopyRgfGridBinariesTo(tempDir);
 
-            var happyWithGrid = false;
-            while (!happyWithGrid)
+            var validGrid = false;
+            while (!validGrid)
             {
                 StartRgfGridFrom(tempDir, polygons, polFileName);
-                happyWithGrid = true;
-
-                if (Path.GetExtension(grids[0]) == ".nc") // for FM
+                validGrid = true;
+                var header = string.Empty;
+                var message = string.Empty;
+                var invalidGridType = GridType.FM;
+                if (ShouldGetGridCopies(Path.GetExtension(grids[0]), ref header, ref message, ref invalidGridType))
                 {
-                    var copies = GetLastGridFilesFromConfigurationFile(tempDir, gridCopies.Length);
-                    
-                    if (copies.Any() && copies[0].Type == GridType.GRD)
-                        // wrong type of grid file! (we can't depend on file extension here: no guarantees)
-                    {
-                        // user accidentally worked in regular-grid mode iso fm mode..warn user and allow retry on same files
-                        if (MessageBox.Show(string.Format(
-                            "You appear to have created a regular grid, however flexible mesh works with irregular (unstructured) grids. " +
-                            "You can convert a regular grid to a irregular grid using rgfgrid with:{0}Operations->Convert Grid->Regular to Irregular{0}{0}" +
-                            "Click Retry to re-open rgfgrid to perform this conversion. If you click Cancel, any grid changes you made will be lost.",
-                            Environment.NewLine), "Structured grid instead of unstructured grid!",
-                            MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
-                        {
-                            // re-create rgfgrid configuration file with only the regular grid (otherwise rgfgrid will complain about mixing them)
-                            CreateRgfGridConfigurationFile(tempDir, copies.Take(1).Select(c => c.FileName).ToArray(),
-                                copiedAdditionalPaths.Select(Path.GetFileName));
-                            happyWithGrid = false; // retry!
-                        }
-                    }
-                    else
-                        gridCopies = copies.Select(c => c.FilePath).ToArray(); //success
-                }
-                else if (Path.GetExtension(grids[0]) == ".grd") // for wave
-                {
-                    var copies = GetLastGridFilesFromConfigurationFile(tempDir, gridCopies.Length);
-
-                    if (copies.Any() && copies[0].Type == GridType.FM)
-                    // wrong type of grid file! (we can't depend on file extension here: no guarantees)
-                    {
-                        // user accidentally worked in regular-grid mode iso fm mode..warn user and allow retry on same files
-                        if (MessageBox.Show(string.Format(
-                            "You appear to have created a irregular grid, however wave works with regular (structured) grids. " +
-                            "Click Retry to re-open rgfgrid to create a valid grid. If you click Cancel, any grid changes you made will be lost."),
-                            "Unstructured grid instead of structured grid!",
-                            MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
-                        {
-                            // re-create rgfgrid configuration file with only the regular grid (otherwise rgfgrid will complain about mixing them)
-                            CreateRgfGridConfigurationFile(tempDir, copies.Take(1).Select(c => c.FileName).ToArray(),
-                                copiedAdditionalPaths.Select(Path.GetFileName));
-                            happyWithGrid = false; // retry!
-                        }
-                    }
-                    else
-                        gridCopies = copies.Select(c => c.FilePath).ToArray(); //success
+                    gridCopies = TryGetValidGridCopies(invalidGridType, message, header, tempDir, gridCopies, copiedAdditionalPaths,ref validGrid);
                 }
             }
 
@@ -128,6 +87,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                 DeleteTempDir(tempDir);
                 MessageBox.Show(
                     "Unable to reload grid file, no grid was referenced in the d3d file! Did you save the rgfgrid project?",
+                    "No grid file found",
+                    MessageBoxButtons.OK);
+                return;
+            }
+
+            if (!File.Exists(gridCopies[0]))
+            {
+                MessageBox.Show(
+                    string.Format("Unable to find grid file, no grid was found at path: {0}", gridCopies[0]),
                     "No grid file found",
                     MessageBoxButtons.OK);
                 return;
@@ -142,9 +110,54 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             }
             else
             {
-                MessageBox.Show("Unable to reload grid file, RGFGrid is locking it!", "Grid file locked",
-                                MessageBoxButtons.OK);
+                MessageBox.Show(
+                    string.Format("Unable to reload grid file {0}, RGFGrid is locking it!", gridCopies[0]), 
+                    "Grid file locked",
+                    MessageBoxButtons.OK);
             }
+        }
+
+        private static bool ShouldGetGridCopies(string gridExtension, ref string header, ref string message, ref GridType invalidGridType)
+        {
+            switch (gridExtension)
+            {
+                case ".nc":
+                    message = string.Format(
+                        "You appear to have created a regular grid, however flexible mesh works with irregular (unstructured) grids. " +
+                        "You can convert a regular grid to a irregular grid using rgfgrid with:{0}Operations->Convert Grid->Regular to Irregular{0}{0}" +
+                        "Click Retry to re-open rgfgrid to perform this conversion. If you click Cancel, any grid changes you made will be lost.",
+                        Environment.NewLine);
+                    header = "Structured grid instead of unstructured grid!";
+                    invalidGridType = GridType.GRD;
+                    return true;
+                case ".grd":
+                    message = string.Format(
+                        "You appear to have created a irregular grid, however wave works with regular (structured) grids. " +
+                        "Click Retry to re-open rgfgrid to create a valid grid. If you click Cancel, any grid changes you made will be lost.");
+                    header = "Unstructured grid instead of structured grid!";
+                    invalidGridType = GridType.FM;
+                    return true;
+            }
+            return false;
+        }
+
+        private static string[] TryGetValidGridCopies(GridType invalidGridType, string message, string header, string tempDir, string[] gridCopies, IList<string> copiedAdditionalPaths, ref bool happyWithGrid)
+        {
+            var copies = GetLastGridFilesFromConfigurationFile(tempDir, gridCopies.Length);
+
+            if (copies.Any() && copies[0].Type == invalidGridType)
+            {
+                if (MessageBox.Show(message, header, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                {
+                    CreateRgfGridConfigurationFile(tempDir, copies.Take(1).Select(c => c.FileName).ToArray(),
+                        copiedAdditionalPaths.Select(Path.GetFileName));
+                    happyWithGrid = false;
+                }
+            }
+            else
+                gridCopies = copies.Select(c => c.FilePath).ToArray();
+
+            return gridCopies;
         }
 
         private static void DeleteTempDir(string tempDir)
