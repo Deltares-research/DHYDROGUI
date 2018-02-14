@@ -158,7 +158,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         /// 
         [Test]
         [Category(TestCategory.Performance)]
-        [Category(TestCategory.Slow)]
         public void ImportingOfDryPointsWithProjectItemMapViewOpenShouldBeFast()
         {
             using (var gui = new DeltaShellGui())
