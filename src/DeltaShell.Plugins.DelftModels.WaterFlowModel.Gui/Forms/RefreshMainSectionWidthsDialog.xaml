@@ -9,8 +9,13 @@
              mc:Ignorable="d" 
              ShowInTaskbar="False"
              AllowsTransparency="True" 
-             WindowStyle="None" Background="Transparent" 
-             Title="Refresh main sections" Height="500" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
+             WindowStyle="None" 
+             Background="Transparent" 
+             Title="Refresh main sections" 
+             Height="500" Width="400" 
+             WindowStartupLocation="CenterScreen" 
+             ResizeMode="CanResizeWithGrip" 
+             Topmost="True">
     <Window.DataContext>
         <local:RefreshMainSectionWidthsDialogViewModel x:Name="ViewModel"/>
     </Window.DataContext>
