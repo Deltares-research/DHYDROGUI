@@ -167,12 +167,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
                 
                 //Get the file content as a list of Gwsw Elements
-                SetProgress(string.Format("Importing file {0}", filePath), fileStep, totalSteps);
-                var elementList = ImportGwswElementList(filePath);
+                SetProgress($"Importing file {filePath}", fileStep, totalSteps);
+                var elementList = ImportGwswElementList(filePath); // TODO Sil deze stap duurt enkele seconden
                 if (!elementList.Any()) continue;
 
                 fileStep++;
-                SetProgress(string.Format("Importing file {0}", Path.GetFileName(filePath)), fileStep, totalSteps);
+                SetProgress($"Importing file {Path.GetFileName(filePath)}", fileStep, totalSteps);
                 var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network).ToList();
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, elementsCreated.Count);
                 
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 if (Enum.TryParse(elementTypeName, out elementType))
                 {
                     fileStep++;
-                    SetProgress(string.Format("Importing file {0}", filePath), fileStep, totalSteps);
+                    SetProgress($"Importing file {filePath}", fileStep, totalSteps);
                     InsertFeatures(elementsCreated, network, elementType);
                 }
 
@@ -277,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public IList<GwswElement> ImportGwswElementList(string path)
         {
             var mapping = CreateCsvMappingDataForFile(path);
-            var importedDataTable = ImportFileAsDataTable(path, mapping);
+            var importedDataTable = ImportFileAsDataTable(path, mapping); // TODO Sil -> invalid cast exception from this method
             if (importedDataTable == null)
                 return null;
 
@@ -347,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var importedCsv = new DataTable();
             try
             {
-                importedCsv = csvImporter.ImportCsv(path, mappingData);
+                importedCsv = csvImporter.ImportCsv(path, mappingData); // TODO Sil -> Invalid cast exception from this method
             }
             catch (Exception e)
             {

@@ -223,96 +223,63 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     GeometryType = typeof(IPoint),
                     Shape = ShapeType.Ellipse,
+                    ShapeSize = 11,
                     Fill = new SolidBrush(Color.Orange),
-                    Outline = new Pen(Color.FromArgb(100, Color.DarkSlateGray), 2f),
+                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
                 };
+
                 var onMultipleBranchesStyle = new VectorStyle
                 {
                     GeometryType = typeof(IPoint),
                     Shape = ShapeType.Ellipse,
+                    ShapeSize = 11,
                     Fill = new SolidBrush(Color.DarkOrange),
-                    Outline = new Pen(Color.FromArgb(100, Color.DimGray), 2f),
+                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
                 };
+
                 return new CategorialTheme
                 {
                     AttributeName = "IsOnSingleBranch",
                     DefaultStyle = onSingleBranchesStyle,
                     ThemeItems = new EventedList<IThemeItem>
                     {
-                        new CategorialThemeItem("True", onSingleBranchesStyle, onSingleBranchesStyle.Symbol, true),
-                        new CategorialThemeItem("False", onMultipleBranchesStyle, onMultipleBranchesStyle.Symbol, false)
+                        new CategorialThemeItem("True", onSingleBranchesStyle, null, true),
+                        new CategorialThemeItem("False", onMultipleBranchesStyle, null, false)
                     }
                 };
             }
 
+            const int lineWidth = 3;
             var connections = networkObjects as IEnumerable<ISewerConnection>;
             if (connections != null)
             {
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DimGray, 3)
-                    {
-                        CustomEndCap = new AdjustableArrowCap(5, 5, true)
-                        {
-                            BaseCap = LineCap.Triangle
-                        }
-                    },
+                    Line = new Pen(Color.DimGray, lineWidth),
                     EnableOutline = false
                 };
 
                  var stormWaterConnectionStyle = new VectorStyle
                     {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.RoyalBlue, 5)
-                    {
-                        CustomEndCap = new AdjustableArrowCap(4, 4, true)
-                        {
-                            BaseCap = LineCap.Triangle
-                        }
-                    },
+                    Line = new Pen(Color.RoyalBlue, lineWidth),
                     EnableOutline = false
                 };
 
                 var dryWaterConnectionStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.IndianRed, 5)
-                    {
-                        CustomEndCap = new AdjustableArrowCap(4, 4, true)
-                        {
-                            BaseCap = LineCap.Triangle
-                        }
-                    },
+                    Line = new Pen(Color.IndianRed, lineWidth),
                     EnableOutline = false
                 };
 
                 var combinedWaterConnectionStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DarkSlateGray, 5)
-                    {
-                        CustomEndCap = new AdjustableArrowCap(4, 4, true)
-                        {
-                            BaseCap = LineCap.Triangle
-                        }
-                    },
-                    EnableOutline = false
+                    Line = new Pen(Color.DarkSlateGray, lineWidth),
+                    EnableOutline = false,
                 };
-
-
-                 /* var customBranchStyle = new VectorStyle
-                 {
-                     GeometryType = typeof(ILineString),
-                     Line = new Pen(Color.RoyalBlue, 5)
-                     {
-                         CustomEndCap = new AdjustableArrowCap(4, 4, true)
-                         {
-                             BaseCap = LineCap.Triangle
-                         }
-                     },
-                     EnableOutline = false
-                 };*/
 
                 return new CategorialTheme
                 {
@@ -326,17 +293,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         new CategorialThemeItem("Combined", combinedWaterConnectionStyle, null, SewerConnectionWaterType.Combined),
                     }
                 };
-                // TODO This was the previous styling, based on IsLengthCustom. Might be required at a later stage again.
-                /* return new CategorialTheme
-                {
-                    AttributeName = "IsLengthCustom",
-                    DefaultStyle = branchStyle,
-                    ThemeItems = new EventedList<IThemeItem>
-                    {
-                        new CategorialThemeItem("True", customBranchStyle, null, true),
-                        new CategorialThemeItem("False", branchStyle, null, false)
-                    }
-                };*/
             }
 
             var pumps = networkObjects as IEnumerable<IPump>;

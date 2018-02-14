@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             features.ForEach(f =>
             {
                 var item = f as IManhole;
-                if( item != null) network.Nodes.Add(item);
+                if( item != null) network.Nodes.Add(item); // TODO Sil: Added an item
             });
         }
 

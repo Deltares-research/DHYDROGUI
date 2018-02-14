@@ -94,6 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var network = hydroRegion as IHydroNetwork;
                 if (network != null)
                 {
+                    // The order below is also the order in which the layers will be stacked
                     yield return network.HydroNodes;
                     yield return network.Pumps;
                     yield return network.LateralSources;
@@ -108,8 +109,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.CrossSections;
                     yield return network.Routes;
                     yield return network.Channels;
-                    yield return network.SewerConnections;
                     yield return network.Manholes;
+                    yield return network.SewerConnections;
                 }
 
                 var drainageBasin = hydroRegion as DrainageBasin;

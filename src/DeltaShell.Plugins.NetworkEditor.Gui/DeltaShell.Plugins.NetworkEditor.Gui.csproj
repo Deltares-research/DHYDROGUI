@@ -1169,6 +1169,9 @@
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Pipe_Small.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
