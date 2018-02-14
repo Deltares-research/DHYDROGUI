@@ -73,13 +73,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             {
                 StartRgfGridFrom(tempDir, polygons, polFileName);
                 validGrid = true;
-                var header = string.Empty;
-                var message = string.Empty;
-                var invalidGridType = GridType.FM;
-                if (ShouldGetGridCopies(Path.GetExtension(grids[0]), ref header, ref message, ref invalidGridType))
-                {
-                    gridCopies = TryGetValidGridCopies(invalidGridType, message, header, tempDir, gridCopies, copiedAdditionalPaths,ref validGrid);
-                }
+
+                var extension = Path.GetExtension(grids[0]);
+                if (extension != ".nc" && extension != ".grd") continue;
+
+                var validGridType = extension == ".nc" ? GridType.FM : GridType.GRD;
+                gridCopies = TryGetValidGridCopies(validGridType, tempDir, gridCopies, copiedAdditionalPaths,ref validGrid);
             }
 
             if (gridCopies.Length == 0)
@@ -117,37 +116,47 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
             }
         }
 
-        private static bool ShouldGetGridCopies(string gridExtension, ref string header, ref string message, ref GridType invalidGridType)
+        private static IList<string> GetMessageBoxTextsWhenInvalidGridType(GridType gridType)
         {
-            switch (gridExtension)
+            var messageBoxTexts = new List<string>();
+            var message = string.Empty;
+            var header = string.Empty;
+
+            var commonText = "Click Retry to re-open rgfgrid to perform this conversion. If you click Cancel, any grid changes you made will be lost.";
+
+            switch (gridType)
             {
-                case ".nc":
+                case GridType.FM:
                     message = string.Format(
                         "You appear to have created a regular grid, however flexible mesh works with irregular (unstructured) grids. " +
-                        "You can convert a regular grid to a irregular grid using rgfgrid with:{0}Operations->Convert Grid->Regular to Irregular{0}{0}" +
-                        "Click Retry to re-open rgfgrid to perform this conversion. If you click Cancel, any grid changes you made will be lost.",
+                        "You can convert a regular grid to an irregular grid using rgfgrid with:{0}Operations->Convert Grid->Regular to Irregular{0}{0}" +
+                        commonText,
                         Environment.NewLine);
                     header = "Structured grid instead of unstructured grid!";
-                    invalidGridType = GridType.GRD;
-                    return true;
-                case ".grd":
+                    break;
+                case GridType.GRD:
                     message = string.Format(
-                        "You appear to have created a irregular grid, however wave works with regular (structured) grids. " +
-                        "Click Retry to re-open rgfgrid to create a valid grid. If you click Cancel, any grid changes you made will be lost.");
+                        "You appear to have created an irregular grid, however wave works with regular (structured) grids. " +
+                        "You can convert an irregular grid to a regular grid using rgfgrid with:{0}Operations->Convert Grid->Irregular to Regular{0}{0}" +
+                        commonText,
+                        Environment.NewLine);
                     header = "Unstructured grid instead of structured grid!";
-                    invalidGridType = GridType.FM;
-                    return true;
+                    break;
             }
-            return false;
+
+            messageBoxTexts.Add(message);
+            messageBoxTexts.Add(header);
+            return messageBoxTexts;
         }
 
-        private static string[] TryGetValidGridCopies(GridType invalidGridType, string message, string header, string tempDir, string[] gridCopies, IList<string> copiedAdditionalPaths, ref bool happyWithGrid)
+        private static string[] TryGetValidGridCopies(GridType validGridType, string tempDir, string[] gridCopies, IList<string> copiedAdditionalPaths, ref bool happyWithGrid)
         {
             var copies = GetLastGridFilesFromConfigurationFile(tempDir, gridCopies.Length);
 
-            if (copies.Any() && copies[0].Type == invalidGridType)
+            if (copies.Any() && copies[0].Type != validGridType)
             {
-                if (MessageBox.Show(message, header, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                var messabeBoxTexts = GetMessageBoxTextsWhenInvalidGridType(validGridType);
+                if (MessageBox.Show(messabeBoxTexts[0], messabeBoxTexts[1], MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
                 {
                     CreateRgfGridConfigurationFile(tempDir, copies.Take(1).Select(c => c.FileName).ToArray(),
                         copiedAdditionalPaths.Select(Path.GetFileName));
