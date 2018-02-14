@@ -3,40 +3,27 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    public class DHydroConfigExporterTest
+    public class DHydroConfigXmlExporterTest
     {
-        private static IEnumerable<IFileExporter> GetFileExporters()
-        {
-            yield return new WaterFlowFMFileExporter();
-            yield return new WaterFlowModel1DExporter();
-            yield return new RealTimeControlModelExporter();
-            yield return new WaveModelFileExporter();
-        }
-
         [Test]
         public void ExportCoupledFmModelToRtc()
         {

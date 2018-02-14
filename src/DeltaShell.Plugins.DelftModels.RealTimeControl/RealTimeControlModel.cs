@@ -526,7 +526,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         [EditAction]
-        public virtual bool IsRunByDimr { get; set; }
+        public virtual bool RunsInInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -668,7 +668,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 MarkOutputOutOfSync();
             }
 
-            if (IsRunByDimr) return;
+            if (RunsInInIntegratedModel) return;
         }
 
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1285,7 +1285,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
         protected override void OnInitialize()
         {
-            if (IsRunByDimr)
+            if (RunsInInIntegratedModel)
             {
                 ModelStateHandler.ModelWorkingDirectory = ExplicitWorkingDirectory;
                 return;
@@ -1300,7 +1300,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// </summary>
         protected override void OnExecute()
         {
-            if (IsRunByDimr) return;
+            if (RunsInInIntegratedModel) return;
 
             OutputOutOfSync = false;
             runner.OnExecute();

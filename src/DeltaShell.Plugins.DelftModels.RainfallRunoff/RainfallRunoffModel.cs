@@ -1062,7 +1062,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         [EditAction]
-        public virtual bool IsRunByDimr { get; set; }
+        public virtual bool RunsInInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -1191,7 +1191,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         #region TimeDependentModelBase
         protected override void OnInitialize()
         {
-            if (IsRunByDimr) return;
+            if (RunsInInIntegratedModel) return;
 
             BuildInputWaterLevelCoverage();
             runner.OnInitialize();

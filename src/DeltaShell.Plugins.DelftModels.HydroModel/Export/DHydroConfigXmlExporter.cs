@@ -65,9 +65,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
                 foreach (var dimrModel in dimrModels)
                 {
-                    dimrModel.DisconnectOutput();
-                    dimrModel.IsRunByDimr = true;
-
                     var exportSubDirectory = Path.Combine(exportDirectory, dimrModel.DirectoryName);
                     FileUtils.CreateDirectoryIfNotExists(exportSubDirectory);
 

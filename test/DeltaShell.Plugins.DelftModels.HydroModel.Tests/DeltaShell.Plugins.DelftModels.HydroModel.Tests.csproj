@@ -215,7 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
-    <Compile Include="DHydroConfigExporterTest.cs" />
+    <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />
     <Compile Include="DHydroConfigModelCouplerTest.cs" />
     <Compile Include="DHydroConfigWriterTest.cs" />
     <Compile Include="DimrConfigModelCouplerFactoryTest.cs" />

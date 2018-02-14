@@ -3477,7 +3477,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         }
 
         [EditAction]
-        public virtual bool IsRunByDimr { get; set; }
+        public virtual bool RunsInInIntegratedModel { get; set; }
 
         public virtual ValidationReport Validate()
         {
@@ -3693,7 +3693,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         #region TimeDependentModelBase
         public override void Initialize()
         {
-            if (!IsRunByDimr)
+            if (!RunsInInIntegratedModel)
             {
                 PrepareModelWorkDirectory();
             }
