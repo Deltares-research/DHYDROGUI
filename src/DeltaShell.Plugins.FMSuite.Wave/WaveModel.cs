@@ -900,7 +900,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         protected override void OnInitialize()
         {
-            if (RunsInInIntegratedModel) return;
+            if (RunsInIntegratedModel) return;
 
             waveApi = new RemoteWaveModelApi(ShowModelRunConsole)
             {
@@ -958,7 +958,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         protected override void OnExecute()
         {
-            if (RunsInInIntegratedModel) return;
+            if (RunsInIntegratedModel) return;
 
             
             if (!IsCoupledToFlow)
@@ -1028,7 +1028,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         protected override void OnFinish()
         {
-            if (RunsInInIntegratedModel) return;
+            if (RunsInIntegratedModel) return;
 
             if (waveApi != null)
             {
@@ -1488,7 +1488,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         [EditAction]
-        public virtual bool RunsInInIntegratedModel { get; set; }
+        public virtual bool RunsInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime

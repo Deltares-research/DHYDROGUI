@@ -2594,7 +2594,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         [EditAction]
-        public virtual bool RunsInInIntegratedModel { get; set; }
+        public virtual bool RunsInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -2698,6 +2698,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             snapApiInErrorMode = false;
             base.OnCleanup();
             runner.OnCleanup();
+
+            ReportProgressText();
         }
 
 

@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnFinish()
         {
-            if (RunsInInIntegratedModel) return;
+            if (RunsInIntegratedModel) return;
 
             base.OnFinish();
 
@@ -541,7 +541,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public new virtual ActivityStatus Status { get { return base.Status; } set { base.Status = value; } }
         
         [EditAction]
-        public virtual bool RunsInInIntegratedModel{get; set;}
+        public virtual bool RunsInIntegratedModel{get; set;}
 
         public virtual ValidationReport Validate()
         {
