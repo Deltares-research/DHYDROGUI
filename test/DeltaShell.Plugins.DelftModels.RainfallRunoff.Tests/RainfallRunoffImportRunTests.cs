@@ -15,7 +15,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
 using DeltaShell.Plugins.NetCDF;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 {
@@ -176,8 +175,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 store.Functions.Add((IFunction)pi.Value);
             }
         }
-
-        private MockRepository mocks = new MockRepository();
 
         [Test]
         [Category(TestCategory.Performance)]
