@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.CommonTools.Functions;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
@@ -243,6 +246,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(1, issues.Count);
             Assert.AreEqual("Model state file should be zip file and have the extension .zip", issues[0].Message);
         }
+
+        [Test]
+        public void ValidateRainfallRunoffWithoutHydroLinkReportError()
+        {
+            var model = CreateValidMiniModel();
+
+            var unpavedDatas = model.GetAllModelData().OfType<UnpavedData>().ToList();
+            unpavedDatas.ForEach( ud => ud.Catchment.Links.Clear());
+            Assert.IsFalse( unpavedDatas.Any( ud => ud.Catchment.Links.Any()));
+            var report = new UnpavedDataValidator().Validate(model, unpavedDatas);
+            var errMssg =
+                string.Format("No runoff target has been defined (concept: {0}); an implicit boundary will be used.",
+                    unpavedDatas[0].GetType().Name);
+            Assert.IsTrue(report.AllErrors.Any( err => err.Severity == ValidationSeverity.Error 
+                                                        && err.Message == errMssg));
+        }
+
 
         private RainfallRunoffModel CreateValidMiniModel()
         {
