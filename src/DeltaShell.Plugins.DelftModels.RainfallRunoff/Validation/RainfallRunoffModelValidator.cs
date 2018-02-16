@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 
             if (runoffs.Count == 0)
             {
-                issues.Add(new ValidationIssue(conceptData.Catchment, ValidationSeverity.Error,
+                issues.Add(new ValidationIssue(conceptData.Catchment, ValidationSeverity.Warning,
                                                string.Format("No runoff target has been defined (concept: {0}); an implicit boundary will be used.",conceptData.GetType().Name),
                                                conceptData.Catchment.Basin));
             }

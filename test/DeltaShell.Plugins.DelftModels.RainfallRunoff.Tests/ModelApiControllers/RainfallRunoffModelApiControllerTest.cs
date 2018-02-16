@@ -12,7 +12,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
 
@@ -85,8 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 var catchment3 = new Catchment { Name = "c3",  IsGeometryDerivedFromAreaSize = true, CatchmentType = CatchmentType.GreenHouse };
                 catchment3.SetAreaSize(3000000);
                 model.Basin.Catchments.Add(catchment3);
-                catchment3.LinkTo(runoffBoundary); //We no longer accept catchments without HydroLinks.
-
+                
                 SetGlobalMeteoDataForTesting(model);
 
                 ActivityRunner.RunActivity(model);
@@ -166,11 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 };
                 catchment.SetAreaSize(3000000);
                 model.Basin.Catchments.Add(catchment);
-
-                var fakeBoundary = new RunoffBoundary();
-                model.Basin.Boundaries.Add(fakeBoundary);
-                catchment.LinkTo(fakeBoundary);
-
+                
                 SetGlobalMeteoDataForTesting(model);
 
                 ActivityRunner.RunActivity(model);
@@ -206,10 +200,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 c1.SetAreaSize(3000000);
                 model.Basin.Catchments.Add(c1);
 
-                var fakeBoundaryOne = new RunoffBoundary() { Name = "B1"};
-                model.Basin.Boundaries.Add(fakeBoundaryOne);
-                c1.LinkTo(fakeBoundaryOne);
-
                 // add 2nd catchment
                 var c2 = new Catchment
                 {
@@ -219,10 +209,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 };
                 c2.SetAreaSize(3000000);
                 model.Basin.Catchments.Add(c2);
-
-                var fakeBoundaryTwo = new RunoffBoundary() { Name = "B2" };
-                model.Basin.Boundaries.Add(fakeBoundaryTwo);
-                c2.LinkTo(fakeBoundaryTwo);
 
                 // both catchments use the default station (=first one)
 
@@ -255,7 +241,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 var boundaries = (IFeatureCoverage) model.OutputCoverages.First();
                 Assert.AreEqual(50, boundaries.Components[0].Values.Count);
 
-                Assert.AreEqual(boundaries[sampleTime, c1], boundaries[sampleTime, c2]);
+                // due to the Area Adjustment Factor, we expect c1 to have about 4 times less outflow than c2
+                Assert.AreEqual(4.0*(double) boundaries[sampleTime, c1], (double) boundaries[sampleTime, c2], 0.5);
             }
         }
 

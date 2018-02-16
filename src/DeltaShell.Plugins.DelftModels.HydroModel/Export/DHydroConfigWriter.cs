@@ -245,6 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                         {
                             var groupElement = new XElement(DHyd + "startGroup");
                             var timeDependentModel = activity as ITimeDependentModel;
+                            var integratedModel = activity.Owner() as HydroModel;
                             if (timeDependentModel != null && refTime != null)
                             {
                                 var timeElement = new XElement(DHyd + "time");
@@ -252,6 +253,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                 var stopTime = (timeDependentModel.StopTime - refTime.Value).TotalSeconds;
                                 var timeStep = timeDependentModel.TimeStep.TotalSeconds;
                                 timeElement.Add(string.Join(" ", new[] {startTime, timeStep, stopTime}));
+                                groupElement.Add(timeElement);
+                            }
+                            else if (integratedModel != null)
+                            {
+                                var timeElement = new XElement(DHyd + "time");
+                                var startTime = 0.0;
+                                var stopTime = (integratedModel.StopTime - integratedModel.StartTime).TotalSeconds;
+                                var timeStep = integratedModel.TimeStep.TotalSeconds;
+                                timeElement.Add(string.Join(" ", new[] { startTime, timeStep, stopTime }));
                                 groupElement.Add(timeElement);
                             }
                             foreach (var modelCoupler in modelCouplers.Where(mc => Equals(mc.Target, activity.Name)))

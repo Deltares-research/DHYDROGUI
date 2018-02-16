@@ -11,10 +11,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
-using DeltaShell.Core;
 using DeltaShell.Gui;
-using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -22,9 +19,7 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
@@ -769,7 +764,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ExportIntegratedModelWithRunfallRunoffSetsBoundaryConditionCorrectly()
+        public void RunIntegratedModelWithRunfallRunoffStandAlone()
         {
             var path = TestHelper.GetTestFilePath("SOBEK3-1313\\Flow1D_RR_IntegratedModel.dsproj");
             path = TestHelper.CreateLocalCopy(path);
@@ -792,33 +787,18 @@ namespace Sobek.IntegrationTests
                 app.Run();
 
                 app.OpenProject(path);
-                var integratedModel = app.GetAllModelsInProject().ToList();
-                Assert.IsTrue(integratedModel.Any());
 
-                var rrModel = integratedModel.OfType<RainfallRunoffModel>().FirstOrDefault();
-                Assert.IsNotNull(rrModel);
+                var hydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                Assert.IsNotNull(hydroModel);
 
-                //rrModel is not valid because misses a hydrolink
-                var validator = new RainfallRunoffModelValidator();
-                var report = validator.Validate(rrModel);
+                hydroModel.CurrentWorkflow =
+                    hydroModel.Workflows.FirstOrDefault(wf => wf.Name.Equals("(RR)"));
 
-                Assert.IsFalse(report.AllErrors.Any());
+                Assert.IsNotNull(hydroModel.CurrentWorkflow);
 
-                //Create missing link
-                var exporter = new RainfallRunoffModelExporter();
-                exporter.Export(rrModel, randomPath);
-
-                var bcFilePath = Path.Combine(randomPath, "BoundaryConditions.bc");
-                Assert.IsTrue(File.Exists(bcFilePath));
-
-                //find boundary conditions.
-                var reader = new DelftBcReader();
-                var bcFile = reader.ReadDelftBcFile(bcFilePath);
-                Assert.IsTrue(bcFile
-                    .Any(c => c.Name.Equals("Boundary")
-                              && c.Properties.Any(
-                                  p => p.Name.Equals("name")
-                                       && p.Value.Equals("Catchment1_boundary"))));
+                // run
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
             }
 
             FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
