@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             if (!File.Exists(gridFile)) 
                 return;
 
-            model.ExportTo(mduFilePath, false);
+            model.ExportTo(mduFilePath, false, false);
             model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
             
             TryInitializeApi();
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 catch
                 {
                     api.Dispose(); //cleanup previous instance
-                    Log.ErrorFormat("API failed to generate snapped feature {0}. Try reopening the project if the problem persists.", featureType);
+                    Log.WarnFormat("API failed to generate snapped feature {0}. Try reopening the project if the problem persists.", featureType);
                 }
             }
 
