@@ -16,6 +16,7 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
@@ -839,6 +840,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
             //Clean directory
+            FileUtils.DeleteIfExists(netFile);
+        }
+
+        [Test]
+        public void TestGetSnappedBoundaryConditionWithNoPreviousSnappedFeatures()
+        {
+            var importer = new FlowFMNetFileImporter();
+            Assert.IsNotNull(importer);
+            //Using some example files from another tests
+            var netFile = TestHelper.GetTestFilePath(@"D3DFMIQ-16\westerscheldt04_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+            Assert.IsTrue(File.Exists(netFile));
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+                gui.Run();
+
+                var fmModel = AddFMModelToProject(app);
+
+                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                //We don't want to use the NetFileImporter for the same reason.
+                File.Copy(netFile, fmModel.NetFilePath, true);
+                fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
+
+                var boundary = new Feature2D{ Geometry = new LineString(new[] { new Coordinate(0.0, 0.0), new Coordinate(100.0, 100.0) }) };
+                fmModel.Boundaries.Add(boundary);
+
+                Assert.DoesNotThrow(
+                    () =>
+                        fmModel.GetGridSnappedGeometry(UnstrucGridOperationApi.Boundary, boundary.Geometry)
+                );
+            }
+
+
             FileUtils.DeleteIfExists(netFile);
         }
 

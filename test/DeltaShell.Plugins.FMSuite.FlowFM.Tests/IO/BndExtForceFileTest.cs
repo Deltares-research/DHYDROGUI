@@ -10,9 +10,11 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Markup;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO;
 
@@ -849,6 +851,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
             bndExtForceFile = new BndExtForceFile();
             bndExtForceFile.Read(extFileName, modelDefinition);
+        }
+
+        [Test]
+        public void WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName()
+        {
+            var bndExtForceFile = new BndExtForceFile();
+            var firstBoundary = new Feature2D
+            {
+                Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
+            };
+            Assert.IsNullOrEmpty(firstBoundary.Name);
+
+            var bcSet = new BoundaryConditionSet { Feature = firstBoundary };
+            var resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(string.Empty, new List<BoundaryConditionSet>{ bcSet}, DateTime.Today);
+
+            Assert.IsFalse(resultingItems.Any());
         }
     }
 }

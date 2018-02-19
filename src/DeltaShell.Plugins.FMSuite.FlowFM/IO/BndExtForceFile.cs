@@ -160,8 +160,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var resultingItems =
                 boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
-                    .Select(boundaryConditionSet => existingPolylineFiles[boundaryConditionSet.Feature])
-                    .Select(pliFileName => CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero))
+                    .Select(boundaryConditionSet =>
+                    {
+                        string pliFileName;
+                        return existingPolylineFiles.TryGetValue(boundaryConditionSet.Feature, out pliFileName) ? CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero) : null;
+                    }).Where( it => it != null)
+//                    .Select(pliFileName => CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero))
                     .ToList();
 
             /* Write all morphology boundaries in one file.*/
@@ -209,6 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (!existingPolylineFiles.TryGetValue(boundaryConditionSet.Feature, out existingFile))
                 {
                     existingFile = ExtForceFileHelper.GetPliFileName(boundaryConditionSet);
+                    if (string.IsNullOrEmpty(existingFile)) return;
                     existingPolylineFiles[boundaryConditionSet.Feature] = existingFile;
                 }
                 if (WriteToDisk)

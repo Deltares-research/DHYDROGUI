@@ -70,8 +70,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var featurePart =
                 new string(
-                    ((Feature2D) featureData.Feature).Name.Where(c => !Path.GetInvalidFileNameChars().Contains(c))
+                    ((Feature2D) featureData.Feature).Name?.Where(c => !Path.GetInvalidFileNameChars().Contains(c))
                                                            .ToArray());
+            if (string.IsNullOrEmpty(featurePart)) return null;
+
             var quantityPart = ExtForceQuantNames.GetPliQuantitySuffix(featureData);
             var filename = featurePart + quantityPart;
             while (File.Exists(filename))
