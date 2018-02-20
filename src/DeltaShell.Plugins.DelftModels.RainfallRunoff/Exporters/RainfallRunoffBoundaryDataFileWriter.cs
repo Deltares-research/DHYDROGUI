@@ -26,20 +26,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             };
 
             var startTime = rainfallRunoffModel.StartTime;
-            
+            var rrBoundaries = new List<IFeature>();
             foreach (var boundaryData in rainfallRunoffModel.BoundaryData)
             {
                 categories.Add(GenerateBoundaryConditionDefinition(startTime, boundaryData));
+                rrBoundaries.Add(boundaryData.Boundary);
             }
             var rrModel = rainfallRunoffModel as RainfallRunoffModel;
             if (rrModel != null)
             {
-                var rrBoundaries = new List<IFeature>();
-                foreach (var link in rrModel.GetAllModelData().SelectMany(md => {
-                    var links = new List<ModelLink>();
-                    RainfallRunoffModelController.AddLink(links, md.Catchment);
-                    return links;
-                }))
+                var linksFound = rrModel.GetAllModelData()
+                    .SelectMany(md =>
+                    {
+                        var links = new List<ModelLink>();
+                        RainfallRunoffModelController.AddLink(links, md.Catchment);
+                        return links;
+                    });
+
+                foreach (var link in linksFound)
                 {
                     if (link.ToFeature != null && !(link.ToFeature is RunoffBoundary)) continue;
                     var boundary = link.ToFeature ?? link.FromFeature;

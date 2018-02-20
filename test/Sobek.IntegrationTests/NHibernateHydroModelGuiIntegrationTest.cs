@@ -814,11 +814,18 @@ namespace Sobek.IntegrationTests
                 //find boundary conditions.
                 var reader = new DelftBcReader();
                 var bcFile = reader.ReadDelftBcFile(bcFilePath);
+                //Check only one runoff boundary appears in the file.
                 Assert.IsTrue(bcFile
                     .Any(c => c.Name.Equals("Boundary")
                               && c.Properties.Any(
                                   p => p.Name.Equals("name")
-                                       && p.Value.Equals("Catchment1_boundary"))));
+                                       && p.Value.Equals("RunoffBoundary1"))));
+                Assert.AreEqual(1,
+                    bcFile
+                    .Count(c => c.Name.Equals("Boundary")
+                              && c.Properties.Any(
+                                  p => p.Name.Equals("name")
+                                       && p.Value.Equals("RunoffBoundary1"))));
             }
 
             FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
