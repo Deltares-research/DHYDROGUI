@@ -11,7 +11,7 @@ namespace DeltaShell.Dimr
 
         private const string STANDARD_BINFOLDER_NAME = "bin";
         private const string STANDARD_SCRIPTFOLDER_NAME = "scripts";
-        private const string SHARE_FOLDER_NAME = "share";
+        private const string SHARED_FOLDER_NAME = "shared";
 
         private const string DIMR_FOLDER_NAME = "dimr";
         private const string WAVE_FOLDER_NAME = "dwaves";
@@ -35,7 +35,7 @@ namespace DeltaShell.Dimr
 
         public static string SharedDllPath
         {
-            get { return Path.Combine(KernelsDirectory, "x64", SHARE_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
+            get { return Path.Combine(KernelsDirectory, "x64", SHARED_FOLDER_NAME); }
         }
 
         public static string DimrDllPath
