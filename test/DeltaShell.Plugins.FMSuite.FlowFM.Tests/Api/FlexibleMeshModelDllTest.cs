@@ -305,6 +305,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
                 var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+
                 var snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
@@ -325,6 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.IsTrue(model.SnapsToGrid(snappedWeir));
                 Assert.IsTrue(model.SnapsToGrid(snappedGate));
                 Assert.IsTrue(model.SnapsToGrid(snappedPump));
+                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
                 Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
                 Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
                 Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
@@ -516,6 +520,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(model.SnapsToGrid(snappedPump));
+            }
+        }
+
+        [Test]
+        public void TestGetSnappedEmbankmentFeature()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localCopy);
+
+            using (var api = new RemoteFlexibleMeshModelApi())
+            {
+                api.Initialize(model.MduFilePath);
+
+                var gridExtent = model.GridExtent;
+
+                var center = gridExtent.Centre;
+                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+
+                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
             }
         }
 
