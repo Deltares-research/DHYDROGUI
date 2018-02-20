@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string Gate = "gate";
         public const string Pump = "pump";
         public const string Embankment = "embankment";
+        public const string SourceSink = "sourcesink";
         public const string Boundary = "boundary";
         public const string WaterLevelBnd = "waterlevelbnd";
         public const string VelocityBnd = "velocitybnd";

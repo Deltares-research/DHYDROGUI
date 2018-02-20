@@ -185,17 +185,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             if (dirty)
                 return; //list already dirty, so don't update
-
+            var feature = e.Item is IFeatureData ? ((IFeatureData)e.Item).Feature : (IFeature) e.Item;
             switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Add:
-                    SnappedFeatures.Insert(e.Index, GetSnappedFeature((IFeature)e.Item));
+                    SnappedFeatures.Insert(e.Index, GetSnappedFeature(feature));
                     break;
                 case NotifyCollectionChangeAction.Remove:
                     SnappedFeatures.RemoveAt(e.Index);
                     break;
                 case NotifyCollectionChangeAction.Replace:
-                    SnappedFeatures[e.Index] = GetSnappedFeature((IFeature)e.Item);
+                    SnappedFeatures[e.Index] = GetSnappedFeature(feature);
                     break;
                 case NotifyCollectionChangeAction.Reset:
                     dirty = true;

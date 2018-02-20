@@ -6,6 +6,7 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -625,6 +626,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
                  Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+            }
+        }
+
+        [Test]
+        public void TestGetSnappedSourceSinkFeature()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localCopy);
+
+            using (var api = new RemoteFlexibleMeshModelApi())
+            {
+                api.Initialize(model.MduFilePath);
+
+                model.SourcesAndSinks.Add(new SourceAndSink
+                {
+                    Feature = new Feature2D
+                    {
+                        Geometry = model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry //Geometry from above test
+                    }
+                });
+
+                var snappedSourcesAndSinksBnd =
+                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
+                        model.SourcesAndSinks.First().Feature.Geometry);
+
+                Assert.IsTrue(model.SnapsToGrid(snappedSourcesAndSinksBnd));
             }
         }
 
