@@ -152,7 +152,7 @@ namespace DelftTools.Hydro.CrossSections
             return definition is CrossSectionDefinitionZW ? 2.0 : 1.0;
         }
 
-        public static void GetCrossSectionDefinitionSectionBounds(this ICrossSectionDefinition definition, out double minY, out double maxY)
+        public static void GetCrossSectionDefinitionSectionBounds(this CrossSectionDefinition definition, out double minY, out double maxY)
         {
             /*
                  YZ - goes from 0 to Width
@@ -160,24 +160,25 @@ namespace DelftTools.Hydro.CrossSections
                  ZW - goes from 0 to +1/2 width (width factor is 2)
                  standard - goes from -1/2 width to +1/2 width
             */
-
+            
             if (definition is CrossSectionDefinitionZW)
             {
                 minY = 0.0;
-                maxY = definition.Width / 2;
+                maxY = definition.FlowWidth() / 2;
                 return;
             }
 
             if (definition is CrossSectionDefinitionStandard)
             {
-                minY = -definition.Width / 2;
-                maxY = definition.Width / 2;
+                minY = -definition.FlowWidth() / 2;
+                maxY = definition.FlowWidth() / 2;
                 return;
             }
 
             // default (YZ & XYZ)
             minY = 0.0;
-            maxY = definition.Width;
+            maxY = definition.FlowWidth();
         }
+
     }
 }

@@ -487,7 +487,7 @@ namespace DelftTools.Hydro.Tests
             Assert.IsTrue(CheckCrossSectionDefinitionSectionsAreCorrectlyFitted(crossSectionDefinition));
         }
 
-        private bool CheckCrossSectionDefinitionSectionsAreCorrectlyFitted(ICrossSectionDefinition crossSectionDefinition)
+        private bool CheckCrossSectionDefinitionSectionsAreCorrectlyFitted(CrossSectionDefinition crossSectionDefinition)
         {
             if (!crossSectionDefinition.Sections.Any()) return false;
 
@@ -506,8 +506,35 @@ namespace DelftTools.Hydro.Tests
             
             return true;
         }
-        
+
         #endregion
 
+        [Test]
+        public void TestGetCrossSectionDefinitionSectionBounds()
+        {
+            var csDefYZ = CrossSectionDefinitionYZ.CreateDefault();
+            csDefYZ.YZDataTable.Rows[0].DeltaZStorage = 25.0;
+
+            double minY;
+            double maxY;
+            csDefYZ.GetCrossSectionDefinitionSectionBounds(out minY, out maxY);
+
+            Assert.AreEqual(0.0, minY);
+            Assert.AreEqual(csDefYZ.Width, maxY);
+        }
+
+        [Test]
+        public void TestGetCrossSectionDefinitionSectionBounds_WithStorageOnZWCrossSections()
+        {
+            var csDefZW = CrossSectionDefinitionZW.CreateDefault();
+            csDefZW.ZWDataTable.Rows[0].StorageWidth = 25.0;
+            
+            double minY;
+            double maxY;
+            csDefZW.GetCrossSectionDefinitionSectionBounds(out minY, out maxY);
+
+            Assert.AreEqual(0.0, minY);
+            Assert.AreEqual((csDefZW.Width - 25.0) / 2, maxY);
+        }
     }
 }
