@@ -118,7 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 var snappedGeometries = GetGridSnappedGeometryCore(featureType, geometries);
 
-                if (featureType == WaterLevelBnd || featureType == VelocityBnd || featureType == DischargeBnd)
+                if (featureType == WaterLevelBnd || featureType == VelocityBnd || featureType == DischargeBnd 
+                    || featureType == SourceSink)
                     snappedGeometries = snappedGeometries.Select(ConvertToMultiPoint).ToList();
 
                 return snappedGeometries;
