@@ -215,6 +215,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             var cs1 = CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch1, chainage1, yzCoordinates);
             var cs2 = CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch2, chainage2, yzCoordinates);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
             // add discretization
             Discretization networkDiscretization = WaterFlowModel1DTestHelper.GetNetworkDiscretization(network);
@@ -341,6 +342,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             CrossSectionHelper.AddCrossSection(branch1, 90, -15);
 
             branch1.CrossSections.First().Name = "cs";
+
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
             // add discretization
             var networkDiscretization = new Discretization
@@ -528,6 +531,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 // add cross-section:
                 CrossSectionHelper.AddCrossSection(newChannel, 10, -10);
+
+                WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(flow.Network);
 
                 // fix comp grid:
                 HydroNetworkHelper.GenerateDiscretization(flow.NetworkDiscretization, true, false, 100.0, false, 0.0,
@@ -767,6 +772,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var branch1 = waterFlowModel1D.Network.Branches[0];
 
                 NetworkHelper.AddBranchFeatureToBranch(CrossSection.CreateDefault(CrossSectionType.YZ, branch1, 0), branch1, 50);
+                WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
                 waterFlowModel1D.NetworkDiscretization.Clear();
                 waterFlowModel1D.NetworkDiscretization[new NetworkLocation(branch1, 0)] = 0.0;
                 waterFlowModel1D.NetworkDiscretization[new NetworkLocation(branch1, 50)] = 0.0;
@@ -1048,6 +1055,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             AddCrossSection(branch1, 60, -10);
             AddCrossSection(branch2, 50, -10);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
             // setup 1d flow waterFlowModel1D
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
             using (var waterFlowModel1D = new WaterFlowModel1D
@@ -1112,6 +1121,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             AddCrossSection(branch1, 60, -10);
             AddCrossSection(branch2, 50, -10);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
             // setup 1d flow waterFlowModel1D
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
             using (var waterFlowModel1D = new WaterFlowModel1D
@@ -1169,6 +1180,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             AddCrossSection(branch1, 60, -10);
             AddCrossSection(branch2, 50, -10);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
             // setup 1d flow waterFlowModel1D
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
             using (var waterFlowModel1D = new WaterFlowModel1D
@@ -1225,6 +1238,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             AddCrossSection(branch1, 40, -10);
             AddCrossSection(branch1, 60, -5);
             AddCrossSection(branch2, 50, -10);
+
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
             // setup 1d flow waterFlowModel1D
             DateTime startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
@@ -1326,18 +1341,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             }
         }
 
-        /// <summary>
-        /// adds a crossection in the middle of every bracnh 
-        /// </summary>
-        /// <param name="network"></param>
-        /// <param name="depth"> </param>
-        private static void AddDefaultCrossSectionsAtBranchCenters(IHydroNetwork network, int depth)
-        {
-            foreach (var channel in network.Channels)
-            {
-                AddCrossSection(channel, channel.Length / 2, depth);
-            }
-        }
         private static void AddCrossSection(IChannel branch1, double chainage, double depth)
         {
             string name = "crs1" + branch1.Name + "_" + chainage;
@@ -2480,6 +2483,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                 var branch = waterFlowModel1D.Network.Channels.First();
                 CrossSectionHelper.AddCrossSection(branch, 10, -10);
 
+                WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
                 var startOfBranch = new NetworkLocation(branch, 0.0);
                 var endOfBranch = new NetworkLocation(branch, 100.0);
 
@@ -2546,7 +2551,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 var branch = waterFlowModel1D.Network.Channels.First();
                 CrossSectionHelper.AddCrossSection(branch, 10, -10);
-                
+
+                WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
                 if (f4HasValues)
                 {
                     var startOfBranch = new NetworkLocation(branch, 0.0);
@@ -3258,6 +3265,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             // add cross-section
             CrossSectionHelper.AddCrossSection(branch1, 50.0d, 0.0d);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
             //add observation point
             var observationPoint = ObservationPoint.CreateDefault(branch1);
             observationPoint.Name = "OP";
@@ -3417,6 +3426,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             definitionYZ.YZDataTable.AddCrossSectionYZRow(26, 1.0, 0);
             var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, definitionYZ, 105.0d);
             crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(network, crossSection);
+
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
             // add weir
             var weir = new Weir { CrestWidth = 5, CrestLevel = 1, FlowDirection = FlowDirection.Both };

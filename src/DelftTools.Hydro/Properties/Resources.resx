@@ -151,7 +151,7 @@
   <data name="CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__" xml:space="preserve">
     <value>Could not add CrossSectionSection with duplicate name '{0}'</value>
   </data>
-  <data name="CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_" xml:space="preserve">
-    <value>The Main section width of cross section {0} has been changed from {1} m to {2} m.</value>
+  <data name="CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m" xml:space="preserve">
+    <value>The {0} section width of cross section {1} has been changed from {2}m to {3}m</value>
   </data>
 </root>

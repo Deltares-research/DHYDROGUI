@@ -42,6 +42,7 @@
     <Compile Include="CrossSectionDefinitionExtensionsTest.cs" />
     <Compile Include="CrossSectionDefinitionProxyTest.cs" />
     <Compile Include="CrossSectionDefinitionStandardTest.cs" />
+    <Compile Include="CrossSectionDefinitionTest.cs" />
     <Compile Include="CrossSectionDefinitionXYZTest.cs" />
     <Compile Include="CrossSectionDefinitionYZTest.cs" />
     <Compile Include="CrossSectionDefinitionZWTest.cs" />

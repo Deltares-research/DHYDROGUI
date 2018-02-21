@@ -8,13 +8,13 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using Sobek.IntegrationTests;
 
 namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
 {
@@ -80,6 +80,8 @@ namespace DeltaShell.Plugins.DeveloperTools.Commands.IntegratedDemoModels
 
             var crossSection10 = new CrossSectionDefinitionProxy(yzCrossSectionDefinition);
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSection10, 1000.0d).Name = "10";
+
+            ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(hydroNetwork);
         }
 
         private static void ConfigureHydroArea(HydroArea hydroArea)

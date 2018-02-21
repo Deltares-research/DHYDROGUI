@@ -4,8 +4,10 @@ using System.Linq;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils;
@@ -58,6 +60,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // add cross-sections
             AddDefaultCrossSection(channel, "crs1", 40);
+
+            RefreshCrossSectionDefinitionSectionWidths(network);
+
             return network;
         }
 
@@ -222,6 +227,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                                                           branch.Length / 10.0);
             }
             return networkDiscretization;
+        }
+
+        public static void RefreshCrossSectionDefinitionSectionWidths(IHydroNetwork network)
+        {
+            // fix for added validation (cross section definition sections total width should not be less than total cross section width
+            network.CrossSections.Select(cs => cs.Definition)
+                .OfType<CrossSectionDefinition>()
+                .Union
+                (
+                    network.CrossSections.Select(cs => cs.Definition)
+                        .OfType<CrossSectionDefinitionProxy>()
+                        .Select(csdp => csdp.InnerDefinition)
+                        .OfType<CrossSectionDefinition>()
+                )
+                .ForEach(csd => csd.RefreshSectionsWidths());
         }
     }
 }

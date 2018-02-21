@@ -674,6 +674,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             };
             WaterFlowModel1DDemoModelTestHelper.ReplaceStoreForOutputCoverages(flowModel1D);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(flowModel1D.Network);
+
             ActivityRunner.RunActivity(flowModel1D);
 
             if (flowModel1D.Status == ActivityStatus.Failed)

@@ -11,6 +11,7 @@ namespace DelftTools.Hydro.Tests.TestObjects
     /// </summary>
     public class TestCrossSectionDefinition:CrossSectionDefinition
     {
+        private IEnumerable<Coordinate> profile;
         public TestCrossSectionDefinition()
         {
             
@@ -26,7 +27,7 @@ namespace DelftTools.Hydro.Tests.TestObjects
 
         public override IEnumerable<Coordinate> FlowProfile
         {
-            get { throw new NotImplementedException(); }
+            get { return profile ?? new List<Coordinate>(); }
         }
 
         
@@ -42,12 +43,12 @@ namespace DelftTools.Hydro.Tests.TestObjects
 
         public override IEnumerable<Coordinate> Profile
         {
-            get { return new List<Coordinate>(); }
+            get { return profile ?? new List<Coordinate>(); }
         }
 
         public override void ShiftLevel(double delta)
         {
-            throw new NotImplementedException();
+            // do nothing
         }
 
         public override Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
@@ -63,6 +64,14 @@ namespace DelftTools.Hydro.Tests.TestObjects
         public override int GetRawDataTableIndex(int profileIndex)
         {
             throw new NotImplementedException();
+        }
+
+        public override object Clone()
+        {
+            var clone = (TestCrossSectionDefinition)base.Clone();
+            clone.profile = this.profile;
+
+            return clone;
         }
     }
 }

@@ -244,6 +244,9 @@ namespace Sobek.IntegrationTests
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(new[] {new Point(0, 0), new Point(0, 100.0)});
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(),
                                                                  CrossSectionDefinitionYZ.CreateDefault(), 20.0);
+
+            ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+            
             var lateral = new LateralSource {Chainage = 15.0}; //not on grid
             network.Branches.First().BranchFeatures.Add(lateral);
             lateral.Geometry = new Point(0, 15.0);

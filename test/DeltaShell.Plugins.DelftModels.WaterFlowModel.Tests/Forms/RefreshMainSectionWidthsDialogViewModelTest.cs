@@ -86,23 +86,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Forms
         [Test]
         public void SelectedCrossSectionsAreFixedByFixSelectedCrossSectionsCommand()
         {
-            var csDefZw = new CrossSectionDefinitionZW("Definition test 1")
+            var csDefZw = CrossSectionDefinitionZW.CreateDefault();
+            csDefZw.Name = "Definition test 1";
+
+            var mainSection = new CrossSectionSection()
             {
-                Sections =
-                {
-                    new CrossSectionSection
-                    {
-                        MinY = 0.0,
-                        MaxY = 30.0,
-                        SectionType = new CrossSectionSectionType {Name = CrossSectionDefinitionZW.MainSectionName}
-                    }
-                }
+                SectionType = new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName },
+                MinY = 0.0,
+                MaxY = 30.0
             };
 
-            csDefZw.ZWDataTable.AddCrossSectionZWRow(10, 150, 40);
-            csDefZw.ZWDataTable.AddCrossSectionZWRow(6, 50, 40);
-            csDefZw.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
-
+            csDefZw.Sections.Add(mainSection);
+            
             var afterFixCount = 0;
 
             var viewModel = new RefreshMainSectionWidthsDialogViewModel

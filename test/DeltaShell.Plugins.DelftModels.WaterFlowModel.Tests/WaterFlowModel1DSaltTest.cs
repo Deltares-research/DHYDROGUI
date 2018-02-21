@@ -291,6 +291,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
                 //add a single crossection halfway the branch
                 CrossSectionHelper.AddCrossSection(network.Channels.First(), 500, -5);
+                WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
                 //generate discretization 
                 HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, true, false, 200, false,

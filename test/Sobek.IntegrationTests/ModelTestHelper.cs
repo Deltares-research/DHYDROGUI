@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -36,6 +38,21 @@ namespace Sobek.IntegrationTests
                                                         a is RainfallRunoffModel ||
                                                         a is RealTimeControlModel));
             return hydroModel;
+        }
+
+        public static void RefreshCrossSectionDefinitionSectionWidths(IHydroNetwork network)
+        {
+            // fix for added validation (cross section definition sections total width should not be less than total cross section width
+            network.CrossSections.Select(cs => cs.Definition)
+                .OfType<CrossSectionDefinition>()
+                .Union
+                (
+                    network.CrossSections.Select(cs => cs.Definition)
+                        .OfType<CrossSectionDefinitionProxy>()
+                        .Select(csdp => csdp.InnerDefinition)
+                        .OfType<CrossSectionDefinition>()
+                )
+                .ForEach(csd => csd.RefreshSectionsWidths());
         }
     }
 }

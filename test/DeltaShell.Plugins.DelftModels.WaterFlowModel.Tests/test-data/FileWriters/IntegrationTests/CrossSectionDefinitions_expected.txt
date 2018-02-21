@@ -32,7 +32,7 @@
     deltaZStorage         = 0.000 0.000 0.000 0.000 0.000 0.000
     sectionCount          = 3                   
     roughnessNames        = Main;FloodPlain1;FloodPlain2
-    roughnessPositions    = 0.000 25.000 75.000 100.000
+    roughnessPositions    = 0.000 160.850 210.850 235.850
     roughnessTypesPos     = 1 4 9               
     roughnessValuesPos    = 45.000 40.000 35.000
     roughnessTypesNeg     = 1 4 9               

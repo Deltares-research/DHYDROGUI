@@ -64,14 +64,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms
                 .Select(vm => vm.Section)
                 .ForEach(cs =>
                 {
-                    var crossSectionDefZw = cs.Definition as CrossSectionDefinitionZW;
-                    if (crossSectionDefZw != null) crossSectionDefZw.RefreshSectionsWidths();
+                    var crossSectionDef = cs.Definition as CrossSectionDefinition;
+                    if (crossSectionDef != null) crossSectionDef.RefreshSectionsWidths();
 
                     var crossSectionDefProxy = cs.Definition as CrossSectionDefinitionProxy;
                     if (crossSectionDefProxy == null) return;
 
-                    crossSectionDefZw = crossSectionDefProxy.InnerDefinition as CrossSectionDefinitionZW;
-                    if (crossSectionDefZw != null) crossSectionDefZw.RefreshSectionsWidths();
+                    crossSectionDef = crossSectionDefProxy.InnerDefinition as CrossSectionDefinition;
+                    if (crossSectionDef != null) crossSectionDef.RefreshSectionsWidths();
                 });
 
             AfterFix?.Invoke();

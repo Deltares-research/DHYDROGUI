@@ -54,6 +54,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             app.OpenProject(dsProjPath);
 
             var waterFlowModel1D = app.Project.RootFolder.Models.OfType<WaterFlowModel1D>().ToList()[0];
+
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+
             waterFlowModel1D.Initialize();
             string errorMessage;
             var actualDirectory = Path.Combine(waterFlowModel1D.WorkingDirectory, waterFlowModel1D.DirectoryName);
