@@ -241,6 +241,7 @@
     <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
+    <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
     <Compile Include="Gui\SupportPointSelectionFormTest.cs" />

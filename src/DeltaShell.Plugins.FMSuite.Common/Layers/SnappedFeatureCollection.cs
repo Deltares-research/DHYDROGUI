@@ -213,12 +213,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             if (OriginalFeatures.Count <= 0) 
                 return;
 
-            var originalGeometries = OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry).ToArray();
+            var originalGeometries = new List<IGeometry>();
+            originalGeometries.AddRange(OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry));
+            //SourceSink is a FeatureData, so we need to extract the feature geometry from it.
+            originalGeometries.AddRange(OriginalFeatures.OfType<IFeatureData>().Select(f => f.Feature.Geometry));
+
             var snappedGeometries = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, originalGeometries).ToArray();
 
-            for (int i = 0; i < OriginalFeatures.Count; i++)
+            for (var i = 0; i < OriginalFeatures.Count; i++)
             {
                 var feature = OriginalFeatures[i];
+                if (feature is IFeatureData)
+                    feature = ((IFeatureData) feature).Feature;
+
                 SnappedFeatures.Add(GetSnappedFeature((IFeature) feature, snappedGeometries[i]));
             }
         }

@@ -54,6 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public const string BoundaryConditionsLayerName = "Boundary Conditions";
         public const string SourcesAndSinksLayerName = "Sources and Sinks";
         public const string OutputSnappedFeaturesLayerName = "Output Snapped features";
+        public const string GridSnappedFeaturesLayerName = "Grid-snapped features";
 
         public ILayer CreateLayer(object data, object parent)
         {
@@ -164,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var snappedGroupLayerData = data as FMSnappedFeaturesGroupLayerData;
             if (snappedGroupLayerData != null)
             {
-                var groupLayer = new GroupLayer("Grid-snapped features") {Visible = false, NameIsReadOnly = true};
+                var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName) {Visible = false, NameIsReadOnly = true};
                 foreach (var snappedFeatures in snappedGroupLayerData.ChildData)
                 {
                     var layer = new VectorLayer(snappedFeatures.LayerName)
