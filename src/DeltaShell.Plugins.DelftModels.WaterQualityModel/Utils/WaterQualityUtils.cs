@@ -1,7 +1,7 @@
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core.Workflow;
+using System.Threading;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
@@ -20,8 +20,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <param name="timeOut">The time out in milliseconds (when <paramref name="useTimeOut"/> is true)</param>
         /// <param name="dataReceivedEventHandler">EventHandler for output that is written to the console (default null)</param>
         /// <returns>Whether the execution ended successfully or not</returns>
-        public static bool RunProcess(string exePath, string parameters, string workDirectory, bool useTimeOut = true, int timeOut = 3000, DataReceivedEventHandler dataReceivedEventHandler = null)
+        public static bool RunProcess(string exePath, string parameters, string workDirectory, Func<bool> isCanceled, bool useTimeOut = true, int timeOut = 3000, DataReceivedEventHandler dataReceivedEventHandler = null)
         {
+            if (isCanceled == null)
+            {
+                isCanceled = () => false;
+            }
+
             Log.InfoFormat("Starting process: '{0} {1}' from working directory '{2}'.", exePath, parameters, workDirectory);
             
             var waqModelProcess = new Process
@@ -57,32 +62,56 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
                     waqModelProcess.BeginOutputReadLine();
                 }
 
-                if (useTimeOut)
+                var timePasted = 0;
+                while (!waqModelProcess.HasExited)
                 {
-                    if (!waqModelProcess.WaitForExit(timeOut))
+                    if (isCanceled() || (useTimeOut && timePasted > timeOut))
                     {
-                        waqModelProcess.Kill();
-                        Log.Error("Model process hung.");
-
-                        return false;
+                        break;
                     }
-                }
-                else
-                {
-                    waqModelProcess.WaitForExit();
+
+                    Thread.Sleep(500);
+                    timePasted += 500;
                 }
 
                 if (useOutputMonitoring)
                 {
                     waqModelProcess.OutputDataReceived -= dataReceivedEventHandler;
                 }
+
+                if (waqModelProcess.HasExited && waqModelProcess.ExitCode != 0)
+                {
+                    Log.ErrorFormat($"The process ({Path.GetFileNameWithoutExtension(exePath)}) has exited with error code {waqModelProcess.ExitCode}");
+                    return false;
+                }
+
+                if (!isCanceled() && (!useTimeOut || timePasted <= timeOut))
+                {
+                    return true;
+                }
+
+                var closeMainWindow = false;
+                try
+                {
+                    closeMainWindow = waqModelProcess.CloseMainWindow();
+                }
+                catch (Exception) {}
+                finally
+                {
+                    if (!closeMainWindow && !waqModelProcess.HasExited)
+                    {
+                        Log.ErrorFormat($"Could not close process ({Path.GetFileNameWithoutExtension(exePath)}) normally, trying to kill the process");
+                        waqModelProcess.Kill();
+                    }
+                }
+
+                return false;
             }
             finally
             {
+                waqModelProcess.Close();
                 Directory.SetCurrentDirectory(currentDir);
             }
-
-            return true;
         }
 
         /// <summary>

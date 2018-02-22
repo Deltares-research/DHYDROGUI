@@ -1137,7 +1137,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
 
             waqPreProcessor = new WaqFileBasedPreProcessor();
-            waqPreProcessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => this.AddTextDocument(displayName, filePath));
+            var success = waqPreProcessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => this.AddTextDocument(displayName, filePath));
+            if (!success)
+            {
+                throw new Exception("Failed to initialize pre-processor.\r\nPlease look at List file for more information.");
+            }
 
             //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
             waqProcessor = new WaqFileBasedProcessor();
@@ -1147,6 +1151,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnExecute()
         {
             InvokeAndRestoreDirectory(OnExecuteCore);
+        }
+
+        protected override void OnCancel()
+        {
+            if (waqPreProcessor != null)
+                waqPreProcessor.TryToCancel = true;
+
+            if (waqProcessor != null)
+                waqProcessor.TryToCancel = true;
         }
 
         private void OnExecuteCore()

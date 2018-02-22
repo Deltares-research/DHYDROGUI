@@ -27,7 +27,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         // save the work directory, because you cannot know it anymore in Cleanup phase.
         private string workDirectory;
-        
+
+        public bool TryToCancel { get; set; }
+
         public bool InitializeWaq(WaqInitializationSettings initSettings, Action<ADataItemMetaData, string> addTextDocumentAction)
         {
             CheckInput(initSettings);
@@ -80,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             var startTime = DateTime.Now;
             Log.Info("Started delwaq1.exe.");
-            var processSuccessful = WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq1ExePath(), parameters, workDirectory, false);
+            var processSuccessful = WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq1ExePath(), parameters, workDirectory, () => TryToCancel, false);
             Log.InfoFormat("Done running delwaq1.exe. (Took {0})", DateTime.Now - startTime);
 
             // Read the output files

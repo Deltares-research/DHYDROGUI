@@ -24,6 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         private const int NoDataValue = -999;
 
+        public bool TryToCancel { get; set; }
+
         public void Initialize(WaqInitializationSettings initializationSettings)
         {
             var outputDirectory = initializationSettings.Settings.OutputDirectory;
@@ -49,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             Log.Debug("Started delwaq2.exe.");
             WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq2ExePath(),
                 string.Format("deltashell.inp " + optionalDuflowSwitch),
-                initializationSettings.Settings.WorkDirectory, false, 3000,
+                initializationSettings.Settings.WorkDirectory, ()=> TryToCancel, false, 3000,
                 (s, e) =>
                 {
                     if (string.IsNullOrEmpty(e.Data) || setProgress == null) return;

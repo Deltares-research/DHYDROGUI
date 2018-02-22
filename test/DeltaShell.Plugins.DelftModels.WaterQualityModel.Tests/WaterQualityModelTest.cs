@@ -18,6 +18,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProc
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
@@ -31,6 +32,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMapTestUtils;
 
@@ -1008,6 +1010,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             TypeUtils.SetField(model, "layerType", LayerType.ZLayer);
             Assert.AreEqual(LayerType.ZLayer, model.LayerType);
             Assert.AreEqual(model.ZTop, model.GetDefaultZ());
+        }
+
+        [Test]
+        public void CallingCancelShouldCancelOnProcessorAndPreProcessor()
+        {
+            var preProcessor = MockRepository.GenerateStrictMock<IWaqPreProcessor>();
+            var processor = MockRepository.GenerateStrictMock<IWaqProcessor>();
+
+            preProcessor.Expect(p => p.TryToCancel).SetPropertyWithArgument(true);
+            processor.Expect(p => p.TryToCancel).SetPropertyWithArgument(true);
+
+            preProcessor.Replay();
+            processor.Replay();
+
+            var model = new WaterQualityModel();
+
+            TypeUtils.SetField(model, "waqPreProcessor", preProcessor);
+            TypeUtils.SetField(model, "waqProcessor", processor);
+
+            model.Cancel();
+
+            preProcessor.VerifyAllExpectations();
+            processor.VerifyAllExpectations();
         }
 
         private void SetUpModelToHaveFunctionInHydroDataWithName(WaterQualityModel model, string functionName, string someValidFilepath)

@@ -24,5 +24,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// Adds the output generated in <see cref="Process"/> function to the output of the waterQualityModel
         /// </summary>
         void AddOutput(string workDirectory, IList<WaterQualityObservationVariableOutput> observationVariableOutputs, Action<ADataItemMetaData, string> addTextDocument, MonitoringOutputLevel monitoringOutputLevel);
+
+        /// <summary>
+        /// Set to indicate that the processor should stop executing
+        /// </summary>
+        bool TryToCancel { get; set; }
     }
 }

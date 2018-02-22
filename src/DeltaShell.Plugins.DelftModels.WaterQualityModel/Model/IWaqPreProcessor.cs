@@ -13,5 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <exception cref="NullReferenceException">Throws when <param name="initSettings"></param> is null</exception>
         /// <returns>Initialization completed successfully</returns>
         bool InitializeWaq(WaqInitializationSettings initSettings, Action<ADataItemMetaData, string> addTextDocumentAction);
+
+        /// <summary>
+        /// Set to indicate that the processor should stop executing
+        /// </summary>
+        bool TryToCancel { get; set; }
     }
 }
