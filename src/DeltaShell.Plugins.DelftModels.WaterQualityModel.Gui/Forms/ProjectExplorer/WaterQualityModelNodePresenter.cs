@@ -97,16 +97,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
         {
             var contextMenuStrip = new ContextMenuStrip();
 
-            var exportInputFile = CreateMenuItem("Export input file(s)", Resources.blue_document_export, (s, e) => gui.CommandHandler.ExportFrom(model, new InputFileExporter()));
-            
-            var validationReport = new WaterQualityModelValidator().Validate(model);
-            if (validationReport.ErrorCount > 0)
-            {
-                exportInputFile.Enabled = false;
-                exportInputFile.ToolTipText = Resources.WaterQualityModelNodePresenter_GetContextMenu_Water_quality_model_is_not_valid__Please_check_the_validation_report_;
-            }
-            
-            contextMenuStrip.Items.Add(exportInputFile);
+            var exportInputFileMenuItem = CreateMenuItem("Export input file(s)", Resources.blue_document_export, (s, e) => gui.CommandHandler.ExportFrom(model, new InputFileExporter()));
+            contextMenuStrip.Items.Add(exportInputFileMenuItem);
             contextMenuStrip.Items.Add(CreateMenuItem(Resources.WaterQualityModelNodePresenter_GetContextMenu_Validate, Resources.Validate, (s, e) => ValidateClick(model, gui)));
 
             return new MenuItemContextMenuStripAdapter(contextMenuStrip);
