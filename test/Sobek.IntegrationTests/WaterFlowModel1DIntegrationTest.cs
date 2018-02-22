@@ -204,6 +204,8 @@ namespace Sobek.IntegrationTests
             {
                 waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
 
+                ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+
                 // cloned model failed if source contains later sources
                 // importedModel.HydroNetwork.Branches.ForEach(b => b.BranchFeatures.RemoveAllWhere(bf => bf is LateralSource));
 
