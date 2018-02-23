@@ -655,11 +655,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     // create a model
                     var waqModel = WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData();
                     app.Project.RootFolder.Add(waqModel);
-                    
-                    ActivityRunner.RunActivity(waqModel);
-                    Assert.That(waqModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
-                    Assert.That(waqModel.OutputOutOfSync, Is.False);
 
+                    waqModel.OutputOutOfSync = false;
+                    
                     // save it
                     app.SaveProjectAs(savePath);
                     Assert.That(waqModel.OutputOutOfSync, Is.False);
