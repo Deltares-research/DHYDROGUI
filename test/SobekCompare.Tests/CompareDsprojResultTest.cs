@@ -21,6 +21,7 @@ using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
+using SobekCompare.Tests.Helpers;
 
 namespace SobekCompare.Tests
 {
@@ -119,7 +120,7 @@ namespace SobekCompare.Tests
                     : application.GetAllModelsInProject().OfType<WaterFlowModel1D>().FirstOrDefault();
 
                 Assert.NotNull(flowModel);
-
+                SobekCompareTestHelper.RefreshCrossSectionDefinitionSectionWidths(flowModel.Network);
 
                 var model = hydroModel != null ? (IModel) hydroModel : flowModel;
                 var projDir = Path.GetDirectoryName(dsProjPath);

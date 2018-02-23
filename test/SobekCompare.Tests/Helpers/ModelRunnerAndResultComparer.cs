@@ -67,6 +67,7 @@ namespace SobekCompare.Tests.Helpers
             waterFlowModel1D = modelToRun.Activities.OfType<WaterFlowModel1D>().FirstOrDefault();
             if (waterFlowModel1D != null)
             {
+                SobekCompareTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
                 waterFlowModel1D.ExplicitWorkingDirectory = Path.Combine(tempDirectory, "dflow1d");  // This is the place where the TBL files are copied to. 
             }
             rainfallRunoffModel = modelToRun.Activities.OfType<RainfallRunoffModel>().FirstOrDefault();
