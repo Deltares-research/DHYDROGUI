@@ -12,6 +12,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
+using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -154,41 +155,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             var fmModel = target as IWaterFlowFMModel;
             var network = fmModel?.Network;
+
+            network?.BeginEdit(new DefaultEditAction("Importing GWSW database"));
             var importedFeatureElements = new List<INetworkFeature>();
-            var subSteps = network != null ? 3 : 2;
-            var totalSteps = FilesToImport.Count * subSteps; /*1. Import Gwsw Element, 2. Import INetworkFeature, 3.Add to Network.*/
-            foreach (var filePath in FilesToImport)
+
+            try
             {
-                var fileStep = FilesToImport.IndexOf(filePath) * subSteps;
-                if (!File.Exists(filePath))
+                var subSteps = network != null ? 3 : 2;
+                var totalSteps = FilesToImport.Count * subSteps; /*1. Import Gwsw Element, 2. Import INetworkFeature, 3.Add to Network.*/
+                foreach (var filePath in FilesToImport)
                 {
-                    Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
-                    continue;
-                }
-                
-                //Get the file content as a list of Gwsw Elements
-                SetProgress($"Importing file {filePath}", fileStep, totalSteps);
-                var elementList = ImportGwswElementList(filePath); // TODO Sil deze stap duurt enkele seconden
-                if (!elementList.Any()) continue;
+                    var fileStep = FilesToImport.IndexOf(filePath) * subSteps;
+                    if (!File.Exists(filePath))
+                    {
+                        Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
+                        continue;
+                    }
 
-                fileStep++;
-                SetProgress($"Importing file {Path.GetFileName(filePath)}", fileStep, totalSteps);
-                var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network).ToList();
-                Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, elementsCreated.Count);
-                
-                SewerFeatureType elementType;
-                var elementTypeName = elementList.FirstOrDefault()?.ElementTypeName;
-                if (Enum.TryParse(elementTypeName, out elementType))
-                {
-                    fileStep++;
+                    //Get the file content as a list of Gwsw Elements
                     SetProgress($"Importing file {filePath}", fileStep, totalSteps);
-                    InsertFeatures(elementsCreated, network, elementType);
+                    var elementList = ImportGwswElementList(filePath);
+                    if (!elementList.Any()) continue;
+
+                    fileStep++;
+                    SetProgress($"Importing file {Path.GetFileName(filePath)}", fileStep, totalSteps);
+                    var elementsCreated = SewerFeatureFactory.CreateMultipleInstances(elementList, network).ToList();
+                    Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, elementsCreated.Count);
+
+                    SewerFeatureType elementType;
+                    var elementTypeName = elementList.FirstOrDefault()?.ElementTypeName;
+                    if (Enum.TryParse(elementTypeName, out elementType))
+                    {
+                        fileStep++;
+                        SetProgress($"Importing file {filePath}", fileStep, totalSteps);
+                        InsertFeatures(elementsCreated, network, elementType);
+                    }
+
+                    if (elementsCreated.Any())
+                    {
+                        importedFeatureElements.AddRange(elementsCreated);
+                    }
                 }
-
-                if (elementsCreated.Any())
-                    importedFeatureElements.AddRange(elementsCreated);
             }
-
+            finally
+            {
+                network?.EndEdit();
+            }
+            
             return importedFeatureElements;
         }
 
