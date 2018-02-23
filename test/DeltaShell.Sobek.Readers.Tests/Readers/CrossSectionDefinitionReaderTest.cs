@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -12,6 +13,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     [TestFixture]
     public class CrossSectionDefinitionReaderTest
     {
+        private const double Delta = 1e-8;
+
         [Test]
         public void ReadingCorruptDefinitionShouldNotThrow()
         {
@@ -895,6 +898,37 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.IsNotNull(definition);
         }
 
+        [Test]
+        public void MakeListOfValuesUnique_OutwardValuesAreEqual()
+        {
+            var originalValues = new List<double> { -25.0, -25.0, -25.0, -20.0, -15.0, -5.0, 5.0, 15.0, 20.0, 25.0, 25.0, 25.0 };
+            var uniqueValues = TypeUtils.CallPrivateStaticMethod(typeof(CrossSectionDefinitionReader), "MakeValuesUniqueInwards", originalValues);
+            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -25.0, -25.0 + Delta, -25.0 + 2 * Delta, -20, -15.0, -5.0, 5.0, 15.0, 20.0, 25.0 - 2 * Delta, 25.0 - Delta, 25.0 }));
+        }
+
+        [Test]
+        public void MakeListOfValuesUnique_InnerValuesAreEqual()
+        {
+            var originalValues = new List<double> { -25.0, -25.0, -20.0, -20.0, -15.0, -5.0, 5.0, 20.0, 20.0, 25.0, 25.0, 25.0 };
+            var uniqueValues = TypeUtils.CallPrivateStaticMethod(typeof(CrossSectionDefinitionReader), "MakeValuesUniqueInwards", originalValues);
+            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -25.0, -25.0 + Delta, -20.0, -20.0 + Delta, -15.0, -5.0, 5.0, 20.0 - Delta, 20.0, 25.0 - 2 * Delta, 25.0 - Delta, 25.0 }));
+        }
+
+        [Test]
+        public void MakeListOfValuesUnique_MoreThanTwoInnerValuesAreEqual()
+        {
+            var originalValues = new List<double> { -2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0 };
+            var uniqueValues = TypeUtils.CallPrivateStaticMethod(typeof(CrossSectionDefinitionReader), "MakeValuesUniqueInwards", originalValues);
+            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -2.0, -2.0 + Delta, -2 * Delta, -Delta, 0.0, Delta, 2 * Delta, 2.0 - Delta, 2.0 }));
+        }
+
+        [Test]
+        public void MakeListOfValuesUnique_EvenNumberOfValues()
+        {
+            var originalValues = new List<double> { -2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0 };
+            var uniqueValues = TypeUtils.CallPrivateStaticMethod(typeof(CrossSectionDefinitionReader), "MakeValuesUniqueInwards", originalValues);
+            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -2.0, -2.0 + Delta, 0.0 - 2 * Delta, 0.0 - Delta, 0.0, 0.0 + Delta, 2.0 - Delta, 2.0 }));
+        }
     }
 }
 
