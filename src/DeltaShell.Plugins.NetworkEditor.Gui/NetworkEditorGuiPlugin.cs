@@ -30,6 +30,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.Feature2DEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
@@ -182,6 +183,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            // TODO Sil added sewer views at this location, has to be moved to a more approperiate location
+            yield return new ViewInfo<IManhole, ManholeView>();
+            
             yield return new ViewInfo<CrossSectionFromCsvFileImporterBase, CrossSectionCsvImportWizard>();
             yield return new ViewInfo<IPump, PumpView>
                 {

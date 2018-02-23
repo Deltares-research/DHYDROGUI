@@ -198,6 +198,10 @@
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
+    <Compile Include="Forms\SewerFeatureViews\ManholeView.xaml.cs">
+      <DependentUpon>ManholeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\ManholeViewModel.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
     </Compile>
@@ -1076,6 +1080,10 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Forms\SewerFeatureViews\ManholeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Forms\StructureFeatureView\CulvertViewWpf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
