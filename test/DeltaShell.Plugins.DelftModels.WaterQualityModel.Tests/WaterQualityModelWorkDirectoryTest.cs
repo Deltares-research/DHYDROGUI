@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -150,6 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 FileUtils.DeleteIfExists(testModelDirectory);
                 FileUtils.DeleteIfExists(Directory.GetParent(testHydFilePath).FullName);
+                Thread.Sleep(100); // Give system enough time to delete these files, before the next test case is being tested.
             }
         }
 
