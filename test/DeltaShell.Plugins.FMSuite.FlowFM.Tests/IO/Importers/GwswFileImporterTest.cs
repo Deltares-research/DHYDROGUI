@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -612,7 +613,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(featuresAsConnections.Any(f => f is Manhole));
         }
 
-        private static IHydroNetwork ImportFromDefinitionFileAndCheckFeatures()
+        private static IHydroNetwork ImportFromDefinitionFileAndCheckFeatures(string testFilePath)
         {
             var model = new WaterFlowFMModel();
             var network = model.Network;
@@ -622,7 +623,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(network.Pumps.Any());
 
             var gwswImporter = new GwswFileImporter();
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+            var filePath = GetFileAndCreateLocalCopy(testFilePath);
             try
             {
                 //Definition file is 'comma' separated, but the features are 'semicolon', so we need to change the delimeter.
@@ -647,13 +648,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void TestImportFromDefinitionFileCreatesAllSortOfElementsInNetwork()
         {
-            ImportFromDefinitionFileAndCheckFeatures();
+            ImportFromDefinitionFileAndCheckFeatures(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
+        }
+
+        [Test]
+        [TestCase(@"gwswFiles\GWSW_DidactischStelsel\GWSW.hydx_Definitie_DM.csv", 4000)]
+        [TestCase(@"gwswFiles\GWSW_Leiden\GWSW.hydx_Definitie_DM.csv", 100000)]
+        public void GivenGwswDatabase_WhenImporting_ShouldBeFasterThan(string testFilePath, float maximumImportingTimeInMs)
+        {
+            var model = new WaterFlowFMModel();
+            var network = model.Network;
+            Assert.IsFalse(network.Pipes.Any());
+            Assert.IsFalse(network.Manholes.Any());
+            Assert.IsFalse(network.SharedCrossSectionDefinitions.Any());
+            Assert.IsFalse(network.Pumps.Any());
+
+            var gwswImporter = new GwswFileImporter();
+            var filePath = GetFileAndCreateLocalCopy(testFilePath);
+            try
+            {
+                //Definition file is 'comma' separated, but the features are 'semicolon', so we need to change the delimeter.
+                TestHelper.AssertIsFasterThan(maximumImportingTimeInMs, () =>
+                {
+                    gwswImporter.CsvDelimeter = ',';
+                    gwswImporter.LoadDefinitionFile(filePath);
+                    gwswImporter.CsvDelimeter = ';';
+                    gwswImporter.ImportItem(null, model);
+                });
+                
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("While importing an exception was thrown {0}", e.Message);
+            }
+
+            Assert.IsTrue(network.Manholes.Any());
+            Assert.IsTrue(network.SharedCrossSectionDefinitions.Any());
+            Assert.IsTrue(network.Pipes.Any()); //There are some pipes defined within the verbinding.csv
+            Assert.IsTrue(network.Pumps.Any()); //There are some pumps defined within the verbinding.csv
         }
 
         [Test]
         public void TestImportFromDefinitionFileAndCheckGwswUseCaseImportsAllSewerConnectionsCorrectly()
         {
-            var network = ImportFromDefinitionFileAndCheckFeatures();
+            var network = ImportFromDefinitionFileAndCheckFeatures(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var numberOfSewerConnectionsInGwsw = 97;
             Assert.IsNotNull(network);
             Assert.IsNotNull(network.SewerConnections);
@@ -684,7 +722,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void TestImportFromDefinitionFileAndCheckCheckGwswUseCaseImportsAllCompartmentsCorrectly()
         {
-            var network = ImportFromDefinitionFileAndCheckFeatures();
+            var network = ImportFromDefinitionFileAndCheckFeatures(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var numberOfManholesInGwsw = 76;
             Assert.IsNotNull(network);
 
