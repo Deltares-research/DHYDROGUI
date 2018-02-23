@@ -277,7 +277,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private IEnumerable<ValidationIssue> ValidateWaterQualityNameableMapFeatures<T>(WaterQualityModel model, IEnumerable<T> nameablePointFeatures, string pointTypeDescription, Func<T, bool> shouldCheckZFunction, IEnumerable<string> existingNames, string alreadyFoundItemDescription) where T : NameablePointFeature
         {
-            var foundNames = new HashSet<string>(existingNames);
+            var alreadyExistingNames = new HashSet<string>(existingNames);
+            var foundNames = new HashSet<string>();
 
             // If not a ZLayer model, then we are working with a sigma-layered model:
             var min = model.LayerType == LayerType.Sigma ? 0.0 : model.ZBot;
@@ -306,12 +307,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     }
                 }
 
+                var alreadyExistingNamesContainsName = alreadyExistingNames.Contains(pointFeature.Name.ToLowerInvariant());
                 var foundNamesContainsName = foundNames.Contains(pointFeature.Name.ToLowerInvariant());
-                if (foundNamesContainsName)
+                var typeName = alreadyExistingNamesContainsName ? alreadyFoundItemDescription : pointTypeDescription;
+
+                if (alreadyExistingNamesContainsName || foundNamesContainsName)
                 {
                     yield return new ValidationIssue(pointFeature, ValidationSeverity.Error,
-                        string.Format("{0} names should be unique and another with name '{1}' was already found.",
-                            pointTypeDescription, pointFeature.Name));
+                        string.Format("{0} names should be unique and another {1} with name '{2}' was already found.",
+                            pointTypeDescription, typeName.ToLower(), pointFeature.Name));
                 }
                 else
                 {
