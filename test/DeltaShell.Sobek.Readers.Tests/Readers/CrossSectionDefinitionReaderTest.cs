@@ -820,8 +820,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             
             //TODO: check the added delta and the message.
             Assert.AreEqual(21,definition.YZ.Count);
-            const double expectedDelta = 0.00000001;
-            Assert.AreEqual(1051.455+expectedDelta,definition.YZ[18].X,expectedDelta/10);
+            Assert.AreEqual(definition.YZ[17].X, 1051.455 - Delta, Delta/10);
+            Assert.AreEqual(definition.YZ[18].X, 1051.455, Delta/10);
         }
 
         [Test]
@@ -834,12 +834,12 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                                 "1 7.446 <\r\n" +
                                 "1 6.142 <\r\n" +
                                 "tble  gl 0 gu 0   crds";
-            const double expectedDelta = 0.00000001;
             var definition = new CrossSectionDefinitionReader().Parse(text).ToList()[0];
 
-            Assert.AreEqual(1.0d, definition.YZ[0].X, expectedDelta/10);
-            Assert.AreEqual(1.0d + expectedDelta, definition.YZ[1].X, expectedDelta/10);
-            Assert.AreEqual(1.0d + 2*expectedDelta, definition.YZ[2].X, expectedDelta/10);
+            Assert.AreEqual(definition.YZ[0].X, 1.0d - 2 * Delta, Delta/10);
+            Assert.AreEqual(definition.YZ[1].X, 1.0d - Delta, Delta/10);
+            Assert.AreEqual(definition.YZ[2].X, 1.0d, Delta/10);
+            Assert.AreEqual(definition.YZ[3].X, 1.0d + Delta, Delta/10);
         }
 
         [Test]
