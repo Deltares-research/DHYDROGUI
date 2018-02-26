@@ -9,18 +9,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerConnectionPipeGenerator: SewerConnectionGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             if (gwswElement == null) return null;
-            return CreateSewerConnection<Pipe>(gwswElement, network);
+            return CreateSewerConnection<Pipe>(gwswElement, network, importHelper);
         }
 
-        protected override void SetSewerConnectionAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network)
+        protected override void SetSewerConnectionAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network, object helper = null)
         {
             var newPipe = element as IPipe;
             if (newPipe == null) return;
 
-            base.SetSewerConnectionAttributes(newPipe, gwswElement, network);
+            base.SetSewerConnectionAttributes(newPipe, gwswElement, network, helper);
 
             var auxDouble = 0.0;
 

@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             };
 
             var generator = new EggCrossSectionDefinitionGenerator();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => generator.Generate(profileGwswElement, new HydroNetwork()), 
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => generator.Generate(profileGwswElement, new HydroNetwork(), null), 
                 "The width and height of sewer profile 'PRO1' are not in the right proportion (2:3). Width is now 250 mm and height is now 375 mm.");
         }
 

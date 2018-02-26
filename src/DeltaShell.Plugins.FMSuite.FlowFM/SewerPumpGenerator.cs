@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public class SewerPumpGenerator : ISewerNetworkFeatureGenerator
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerPumpGenerator));
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper)
         {
             if (gwswElement.IsValidGwswSewerConnection()) return CreatePumpFromGwswSewerConnection(gwswElement, network);
             return CreatePumpFromGwswStructure(gwswElement, network);

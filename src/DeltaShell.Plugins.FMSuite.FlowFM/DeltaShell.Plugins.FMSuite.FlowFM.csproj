@@ -133,6 +133,12 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\LocationInfoApiHelper.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
+    <Compile Include="ArchCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="CircleCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="CunetteCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerManholeGenerator.cs" />
     <Compile Include="SewerProfileMapping.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
@@ -248,6 +254,7 @@
     <Compile Include="SewerPumpGenerator.cs" />
     <Compile Include="SewerStructureMapping.cs" />
     <Compile Include="SewerWeirGenerator.cs" />
+    <Compile Include="TrapezoidCrossSectionDefinitionGenerator.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

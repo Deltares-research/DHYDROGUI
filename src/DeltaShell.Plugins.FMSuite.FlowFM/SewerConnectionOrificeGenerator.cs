@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerConnectionOrificeGenerator: SewerConnectionGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             if (gwswElement.IsValidGwswSewerConnection()) return CreateSewerConnection<SewerConnectionOrifice>(gwswElement, network);
 
@@ -17,12 +17,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return orifice;
         }
 
-        protected override void SetSewerConnectionAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network)
+        protected override void SetSewerConnectionAttributes(ISewerConnection element, GwswElement gwswElement, IHydroNetwork network, object helper)
         {
             var connection = element as SewerConnectionOrifice;
             if (connection == null) return;
 
-            base.SetSewerConnectionAttributes(connection, gwswElement, network);
+            base.SetSewerConnectionAttributes(connection, gwswElement, network, helper);
 
             if (!gwswElement.IsValidGwswStructure()) return;
             double auxDouble;

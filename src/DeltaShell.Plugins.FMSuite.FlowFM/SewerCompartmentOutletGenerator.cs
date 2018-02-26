@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerCompartmentOutletGenerator : SewerCompartmentGenerator
     {
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             return CreateCompartmentForManhole<OutletCompartment>(gwswElement, network);
         }

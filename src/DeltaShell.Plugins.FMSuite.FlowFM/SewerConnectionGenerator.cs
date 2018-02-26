@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -11,21 +12,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerConnectionGenerator: ISewerNetworkFeatureGenerator
     {
-        private static ILog Log = LogManager.GetLogger(typeof(SewerConnectionGenerator));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnectionGenerator));
 
-        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             if (!gwswElement.IsValidGwswSewerConnection()) return null;
-            return CreateSewerConnection<SewerConnection>(gwswElement, network);
+            return CreateSewerConnection<SewerConnection>(gwswElement, network, importHelper);
         }
 
-        protected  T CreateSewerConnection<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : SewerConnection, new()
+        protected  T CreateSewerConnection<T>(GwswElement gwswElement, IHydroNetwork network = null, object importHelper = null) where T : SewerConnection, new()
         {
             if (gwswElement == null) return null;
 
             //Now we are free to create the connection.
             var connection = FindOrGetNewConnection<T>(gwswElement, network);
-            SetSewerConnectionAttributes(connection, gwswElement, network);
+            SetSewerConnectionAttributes(connection, gwswElement, network, importHelper);
             SetSewerConnectionDefaultGeometry(connection);
 
             return connection;
@@ -46,9 +47,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return foundConnection ?? new T { Name = connectionName };
         }
 
-        protected virtual void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement, IHydroNetwork network)
+        protected virtual void SetSewerConnectionAttributes(ISewerConnection sewerConnection, GwswElement gwswElement, IHydroNetwork network, object helper)
         {
             sewerConnection.Network = network;
+            var manholeCompartmentDict = helper as Dictionary<string, IManhole>;
 
             var nodeIdString = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId);
             if (nodeIdString.IsValidAttribute())
@@ -61,7 +63,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var nodeIdEnd = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.NodeUniqueIdEnd);
             if (nodeIdStart.IsValidAttribute() && network != null)
             {
-                var foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdStart.ValueAsString) != null);
+                IManhole foundNode = null; 
+                if (manholeCompartmentDict!= null)
+                {
+                    IManhole auxFoundNode;
+                    if (manholeCompartmentDict.TryGetValue(nodeIdStart.ValueAsString, out auxFoundNode))
+                    {
+                        foundNode = auxFoundNode;
+                    }
+                }
+                else
+                {
+                    foreach (var m in network.Manholes)
+                    {
+                        if (m.GetCompartmentByName(nodeIdStart.ValueAsString) == null) continue;
+                        foundNode = m;
+                        break;
+                    }
+                }
+                
                 if (foundNode == null)
                 {
                     //create node
@@ -69,12 +89,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     network.Nodes.Add(foundNode);
                 }
                 sewerConnection.Source = foundNode;
-                sewerConnection.SourceCompartment = foundNode.GetCompartmentByName(nodeIdStart.ValueAsString);
+                sewerConnection.SourceCompartment = foundNode.GetCompartmentByName(nodeIdStart.ValueAsString); 
             }
 
             if (nodeIdEnd.IsValidAttribute() && network != null)
             {
-                var foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
+                IManhole foundNode = null;
+
+                if (manholeCompartmentDict != null)
+                {
+                    IManhole auxFoundNode;
+                    if (manholeCompartmentDict.TryGetValue(nodeIdEnd.ValueAsString, out auxFoundNode))
+                    {
+                        foundNode = auxFoundNode;
+                    }
+                }
+                else
+                {
+                    foundNode = network.Manholes.FirstOrDefault(m => m.GetCompartmentByName(nodeIdEnd.ValueAsString) != null);
+                }
                 if (foundNode == null)
                 {
                     //create node
@@ -82,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     network.Nodes.Add(foundNode);
                 }
                 sewerConnection.Target = foundNode;
-                sewerConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString);
+                sewerConnection.TargetCompartment = foundNode.GetCompartmentByName(nodeIdEnd.ValueAsString); 
             }
 
             double auxDouble;

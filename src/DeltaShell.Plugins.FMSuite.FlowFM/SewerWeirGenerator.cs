@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerWeirGenerator));
 
-        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             return gwswElement.IsValidGwswSewerConnection() 
                 ? CreateWeirFromGwswSewerConnection(gwswElement, network) 

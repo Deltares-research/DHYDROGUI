@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public class SewerManholeGenerator: ISewerNetworkFeatureGenerator
     {
-        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public virtual INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             if (!gwswElement.IsValidGwswManhole()) return null;
             var manhole = GetNewOrExistingManhole(gwswElement, network);

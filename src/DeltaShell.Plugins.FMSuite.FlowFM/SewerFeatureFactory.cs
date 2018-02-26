@@ -35,11 +35,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             //By using the auxiliar network the objects will be added to it and later used by the other list.
             if (auxList.Any())
             {
-                var validAuxFeatures = auxList.Select(element => CreateInstance(element, auxNetwork)).Where(createdFeatures => createdFeatures != null).ToList();
+                var validAuxFeatures = CreateInstances(auxList, auxNetwork).ToList();
                 AddAuxFeaturesToNetwork(validAuxFeatures, auxNetwork);
             }
 
-            return listOfElements.Select(element => CreateInstance(element, auxNetwork)).Where(createdFeatures => createdFeatures != null).ToList();
+            var networkFeatures = CreateInstances(listOfElements, network).Where(c => c != null);
+            return networkFeatures;
         }
 
         /// <summary>
@@ -48,7 +49,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <param name="gwswElement">Collection of attributes and values extracted from a Csv Element.</param>
         /// <param name="network">HydroNetwork where we can find existing Network Features or add new ones.</param>
         /// <returns>Single Network Feature representing the <param name="gwswElement"/> given as a parameter.</returns>
-        public static INetworkFeature CreateInstance(GwswElement gwswElement, IHydroNetwork network = null)
+        public static INetworkFeature CreateInstance(GwswElement gwswElement, IHydroNetwork network = null, object importHelper = null)
+        {
+            var generator = GetSewerNetworkFeatureGenerator(gwswElement, network);
+            return generator?.Generate(gwswElement, network, importHelper);
+        }
+
+        private static IEnumerable<INetworkFeature> CreateInstances(IList<GwswElement> listOfElements, IHydroNetwork network = null)
+        {
+            var createdNetworkFeatures = new List<INetworkFeature>();
+            // try parse all element type -> make list of items of SewerFeatureTypes
+            var elementTypesList = new List<KeyValuePair<SewerFeatureType, GwswElement>>();
+
+            foreach (var gwswElement in listOfElements)
+            {
+                SewerFeatureType elementType;
+                if(!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) continue;
+
+                elementTypesList.Add(new KeyValuePair<SewerFeatureType, GwswElement>(elementType, gwswElement));
+            }
+
+            // node types
+            var nodeTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Node).Select(k => k.Value).ToList();
+            if (nodeTypes.Any())
+            {
+                createdNetworkFeatures.AddRange(nodeTypes.Select(n => CreateInstance(n, network)).Where(c => c != null));
+            }
+            
+            // Cross section types
+            var crossSectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Crosssection).Select(k => k.Value).ToList();
+            if (crossSectionTypes.Any())
+            {
+                createdNetworkFeatures.AddRange(crossSectionTypes.Select(element => CreateInstance(element, network)).Where(c => c != null));
+            }
+
+            // Connection types
+            var connectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Connection).Select(k => k.Value).ToList();
+            if (connectionTypes.Any())
+            {
+                var connectionImportHelper = CreateConnectionImportHelper(network);
+                var connectionNetworkFeatures = connectionTypes.Select(element => CreateInstance(element, network, connectionImportHelper)).Where(c => c != null);
+                createdNetworkFeatures.AddRange(connectionNetworkFeatures);
+            }
+            
+
+            // Structure types 
+            var structureTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Structure).Select(k => k.Value).ToList();
+            if (structureTypes.Any())
+            {
+                var structureFeatures = structureTypes.Select(element => CreateInstance(element, network)).Where(c => c != null);
+                createdNetworkFeatures.AddRange(structureFeatures);
+            }
+
+            return createdNetworkFeatures;
+        }
+
+        #endregion
+
+        private static ISewerNetworkFeatureGenerator GetSewerNetworkFeatureGenerator(GwswElement gwswElement, IHydroNetwork network = null)
         {
             SewerFeatureType elementType;
             if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
@@ -72,10 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     generator = null;
                     break;
             }
-            return generator?.Generate(gwswElement, network);
+            return generator;
         }
-
-        #endregion
 
         private static ISewerNetworkFeatureGenerator GetCrossSectionGenerator(this GwswElement gwswElement)
         {
@@ -248,6 +304,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             var xAvgCoord = cSum / validCoords;
             return xAvgCoord;
+        }
+
+        private static Dictionary<string, IManhole> CreateConnectionImportHelper(IHydroNetwork network)
+        {
+            var connectionImportHelper = new Dictionary<string, IManhole>();
+            if (network?.Manholes != null)
+            {
+                // get a list of compartment names 
+                foreach (var manhole in network.Manholes)
+                {
+                    var compartments = manhole.Compartments;
+                    foreach (var compartment in compartments)
+                    {
+                        IManhole auxManhole = null;
+                        if (connectionImportHelper.TryGetValue(compartment.Name, out auxManhole)) continue;
+
+                        connectionImportHelper.Add(compartment.Name, manhole);
+                    }
+                }
+            }
+            return connectionImportHelper;
         }
 
         #endregion

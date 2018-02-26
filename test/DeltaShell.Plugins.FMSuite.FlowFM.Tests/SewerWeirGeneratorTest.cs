@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             var sewerConnection = createWithFactory
                 ? SewerFeatureFactory.CreateInstance(gwswElement, network) as SewerConnection
-                : new SewerWeirGenerator().Generate(gwswElement, network) as SewerConnection;
+                : new SewerWeirGenerator().Generate(gwswElement, network, null) as SewerConnection;
             Assert.IsNotNull(sewerConnection);
 
             var createdWeir = sewerConnection.GetStructuresFromBranchFeatures<Weir>().FirstOrDefault();
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             var structureElement = createWithFactory
                 ? SewerFeatureFactory.CreateInstance(gwswElement, network)
-                : new SewerWeirGenerator().Generate(gwswElement, network);
+                : new SewerWeirGenerator().Generate(gwswElement, network, null);
 
             var createdWeir = structureElement as Weir;
             Assert.IsNotNull(createdWeir);
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             var createdWeir = createWithFactory
                 ? SewerFeatureFactory.CreateInstance(gwswElement, network) as Weir
-                : new SewerWeirGenerator().Generate(gwswElement, network) as Weir;
+                : new SewerWeirGenerator().Generate(gwswElement, network, null) as Weir;
             Assert.IsNotNull(createdWeir);
 
             var weirFormula = createdWeir.WeirFormula as SimpleWeirFormula;

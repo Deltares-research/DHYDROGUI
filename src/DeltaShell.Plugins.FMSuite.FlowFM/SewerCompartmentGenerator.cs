@@ -16,10 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
          INetworkFeatures */
         private static ILog Log = LogManager.GetLogger(typeof(SewerCompartmentGenerator));
 
-        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network)
+        public override INetworkFeature Generate(GwswElement gwswElement, IHydroNetwork network, object importHelper = null)
         {
             if (gwswElement == null) return null;
-            var manhole = CreateCompartmentForManhole<Compartment>(gwswElement, network);
+            var manhole = CreateCompartmentForManhole<Compartment>(gwswElement, network, importHelper);
             return manhole;
         }
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return NetworkHelper.GetUniqueName("Manhole{0:D2}ForCompartment"+compartmentName, manholeList, "Manhole");
         }
 
-        protected IManhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null) where T : Compartment, new()
+        protected IManhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null, object importHelper = null) where T : Compartment, new()
         {
             if (gwswElement == null) return null;
 
