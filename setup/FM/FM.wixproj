@@ -106,6 +106,7 @@
     <Content Include="Delft3D FM HMWQ_Resources\setup_start.jpg" />
     <Content Include="Delft3D FM HMWQ_Resources\splash_screen.jpg" />
     <Content Include="Delft3D FM HMWQ_Resources\start_page_background.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\Welcome.htm" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
     <Content Include="FMPlugin.wxi" />

@@ -103,6 +103,7 @@
     <Content Include="D-HYDRO_Resources\setup_start.jpg" />
     <Content Include="D-HYDRO_Resources\splash_screen.jpg" />
     <Content Include="D-HYDRO_Resources\start_page_background.jpg" />
+    <Content Include="D-HYDRO_Resources\Welcome.htm" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
     <Content Include="FMPlugin.wxi" />
