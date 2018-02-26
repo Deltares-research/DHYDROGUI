@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             if (!File.Exists(gridFile)) 
                 return;
 
-            model.ExportTo(mduFilePath, false, false);
+            model.ExportTo(mduFilePath, false);
             model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
             
             TryInitializeApi();
