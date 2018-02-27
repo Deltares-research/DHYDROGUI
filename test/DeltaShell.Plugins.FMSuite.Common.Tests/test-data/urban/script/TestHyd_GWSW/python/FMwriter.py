@@ -51,8 +51,10 @@ class FMwriter:
                 #set coordinate 1 meter to east
                 lastId = manholes[manholeId][-1]
                 xLastId = self.model.nodes[lastId][3]
+                yLastId = self.model.nodes[lastId][4]
                 xNext = float(xLastId) + 1.0 # 1 meter to the east
                 self.model.nodes[id][3] = self.to2Dec(xNext)
+                self.model.nodes[id][4] = self.to2Dec(yLastId) #same y values
                 #add to list
                 manholes[manholeId].append(id)
             else:
@@ -250,11 +252,11 @@ class FMwriter:
         result += 'Function                        = timeseries\n'
         result += 'Time-interpolation              = linear\n'
         result += 'Quantity                        = time\n'
-        result += 'Unit                            = years since 1900-01-01 00:00:00\n'
+        result += 'Unit                            = days since 1900-01-01 00:00:00\n'
         result += 'Quantity                        = dischargebnd\n'
         result += 'Unit                            = m³/s\n'
         result += '0        0.01\n'
-        result += '200      0.01\n\n'
+        result += '73050    0.01\n\n'
         return result
 
     def getBcOutBlock(self, name):
@@ -264,11 +266,11 @@ class FMwriter:
         result += 'Function                        = timeseries\n'
         result += 'Time-interpolation              = linear\n'
         result += 'Quantity                        = time\n'
-        result += 'Unit                            = years since 1900-01-01 00:00:00\n'
+        result += 'Unit                            = days since 1900-01-01 00:00:00\n'
         result += 'Quantity                        = outflowbnd\n'
         result += 'Unit                            = m\n'
         result += '0        -100.0\n'
-        result += '200      -100.0\n\n'
+        result += '73050    -100.0\n\n'
         return result
 
     def  writeXYZStreetlevel(self, dirPath, outputDir):  # write streetlevel as a xyz file
@@ -375,7 +377,6 @@ class FMwriter:
             file.write('name = ' + str(value[2]) + '\n')
             file.write('nodeId = ' + id + '\n')
             file.write('manholeId = ' + str(value[2]) + '\n')
-            file.write('storageType = Reservoir\n')
             file.write('useTable = 0\n')
             file.write('bedLevel = ' + str(value[11]) + '\n')
 
@@ -408,6 +409,7 @@ class FMwriter:
 
             file.write('area = ' + areaStr + '\n')
             file.write('streetLevel = ' + self.to2Dec(streetLevel) + '\n')
+            file.write('storageType = Reservoir\n')
             street_Area = defaultStreetArea
             if str(value[8]) != '' and float(value[8]) > 0.0:
                 street_Area = float(value[8])

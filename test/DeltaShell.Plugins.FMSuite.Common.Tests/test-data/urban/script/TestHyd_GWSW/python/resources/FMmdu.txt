@@ -10,7 +10,7 @@ AutoStart                         = 0                   # Autostart simulation a
 [geometry]
 NetFile                           = sewer_system_net.nc # Unstructured grid file *_net.nc
 OneDNetworkFile                   = sewer_system.md1d   # 1d networkfile
-BedlevelFile                      = street_level.xyz    # Bedlevels points file e.g. *.xyz, only needed for bedlevtype not equal 3
+BedlevelFile                      =                     # street_level.xyz , Bedlevels points file e.g. *.xyz, only needed for bedlevtype not equal 3
 DryPointsFile                     =                     # Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)
 WaterLevIniFile                   =                     # Initial water levels sample file *.xyz
 LandBoundaryFile                  =                     # Land boundaries file *.ldb, used for visualization
@@ -23,7 +23,7 @@ ProfdefFile                       =                     # Channel profile defini
 ProfdefxyzFile                    =                     # Channel profile definition file _profdefinition.def with definition for all profile numbers
 Uniformwidth1D                    = 1.                  # Uniform width for channel profiles not specified by profloc
 Uniformheight1D                   = 1.                  # Uniform height for channel profiles not specified by profloc
-ManholeFile                       = node.ini            # File *.ini containing manholes
+ManholeFile                       =                     # File *.ini containing manholes
 PipeFile                          =                     # File *.pliz containing pipe-based 'culverts'
 ShipdefFile                       =                     # File *.shd containing ship definitions
 WaterLevIni                       = 3.                  # Initial water level at missing s0 values

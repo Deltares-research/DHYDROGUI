@@ -20,7 +20,7 @@
     latDischargeLocFile   =                      # Name and location of the file containing the lateral discharge locations
     boundCondFile         =                      # Name and location of the file containing the boundary conditions and lateral discharges
     sobekSimIniFile       =                      # Name of the sobek sim ini file containing also model parameter which are not in here. Will be phased out later
-    retentionFile         =                      # Name of the retention ini file containing the values of the retention areas
+    retentionFile         = node.ini             # Name of the retention ini file containing the values of the retention areas
     logFile               = sobek.log            # Name of the log file
 
 [ResultsNodes]
