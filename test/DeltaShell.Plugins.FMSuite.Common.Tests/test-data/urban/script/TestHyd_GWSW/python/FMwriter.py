@@ -224,16 +224,16 @@ class FMwriter:
             bndName = 'bnd_' + name
 
             #relation
-            fileExternalForce.write('[boundary]\n')
-            fileExternalForce.write('quantity=dischargebnd\n')
+            fileExternalForce.write('[lateraldischarge]\n')
             fileExternalForce.write('nodeId = ' + str(value[0]) + '\n')
-            fileExternalForce.write('locationfile=' + bndName + '.pli\n')
+            fileExternalForce.write('type = lateraldischarge1d\n')
+            fileExternalForce.write('locationfile=' + bndName + '.pol\n')
             fileExternalForce.write('forcingfile=' + inflowBC + '\n')
             fileExternalForce.write('\n')
 
             #location
             xyz = self.getGeometryBoundary(name,True)
-            self.writePliFile(dirPath,outputDir,bndName,xyz)
+            self.writePolFile(dirPath,outputDir,bndName,xyz)
 
             #boundary data
             l = self.getBcInBlock(bndName)
@@ -720,6 +720,19 @@ class FMwriter:
         plizFile.close()
         return True
 
+    def writePolFile(self, dirPath, outputDir,  name, xyz, fileName = None):
+        if fileName is None:
+            fileName = name
+        plizFile = open(os.path.join(dirPath, outputDir, fileName + '.pol'), 'w')
+        plizFile.write(name + '\n')
+        plizFile.write(str(len(xyz)) + '    2\n')
+        for p in xyz:
+            x = p[0]
+            y = p[1]
+            plizFile.write(self.to2Dec(x) + '    ' + self.to2Dec(y) + '\n')
+        plizFile.close()
+        return True
+
     def getGeometryBoundary(self, nodeId, isInlet = True):
         xyz = []
         node = self.model.nodes[nodeId]
@@ -727,10 +740,14 @@ class FMwriter:
         x = float(node[3])
         y = float(node[4])
         if isInlet:
-            xyz.append([x - 0.5, y + 0.5, z])
-            xyz.append([x, y, z])
-            xyz.append([x + 0.5, y + 0.5, z])
+            xyz.append([x - 0.5, y, z])
+            xyz.append([x, y - 0.5, z])
+            xyz.append([x + 0.5, y, z])
+            xyz.append([x, y + 0.5, z])
+            xyz.append([x - 0.5, y, z])
         else:
+            #connection = self.model.connections.
+            #connectedNode
             xyz.append([x - 0.5, y, z])
             xyz.append([x, y - 0.5, z])
             xyz.append([x + 0.5, y, z])

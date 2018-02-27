@@ -4,10 +4,10 @@ from FMwriter import FMwriter
 from Logger import Logger
 
 p = 'D:\\source\\nghs-1d2dflooding\\test\\DeltaShell.Plugins.FMSuite.Common.Tests\\test-data\\urban\\script\\TestHyd_GWSW\\'
-inputDir = 'GWSW_DidactischStelsel'
-oppervlakOnNode = False
-#inputDir = 'GWSW_Leiden'
-#oppervlakOnNode = True
+#inputDir = 'GWSW_DidactischStelsel'
+#oppervlakOnNode = False
+inputDir = 'GWSW_Waardenburg'
+oppervlakOnNode = True
 outputDir = 'output_FM'
 dirPath = os.path.abspath(p)
 
