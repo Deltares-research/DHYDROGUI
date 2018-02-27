@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -13,9 +14,11 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -36,11 +39,13 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
+using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -928,6 +933,92 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
 
             FileUtils.DeleteIfExists(netFile);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.WindowsForms)]
+        public void TestGetSnappedFeatureAfterFailGetSnappedBoundaryConditionWillNotCrash()
+        {
+            var importer = new FlowFMNetFileImporter();
+            Assert.IsNotNull(importer);
+            //Using some example files from another tests
+            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+            Assert.IsTrue(File.Exists(netFile));
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin
+                {
+                    GridHandler = null
+                }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Run();
+
+                var fmModel = AddFMModelToProject(app);
+
+                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                //We don't want to use the NetFileImporter for the same reason.
+                File.Copy(netFile, fmModel.NetFilePath, true);
+                fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
+                    .SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
+
+                ImportGrid(app, netFile, fmModel);
+
+                //Open grid
+                gui.CommandHandler.OpenView(fmModel.Grid, typeof(WaterFlowFMModelView));
+
+                var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(fmModel);
+
+                var snappedLayer =
+                    modelLayer.Layers.FirstOrDefault(
+                            l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as
+                        GroupLayer;
+                Assert.IsNotNull(snappedLayer);
+                //Make sure the layers are visible.
+                snappedLayer.Visible = false;
+                var boundary = new Feature2D
+                {
+                    Geometry = new LineString(new[] { new Coordinate(-10.0, 900.0), new Coordinate(-10.0, 100.0) })
+                };
+                fmModel.Boundaries.Add(boundary);
+                snappedLayer.Visible = true;
+
+                var thinDam2D = new ThinDam2D
+                {
+                    Geometry = new LineString(new[] { new Coordinate(300.0, 15.0), new Coordinate(1200.0, 1250.0) })
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
+                {
+                    try
+                    {
+                        gui.CommandHandler.OpenView(fmModel.Grid, typeof(WaterFlowFMModelView));
+                        fmModel.Area.ThinDams.Add(thinDam2D);
+                    }
+                    catch (Exception e)
+                    {
+                        Assert.Fail("Not expected to throw an exception here. {0}", e.Message);
+                    }
+                });
+            }
+
+            FileUtils.DeleteIfExists(netFile);
+        }
+
+        private static SnappedFeatureCollection GetSnappedFeatureCollectionFromLayers(IList<ILayer> layers, string layerName)
+        {
+            var layer = layers.FirstOrDefault(l => l.Name == layerName);
+            return layer?.DataSource as SnappedFeatureCollection;
         }
 
         private static WaterFlowFMModel ImportLdbAndGrid(IApplication app, string landBoundaryPath, string netFile)

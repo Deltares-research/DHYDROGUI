@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private VectorStyle OriginalFeaturesLayerStyle { get; set; }
         private List<Feature2D> SnappedFeatures { get; set; }
         private bool dirty;
+        private bool snappedFeatureFailed;
 
         /// <summary>
         /// A <see cref="FeatureCollection"/> for <see cref="IFeature"/> objects that are being
@@ -46,16 +47,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             SnapApiFeatureType = snapApiFeatureType;
             SnappedFeatures = new List<Feature2D>();
             dirty = true;
+            snappedFeatureFailed = false;
         }
 
         public override IList Features
         {
             get
             {
-                if (dirty && LayerIsShown)
+                if ( LayerIsShown && (dirty || snappedFeatureFailed ))
                 {
                     try
                     {
+                        snappedFeatureFailed = false; //Reset it.
                         CalculateSnappedFeatures();
                         dirty = false;
                     }
@@ -158,7 +161,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry=null)
         {
             if (snappedGeometry == null)
+            {
                 snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
+
+                try
+                {
+                    snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);;
+                }
+                catch (Exception)
+                {
+                    snappedFeatureFailed = true;
+                }
+            }
 
             var feature2D = new Feature2D();
             if (feature.Attributes != null)
