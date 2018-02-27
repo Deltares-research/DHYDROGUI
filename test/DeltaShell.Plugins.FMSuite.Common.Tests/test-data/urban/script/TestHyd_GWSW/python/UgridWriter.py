@@ -86,7 +86,7 @@ class UgridWriter:
         #ntw = ncfile.createVariable("network1D", "u4", ())
         ntw = ncfile.createVariable("network", "i4", ())
         ntw.cf_role = 'mesh_topology'
-        ntw.edge_dimension = 'nnetwork_edges'
+        ntw.edge_dimension = 'nnetwork_branches'
         ntw.edge_geometry = 'network_geometry'
         ntw.edge_node_connectivity = 'network_edge_nodes'
         ntw.long_name = "Network topology"
