@@ -1,3 +1,4 @@
+# coding: latin-1
 import os, sys, math
 from netCDF4 import Dataset
 from collections import OrderedDict
@@ -269,9 +270,9 @@ class UgridWriter:
         mesh2d_fn[:] = data_2dmesh["face_node"]
 
         #mesh2d_edge_faces = ncfile.createVariable("mesh2d_edge_faces", "i4", ("nmesh2d_edge", "Two"), fill_value=-1)
-		#mesh2d_edge_faces.cf_role = "edge_face_connectivity"
-		#mesh2d_edge_faces.long_name = "Mapping from every edge to the two faces that it separates"
-		#mesh2d_edge_faces.start_index = 1
+      #mesh2d_edge_faces.cf_role = "edge_face_connectivity"
+      #mesh2d_edge_faces.long_name = "Mapping from every edge to the two faces that it separates"
+      #mesh2d_edge_faces.start_index = 1
         #mesh2d_edge_faces[:] = data_2dmesh["edge_faces"]
 
         mesh2d_face_x = ncfile.createVariable("mesh2d_face_x", "f8", "nmesh2d_faces")
