@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             {
                 try
                 {
-                    snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);;
+                    snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
                 }
                 catch (Exception)
                 {
