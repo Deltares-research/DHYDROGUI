@@ -687,7 +687,6 @@ class FMwriter:
 
     def writeLaterals(self, dirPath, outputDir):  # write all inlets from GWSW model
 
-
         fileLateral = open(os.path.join(dirPath, outputDir, 'lateral_locations.ini'), 'w')
 
         #header
@@ -747,11 +746,38 @@ class FMwriter:
             xyz.append([x, y + 0.5, z])
             xyz.append([x - 0.5, y, z])
         else:
-            #connection = self.model.connections.
-            #connectedNode
-            xyz.append([x - 0.5, y, z])
-            xyz.append([x, y - 0.5, z])
-            xyz.append([x + 0.5, y, z])
+
+            for keyvalue in self.model.connections.items():
+                value = keyvalue[1]
+                if(value[1] == nodeId):
+                    fromNodeId = value[2]
+                    break
+                if(value[2] == nodeId):
+                    fromNodeId = value[1]
+                    break
+
+            fromNode = self.model.nodes[fromNodeId]
+            xFrom = float(fromNode[3])
+            yFrom = float(fromNode[4])
+            if(x - xFrom > 0.0):
+                if(y - yFrom > 0.0):
+                    xyz.append([x , y + 1.0, z])
+                    xyz.append([x + 1.0, y + 1.0, z])
+                    xyz.append([x + 1.0, y , z])
+                else:
+                    xyz.append([x , y - 1.0, z])
+                    xyz.append([x + 1.0, y - 1.0, z])
+                    xyz.append([x + 1.0, y , z])
+            else:
+                if(y - yFrom > 0.0):
+                    xyz.append([x , y + 1.0, z])
+                    xyz.append([x - 1.0, y + 1.0, z])
+                    xyz.append([x - 1.0, y , z])
+                else:
+                    xyz.append([x , y - 1.0, z])
+                    xyz.append([x - 1.0, y - 1.0, z])
+                    xyz.append([x - 1.0, y , z])
+
         return xyz
 
     def getGeometryOfStructure(self, id): #0,5 meter from node, 1 meter south -> north
