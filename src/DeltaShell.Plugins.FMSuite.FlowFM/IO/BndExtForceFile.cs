@@ -165,7 +165,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         string pliFileName;
                         return existingPolylineFiles.TryGetValue(boundaryConditionSet.Feature, out pliFileName) ? CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero) : null;
                     }).Where( it => it != null)
-//                    .Select(pliFileName => CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero))
                     .ToList();
 
             /* Write all morphology boundaries in one file.*/

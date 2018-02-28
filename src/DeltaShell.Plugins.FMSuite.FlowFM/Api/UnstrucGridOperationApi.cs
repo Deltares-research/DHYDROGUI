@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using System.Collections.Generic;
 using System.Threading;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -255,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 catch
                 {
                     api.Dispose(); //cleanup previous instance
-                    Log.WarnFormat("API failed to generate snapped feature {0}. Try reopening the project if the problem persists.", featureType);
+                    Log.WarnFormat(Resources.UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_, featureType);
                 }
             }
 
