@@ -1407,47 +1407,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             TestHelper.AssertLogMessageIsGenerated(() => modelDefinition.UseMorphologySediment = true, expectedMessage, 1);
         }
 
-        //[Test]
-        //public void TestName()
-        //{
-        //    var gui = new DeltaShellGui();
-        //    var app = gui.Application;
-
-        //    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-        //    app.Plugins.Add(new CommonToolsApplicationPlugin());
-        //    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-        //    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-        //    app.Plugins.Add(new HydroModelApplicationPlugin());
-        //    app.Plugins.Add(new RealTimeControlApplicationPlugin());
-        //    app.Plugins.Add(new NetCdfApplicationPlugin());
-        //    app.Plugins.Add(new FlowFMApplicationPlugin());
-        //    app.Plugins.Add(new WaveApplicationPlugin());
-
-        //    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-        //    gui.Plugins.Add(new CommonToolsGuiPlugin());
-        //    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-        //    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-        //    gui.Plugins.Add(new RealTimeControlGuiPlugin());
-        //    gui.Plugins.Add(new FlowFMGuiPlugin());
-        //    gui.Plugins.Add(new WaveGuiPlugin());
-
-        //    gui.Run();
-            
-        //    app.Project.RootFolder.Items.Add(new WaterFlowFMModel());
-        //    var fmModel = app.Project.RootFolder.Items[0] as WaterFlowFMModel;
-        //    Assert.IsNotNull(fmModel);
-
-        //    var ldbFile = new LdbFile();
-        //    var ldbPath = TestHelper.GetTestFilePath(@"landboundaries\sealand.ldb");
-        //    fmModel.Area.LandBoundaries.AddRange(ldbFile.Read(ldbPath));
-
-        //    var tempDir = FileUtils.CreateTempDirectory();
-        //    var mduFilePath = Path.Combine(tempDir, "myMdu.mdu");
-        //    var mduFile = new MduFile();
-
-        //    TestHelper.AssertIsFasterThan(2000, () => mduFile.WriteLandBoundaries(mduFilePath, fmModel.ModelDefinition, fmModel.Area));
-        //}
-
         #region TestHelpers
 
         private void CompareHydroAreaFeatures(HydroArea originalArea, HydroArea savedArea)
