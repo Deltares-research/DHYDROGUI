@@ -226,22 +226,26 @@ namespace DeltaShell.Sobek.Readers.Readers
         {
             const double yDelta = 1e-8;
             var valueCount = uniqueY.Count;
-            var index = (int) Math.Ceiling(0.5 * valueCount);
+            var index = (int)Math.Ceiling(0.5 * valueCount);
 
-            for (var i = index; i < valueCount; i++)
-            {
-                while (uniqueY.Count(val => Math.Abs(val - uniqueY[i]) < 1e-10) > 1)
-                {
-                    uniqueY[i] = uniqueY[i] - yDelta;
-                }
-            }
+            var correctedDelta = yDelta;
+            var deltaCorrection = new double[valueCount];
+            var previous = uniqueY[0];
 
-            for (var i = index - 1; i >= 0; i--)
+            deltaCorrection[0] = correctedDelta;
+            for (var i = 1; i < valueCount; i++)
             {
-                while (uniqueY.Count(val => Math.Abs(val - uniqueY[i]) < 1e-10) > 1)
+                var areEqual = Math.Abs(uniqueY[i] - previous) < 1e-10;
+                previous = uniqueY[i];
+
+                if (i == index)
                 {
-                    uniqueY[i] = uniqueY[i] + yDelta;
+                    correctedDelta = -yDelta;
+                    deltaCorrection[i - 1] = correctedDelta; //Reset the correction if we are in the middle.
                 }
+                if (areEqual) uniqueY[i] += deltaCorrection[i - 1];
+
+                deltaCorrection[i] = areEqual ? deltaCorrection[i - 1] + correctedDelta : correctedDelta;
             }
 
             return uniqueY.OrderBy(d => d).ToList();

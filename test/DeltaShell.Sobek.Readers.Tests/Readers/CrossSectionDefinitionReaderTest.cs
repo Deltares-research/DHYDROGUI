@@ -18,7 +18,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Test]
         public void ReadingCorruptDefinitionShouldNotThrow()
         {
-            const string inValidDefinition = "iunvalid definition";
+            const string inValidDefinition = "invalid definition";
             SobekCrossSectionDefinition definition = null;
             var expectedLogMessage = string.Format("Could not read cross-section definition with specification: \"{0}\"", inValidDefinition);
             Action readDefinitionAction = delegate
@@ -919,7 +919,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var originalValues = new List<double> { -2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0 };
             var uniqueValues = TypeUtils.CallPrivateStaticMethod(typeof(CrossSectionDefinitionReader), "MakeValuesUniqueInwards", originalValues);
-            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -2.0, -2.0 + Delta, -2 * Delta, -Delta, 0.0, Delta, 2 * Delta, 2.0 - Delta, 2.0 }));
+            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -2.0, -2.0 + Delta, -2*Delta, -Delta, 0.0, Delta, 2*Delta, 2.0 - Delta, 2.0 }));
         }
 
         [Test]
@@ -927,7 +927,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         {
             var originalValues = new List<double> { -2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0 };
             var uniqueValues = TypeUtils.CallPrivateStaticMethod(typeof(CrossSectionDefinitionReader), "MakeValuesUniqueInwards", originalValues);
-            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -2.0, -2.0 + Delta, 0.0 - 2 * Delta, 0.0 - Delta, 0.0, 0.0 + Delta, 2.0 - Delta, 2.0 }));
+            Assert.That(uniqueValues, Is.EqualTo(new List<double> { -2.0, -2.0 + Delta, - 2*Delta, - Delta, 0.0, Delta, 2.0 - Delta, 2.0 }));
         }
     }
 }
