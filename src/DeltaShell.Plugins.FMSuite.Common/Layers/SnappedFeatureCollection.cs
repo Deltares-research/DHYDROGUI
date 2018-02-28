@@ -178,6 +178,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             if (feature is INameable)
                 feature2D.Name = ((INameable) feature).Name;
 
+            if (snappedGeometry == null)
+            {
+                snappedFeatureFailed = false;
+                return feature2D;
+            }
+
             if (feature.Geometry is IPoint)
             {
                 //hack: line to snapped point

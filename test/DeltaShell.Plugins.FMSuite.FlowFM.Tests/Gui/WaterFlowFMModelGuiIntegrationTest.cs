@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -14,7 +15,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -26,6 +26,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -810,7 +811,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     var fmModel = AddFMModelToProject(app);
 
-                    //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                    //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without triggering further events.
                     //We don't want to use the NetFileImporter for the same reason.
                     File.Copy(netFile, fmModel.NetFilePath, true);
                     fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
@@ -873,7 +874,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var fmModel = AddFMModelToProject(app);
 
-                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without triggering further events.
                 //We don't want to use the NetFileImporter for the same reason.
                 File.Copy(netFile, fmModel.NetFilePath, true);
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
@@ -884,6 +885,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.DoesNotThrow(
                     () =>
                         fmModel.GetGridSnappedGeometry(UnstrucGridOperationApi.Boundary, boundary.Geometry)
+                );
+            }
+
+            FileUtils.DeleteIfExists(netFile);
+        }
+
+        [Test]
+        public void TestGetSnappedPumpAndDryPointWithNoPreviousSnappedFeatures()
+        {
+            var importer = new FlowFMNetFileImporter();
+            Assert.IsNotNull(importer);
+            //Using some example files from another tests
+            var netFile = TestHelper.GetTestFilePath(@"D3DFMIQ-16\westerscheldt04_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+            Assert.IsTrue(File.Exists(netFile));
+
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin { GridHandler = null }); /* Using an extension to override the method. */
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+                gui.Run();
+
+                var fmModel = AddFMModelToProject(app);
+
+                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without triggering further events.
+                //We don't want to use the NetFileImporter for the same reason.
+                File.Copy(netFile, fmModel.NetFilePath, true);
+                fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
+
+                var pump2D = new Pump2D{Geometry = new LineString(new[] { new Coordinate(0.0, 0.0), new Coordinate(100.0, 100.0) }) };
+                fmModel.Area.Pumps.Add(pump2D);
+                var obsPoint = new GroupableFeature2DPoint{ Geometry = new Point(new Coordinate(100.0, 100.0)) };
+                fmModel.Area.ObservationPoints.Add(obsPoint);
+
+                Assert.DoesNotThrow(
+                    () => { 
+                        //Open grid
+                        gui.CommandHandler.OpenView(fmModel.Grid, typeof(WaterFlowFMModelView));
+
+                        var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                        var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(fmModel);
+
+                        var snappedLayer =
+                            modelLayer.Layers.FirstOrDefault(
+                                    l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as
+                                GroupLayer;
+                        Assert.IsNotNull(snappedLayer);
+                        //Make sure the layers are visible.
+                        snappedLayer.Visible = true;
+                        GetSnappedFeatureCollectionFromLayers(snappedLayer.Layers, "Pumps (Snapped)");
+                        GetSnappedFeatureCollectionFromLayers(snappedLayer.Layers, "Observation Points (Snapped)");
+                    }
                 );
             }
 
@@ -916,7 +977,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var fmModel = AddFMModelToProject(app);
 
-                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without triggering further events.
                 //We don't want to use the NetFileImporter for the same reason.
                 File.Copy(netFile, fmModel.NetFilePath, true);
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(fmModel.NetFilePath));
@@ -927,7 +988,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () =>
                         fmModel.GetGridSnappedGeometry(UnstrucGridOperationApi.Boundary, boundary.Geometry),
-                    string.Format("API failed to generate snapped feature {0}. Try reopening the project if the problem persists.", UnstrucGridOperationApi.Boundary)
+                    string.Format(Resources.UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_, UnstrucGridOperationApi.Boundary)
                     );
             }
 
@@ -965,7 +1026,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var fmModel = AddFMModelToProject(app);
 
-                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without trigerring further events.
+                //We replicate here what the LoadGrid from RGFGrid does when importing an existing grid, but without triggering further events.
                 //We don't want to use the NetFileImporter for the same reason.
                 File.Copy(netFile, fmModel.NetFilePath, true);
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
