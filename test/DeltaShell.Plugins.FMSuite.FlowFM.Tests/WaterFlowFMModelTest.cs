@@ -29,13 +29,11 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -925,6 +923,118 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.DryAreas.FirstOrDefault().GroupName, Is.EqualTo(@"MyDryAreas_dry.pol"));
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void GivenValidFmModel_WhenModelHasRun_ThenProgressTextHasBeenReset()
+        {
+            var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
+            var testDir = FileUtils.CreateTempDirectory();
+            var mduFilePath = Path.Combine(testDir, "FlowFM.mdu");
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            var messageList = new List<string>
+            {
+                "Exporting to mdu file",
+                "Initializing",
+                "0,00 %",
+                "00:17:59 (1,39 %)",
+                "00:10:12 (2,78 %)",
+                "00:07:13 (4,17 %)",
+                "00:05:20 (5,56 %)",
+                "00:04:14 (6,94 %)",
+                "00:03:32 (8,33 %)",
+                "00:03:00 (9,72 %)",
+                "00:02:35 (11,11 %)",
+                "00:02:16 (12,50 %)",
+                "00:02:01 (13,89 %)",
+                "00:01:48 (15,28 %)",
+                "00:01:38 (16,67 %)",
+                "00:01:29 (18,06 %)",
+                "00:01:22 (19,44 %)",
+                "00:01:15 (20,83 %)",
+                "00:01:09 (22,22 %)",
+                "00:01:04 (23,61 %)",
+                "00:01:00 (25,00 %)",
+                "00:00:56 (26,39 %)",
+                "00:00:53 (27,78 %)",
+                "00:00:50 (29,17 %)",
+                "00:00:46 (30,56 %)",
+                "00:00:44 (31,94 %)",
+                "00:00:41 (33,33 %)",
+                "00:00:39 (34,72 %)",
+                "00:00:37 (36,11 %)",
+                "00:00:35 (37,50 %)",
+                "00:00:33 (38,89 %)",
+                "00:00:31 (40,28 %)",
+                "00:00:30 (41,67 %)",
+                "00:00:28 (43,06 %)",
+                "00:00:27 (44,44 %)",
+                "00:00:25 (45,83 %)",
+                "00:00:24 (47,22 %)",
+                "00:00:23 (48,61 %)",
+                "00:00:21 (50,00 %)",
+                "00:00:20 (51,39 %)",
+                "00:00:19 (52,78 %)",
+                "00:00:18 (54,17 %)",
+                "00:00:17 (55,56 %)",
+                "00:00:16 (56,94 %)",
+                "00:00:16 (58,33 %)",
+                "00:00:15 (59,72 %)",
+                "00:00:14 (61,11 %)",
+                "00:00:13 (62,50 %)",
+                "00:00:12 (63,89 %)",
+                "00:00:12 (65,28 %)",
+                "00:00:11 (66,67 %)",
+                "00:00:10 (68,06 %)",
+                "00:00:10 (69,44 %)",
+                "00:00:09 (70,83 %)",
+                "00:00:08 (72,22 %)",
+                "00:00:08 (73,61 %)",
+                "00:00:07 (75,00 %)",
+                "00:00:07 (76,39 %)",
+                "00:00:06 (77,78 %)",
+                "00:00:06 (79,17 %)",
+                "00:00:05 (80,56 %)",
+                "00:00:05 (81,94 %)",
+                "00:00:04 (83,33 %)",
+                "00:00:04 (84,72 %)",
+                "00:00:03 (86,11 %)",
+                "00:00:03 (87,50 %)",
+                "00:00:03 (88,89 %)",
+                "00:00:02 (90,28 %)",
+                "00:00:02 (91,67 %)",
+                "00:00:01 (93,06 %)",
+                "00:00:01 (94,44 %)",
+                "00:00:01 (95,83 %)",
+                "00:00:00 (97,22 %)",
+                "00:00:00 (98,61 %)",
+                "00:00:00 (100,00 %)",
+                "Reading map file",
+                "Reading his file",
+                "Reading dia file",
+                "00:00:00 (100,00 %)"
+            };
+
+            try
+            {
+                var counter = 0;
+                var fmModel = new WaterFlowFMModel(mduFilePath);
+                fmModel.ReferenceTime = fmModel.StartTime;
+                fmModel.ProgressChanged += (sender, args) =>
+                {
+                    Assert.AreEqual(fmModel.ProgressText, messageList[counter]);
+                    counter++;
+                };
+                ActivityRunner.RunActivity(fmModel);
+                counter = 0;
+                ActivityRunner.RunActivity(fmModel);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
         }
 
         [Test]
