@@ -1,3 +1,9 @@
+** INFO   : ********************************************************************************
+** INFO   : Version:      Deltares, dflow1d Version 5.00.024.54451M, Feb 13 2018, 20:10:55
+** INFO   : Build from:   https://repos.deltares.nl/repos/ds/trunk/
+** INFO   : Architecture: Win64
+** INFO   : ********************************************************************************
+** INFO   : 
 ** INFO   : Start of SOBEK computation
 ** INFO   : Density computation set to Eckart(modified)
 ** INFO   : Reading Network ...
@@ -30,7 +36,7 @@
 ** INFO   : Clean Up Spatial Data
 ** INFO   : Cleaning Up Spatial Data Done
 ** INFO   : All Reading Done
-** INFO   : @(#)Deltares, SOBEKSIM Version 5.00.024.53432 (Win64), Nov 22 2017, 20:03:31
+** INFO   : Deltares, dflow1d Version 5.00.024.54451M, Feb 13 2018, 20:10:55
 ** INFO   : Simulation started .....
 ** INFO   : Computation of Conveyance Tables
 ** INFO   : 
@@ -340,7 +346,7 @@
 ** INFO   : 
 
 ****************************************
-Info Messages :      340
+Info Messages :      346
 ****************************************
 
 ** Normal End of Sobeksim

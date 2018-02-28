@@ -496,7 +496,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (string.IsNullOrEmpty(outputPath)) return;
 
-            var outputFilePath = Path.Combine(outputPath, OutputFileName);
+            var dirInfo = new DirectoryInfo(outputPath);
+            if (dirInfo.Parent == null) return;
+
+            var outputFilePath = Path.Combine(dirInfo.Parent.FullName, OutputFileName);
             ReconnectOutputFiles(outputFilePath);
         }
 

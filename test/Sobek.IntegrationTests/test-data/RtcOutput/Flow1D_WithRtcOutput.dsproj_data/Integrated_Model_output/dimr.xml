@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.0.xsd">
+<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
   <documentation>
-    <fileVersion>1.00</fileVersion>
+    <fileVersion>1.2</fileVersion>
     <createdBy>Deltares, Coupling Team</createdBy>
-    <creationDate>2018-01-18T10:42:49.8123826Z</creationDate>
+    <creationDate>2018-02-28T15:27:18.7074818Z</creationDate>
   </documentation>
   <!--<control>
           The <control> specifies the workflow of the deltaresHydro executable.
