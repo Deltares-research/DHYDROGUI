@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro.CrossSections;
+﻿using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Tests.TestObjects;
-using DelftTools.Utils.Reflection;
-using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -37,30 +33,5 @@ namespace DelftTools.Hydro.Tests
 
         #endregion
 
-        #region RefreshSectionWidths
-
-        [Test]
-        public void TestRefreshSectionWidths_CreatesNewMainSectionIfNoSectionsArePresent()
-        {
-            var csDef = new TestCrossSectionDefinition();
-            TypeUtils.SetField(csDef, "profile", new List<Coordinate>()
-            {
-                new Coordinate(0, 0),
-                new Coordinate(40, -10.0),
-                new Coordinate(60, -10.0),
-                new Coordinate(100, 0)
-            });
-
-            Assert.IsTrue(!csDef.Sections.Any());
-
-            csDef.RefreshSectionsWidths();
-            var mainSection = csDef.Sections.FirstOrDefault(css => css.SectionType.Name == CrossSectionDefinition.MainSectionName);
-            Assert.NotNull(mainSection);
-
-            Assert.AreEqual(csDef.Left, mainSection.MinY);
-            Assert.AreEqual(csDef.Right, mainSection.MaxY);
-        }
-
-        #endregion
     }
 }

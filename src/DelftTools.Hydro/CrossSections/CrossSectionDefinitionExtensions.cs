@@ -82,49 +82,82 @@ namespace DelftTools.Hydro.CrossSections
                 MaxY = newMinY + sectionWidth / widthFactor
             });
         }
+
         public static void AdjustSectionWidths(this CrossSectionDefinition crossSectionDefinition)
-        {           
-            var actualCrossSectionWidth = crossSectionDefinition.FlowWidth();
-            var widthDifference = actualCrossSectionWidth - crossSectionDefinition.SectionsTotalWidth();
-            if (Math.Abs(widthDifference) < 1e-10) return;
-
-            var sectionAndIndexToAdjust = crossSectionDefinition.Sections
-                .Select((section, index) => new {section, index})
-                .FirstOrDefault(s => s.section.SectionType.Name.Equals(CrossSectionDefinition.MainSectionName, StringComparison.InvariantCultureIgnoreCase))
-                ?? new { section = crossSectionDefinition.Sections.First(), index = 0 };
-
-            var sectionToAdjust = sectionAndIndexToAdjust.section;
-            if (sectionToAdjust == null) return;
-
-            // Get old Width for log message before updating!
-            var widthFactor = GetWidthFactor(crossSectionDefinition);
-            var oldWidth = (sectionToAdjust.MaxY - sectionToAdjust.MinY) * widthFactor;
-
-            double nextMinY;
-            double nextMaxY;
-            crossSectionDefinition.GetCrossSectionDefinitionSectionBounds(out nextMinY, out nextMaxY);
-            
-            for (var i = 0; i <= sectionAndIndexToAdjust.index; i++)
+        {
+            CrossSectionSection adjustedSection;
+            double oldWidth, newWidth;
+            if (crossSectionDefinition.Sections.Any())
             {
-                var section = crossSectionDefinition.Sections[i];
-                var diff = nextMinY - section.MinY;
+                var actualCrossSectionWidth = crossSectionDefinition.FlowWidth();
+                var widthDifference = actualCrossSectionWidth - crossSectionDefinition.SectionsTotalWidth();
+                if (Math.Abs(widthDifference) < 1e-10) return;
 
-                section.MinY += diff;
-                nextMinY = section.MaxY + diff;
+                var sectionAndIndexToAdjust = crossSectionDefinition.Sections
+                    .Select((section, index) => new {section, index})
+                    .FirstOrDefault(s =>s.section.SectionType.Name.Equals(CrossSectionDefinition.MainSectionName, StringComparison.InvariantCultureIgnoreCase))
+                    ?? new {section = crossSectionDefinition.Sections.First(), index = 0};
+
+                adjustedSection = sectionAndIndexToAdjust.section;
+                if (adjustedSection == null) return;
+                
+                // Get old Width for log message before updating!
+                var widthFactor = GetWidthFactor(crossSectionDefinition);
+                oldWidth = (adjustedSection.MaxY - adjustedSection.MinY) * widthFactor;
+
+                double nextMinY;
+                double nextMaxY;
+                crossSectionDefinition.GetCrossSectionDefinitionSectionBounds(out nextMinY, out nextMaxY);
+
+                for (var i = 0; i <= sectionAndIndexToAdjust.index; i++)
+                {
+                    var section = crossSectionDefinition.Sections[i];
+                    var diff = nextMinY - section.MinY;
+
+                    section.MinY += diff;
+                    nextMinY = section.MaxY + diff;
+                }
+
+                for (var i = crossSectionDefinition.Sections.Count - 1; i >= sectionAndIndexToAdjust.index; i--)
+                {
+                    var section = crossSectionDefinition.Sections[i];
+                    var diff = nextMaxY - section.MaxY;
+
+                    section.MaxY += diff;
+                    nextMaxY = section.MinY + diff;
+                }
+
+                newWidth = (adjustedSection.MaxY - adjustedSection.MinY)*widthFactor;
+            }
+            else
+            {
+                adjustedSection = AddDefaultSection(crossSectionDefinition, out newWidth);
+                oldWidth = 0;
             }
 
-            for (var i = crossSectionDefinition.Sections.Count -1; i >= sectionAndIndexToAdjust.index; i--)
-            {
-                var section = crossSectionDefinition.Sections[i];
-                var diff = nextMaxY - section.MaxY;
-
-                section.MaxY += diff;
-                nextMaxY = section.MinY + diff;
-            }
-
-            var newWidth = (sectionToAdjust.MaxY - sectionToAdjust.MinY) * widthFactor;
             Log.InfoFormat(Resources.CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m,
-                sectionToAdjust.SectionType.Name, crossSectionDefinition.Name, oldWidth, newWidth);            
+                adjustedSection.SectionType.Name, crossSectionDefinition.Name, oldWidth, newWidth);            
+        }
+
+        private static CrossSectionSection AddDefaultSection(CrossSectionDefinition crossSectionDefinition, out double width)
+        {
+            double minY;
+            double maxY;
+            crossSectionDefinition.GetCrossSectionDefinitionSectionBounds(out minY, out maxY);
+
+            var newSection = new CrossSectionSection()
+            {
+                SectionType = new CrossSectionSectionType()
+                {
+                    Name = CrossSectionDefinition.MainSectionName
+                },
+                MinY = minY,
+                MaxY = maxY
+            };
+
+            crossSectionDefinition.Sections.Add(newSection);
+            width = crossSectionDefinition.FlowWidth();
+            return newSection;
         }
 
         public static IList<ICrossSection> FindUsage(this ICrossSectionDefinition definition, IHydroNetwork network)

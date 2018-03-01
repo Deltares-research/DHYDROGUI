@@ -133,7 +133,32 @@ namespace DelftTools.Hydro.Tests
 
         #endregion
 
+
         #region AdjustSectionWidths
+
+        [Test]
+        public void TestAdjustSectionWidths_CreatesNewMainSectionIfNoSectionsArePresent()
+        {
+            var csDef = new TestCrossSectionDefinition { Name = "TestCrossSectionDefinition" };
+            TypeUtils.SetField(csDef, "profile", new List<Coordinate>()
+            {
+                new Coordinate(0, 0),
+                new Coordinate(40, -10.0),
+                new Coordinate(60, -10.0),
+                new Coordinate(100, 0)
+            });
+
+            Assert.IsTrue(!csDef.Sections.Any());
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => csDef.AdjustSectionWidths(),
+                "The Main section width of cross section TestCrossSectionDefinition has been changed from 0m to 100m");
+
+            var mainSection = csDef.Sections.FirstOrDefault(css => css.SectionType.Name == CrossSectionDefinition.MainSectionName);
+            Assert.NotNull(mainSection);
+
+            Assert.AreEqual(csDef.Left, mainSection.MinY);
+            Assert.AreEqual(csDef.Right, mainSection.MaxY);
+        }
 
         const string MainSectionName = "Main";
         const string FP1SectionName = "FloodPlain1";

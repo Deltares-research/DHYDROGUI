@@ -291,26 +291,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual void RefreshSectionsWidths()
         {
-            if (Sections.Any())
-            {
-                this.AdjustSectionWidths();
-            }
-            else
-            { 
-                double minY;
-                double maxY;
-                this.GetCrossSectionDefinitionSectionBounds(out minY, out maxY);
-
-                Sections.Add(new CrossSectionSection()
-                {
-                    SectionType = new CrossSectionSectionType()
-                    {
-                        Name = MainSectionName
-                    },
-                    MinY = minY,
-                    MaxY = maxY
-                });
-            }
+            this.AdjustSectionWidths();
         }
 
         /// <summary>
