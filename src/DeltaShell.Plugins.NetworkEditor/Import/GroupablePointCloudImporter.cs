@@ -12,6 +12,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(GroupablePointCloudImporter));
 
+        public override bool CanImportOnRootLevel
+        {
+            get { return false; }
+        }
+
         protected override object OnImportItem(string path, object target = null)
         {
             try
