@@ -905,7 +905,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var lines = File.ReadAllLines(filePath);
             Assert.IsNotNull(lines);
+
+            //Make sure only one boundary has been added (double check from the test WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName above)
+            Assert.AreEqual(1, lines.Count( l => l.Contains("[boundary]")));
             Assert.IsTrue(lines.Any( l => l.Contains("TestName.pli")));
+
+            
 
             FileUtils.DeleteIfExists(filePath);
         }
