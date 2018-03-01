@@ -849,6 +849,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void TestGetSnappedBoundaryConditionWithNoPreviousSnappedFeatures()
         {
             var importer = new FlowFMNetFileImporter();
@@ -892,6 +893,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void TestGetSnappedPumpAndDryPointWithNoPreviousSnappedFeatures()
         {
             var importer = new FlowFMNetFileImporter();
@@ -952,6 +954,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void TestGetSnappedBoundaryConditionThatWillFailLogsWarnMessage()
         {
             var importer = new FlowFMNetFileImporter();
