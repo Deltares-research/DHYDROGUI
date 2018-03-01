@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -47,8 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string AreaKey = "AREA";
         public const string AveragingTypeKey = "AVERAGINGTYPE";
         public const string RelSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
-        private const string InitialTracerPrefix = "initialtracer";
-        private const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
+        public const string InitialTracerPrefix = "initialtracer";
+        public const string InitialSpatialVaryingSedimentPrefix = "initialsedfrac";
         private const string SedConcPostfix = "_SedConc";
         private static readonly string[] UnsupportedQuantityKeys = { "WUANTITY", "_UANTITY" };
 
@@ -853,42 +854,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            ReadSpatialOperationData(extForceFileItems, modelDefinition, ExtForceQuantNames.InitialWaterLevel,
-                WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
-            ReadSpatialOperationData(extForceFileItems, modelDefinition, ExtForceQuantNames.InitialSalinity,
-                WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            ReadSpatialOperationData(extForceFileItems, modelDefinition, ExtForceQuantNames.InitialSalinityTop,
-                WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            ReadSpatialOperationData(extForceFileItems, modelDefinition, ExtForceQuantNames.InitialTemperature,
-                WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-            ReadSpatialOperationData(FilterByFrictionType(extForceFileItems, modelDefinition), modelDefinition,
-                ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName);
-            ReadSpatialOperationData(extForceFileItems, modelDefinition, ExtForceQuantNames.HorEddyViscCoef,
-                WaterFlowFMModelDefinition.ViscosityDataItemName);
-            ReadSpatialOperationData(extForceFileItems, modelDefinition, ExtForceQuantNames.HorEddyDiffCoef,
-                WaterFlowFMModelDefinition.DiffusivityDataItemName);
-            foreach (var forceFileItem in extForceFileItems)
-            {
-                if (forceFileItem.Quantity.StartsWith(InitialTracerPrefix))
-                {
-                    string tracerName = forceFileItem.Quantity.Substring(InitialTracerPrefix.Length);
-                    ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity, tracerName);
-                }
-                else if (forceFileItem.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix))
-                {
-                    /* DELFT3DFM-1112
-                     * The only Spatially Varying Sediment that gets read from the ExtForces file is
-                     * SedimentConcentration. We could simply remove its prefix, however, due to the 
-                     * way it's meant to be written in said file, we need to add the postfix */
-                    string spatialvaryingSedConc = forceFileItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
-                    ReadSpatialOperationData(extForceFileItems, modelDefinition, forceFileItem.Quantity,
-                        spatialvaryingSedConc);
-                }
-                else if( forceFileItem.FileName.EndsWith(XyzFile.Extension)) // then it was a spatial varying operation.
-                {
-                    log.ErrorFormat(Resources.ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_, forceFileItem.Quantity, InitialTracerPrefix, InitialSpatialVaryingSedimentPrefix);
-                }
+            var unReadExtForceFileItems = extForceFileItems;
 
+            var dict = new Dictionary<string, string>
+            {
+                {ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName},
+                {ExtForceQuantNames.InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
+                {ExtForceQuantNames.InitialSalinityTop, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
+                {ExtForceQuantNames.InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName},
+                {ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName},
+                {ExtForceQuantNames.HorEddyViscCoef, WaterFlowFMModelDefinition.ViscosityDataItemName},
+                {ExtForceQuantNames.HorEddyDiffCoef, WaterFlowFMModelDefinition.DiffusivityDataItemName}
+            };
+
+            foreach (var pair in dict)
+            {
+                ReadSpatialOperationData(unReadExtForceFileItems, modelDefinition, pair.Key, pair.Value);
+                //Remove read items.
+                var readItems = unReadExtForceFileItems.Where(i => i.Quantity == pair.Key);
+                unReadExtForceFileItems.RemoveAllWhere( et => readItems.Contains(et));
+            }
+
+            //Read tracer items.
+            var initialTracerItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialTracerPrefix));
+            unReadExtForceFileItems.RemoveAllWhere(et => initialTracerItems.Contains(et));
+            foreach( var tracerItem in initialTracerItems)
+            {
+                string tracerName = tracerItem.Quantity.Substring(InitialTracerPrefix.Length);
+                ReadSpatialOperationData(extForceFileItems, modelDefinition, tracerItem.Quantity, tracerName);
+            }
+
+            //Read sediment items.
+            var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix));
+            unReadExtForceFileItems.RemoveAllWhere(et => initialSedimentItems.Contains(et));
+            foreach (var tracerItem in initialSedimentItems)
+            {
+                /* DELFT3DFM-1112
+                 * The only Spatially Varying Sediment that gets read from the ExtForces file is
+                 * SedimentConcentration. We could simply remove its prefix, however, due to the 
+                 * way it's meant to be written in said file, we need to add the postfix */
+                string spatialvaryingSedConc = tracerItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
+                ReadSpatialOperationData(extForceFileItems, modelDefinition, tracerItem.Quantity,spatialvaryingSedConc);
+            }
+
+            //If there are any XYZ items left means they are not a known quantity.
+            var xyzUnreadItems = unReadExtForceFileItems.Where(fi => fi.FileName.EndsWith(XyzFile.Extension));
+            foreach (var xyzItem in xyzUnreadItems)
+            {
+                log.WarnFormat(
+                    Resources
+                        .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
+                    xyzItem.Quantity, InitialTracerPrefix, InitialSpatialVaryingSedimentPrefix);
             }
         }
 
