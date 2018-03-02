@@ -1,5 +1,9 @@
-﻿using DelftTools.Controls;
+﻿using System.Windows.Forms;
+using DelftTools.Controls;
+using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
@@ -17,7 +21,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public object Data
         {
             get { return WeirViewModel.Weir; }
-            set { WeirViewModel.Weir = (IWeir) value; }
+            set
+            {
+                WeirViewModel.Weir = (IWeir) value;
+                WeirViewModel.GetTimeSeriesEditor = TimeSeriesEditor;
+            }
         }
 
         public string Text { get; set; }
@@ -27,7 +35,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public bool Visible { get; private set; }
 
         public ViewInfo ViewInfo { get; set; }
-        
+
+        private TimeSeries TimeSeriesEditor(IWeir weirData)
+        {
+            var weirName = weirData.Name;
+            var dialogData = (TimeSeries)weirData.CrestLevelTimeSeries.Clone(true);
+
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = string.Format("Crest level time series for {0}", weirName),
+                ColumnNames = new[] { "Date time", "Crest level [m]" },
+                ChartViewOption = ChartViewOptions.AllSeries,
+                Data = dialogData
+            };
+
+            if (DialogResult.OK == editFunctionDialog.ShowDialog())
+            {
+                return dialogData;
+            }
+            return null;
+        }
+
         public void EnsureVisible(object item)
         {
 

@@ -1,20 +1,27 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Input;
+using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     public class WeirViewModel : IDisposable, INotifyPropertyChanged
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WeirViewModel));
         private IWeir weir;
         private SelectableWeirFormulaType selectedWeirType;
 
         private double lowerEdgeLevel;
         private double previousCrestLevel;
+        public Func<IWeir, TimeSeries> GetTimeSeriesEditor { get; set; }
 
         public IWeir Weir
         {
@@ -165,12 +172,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             GateGroupboxEnabled = true;
             CrestLevelEnabled = false;
+            if(EnableCrestLevelTimeSeries != previousCrestLevelTimeSeriesValue)
+                previousCrestLevelTimeSeriesValue = EnableCrestLevelTimeSeries;
+            EnableCrestLevelTimeSeries = false;
         }
 
         private void SetSimpleWeirControls()
         {
             GateGroupboxEnabled = false;
             CrestLevelEnabled = true;
+            EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
         }
 
         public Visibility CrestLevelVisibility
@@ -215,11 +226,59 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
+        public bool IsSimpleWeir { get { return !EnableCrestLevelTimeSeries; } }
+
+        private bool previousCrestLevelTimeSeriesValue;
+
+        public bool EnableCrestLevelTimeSeries
+        {
+            get { return weir?.UseCrestLevelTimeSeries ?? false; }
+            set
+            {
+                if (weir.UseCrestLevelTimeSeries == value) return; //Avoid useless propagation of events.
+                try
+                {
+                    if (value && SelectedWeirType == SelectableWeirFormulaType.GeneralStructure)
+                        throw new NotSupportedException();
+
+                    weir.UseCrestLevelTimeSeries = value;
+                }
+                catch (Exception)
+                {
+                    //Log error
+                    Log.ErrorFormat(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, Weir.Name);
+                }
+
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsSimpleWeir));
+            }
+        }
+
         private bool gateGroupboxEnabled;
         private bool crestLevelEnabled;
         private bool enableAdvancedSettings;
 
         #endregion
+
+        public ICommand OnEditCrestLevelTimeSeries
+        {
+            get { return new RelayCommand(param => EditCrestLevelTimeSeries()); }
+        }
+
+        private void EditCrestLevelTimeSeries()
+        {
+            if(!Weir.CanBeTimedependent)
+                Log.ErrorFormat(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, Weir.Name);
+            
+            var result = GetTimeSeriesEditor?.Invoke(Weir);
+            if (result != null)
+            {
+                Weir.CrestLevelTimeSeries.Time.Clear();
+                Weir.CrestLevelTimeSeries.Components[0].Clear();
+                Weir.CrestLevelTimeSeries.Time.SetValues(result.Time.Values);
+                Weir.CrestLevelTimeSeries.Components[0].SetValues(result.Components[0].Values.Cast<double>());
+            }
+        }
 
         public void Dispose()
         {
@@ -238,9 +297,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.WeirFormula))
             {
                 selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
-
-                UpdateControls();
-                
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
             }
         }

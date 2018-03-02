@@ -1414,6 +1414,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The weir {0} does not support Time Series..
+        /// </summary>
+        public static string WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_ {
+            get {
+                return ResourceManager.GetString("WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This formula type: &apos;{0}&apos; is not (yet) supported.
         /// </summary>
         public static string WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__supported {
