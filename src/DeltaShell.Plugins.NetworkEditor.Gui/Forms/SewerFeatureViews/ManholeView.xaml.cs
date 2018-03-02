@@ -15,19 +15,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             InitializeComponent();
         }
 
+        #region IView implementation
+
+        public object Data
+        {
+            get { return ViewModel.Manhole; }
+            set { ViewModel.Manhole = (Manhole)value; }
+        }
+
         public void Dispose()
         {
-
         }
 
         public void EnsureVisible(object item)
         {
         }
 
-        public object Data { get { return ViewModel.Manhole; } set { ViewModel.Manhole = (IManhole)value; } }
         public string Text { get; set; }
+
         public Image Image { get; set; }
+
         public bool Visible { get; }
+
         public ViewInfo ViewInfo { get; set; }
+
+        #endregion
     }
 }

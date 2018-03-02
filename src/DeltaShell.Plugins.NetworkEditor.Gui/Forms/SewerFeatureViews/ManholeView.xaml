@@ -1,15 +1,201 @@
 ﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeView"
+             x:Name="UserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="800" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
     <UserControl.DataContext>
         <local:ManholeViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
-    <Grid>
-            <TextBlock Text="Manhole view test"/>
-    </Grid>
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,3,3,3"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="0,3,3,3"/>
+        </Style>
+        <Style TargetType="ListBoxItem" x:Key="ListBoxStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border Name="ItemBorder"
+                                BorderBrush="Black" 
+                                BorderThickness="1"
+                                Background="White">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#FFD0ECFD"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="LightSkyBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Margin" Value="2"/>
+        </Style>
+
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel >
+            <!-- General info -->
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Text="General info" FontWeight="Bold"/>
+                </Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Grid Width="300">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="120"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Row 0 -->
+                        <Label Grid.Column="0" Grid.Row="0" Content="Name"/>
+                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Manhole.Name}"/>
+
+                        <!-- Row 1 -->
+                        <Label Grid.Column="0" Grid.Row="1" Content="ID"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Manhole.Id}"/>
+
+                        <!-- Row 2 -->
+                        <Label Grid.Column="0" Grid.Row="2" Content="Compartments"/>
+                        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Manhole.Compartments.Count}"/>
+
+                        <!-- Row 3 -->
+                        <Label Grid.Column="0" Grid.Row="3" Content="X-Coordinate"/>
+                        <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Manhole.XCoordinate}"/>
+
+                        <!-- Row 4 -->
+                        <Label Grid.Column="0" Grid.Row="4" Content="Y-Coordinate"/>
+                        <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding Manhole.YCoordinate}"/>
+
+                        <!-- Row 5 -->
+                        <Label Grid.Column="0" Grid.Row="5" Content="Surface level [m]"/>
+                        <TextBlock Grid.Column="1" Grid.Row="5" Text="Dummy"/>
+
+                        <!-- Row 6 -->
+                        <Label Grid.Column="0" Grid.Row="6" Content="Bottom level [m]"/>
+                        <TextBlock Grid.Column="1" Grid.Row="6" Text="Dummy 2"/>
+                    </Grid>
+
+                    <!-- Pipes -->
+                    <GroupBox Header="Pipes" Margin="7,0,0,0" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            
+                            <ItemsControl ItemsSource="{Binding PipesInManholes}" >
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Name}" Margin="0,3,3,0" VerticalAlignment="Center" Width="90" x:Name="Label"/>
+                                            <ComboBox ItemsSource="{Binding Path=DataContext.Compartments, ElementName=UserControl}" 
+                                                      SelectedItem="{Binding SourceCompartment}"
+                                                      Height="{Binding ElementName=Label, Path=ActualHeight}" Width="130" 
+                                                      />
+                                            <ComboBox ItemsSource="{Binding Path=DataContext.Compartments, ElementName=UserControl}"
+                                                      SelectedItem="{Binding TargetCompartment}"
+                                                      Height="{Binding ElementName=Label, Path=ActualHeight}" Width="130"
+                                                      />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </GroupBox>
+
+                    <!-- Manhole overview -->
+                    <Canvas x:Name="Canvas"
+                            Width="300" Height="200" 
+                            Margin="20,0,0,0"
+                            VerticalAlignment="Top"
+                            Background="White">
+                        <Rectangle Fill="Orange" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Width="100" Height="100" Canvas.Left="10" Canvas.Top="10"/>
+                        <Rectangle Fill="Red" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Width="100" Height="100" Canvas.Left="30" Canvas.Top="30"/>
+                        <Rectangle Fill="RoyalBlue" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Width="100" Height="100" Canvas.Left="50" Canvas.Top="50"/>
+                    </Canvas>
+                </StackPanel>
+            </Expander>
+
+            <!-- Compartments -->
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Text="Compartments" FontWeight="Bold"/>
+                </Expander.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox ItemsSource="{Binding Compartments}" 
+                             SelectedItem="{Binding SelectedCompartment}"
+                             Grid.Column="0" Grid.Row="0"
+                             HorizontalAlignment="Left"
+                             Margin="10,7,7,7" 
+                             Width="350" Height="150"
+                             Background="#FFE6E6E6"
+                             ItemContainerStyle="{StaticResource ListBoxStyle}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" Margin="2">
+                                    <TextBlock Text="{Binding Name}" Margin="1,3,3,0" VerticalAlignment="Center"/>
+                                    <TextBlock FontStyle="Italic" Margin="1,3,3,3" VerticalAlignment="Center">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="Surface level [m]: {0}. Bottom level [m]: {1}">
+                                                <Binding Path="SurfaceLevel"/>
+                                                <Binding Path="BottomLevel"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                    <!-- Compartment view -->
+                    <local:CompartmentView Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Compartment="{Binding DataContext.SelectedCompartment, ElementName=UserControl}"/>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                        <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="0,3,3,3"/>
+                        <Button Content="Remove compartment" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
+                    </StackPanel>
+                </Grid>
+
+            </Expander>
+
+            <!-- Structures -->
+            <Expander IsExpanded="True">
+                <Expander.Header>
+                    <TextBlock Text="Structures" FontWeight="Bold"/>
+                </Expander.Header>
+            </Expander>
+
+
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

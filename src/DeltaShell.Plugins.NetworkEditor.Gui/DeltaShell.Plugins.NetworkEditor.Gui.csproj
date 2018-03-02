@@ -198,10 +198,18 @@
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
+    <Compile Include="Forms\SewerFeatureViews\CompartmentView.xaml.cs">
+      <DependentUpon>CompartmentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\CompartmentViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeView.xaml.cs">
       <DependentUpon>ManholeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\ManholeViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\ManholeVisualisationControl.xaml.cs">
+      <DependentUpon>ManholeVisualisationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\ManholeVisualisationControlViewModel.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
     </Compile>
@@ -1080,7 +1088,15 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Forms\SewerFeatureViews\CompartmentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Forms\SewerFeatureViews\ManholeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\SewerFeatureViews\ManholeVisualisationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
