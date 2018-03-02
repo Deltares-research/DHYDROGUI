@@ -856,7 +856,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var unReadExtForceFileItems = extForceFileItems.ToList();
 
-            var dict = new Dictionary<string, string>
+            var knownQuantities = new Dictionary<string, string>
             {
                 {ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName},
                 {ExtForceQuantNames.InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
@@ -867,12 +867,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {ExtForceQuantNames.HorEddyDiffCoef, WaterFlowFMModelDefinition.DiffusivityDataItemName}
             };
 
-            foreach (var pair in dict)
+            foreach (var quantityPair in knownQuantities)
             {
-                ReadSpatialOperationData(unReadExtForceFileItems, modelDefinition, pair.Key, pair.Value);
+                var readItems = unReadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
+                if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
+                    readItems = FilterByFrictionType(unReadExtForceFileItems, modelDefinition).ToList();
+
+                ReadSpatialOperationData(readItems, modelDefinition, quantityPair.Key, quantityPair.Value);
+                
                 //Remove read items.
-                var readItems = unReadExtForceFileItems.Where(i => i.Quantity == pair.Key);
-                unReadExtForceFileItems.RemoveAllWhere( et => readItems.Contains(et));
+                unReadExtForceFileItems = unReadExtForceFileItems.Except(readItems).ToList();
                 if (!unReadExtForceFileItems.Any()) return;
             }
 
@@ -883,21 +887,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 string tracerName = tracerItem.Quantity.Substring(InitialTracerPrefix.Length);
                 ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
             }
-            unReadExtForceFileItems.RemoveAllWhere(et => initialTracerItems.Contains(et));
+            unReadExtForceFileItems = unReadExtForceFileItems.Except(initialTracerItems).ToList();
             if (!unReadExtForceFileItems.Any()) return;
 
             //Read sediment items.
             var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix)).ToList();
-            foreach (var tracerItem in initialSedimentItems)
+            foreach (var sedimentItem in initialSedimentItems)
             {
                 /* DELFT3DFM-1112
                  * The only Spatially Varying Sediment that gets read from the ExtForces file is
                  * SedimentConcentration. We could simply remove its prefix, however, due to the 
                  * way it's meant to be written in said file, we need to add the postfix */
-                string spatialvaryingSedConc = tracerItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
-                ReadSpatialOperationData(initialSedimentItems, modelDefinition, tracerItem.Quantity,spatialvaryingSedConc);
+                string spatialvaryingSedConc = sedimentItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
+                ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,spatialvaryingSedConc);
             }
-            unReadExtForceFileItems.RemoveAllWhere(et => initialSedimentItems.Contains(et));
+            unReadExtForceFileItems = unReadExtForceFileItems.Except(initialSedimentItems).ToList();
             if (!unReadExtForceFileItems.Any()) return;
 
             //If there are any XYZ items left means they are not a known quantity.
