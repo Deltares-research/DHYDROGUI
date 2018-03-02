@@ -854,7 +854,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems, WaterFlowFMModelDefinition modelDefinition)
         {
-            var unReadExtForceFileItems = extForceFileItems;
+            var unReadExtForceFileItems = extForceFileItems.ToList();
 
             var dict = new Dictionary<string, string>
             {
@@ -873,20 +873,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 //Remove read items.
                 var readItems = unReadExtForceFileItems.Where(i => i.Quantity == pair.Key);
                 unReadExtForceFileItems.RemoveAllWhere( et => readItems.Contains(et));
+                if (!unReadExtForceFileItems.Any()) return;
             }
 
             //Read tracer items.
-            var initialTracerItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialTracerPrefix));
-            unReadExtForceFileItems.RemoveAllWhere(et => initialTracerItems.Contains(et));
+            var initialTracerItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialTracerPrefix)).ToList();
             foreach( var tracerItem in initialTracerItems)
             {
                 string tracerName = tracerItem.Quantity.Substring(InitialTracerPrefix.Length);
-                ReadSpatialOperationData(extForceFileItems, modelDefinition, tracerItem.Quantity, tracerName);
+                ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
             }
+            unReadExtForceFileItems.RemoveAllWhere(et => initialTracerItems.Contains(et));
+            if (!unReadExtForceFileItems.Any()) return;
 
             //Read sediment items.
-            var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix));
-            unReadExtForceFileItems.RemoveAllWhere(et => initialSedimentItems.Contains(et));
+            var initialSedimentItems = unReadExtForceFileItems.Where(fi => fi.Quantity.StartsWith(InitialSpatialVaryingSedimentPrefix)).ToList();
             foreach (var tracerItem in initialSedimentItems)
             {
                 /* DELFT3DFM-1112
@@ -894,8 +895,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                  * SedimentConcentration. We could simply remove its prefix, however, due to the 
                  * way it's meant to be written in said file, we need to add the postfix */
                 string spatialvaryingSedConc = tracerItem.Quantity.Substring(InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
-                ReadSpatialOperationData(extForceFileItems, modelDefinition, tracerItem.Quantity,spatialvaryingSedConc);
+                ReadSpatialOperationData(initialSedimentItems, modelDefinition, tracerItem.Quantity,spatialvaryingSedConc);
             }
+            unReadExtForceFileItems.RemoveAllWhere(et => initialSedimentItems.Contains(et));
+            if (!unReadExtForceFileItems.Any()) return;
 
             //If there are any XYZ items left means they are not a known quantity.
             var xyzUnreadItems = unReadExtForceFileItems.Where(fi => fi.FileName.EndsWith(XyzFile.Extension));
