@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadWrongSpatialVaryingPropertiesShouldGiveAWarningMessage()
+        public void ReadXyzFile_WithUnknownSpatiallyVaryingProperties_ShouldGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadXyzSpatialVaryingPropertiesShouldNotGiveAWarningMessage()
+        public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correctKnownQuantity.ext");
