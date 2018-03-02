@@ -646,7 +646,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     return runTimeGridOperationApi;
                 }
-                return gridOperationApi ?? (gridOperationApi = new UnstrucGridOperationApi(this));
+                var api =  gridOperationApi ?? (gridOperationApi = new UnstrucGridOperationApi(this));
+                snapApiInErrorMode = false;
+                return api;
             }
             catch (Exception e)
             {

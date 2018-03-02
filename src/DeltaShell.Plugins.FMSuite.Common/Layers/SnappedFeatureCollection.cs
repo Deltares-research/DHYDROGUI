@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -25,6 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private List<Feature2D> SnappedFeatures { get; set; }
         private bool dirty;
         private bool snappedFeatureFailed;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
 
         /// <summary>
         /// A <see cref="FeatureCollection"/> for <see cref="IFeature"/> objects that are being
@@ -165,6 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 try
                 {
                     snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
+                    if (snappedGeometry == null || snappedGeometry.IsEmpty)
+                    {
+                        Log.WarnFormat("No snapped geometry was generated for type {0}.",feature.Geometry.GeometryType);
+                    }
                 }
                 catch (Exception)
                 {
@@ -180,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
             if (snappedGeometry == null)
             {
-                snappedFeatureFailed = false;
+                snappedFeatureFailed = true;
                 return feature2D;
             }
 
