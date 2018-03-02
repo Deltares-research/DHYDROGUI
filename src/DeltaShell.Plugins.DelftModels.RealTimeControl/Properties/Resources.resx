@@ -271,4 +271,10 @@
   <data name="RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep" xml:space="preserve">
     <value>Series '{0}' time steps not multiple of model time step {1}.</value>
   </data>
+  <data name="RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__" xml:space="preserve">
+    <value>Unable to update ControlGroup name, all ControlGroup names must be unique!{0}'{1}' has been reverted back to '{2}'</value>
+  </data>
+  <data name="RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_" xml:space="preserve">
+    <value>ControlGroup names for Model {0} were not unique.{1}Control Groups have been renamed such that they are now unique.</value>
+  </data>
 </root>

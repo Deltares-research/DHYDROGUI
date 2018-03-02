@@ -46,6 +46,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get { return null; }
         }
 
+        public override IApplication Application
+        {
+            get
+            {
+                return base.Application;
+            }
+            set
+            {
+                if (Application != null)
+                {
+                    Application.ProjectOpened -= ApplicationProjectOpened;
+                }
+
+                base.Application = value;
+
+                if (Application != null)
+                {
+                    Application.ProjectOpened += ApplicationProjectOpened;
+                }
+            }
+        }
+
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
             yield return new ModelInfo
@@ -76,6 +98,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new RealTimeControlModelImporter();
+        }
+
+        private void ApplicationProjectOpened(Project project)
+        {
+            /*
+                Note: it was not possible to do this in RtcDataAccessListener.OnPostLoad() 
+                DataItems for Inputs and Outputs are not re-linked until the whole HydroModel has been imported
+             */
+             
+            var rtcModelsWithControlGroups = Application.GetAllModelsInProject()
+                .OfType<RealTimeControlModel>().Where(m => m.ControlGroups.Any()).ToList();
+
+            if (!rtcModelsWithControlGroups.Any()) return;
+
+            // DELFT3DFM-1441: Existing projects can have ControlGroups with the same names
+            rtcModelsWithControlGroups.ForEach(m => m.MakeControlGroupNamesUnique());
+
+            // DELFT3DFM-1441: Existing projects can have ControlGroup DataItems with ChildDataItems without the correct ControlGroup Name (as a prefix)
+            rtcModelsWithControlGroups.ForEach(m => m.SyncControlGroupDataItemNames());
         }
     }
 }

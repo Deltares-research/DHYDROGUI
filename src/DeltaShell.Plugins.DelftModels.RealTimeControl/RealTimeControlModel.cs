@@ -43,6 +43,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     [Entity(FireOnCollectionChange=false)]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
     {
+        public const string InputPostFix = ".input";
+        public const string OutputPostFix = ".output";
+
         private string outputFileName = "rtcOutput.nc";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModel));
@@ -82,7 +85,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             LogLevel = 0;
             FlushLogEveryStep = false;
-            ((ModelBase) this).CollectionChanged += CollectionChanged;
 
             LimitMemory = true;
 
@@ -168,19 +170,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return null;
         }
 
-        void CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (cloning)
-            {
-                return;
-            }
-            
-            if (e.Item is ConnectionPoint && !IsAggregationList(sender)) //breaks if other collections are added
-            {
-                ConnectionPointsCollectionChanged(e);
-            }
-        }
-
         [EditAction]
         private void ConnectionPointsCollectionChanged(NotifyCollectionChangingEventArgs e)
         {
@@ -241,6 +230,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 return;
             }
+
+            if (e.Item is ConnectionPoint && !IsAggregationList(sender)) //breaks if other collections are added
+            {
+                ConnectionPointsCollectionChanged(e);
+            }
+
             BubbleCollectionChangedEvent(sender, e);
             AfterControlGroupsCollectionChanged(sender, e);
         }
@@ -305,15 +300,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if ((role & DataItemRole.Input) == DataItemRole.Input)
             {
-                var count =
-                    controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
-                name = ((IControlGroup) controlGroupDataItem.Value).Name + ".input" + count;
+                var count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+                name = ((IControlGroup) controlGroupDataItem.Value).Name + InputPostFix + count;
             }
             if ((role & DataItemRole.Output) == DataItemRole.Output)
             {
-                var count =
-                    controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
-                name = ((IControlGroup)controlGroupDataItem.Value).Name + ".output" + count;
+                var count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+                name = ((IControlGroup)controlGroupDataItem.Value).Name + OutputPostFix + count;
             }            
             
             var dataItem = new DataItem
@@ -578,7 +571,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         
         private IEventedList<ControlGroup> controlGroups;
 
-        [Aggregation]
         public virtual IEventedList<ControlGroup> ControlGroups
         {
             get
@@ -592,6 +584,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     controlGroups.CollectionChanging -= ControlGroupsCollectionChanging;
                     controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
                     ((INotifyPropertyChange)controlGroups).PropertyChanged -= SetOutputOutOfSync;
+                    ((INotifyPropertyChanging)controlGroups).PropertyChanging -= ControlGroupsPropertyChanging;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged -= ControlGroupsPropertyChanged;
                 }
 
                 controlGroups = value;
@@ -601,6 +595,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     controlGroups.CollectionChanging += ControlGroupsCollectionChanging;
                     controlGroups.CollectionChanged += ControlGroupsCollectionChanged;
                     ((INotifyPropertyChange)controlGroups).PropertyChanged += SetOutputOutOfSync;
+                    ((INotifyPropertyChanging)controlGroups).PropertyChanging += ControlGroupsPropertyChanging;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged += ControlGroupsPropertyChanged;
                 }
             }
         }
@@ -615,6 +611,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     outputFileFunctionStore.CoordinateSystem = coordinateSystem;
             }
         }
+
+        #region HandleControlGroupRenaming
+
+        private string previousControlGroupName;
+
+        private void ControlGroupsPropertyChanging(object sender, PropertyChangingEventArgs e)
+        {
+            if (e.PropertyName != "Name") return;
+            var controlGroup = sender as ControlGroup;
+            if (controlGroup == null) return;
+
+            previousControlGroupName = controlGroup.Name;
+        }
+
+        private void ControlGroupsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != "Name") return;
+            var controlGroup = sender as ControlGroup;
+            if (controlGroup == null) return;
+
+            // DELFT3DFM-1441: ControlGroups must have unique names!
+            if (ControlGroups.Where(cg => !ReferenceEquals(cg, controlGroup)).Any(cg => cg.Name == controlGroup.Name))
+            {
+                Log.WarnFormat(Resources.RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__,
+                    Environment.NewLine, controlGroup.Name, previousControlGroupName);
+                controlGroup.Name = previousControlGroupName;
+                return;
+            }
+
+            // DELFT3DFM-1441: ControlGroup ChildDataItems with should have the ControlGroup DataItem Name as a prefix
+            this.SyncControlGroupChildDataItemNames(controlGroup);
+        }
+
+        #endregion
 
         private void SetOutputOutOfSync(object sender, PropertyChangedEventArgs e)
         {

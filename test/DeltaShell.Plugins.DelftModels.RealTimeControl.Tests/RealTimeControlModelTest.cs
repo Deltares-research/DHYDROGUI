@@ -15,6 +15,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -27,6 +28,107 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     public class RealTimeControlModelTest
     {
         # region Syncing controlled models, control group items, model settings, etc.
+
+        [Test]
+        public void TestChangingControlGroupName_IsRevertedAndGivesWarningWhenDuplicateNameExists()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup1 = new ControlGroup() { Name = "ControlGroup1" };
+            var controlGroup2 = new ControlGroup() { Name = "ControlGroup2" };
+            
+            rtcModel.ControlGroups.Add(controlGroup1);
+            rtcModel.ControlGroups.Add(controlGroup2);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => { controlGroup2.Name = "ControlGroup1"; },
+                string.Format(Resources.RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__,
+                    Environment.NewLine, "ControlGroup1", "ControlGroup2"));
+            
+            Assert.AreEqual("ControlGroup1", controlGroup1.Name);
+            Assert.AreEqual("ControlGroup2", controlGroup2.Name);
+        }
+
+        [Test]
+        public void TestChangingControlGroupName_SucceedsAndGivesNoWarningWhenNoDuplicateNameExists()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup1 = new ControlGroup() { Name = "ControlGroup1" };
+            var controlGroup2 = new ControlGroup() { Name = "ControlGroup2" };
+
+            rtcModel.ControlGroups.Add(controlGroup1);
+            rtcModel.ControlGroups.Add(controlGroup2);
+
+            Assert.Throws<AssertionException>(() => 
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => { controlGroup2.Name = "ControlGroup3"; },
+                    string.Format(Resources.RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__,
+                        Environment.NewLine, "ControlGroup1", "ControlGroup2")),
+                "Warning message was logged where we did not expect it to be");
+
+            Assert.AreEqual("ControlGroup1", controlGroup1.Name);
+            Assert.AreEqual("ControlGroup3", controlGroup2.Name);
+        }
+
+        [Test]
+        public void TestChangingControlGroupName_WhenNoDuplicateNameExists_UpdatesChildDataItemNames()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup1 = new ControlGroup() { Name = "ControlGroup1" };
+            var controlGroup2 = new ControlGroup() { Name = "ControlGroup2" };
+
+            controlGroup1.Inputs.Add(new Input());
+            controlGroup1.Outputs.Add(new Output());
+
+            controlGroup2.Inputs.Add(new Input());
+            controlGroup2.Outputs.Add(new Output());
+
+            rtcModel.ControlGroups.Add(controlGroup1);
+            rtcModel.ControlGroups.Add(controlGroup2);
+
+            var controlGroup1DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup1));
+            Assert.NotNull(controlGroup1DataItem);
+            Assert.AreEqual(2, controlGroup1DataItem.Children.Count);
+
+            var controlGroup2DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup2));
+            Assert.NotNull(controlGroup2DataItem);
+            Assert.AreEqual(2, controlGroup2DataItem.Children.Count);
+
+            var controlGroup1InputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            Assert.NotNull(controlGroup1InputDataItem);
+
+            var controlGroup1OutputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            Assert.NotNull(controlGroup1OutputDataItem);
+
+            var controlGroup2InputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            Assert.NotNull(controlGroup2InputDataItem);
+
+            var controlGroup2OutputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            Assert.NotNull(controlGroup2OutputDataItem);
+
+            Assert.IsTrue(controlGroup1InputDataItem.Name.StartsWith(controlGroup1.Name + RealTimeControlModel.InputPostFix));
+            Assert.IsTrue(controlGroup1OutputDataItem.Name.StartsWith(controlGroup1.Name + RealTimeControlModel.OutputPostFix));
+            Assert.IsTrue(controlGroup2InputDataItem.Name.StartsWith(controlGroup2.Name + RealTimeControlModel.InputPostFix));
+            Assert.IsTrue(controlGroup2OutputDataItem.Name.StartsWith(controlGroup2.Name + RealTimeControlModel.OutputPostFix));
+            
+            controlGroup1.Name = "ControlGroup3";
+            controlGroup2.Name = "ControlGroup4";
+
+            Assert.AreEqual("ControlGroup3", controlGroup1.Name);
+            Assert.AreEqual("ControlGroup4", controlGroup2.Name);
+
+            Assert.IsTrue(controlGroup1InputDataItem.Name.StartsWith(controlGroup1.Name + RealTimeControlModel.InputPostFix));
+            Assert.IsTrue(controlGroup1OutputDataItem.Name.StartsWith(controlGroup1.Name + RealTimeControlModel.OutputPostFix));
+            Assert.IsTrue(controlGroup2InputDataItem.Name.StartsWith(controlGroup2.Name + RealTimeControlModel.InputPostFix));
+            Assert.IsTrue(controlGroup2OutputDataItem.Name.StartsWith(controlGroup2.Name + RealTimeControlModel.OutputPostFix));
+
+            controlGroup1.Name = "ControlGroup5";
+
+            Assert.AreEqual("ControlGroup5", controlGroup1.Name);
+            Assert.AreEqual("ControlGroup4", controlGroup2.Name);
+
+            Assert.IsTrue(controlGroup1InputDataItem.Name.StartsWith(controlGroup1.Name + RealTimeControlModel.InputPostFix));
+            Assert.IsTrue(controlGroup1OutputDataItem.Name.StartsWith(controlGroup1.Name + RealTimeControlModel.OutputPostFix));
+            Assert.IsTrue(controlGroup2InputDataItem.Name.StartsWith(controlGroup2.Name + RealTimeControlModel.InputPostFix));
+            Assert.IsTrue(controlGroup2OutputDataItem.Name.StartsWith(controlGroup2.Name + RealTimeControlModel.OutputPostFix));
+        }
 
         [Test]
         public void TestControlledModelsAreAddedAutomaticallyAfterOwnerIsSet()
@@ -311,9 +413,57 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(controlGroupDataItem, outputDataItem.Parent);
         }
 
+        [Test]
+        public void TestOnly1ChildDataItemIsAddedWhenAddingAConnectionPoint()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup();
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            Assert.NotNull(controlGroupDataItem);
+            Assert.IsFalse(controlGroupDataItem.Children.Any());
+
+            controlGroup.Inputs.Add(new Input());
+            Assert.AreEqual(1, controlGroupDataItem.Children.Count);
+
+            controlGroup.Outputs.Add(new Output());
+            Assert.AreEqual(2, controlGroupDataItem.Children.Count);
+        }
+
         # endregion
 
         # region Events handling (and refreshing)
+
+        [Test]
+        public void TestControlGroupPropertyChanged_IsHandledInRTCModel()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup();
+            var counter = 0;
+
+            rtcModel.ControlGroups.Add(controlGroup);
+            ((INotifyPropertyChanged)rtcModel.ControlGroups).PropertyChanged += (sender, e) => { counter++; };
+
+            Assert.AreEqual(0, counter);
+            controlGroup.Name = "Renamed";
+            Assert.AreEqual(1, counter);
+        }
+
+        [Test]
+        public void TestControlGroupPropertyChanging_IsHandledInRTCModel()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup();
+            var counter = 0;
+
+            rtcModel.ControlGroups.Add(controlGroup);
+            ((INotifyPropertyChanging)rtcModel.ControlGroups).PropertyChanging += (sender, e) => { counter++; };
+
+            Assert.AreEqual(0, counter);
+            controlGroup.Name = "Renamed";
+            Assert.AreEqual(1, counter);
+        }
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]

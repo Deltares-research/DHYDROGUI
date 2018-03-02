@@ -1,7 +1,12 @@
+using System;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
@@ -65,6 +70,78 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             return true;
         }
+
+        // DELFT3DFM-1441: Existing projects can have ControlGroups with the same names
+        public static void MakeControlGroupNamesUnique(this RealTimeControlModel realTimeControlModel)
+        {
+            if (realTimeControlModel.ControlGroups.Select(cg => cg.Name).HasUniqueValues()) return;
+
+            NamingHelper.MakeNamesUnique(realTimeControlModel.ControlGroups);
+            Log.WarnFormat(Resources.RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_,
+                realTimeControlModel.Name, Environment.NewLine);
+        }
+
+        #region SyncControlGroupDataItemNames
+
+        // DELFT3DFM-1441: Existing projects can have ControlGroup DataItems with ChildDataItems without the correct ControlGroup Name (as a prefix)
+        public static void SyncControlGroupDataItemNames(this RealTimeControlModel realTimeControlModel)
+        {
+            if (!realTimeControlModel.ControlGroups.Any()) return;
+
+            realTimeControlModel.ControlGroups
+                .Where(cg => !realTimeControlModel.ControlGroupDataItemChildDataItemNamesAreInSync(cg))
+                .ForEach(realTimeControlModel.SyncControlGroupChildDataItemNames);
+        }
+
+        public static void SyncControlGroupChildDataItemNames(this RealTimeControlModel realTimeControlModel, IControlGroup controlGroup)
+        {
+            var controlGroupDataItem = realTimeControlModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            if (controlGroupDataItem == null) return;
+            if (!controlGroupDataItem.Children.Any()) return;
+
+            foreach (var child in controlGroupDataItem.Children.Where(di => (di.Role & DataItemRole.Input) == DataItemRole.Input))
+            {
+                var postfixIndex = child.Name.IndexOf(RealTimeControlModel.InputPostFix, StringComparison.InvariantCulture);
+                if (postfixIndex < 1) continue;
+
+                var oldControlGroupName = child.Name.Substring(0, postfixIndex);
+                child.Name = child.Name.Replace(oldControlGroupName, controlGroup.Name);
+            }
+
+            foreach (var child in controlGroupDataItem.Children.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output))
+            {
+                var postfixIndex = child.Name.IndexOf(RealTimeControlModel.OutputPostFix, StringComparison.InvariantCulture);
+                if (postfixIndex < 1) continue;
+
+                var oldControlGroupName = child.Name.Substring(0, postfixIndex);
+                child.Name = child.Name.Replace(oldControlGroupName, controlGroup.Name);
+            }
+        }
+
+        private static bool ControlGroupDataItemChildDataItemNamesAreInSync(this RealTimeControlModel realTimeControlModel, IControlGroup controlGroup)
+        {
+            var controlGroupDataItem = realTimeControlModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            if (controlGroupDataItem == null) return true;
+            if (!controlGroupDataItem.Children.Any()) return true;
+
+            if (controlGroupDataItem.Children
+                .Where(di => (di.Role & DataItemRole.Input) == DataItemRole.Input)
+                .Any(child => child.Name != controlGroup.Name + RealTimeControlModel.InputPostFix))
+            {
+                return false;
+            }
+
+            if (controlGroupDataItem.Children
+                .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output)
+                .Any(child => child.Name != controlGroup.Name + RealTimeControlModel.OutputPostFix))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
 
         private static void TransformGeometry(IFeature feature, ICoordinateTransformation transformation)
         {
