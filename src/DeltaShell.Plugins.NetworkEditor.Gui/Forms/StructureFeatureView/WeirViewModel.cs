@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        public bool IsSimpleWeir { get { return !EnableCrestLevelTimeSeries; } }
+        public bool IsTimeDependent { get { return !weir.UseCrestLevelTimeSeries; } }
 
         private bool previousCrestLevelTimeSeriesValue;
 
@@ -239,9 +239,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 try
                 {
                     if (value && SelectedWeirType == SelectableWeirFormulaType.GeneralStructure)
-                        throw new NotSupportedException();
-
-                    weir.UseCrestLevelTimeSeries = value;
+                    {
+                        //Log error
+                        Log.ErrorFormat(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, Weir.Name);
+                    }
+                    else
+                    {
+                        weir.UseCrestLevelTimeSeries = value;
+                    }
                 }
                 catch (Exception)
                 {
@@ -250,7 +255,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsSimpleWeir));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsTimeDependent));
             }
         }
 
