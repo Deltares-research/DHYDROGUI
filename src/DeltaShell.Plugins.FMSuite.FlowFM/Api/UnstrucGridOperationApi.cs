@@ -56,7 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             this.api = api;
         }
 
-        public UnstrucGridOperationApi(WaterFlowFMModel model)
+        /// <summary>
+        /// Gets an iterator for iterating over feature coverage time series
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fullExport">When false makes an export without extForces or features</param>
+        /// <returns></returns>
+        public UnstrucGridOperationApi(WaterFlowFMModel model, bool fullExport = true)
         {
             tempPath = FileUtils.CreateTempDirectory();
 
@@ -86,7 +92,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             if (!File.Exists(gridFile)) 
                 return;
 
-            model.ExportTo(mduFilePath, false);
+            /* When initializing this api for GridSnap features, we are not interested in doing a full export, only in having
+             the api running.*/
+            model.ExportTo(mduFilePath, false, fullExport, fullExport);
             model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
             
             TryInitializeApi();
