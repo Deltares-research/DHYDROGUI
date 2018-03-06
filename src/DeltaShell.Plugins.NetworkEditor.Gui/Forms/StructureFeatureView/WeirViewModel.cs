@@ -304,6 +304,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
             }
+
+            if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.UseCrestLevelTimeSeries))
+            {
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+            }
         }
 
         private void WeirFormulaPropertyChanged(object sender, PropertyChangedEventArgs e)

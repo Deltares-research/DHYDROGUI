@@ -48,6 +48,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         #region TimeSeriesEditor
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsChangedToTimeDependant_ViewGetsRefreshedCorrectly()
+        {
+            var weir = new Weir(true);
+            var viewModel = new WeirViewModel
+            {
+                Weir = weir
+            };
+
+            var count = 0;
+            ((INotifyPropertyChanged)viewModel).PropertyChanged += (s, e) => count++;
+
+            Assert.IsFalse(weir.UseCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+            
+            //Make it time dependent
+            weir.UseCrestLevelTimeSeries = true;
+
+            //Because the bubbling event tiggered the property change in the view model.
+            Assert.IsTrue(count.Equals(1));
+
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+        }
+
         [Test]
         public void GivenWeirViewModel_WhenWeirIsNotTimeDependant_EnableTimeDependent_LogMessageIsGiven()
         {
