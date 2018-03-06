@@ -56,6 +56,12 @@ class FMwriter:
                 xNext = float(xLastId) + 1.0 # 1 meter to the east
                 self.model.nodes[id][3] = self.to2Dec(xNext)
                 self.model.nodes[id][4] = self.to2Dec(yLastId) #same y values
+                #set length to 1 m
+                for keyvalue in self.model.connections.items():
+                    value = keyvalue[1]
+                    if((value[1] == lastId or value[2] == lastId) and (value[1] == id or value[2] == id)):
+                        value[8] = 1.0
+                        break
                 #add to list
                 manholes[manholeId].append(id)
             else:
@@ -312,7 +318,7 @@ class FMwriter:
                 file.write(x + tab + y + tab + z)
                 file.write('\n')
             except:
-                print("No streetlevel available of node " + str(keyvalue[0]))
+                print("No streetlevel (xyz file) available of node " + str(keyvalue[0]))
 
 
         file.close()
@@ -405,7 +411,7 @@ class FMwriter:
             try:
                 streetLevel = float(value[6])
             except ValueError:
-                print("Missing data for street level " + id)
+                print("Missing data for street level node " + id + ". Will be set to 0.0")
                 streetLevel = 0.0
 
             file.write('area = ' + areaStr + '\n')
@@ -547,8 +553,8 @@ class FMwriter:
             elif t == 'EIV':
                 fileCSDef.write('type = egg\n')
                 fileCSDef.write('diameter = ' + self.to2Dec(w) + '\n')
-#                fileCSDef.write('width = ' + self.to2Dec(w) + '\n')
-#                fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
+                #fileCSDef.write('width = ' + self.to2Dec(w) + '\n') not supported by kernel
+                #fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
             else:
                 h = float(value[4])/100.0 #mm -> m
                 fileCSDef.write('type = rectangle\n')
@@ -558,7 +564,7 @@ class FMwriter:
             fileCSDef.write('closed = 1\n')
             fileCSDef.write('groundlayerUsed = 0\n')
             fileCSDef.write('roughnessNames = Main\n')
-#            fileCSDef.write('roughnessNames = sewer_system\n')
+            #fileCSDef.write('roughnessNames = sewer_system\n') not supported yet by kernel
             fileCSDef.write('\n')
 
         fileCSDef.close()
@@ -613,40 +619,45 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = orifice\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('branch_id = ' + branchId + '\n')
+                fileStructures.write('branchid = ' + branchId + '\n')
                 fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 
                 direction = self.getDirectionOfStructure(value[0])
                 if direction == '1_2':
-                    fileStructures.write('allowed_flow_dir = 1\n')
+                    fileStructures.write('allowedflowdir = 1\n')
                 elif direction == '2_1':
-                    fileStructures.write('allowed_flow_dir = 2\n')
+                    fileStructures.write('allowedflowdir = 2\n')
                 else:
-                    fileStructures.write('allowed_flow_dir = 0\n')
+                    fileStructures.write('allowedflowdir = 0\n')
 
-                fileStructures.write('bottom_level = ' + self.to2Dec(value[3]) + '\n')
+                fileStructures.write('bottomlevel = ' + self.to2Dec(value[3]) + '\n')
 
                 area = self.getAreaOfOrifice(value[0])
 
                 fileStructures.write('area = ' + self.to2Dec(area) + '\n')
-                fileStructures.write('lat_contr_coeff = ' + self.to2Dec(value[4]) + '\n')
+                fileStructures.write('latcontrcoeff = ' + self.to2Dec(value[4]) + '\n')
+                fileStructures.write('contractioncoeff = 1\n')
                 fileStructures.write('\n')
 
             elif type == 'OVS':
                 writePliz = True
                 fileStructures.write('[structure]\n')
-                fileStructures.write('type = gate\n')
+                #fileStructures.write('type = gate\n')
+                fileStructures.write('type = orifice\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('branch_id = ' + branchId + '\n')
+                fileStructures.write('branchid = ' + branchId + '\n')
                 fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
-
-                fileStructures.write('sill_level = ' + self.to2Dec(value[7]) + '\n')
-                fileStructures.write('door_height = ' + self.to2Dec(self.deltaGateHeightTopLevel) + '\n')
-                fileStructures.write('lower_edge_level = ' + self.to2Dec(self.getGateHeight(value[0])) + '\n')
-                fileStructures.write('opening_width = ' + self.to2Dec(value[6]) + '\n')
-                fileStructures.write('horizontal_opening_direction = symmetric\n')
+                streetLevel = self.getStreetLevel(value[0])
+                crestLevel = float(value[7])
+                fileStructures.write('crestlevel = ' + self.to2Dec(crestLevel) + '\n')
+                fileStructures.write('doorheight = ' + self.to2Dec(self.deltaGateHeightTopLevel) + '\n')
+                fileStructures.write('openlevel = ' + self.to2Dec(streetLevel - self.deltaGateHeightTopLevel) + '\n')
+                fileStructures.write('crestwidth = ' + self.to2Dec(value[6]) + '\n')
+                fileStructures.write('allowedflowdir = 0\n')
+                fileStructures.write('latcontrcoeff = 1\n')
+                fileStructures.write('contractioncoeff = 1\n')
 
                 fileStructures.write('\n')
 
@@ -655,7 +666,7 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = pump\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('branch_id = ' + branchId + '\n')
+                fileStructures.write('branchid = ' + branchId + '\n')
                 fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
                 valuePerSecond = float(value[9])/3600
@@ -670,14 +681,13 @@ class FMwriter:
                     fileStructures.write('direction = 0\n')
 
                 if value[10] != '' and value[11] != '':
-                    fileStructures.write('start_level_suction_side = ' + self.to2Dec(value[10]) + '\n')
-                    fileStructures.write('stop_level_suction_side = ' + self.to2Dec(value[11]) + '\n')
+                    fileStructures.write('startlevelsuctionside = ' + self.to2Dec(value[10]) + '\n')
+                    fileStructures.write('stoplevelsuctionside = ' + self.to2Dec(value[11]) + '\n')
 
                 if value[12] != '' and value[13] != '':
-                    fileStructures.write('start_level_delivery_side = ' + self.to2Dec(value[12]) + '\n')
-                    fileStructures.write('stop_level_delivery_side = ' + self.to2Dec(value[13]) + '\n')
-                direction = 1
-                fileStructures.write('reduction_factor_no_levels = 1.00\n')
+                    fileStructures.write('startleveldeliveryside = ' + self.to2Dec(value[12]) + '\n')
+                    fileStructures.write('stopleveldeliveryside = ' + self.to2Dec(value[13]) + '\n')
+                fileStructures.write('reductionfactornolevels = 1.00\n')
                 fileStructures.write('\n')
 
             if writePliz:
@@ -805,22 +815,29 @@ class FMwriter:
         connection = self.model.connections[id]
         profile = self.model.profiles[connection[15]]
         type = profile[2]
-        width = float(profile[3])
-        height = float(profile[4])
-        result = pi * ((float(profile[3])/200.0) ** 2)
+        width = float(profile[3])/1000.0
+        height = width
+        if profile[4] != '' and float(profile[4]) > 0.0:
+            height = float(profile[4])/1000.0
+        if type == "RND":
+            result = pi * ((float(width)/2.0) ** 2)
+        else:
+            result = width * height
+
         return result
 
-    def getGateHeight(self, id):
+    def getStreetLevel(self, id):
         connection = self.model.connections[id]
         result = 0.0
-        try:
-            cmp1Level = float(self.model.nodes[connection[1]][6])
-            cmp2Level = float(self.model.nodes[connection[2]][6])
-            if cmp1Level < cmp2Level:
-                result = cmp1Level - self.deltaGateHeightTopLevel
-            else:
-                result = cmp2Level - self.deltaGateHeightTopLevel
-        except ValueError:
-            print("Missing data for gateheight " + id)
+        cmp1Level = self.model.nodes[connection[1]][6]
+        cmp2Level = self.model.nodes[connection[2]][6]
+        if cmp1Level != "" and cmp2Level != "":
+            result = min(float(cmp1Level),float(cmp2Level))
+        elif cmp1Level != "":
+            result = float(cmp1Level)
+        elif cmp2Level != "":
+            result = float(cmp2Level)
+        else:
+            print("Missing streetlevel for calculation gateheight " + id)
         return result
 
