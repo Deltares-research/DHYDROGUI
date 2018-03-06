@@ -75,11 +75,11 @@ class FMwriter:
 
     def writeBoundaries(self, dirPath, outputDir):  # write boundaries ini and bc
 
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE  Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE  Identificatie (naam, nummer, code) van de put of het bouwwerk
-        #KNP_XCO  X-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
-        #KNP_YCO  Y-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_XCO  X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO  Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
         #CMP_IDE  Identificatie (naam, nummer, code) van het compartiment
         #MVD_NIV  Niveau maaiveld t.o.v. NAP
         #MVD_SCH  Type maaiveldschematisering
@@ -91,7 +91,7 @@ class FMwriter:
         #KNP_LEN  Lengte putbodem
         #KNP_TYP  Type knooppunt
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #STA_OBJ  Status van het object
         #AAN_MVD  Aanname maaiveldhoogte
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
@@ -161,11 +161,11 @@ class FMwriter:
         return True
 
     def writeExternalForcingFiles(self, dirPath, outputDir):  # write boundaries and laterals as external force files
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE  Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE  Identificatie (naam, nummer, code) van de put of het bouwwerk
-        #KNP_XCO  X-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
-        #KNP_YCO  Y-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_XCO  X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO  Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
         #CMP_IDE  Identificatie (naam, nummer, code) van het compartiment
         #MVD_NIV  Niveau maaiveld t.o.v. NAP
         #MVD_SCH  Type maaiveldschematisering
@@ -177,7 +177,7 @@ class FMwriter:
         #KNP_LEN  Lengte putbodem
         #KNP_TYP  Type knooppunt
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #STA_OBJ  Status van het object
         #AAN_MVD  Aanname maaiveldhoogte
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
@@ -255,7 +255,7 @@ class FMwriter:
         result += 'Quantity                        = time\n'
         result += 'Unit                            = days since 1900-01-01 00:00:00\n'
         result += 'Quantity                        = dischargebnd\n'
-        result += 'Unit                            = mÂ³/s\n'
+        result += 'Unit                            = m³/s\n'
         result += '0        0.01\n'
         result += '73050    0.01\n\n'
         return result
@@ -276,11 +276,11 @@ class FMwriter:
 
     def  writeXYZStreetlevel(self, dirPath, outputDir):  # write streetlevel as a xyz file
 
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE  Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE  Identificatie (naam, nummer, code) van de put of het bouwwerk
-        #KNP_XCO  X-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
-        #KNP_YCO  Y-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_XCO  X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO  Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
         #CMP_IDE  Identificatie (naam, nummer, code) van het compartiment
         #MVD_NIV  Niveau maaiveld t.o.v. NAP
         #MVD_SCH  Type maaiveldschematisering
@@ -292,7 +292,7 @@ class FMwriter:
         #KNP_LEN  Lengte putbodem
         #KNP_TYP  Type knooppunt
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #STA_OBJ  Status van het object
         #AAN_MVD  Aanname maaiveldhoogte
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
@@ -320,11 +320,11 @@ class FMwriter:
 
     def writeRetentions(self, dirPath, outputDir):  # write all manholes from GWSW model
 
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #RST_IDE  Identificatie (naam, nummer, code) van het rioolstelsel
         #PUT_IDE  Identificatie (naam, nummer, code) van de put of het bouwwerk
-        #KNP_XCO  X-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
-        #KNP_YCO  Y-coÃ¶rdinaat knooppunt. Conform coÃ¶rdinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_XCO  X-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
+        #KNP_YCO  Y-coördinaat knooppunt. Conform coördinatenstelsel EPSG:7415 (x/y conform EPSG:28992 (=RD), z conform EPSG:5709 (=NAP).
         #CMP_IDE  Identificatie (naam, nummer, code) van het compartiment
         #MVD_NIV  Niveau maaiveld t.o.v. NAP
         #MVD_SCH  Type maaiveldschematisering
@@ -336,7 +336,7 @@ class FMwriter:
         #KNP_LEN  Lengte putbodem
         #KNP_TYP  Type knooppunt
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #STA_OBJ  Status van het object
         #AAN_MVD  Aanname maaiveldhoogte
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
@@ -421,7 +421,7 @@ class FMwriter:
 
     def writePipes(self, dirPath, outputDir):  # write pipes described as crossections from GWSW model
 
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KN1_IDE  Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
         #KN2_IDE  Identificatie knooppunt 2. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
         #VRB_TYP  Type verbinding
@@ -431,16 +431,16 @@ class FMwriter:
         #STR_RCH  Mogelijke stromingsrichting door verbinding
         #VRB_LEN  Lengte van de leiding of de lengte die via het kunstwerk overbrugd wordt (bijvoorbeeld de lengte van de persleiding tussen pomp en lozingspunt)
         #INZ_TYP  Type afvalwater dat wordt ingezameld
-        #INV_KN1  InstroomverliescoÃ«fficient knooppunt 1
-        #UTV_KN1  UitstroomverliescoÃ«fficient knooppunt 1
-        #INV_KN2  InstroomverliescoÃ«fficient knooppunt 2
-        #UTV_KN2  UitstroomverliescoÃ«fficient knooppunt 2
+        #INV_KN1  Instroomverliescoëfficient knooppunt 1
+        #UTV_KN1  Uitstroomverliescoëfficient knooppunt 1
+        #INV_KN2  Instroomverliescoëfficient knooppunt 2
+        #UTV_KN2  Uitstroomverliescoëfficient knooppunt 2
         #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
         #PRO_IDE  Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
         #STA_OBJ  Status van het object
         #AAN_BB1  Aanname waarde BOB_KN1
         #AAN_BB2  Aanname waarde BOB_KN2
-        #INI_NIV  InitiÃ«le waterstand t.o.v. NAP
+        #INI_NIV  Initiële waterstand t.o.v. NAP
         #ALG_TOE  Toelichting bij deze regel
 
         fileCSLoc = open(os.path.join(dirPath, outputDir, 'cross_section_locations.ini'), 'w')
@@ -563,15 +563,15 @@ class FMwriter:
 
     def writeStructures(self, dirPath, outputDir):
 
-        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts Ã©Ã©n keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
         #KWK_TYP  Type hydraulisch component in het kunstwerk
         #BWS_NIV  Buitenwaterstand t.o.v. NAP
         #PRO_BOK  Niveau binnenonderkant profiel t.o.v. NAP
-        #DRL_COE  ContractiecoÃ«fficient doorlaatprofiel
+        #DRL_COE  Contractiecoëfficient doorlaatprofiel
         #DRL_CAP  Maximale capaciteit doorlaat
         #OVS_BRE  Breedte overstortdrempel / crest length
         #OVS_NIV  Niveau overstortdrempel t.o.v. NAP / crest height
-        #OVS_COE  AfvoercoÃ«fficient overstortdrempel
+        #OVS_COE  Afvoercoëfficient overstortdrempel
         #PMP_CAP  Capaciteit van de individuele pomp
         #PMP_AN1  Aanslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
         #PMP_AF1  Afslagniveau benedenstrooms (zuigzijde) pomp t.o.v. NAP
@@ -616,11 +616,11 @@ class FMwriter:
 
                 direction = self.getDirectionOfStructure(value[0])
                 if direction == '1_2':
-                    fileStructures.write('allowed_flow_dir = 2\n')
-                elif direction == '2_1':
-                    fileStructures.write('allowed_flow_dir = 3\n')
-                else:
                     fileStructures.write('allowed_flow_dir = 1\n')
+                elif direction == '2_1':
+                    fileStructures.write('allowed_flow_dir = 2\n')
+                else:
+                    fileStructures.write('allowed_flow_dir = 0\n')
 
                 fileStructures.write('bottom_level = ' + self.to2Dec(value[3]) + '\n')
 
@@ -635,7 +635,7 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = gate\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('branchid = ' + branchId + '\n')
+                fileStructures.write('branch_id = ' + branchId + '\n')
                 fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
 
@@ -652,7 +652,7 @@ class FMwriter:
                 fileStructures.write('[structure]\n')
                 fileStructures.write('type = pump\n')
                 fileStructures.write('id = ' + value[0] + '\n')
-                fileStructures.write('branchid = ' + branchId + '\n')
+                fileStructures.write('branch_id = ' + branchId + '\n')
                 fileStructures.write('chainage = ' + branchOffset + '\n')
                 fileStructures.write('polylinefile = ' + pliName + '.pli\n')
                 valuePerSecond = float(value[9])/3600
@@ -664,7 +664,7 @@ class FMwriter:
                 elif direction == '2_1':
                     fileStructures.write('direction = 2\n')
                 else:
-                    fileStructures.write('direction = 3\n')
+                    fileStructures.write('direction = 0\n')
 
                 if value[10] != '' and value[11] != '':
                     fileStructures.write('start_level_suction_side = ' + self.to2Dec(value[10]) + '\n')
@@ -801,6 +801,9 @@ class FMwriter:
     def getAreaOfOrifice(self, id):
         connection = self.model.connections[id]
         profile = self.model.profiles[connection[15]]
+        type = profile[2]
+        width = float(profile[3])
+        height = float(profile[4])
         result = pi * ((float(profile[3])/200.0) ** 2)
         return result
 

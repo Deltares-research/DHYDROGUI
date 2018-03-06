@@ -5,6 +5,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FMwriter.py" afterPath="$PROJECT_DIR$/FMwriter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Run.py" afterPath="$PROJECT_DIR$/Run.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/FMmd1d.txt" afterPath="$PROJECT_DIR$/resources/FMmd1d.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/FMmdu.txt" afterPath="$PROJECT_DIR$/resources/FMmdu.txt" />
     </list>
     <ignored path="python.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,9 +31,9 @@
         <entry file="file://$PROJECT_DIR$/Run.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding>
-                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#18#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -40,11 +42,41 @@
       <file leaf-file-name="FMwriter.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FMwriter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.27993256">
-              <caret line="247" column="0" selection-start-line="247" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.68824166">
+              <caret line="806" column="1" selection-start-line="806" selection-start-column="1" selection-end-line="806" selection-end-column="1" />
               <folding>
-                <element signature="e#0#17#0" expanded="true" />
+                <element signature="e#18#35#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GWSWreader.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GWSWreader.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="93" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FMmd1d.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/FMmd1d.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="17" selection-end-column="116" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FMmdu.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/FMmdu.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="31" column="34" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="34" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -53,8 +85,10 @@
         <entry file="file://$PROJECT_DIR$/UgridWriter.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
-              <folding />
+              <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
+              <folding>
+                <element signature="e#18#38#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -78,10 +112,10 @@
         <option value="$PROJECT_DIR$/Logger.py" />
         <option value="$PROJECT_DIR$/GWSWreader.py" />
         <option value="$PROJECT_DIR$/create_ugrid_1d2d_map.py" />
+        <option value="$PROJECT_DIR$/Run.py" />
+        <option value="$PROJECT_DIR$/UgridWriter.py" />
         <option value="$PROJECT_DIR$/resources/FMmd1d.txt" />
         <option value="$PROJECT_DIR$/resources/FMmdu.txt" />
-        <option value="$PROJECT_DIR$/UgridWriter.py" />
-        <option value="$PROJECT_DIR$/Run.py" />
         <option value="$PROJECT_DIR$/FMwriter.py" />
       </list>
     </option>
@@ -89,8 +123,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1932" />
+    <option name="height" value="1086" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -368,26 +402,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
+    <frame x="-8" y="-8" width="1932" height="1086" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19599578" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19588172" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32864866" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973656" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42918918" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32864866" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42918918" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -446,7 +480,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -456,7 +490,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -480,7 +514,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="286" column="29" selection-start-line="286" selection-start-column="29" selection-end-line="286" selection-end-column="29" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -490,7 +524,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -514,7 +548,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -524,7 +558,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -548,7 +582,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -558,7 +592,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -582,7 +616,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -592,7 +626,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -616,7 +650,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -626,7 +660,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -650,7 +684,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -660,7 +694,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -684,7 +718,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -694,7 +728,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -718,7 +752,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -728,7 +762,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -752,7 +786,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -762,7 +796,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -802,27 +836,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GWSWreader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="211" column="91" selection-start-line="211" selection-start-column="91" selection-end-line="211" selection-end-column="91" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/FMmd1d.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="36" selection-start-line="22" selection-start-column="36" selection-end-line="22" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/FMmdu.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="56" selection-start-line="12" selection-start-column="56" selection-end-line="12" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/GWSWmodel.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -830,30 +843,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/UgridWriter.py">
+    <entry file="file://$PROJECT_DIR$/Run.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#18#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/FMmd1d.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="17" selection-end-column="116" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Run.py">
+    <entry file="file://$PROJECT_DIR$/resources/FMmdu.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+          <caret line="31" column="34" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GWSWreader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="93" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UgridWriter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#18#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FMwriter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27993256">
-          <caret line="247" column="0" selection-start-line="247" selection-start-column="0" selection-end-line="247" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.68824166">
+          <caret line="806" column="1" selection-start-line="806" selection-start-column="1" selection-end-line="806" selection-end-column="1" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#18#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
