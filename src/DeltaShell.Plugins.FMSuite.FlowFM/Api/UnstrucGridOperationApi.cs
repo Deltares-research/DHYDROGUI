@@ -82,11 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 adjustedMduProperties[adjustedIndex] = clonedProperty;
             }
 
-            // write mdu with adjusted properties
-            var mduFile = new MduFile();
-            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            mduFile.WriteProperties(mduFilePath, adjustedMduProperties, false, false, useNetCDFMapFormat:isPartOf1D2DModel, disableFlowNodeRenumbering:model.DisableFlowNodeRenumbering);
-
             // do write grid file
             var gridFile = model.NetFilePath;
             if (!File.Exists(gridFile)) 
@@ -96,7 +91,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
              the api running.*/
             model.ExportTo(mduFilePath, false, fullExport, fullExport);
             model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
-            
+
+            // Overwrite existing mdu to ignore the properties with adjusted properties
+            var mduFile = new MduFile();
+            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            mduFile.WriteProperties(mduFilePath, fullExport ? model.ModelDefinition.Properties.ToList() : adjustedMduProperties, fullExport, fullExport, useNetCDFMapFormat: isPartOf1D2DModel, disableFlowNodeRenumbering: model.DisableFlowNodeRenumbering);
+
             TryInitializeApi();
         }
         
@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 api.Initialize(mduFilePath);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 api.Dispose(); // cleanup remote instance on crash!
                 throw;

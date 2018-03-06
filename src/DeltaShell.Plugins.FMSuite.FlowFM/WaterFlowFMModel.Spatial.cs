@@ -634,7 +634,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         // Creation should only occur on the UI thread!!!
-        private IGridOperationApi GetGridSnapApi()
+        private IGridOperationApi GetGridSnapApi(bool fullExport = true)
         {
             if (snapApiInErrorMode) // very crude..
             {
@@ -646,7 +646,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     return runTimeGridOperationApi;
                 }
-                var api =  gridOperationApi ?? (gridOperationApi = new UnstrucGridOperationApi(this, false));
+                var api =  gridOperationApi ?? (gridOperationApi = new UnstrucGridOperationApi(this, fullExport));
                 snapApiInErrorMode = false;
                 return api;
             }
@@ -689,12 +689,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
         {
-            return GetGridSnapApi().GetGridSnappedGeometry(featureType, geometry);
+            return GetGridSnapApi(false).GetGridSnappedGeometry(featureType, geometry);
         }
 
         public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
         {
-            return GetGridSnapApi().GetGridSnappedGeometry(featureType, geometries);
+            return GetGridSnapApi(false).GetGridSnappedGeometry(featureType, geometries);
         }
 
         public int[] GetLinkedCells()
