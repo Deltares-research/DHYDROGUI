@@ -104,11 +104,13 @@ class UgridWriter:
         ntw_node_id = ncfile.createVariable("network_node_ids", "c", ("nnetwork_nodes", "idstrlength"))
         ntw_node_id.standard_name = 'network_node_ids'
         ntw_node_id.long_name = "The identification name of the node"
+        ntw_node_id.mesh = 'network1D'
         ntw_node_id[:] = data["node_ids"]
 
         ntw_node_longname = ncfile.createVariable("network_node_long_names", "c", ("nnetwork_nodes", "longstrlength"))
         ntw_node_longname.standard_name = 'network_node_longname'
         ntw_node_longname.long_name = "The long name of the node"
+        ntw_node_longname.mesh = 'network1D'
         ntw_node_longname[:] = data["node_longnames"]
 
         ntw_node_x = ncfile.createVariable("network_node_x", "f8", "nnetwork_nodes")
@@ -193,11 +195,13 @@ class UgridWriter:
         mesh1d_node_id = ncfile.createVariable("mesh1d_node_ids", "c", ("nmesh1d_nodes", "idstrlength"))
         mesh1d_node_id.standard_name = 'mesh1d_node_ids'
         mesh1d_node_id.long_name = "The name of the calculation points"
+        mesh1d_node_id.mesh = 'mesh1d'
         mesh1d_node_id[:] = data["point_ids"]
 
         mesh1d_node_longname = ncfile.createVariable("mesh1d_node_long_names", "c", ("nmesh1d_nodes", "longstrlength"))
         mesh1d_node_longname.standard_name = 'mesh1d_node_longname'
         mesh1d_node_longname.long_name = "The long name of calculation points"
+        mesh1d_node_longname.mesh = 'mesh1d'
         mesh1d_node_longname[:] = data["point_longnames"]
 
         mesh1d_edge_node = ncfile.createVariable("mesh1d_edge_nodes", "i4", ("nmesh1d_edges", "Two"))

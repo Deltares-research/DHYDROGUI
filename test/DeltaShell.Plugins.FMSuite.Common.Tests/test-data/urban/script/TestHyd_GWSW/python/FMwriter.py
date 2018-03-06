@@ -460,7 +460,8 @@ class FMwriter:
         fileRough.write('fileType = roughness\n')
         fileRough.write('\n')
         fileRough.write('[content]\n')
-        fileRough.write('sectionId = sewer_system\n')
+#        fileRough.write('sectionId = sewer_system\n')
+        fileRough.write('sectionId = Main\n')
         fileRough.write('flowDirection = False\n')
         fileRough.write('interpolate = 1\n')
         fileRough.write('globalType = 7\n')
@@ -545,8 +546,9 @@ class FMwriter:
                 fileCSDef.write('diameter = ' + self.to2Dec(w) + '\n')
             elif t == 'EIV':
                 fileCSDef.write('type = egg\n')
-                fileCSDef.write('width = ' + self.to2Dec(w) + '\n')
-                fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
+                fileCSDef.write('diameter = ' + self.to2Dec(w) + '\n')
+#                fileCSDef.write('width = ' + self.to2Dec(w) + '\n')
+#                fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
             else:
                 h = float(value[4])/100.0 #mm -> m
                 fileCSDef.write('type = rectangle\n')
@@ -555,7 +557,8 @@ class FMwriter:
 
             fileCSDef.write('closed = 1\n')
             fileCSDef.write('groundlayerUsed = 0\n')
-            fileCSDef.write('roughnessNames = sewer_system\n')
+            fileCSDef.write('roughnessNames = Main\n')
+#            fileCSDef.write('roughnessNames = sewer_system\n')
             fileCSDef.write('\n')
 
         fileCSDef.close()
