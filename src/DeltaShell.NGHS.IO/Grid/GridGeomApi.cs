@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         protected GridGeomWrapper geomWrapper;
         public const string LIB_DLL_NAME = "gridgeom.dll";
-        private const string DFLOWFM_FOLDER_NAME = "dflowfm";
+        private const string DFLOWFM_FOLDER_NAME = "shared";
         private const string DFLOWFM_BINFOLDER_NAME = "bin";
         
         public static string DllDirectory

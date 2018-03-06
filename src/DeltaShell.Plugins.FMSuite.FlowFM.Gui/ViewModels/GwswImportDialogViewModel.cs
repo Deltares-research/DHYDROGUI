@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
@@ -15,35 +17,80 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
 {
+    /// <summary>
+    /// GwswImportDialogViewModel is a view model for the GwswImport dialog
+    /// </summary>
     [Entity]
     public class GwswImportDialogViewModel
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswImportDialogViewModel));
-        private static string definitionFilePath;
+        private static string selectedDirectoryPath;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GwswImportDialogViewModel"/> class.
+        /// </summary>
+        public GwswImportDialogViewModel()
+        {
+            GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
+            selectedDirectoryPath = null;
+            FeatureDelimeter = ';';
+        }
+
+        /// <summary>
+        /// Gets or sets the importer.
+        /// </summary>
+        /// <value>
+        /// The importer.
+        /// </value>
         public GwswFileImporter Importer { get; set; }
 
+        /// <summary>
+        /// Gets or sets the model.
+        /// </summary>
+        /// <value>
+        /// The model.
+        /// </value>
         public WaterFlowFMModel Model { get; set; }
 
-        public bool IsDefinitionFileLoaded { get; set; }
-
-        public char SelectedDelimeter { get; set; }
-
-        public char DefinitionDelimeter { get; set; }
+        /// <summary>
+        /// Gets or sets the delimeter for the feature csv files.
+        /// </summary>
+        /// <value>
+        /// The feature delimeter.
+        /// </value>
         public char FeatureDelimeter { get; set; }
 
-        public string SelectedDefinitionFilePath { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is directory selected, a state of the viewand the user process.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is directory selected; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsDirectorySelected { get; set; }
 
-        private string DefinitionFilePath
+        /// <summary>
+        /// Gets or sets the selected directory path.
+        /// </summary>
+        /// <value>
+        /// The selected directory path.
+        /// </value>
+        public string SelectedDirectoryPath
         {
-            get { return definitionFilePath; }
+            get { return selectedDirectoryPath; }
             set
             {
-                if (!String.IsNullOrEmpty(value) && File.Exists(value))
-                    definitionFilePath = value;
+                if (!String.IsNullOrEmpty(value) && Directory.Exists(value))
+                    selectedDirectoryPath = value;
+                    IsDirectorySelected = true;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected feature file path.
+        /// </summary>
+        /// <value>
+        /// The selected feature file path.
+        /// </value>
         public string SelectedFeatureFilePath { get; set; }
 
         public bool AllFilesSelected
@@ -52,57 +99,103 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             set { } //The setter triggers the getter in the View.
         }
 
+        /// <summary>
+        /// Gets or sets the GWSW feature files, based on the GWSW definition.
+        /// </summary>
+        /// <value>
+        /// The GWSW feature files.
+        /// </value>
         public ObservableCollection<GwswFeatureViewItem> GwswFeatureFiles { get; set; }
-        public bool OverwriteGwswFeatureFiles;
 
+        /// <summary>
+        /// Gets or sets the close action.
+        /// </summary>
+        /// <value>
+        /// The close action.
+        /// </value>
         public Action<bool> CloseAction { get; set; }
 
+        /// <summary>
+        /// Gets or sets the get delimeter.
+        /// </summary>
+        /// <value>
+        /// The get delimeter.
+        /// </value>
         public Func<char, char> GetDelimeter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the message action.
+        /// </summary>
+        /// <value>
+        /// The message action.
+        /// </value>
         public Func<string, string, MessageBoxButtons, MessageBoxIcon, bool> MessageAction { get; set; }
-
-        public GwswImportDialogViewModel()
-        {
-            GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
-            definitionFilePath = null;
-            //Default Delimeters
-            DefinitionDelimeter = ',';
-            FeatureDelimeter = ';';
-        }
 
         #region Commands
 
+        /// <summary>
+        /// Gets the on select all command.
+        /// </summary>
+        /// <value>
+        /// The on select all.
+        /// </value>
         public ICommand OnSelectAll
         {
             get { return new RelayCommand( param => SelectAll());}
         }
 
-        public ICommand OnLoadDefinitionFile
+        /// <summary>
+        /// Gets the on directory selected command.
+        /// </summary>
+        /// <value>
+        /// The on directory selected.
+        /// </value>
+        public ICommand OnDirectorySelected
         {
-            get { return new RelayCommand( param => LoadDefinitionFile()); }
+            get { return new RelayCommand( param => LoadFeatureFiles()); }
         }
 
+
+        /// <summary>
+        /// Gets the on add custom feature file command.
+        /// </summary>
+        /// <value>
+        /// The on add custom feature file.
+        /// </value>
         public ICommand OnAddCustomFeatureFile
         {
             get { return new RelayCommand(param => AddFeatureFile()); }
         }
 
+        /// <summary>
+        /// Gets the on configure importer command.
+        /// </summary>
+        /// <value>
+        /// The on configure importer.
+        /// </value>
         public ICommand OnConfigureImporter
         {
             get { return new RelayCommand(param => ConfigureImporter()); }
         }
 
+        /// <summary>
+        /// Gets the on cancel import features command.
+        /// </summary>
+        /// <value>
+        /// The on cancel import features.
+        /// </value>
         public ICommand OnCancelImportFeatures
         {
             get { return new RelayCommand(param => CloseAction(false)); }
         }
 
-        public ICommand OnSetDefinitionDelimeter
-        {
-            get { return new RelayCommand(param => SetDefinitionDelimeter()); }
-        }
 
-
+        /// <summary>
+        /// Gets the on set feature delimeted command.
+        /// </summary>
+        /// <value>
+        /// The on set feature delimeter.
+        /// </value>
         public ICommand OnSetFeatureDelimeter
         {
             get { return new RelayCommand(param => SetFeatureDelimeter()); }
@@ -113,9 +206,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
 
         #region Commands Private methods
 
-        private void SetDefinitionDelimeter()
+        private void LoadFeatureFiles()
         {
-            DefinitionDelimeter = GetDelimeter?.Invoke(DefinitionDelimeter) ?? DefinitionDelimeter;
+            Importer.LoadFeatureFiles(this.SelectedDirectoryPath);
+
+            GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
+            Importer.GwswDefaultFeatures.ForEach(
+                kv => GwswFeatureFiles.Add(
+                    new GwswFeatureViewItem
+                    {
+                        Selected = Importer.FilesToImport != null && Importer.FilesToImport.Contains(kv.Value[2]),
+                        FileName = kv.Key,
+                        FileExists = File.Exists(kv.Value[2]),
+                        ElementName = kv.Value[0],
+                        FeatureType = kv.Value[1],
+                        FullPath = kv.Value[2],
+                        AfterSelected = () => TriggerSelectedFilesCheckbox() // trigger event
+                    }));
+
+            TriggerSelectedFilesCheckbox();
         }
 
         private void SetFeatureDelimeter()
@@ -141,58 +250,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             TriggerSelectedFilesCheckbox();
         }
 
-        private void LoadDefinitionFile()
-        {
-            if (String.IsNullOrEmpty(SelectedDefinitionFilePath)
-                || !OverwriteGwswFeatureFiles 
-                    && GwswFeatureFiles != null 
-                    && GwswFeatureFiles.Any())
-            {
-                SelectedDefinitionFilePath = DefinitionFilePath ?? string.Empty;
-                return;
-            }
-
-            //Set delimeter.
-            if (Importer != null)
-                Importer.CsvDelimeter = DefinitionDelimeter;
-
-            //Load definition file if possible.
-            var loadResult = Importer?.LoadDefinitionFile(SelectedDefinitionFilePath);
-            if (loadResult == null || Importer.GwswDefaultFeatures == null )
-            {
-                //Log message in DeltaShell
-                Log.ErrorFormat(Resources.GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__could_not_be_imported__Path___1_, Path.GetFileName(SelectedDefinitionFilePath), SelectedDefinitionFilePath);
-                
-                //Display a message window informing the user
-                var message = "A problem was found while importing the Definition File, please check the log messages for further details.";
-                MessageAction?.Invoke("Error importing Definition File.", message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //Clean Definition file path, GwswFeatureFiles and Importer mappings.
-                SelectedDefinitionFilePath = string.Empty;
-                GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
-                IsDefinitionFileLoaded = false;
-                return;
-            }
-
-            DefinitionFilePath = SelectedDefinitionFilePath;
-            Log.InfoFormat(Resources.GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__was_imported_correctly__Path___1_, Path.GetFileName(DefinitionFilePath), DefinitionFilePath);
-
-            GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
-            Importer.GwswDefaultFeatures.ForEach(
-                kv => GwswFeatureFiles.Add(
-                    new GwswFeatureViewItem
-                    {
-                        Selected = Importer.FilesToImport != null && Importer.FilesToImport.Contains(kv.Value[2]),
-                        FileName = kv.Key,
-                        ElementName = kv.Value[0],
-                        FeatureType = kv.Value[1],
-                        FullPath = kv.Value[2],
-                        AfterSelected = () => TriggerSelectedFilesCheckbox() // trigger event
-                    }));
-
-            IsDefinitionFileLoaded = GwswFeatureFiles.Any();
-            TriggerSelectedFilesCheckbox();
-        }
-
         private void AddFeatureFile()
         {
             if (String.IsNullOrEmpty(SelectedFeatureFilePath)) return;
@@ -209,6 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
             var newItem = new GwswFeatureViewItem
             {
                 FileName = fileName,
+                FileExists = File.Exists(SelectedFeatureFilePath),
                 ElementName = foundFeature?.ElementName,
                 FeatureType = foundFeature?.FeatureType,
                 FullPath = SelectedFeatureFilePath,
@@ -216,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
                 AfterSelected = () => TriggerSelectedFilesCheckbox()
             };
             GwswFeatureFiles?.Insert(0, newItem);
-            if( GwswFeatureFiles.Contains(newItem))
+            if(GwswFeatureFiles != null && GwswFeatureFiles.Contains(newItem))
                 Log.InfoFormat(Resources.GwswImportDialogViewModel_AddFeatureFile_Feature_file__0__added_to_the_list_correctly__Path___1_, fileName, SelectedFeatureFilePath);
 
             TriggerSelectedFilesCheckbox();
@@ -243,31 +301,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels
         {
             AllFilesSelected = true; // trigger event
         }
-    }
-
-    [Entity]
-    public class GwswFeatureViewItem
-    {
-        private bool selected;
-
-        public bool Selected
-        {
-            get { return selected; }
-            set
-            {
-                selected = value;
-                AfterSelected?.Invoke();
-            }
-        }
-
-        public string FileName { get; set; }
-
-        public string ElementName { get; set; }
-
-        public string FeatureType { get; set; }
-
-        public string FullPath { get; set; }
-
-        public Action AfterSelected { get; set; }
     }
 }

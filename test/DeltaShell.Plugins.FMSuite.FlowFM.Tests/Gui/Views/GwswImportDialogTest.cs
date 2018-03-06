@@ -66,10 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
 
             viewModel.GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem> { item1, item2, item3 };
             
-            var filePath = GetValidDefinitionFile();
-            viewModel.Importer.CsvDelimeter = ',';
-            var value = viewModel.Importer.LoadDefinitionFile(filePath);
-            Assert.IsNotNull(value);
+            var filePath = GetValidDirectoryPath();
 
             viewModel.OnConfigureImporter.Execute(null);
             var importerFilesToImport = viewModel.Importer.FilesToImport;
@@ -81,94 +78,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
 
         #endregion
 
-        #region OnLoadDefinitionFile
+        #region OnDirectorySelected
 
-        [Test]
-        public void GivenNullImporter_OnLoadDefinitionFile_LogMessageIsGiven()
-        {
-            var viewModel = new GwswImportDialogViewModel();
-            Assert.IsNotNull(viewModel);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-
-            var validDefinitionFile = GetValidDefinitionFile();
-            viewModel.SelectedDefinitionFilePath = validDefinitionFile;
-
-            var logMessage = string.Format(Resources.GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__could_not_be_imported__Path___1_, Path.GetFileName(validDefinitionFile), validDefinitionFile);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => viewModel.OnLoadDefinitionFile.Execute(null), logMessage);
-            Assert.IsNullOrEmpty(viewModel.SelectedDefinitionFilePath);
-        }
-
-        [Test]
-        public void GivenOverwriteGwswFeatureFiles_IsFalse_PreviousDefinitionAndFiles_Remain()
-        {
-            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
-            Assert.IsNotNull(viewModel);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-
-            var validDefinitionFile = GetValidDefinitionFile();
-
-            //We need to execute it to store correctly the private property 'CurrentDefinitionFilePath'.
-            viewModel.SelectedDefinitionFilePath = validDefinitionFile;
-            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDefinitionFilePath);
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-            var firstLoad = viewModel.GwswFeatureFiles;
-
-            //Second execution will do nothing because overwrite is set to false;
-            viewModel.OverwriteGwswFeatureFiles = false;
-            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDefinitionFilePath);
-
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDefinitionFilePath);
-            Assert.AreEqual(firstLoad, viewModel.GwswFeatureFiles);
-        }
-
-        [Test]
+ [Test]
         public void GivenOverwriteGwswFeatureFiles_IsTrue_PreviousDefinitionAndFiles_AreReplaced()
         {
             var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 
-            var validDefinitionFile = GetValidDefinitionFile();
+            var validDefinitionFile = GetValidDirectoryPath();
             var fileName = "TestFile";
             viewModel.GwswFeatureFiles.Add( new GwswFeatureViewItem{FileName = fileName});
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any( f => f.FileName == fileName));
 
-            viewModel.OverwriteGwswFeatureFiles = true;
-            viewModel.SelectedDefinitionFilePath = validDefinitionFile;
+            viewModel.SelectedDirectoryPath = validDefinitionFile;
 
-            viewModel.OnLoadDefinitionFile.Execute(null);
+            viewModel.OnDirectorySelected.Execute(null);
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDefinitionFilePath);
+            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDirectoryPath);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any(f => f.FileName == fileName));
-        }
-
-        [Test]
-        public void GivenACorrectImport_OnLoadDefinitionFile_DefinitionFilePathIsRestored_IfNextImportFails()
-        {
-            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
-            Assert.IsNotNull(viewModel);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-
-            var validDefinitionFile = GetValidDefinitionFile();
-            var invalidDefinitionFile = "testFilepath.csv";
-
-            //We need to execute it to store correctly the private property 'CurrentDefinitionFilePath'.
-            viewModel.SelectedDefinitionFilePath = validDefinitionFile;
-            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDefinitionFilePath);
-
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-
-            viewModel.SelectedDefinitionFilePath = invalidDefinitionFile;
-            Assert.AreEqual(invalidDefinitionFile, viewModel.SelectedDefinitionFilePath);
-
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-            Assert.AreEqual(validDefinitionFile, viewModel.SelectedDefinitionFilePath);
-
         }
 
         [Test]
@@ -178,48 +107,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 
-            viewModel.SelectedDefinitionFilePath = GetValidDefinitionFile();
-            viewModel.OnLoadDefinitionFile.Execute(null);
+            viewModel.SelectedDirectoryPath = GetValidDirectoryPath();
+            viewModel.OnDirectorySelected.Execute(null);
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
             Assert.IsTrue(viewModel.GwswFeatureFiles.All(ff => ff.Selected));
-        }
-
-        [Test]
-        public void GivenCorrectDefinitionFile_OnLoadDefinitionFile_LogMessageIsGiven()
-        {
-            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
-            Assert.IsNotNull(viewModel);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-
-            viewModel.SelectedDefinitionFilePath = GetValidDefinitionFile();
-            var logMessage = string.Format(Resources.GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__was_imported_correctly__Path___1_, Path.GetFileName(viewModel.SelectedDefinitionFilePath), viewModel.SelectedDefinitionFilePath);
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => viewModel.OnLoadDefinitionFile.Execute(null), logMessage);
-
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-        }
-
-        [Test]
-        public void GivenOverwriteGwswFeatureFiles_FailedBecauseBadDefinitionFile_GwswFeatureFilesAndDefinitionFile_AreCleaned()
-        {
-            var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter()};
-            Assert.IsNotNull(viewModel);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-
-            //First load a valid definition file.
-            viewModel.SelectedDefinitionFilePath = GetValidDefinitionFile();
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-
-            //Loading a Feature File as Definition will, in most of the cases, result in a failed Loading.
-            viewModel.OverwriteGwswFeatureFiles = true;
-            var filePath = TestHelper.GetTestFilePath(@"gwswFiles\Knoppunten.csv");
-            filePath = TestHelper.CreateLocalCopy(filePath);
-            Assert.IsNotNull(filePath);
-            viewModel.SelectedDefinitionFilePath = filePath;
-
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-            Assert.IsNullOrEmpty(viewModel.SelectedDefinitionFilePath);
         }
 
         #endregion
@@ -257,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
 
         [Test]
         /*The path is not really used as it is not check for existence of file or not. Only used to map the type of feature.*/
-        [TestCase(@"gwswFiles\sub\Kunstwerk.csv", "Kunstwerk.csv", "Structure", "Structure")]
+        [TestCase(@"gwswFiles\Kunstwerk.csv", "Kunstwerk.csv", "Structure", "Structure")]
         public void GivenValidFeatureFile_GwswFeatureFiles_AddsNewRepeatedItem_WithExpectedProperties(string path, string expectedFileName, string expectedElementName, string expectedFeatureType)
         {
             var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter()};
@@ -266,8 +157,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
 
             //Load definition file and all it´s features
             var filePath = TestHelper.GetTestFilePath(path);
-            viewModel.SelectedDefinitionFilePath = TestHelper.GetTestFilePath(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
-            viewModel.OnLoadDefinitionFile.Execute(null);
+            viewModel.SelectedDirectoryPath = TestHelper.GetDataDir();
+            viewModel.OnDirectorySelected.Execute(null);
             Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
             var numberOfFeatures = viewModel.GwswFeatureFiles.Count;
 
@@ -324,6 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
         public void GivenImporter_WithoutGwswAttributesDefinition_OnConfigureImporter_DoesNotModify_Importer_FilesToImport()
         {
             var importer = new GwswFileImporter();
+            importer.GwswAttributesDefinition.Clear();
             var testfile = "TestFile";
             importer.FilesToImport.Add(testfile);
             Assert.IsTrue(importer.FilesToImport.Any());
@@ -378,51 +270,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
             Assert.AreEqual(selectedFiles, importer.FilesToImport.Any());
         }
 
-        [Test]
-        public void GivenOverwriteGwswFeatureFiles_FailedBecauseBadDefinitionFile_NothingIsImported()
-        {
-            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
-            Assert.IsNotNull(viewModel);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-
-            //First load a valid definition file.
-            viewModel.SelectedDefinitionFilePath = GetValidDefinitionFile();
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsTrue(viewModel.GwswFeatureFiles.Any());
-
-            //Loading a Feature File as Definition will, in most of the cases, result in a failed Loading.
-            viewModel.OverwriteGwswFeatureFiles = true;
-            var filePath = TestHelper.GetTestFilePath(@"gwswFiles\Knoppunten.csv");
-            filePath = TestHelper.CreateLocalCopy(filePath);
-            Assert.IsNotNull(filePath);
-            viewModel.SelectedDefinitionFilePath = filePath;
-
-            viewModel.OnLoadDefinitionFile.Execute(null);
-            Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-            Assert.IsNullOrEmpty(viewModel.SelectedDefinitionFilePath);
-
-            //Now Try to Configure the import and import.
-            try
-            {
-                viewModel.OnConfigureImporter.Execute(null);
-
-                Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-                Assert.IsFalse(viewModel.Importer.FilesToImport.Any());
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Should not throw exception.");
-            }
-        }
-
         #endregion
 
-        private static string GetValidDefinitionFile()
+        private static string GetValidDirectoryPath()
         {
             var filePath = TestHelper.GetTestFilePath(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             filePath = TestHelper.CreateLocalCopy(filePath);
             Assert.IsNotNull(filePath);
-            return filePath;
+            return Path.GetDirectoryName(filePath);
         }
     }
 }

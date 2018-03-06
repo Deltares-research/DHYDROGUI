@@ -64,21 +64,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 : DelftDialogResult.Cancel;
         }
 
-        private void Click_LoadDefinitionFile(object sender, RoutedEventArgs e)
+        private void Click_SelectDirectory(object sender, RoutedEventArgs e)
         {
-            var selectedFile = BrowseFiles();
-            if (!String.IsNullOrEmpty(selectedFile)
-                && ViewModel.GwswFeatureFiles != null && ViewModel.GwswFeatureFiles.Any())
-            {
-                var message =
-                    "Importing a new Definition File will remove the existent Feature Files from the list. \nDo you wish to continue with this action?";
-                var proceed = ShowMessageDialog("Feature Files to be overwritten", message, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                ViewModel.OverwriteGwswFeatureFiles = proceed;
-                if (!proceed) return;
-            }
-
-            ViewModel.SelectedDefinitionFilePath = selectedFile;
+            var selectedDirectory = GetSelectedDirectory();
+            ViewModel.SelectedDirectoryPath = selectedDirectory;
         }
 
         private void Click_AddFeatureFile(object sender, RoutedEventArgs e)
@@ -96,6 +85,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return (char)selector.Data;
 
             return delimeter;
+        }
+
+        private string GetSelectedDirectory()
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            return result != System.Windows.Forms.DialogResult.OK ? null : dialog.SelectedPath;
         }
 
         private string BrowseFiles()

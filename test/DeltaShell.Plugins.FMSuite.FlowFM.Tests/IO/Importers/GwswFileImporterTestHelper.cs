@@ -75,17 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             return filePath;
         }
 
-        protected static GwswFileImporter GetImporterWithLoadedDefinition()
-        {
-            var importer = new GwswFileImporter();
-            Assert.IsNotNull(importer);
-            importer.CsvDelimeter = ',';
-            var defFile = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
-            importer.LoadDefinitionFile(defFile);
-
-            return importer;
-        }
-
         protected static IList<GwswElement> GwswFileImportAsGwswElementsWorksCorrectly(GwswFileImporter importer, string filePath, bool continousTesting = false)
         {
             var importedElementList = importer.ImportGwswElementList(filePath);

@@ -314,6 +314,7 @@
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DelimeterSelectorViewModel.cs" />
+    <Compile Include="ViewModels\GwswFeatureViewItem.cs" />
     <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />
     <Compile Include="Views\GwswImportDialog.xaml.cs">
       <DependentUpon>GwswImportDialog.xaml</DependentUpon>

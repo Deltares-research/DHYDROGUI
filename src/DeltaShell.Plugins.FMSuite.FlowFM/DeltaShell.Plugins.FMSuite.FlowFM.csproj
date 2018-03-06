@@ -138,6 +138,9 @@
     <Compile Include="CunetteCrossSectionDefinitionGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="IO\Importers\GwswAttribute.cs" />
+    <Compile Include="IO\Importers\GwswAttributeType.cs" />
+    <Compile Include="IO\Importers\GwswElement.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerManholeGenerator.cs" />
     <Compile Include="SewerProfileMapping.cs" />
@@ -305,6 +308,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="dflowfm-mor-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -314,6 +318,7 @@
     <None Include="mor-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Resources\GWSWDefinition.csv" />
     <None Include="sed-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
