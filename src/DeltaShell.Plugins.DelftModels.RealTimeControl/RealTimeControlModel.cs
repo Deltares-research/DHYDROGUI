@@ -215,15 +215,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private bool cloning;
 
-        private void ControlGroupsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (cloning)
-            {
-                return;
-            }
-            BubbleCollectionChangingEvent(sender, e);
-        }
-
         void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (cloning)
@@ -236,7 +227,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ConnectionPointsCollectionChanged(e);
             }
 
-            BubbleCollectionChangedEvent(sender, e);
             AfterControlGroupsCollectionChanged(sender, e);
         }
 
@@ -581,7 +571,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 if (controlGroups != null)
                 {
-                    controlGroups.CollectionChanging -= ControlGroupsCollectionChanging;
                     controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
                     ((INotifyPropertyChange)controlGroups).PropertyChanged -= SetOutputOutOfSync;
                     ((INotifyPropertyChanging)controlGroups).PropertyChanging -= ControlGroupsPropertyChanging;
@@ -592,7 +581,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 if (controlGroups != null)
                 {
-                    controlGroups.CollectionChanging += ControlGroupsCollectionChanging;
                     controlGroups.CollectionChanged += ControlGroupsCollectionChanged;
                     ((INotifyPropertyChange)controlGroups).PropertyChanged += SetOutputOutOfSync;
                     ((INotifyPropertyChanging)controlGroups).PropertyChanging += ControlGroupsPropertyChanging;

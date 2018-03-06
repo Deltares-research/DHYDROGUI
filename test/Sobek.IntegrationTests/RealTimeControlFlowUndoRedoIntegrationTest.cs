@@ -41,6 +41,8 @@ namespace Sobek.IntegrationTests
 {
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
+    [Category(TestCategory.UndoRedo)]
+    [Category(TestCategory.WorkInProgress)] // Remove from work in progress when re-adding UndoRedo support
     public class RealTimeControlFlowUndoRedoIntegrationTest
     {
         private DeltaShellGui gui;
@@ -81,7 +83,7 @@ namespace Sobek.IntegrationTests
 
             // add data
             var builder = new HydroModelBuilder();
-            hydroModel = builder.BuildModel(ModelGroup.All);
+            hydroModel = builder.BuildModel(ModelGroup.SobekModels);
 
             // remove anything but flow and RTC
             var activitiesToRemove = hydroModel.Activities.Where(a => !(a is WaterFlowModel1D) && !(a is RealTimeControlModel)).ToList();
