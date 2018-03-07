@@ -624,7 +624,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 Log.WarnFormat(Resources.RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__,
                     Environment.NewLine, controlGroup.Name, previousControlGroupName);
-                controlGroup.Name = previousControlGroupName;
+
+                if(controlGroup.Name != previousControlGroupName)
+                    controlGroup.Name = previousControlGroupName;
+
                 return;
             }
 
@@ -1188,6 +1191,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     clonedControlGroup.Name = uniqueName;
                 }
                 ControlGroups.Add(clonedControlGroup);
+                existingControlGroupNames.Add(clonedControlGroup.Name);
             }
 
             if (mergedDependendModelsLookup == null) return true;
