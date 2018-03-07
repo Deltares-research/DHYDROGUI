@@ -50,6 +50,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         #region TimeSeriesEditor
 
         [Test]
+        public void GivenWeirViewModel_WhenWeirIsTimeDependant_ViewShouldNotSetItToConstant()
+        {
+            var weir = new Weir(true){ UseCrestLevelTimeSeries = true};
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            var viewModel = new WeirViewModel
+            {
+                Weir = weir,
+            };
+            
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.IsConstant);
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsSetToConstant_IsTimeDependent_ShouldBeFalse()
+        {
+            var weir = new Weir(true) { UseCrestLevelTimeSeries = true };
+            var viewModel = new WeirViewModel
+            {
+                Weir = weir,
+            };
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.IsConstant);
+
+            weir.UseCrestLevelTimeSeries = false;
+            Assert.IsFalse(weir.UseCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.IsConstant);
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+        }
+
+        [Test]
         public void GivenWeirViewModel_WhenWeirIsChangedToTimeDependant_ViewGetsRefreshedCorrectly()
         {
             var weir = new Weir(true);

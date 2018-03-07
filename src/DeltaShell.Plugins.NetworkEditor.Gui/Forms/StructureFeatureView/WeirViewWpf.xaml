@@ -74,7 +74,7 @@
 
                         <Label Grid.Row="1" Grid.Column="0" Content="Crest level" Visibility="{Binding CrestLevelVisibility}" />
                         <Label Grid.Row="1" Grid.Column="2" Content="m" Visibility="{Binding CrestLevelVisibility}"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Weir.CrestLevel}" Visibility="{Binding CrestLevelVisibility}" IsEnabled="{Binding IsTimeDependent}"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Weir.CrestLevel}" Visibility="{Binding CrestLevelVisibility}" IsEnabled="{Binding IsConstant}"/>
 
                         <CheckBox Grid.Row="2" Grid.Column="0"  Margin="5" Content=" Time dependent" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}" Visibility="{Binding CrestLevelVisibility}"/>
                         <Button Grid.Row="2" Grid.Column="1"  Margin="5" Content=" Time series" VerticalAlignment="Center" IsEnabled="{Binding EnableCrestLevelTimeSeries}" Command="{Binding Path=OnEditCrestLevelTimeSeries}" Visibility="{Binding CrestLevelVisibility}"/>

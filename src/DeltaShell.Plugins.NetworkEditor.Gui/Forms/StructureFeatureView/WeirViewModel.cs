@@ -41,12 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 if (weir != null)
                 {
                     selectedWeirType = GetSelectableWeirFormulaType(weir.WeirFormula);
+                    previousCrestLevelTimeSeriesValue = weir.UseCrestLevelTimeSeries;
                     UpdateControls();
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.Weir));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HasWeir));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsConstant));
 
                     ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
                     ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
@@ -226,7 +229,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        public bool IsTimeDependent { get { return !weir.UseCrestLevelTimeSeries; } }
+        public bool IsConstant { get { return !weir.UseCrestLevelTimeSeries; } }
 
         private bool previousCrestLevelTimeSeriesValue;
 
@@ -255,7 +258,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 }
 
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsTimeDependent));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsConstant));
             }
         }
 
@@ -308,6 +311,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (e.PropertyName == TypeUtils.GetMemberName<IWeir>(vm => vm.UseCrestLevelTimeSeries))
             {
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsConstant));
             }
         }
 
