@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         #region TimeSeriesEditor
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsTimeDependant_ViewShouldNotSetItToConstant()
+        public void GivenWeirViewModel_WhenWeirIsTimeDependent_ViewShouldNotSetItToConstant()
         {
             var weir = new Weir(true){ UseCrestLevelTimeSeries = true};
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
@@ -60,12 +60,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             };
             
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.IsConstant);
+            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
             Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsSetToConstant_IsTimeDependent_ShouldBeFalse()
+        public void GivenWeirViewModel_WhenWeirIsSetToConstant_IsCrestLevelConstantTime_ShouldBeTrue()
         {
             var weir = new Weir(true) { UseCrestLevelTimeSeries = true };
             var viewModel = new WeirViewModel
@@ -73,16 +73,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 Weir = weir,
             };
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.IsConstant);
+            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
 
             weir.UseCrestLevelTimeSeries = false;
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.IsConstant);
+            Assert.IsTrue(viewModel.IsCrestLevelConstantTime);
             Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsChangedToTimeDependant_ViewGetsRefreshedCorrectly()
+        public void GivenWeirViewModel_WhenWeirIsChangedToTimeDependent_ViewGetsRefreshedCorrectly()
         {
             var weir = new Weir(true);
             var viewModel = new WeirViewModel
@@ -95,21 +95,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
             Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.IsConstant);
+            Assert.IsTrue(viewModel.IsCrestLevelConstantTime);
 
             //Make it time dependent
             weir.UseCrestLevelTimeSeries = true;
 
             //Because the bubbling event tiggered the property change in the view model.
+            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
             Assert.IsTrue(count.Equals(2));
 
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
             Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
-            Assert.IsFalse(viewModel.IsConstant);
+            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsNotTimeDependant_EnableTimeDependent_LogMessageIsGiven()
+        public void GivenWeirViewModel_WhenWeirIsNotTimeDependent_EnableTimeDependent_LogMessageIsGiven()
         {
             var viewModel = new WeirViewModel
             {
@@ -125,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsTimeDependant_EnableTimeDependent_LogMessageIsNotGiven()
+        public void GivenWeirViewModel_WhenWeirIsTimeDependent_EnableTimeDependent_LogMessageIsNotGiven()
         {
             var viewModel = new WeirViewModel
             {
@@ -140,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsNotTimeDependant_OnEditTimeSeries_LogMessageIsGiven()
+        public void GivenWeirViewModel_WhenWeirIsNotTimeDependent_OnEditTimeSeries_LogMessageIsGiven()
         {
             var viewModel = new WeirViewModel
             {
@@ -153,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        public void GivenWeirViewModel_WhenWeirIsTimeDependant_OnEditTimeSeries_LogMessageIsNotGiven()
+        public void GivenWeirViewModel_WhenWeirIsTimeDependent_OnEditTimeSeries_LogMessageIsNotGiven()
         {
             var viewModel = new WeirViewModel
             {
