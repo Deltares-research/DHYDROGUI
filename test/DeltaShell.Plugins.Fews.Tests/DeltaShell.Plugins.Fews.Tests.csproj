@@ -45,6 +45,7 @@
     <Compile Include="FewsAdapterHKTGTest.cs" />
     <Compile Include="FewsAdapterMaasTest.cs" />
     <Compile Include="FewsAdapterTestBase.cs" />
+    <Compile Include="FewsPI\RunInfoTest.cs" />
     <Compile Include="ModelExchangeItemExporterTest.cs" />
     <Compile Include="ModelStateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -258,11 +259,6 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
       <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Deltares.IO.FewsPI\Deltares.IO.FewsPI.csproj">
-      <Project>{2989E646-B5A0-4599-8AF5-113FD60C3749}</Project>
-      <Name>Deltares.IO.FewsPI</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.Fews\DeltaShell.Plugins.Fews.csproj">

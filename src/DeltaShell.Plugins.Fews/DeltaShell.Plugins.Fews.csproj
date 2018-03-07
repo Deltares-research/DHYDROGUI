@@ -70,11 +70,6 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Deltares.IO.FewsPI\Deltares.IO.FewsPI.csproj">
-      <Project>{2989E646-B5A0-4599-8AF5-113FD60C3749}</Project>
-      <Name>Deltares.IO.FewsPI</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assemblers\branches_xsd.custom.cs" />
@@ -85,6 +80,9 @@
     <Compile Include="Assemblers\ProfilesComplexTypeAssembler.cs" />
     <Compile Include="Assemblers\LineFeatureCollectionAssembler.cs" />
     <Compile Include="Export\ModelExchangeItemExporter.cs" />
+    <Compile Include="FewsPI\FewsPiException.cs" />
+    <Compile Include="FewsPI\RunInfo.cs" />
+    <Compile Include="FewsPI\TimeSeries.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
