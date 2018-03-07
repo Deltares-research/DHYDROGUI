@@ -277,4 +277,7 @@
   <data name="RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_" xml:space="preserve">
     <value>ControlGroup names for Model {0} were not unique.{1}Control Groups have been renamed such that they are now unique.</value>
   </data>
+  <data name="RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model__1___ControlGroup__0__will_be_renamed_to__2_" xml:space="preserve">
+    <value>There already exists a ControlGroup named {0} in Model {1}, ControlGroup {0} will be renamed to {2}</value>
+  </data>
 </root>

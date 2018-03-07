@@ -1174,10 +1174,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
             var srcModel = sourceModel as RealTimeControlModel;
             if (srcModel == null) return false;
-            
+
+            var existingControlGroupNames = ControlGroups.Select(cg => cg.Name).ToList();
             foreach (var controlGroup in srcModel.ControlGroups)
             {
-                ControlGroups.Add((ControlGroup)controlGroup.Clone());
+                var clonedControlGroup = (ControlGroup) controlGroup.Clone();
+                if (existingControlGroupNames.Contains(clonedControlGroup.Name))
+                {
+                    var uniqueName = NamingHelper.GenerateUniqueNameFromList(controlGroup.Name + "{0}", true, existingControlGroupNames);
+                    Log.InfoFormat(Resources.RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model__1___ControlGroup__0__will_be_renamed_to__2_,
+                        clonedControlGroup.Name, this.Name, uniqueName);
+
+                    clonedControlGroup.Name = uniqueName;
+                }
+                ControlGroups.Add(clonedControlGroup);
             }
 
             if (mergedDependendModelsLookup == null) return true;

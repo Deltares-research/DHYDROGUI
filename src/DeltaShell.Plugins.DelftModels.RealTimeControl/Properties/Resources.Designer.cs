@@ -285,6 +285,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There already exists a ControlGroup named {0} in Model {1}, ControlGroup {0} will be renamed to {2}.
+        /// </summary>
+        public static string RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model__1___ControlGroup__0__will_be_renamed_to__2_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model" +
+                        "__1___ControlGroup__0__will_be_renamed_to__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ControlGroup names for Model {0} were not unique.{1}Control Groups have been renamed such that they are now unique..
         /// </summary>
         public static string RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_ {
