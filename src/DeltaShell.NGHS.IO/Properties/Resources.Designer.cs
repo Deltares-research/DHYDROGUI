@@ -151,6 +151,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No snapped geometry was generated for type {0}..
+        /// </summary>
+        public static string SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__ {
+            get {
+                return ResourceManager.GetString("SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_" +
+                        "type__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t get the node coordinates.
         /// </summary>
         public static string UGrid_GetAllNodeCoordinatesForMeshId_Couldn_t_get_the_node_coordinates {

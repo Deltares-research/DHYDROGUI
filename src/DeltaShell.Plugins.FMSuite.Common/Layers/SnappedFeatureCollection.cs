@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -167,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                     snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
                     if (snappedGeometry == null || snappedGeometry.IsEmpty)
                     {
-                        Log.WarnFormat("No snapped geometry was generated for type {0}.",feature.Geometry.GeometryType);
+                        Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__,feature.Geometry.GeometryType);
                     }
                 }
                 catch (Exception)
