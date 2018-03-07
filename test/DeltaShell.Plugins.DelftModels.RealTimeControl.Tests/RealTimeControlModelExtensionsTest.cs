@@ -4,6 +4,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using NUnit.Framework;
@@ -295,6 +296,84 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual("ControlGroup", controlGroup.Name);
             Assert.IsTrue(controlGroupInputDataItem.Name.StartsWith(controlGroup.Name + RealTimeControlModel.InputPostFix));
             Assert.IsTrue(controlGroupOutputDataItem.Name.StartsWith(controlGroup.Name + RealTimeControlModel.OutputPostFix));
+        }
+
+        [Test]
+        public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsTrueForNoDataItem()
+        {
+            var rtcModel = new RealTimeControlModel();
+            Assert.IsTrue((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, new ControlGroup()));
+        }
+
+        [Test]
+        public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsTrueForNoChildren()
+        {
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            rtcModel.ControlGroups.Add(controlGroup);
+            Assert.IsTrue((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+        }
+
+        [Test]
+        public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsFalseForInputsWithOutOfSyncNames()
+        {
+            // setup
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            controlGroup.Inputs.Add(new Input());
+            controlGroup.Inputs.Add(new Input());
+
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            Assert.NotNull(controlGroupDataItem);
+            Assert.AreEqual(2, controlGroupDataItem.Children.Count);
+
+            var controlGroupInput1DataItem = controlGroupDataItem.Children[0];
+            Assert.NotNull(controlGroupInput1DataItem);
+            
+            // simulate ChildDataItem names being 'out of sync'
+            controlGroupInput1DataItem.Name = controlGroupInput1DataItem.Name.Replace("ControlGroup", "ControlGroup_Renamed");
+
+            Assert.IsFalse((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+        }
+
+        [Test]
+        public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsFalseForOutputsWithOutOfSyncNames()
+        {
+            // setup
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            controlGroup.Outputs.Add(new Output());
+            controlGroup.Outputs.Add(new Output());
+
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            Assert.NotNull(controlGroupDataItem);
+            Assert.AreEqual(2, controlGroupDataItem.Children.Count);
+
+            var controlGroupOutput1DataItem = controlGroupDataItem.Children[0];
+            Assert.NotNull(controlGroupOutput1DataItem);
+
+            // simulate ChildDataItem names being 'out of sync'
+            controlGroupOutput1DataItem.Name = controlGroupOutput1DataItem.Name.Replace("ControlGroup", "ControlGroup_Renamed");
+
+            Assert.IsFalse((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+        }
+
+        [Test]
+        public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsTrueForInputsAndOutputsNamesInSync()
+        {
+            // setup
+            var rtcModel = new RealTimeControlModel();
+            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            controlGroup.Inputs.Add(new Input());
+            controlGroup.Outputs.Add(new Output());
+
+            rtcModel.ControlGroups.Add(controlGroup);
+
+            Assert.IsTrue((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
         }
 
     }

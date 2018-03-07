@@ -126,14 +126,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (controlGroupDataItem.Children
                 .Where(di => (di.Role & DataItemRole.Input) == DataItemRole.Input)
-                .Any(child => child.Name != controlGroup.Name + RealTimeControlModel.InputPostFix))
+                .Any(child => !child.Name.StartsWith(controlGroup.Name + RealTimeControlModel.InputPostFix)))
             {
                 return false;
             }
 
             if (controlGroupDataItem.Children
                 .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output)
-                .Any(child => child.Name != controlGroup.Name + RealTimeControlModel.OutputPostFix))
+                .Any(child => !child.Name.StartsWith(controlGroup.Name + RealTimeControlModel.OutputPostFix)))
             {
                 return false;
             }
