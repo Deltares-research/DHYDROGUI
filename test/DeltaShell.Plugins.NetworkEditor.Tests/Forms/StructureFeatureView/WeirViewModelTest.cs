@@ -95,15 +95,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
             Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
-            
+            Assert.IsTrue(viewModel.IsConstant);
+
             //Make it time dependent
             weir.UseCrestLevelTimeSeries = true;
 
             //Because the bubbling event tiggered the property change in the view model.
-            Assert.IsTrue(count.Equals(1));
+            Assert.IsTrue(count.Equals(2));
 
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
             Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.IsConstant);
         }
 
         [Test]
