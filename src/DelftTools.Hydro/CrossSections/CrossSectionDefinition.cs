@@ -17,6 +17,8 @@ namespace DelftTools.Hydro.CrossSections
     [Entity]
     public abstract class CrossSectionDefinition : EditableObjectUnique<long>, ICrossSectionDefinition
     {
+        public const string MainSectionName = "Main";
+
         private double thalweg;
         protected IEventedList<CrossSectionSection> sections;
         private bool inSectionsPropertyChanged;
@@ -271,6 +273,26 @@ namespace DelftTools.Hydro.CrossSections
         }
 
         public abstract int GetRawDataTableIndex(int profileIndex);
+
+        /// <summary>
+        /// Returns width of section with given type name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public virtual double GetSectionWidth(string name)
+        {
+            var section = Sections.FirstOrDefault(s => s.SectionType.Name == name);
+            if (section != null)
+            {
+                return (section.MaxY - section.MinY) * this.GetWidthFactor();
+            }
+            return 0;
+        }
+
+        public virtual void RefreshSectionsWidths()
+        {
+            this.AdjustSectionWidths();
+        }
 
         /// <summary>
         /// Resets the geometry cache and optionally recalculates the thalweg and sections min/max.

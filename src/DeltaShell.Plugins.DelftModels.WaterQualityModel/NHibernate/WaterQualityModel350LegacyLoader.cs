@@ -17,10 +17,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
 
             foreach (var waterQualityModel in waqModels)
             {
-                var outputParametersDataItemSet = new DataItemSet(new EventedList<UnstructuredGridCellCoverage>(), "Output parameters", DataItemRole.Output, false, WaterQualityModel.OutputParametersTag, typeof(UnstructuredGridCellCoverage));
+                var outputParametersDataItemSet = new DataItemSet(new EventedList<UnstructuredGridCellCoverage>(), WaterQualityModel.OutputParametersDataItemMetaData.Name, DataItemRole.Output, false, WaterQualityModel.OutputParametersDataItemMetaData.Tag, typeof(UnstructuredGridCellCoverage));
                 waterQualityModel.DataItems.Insert(0, outputParametersDataItemSet);
              
-                var substancesDataItemSet = new DataItemSet(new EventedList<UnstructuredGridCellCoverage>(), "Substances", DataItemRole.Output, false, WaterQualityModel.OutputSubstancesTag, typeof(UnstructuredGridCellCoverage));
+                var substancesDataItemSet = new DataItemSet(new EventedList<UnstructuredGridCellCoverage>(), WaterQualityModel.OutputSubstancesDataItemMetaData.Name, DataItemRole.Output, false, WaterQualityModel.OutputSubstancesDataItemMetaData.Tag, typeof(UnstructuredGridCellCoverage));
                 waterQualityModel.DataItems.Insert(0, substancesDataItemSet);
 
                 var outputDataItems = waterQualityModel.DataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)).ToList();

@@ -2,8 +2,9 @@
 using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -45,6 +46,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
     [TestFixture]
     public class RealTimeControlModelMergeTest
     {
+        [Test]
+        public void TestMerge2ModelsWithTheSameControlGroupNames_ResultingControlGroupNamesAreUnique()
+        {
+            var destModel = new RealTimeControlModel();
+            var srcModel = new RealTimeControlModel();
+
+            destModel.ControlGroups.Add(new ControlGroup { Name = "ControlGroup1" });
+            srcModel.ControlGroups.Add(new ControlGroup { Name = "ControlGroup1" });
+            srcModel.ControlGroups.Add(new ControlGroup { Name = "ControlGroup1" });
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => destModel.Merge(srcModel, null),
+                string.Format("There already exists a ControlGroup named ControlGroup1 in Model {0}, ControlGroup ControlGroup1 will be renamed", destModel.Name));
+
+            Assert.AreEqual(3, destModel.ControlGroups.Count);
+            Assert.AreEqual(destModel.ControlGroups[0].Name, "ControlGroup1");
+            Assert.AreNotEqual(destModel.ControlGroups[1].Name, "ControlGroup1");
+            Assert.AreNotEqual(destModel.ControlGroups[2].Name, "ControlGroup1");
+
+            Assert.IsTrue(destModel.ControlGroups.Select(cg => cg.Name).HasUniqueValues());
+        }
+
         [Test]
 		public void Given2RTCModelsWithControlGroupWhenMergeThenInDestinationModel2ControlGroups()
 		{

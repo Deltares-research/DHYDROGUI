@@ -1,21 +1,18 @@
 ﻿using System.IO;
-
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    [Category(TestCategory.Slow)]
-    public class ModelExtensionsTest
+    public class WaterQualityModelExtensionsTest
     {
         [Test]
         public void AddTextDocument_WaterQualityModel_OpenTextDocument()
@@ -36,11 +33,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
             try
             {
                 // call
-                model.AddTextDocument("<dataitem name>", path);
+                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, path);
 
                 // assert
                 Assert.AreEqual(1, dataItems.Count);
-                Assert.AreEqual("<dataitem name>", model.DataItems[0].Name);
+                Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
                 var document = (TextDocumentFromFile)model.DataItems[0].Value;
                 Assert.AreEqual(content, document.Content);
                 Assert.IsTrue(document.IsOpen);
@@ -71,17 +68,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
             try
             {
                 const string newContent = "Some other text";
-                const string dataItemName = "<dataitem name>";
-                model.AddTextDocument(dataItemName, path);
+                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, path);
 
                 File.WriteAllText(path, newContent);
 
                 // call
-                model.AddTextDocument(dataItemName, path);
+                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, path);
 
                 // assert
                 Assert.AreEqual(1, dataItems.Count);
-                Assert.AreEqual(dataItemName, model.DataItems[0].Name);
+                Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
                 var document = (TextDocumentFromFile)model.DataItems[0].Value;
                 Assert.AreEqual(newContent, document.Content);
                 Assert.IsTrue(document.IsOpen);

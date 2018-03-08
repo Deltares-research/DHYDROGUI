@@ -180,6 +180,19 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
+        public static VectorStyle SnappedSourcesAndSinksStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Fill = new SolidBrush(Color.Tomato),
+                    ShapeSize = 8,
+                };
+            }
+        }
+
         public static VectorStyle EmbankmentStyle
         {
             get

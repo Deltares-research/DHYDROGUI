@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             Func<IDataItem, bool> isWaqOutputFileDataItem = di => di.Role == DataItemRole.Output &&
                                                                   di.ValueType == typeof(TextDocumentFromFile) &&
-                                                                  di.Tag != WaterQualityModel.ListFileTag;
+                                                                  di.Tag != WaterQualityModel.ListFileDataItemMetaData.Tag;
 
             try
             {

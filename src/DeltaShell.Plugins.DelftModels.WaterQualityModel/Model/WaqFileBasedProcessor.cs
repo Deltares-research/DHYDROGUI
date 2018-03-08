@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using log4net;
@@ -15,13 +16,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     public class WaqFileBasedProcessor : IWaqProcessor
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedProcessor));
-        private static readonly IDictionary<string, string> OutputFiles = new Dictionary<string, string>
+        private static readonly IDictionary<ADataItemMetaData, string> OutputFiles = new Dictionary<ADataItemMetaData, string>
         {
-            { WaterQualityModel.BalanceOutputTag, "deltashell-bal.prn" },
-            { WaterQualityModel.MonitoringFileTag, "deltashell.mon" }
+            { WaterQualityModel.BalanceOutputDataItemMetaData, "deltashell-bal.prn" },
+            { WaterQualityModel.MonitoringFileDataItemMetaData, "deltashell.mon" }
         };
 
         private const int NoDataValue = -999;
+
+        public bool TryToCancel { get; set; }
 
         public void Initialize(WaqInitializationSettings initializationSettings)
         {
@@ -48,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             Log.Debug("Started delwaq2.exe.");
             WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq2ExePath(),
                 string.Format("deltashell.inp " + optionalDuflowSwitch),
-                initializationSettings.Settings.WorkDirectory, false, 3000,
+                initializationSettings.Settings.WorkDirectory, ()=> TryToCancel, false, 3000,
                 (s, e) =>
                 {
                     if (string.IsNullOrEmpty(e.Data) || setProgress == null) return;
@@ -72,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             }
         }
         
-        public void AddOutput(string workDirectory, IList<WaterQualityObservationVariableOutput> observationVariableOutputs, Action<string, string> addTextDocument, MonitoringOutputLevel monitoringOutputLevel)
+        public void AddOutput(string workDirectory, IList<WaterQualityObservationVariableOutput> observationVariableOutputs, Action<ADataItemMetaData, string> addTextDocument, MonitoringOutputLevel monitoringOutputLevel)
         {
             if (workDirectory == null)
             {
@@ -91,8 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             if (addTextDocument == null)
             {
-                Log.ErrorFormat("Could not read output files : {0}", string.Join(", ", 
-                    OutputFiles.Keys.Select(key => WaterQualityModel.GetDataItemNameFromTag(key))));
+                Log.ErrorFormat("Could not read output files : {0}", string.Join(", ", OutputFiles.Keys.Select(key => key.Name)));
                 return;
             }
 

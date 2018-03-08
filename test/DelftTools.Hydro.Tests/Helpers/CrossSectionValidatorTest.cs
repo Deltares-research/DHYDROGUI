@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using DelftTools.Hydro.Tests.TestObjects;
+using DelftTools.Utils.Reflection;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -15,17 +19,19 @@ namespace DelftTools.Hydro.Tests.Helpers
         private Func<ICrossSectionDefinition, bool> checkSectionsTotalWidth = csd => CrossSectionValidator.AreCrossSectionsLengthsLargerThanTheFlowWidth(csd);
         private Func<ICrossSectionDefinition, bool> checkFloodPlain1AndFloodPlain2 = csd => CrossSectionValidator.AreFloodPlain1AndFloodPlain2WidthsValid(csd);
 
+        #region CrossSectionDefinition SectionWidths
+
         [TestCase(20.0, false, false)]
         [TestCase(45.0, true, false)]
         [TestCase(50.0, true, false)]
         [TestCase(20.0, false, true)]
         [TestCase(45.0, true, true)]
         [TestCase(50.0, true, true)]
-        public void GivenCrossSectionDefinitionZWWithOnlyMainSection_WhenValidatingSections_ThenMainSectionIsValidWhenItsWidthIsEqualToMaxFlowWidth(double mainSectionWidth, bool expectedResult, bool useCsdProxy)
+        public void GivenCrossSectionDefinitionWithOnlyMainSection_WhenValidatingSections_ThenMainSectionIsValidWhenItsWidthIsEqualToMaxFlowWidth(double mainSectionWidth, bool expectedResult, bool useCsdProxy)
         {
-            var csdZw = GetSimpleCrossSectionDefinitionZw();
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
-            CheckSectionWidthValidationWithOrWithoutProxy(csdZw, checkSectionsTotalWidth, expectedResult, useCsdProxy);
+            var csDef = GetSimpleCrossSectionDefinition();
+            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, mainSectionWidth);
+            CheckSectionWidthValidationWithOrWithoutProxy(csDef, checkSectionsTotalWidth, expectedResult, useCsdProxy);
         }
 
         [TestCase(20.0, 20.0, false, false)]
@@ -42,12 +48,12 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(0.0, 45.0, true, true)]
         [TestCase(30.0, 15.0, true, true)]
         [TestCase(45.0, 5.0, true, true)]
-        public void GivenCrossSectionDefinitionZWWithMainSectionAndFloodPlain1_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, bool expectedResult, bool useCsdProxy)
+        public void GivenCrossSectionDefinitionWithMainSectionAndFloodPlain1_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, bool expectedResult, bool useCsdProxy)
         {
-            var csdZw = GetSimpleCrossSectionDefinitionZw();
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
-            CheckSectionWidthValidationWithOrWithoutProxy(csdZw, checkSectionsTotalWidth, expectedResult, useCsdProxy);
+            var csDef = GetSimpleCrossSectionDefinition();
+            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, mainSectionWidth);
+            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
+            CheckSectionWidthValidationWithOrWithoutProxy(csDef, checkSectionsTotalWidth, expectedResult, useCsdProxy);
         }
 
         [TestCase(10.0, 20.0, 10.0, false, false)]
@@ -76,13 +82,17 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(10.0, 20.0, 45.0, true, true)]
         public void GivenCrossSectionDefinitionZWWithThreeSectionsDefined_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, double floodPlain2Width, bool expectedResult, bool useCsdProxy)
         {
-            var csdZw = GetSimpleCrossSectionDefinitionZw();
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.MainSectionName }, mainSectionWidth);
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
-            csdZw.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, floodPlain2Width);
+            var csDef = GetSimpleCrossSectionDefinition();
+            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, mainSectionWidth);
+            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, floodPlain1Width);
+            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, floodPlain2Width);
             
-            CheckSectionWidthValidationWithOrWithoutProxy(csdZw, checkSectionsTotalWidth, expectedResult, useCsdProxy);
+            CheckSectionWidthValidationWithOrWithoutProxy(csDef, checkSectionsTotalWidth, expectedResult, useCsdProxy);
         }
+
+        #endregion
+
+        #region FloodPlain1 & FloodPlain2 validation
 
         [TestCase(10.0, 0.0, 3.0, false, false)]
         [TestCase(10.0, 3.0, 0.0, true, false)]
@@ -130,6 +140,8 @@ namespace DelftTools.Hydro.Tests.Helpers
             crossSectionDefStandard.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain2SectionTypeName }, 30.0);
             CheckSectionWidthValidationWithOrWithoutProxy(crossSectionDefStandard, checkFloodPlain1AndFloodPlain2, true, useCsdProxy);
         }
+
+        #endregion
 
         [Test]
         public void CrossSectionTypeTabulatedZWZeroWidthOptions()
@@ -416,16 +428,32 @@ namespace DelftTools.Hydro.Tests.Helpers
             return csdZw;
         }
 
-        private static void CheckSectionWidthValidationWithOrWithoutProxy(ICrossSectionDefinition csdZw, Func<ICrossSectionDefinition, bool> function, bool expectedResult, bool useCsdProxy)
+        private static ICrossSectionDefinition GetSimpleCrossSectionDefinition()
+        {
+            var csDef = new TestCrossSectionDefinition { Name = "TestCrossSectionDefinition" };
+
+            TypeUtils.SetField(csDef, "profile", new List<Coordinate>()
+            {
+                new Coordinate(0, 0),
+                new Coordinate(15, -10.0),
+                new Coordinate(30, -10.0),
+                new Coordinate(45, 0)
+            });
+
+            Assert.That(csDef.FlowWidth(), Is.EqualTo(45.0));
+            return csDef;
+        }
+
+        private static void CheckSectionWidthValidationWithOrWithoutProxy(ICrossSectionDefinition csDef, Func<ICrossSectionDefinition, bool> function, bool expectedResult, bool useCsdProxy)
         {
             if (useCsdProxy)
             {
-                var csdProxy = new CrossSectionDefinitionProxy(csdZw);
+                var csdProxy = new CrossSectionDefinitionProxy(csDef);
                 Assert.That(function(csdProxy), Is.EqualTo(expectedResult));
             }
             else
             {
-                Assert.That(function(csdZw), Is.EqualTo(expectedResult));
+                Assert.That(function(csDef), Is.EqualTo(expectedResult));
             }
         }
     }

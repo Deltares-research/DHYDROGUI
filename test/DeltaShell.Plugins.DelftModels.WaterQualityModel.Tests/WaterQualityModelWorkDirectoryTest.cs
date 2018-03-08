@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -143,14 +144,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     // As the file path ends with "DeltaShell.Plugins(.DelftModels).WaterQualityModel\waq_kernel\Data\Default\proc_def", this is the default file path to the process 
                     // definition path on another PC or DeltaShell build.
                     // Here, we check that this process definition file path is set to the one that is default on the current build of DeltaShell.
-                    Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath,
-                        Is.EqualTo(SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath));
+                    Assert.That(waqModel.SubstanceProcessLibrary.ProcessDefinitionFilesPath, Is.EqualTo(SubstanceProcessLibrary.DefaultSobekProcessDefinitionFilesPath));                    
                 }
             }
             finally
             {
                 FileUtils.DeleteIfExists(testModelDirectory);
                 FileUtils.DeleteIfExists(Directory.GetParent(testHydFilePath).FullName);
+                Thread.Sleep(100); // Give system enough time to delete these files, before the next test case is being tested.
             }
         }
 

@@ -39,7 +39,7 @@ namespace DeltaShell.Dimr
         new ActivityStatus Status { get; set; }
 
         // TODO: temporary, need to remove when models can no longer run without Dimr
-        bool IsRunByDimr { get; set; }
+        bool RunsInIntegratedModel { get; set; }
 
         ValidationReport Validate();
 

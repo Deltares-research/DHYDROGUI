@@ -311,6 +311,7 @@ namespace Sobek.IntegrationTests
                 fmModel.Area.ObservationPoints.Add(observationPointFM);
 
                 var f1dModel = hydroModel.Activities.OfType<WaterFlowModel1D>().First();
+                ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(f1dModel.Network);
 
                 var observationPointF1D = new ObservationPoint { Name = "ObservationF1D", Geometry = new Point(f1dModel.Network.Branches[0].Geometry.Coordinate.X + 10, f1dModel.Network.Branches[0].Geometry.Coordinate.Y) };
                 var weir = new Weir { Name = "Weir1", Geometry = new Point(f1dModel.Network.Branches[0].Geometry.Coordinate.X + 20, f1dModel.Network.Branches[0].Geometry.Coordinate.Y) };

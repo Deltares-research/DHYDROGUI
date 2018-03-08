@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using System.Collections.Generic;
 using System.Threading;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -24,6 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string Weir = "weir";
         public const string Gate = "gate";
         public const string Pump = "pump";
+        public const string Embankment = "embankment";
+        public const string SourceSink = "sourcesink";
         public const string Boundary = "boundary";
         public const string WaterLevelBnd = "waterlevelbnd";
         public const string VelocityBnd = "velocitybnd";
@@ -53,7 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             this.api = api;
         }
 
-        public UnstrucGridOperationApi(WaterFlowFMModel model)
+        /// <summary>
+        /// Gets an iterator for iterating over feature coverage time series
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="fullExport">When false makes an export without extForces or features</param>
+        /// <returns></returns>
+        public UnstrucGridOperationApi(WaterFlowFMModel model, bool fullExport = true)
         {
             tempPath = FileUtils.CreateTempDirectory();
 
@@ -73,19 +82,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 adjustedMduProperties[adjustedIndex] = clonedProperty;
             }
 
-            // write mdu with adjusted properties
-            var mduFile = new MduFile();
-            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            mduFile.WriteProperties(mduFilePath, adjustedMduProperties, false, false, useNetCDFMapFormat:isPartOf1D2DModel, disableFlowNodeRenumbering:model.DisableFlowNodeRenumbering);
-
             // do write grid file
             var gridFile = model.NetFilePath;
             if (!File.Exists(gridFile)) 
                 return;
 
-            model.ExportTo(mduFilePath, false);
+            /* When initializing this api for GridSnap features, we are not interested in doing a full export, only in having
+             the api running.*/
+            model.ExportTo(mduFilePath, false, fullExport, fullExport);
             model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory??model.WorkingDirectory??Environment.CurrentDirectory);
-            
+
+            // Overwrite existing mdu to ignore the properties with adjusted properties
+            var mduFile = new MduFile();
+            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
+            mduFile.WriteProperties(mduFilePath, fullExport ? model.ModelDefinition.Properties.ToList() : adjustedMduProperties, fullExport, fullExport, useNetCDFMapFormat: isPartOf1D2DModel, disableFlowNodeRenumbering: model.DisableFlowNodeRenumbering);
+
             TryInitializeApi();
         }
         
@@ -116,7 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 var snappedGeometries = GetGridSnappedGeometryCore(featureType, geometries);
 
-                if (featureType == WaterLevelBnd || featureType == VelocityBnd || featureType == DischargeBnd)
+                if (featureType == WaterLevelBnd || featureType == VelocityBnd || featureType == DischargeBnd 
+                    || featureType == SourceSink)
                     snappedGeometries = snappedGeometries.Select(ConvertToMultiPoint).ToList();
 
                 return snappedGeometries;
@@ -252,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 catch
                 {
                     api.Dispose(); //cleanup previous instance
-                    Log.ErrorFormat("API failed to generate snapped feature {0}. Try reopening the project if the problem persists.", featureType);
+                    Log.WarnFormat(Resources.UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_, featureType);
                 }
             }
 
@@ -271,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 api.Initialize(mduFilePath);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 api.Dispose(); // cleanup remote instance on crash!
                 throw;

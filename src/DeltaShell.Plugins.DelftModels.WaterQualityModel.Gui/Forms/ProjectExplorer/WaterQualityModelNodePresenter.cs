@@ -97,16 +97,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
         {
             var contextMenuStrip = new ContextMenuStrip();
 
-            var exportInputFile = CreateMenuItem("Export input file(s)", Resources.blue_document_export, (s, e) => gui.CommandHandler.ExportFrom(model, new InputFileExporter()));
-            
-            var validationReport = new WaterQualityModelValidator().Validate(model);
-            if (validationReport.ErrorCount > 0)
-            {
-                exportInputFile.Enabled = false;
-                exportInputFile.ToolTipText = Resources.WaterQualityModelNodePresenter_GetContextMenu_Water_quality_model_is_not_valid__Please_check_the_validation_report_;
-            }
-            
-            contextMenuStrip.Items.Add(exportInputFile);
+            var exportInputFileMenuItem = CreateMenuItem("Export input file(s)", Resources.blue_document_export, (s, e) => gui.CommandHandler.ExportFrom(model, new InputFileExporter()));
+            contextMenuStrip.Items.Add(exportInputFileMenuItem);
             contextMenuStrip.Items.Add(CreateMenuItem(Resources.WaterQualityModelNodePresenter_GetContextMenu_Validate, Resources.Validate, (s, e) => ValidateClick(model, gui)));
 
             return new MenuItemContextMenuStripAdapter(contextMenuStrip);
@@ -137,20 +129,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                 : base(waterQualityModel, childItems, text, imageType)
             {
 
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.InputFileCommandLineTag));
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.InputFileHybridTag));
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryTag));
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.GridTag));
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BathymetryTag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.InputFileCommandLineDataItemMetaData.Tag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.InputFileHybridDataItemMetaData.Tag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Tag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.GridDataItemMetaData.Tag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BathymetryDataItemMetaData.Tag));
 
                 // TODO: Should these DataItem instances also be moved to Waq model? Perhaps turn them into DataItemSet and remove need for WaterQualityFunctionDataWrapper?
                 // Add a function data wrapper data item for the initial conditions
                 inputItems.Add(new DataItem(new WaterQualityFunctionDataWrapper(waterQualityModel.InitialConditions),
-                    "Initial Conditions", typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input, WaterQualityModel.InitialConditionsTag) { Owner = waterQualityModel });
+                    WaterQualityModel.InitialConditionsDataItemMetaData.Name, typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input, WaterQualityModel.InitialConditionsDataItemMetaData.Tag) { Owner = waterQualityModel });
 
                 // Add a function data wrapper data item for the process coefficients
                 inputItems.Add(new DataItem(new WaterQualityFunctionDataWrapper(waterQualityModel.ProcessCoefficients),
-                    "Process Coefficients", typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input, WaterQualityModel.ProcessCoefficientsTag) { Owner = waterQualityModel });
+                    WaterQualityModel.ProcessCoefficientsDataItemMetaData.Name, typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input, WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag) { Owner = waterQualityModel });
 
                 var waqGuiPlugin = guiPlugin as WaterQualityModelGuiPlugin;
 
@@ -159,22 +151,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                         pc => waqGuiPlugin.BloomInfo.AllParameters.Any(
                         par => string.Equals(par, pc.Name, StringComparison.InvariantCultureIgnoreCase))))
                 {
-                    var dataItemName = WaterQualityModel.GetDataItemNameFromTag(WaterQualityModel.BloomAlgaeTag);
                     inputItems.Add(
                         new DataItem(new WaterQualityBloomFunctionWrapper(waterQualityModel.ProcessCoefficients),
-                            dataItemName, typeof (WaterQualityBloomFunctionWrapper), DataItemRole.Input, WaterQualityModel.BloomAlgaeTag) {Owner = waterQualityModel});
+                            WaterQualityModel.BloomAlgaeDataItemMetaData.Name, typeof (WaterQualityBloomFunctionWrapper), DataItemRole.Input, WaterQualityModel.BloomAlgaeDataItemMetaData.Tag) {Owner = waterQualityModel});
                 }
 
                 // Add a function data wrapper data item for dispersion
                 inputItems.Add(new DataItem(new WaterQualityFunctionDataWrapper(waterQualityModel.Dispersion),
-                    "Horizontal Dispersion", typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input, WaterQualityModel.DispersionTag) { Owner = waterQualityModel });
+                    WaterQualityModel.DispersionDataItemMetaData.Name, typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input, WaterQualityModel.DispersionDataItemMetaData.Tag) { Owner = waterQualityModel });
 
-                inputItems.Add(new DataItem(waterQualityModel.Boundaries, DataItemRole.Input, "BoundariesTag") { Owner = waterQualityModel });
-                inputItems.Add(new DataItem(waterQualityModel.Loads, DataItemRole.Input, WaterQualityModel.LoadsTag) { Owner = waterQualityModel });
-                inputItems.Add(new DataItem(waterQualityModel.ObservationPoints, DataItemRole.Input, WaterQualityModel.ObservationPointsTag) { Owner = waterQualityModel });
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.ObservationAreasTag));
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BoundaryDataTag));
-                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.LoadsDataTag));
+                inputItems.Add(new DataItem(waterQualityModel.Boundaries, DataItemRole.Input, WaterQualityModel.BoundariesDataItemMetaData.Tag) { Owner = waterQualityModel });
+                inputItems.Add(new DataItem(waterQualityModel.Loads, DataItemRole.Input, WaterQualityModel.LoadsDataItemMetaData.Tag) { Owner = waterQualityModel });
+                inputItems.Add(new DataItem(waterQualityModel.ObservationPoints, DataItemRole.Input, WaterQualityModel.ObservationPointsDataItemMetaData.Tag) { Owner = waterQualityModel });
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BoundaryDataDataItemMetaData.Tag));
+                inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.LoadsDataDataItemMetaData.Tag));
 
                 inputItems.Add(waterQualityModel.GetDataItemByTag(TimeDependentModelBase.RestartInputStateTag));
             }

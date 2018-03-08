@@ -5,6 +5,8 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.NetworkEditor.Import;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -12,6 +14,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class GroupableCloudImporterTest
     {
+        [Test]
+        public void PointCloudImporterCanImportOnRootLevel()
+        {
+            var importer = new PointCloudImporter<PointFeature>();
+            Assert.IsTrue(importer.CanImportOnRootLevel);
+        }
+        
+        [Test]
+        public void GroupablePointCloudImporterCanImportOnRootLevel()
+        {
+            var importer = new GroupablePointCloudImporter();
+            Assert.IsFalse(importer.CanImportOnRootLevel);
+        }
+
         [Test]
         public void ImportDryPointFeatureAssignsGroupName()
         {

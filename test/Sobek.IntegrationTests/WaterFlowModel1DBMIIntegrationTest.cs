@@ -41,6 +41,9 @@ namespace Sobek.IntegrationTests
             channel = model.Network.Channels.FirstOrDefault();
             if (channel == null) throw new ArgumentNullException("branch");
             CrossSectionHelper.AddCrossSection(channel, 90.0, -10.0d);
+
+            ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(model.Network);
+
             var boundaryCondition1 = model.BoundaryConditions.FirstOrDefault();
             if (boundaryCondition1 == null) throw new ArgumentNullException("boundaryCondition1");
             boundaryCondition1.DataType = WaterFlowModel1DBoundaryNodeDataType.WaterLevelTimeSeries;

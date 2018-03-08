@@ -6,7 +6,7 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.4.1</ReleaseVersion>
+    <ReleaseVersion>1.4.3</ReleaseVersion>
     <!-- This is the product name -->
     <ProductName>Delft3D FM Suite 2018 OpenHMWQ</ProductName>
     <ProjectGuid>{2481f918-8b09-42cc-ac8b-b81e78a2aaa9}</ProjectGuid>
@@ -106,6 +106,7 @@
     <Content Include="Delft3D FM HMWQ_Resources\setup_start.jpg" />
     <Content Include="Delft3D FM HMWQ_Resources\splash_screen.jpg" />
     <Content Include="Delft3D FM HMWQ_Resources\start_page_background.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\Welcome.htm" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
     <Content Include="FMPlugin.wxi" />
@@ -182,7 +183,7 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />  
+  <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
   <Import Project="FMOpenProperties.targets" />
   <Import Project="..\Dimr\HarvestDimrLibs.targets" />
 </Project>

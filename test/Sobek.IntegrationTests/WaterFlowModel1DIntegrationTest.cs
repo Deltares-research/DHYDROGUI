@@ -106,6 +106,8 @@ namespace Sobek.IntegrationTests
                 //AddCrossSectionToBranch4(importedModel);
                 //reduce stoptime to make test faster.
                 waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
+                ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+                var report = waterFlowModel1D.Validate();
                 RunModel(waterFlowModel1D);
                 Assert.AreEqual(ActivityStatus.Cleaned, waterFlowModel1D.Status);
 
@@ -201,6 +203,8 @@ namespace Sobek.IntegrationTests
             using (var waterFlowModel1D = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork))
             {
                 waterFlowModel1D.StopTime = waterFlowModel1D.StartTime.AddHours(1);
+
+                ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
 
                 // cloned model failed if source contains later sources
                 // importedModel.HydroNetwork.Branches.ForEach(b => b.BranchFeatures.RemoveAllWhere(bf => bf is LateralSource));

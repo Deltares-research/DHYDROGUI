@@ -33,7 +33,7 @@ namespace DeltaShell.Dimr
         public void OnInitialize()
         {
             model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunLogfileDataItemTag);
-            if (model.IsRunByDimr) return;
+            if (model.RunsInIntegratedModel) return;
             try
             {
                 ValidateExportAndInitialize(true);
@@ -102,7 +102,7 @@ namespace DeltaShell.Dimr
 
         public void OnExecute()
         {
-            if (model.IsRunByDimr) return;
+            if (model.RunsInIntegratedModel) return;
             try
             {
                 if (dimrApi == null) return;
@@ -130,7 +130,7 @@ namespace DeltaShell.Dimr
         }
         public void OnFinish()
         {
-            if (model.IsRunByDimr) return;
+            if (model.RunsInIntegratedModel) return;
             if (dimrApi != null)
             {
                 dimrApi.Finish();

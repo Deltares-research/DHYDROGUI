@@ -70,6 +70,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                 
                 waterFlowModel1D.Network.Branches.AddMultipleCrossSections();
 
+                WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+
                 foreach (var branch in waterFlowModel1D.Network.Branches)
                 {
                     var mainRoughnessSection = waterFlowModel1D.RoughnessSections.First(r => r.Name == CrossSectionDefinitionZW.MainSectionName);

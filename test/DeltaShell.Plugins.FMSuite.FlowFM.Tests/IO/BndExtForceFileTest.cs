@@ -10,10 +10,12 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -849,6 +851,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
             bndExtForceFile = new BndExtForceFile();
             bndExtForceFile.Read(extFileName, modelDefinition);
+        }
+
+        [Test]
+        public void WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName()
+        {
+            var bndExtForceFile = new BndExtForceFile();
+            var firstBoundary = new Feature2D
+            {
+                Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
+            };
+            Assert.IsNullOrEmpty(firstBoundary.Name);
+
+            var bcSet = new BoundaryConditionSet { Feature = firstBoundary };
+            var resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(string.Empty, new List<BoundaryConditionSet>{ bcSet}, DateTime.Today);
+
+            Assert.IsFalse(resultingItems.Any());
+        }
+
+        [Test]
+        public void WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing()
+        {
+            var bndExtForceFile = new BndExtForceFile();
+            var testFolder = Path.GetDirectoryName(Path.GetDirectoryName(TestHelper.GetDataDir())); //This will place it under /debug
+            Assert.IsNotNull(testFolder);
+
+            var fileDirectory = Path.Combine(testFolder, "WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing");
+            FileUtils.DeleteIfExists(fileDirectory);
+
+            var filePath = Path.Combine(fileDirectory, "file.ext");
+            FileUtils.DeleteIfExists(filePath);
+
+            var firstBoundary = new Feature2D
+            {
+                Name = "TestName",
+                Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
+            };
+            var secondBoundary = new Feature2D
+            {
+                Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
+            };
+            Assert.IsNullOrEmpty(secondBoundary.Name);
+
+            var bcSetOne = new BoundaryConditionSet { Feature = firstBoundary };
+            var bcSetTwo = new BoundaryConditionSet { Feature = secondBoundary };
+
+            var md = new WaterFlowFMModelDefinition();
+            md.BoundaryConditionSets.AddRange(new[]{bcSetOne, bcSetTwo});
+
+            Assert.IsFalse(File.Exists(filePath));
+            bndExtForceFile.Write(filePath, md);
+            Assert.IsTrue(File.Exists(filePath));
+
+            var lines = File.ReadAllLines(filePath);
+            Assert.IsNotNull(lines);
+
+            //Make sure only one boundary has been added (double check from the test WriteBndExtForceFileSubFilesReturnsNoItemsIfMissingName above)
+            Assert.AreEqual(1, lines.Count( l => l.Contains("[boundary]")));
+            Assert.IsTrue(lines.Any( l => l.Contains("TestName.pli")));
+
+            
+
+            FileUtils.DeleteIfExists(filePath);
         }
     }
 }

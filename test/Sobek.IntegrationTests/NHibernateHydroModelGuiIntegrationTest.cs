@@ -11,7 +11,10 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
+using DeltaShell.Core;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -19,7 +22,9 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
@@ -760,6 +765,70 @@ namespace Sobek.IntegrationTests
                     };
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, onMainWindowShown);
             }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ExportIntegratedModelWithRunfallRunoffSetsBoundaryConditionCorrectly()
+        {
+            var path = TestHelper.GetTestFilePath("SOBEK3-1313\\Flow1D_RR_IntegratedModel.dsproj");
+            path = TestHelper.CreateLocalCopy(path);
+            Assert.IsNotNull(path);
+            Assert.IsTrue(File.Exists(path));
+
+            var randomPath = Path.Combine(Path.GetDirectoryName(path), Path.GetRandomFileName());
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+                app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+
+                app.Run();
+
+                app.OpenProject(path);
+                var integratedModel = app.GetAllModelsInProject().ToList();
+                Assert.IsTrue(integratedModel.Any());
+
+                var rrModel = integratedModel.OfType<RainfallRunoffModel>().FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                //rrModel is not valid because misses a hydrolink
+                var validator = new RainfallRunoffModelValidator();
+                var report = validator.Validate(rrModel);
+
+                Assert.IsFalse(report.AllErrors.Any());
+
+                //Create missing link
+                var exporter = new RainfallRunoffModelExporter();
+                exporter.Export(rrModel, randomPath);
+
+                var bcFilePath = Path.Combine(randomPath, "BoundaryConditions.bc");
+                Assert.IsTrue(File.Exists(bcFilePath));
+
+                //find boundary conditions.
+                var reader = new DelftBcReader();
+                var bcFile = reader.ReadDelftBcFile(bcFilePath);
+                //Check only one runoff boundary appears in the file.
+                Assert.IsTrue(bcFile
+                    .Any(c => c.Name.Equals("Boundary")
+                              && c.Properties.Any(
+                                  p => p.Name.Equals("name")
+                                       && p.Value.Equals("RunoffBoundary1"))));
+                Assert.AreEqual(1,
+                    bcFile
+                    .Count(c => c.Name.Equals("Boundary")
+                              && c.Properties.Any(
+                                  p => p.Name.Equals("name")
+                                       && p.Value.Equals("RunoffBoundary1"))));
+            }
+
+            FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
         }
     }
 }

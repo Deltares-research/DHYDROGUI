@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 using DelftTools.Utils.IO;
-
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
@@ -16,10 +16,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedPreProcessor));
 
-        private static readonly IDictionary<string, string> OutputFiles = new Dictionary<string, string>
+        private static readonly IDictionary<ADataItemMetaData, string> OutputFiles = new Dictionary<ADataItemMetaData, string>
         {
-            { WaterQualityModel.ListFileTag, "deltashell.lst" },
-            { WaterQualityModel.ProcessFileTag, "deltashell.lsp" }
+            { WaterQualityModel.ListFileDataItemMetaData, "deltashell.lst" },
+            { WaterQualityModel.ProcessFileDataItemMetaData, "deltashell.lsp" }
         };
 
         private const string WorkFilesPrefix = "deltashell";
@@ -27,8 +27,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
         // save the work directory, because you cannot know it anymore in Cleanup phase.
         private string workDirectory;
-        
-        public bool InitializeWaq(WaqInitializationSettings initSettings, Action<string, string> addTextDocumentAction)
+
+        public bool TryToCancel { get; set; }
+
+        public bool InitializeWaq(WaqInitializationSettings initSettings, Action<ADataItemMetaData, string> addTextDocumentAction)
         {
             CheckInput(initSettings);
 
@@ -80,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             var startTime = DateTime.Now;
             Log.Info("Started delwaq1.exe.");
-            var processSuccessful = WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq1ExePath(), parameters, workDirectory, false);
+            var processSuccessful = WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq1ExePath(), parameters, workDirectory, () => TryToCancel, false);
             Log.InfoFormat("Done running delwaq1.exe. (Took {0})", DateTime.Now - startTime);
 
             // Read the output files

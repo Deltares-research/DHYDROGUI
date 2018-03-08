@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 var modelSettings = sender as WaterQualityModelSettings;
                 if (modelSettings != null && e.PropertyName == "MonitoringOutputLevel")
                 {
-                    MonitoringOutputLevelChanged(waterQualityModel, WaterQualityModel.MonitoringOutputTag);
+                    MonitoringOutputLevelChanged(waterQualityModel, WaterQualityModel.MonitoringOutputDataItemMetaData.Tag);
                 }
 
                 var coverage = sender as WaterQualityObservationAreaCoverage;
@@ -470,9 +470,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static bool IsChildOfWaterQualityModelDataItemSet(WaterQualityModel waterQualityModel, IDataItem dataItem)
         {
             // All collections in a DataItemSet should be mentioned here:
-            return waterQualityModel.GetDataItemByTag(WaterQualityModel.InitialConditionsTag).Equals(dataItem.Owner) ||
-                   waterQualityModel.GetDataItemByTag(WaterQualityModel.DispersionTag).Equals(dataItem.Owner) ||
-                   waterQualityModel.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsTag).Equals(dataItem.Owner);
+            return waterQualityModel.GetDataItemByTag(WaterQualityModel.InitialConditionsDataItemMetaData.Tag).Equals(dataItem.Owner) ||
+                   waterQualityModel.GetDataItemByTag(WaterQualityModel.DispersionDataItemMetaData.Tag).Equals(dataItem.Owner) ||
+                   waterQualityModel.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag).Equals(dataItem.Owner);
         }
 
         private static void HandleFunctionListCollectionChanged(UnstructuredGrid grid, NotifyCollectionChangeAction notifyCollectionChangeAction, IDataItem dataItem)

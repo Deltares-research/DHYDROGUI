@@ -79,6 +79,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                             @"FileWriters\IntegrationTests\CrossSectionDefinitions_expected.txt");
 
                     waterFlowModel1D.Network.Branches.AddMultipleCrossSections();
+
+                    WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
+
                     foreach (var branch in waterFlowModel1D.Network.Branches)
                     {
                         var mainRoughnessSection =
@@ -177,6 +180,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
                     waterFlowModel1D.Network.Branches.AddMultipleCrossSections();
 
                     waterFlowModel1D.Network.Branches.AddEvenMoreMultipleCrossSections();
+
+                    WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(waterFlowModel1D.Network);
 
                     foreach (var branch in waterFlowModel1D.Network.Branches)
                     {

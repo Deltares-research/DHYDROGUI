@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -850,6 +850,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("unstruc", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to API failed to generate snapped feature {0}. Try reopening the project if the problem persists..
+        /// </summary>
+        public static string UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_ {
+            get {
+                return ResourceManager.GetString("UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_f" +
+                        "eature__0___Try_reopening_the_project_if_the_problem_persists_", resourceCulture);
             }
         }
         

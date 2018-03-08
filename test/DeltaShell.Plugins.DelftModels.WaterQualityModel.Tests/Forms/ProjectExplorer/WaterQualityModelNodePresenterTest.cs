@@ -33,19 +33,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.ProjectEx
             var inputFolderChildren = inputFolder.ChildItems.GetEnumerator();
 
             // assert
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.InputFileCommandLineTag);
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.SubstanceProcessLibraryTag);
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.GridTag);
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.BathymetryTag);
-            AssertNextNodeIsModelDataItemInWrapper(inputFolderChildren, model, WaterQualityModel.InitialConditionsTag);
-            AssertNextNodeIsModelDataItemInWrapper(inputFolderChildren, model, WaterQualityModel.ProcessCoefficientsTag);
-            AssertNextNodeIsModelDataItemInWrapper(inputFolderChildren, model, WaterQualityModel.DispersionTag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.InputFileCommandLineDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.GridDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.BathymetryDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItemInWrapper(inputFolderChildren, model, WaterQualityModel.InitialConditionsDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItemInWrapper(inputFolderChildren, model, WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItemInWrapper(inputFolderChildren, model, WaterQualityModel.DispersionDataItemMetaData.Tag);
             AssertNextNodeIsDataItemWithModelData(inputFolderChildren, model.Boundaries);
             AssertNextNodeIsDataItemWithModelData(inputFolderChildren, model.Loads);
             AssertNextNodeIsDataItemWithModelData(inputFolderChildren, model.ObservationPoints);
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.ObservationAreasTag);
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.BoundaryDataTag);
-            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.LoadsDataTag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.ObservationAreasDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.BoundaryDataDataItemMetaData.Tag);
+            AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.LoadsDataDataItemMetaData.Tag);
             AssertNextNodeIsModelDataItem(inputFolderChildren, model, TimeDependentModelBase.RestartInputStateTag);
         }
 

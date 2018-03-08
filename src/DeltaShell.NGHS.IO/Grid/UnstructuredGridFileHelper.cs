@@ -27,7 +27,10 @@ namespace DeltaShell.NGHS.IO.Grid
         public static UnstructuredGrid LoadFromFile(string path, bool loadFlowLinksAndCells = false)
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)
+            {
+                Log.ErrorFormat("Could not find grid at \"{0}\"", path);
                 return null;
+            }
 
             switch (GetConvention(path))
             {

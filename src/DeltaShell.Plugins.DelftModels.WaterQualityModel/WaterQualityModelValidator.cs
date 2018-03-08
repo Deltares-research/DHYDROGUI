@@ -277,13 +277,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private IEnumerable<ValidationIssue> ValidateWaterQualityNameableMapFeatures<T>(WaterQualityModel model, IEnumerable<T> nameablePointFeatures, string pointTypeDescription, Func<T, bool> shouldCheckZFunction, IEnumerable<string> existingNames, string alreadyFoundItemDescription) where T : NameablePointFeature
         {
-            var foundNames = existingNames.ToList();
+            var alreadyExistingNames = new HashSet<string>(existingNames);
+            var foundNames = new HashSet<string>();
 
             // If not a ZLayer model, then we are working with a sigma-layered model:
             var min = model.LayerType == LayerType.Sigma ? 0.0 : model.ZBot;
             var max = model.LayerType == LayerType.Sigma ? 1.0 : model.ZTop;
 
-            var mapFeatureStartingIndex = foundNames.Count;
             foreach (var pointFeature in nameablePointFeatures)
             {
                 var shouldCheckZ = shouldCheckZFunction(pointFeature);
@@ -307,10 +307,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     }
                 }
 
-                var index = foundNames.IndexOf(pointFeature.Name.ToLowerInvariant());
-                if (index >= 0)
+                var alreadyExistingNamesContainsName = alreadyExistingNames.Contains(pointFeature.Name.ToLowerInvariant());
+                var foundNamesContainsName = foundNames.Contains(pointFeature.Name.ToLowerInvariant());
+                var typeName = alreadyExistingNamesContainsName ? alreadyFoundItemDescription : pointTypeDescription;
+
+                if (alreadyExistingNamesContainsName || foundNamesContainsName)
                 {
-                    var typeName = index < mapFeatureStartingIndex ? alreadyFoundItemDescription : pointTypeDescription;
                     yield return new ValidationIssue(pointFeature, ValidationSeverity.Error,
                         string.Format("{0} names should be unique and another {1} with name '{2}' was already found.",
                             pointTypeDescription, typeName.ToLower(), pointFeature.Name));

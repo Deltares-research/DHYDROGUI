@@ -210,5 +210,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // do the export
             ExtForceFileHelper.WriteSourceAndSinkData(exportedFile, sourceAndSink, fmModel.ReferenceTime, extForceFileItem, true, modelDefinition);
         }
+
+        [Test]
+        public void GetPliFileNameReturnsNullIfFeatureDoesNotHaveName()
+        {
+            var featureData = new SourceAndSink
+            {
+                Feature = new Feature2D { Geometry = new Point(0.0, 0.0) },
+                Data = null
+            };
+            Assert.IsTrue(string.IsNullOrEmpty(featureData.Feature.Name));
+            Assert.IsNull(ExtForceFileHelper.GetPliFileName(featureData));
+        }
     }
 }

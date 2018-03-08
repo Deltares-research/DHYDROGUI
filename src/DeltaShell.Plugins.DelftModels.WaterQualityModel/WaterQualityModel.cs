@@ -16,10 +16,12 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
@@ -44,49 +46,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
 
         #region Tags
-
-        public const string DispersionTag = "DispersionTag";
-        public const string ProcessCoefficientsTag = "ProcessCoefficientsTag";
-        public const string BloomAlgaeTag = "BloomAlgaeTag";
-        public const string InputFileHybridTag = "InputFileHybridTag";
-        public const string BathymetryTag = "BathymetryTag";
-        public const string BoundaryDataTag = "BoundaryDataTag";
-        public const string LoadsDataTag = "LoadsDataTag";
-        public const string GridTag = "GridTag";
-        public const string SubstanceProcessLibraryTag = "SubstanceProcessLibraryTag";
-        public const string InputFileCommandLineTag = "InputFileCommandLineTag";
-        public const string LoadsTag = "LoadsTag";
-        public const string InitialConditionsTag = "InitialConditionsTag";
-        public const string ObservationPointsTag = "ObservationPointsTag";
-        public const string ObservationAreasTag = "ObservationAreasTag";
-        public const string MonitoringOutputTag = "MonitoringOutputTag";
-        public const string OutputSubstancesTag = "OutputSubstancesTag";
-        public const string OutputParametersTag = "OutputParametersTag";
-        public const string BalanceOutputTag = "BalanceOutputTag";
-        public const string MonitoringFileTag = "MonitoringFileTag";
-        public const string ListFileTag = "ListFileTag";
-        public const string ProcessFileTag = "ProcessFileTag";
-
-        private static readonly IDictionary<string, string> TagToNameDictionary = new Dictionary<string, string>
-        {
-            { ListFileTag, "List file" },
-            { ProcessFileTag, "Process file" },
-            { BalanceOutputTag, "Balance output" },
-            { MonitoringFileTag, "Monitoring file" },
-            { OutputSubstancesTag, "Substances" },
-            { OutputParametersTag, "Output parameters" },
-            { MonitoringOutputTag, "Monitoring locations" },
-            { ObservationAreasTag, "Observation Areas" },
-            { BloomAlgaeTag, "Bloom Parameters" },
-            { BoundaryDataTag, "Boundary Data" },
-            { BathymetryTag, "Bed Level" },
-            { LoadsDataTag, "Loads Data" },
-            { InitialConditionsTag, "Initial Conditions" },
-            { ProcessCoefficientsTag, "Process Coefficients" },
-            { DispersionTag, "Horizontal Dispersion" },
-            { SubstanceProcessLibraryTag, "Process Library" },
-            { GridTag, "Grid" }
-        };
+        public static readonly DispersionDataItemMetaData DispersionDataItemMetaData = new DispersionDataItemMetaData();
+        public static readonly ProcessCoefficientsDataItemMetaData ProcessCoefficientsDataItemMetaData = new ProcessCoefficientsDataItemMetaData();
+        public static readonly BloomAlgaeDataItemMetaData BloomAlgaeDataItemMetaData = new BloomAlgaeDataItemMetaData();
+        public static readonly InputFileHybridDataItemMetaData InputFileHybridDataItemMetaData = new InputFileHybridDataItemMetaData();
+        public static readonly BathymetryDataItemMetaData BathymetryDataItemMetaData = new BathymetryDataItemMetaData();
+        public static readonly BoundaryDataDataItemMetaData BoundaryDataDataItemMetaData = new BoundaryDataDataItemMetaData();
+        public static readonly BoundariesDataItemMetaData BoundariesDataItemMetaData = new BoundariesDataItemMetaData();
+        public static readonly LoadsDataDataItemMetaData LoadsDataDataItemMetaData = new LoadsDataDataItemMetaData();
+        public static readonly GridDataItemMetaData GridDataItemMetaData = new GridDataItemMetaData();
+        public static readonly SubstanceProcessLibraryDataItemMetaData SubstanceProcessLibraryDataItemMetaData = new SubstanceProcessLibraryDataItemMetaData();
+        public static readonly InputFileCommandLineDataItemMetaData InputFileCommandLineDataItemMetaData = new InputFileCommandLineDataItemMetaData();
+        public static readonly LoadsDataItemMetaData LoadsDataItemMetaData = new LoadsDataItemMetaData();
+        public static readonly InitialConditionsDataItemMetaData InitialConditionsDataItemMetaData = new InitialConditionsDataItemMetaData();
+        public static readonly ObservationPointsDataItemMetaData ObservationPointsDataItemMetaData = new ObservationPointsDataItemMetaData();
+        public static readonly ObservationAreasDataItemMetaData ObservationAreasDataItemMetaData = new ObservationAreasDataItemMetaData();
+        public static readonly MonitoringOutputDataItemMetaData MonitoringOutputDataItemMetaData = new MonitoringOutputDataItemMetaData();
+        public static readonly OutputSubstancesDataItemMetaData OutputSubstancesDataItemMetaData = new OutputSubstancesDataItemMetaData();
+        public static readonly OutputParametersDataItemMetaData OutputParametersDataItemMetaData = new OutputParametersDataItemMetaData();
+        public static readonly BalanceOutputDataItemMetaData BalanceOutputDataItemMetaData = new BalanceOutputDataItemMetaData();
+        public static readonly MonitoringFileDataItemMetaData MonitoringFileDataItemMetaData = new MonitoringFileDataItemMetaData();
+        public static readonly ListFileDataItemMetaData ListFileDataItemMetaData = new ListFileDataItemMetaData();
+        public static readonly ProcessFileDataItemMetaData ProcessFileDataItemMetaData = new ProcessFileDataItemMetaData();
 
         #endregion
 
@@ -152,12 +133,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             this.SetupModelDataFolderStructure(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
 
-            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), GetDataItemNameFromTag(OutputSubstancesTag), DataItemRole.Output, OutputSubstancesTag);
-            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), GetDataItemNameFromTag(OutputParametersTag), DataItemRole.Output, OutputParametersTag);
+            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputSubstancesDataItemMetaData.Name, DataItemRole.Output, OutputSubstancesDataItemMetaData.Tag);
+            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputParametersDataItemMetaData.Name, DataItemRole.Output, OutputParametersDataItemMetaData.Tag);
 
             if (modelSettings.MonitoringOutputLevel != MonitoringOutputLevel.None)
             {
-                AddDataItemSet(new EventedList<WaterQualityObservationVariableOutput>(), GetDataItemNameFromTag(MonitoringOutputTag), DataItemRole.Output, MonitoringOutputTag);
+                AddDataItemSet(new EventedList<WaterQualityObservationVariableOutput>(), MonitoringOutputDataItemMetaData.Name, DataItemRole.Output, MonitoringOutputDataItemMetaData.Tag);
             }
 
             SubscribeToInternalEvents();
@@ -224,7 +205,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                var inputFileDataItem = GetDataItemByTag(InputFileCommandLineTag);
+                var inputFileDataItem = GetDataItemByTag(InputFileCommandLineDataItemMetaData.Tag);
 
                 return inputFileDataItem != null
                            ? inputFileDataItem.Value as TextDocument
@@ -239,7 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             get
             {
-                var inputFileDataItem = GetDataItemByTag(InputFileHybridTag);
+                var inputFileDataItem = GetDataItemByTag(InputFileHybridDataItemMetaData.Tag);
 
                 return inputFileDataItem != null
                            ? inputFileDataItem.Value as TextDocument
@@ -252,7 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual SubstanceProcessLibrary SubstanceProcessLibrary
         {
-            get { return (SubstanceProcessLibrary)GetDataItemByTag(SubstanceProcessLibraryTag).Value; }
+            get { return (SubstanceProcessLibrary)GetDataItemByTag(SubstanceProcessLibraryDataItemMetaData.Tag).Value; }
         }
 
         /// <summary>
@@ -301,7 +282,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual WaterQualityObservationAreaCoverage ObservationAreas
         {
-            get { return GetDataItemValueByTag<WaterQualityObservationAreaCoverage>(ObservationAreasTag); }
+            get { return GetDataItemValueByTag<WaterQualityObservationAreaCoverage>(ObservationAreasDataItemMetaData.Tag); }
         }
 
         /// <summary>
@@ -309,7 +290,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IEventedList<IFunction> InitialConditions
         {
-            get { return GetDataItemSetByTag(InitialConditionsTag).AsEventedList<IFunction>(); }
+            get { return GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag).AsEventedList<IFunction>(); }
         }
 
         /// <summary>
@@ -317,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IEventedList<IFunction> ProcessCoefficients
         {
-            get { return GetDataItemSetByTag(ProcessCoefficientsTag).AsEventedList<IFunction>(); }
+            get { return GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag).AsEventedList<IFunction>(); }
         }
 
         /// <summary>
@@ -325,7 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IEventedList<IFunction> Dispersion
         {
-            get { return GetDataItemSetByTag(DispersionTag).AsEventedList<IFunction>(); }
+            get { return GetDataItemSetByTag(DispersionDataItemMetaData.Tag).AsEventedList<IFunction>(); }
         }
 
         /// <summary>
@@ -353,7 +334,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IDataItemSet MonitoringOutputDataItemSet
         {
-            get { return GetDataItemSetByTag(MonitoringOutputTag); }
+            get { return GetDataItemSetByTag(MonitoringOutputDataItemMetaData.Tag); }
         }
 
         /// <summary>
@@ -376,7 +357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IDataItemSet OutputSubstancesDataItemSet
         {
-            get { return GetDataItemSetByTag(OutputSubstancesTag); }
+            get { return GetDataItemSetByTag(OutputSubstancesDataItemMetaData.Tag); }
         }
         
         /// <summary>
@@ -384,7 +365,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual IDataItemSet OutputParametersDataItemSet
         {
-            get { return GetDataItemSetByTag(OutputParametersTag); }
+            get { return GetDataItemSetByTag(OutputParametersDataItemMetaData.Tag); }
         }
 
         /// <summary>
@@ -392,7 +373,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual UnstructuredGrid Grid
         {
-            get { return (UnstructuredGrid)GetDataItemByTag(GridTag).Value; }
+            get { return (UnstructuredGrid)GetDataItemByTag(GridDataItemMetaData.Tag).Value; }
         }
 
         /// <summary>
@@ -400,8 +381,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// </summary>
         public virtual UnstructuredGridVertexCoverage Bathymetry
         {
-            get { return (UnstructuredGridVertexCoverage)GetDataItemByTag(BathymetryTag).Value; }
-            protected set { GetDataItemByTag(BathymetryTag).Value = value; }
+            get { return (UnstructuredGridVertexCoverage)GetDataItemByTag(BathymetryDataItemMetaData.Tag).Value; }
+            protected set { GetDataItemByTag(BathymetryDataItemMetaData.Tag).Value = value; }
         }
 
         /// <summary>
@@ -571,7 +552,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 salinityRelativeFilePath = value;
 
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsTag), "Salinity");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Salinity");
             }
         }
 
@@ -588,7 +569,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 temperatureRelativeFilePath = value;
 
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsTag), "Temp");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Temp");
             }
         }
 
@@ -605,7 +586,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 shearStressesRelativeFilePath = value;
 
-                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsTag), "Tau");
+                HandleNewHydroDynamicsFunctionDataSet(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), "Tau");
             }
         }
 
@@ -695,9 +676,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             set { modelDataDirectory = value; }
         }
 
-        public virtual DataTableManager BoundaryDataManager { get { return (DataTableManager)GetDataItemByTag(BoundaryDataTag).Value; } }
+        public virtual DataTableManager BoundaryDataManager { get { return (DataTableManager)GetDataItemByTag(BoundaryDataDataItemMetaData.Tag).Value; } }
 
-        public virtual DataTableManager LoadsDataManager { get { return (DataTableManager)GetDataItemByTag(LoadsDataTag).Value; } }
+        public virtual DataTableManager LoadsDataManager { get { return (DataTableManager)GetDataItemByTag(LoadsDataDataItemMetaData.Tag).Value; } }
 
         /// <summary>
         /// The coordinate system can be found in the grid, 
@@ -1115,7 +1096,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var textDocumentOutputDataItems = DataItems.Where(di =>
                 di.Role == DataItemRole.Output &&
                 di.ValueType == typeof(TextDocumentFromFile) &&
-                di.Tag != ListFileTag)
+                di.Tag != ListFileDataItemMetaData.Tag)
                 .ToList();
 
             textDocumentOutputDataItems.ForEach(di => DataItems.Remove(di));
@@ -1156,7 +1137,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
 
             waqPreProcessor = new WaqFileBasedPreProcessor();
-            waqPreProcessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => this.AddTextDocument(displayName, filePath));
+            var success = waqPreProcessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => this.AddTextDocument(displayName, filePath));
+            if (!success)
+            {
+                throw new Exception("Failed to initialize pre-processor.\r\nPlease look at List file for more information.");
+            }
 
             //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
             waqProcessor = new WaqFileBasedProcessor();
@@ -1166,6 +1151,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         protected override void OnExecute()
         {
             InvokeAndRestoreDirectory(OnExecuteCore);
+        }
+
+        protected override void OnCancel()
+        {
+            if (waqPreProcessor != null)
+                waqPreProcessor.TryToCancel = true;
+
+            if (waqProcessor != null)
+                waqProcessor.TryToCancel = true;
         }
 
         private void OnExecuteCore()
@@ -1272,13 +1266,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 gridToSet.CoordinateSystem = overriddenCoordinateSystem;
             }
 
-            GetDataItemByTag(GridTag).Value = gridToSet;
+            GetDataItemByTag(GridDataItemMetaData.Tag).Value = gridToSet;
             Bathymetry = CreateAndFillBathymetryCoverage(gridToSet);
 
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(InitialConditionsTag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(ProcessCoefficientsTag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(DispersionTag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(GetDataItemByTag(ObservationAreasTag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(GetDataItemSetByTag(DispersionDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(GetDataItemByTag(ObservationAreasDataItemMetaData.Tag), schematizationRemainsUnchanged);
             ReplaceGridOnUnstructuredGridCoverages(this.GetOutputCoverages(), schematizationRemainsUnchanged);
         }
 
@@ -1356,21 +1350,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void InitializeInputDataItems()
         {
-            AddDataItem(new TextDocument { Name = "Input File", Content = Resources.TemplateInpFileNew }, DataItemRole.Input, InputFileCommandLineTag);
-            AddDataItem(new TextDocument { Name = "Input File", Content = Resources.TemplateInpFileHybrid }, DataItemRole.Input, InputFileHybridTag);
+            AddDataItem(new TextDocument { Name = InputFileCommandLineDataItemMetaData.Name, Content = Resources.TemplateInpFileNew }, DataItemRole.Input, InputFileCommandLineDataItemMetaData.Tag);
+            AddDataItem(new TextDocument { Name = InputFileHybridDataItemMetaData.Name, Content = Resources.TemplateInpFileHybrid }, DataItemRole.Input, InputFileHybridDataItemMetaData.Tag);
 
-            AddDataItem(CreateSubstanceProcessLibrary(), GetDataItemNameFromTag(SubstanceProcessLibraryTag), DataItemRole.Input, SubstanceProcessLibraryTag);
+            AddDataItem(CreateSubstanceProcessLibrary(), SubstanceProcessLibraryDataItemMetaData.Name, DataItemRole.Input, SubstanceProcessLibraryDataItemMetaData.Tag);
 
             var initialGrid = new UnstructuredGrid();
-            AddDataItem(initialGrid, GetDataItemNameFromTag(GridTag), DataItemRole.Input, GridTag);
-            AddDataItem(CreateAndFillBathymetryCoverage(initialGrid), GetDataItemNameFromTag(BathymetryTag), DataItemRole.Input, BathymetryTag);
-            AddDataItem(CreateObservationAreasCoverage(initialGrid), GetDataItemNameFromTag(ObservationAreasTag), DataItemRole.Input, ObservationAreasTag);
-            AddDataItem(new DataTableManager(), GetDataItemNameFromTag(BoundaryDataTag), DataItemRole.Input, BoundaryDataTag);
-            AddDataItem(new DataTableManager(), GetDataItemNameFromTag(LoadsDataTag), DataItemRole.Input, LoadsDataTag);
+            AddDataItem(initialGrid, GridDataItemMetaData.Name, DataItemRole.Input, GridDataItemMetaData.Tag);
+            AddDataItem(CreateAndFillBathymetryCoverage(initialGrid), BathymetryDataItemMetaData.Name, DataItemRole.Input, BathymetryDataItemMetaData.Tag);
+            AddDataItem(CreateObservationAreasCoverage(initialGrid), ObservationAreasDataItemMetaData.Name, DataItemRole.Input, ObservationAreasDataItemMetaData.Tag);
+            AddDataItem(new DataTableManager(), BoundaryDataDataItemMetaData.Name, DataItemRole.Input, BoundaryDataDataItemMetaData.Tag);
+            AddDataItem(new DataTableManager(), LoadsDataDataItemMetaData.Name, DataItemRole.Input, LoadsDataDataItemMetaData.Tag);
 
-            AddDataItemSet(new EventedList<IFunction>(), GetDataItemNameFromTag(InitialConditionsTag), DataItemRole.Input, InitialConditionsTag, true);
-            AddDataItemSet(new EventedList<IFunction>(), GetDataItemNameFromTag(ProcessCoefficientsTag), DataItemRole.Input, ProcessCoefficientsTag, true);
-            AddDataItemSet(new EventedList<IFunction>(CreateDispersionFunctions()), GetDataItemNameFromTag(DispersionTag), DataItemRole.Input, DispersionTag, true);
+            AddDataItemSet(new EventedList<IFunction>(), InitialConditionsDataItemMetaData.Name, DataItemRole.Input, InitialConditionsDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(), ProcessCoefficientsDataItemMetaData.Name, DataItemRole.Input, ProcessCoefficientsDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(CreateDispersionFunctions()), DispersionDataItemMetaData.Name, DataItemRole.Input, DispersionDataItemMetaData.Tag, true);
         }
 
         private void SetImportProgress(string progress)
@@ -1463,12 +1457,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 // use a folder that was created
                 ModelSettings.WorkDirectory = Path.Combine(tempWorkDirectory, GetWaqDataFolderName() + "_output");
             }
-        }
-
-        public static string GetDataItemNameFromTag(string dataItemTag)
-        {
-            string value;
-            return TagToNameDictionary.TryGetValue(dataItemTag, out value) ? value : "Unknown dataItem";
         }
 
         /// <summary>

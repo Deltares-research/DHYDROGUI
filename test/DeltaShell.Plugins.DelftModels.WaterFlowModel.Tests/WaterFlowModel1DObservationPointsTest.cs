@@ -50,6 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
             // add cross-section
             CrossSectionHelper.AddCrossSection(branch1, 50.0d, 0.0d);
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
             //add observation point1
             var observationPoint1 = ObservationPoint.CreateDefault(branch1);

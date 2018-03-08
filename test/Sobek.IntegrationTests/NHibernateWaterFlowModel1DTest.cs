@@ -673,12 +673,12 @@ namespace Sobek.IntegrationTests
             projectRepository.Create(path);
             var project = projectRepository.GetProject();
 
-            var csst = new CrossSectionSectionType {Name = "MyCrossSectionSectionType"};
             var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
-            hydroNetwork.CrossSectionSectionTypes.Add(csst);
+            var mainSection = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(s => s.Name == CrossSectionDefinition.MainSectionName);
+            Assert.NotNull(mainSection);
 
             var crossSection1 = CrossSectionDefinitionZW.CreateDefault();
-            crossSection1.AddSection(csst, crossSection1.FlowWidth());
+            crossSection1.AddSection(mainSection, crossSection1.FlowWidth());
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(hydroNetwork.Branches[0], crossSection1, 1.0);
             
             var networkDiscretization = new Discretization

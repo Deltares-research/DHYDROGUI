@@ -345,6 +345,8 @@ namespace Sobek.IntegrationTests
 
                 var network = new HydroNetwork { Nodes = { node1, node2 }, Branches = { branch1 } };
 
+                ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
                 // add model
                 model = new WaterFlowModel1D { Network = network };
                 project.RootFolder.Items.Add(model);
@@ -411,6 +413,8 @@ namespace Sobek.IntegrationTests
                 branch1.BranchFeatures.Add(crs1);
 
                 var network = new HydroNetwork { Nodes = { node1, node2 }, Branches = { branch1 } };
+
+                ModelTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
 
                 // create model model
                 model = new WaterFlowModel1D { Network = network };

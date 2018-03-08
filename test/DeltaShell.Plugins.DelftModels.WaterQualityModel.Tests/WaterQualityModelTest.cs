@@ -15,8 +15,10 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
@@ -216,76 +218,76 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             
             // assert
-            var inputFileDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileCommandLineTag);
+            var inputFileDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileCommandLineDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, inputFileDataItem.Role);
-            Assert.AreEqual("Input File", inputFileDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.InputFileCommandLineDataItemMetaData.Name, inputFileDataItem.Name);
             Assert.AreEqual(typeof(TextDocument), inputFileDataItem.ValueType);
             Assert.AreSame(model, inputFileDataItem.Owner);
             Assert.AreSame(model.InputFileCommandLine, inputFileDataItem.Value);
 
-            var inputFileHybridDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileHybridTag);
+            var inputFileHybridDataItem = model.GetDataItemByTag(WaterQualityModel.InputFileHybridDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, inputFileHybridDataItem.Role);
-            Assert.AreEqual("Input File", inputFileHybridDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.InputFileHybridDataItemMetaData.Name, inputFileHybridDataItem.Name);
             Assert.AreEqual(typeof(TextDocument), inputFileHybridDataItem.ValueType);
             Assert.AreSame(model, inputFileHybridDataItem.Owner);
             Assert.AreSame(model.InputFileHybrid, inputFileHybridDataItem.Value);
 
-            var substanceProcessLibraryDataItem = model.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryTag);
+            var substanceProcessLibraryDataItem = model.GetDataItemByTag(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, substanceProcessLibraryDataItem.Role);
-            Assert.AreEqual("Process Library", substanceProcessLibraryDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.SubstanceProcessLibraryDataItemMetaData.Name, substanceProcessLibraryDataItem.Name);
             Assert.AreEqual(typeof(SubstanceProcessLibrary), substanceProcessLibraryDataItem.ValueType);
             Assert.AreSame(model, substanceProcessLibraryDataItem.Owner);
             Assert.AreSame(model.SubstanceProcessLibrary, substanceProcessLibraryDataItem.Value);
 
-            var gridDataItem = model.GetDataItemByTag(WaterQualityModel.GridTag);
+            var gridDataItem = model.GetDataItemByTag(WaterQualityModel.GridDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, gridDataItem.Role);
-            Assert.AreEqual("Grid", gridDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, gridDataItem.Name);
             Assert.AreEqual(typeof(UnstructuredGrid), gridDataItem.ValueType);
             Assert.AreSame(model, gridDataItem.Owner);
             Assert.AreSame(model.Grid, gridDataItem.Value);
 
-            var bathymetryDataItem = model.GetDataItemByTag(WaterQualityModel.BathymetryTag);
+            var bathymetryDataItem = model.GetDataItemByTag(WaterQualityModel.BathymetryDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, bathymetryDataItem.Role);
-            Assert.AreEqual("Bed Level", bathymetryDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.BathymetryDataItemMetaData.Name, bathymetryDataItem.Name);
             Assert.AreEqual(typeof(UnstructuredGridVertexCoverage), bathymetryDataItem.ValueType);
             Assert.AreSame(model, bathymetryDataItem.Owner);
             Assert.AreSame(model.Bathymetry, bathymetryDataItem.Value);
 
-            var boundaryDataDataItem = model.GetDataItemByTag(WaterQualityModel.BoundaryDataTag);
+            var boundaryDataDataItem = model.GetDataItemByTag(WaterQualityModel.BoundaryDataDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, boundaryDataDataItem.Role);
-            Assert.AreEqual("Boundary Data", boundaryDataDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.BoundaryDataDataItemMetaData.Name, boundaryDataDataItem.Name);
             Assert.AreEqual(typeof(DataTableManager), boundaryDataDataItem.ValueType);
             Assert.AreSame(model, boundaryDataDataItem.Owner);
             Assert.AreSame(model.BoundaryDataManager, boundaryDataDataItem.Value);
 
-            var loadsDataDataItem = model.GetDataItemByTag(WaterQualityModel.LoadsDataTag);
+            var loadsDataDataItem = model.GetDataItemByTag(WaterQualityModel.LoadsDataDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, loadsDataDataItem.Role);
-            Assert.AreEqual("Loads Data", loadsDataDataItem.Name);
+            Assert.AreEqual(WaterQualityModel.LoadsDataDataItemMetaData.Name, loadsDataDataItem.Name);
             Assert.AreEqual(typeof(DataTableManager), loadsDataDataItem.ValueType);
             Assert.AreSame(model, loadsDataDataItem.Owner);
             Assert.AreSame(model.LoadsDataManager, loadsDataDataItem.Value);
 
-            var initialConditionsDataItemSet = model.GetDataItemByTag(WaterQualityModel.InitialConditionsTag);
+            var initialConditionsDataItemSet = model.GetDataItemByTag(WaterQualityModel.InitialConditionsDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, initialConditionsDataItemSet.Role);
-            Assert.AreEqual("Initial Conditions", initialConditionsDataItemSet.Name);
+            Assert.AreEqual(WaterQualityModel.InitialConditionsDataItemMetaData.Name, initialConditionsDataItemSet.Name);
             Assert.AreEqual(typeof(IList<IDataItem>), initialConditionsDataItemSet.ValueType);
             Assert.AreSame(model, initialConditionsDataItemSet.Owner);
             var adapter = (IDataItemsEventedListAdapter)initialConditionsDataItemSet.Value;
             Assert.AreEqual(typeof(IFunction), adapter.ItemType);
             CollectionAssert.AreEqual(model.InitialConditions.ToArray(), adapter.DataItems.Select(di=>di.Value).ToArray());
 
-            var processCoefficientsDataItemSet = model.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsTag);
+            var processCoefficientsDataItemSet = model.GetDataItemByTag(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, processCoefficientsDataItemSet.Role);
-            Assert.AreEqual("Process Coefficients", processCoefficientsDataItemSet.Name);
+            Assert.AreEqual(WaterQualityModel.ProcessCoefficientsDataItemMetaData.Name, processCoefficientsDataItemSet.Name);
             Assert.AreEqual(typeof(IList<IDataItem>), processCoefficientsDataItemSet.ValueType);
             Assert.AreSame(model, processCoefficientsDataItemSet.Owner);
             adapter = (IDataItemsEventedListAdapter)processCoefficientsDataItemSet.Value;
             Assert.AreEqual(typeof(IFunction), adapter.ItemType);
             CollectionAssert.AreEqual(model.ProcessCoefficients.ToArray(), adapter.DataItems.Select(di => di.Value).ToArray());
 
-            var dispersionDataItemSet = model.GetDataItemByTag(WaterQualityModel.DispersionTag);
+            var dispersionDataItemSet = model.GetDataItemByTag(WaterQualityModel.DispersionDataItemMetaData.Tag);
             Assert.AreEqual(DataItemRole.Input, dispersionDataItemSet.Role);
-            Assert.AreEqual("Horizontal Dispersion", dispersionDataItemSet.Name);
+            Assert.AreEqual(WaterQualityModel.DispersionDataItemMetaData.Name, dispersionDataItemSet.Name);
             Assert.AreEqual(typeof(IList<IDataItem>), dispersionDataItemSet.ValueType);
             Assert.AreSame(model, dispersionDataItemSet.Owner);
             adapter = (IDataItemsEventedListAdapter)dispersionDataItemSet.Value;
@@ -1008,6 +1010,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             TypeUtils.SetField(model, "layerType", LayerType.ZLayer);
             Assert.AreEqual(LayerType.ZLayer, model.LayerType);
             Assert.AreEqual(model.ZTop, model.GetDefaultZ());
+        }
+
+        [Test]
+        public void CallingCancelShouldCancelOnProcessorAndPreProcessor()
+        {
+            var preProcessor = MockRepository.GenerateStrictMock<IWaqPreProcessor>();
+            var processor = MockRepository.GenerateStrictMock<IWaqProcessor>();
+
+            preProcessor.Expect(p => p.TryToCancel).SetPropertyWithArgument(true);
+            processor.Expect(p => p.TryToCancel).SetPropertyWithArgument(true);
+
+            preProcessor.Replay();
+            processor.Replay();
+
+            var model = new WaterQualityModel();
+
+            TypeUtils.SetField(model, "waqPreProcessor", preProcessor);
+            TypeUtils.SetField(model, "waqProcessor", processor);
+
+            model.Cancel();
+
+            preProcessor.VerifyAllExpectations();
+            processor.VerifyAllExpectations();
         }
 
         private void SetUpModelToHaveFunctionInHydroDataWithName(WaterQualityModel model, string functionName, string someValidFilepath)

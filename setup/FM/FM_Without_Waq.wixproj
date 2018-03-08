@@ -6,7 +6,7 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.4.1</ReleaseVersion>
+    <ReleaseVersion>1.4.3</ReleaseVersion>
     <!-- This is the product name -->
     <ProductName>Delft3D FM Suite 2018 HM</ProductName>
     <ProjectGuid>{526694a4-fee1-41ab-8f54-d3f3dc5f192d}</ProjectGuid>
@@ -100,6 +100,7 @@
     <Content Include="Delft3D FM HM_Resources\setup_start.jpg" />
     <Content Include="Delft3D FM HM_Resources\splash_screen.jpg" />
     <Content Include="Delft3D FM HM_Resources\start_page_background.jpg" />
+    <Content Include="Delft3D FM HM_Resources\Welcome.htm" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
     <Content Include="FMPlugin.wxi" />

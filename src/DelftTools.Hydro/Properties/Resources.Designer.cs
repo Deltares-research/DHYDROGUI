@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -81,12 +81,12 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Main section width of cross section {0} has been changed from {1} m to {2} m..
+        ///   Looks up a localized string similar to The {0} section width of cross section {1} has been changed from {2}m to {3}m.
         /// </summary>
-        internal static string CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_ {
+        internal static string CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m {
             get {
-                return ResourceManager.GetString("CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_se" +
-                        "ction__0__has_been_changed_from__1__m_to__2__m_", resourceCulture);
+                return ResourceManager.GetString("CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cro" +
+                        "ss_section__1__has_been_changed_from__2_m_to__3_m", resourceCulture);
             }
         }
         

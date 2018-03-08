@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void Show()
         {
             var view = new WeirViewWpf();
-            var weir = new Weir("weir")
+            var weir = new Weir("weir", true)
             {
                 WeirFormula = new SimpleWeirFormula(),
             };
@@ -39,6 +39,4 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             WpfTestHelper.ShowModal(view);
         }
     }
-
-    
 }

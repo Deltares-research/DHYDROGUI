@@ -4,8 +4,7 @@
   <?define explicitX86desktopshortcut="false"?>
 
   <?define Description="D-FM Delta Shell" ?>
-  <?define StartPage="Welcome.htm"?>
-
+  
   <?define checkForRegistration="true"?>
   
   <?ifdef var.RWS?>
@@ -23,9 +22,10 @@
       <?define Delft3DPackageName="Delft3D FM HMWQ"?>
       <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
       <?define registrationVersion="1.4"?>
+    <?endif?>
   <?endif?>
-  <?endif?>
-
+  
+  <?define StartPage="Welcome.htm"?>
   <?define pluginicon="$(var.ProjectDir)\Resources\FM.ico"?>
   <?define licensefilepath="$(var.ProjectDir)\$(var.Delft3DPackageName)_Resources\"?>
   <?define windowlayoutpath="$(var.ProjectDir)\Resources\"?>

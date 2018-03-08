@@ -60,6 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
                                                       AreaLayerStyles.GateStyle, "Gates (snapped)", UnstrucGridOperationApi.Gate);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.ObservationCrossSections,
                                                       AreaLayerStyles.ObsCrossSectionStyle, "Observation cross sections (snapped)", UnstrucGridOperationApi.ObsCrossSection);
+            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Embankments,
+                                                      AreaLayerStyles.EmbankmentStyle, "Embankments (snapped)", UnstrucGridOperationApi.Embankment);
+            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.SourcesAndSinks,
+                                                      AreaLayerStyles.SnappedSourcesAndSinksStyle, "Sources and sinks (snapped)", UnstrucGridOperationApi.SourceSink);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Boundaries,
                                                       AreaLayerStyles.BoundariesStyle, "Boundaries (snapped)", UnstrucGridOperationApi.Boundary);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Boundaries,

@@ -7,9 +7,11 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -24,6 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private VectorStyle OriginalFeaturesLayerStyle { get; set; }
         private List<Feature2D> SnappedFeatures { get; set; }
         private bool dirty;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
 
         /// <summary>
         /// A <see cref="FeatureCollection"/> for <see cref="IFeature"/> objects that are being
@@ -52,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             get
             {
-                if (dirty && LayerIsShown)
+                if ( LayerIsShown && dirty)
                 {
                     try
                     {
@@ -157,14 +161,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
         private Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry=null)
         {
-            if (snappedGeometry == null)
-                snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
+            if (snappedGeometry == null || snappedGeometry.IsEmpty)
+            {
+                try
+                {
+                    snappedGeometry = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, feature.Geometry);
+                    if (snappedGeometry == null || snappedGeometry.IsEmpty)
+                    {
+                        Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__,feature.Geometry.GeometryType);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
 
             var feature2D = new Feature2D();
             if (feature.Attributes != null)
                 feature2D.Attributes = (IFeatureAttributeCollection) feature.Attributes.Clone();
             if (feature is INameable)
                 feature2D.Name = ((INameable) feature).Name;
+
+            if (snappedGeometry == null)
+            {
+                return feature2D;
+            }
 
             if (feature.Geometry is IPoint)
             {
@@ -185,17 +206,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             if (dirty)
                 return; //list already dirty, so don't update
-
+            var feature = e.Item is IFeatureData ? ((IFeatureData)e.Item).Feature : (IFeature) e.Item;
             switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Add:
-                    SnappedFeatures.Insert(e.Index, GetSnappedFeature((IFeature)e.Item));
+                    SnappedFeatures.Insert(e.Index, GetSnappedFeature(feature));
                     break;
                 case NotifyCollectionChangeAction.Remove:
                     SnappedFeatures.RemoveAt(e.Index);
                     break;
                 case NotifyCollectionChangeAction.Replace:
-                    SnappedFeatures[e.Index] = GetSnappedFeature((IFeature)e.Item);
+                    SnappedFeatures[e.Index] = GetSnappedFeature(feature);
                     break;
                 case NotifyCollectionChangeAction.Reset:
                     dirty = true;
@@ -213,12 +234,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             if (OriginalFeatures.Count <= 0) 
                 return;
 
-            var originalGeometries = OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry).ToArray();
+            var originalGeometries = new List<IGeometry>();
+            originalGeometries.AddRange(OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry));
+            //SourceSink is a FeatureData, so we need to extract the feature geometry from it.
+            originalGeometries.AddRange(OriginalFeatures.OfType<IFeatureData>().Select(f => f.Feature.Geometry));
+
             var snappedGeometries = OperationApi.GetGridSnappedGeometry(SnapApiFeatureType, originalGeometries).ToArray();
 
-            for (int i = 0; i < OriginalFeatures.Count; i++)
+            for (var i = 0; i < OriginalFeatures.Count; i++)
             {
                 var feature = OriginalFeatures[i];
+                if (feature is IFeatureData)
+                    feature = ((IFeatureData) feature).Feature;
+
                 SnappedFeatures.Add(GetSnappedFeature((IFeature) feature, snappedGeometries[i]));
             }
         }

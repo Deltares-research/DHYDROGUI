@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using System.Windows;
+using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections;
+using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms
 {
@@ -15,13 +16,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms
         public RefreshMainSectionWidthsDialog()
         {
             InitializeComponent();
+            ViewModel.AfterFix = Close;
         }
 
         private IEnumerable<ICrossSection> crossSections;
-
-        public void EnsureVisible(object item)
-        {
-        }
 
         object IView.Data
         {
@@ -29,38 +27,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.Forms
             set { Data = (IEnumerable<ICrossSection>)value; }
         }
 
-        public string Text { get; set; }
-        public Image Image { get; set; }
-        public bool Visible { get; }
-        public ViewInfo ViewInfo { get; set; }
-
         public IEnumerable<ICrossSection> Data
         {
-            get { return crossSections; }
-            set { crossSections = value; }
+            get { return ViewModel.CrossSections; }
+            set { ViewModel.CrossSections = value; }
         }
 
+        public string Text { get; set; }
 
+        public Image Image { get; set; }
 
-        private void OkButton_OnClick(object sender, RoutedEventArgs e)
+        public bool Visible { get; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item)
         {
-            crossSections.ForEach(cs =>
-            {
-                var crossSectionDefZw = cs.Definition as CrossSectionDefinitionZW;
-                if (crossSectionDefZw != null) crossSectionDefZw.RefreshSectionsWidths();
-
-                var crossSectionDefProxy = cs.Definition as CrossSectionDefinitionProxy;
-                if (crossSectionDefProxy == null) return;
-
-                crossSectionDefZw = crossSectionDefProxy.InnerDefinition as CrossSectionDefinitionZW;
-                if (crossSectionDefZw != null) crossSectionDefZw.RefreshSectionsWidths();
-            });
-            Close();
         }
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Properties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
-using log4net;
 
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity(FireOnCollectionChange=false)]
     public class CrossSectionDefinitionZW : CrossSectionDefinition, ISummerDikeEnabledDefinition
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionZW));
-        public const string MainSectionName = "Main";
         public const string Floodplain1SectionTypeName = "FloodPlain1";
         public const string Floodplain2SectionTypeName = "FloodPlain2";
         private bool skipValidation;
@@ -25,20 +20,6 @@ namespace DelftTools.Hydro.CrossSections
         public CrossSectionDefinitionZW() : this("")
         {
 
-        }
-        /// <summary>
-        /// Returns width of section with given type name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public virtual double GetSectionWidth(string name)
-        {
-            return GetSection(name)?.Width ?? 0.0;
-        }
-
-        protected virtual CrossSectionSection GetSection(string name)
-        {
-            return Sections.FirstOrDefault(s => s.SectionType.Name == name);
         }
 
         public CrossSectionDefinitionZW(string name) : base(name)
@@ -346,36 +327,6 @@ namespace DelftTools.Hydro.CrossSections
             crossSectionZW.SetDefaultZWTable();
             crossSectionZW.Name = name;
             return crossSectionZW;
-        }
-
-        public virtual void RefreshSectionsWidths()
-        {
-            ((INotifyPropertyChanged)sections).PropertyChanged -= SectionsPropertyChanged;
-
-            var widthDifference = this.FlowWidth() - this.SectionsTotalWidth();
-            if (Math.Abs(widthDifference) < 1e-10) return;
-
-            // Change main section width
-            var mainSection = GetSection(MainSectionName);
-            if(mainSection == null) return;
-            var oldWidth = mainSection.Width;
-            mainSection.MaxY += 0.5 * widthDifference;
-            Log.InfoFormat(Resources.CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_, 
-                Name, oldWidth, mainSection.Width);
-
-            // Change floodplain1 section width
-            var floodPlain1 = GetSection(Floodplain1SectionTypeName);
-            if (floodPlain1 == null) return;
-            floodPlain1.MinY += 0.5 * widthDifference;
-            floodPlain1.MaxY += 0.5 * widthDifference;
-
-            // Change floodplain2 section width
-            var floodPlain2 = GetSection(Floodplain2SectionTypeName);
-            if (floodPlain2 == null) return;
-            floodPlain2.MinY += 0.5 * widthDifference;
-            floodPlain2.MaxY += 0.5 * widthDifference;
-
-            ((INotifyPropertyChanged)sections).PropertyChanged += SectionsPropertyChanged;
         }
     }
 }

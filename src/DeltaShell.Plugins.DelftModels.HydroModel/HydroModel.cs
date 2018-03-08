@@ -700,8 +700,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 dimrModels.ForEach(m =>
                 {
                     m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
-                    
+                    m.RunsInIntegratedModel = true;
+                    m.DisconnectOutput();
                 });
+
                 var kernelDirectories = GetKernelDirectories(dimrModels);
                 if (kernelDirectories == null) return;
 
@@ -808,18 +810,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 var validPath = ExplicitWorkingDirectory;
                 if (!Directory.Exists(validPath)) return;
+                
+                var dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
+                dimrModels.ForEach(m => m.RunsInIntegratedModel = false);
 
-                foreach (var dimrModel in currentWorkflow.GetActivitiesOfType<IDimrModel>())
+                foreach (var dimrModel in dimrModels)
                 {
                     var outputDirectory = Path.Combine(validPath, dimrModel.DirectoryName);
                     dimrModel.ConnectOutput(outputDirectory);
-                    dimrModel.IsRunByDimr = false;
                 }
                 var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;
                 if (CurrentWorkflowIsDimr != null)
                 {
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
-                    CurrentWorkflowIsDimr.IsRunByDimr = false;
+                    CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
                 DimrRunner.ConnectDimrRunLogFile(this);
             }

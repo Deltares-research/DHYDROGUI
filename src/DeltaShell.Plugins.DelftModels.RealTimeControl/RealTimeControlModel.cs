@@ -43,6 +43,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     [Entity(FireOnCollectionChange=false)]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
     {
+        public const string InputPostFix = ".input";
+        public const string OutputPostFix = ".output";
+
         private string outputFileName = "rtcOutput.nc";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModel));
@@ -82,7 +85,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             LogLevel = 0;
             FlushLogEveryStep = false;
-            ((ModelBase) this).CollectionChanged += CollectionChanged;
 
             LimitMemory = true;
 
@@ -168,19 +170,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return null;
         }
 
-        void CollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (cloning)
-            {
-                return;
-            }
-            
-            if (e.Item is ConnectionPoint && !IsAggregationList(sender)) //breaks if other collections are added
-            {
-                ConnectionPointsCollectionChanged(e);
-            }
-        }
-
         [EditAction]
         private void ConnectionPointsCollectionChanged(NotifyCollectionChangingEventArgs e)
         {
@@ -226,22 +215,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private bool cloning;
 
-        private void ControlGroupsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (cloning)
-            {
-                return;
-            }
-            BubbleCollectionChangingEvent(sender, e);
-        }
-
         void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (cloning)
             {
                 return;
             }
-            BubbleCollectionChangedEvent(sender, e);
+
+            if (e.Item is ConnectionPoint && !IsAggregationList(sender)) //breaks if other collections are added
+            {
+                ConnectionPointsCollectionChanged(e);
+            }
+
             AfterControlGroupsCollectionChanged(sender, e);
         }
 
@@ -305,15 +290,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if ((role & DataItemRole.Input) == DataItemRole.Input)
             {
-                var count =
-                    controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
-                name = ((IControlGroup) controlGroupDataItem.Value).Name + ".input" + count;
+                var count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+                name = ((IControlGroup) controlGroupDataItem.Value).Name + InputPostFix + count;
             }
             if ((role & DataItemRole.Output) == DataItemRole.Output)
             {
-                var count =
-                    controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
-                name = ((IControlGroup)controlGroupDataItem.Value).Name + ".output" + count;
+                var count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+                name = ((IControlGroup)controlGroupDataItem.Value).Name + OutputPostFix + count;
             }            
             
             var dataItem = new DataItem
@@ -496,7 +479,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (string.IsNullOrEmpty(outputPath)) return;
 
-            var outputFilePath = Path.Combine(outputPath, OutputFileName);
+            var dirInfo = new DirectoryInfo(outputPath);
+            if (dirInfo.Parent == null) return;
+
+            var outputFilePath = Path.Combine(dirInfo.Parent.FullName, OutputFileName);
             ReconnectOutputFiles(outputFilePath);
         }
 
@@ -526,7 +512,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         [EditAction]
-        public virtual bool IsRunByDimr { get; set; }
+        public virtual bool RunsInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -575,7 +561,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         
         private IEventedList<ControlGroup> controlGroups;
 
-        [Aggregation]
         public virtual IEventedList<ControlGroup> ControlGroups
         {
             get
@@ -586,18 +571,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 if (controlGroups != null)
                 {
-                    controlGroups.CollectionChanging -= ControlGroupsCollectionChanging;
                     controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
                     ((INotifyPropertyChange)controlGroups).PropertyChanged -= SetOutputOutOfSync;
+                    ((INotifyPropertyChanging)controlGroups).PropertyChanging -= ControlGroupsPropertyChanging;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged -= ControlGroupsPropertyChanged;
                 }
 
                 controlGroups = value;
 
                 if (controlGroups != null)
                 {
-                    controlGroups.CollectionChanging += ControlGroupsCollectionChanging;
                     controlGroups.CollectionChanged += ControlGroupsCollectionChanged;
                     ((INotifyPropertyChange)controlGroups).PropertyChanged += SetOutputOutOfSync;
+                    ((INotifyPropertyChanging)controlGroups).PropertyChanging += ControlGroupsPropertyChanging;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged += ControlGroupsPropertyChanged;
                 }
             }
         }
@@ -612,6 +599,43 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     outputFileFunctionStore.CoordinateSystem = coordinateSystem;
             }
         }
+
+        #region HandleControlGroupRenaming
+
+        private string previousControlGroupName;
+
+        private void ControlGroupsPropertyChanging(object sender, PropertyChangingEventArgs e)
+        {
+            if (e.PropertyName != "Name") return;
+            var controlGroup = sender as ControlGroup;
+            if (controlGroup == null) return;
+
+            previousControlGroupName = controlGroup.Name;
+        }
+
+        private void ControlGroupsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != "Name") return;
+            var controlGroup = sender as ControlGroup;
+            if (controlGroup == null) return;
+
+            // DELFT3DFM-1441: ControlGroups must have unique names!
+            if (ControlGroups.Where(cg => !ReferenceEquals(cg, controlGroup)).Any(cg => cg.Name == controlGroup.Name))
+            {
+                Log.WarnFormat(Resources.RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__,
+                    Environment.NewLine, controlGroup.Name, previousControlGroupName);
+
+                if(controlGroup.Name != previousControlGroupName)
+                    controlGroup.Name = previousControlGroupName;
+
+                return;
+            }
+
+            // DELFT3DFM-1441: ControlGroup ChildDataItems with should have the ControlGroup DataItem Name as a prefix
+            this.SyncControlGroupChildDataItemNames(controlGroup);
+        }
+
+        #endregion
 
         private void SetOutputOutOfSync(object sender, PropertyChangedEventArgs e)
         {
@@ -668,7 +692,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 MarkOutputOutOfSync();
             }
 
-            if (IsRunByDimr) return;
+            if (RunsInIntegratedModel) return;
         }
 
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1153,10 +1177,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
             var srcModel = sourceModel as RealTimeControlModel;
             if (srcModel == null) return false;
-            
+
+            var existingControlGroupNames = ControlGroups.Select(cg => cg.Name).ToList();
             foreach (var controlGroup in srcModel.ControlGroups)
             {
-                ControlGroups.Add((ControlGroup)controlGroup.Clone());
+                var clonedControlGroup = (ControlGroup) controlGroup.Clone();
+                if (existingControlGroupNames.Contains(clonedControlGroup.Name))
+                {
+                    var uniqueName = NamingHelper.GenerateUniqueNameFromList(controlGroup.Name + "{0}", true, existingControlGroupNames);
+                    Log.InfoFormat(Resources.RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model__1___ControlGroup__0__will_be_renamed_to__2_,
+                        clonedControlGroup.Name, this.Name, uniqueName);
+
+                    clonedControlGroup.Name = uniqueName;
+                }
+                ControlGroups.Add(clonedControlGroup);
+                existingControlGroupNames.Add(clonedControlGroup.Name);
             }
 
             if (mergedDependendModelsLookup == null) return true;
@@ -1285,7 +1320,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
         protected override void OnInitialize()
         {
-            if (IsRunByDimr)
+            if (RunsInIntegratedModel)
             {
                 ModelStateHandler.ModelWorkingDirectory = ExplicitWorkingDirectory;
                 return;
@@ -1300,7 +1335,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// </summary>
         protected override void OnExecute()
         {
-            if (IsRunByDimr) return;
+            if (RunsInIntegratedModel) return;
 
             OutputOutOfSync = false;
             runner.OnExecute();

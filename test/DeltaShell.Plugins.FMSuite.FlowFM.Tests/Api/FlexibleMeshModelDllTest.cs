@@ -6,6 +6,7 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -305,6 +306,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
                 var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+
                 var snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
@@ -325,6 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.IsTrue(model.SnapsToGrid(snappedWeir));
                 Assert.IsTrue(model.SnapsToGrid(snappedGate));
                 Assert.IsTrue(model.SnapsToGrid(snappedPump));
+                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
                 Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
                 Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
                 Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
@@ -520,6 +525,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        public void TestGetSnappedEmbankmentFeature()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localCopy);
+
+            using (var api = new RemoteFlexibleMeshModelApi())
+            {
+                api.Initialize(model.MduFilePath);
+
+                var gridExtent = model.GridExtent;
+
+                var center = gridExtent.Centre;
+                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+
+                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
+            }
+        }
+
+        [Test]
         public void TestGetSnappedObservationPointFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -599,6 +626,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
                  Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+            }
+        }
+
+        [Test]
+        public void TestGetSnappedSourceSinkFeature()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localCopy);
+
+            using (var api = new RemoteFlexibleMeshModelApi())
+            {
+                api.Initialize(model.MduFilePath);
+
+                model.SourcesAndSinks.Add(new SourceAndSink
+                {
+                    Feature = new Feature2D
+                    {
+                        Geometry = model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry //Geometry from above test
+                    }
+                });
+
+                var snappedSourcesAndSinksBnd =
+                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
+                        model.SourcesAndSinks.First().Feature.Geometry);
+
+                Assert.IsTrue(model.SnapsToGrid(snappedSourcesAndSinksBnd));
             }
         }
 

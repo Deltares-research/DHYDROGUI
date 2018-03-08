@@ -274,6 +274,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to update ControlGroup name, all ControlGroup names must be unique!{0}&apos;{1}&apos; has been reverted back to &apos;{2}&apos;.
+        /// </summary>
+        public static string RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_name__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___2__ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModel_ControlGroupsPropertyChanged_Unable_to_update_ControlGroup_n" +
+                        "ame__all_ControlGroup_names_must_be_unique__0___1___has_been_reverted_back_to___" +
+                        "2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There already exists a ControlGroup named {0} in Model {1}, ControlGroup {0} will be renamed to {2}.
+        /// </summary>
+        public static string RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model__1___ControlGroup__0__will_be_renamed_to__2_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModel_Merge_There_already_exists_a_ControlGroup_named__0__in_Model" +
+                        "__1___ControlGroup__0__will_be_renamed_to__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ControlGroup names for Model {0} were not unique.{1}Control Groups have been renamed such that they are now unique..
+        /// </summary>
+        public static string RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_ {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for" +
+                        "_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_ar" +
+                        "e_now_unique_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run parameters.
         /// </summary>
         public static string RealTimeControlModelProperties_Category_RunParameters {

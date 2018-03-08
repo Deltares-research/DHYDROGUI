@@ -71,6 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool updatingGroupName;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
+        private double previousProgress = 0;
+        private string progressText;
 
         public WaterFlowFMModel() : this(null)
         {
@@ -2139,6 +2141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
             if (existsMapFile)
             {
+                ReportProgressText("Reading map file");
                 var cs = UnstructuredGridFileHelper.GetCoordinateSystem(mapFilePath);
 
                 // update map file coordinate system:
@@ -2159,6 +2162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (existsHisFile)
             {
+                ReportProgressText("Reading his file");
                 FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
                 if (switchTo && OutputHisFileStore != null)
                 {
@@ -2178,7 +2182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 WaqHydFilePath = waqFolderPath;
             }
-
+            
             OutputIsEmpty = false;
 
             EndEdit();
@@ -2627,6 +2631,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void ReadDiaFile(string outputDirectory)
         {
+            ReportProgressText("Reading dia file");
             var diaFileName = string.Format("{0}.dia", Name);
 
             var diaFilePath = Path.Combine(outputDirectory, diaFileName);
@@ -2668,7 +2673,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         [EditAction]
-        public virtual bool IsRunByDimr { get; set; }
+        public virtual bool RunsInIntegratedModel { get; set; }
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -2747,12 +2752,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         protected override void OnInitialize()
         {
+            previousProgress = 0;
             DataItems.RemoveAllWhere(di => di.Tag == DiaFileDataItemTag);
 
             var mduPath = Path.Combine(WorkingDirectory, Path.GetFileName(MduFilePath));
+
+            ReportProgressText("Exporting to mdu file");
             ExportTo(mduPath, false);
             InitializeRunTimeGridOperationApi();
+
+            ReportProgressText("Initializing");
             runner.OnInitialize();
+
+            ReportProgressText();
         }
         
         protected override void OnCleanup()
@@ -2765,9 +2777,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             snapApiInErrorMode = false;
             base.OnCleanup();
             runner.OnCleanup();
+
+            ReportProgressText();
         }
 
-        private double previousProgress = 0;
+
+        protected override void OnExecute()
+        {
+            runner.OnExecute();
+        }
+
+        protected override void OnFinish()
+        {
+            runner.OnFinish();
+        }
+        #endregion
+
         protected override void OnProgressChanged()
         {
             // Only update gui for every 1 percent progress (performance)
@@ -2778,15 +2803,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             base.OnProgressChanged();
         }
 
-        protected override void OnExecute()
+        public override string ProgressText
         {
-            runner.OnExecute();
+            get { return string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText; }
         }
-        protected override void OnFinish()
+
+        private void ReportProgressText(string text = null)
         {
-            runner.OnFinish();
+            progressText = text;
+            base.OnProgressChanged();
         }
-        #endregion
 
         public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
         {

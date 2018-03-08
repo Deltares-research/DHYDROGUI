@@ -446,6 +446,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
             WaterFlowModel1DTestHelper.AddDefaultCrossSection(branch1, "crs1", 40.0);
             WaterFlowModel1DTestHelper.AddDefaultCrossSection(branch1, "crs2", 60.0);
 
+            WaterFlowModel1DTestHelper.RefreshCrossSectionDefinitionSectionWidths(network);
+
             var compositeStructure = new CompositeBranchStructure { Chainage = 50 };
             NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch1, compositeStructure.Chainage);
             HydroNetworkHelper.AddStructureToComposite(compositeStructure, weir);

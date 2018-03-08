@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-
 using DelftTools.Utils;
 using GeoAPI.Geometries;
-
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 {
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
                 throw new InvalidOperationException("Cannot determine cell index as no grid was set.");
             }
 
-            return Grid.GetCellIndexForCoordinate(new Coordinate(x, y)) + 1; // + 1, waq is one based.
+            return Grid.GetCellIndexForCoordinate(new Coordinate(x, y)) + 1 ?? 0; // + 1, waq is one based.
         }
 
         private string GetModelType()

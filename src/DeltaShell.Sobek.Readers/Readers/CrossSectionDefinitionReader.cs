@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils;
@@ -188,7 +189,6 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         private static bool ParseYZTable(SobekCrossSectionDefinition sobekCrossSectionDefinition, string tableSource)
         {
-            const double yDelta = 0.00000001;
             const string tablepattern = @"lt\s+yz(?<Structure>" + RegularExpression.CharactersAndQuote + @"?)tble";
 
             var tableMatch = RegularExpression.GetFirstMatch(tablepattern, tableSource);
@@ -205,25 +205,50 @@ namespace DeltaShell.Sobek.Readers.Readers
                                                                 {"y", typeof (double)}
                                                             });
 
-            var uniqueY = new HashSet<double>();
-            
-            for (int i = 0; i < yzTable.Rows.Count; i++)
+            var valuesY = new List<double>();
+            foreach (DataRow row in yzTable.Rows)
             {
-                //check if the given y is already in the profile
-
-                var row = yzTable.Rows[i];
                 var y = (double) row[0];
+                valuesY.Add(y);
+            }
 
-                while (uniqueY.Contains(y))
-                {
-                    y = y + yDelta;
-                }
-
-                sobekCrossSectionDefinition.YZ.Add(new Coordinate(y, (double) row[1]));
-                uniqueY.Add(y);
+            var uniqueY = MakeValuesUniqueInwards(valuesY);
+            for (var i = 0; i < yzTable.Rows.Count; i++)
+            {
+                var row = yzTable.Rows[i];
+                sobekCrossSectionDefinition.YZ.Add(new Coordinate(uniqueY[i], (double)row[1]));
             }
 
             return true;
+        }
+
+        private static List<double> MakeValuesUniqueInwards(IList<double> uniqueY)
+        {
+            const double yDelta = 1e-8;
+            var valueCount = uniqueY.Count;
+            var index = (int)Math.Ceiling(0.5 * valueCount);
+
+            var correctedDelta = yDelta;
+            var deltaCorrection = new double[valueCount];
+            var previous = uniqueY[0];
+
+            deltaCorrection[0] = correctedDelta;
+            for (var i = 1; i < valueCount; i++)
+            {
+                var areEqual = Math.Abs(uniqueY[i] - previous) < 1e-10;
+                previous = uniqueY[i];
+
+                if (i == index)
+                {
+                    correctedDelta = -yDelta;
+                    deltaCorrection[i - 1] = correctedDelta; //Reset the correction if we are in the middle.
+                }
+                if (areEqual) uniqueY[i] += deltaCorrection[i - 1];
+
+                deltaCorrection[i] = areEqual ? deltaCorrection[i - 1] + correctedDelta : correctedDelta;
+            }
+
+            return uniqueY.OrderBy(d => d).ToList();
         }
 
         /// <summary>

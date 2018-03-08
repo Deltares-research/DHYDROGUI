@@ -173,7 +173,7 @@ namespace Sobek.IntegrationTests
 
             hydroModel.Execute();
 
-            Assert.AreEqual(rtc.IsRunByDimr ? 9.365 : 7.90, rtc.ControlGroups[0].Inputs[0].Value, 0.01);
+            Assert.AreEqual(rtc.RunsInIntegratedModel ? 9.365 : 7.90, rtc.ControlGroups[0].Inputs[0].Value, 0.01);
 
             Assert.AreEqual(ActivityStatus.Executed, rtc.Status);
             Assert.AreEqual(ActivityStatus.Executed, flow.Status);

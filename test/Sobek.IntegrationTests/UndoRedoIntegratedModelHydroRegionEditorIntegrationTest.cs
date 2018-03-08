@@ -95,6 +95,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Category(TestCategory.WorkInProgress)]
         public void UndoDeletionOfControlledWeirShouldNotThrow()
         {
             // See the text in TOOLS-10074 for full details on the steps to take for the exception to occur.

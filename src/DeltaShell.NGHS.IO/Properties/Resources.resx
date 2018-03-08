@@ -273,4 +273,7 @@
   <data name="UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_discretisation_point_ids" xml:space="preserve">
     <value>Couldn't write the network discretisation point ids</value>
   </data>
+  <data name="SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__" xml:space="preserve">
+    <value>No snapped geometry was generated for type {0}.</value>
+  </data>
 </root>

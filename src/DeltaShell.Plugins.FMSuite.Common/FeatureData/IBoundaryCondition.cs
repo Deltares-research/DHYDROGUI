@@ -2,7 +2,6 @@
 using DelftTools.Functions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
-using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData

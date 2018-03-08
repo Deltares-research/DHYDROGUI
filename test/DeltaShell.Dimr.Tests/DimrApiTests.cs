@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -12,11 +13,23 @@ namespace DeltaShell.Dimr.Tests
     [TestFixture()]
     public class DimrApiTests
     {
-        private readonly string dimrConfig = Path.Combine(tmpDir, "dimr.xml");
+        private string dimrConfig;
         private static readonly string tmpDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
         static DimrApiTests()
         {
             Directory.CreateDirectory(tmpDir);
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            dimrConfig = Path.Combine(tmpDir, "dimr.xml");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            FileUtils.DeleteIfExists(dimrConfig);
         }
 
         [Test()]
@@ -116,7 +129,7 @@ namespace DeltaShell.Dimr.Tests
             }
         }
 
-        [Test()]
+        [Test]
         public void TestMessages()
         {
             using (var dimrApi = new DimrApi())

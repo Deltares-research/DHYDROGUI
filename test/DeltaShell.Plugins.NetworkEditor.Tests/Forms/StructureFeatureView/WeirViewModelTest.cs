@@ -1,7 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -40,6 +46,201 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             };
             Assert.IsTrue(viewModel.HasWeir);
         }
+
+        #region TimeSeriesEditor
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsTimeDependent_ViewShouldNotSetItToConstant()
+        {
+            var weir = new Weir(true){ UseCrestLevelTimeSeries = true};
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            var viewModel = new WeirViewModel
+            {
+                Weir = weir,
+            };
+            
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsSetToConstant_IsCrestLevelConstantTime_ShouldBeTrue()
+        {
+            var weir = new Weir(true) { UseCrestLevelTimeSeries = true };
+            var viewModel = new WeirViewModel
+            {
+                Weir = weir,
+            };
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
+
+            weir.UseCrestLevelTimeSeries = false;
+            Assert.IsFalse(weir.UseCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.IsCrestLevelConstantTime);
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsChangedToTimeDependent_ViewGetsRefreshedCorrectly()
+        {
+            var weir = new Weir(true);
+            var viewModel = new WeirViewModel
+            {
+                Weir = weir
+            };
+
+            var count = 0;
+            ((INotifyPropertyChanged)viewModel).PropertyChanged += (s, e) => count++;
+
+            Assert.IsFalse(weir.UseCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.IsCrestLevelConstantTime);
+
+            //Make it time dependent
+            weir.UseCrestLevelTimeSeries = true;
+
+            //Because the bubbling event tiggered the property change in the view model.
+            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
+            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
+            Assert.IsTrue(count.Equals(2));
+
+            Assert.IsTrue(weir.UseCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.IsCrestLevelConstantTime);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsNotTimeDependent_EnableTimeDependent_LogMessageIsGiven()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir("testName")
+            };
+            Assert.IsFalse(viewModel.Weir.CanBeTimedependent);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => viewModel.EnableCrestLevelTimeSeries = true,
+                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name));
+
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsTimeDependent_EnableTimeDependent_LogMessageIsNotGiven()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir("testName", true)
+            };
+            Assert.IsTrue(viewModel.Weir.CanBeTimedependent);
+            Assert.Throws<AssertionException>(() => TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => viewModel.EnableCrestLevelTimeSeries = true,
+                    string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_,
+                        viewModel.Weir.Name)),
+                "Expected no log messages, but at least one was found.");
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsNotTimeDependent_OnEditTimeSeries_LogMessageIsGiven()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir("testName")
+            };
+            Assert.IsFalse(viewModel.Weir.CanBeTimedependent);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => viewModel.OnEditCrestLevelTimeSeries.Execute(null),
+                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name));
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenWeirIsTimeDependent_OnEditTimeSeries_LogMessageIsNotGiven()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir("testName", true)
+            };
+            Assert.IsTrue(viewModel.Weir.CanBeTimedependent);
+            Assert.Throws<AssertionException>(() => TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => viewModel.OnEditCrestLevelTimeSeries.Execute(null),
+                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_,
+                    viewModel.Weir.Name)),
+                    "Expected no log messages, but at least one was found.");
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenGeneralStructure_Set_UseCrestLevelTimeSeries_True_LogsErrorMessage()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true)
+            };
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => viewModel.EnableCrestLevelTimeSeries = true,
+                string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name));
+
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.Weir.UseCrestLevelTimeSeries);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenSimpleWeir_Set_UseCrestLevelTimeSeries_True_LogsErrorMessageIsNotGiven()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true)
+            };
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.Throws<AssertionException>(
+                () => TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => viewModel.EnableCrestLevelTimeSeries = true,
+                    string.Format(Resources.WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_, viewModel.Weir.Name)),
+                "Expected no log messages, but at least one was found.");
+
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.Weir.UseCrestLevelTimeSeries);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenEditingTimeSeries_ModelGetsUpdated()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir("testWeir", true),
+                GetTimeSeriesEditor = GenerateBasicTimeSeriesForIWeir
+            };
+
+            Assert.IsFalse(viewModel.Weir.CrestLevelTimeSeries.Time.Values.Any());
+            viewModel.OnEditCrestLevelTimeSeries.Execute(null);
+
+            //Check now there are values.
+            Assert.IsTrue(viewModel.Weir.CrestLevelTimeSeries.Time.Values.Any());
+
+            //Values From the method GenerateBasicTimeSeriesForIWeir
+            var timeSeriesValues = GenerateBasicTimeSeriesForIWeir(new Weir());
+            Assert.AreEqual(timeSeriesValues.Time.Values, viewModel.Weir.CrestLevelTimeSeries.Time.Values);
+            Assert.AreEqual(timeSeriesValues.Components[0].Values, viewModel.Weir.CrestLevelTimeSeries.Components[0].Values);
+        }
+
+        private TimeSeries GenerateBasicTimeSeriesForIWeir(IWeir weir)
+        {
+            //We have IWeir in the header just for the signature in WeirViewModel.GetTimeSeriesEditor
+            var timeSeries = new TimeSeries();
+            timeSeries.Components.Add(new Variable<double>("value"));
+
+            var dates = new[] { new DateTime(2000, 1, 1), new DateTime(2001, 1, 1), new DateTime(2003, 1, 1) };
+            timeSeries.Time.SetValues(dates);
+
+            var values = new[] { 0.0, 10.0, 20.0 };
+            timeSeries.Components[0].SetValues(values);
+
+            return timeSeries;
+        }
+
+        #endregion
 
         #region GateOpeningHeight
 
@@ -166,6 +367,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.IsTrue(viewModel.GateGroupboxEnabled);
             Assert.That(viewModel.CrestLevelVisibility, Is.EqualTo(System.Windows.Visibility.Collapsed));
             Assert.AreEqual(1, count);
+        }
+
+        [Test]
+        public void GivenWeirViewModel_WhenSettingSelectedWeirTypeToGeneralStructure_ThenEnableTimeDependentIsFalse()
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true),
+                EnableCrestLevelTimeSeries = true
+            };
+
+            Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+            Assert.IsFalse(viewModel.Weir.UseCrestLevelTimeSeries);
+            Assert.IsTrue(viewModel.GateGroupboxEnabled);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GivenWeirViewModel_WhenSettingSelectedWeirType_FromGeneralStructure_ToSimpleWeir_ThenEnableTimeDependent_GetsItsPreviousValue(bool previousValue)
+        {
+            var viewModel = new WeirViewModel
+            {
+                Weir = new Weir(true),
+                EnableCrestLevelTimeSeries = previousValue,
+            };
+
+            Assert.AreEqual(previousValue, viewModel.EnableCrestLevelTimeSeries);
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
+            Assert.IsFalse(viewModel.EnableCrestLevelTimeSeries);
+
+            viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
+            Assert.AreEqual(viewModel.EnableCrestLevelTimeSeries, previousValue);
+            Assert.AreEqual(viewModel.Weir.UseCrestLevelTimeSeries, previousValue);
         }
 
         #endregion

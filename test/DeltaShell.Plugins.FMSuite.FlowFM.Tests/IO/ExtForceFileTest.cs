@@ -107,13 +107,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadWrongSpatialVaryingPropertiesShouldGiveAnError()
+        public void ReadXyzFile_WithUnknownSpatiallyVaryingProperties_ShouldGiveAWarningMessage()
         {
-            //LogHelper.ConfigureLogging(|Level);
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+
             var extForceFile = new ExtForceFile();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def), "The model may not run. Spatial varying quantity ");
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => extForceFile.Read(extPath, def),
+                String.Format(
+                    Resources
+                        .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
+                    "initialspatialvaryingsedimentSediment_sand_SedConc", 
+                    ExtForceFile.InitialTracerPrefix,ExtForceFile.InitialSpatialVaryingSedimentPrefix));
+
+            FileUtils.DeleteIfExists(extPath);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
+        {
+            var def = new WaterFlowFMModelDefinition();
+            var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correctKnownQuantity.ext");
+            extPath = TestHelper.CreateLocalCopy(extPath);
+            Assert.IsTrue(File.Exists(extPath));
+
+            var extForceFile = new ExtForceFile();
+            Assert.Throws<AssertionException>(
+                () => TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => extForceFile.Read(extPath, def),
+                    String.Format(
+                        Resources
+                            .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
+                        ExtForceQuantNames.InitialWaterLevel, 
+                        ExtForceFile.InitialTracerPrefix,ExtForceFile.InitialSpatialVaryingSedimentPrefix)),
+                "The warn message was logged, but we were not expecting it to appear");
+            
+
+            FileUtils.DeleteIfExists(extPath);
         }
 
         [Test]
