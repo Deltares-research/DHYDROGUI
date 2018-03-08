@@ -28,6 +28,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsFalse(importer.CanImportOnRootLevel);
         }
 
+        [TestCase(null)]
+        [TestCase("NotListObject")]
+        public void GivenGroupableCloudImporter_WhenImportingWithTargetThatIsNotAListOrNullObject_ThenNullIsReturned(string target)
+        {
+            var xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryGroup1_dry.xyz");
+            xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
+            try
+            {
+                var importer = new GroupablePointCloudImporter();
+                var importedFeatures = importer.ImportItem(xyzFilePath, target);
+                Assert.IsNull(importedFeatures);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(xyzFilePath);
+            }
+        }
+
         [Test]
         public void ImportDryPointFeatureAssignsGroupName()
         {
