@@ -247,6 +247,7 @@
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
     <Compile Include="Import\CrossSectionXYZFromCsvFileImporterTest.cs" />
     <Compile Include="Import\CrossSectionYZFromCsvFileImporterTest.cs" />
+    <Compile Include="Import\MappingColumnTest.cs" />
     <Compile Include="Import\NetworkCoverageFromGisImporterTest.cs" />
     <Compile Include="Import\PointValuePairsFromGisImporterTest.cs" />
     <Compile Include="Import\Wizard\ImportNetworkCoverageFromGisWizardDialogTest.cs" />
