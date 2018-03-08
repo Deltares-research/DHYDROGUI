@@ -15,7 +15,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -115,6 +115,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
 
+        /// <summary>
+        /// Loads the feature files from a directory.
+        /// </summary>
+        /// <param name="directoryPath">The directory path.</param>
         public void LoadFeatureFiles(string directoryPath)
         {
             Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_, GwswAttributesDefinition.Count);
@@ -157,29 +161,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, path);
                 return elementList;
             }
-            
+
+            if (!IsColumnMappingCorrect(path, importedDataTable))
+            {
+                return elementList;
+            }
+
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
                 var element = new GwswElement { ElementTypeName = elementTypeName };
-                var rowValues = dataRow.ItemArray.ToList();
-                var columnIndex = 0;
-                foreach (var column in rowValues)
+                for (var i = 0; i < dataRow.ItemArray.Length; i++)
                 {
+                    var cell = dataRow.ItemArray[i];
+                    var columnName = importedDataTable.Columns[i].ColumnName;
                     var attribute = new GwswAttribute
                     {
                         LineNumber = importedDataTable.Rows.IndexOf(dataRow),
-                        ValueAsString = column.ToString()
+                        ValueAsString = cell.ToString()
                     };
-                    var columnName = importedDataTable.Columns[columnIndex].ColumnName;
-                    columnIndex++;
                     if (GwswAttributesDefinition != null)
                     {
                         var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.ElementName.Equals(elementTypeName) && attr.Key.Equals(columnName));
-                        //Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, importedDataTable.Rows.IndexOf(dataRow), columnName, path);
-                        //continue;
                         attribute.GwswAttributeType = foundAttributeType;
                     }
-
                     element.GwswAttributeList.Add(attribute);
                 }
 
@@ -187,6 +191,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
 
             return elementList;
+        }
+
+        private bool IsColumnMappingCorrect(string path, DataTable importedDataTable)
+        {
+            var result = true;
+            var headerLineFile = "";
+            using (StreamReader reader = new StreamReader(path))
+            {
+                headerLineFile = reader.ReadLine() ?? "";
+            }
+            var headersFile = headerLineFile.Split(CsvDelimeter);
+            var fileAttributes = GwswAttributesDefinition.Where(at => at.FileName.Equals(Path.GetFileName(Path.GetFileName(path)))).ToList();
+            for (var columnIndex = 0; columnIndex < importedDataTable.Columns.Count; columnIndex++)
+            {
+                var columnName = importedDataTable.Columns[columnIndex].ColumnName;
+                var fileAttribute = fileAttributes.First(a => a.Key.Equals(columnName));
+                var expectedHeader = fileAttribute.LocalKey;
+                var headerName = headersFile[columnIndex];
+                if (!expectedHeader.ToLower().Equals(headerName.ToLower().Trim()))
+                {
+                    Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__,
+                        headerName, expectedHeader, path);
+                    result = false;
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -217,8 +247,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedCsv;
         }
 
+        /// <summary>
+        /// Gets or sets the CSV delimeter to split a line in a csv file.
+        /// </summary>
+        /// <value>
+        /// The CSV delimeter.
+        /// </value>
         public char CsvDelimeter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the files to import.
+        /// </summary>
+        /// <value>
+        /// The files to import.
+        /// </value>
         public IList<string> FilesToImport{ get; set; }
 
     private CsvSettings CsvSettingsSemiColonDelimeted
@@ -331,6 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get
             {
                 yield return typeof(IWaterFlowFMModel);
+                yield return typeof(INetwork);
             }
         }
 
@@ -543,131 +586,4 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
         }
     }
-
-    #region Gwsw Types
-
-
-    // TODO Sil move these classes to seperate files
-    public static class GwswElementExtensions
-    {
-        private static ILog Log = LogManager.GetLogger(typeof(GwswElementExtensions));
-        private const string UniqueId = "UNIQUE_ID";
-
-        public static bool IsNumerical(this GwswAttribute gwswAttribute)
-        {
-            if (gwswAttribute.GwswAttributeType != null && gwswAttribute.GwswAttributeType.AttributeType != null)
-                return gwswAttribute.GwswAttributeType.AttributeType.IsNumericalType();
-
-            return false;
-        }
-
-        public static bool IsTypeOf(this GwswAttribute gwswAttribute, Type compareType)
-        {
-            if (gwswAttribute.GwswAttributeType != null && gwswAttribute.GwswAttributeType.AttributeType != null)
-                return gwswAttribute.GwswAttributeType.AttributeType == compareType;
-
-            return false;
-        }
-
-        public static bool IsValidAttribute(this GwswAttribute gwswAttribute)
-        {
-            if (gwswAttribute == null) return false;
-            
-            if (gwswAttribute.ValueAsString != null &&
-                gwswAttribute.GwswAttributeType != null &&
-                gwswAttribute.GwswAttributeType.AttributeType != null)
-            {
-                return true;
-            }
-
-            gwswAttribute.LogInvalidAttribute();
-            return false;
-        }
-
-        public static int GetElementLine(this GwswElement gwswElement)
-        {
-            var line = 0;
-            /* It should always have attributes, but just in case (mostly testing) we include this check. */
-            if( gwswElement.GwswAttributeList.Any())
-                return gwswElement.GwswAttributeList.Select(attr => attr?.LineNumber).First() ?? line;
-
-            return line;
-        }
-        
-        public static GwswAttribute GetAttributeFromList(this GwswElement element, string attributeName)
-        {
-            var attribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(attributeName));
-            if (attribute != null)
-                return attribute;
-
-            var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(UniqueId));
-            Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
-            return null;
-        }
-
-        public static string GetValidStringValue(this GwswAttribute gwswAttribute)
-        {
-            if (gwswAttribute.IsValidAttribute() && gwswAttribute.IsTypeOf(typeof(string)))
-            {
-                return gwswAttribute.ValueAsString;
-            }
-
-            return null;
-        }
-
-        public static bool TryGetValueAsDouble(this GwswAttribute gwswAttribute, out double value)
-        {
-            value = default(double);
-            if (!gwswAttribute.IsValidAttribute() || gwswAttribute.ValueAsString == string.Empty) return false;
-            if( !gwswAttribute.IsNumerical())
-            {
-                gwswAttribute.LogErrorParseType(typeof(double));
-                return false;
-            }
-
-            try
-            {
-                value = Convert.ToDouble(gwswAttribute.ValueAsString, CultureInfo.InvariantCulture);
-                return true;
-            }
-            catch (Exception)
-            {
-                gwswAttribute.LogErrorParseType(typeof(double));
-            }
-            return false;
-        }
-
-        public static T GetValueFromDescription<T>(this GwswAttribute gwswAttribute)
-        {
-            var description = gwswAttribute.GetValidStringValue();
-            try
-            {
-                return (T)EnumDescriptionAttributeTypeConverter.GetEnumValue<T>(description);
-            }
-            catch (Exception)
-            {
-                Log.WarnFormat(Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, description);
-            }
-
-            return default(T);
-        }
-
-        private static void LogInvalidAttribute(this GwswAttribute gwswAttribute)
-        {
-            if (gwswAttribute.GwswAttributeType == null) return;
-
-            var attributeType = gwswAttribute.GwswAttributeType;
-            Log.ErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
-                , attributeType.FileName, gwswAttribute.LineNumber, attributeType.LocalKey, attributeType.Key, gwswAttribute.ValueAsString);
-        }
-
-        private static void LogErrorParseType(this GwswAttribute gwswAttribute, Type toType)
-        {
-            var attr = gwswAttribute.GwswAttributeType;
-            Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__
-                , attr.FileName, gwswAttribute.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
-        }
-    }
-
-    #endregion
 }

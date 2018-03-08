@@ -141,6 +141,7 @@
     <Compile Include="IO\Importers\GwswAttribute.cs" />
     <Compile Include="IO\Importers\GwswAttributeType.cs" />
     <Compile Include="IO\Importers\GwswElement.cs" />
+    <Compile Include="IO\Importers\GwswElementExtensions.cs" />
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerManholeGenerator.cs" />
     <Compile Include="SewerProfileMapping.cs" />

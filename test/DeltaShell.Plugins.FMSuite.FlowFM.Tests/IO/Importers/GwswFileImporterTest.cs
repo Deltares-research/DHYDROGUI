@@ -10,10 +10,12 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
+using log4net;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -389,6 +391,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var gwswImporter = new GwswFileImporter();
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            var mappingItem = gwswImporter.GwswAttributesDefinition.First(item => item.FileName == "Verbinding.csv");
+            gwswImporter.GwswAttributesDefinition.Remove(mappingItem);
             var message = string.Format(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, filePath);
             gwswImporter.CsvDelimeter = ';';
             TestHelper.AssertAtLeastOneLogMessagesContains(() => gwswImporter.ImportGwswElementList(filePath), message);
@@ -415,14 +419,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             gwswImporter.CsvDelimeter = ';';
 
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\WithUnknownAttribute\Verbinding.csv");
-            var message = string.Format(Resources.GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_, 0, 0, filePath);
+            var message = string.Format(Resources.GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__, "UNKNOWN_ATTR", "UNI_IDE", filePath);
 
             var importedList = new List<GwswElement>();
-            //Known bug.
-            // We map the files based on the GwswDefinitionFile, but we do not check whether the header / column of the csv has its attribute
-            // in it (at least not correctly).
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
-            Assert.IsTrue(importedList.Any());
+            Assert.IsFalse(importedList.Any()); //import is cancelled
         }
 
         [Test]
@@ -651,6 +652,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 TestHelper.AssertIsFasterThan(maximumImportingTimeInMs, () =>
                 {
                     gwswImporter.CsvDelimeter = ';';
+                    gwswImporter.LoadFeatureFiles(Path.GetDirectoryName(filePath));
                     gwswImporter.ImportItem(null, model);
                 });
                 

@@ -399,6 +399,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Column {0} of file {2} was not mapped correctly. Expected column is column {1}..
+        /// </summary>
+        public static string GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__ {
+            get {
+                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not" +
+                        "_mapped_correctly__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not import file {0}. Reason: {1}.
         /// </summary>
         public static string GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_ {
@@ -441,16 +451,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any" +
                         "_element_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Row {0} column {1} of file {2} was not mapped correctly..
-        /// </summary>
-        public static string GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_ {
-            get {
-                return ResourceManager.GetString("GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_cor" +
-                        "rectly_", resourceCulture);
             }
         }
         
@@ -639,16 +639,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
-        /// </summary>
-        public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {
-            get {
-                return ResourceManager.GetString("SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_" +
-                        "values_detected_for_one_or_more_physical_processes", resourceCulture);
-            }
-        }
-        
-        /// <summary>        ///   Looks up a localized string similar to {0} in line {1} does not have a name and has been created as {2}.
+        ///   Looks up a localized string similar to {0} in line {1} does not have a name and has been created as {2}.
         /// </summary>
         public static string SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_has_been_created_as__2_ {
             get {
@@ -764,6 +755,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("SewerWeirGenerator_CreateWeirFromGwswStructure_Weir_s__cannot_be_created_without_" +
                         "a_network_defined_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
+        /// </summary>
+        public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {
+            get {
+                return ResourceManager.GetString("SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_" +
+                        "values_detected_for_one_or_more_physical_processes", resourceCulture);
             }
         }
         
@@ -994,6 +995,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid is empty.
+        /// </summary>
+        public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
+            get {
+                return ResourceManager.GetString("WaterFlowFMGridValidator_Validate_Grid_is_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {
@@ -1011,15 +1021,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             }
         }
         
-        /// <summary>        ///   Looks up a localized string similar to Grid is empty.
-        /// </summary>
-        public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
-            get {
-                return ResourceManager.GetString("WaterFlowFMGridValidator_Validate_Grid_is_empty", resourceCulture);
-            }
-        }
-        
-        /// <summary>        ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// <summary>
         ///   Looks up a localized string similar to FM Model {0} is part of a 1D2D model and can&apos;t have morphology properties and / or sediments. Removing these properties from the model.
         /// </summary>

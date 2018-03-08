@@ -396,8 +396,8 @@ File import of structures file '{1}' has failed.</value>
   <data name="GwswFileImporterBase_ImportItem_File__0__imported__1__features_" xml:space="preserve">
     <value>File {0}, imported {1} features.</value>
   </data>
-  <data name="GwswFileImporterBase_ImportItem_Row__0__column__1__of_file__2__was_not_mapped_correctly_" xml:space="preserve">
-    <value>Row {0} column {1} of file {2} was not mapped correctly.</value>
+  <data name="GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__" xml:space="preserve">
+    <value>Column {0} of file {2} was not mapped correctly. Expected column is column {1}.</value>
   </data>
   <data name="GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__" xml:space="preserve">
     <value>There is a mismatch for File Name {0}, currently mapped to different element names {1}.</value>
