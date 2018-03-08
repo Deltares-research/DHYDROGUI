@@ -436,4 +436,7 @@
   <data name="WaterFlowModel1DHydroNetworkValidator_GetCorrectCrossSectionIssue_No_profile_defined" xml:space="preserve">
     <value>No profile defined</value>
   </data>
+  <data name="WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type__1__could_not_be_found_" xml:space="preserve">
+    <value>Values for {0} feature type {1} could not be found.</value>
+  </data>
 </root>
