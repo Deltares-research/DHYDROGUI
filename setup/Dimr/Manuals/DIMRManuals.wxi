@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <!-- DIMR -->
-  <File Id="DIMR_Reference_Manual.pdf" Source="$(var.ProjectDir)\..\Dimr\$(var.Delft3DPackageName)_Manuals\DIMR_Technical_Reference_Manual.pdf"/>
+  <File Id="DIMR_Technical_Reference_Manual" Source="$(var.ProjectDir)\..\Dimr\$(var.Delft3DPackageName)_Manuals\DIMR_Technical_Reference_Manual.pdf"/>
 </Include>
