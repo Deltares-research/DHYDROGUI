@@ -672,21 +672,28 @@ class FMwriter:
                 valuePerSecond = float(value[9])/3600
                 fileStructures.write('capacity = ' + str("%.4f" % round(float(valuePerSecond),4)) + '  #m3/s\n')
 
-                direction = self.getDirectionOfStructure(value[0])
-                if direction == '1_2':
-                    fileStructures.write('direction = 1\n')
-                elif direction == '2_1':
-                    fileStructures.write('direction = 2\n')
-                else:
-                    fileStructures.write('direction = 0\n')
+                #direction = self.getDirectionOfStructure(value[0])
+                #if direction == '1_2':
+                #    fileStructures.write('direction = 1\n')
+                #elif direction == '2_1':
+                #    fileStructures.write('direction = 2\n')
+                #else:
+                #    fileStructures.write('direction = 0\n')
+
+                direction = 0
 
                 if value[10] != '' and value[11] != '':
                     fileStructures.write('startlevelsuctionside = ' + self.to2Dec(value[10]) + '\n')
                     fileStructures.write('stoplevelsuctionside = ' + self.to2Dec(value[11]) + '\n')
+                    direction += 1
 
                 if value[12] != '' and value[13] != '':
                     fileStructures.write('startleveldeliveryside = ' + self.to2Dec(value[12]) + '\n')
                     fileStructures.write('stopleveldeliveryside = ' + self.to2Dec(value[13]) + '\n')
+                    direction += 2
+
+                fileStructures.write('direction = ' + str(direction) + '\n')
+
                 fileStructures.write('reductionfactornolevels = 1.00\n')
                 fileStructures.write('\n')
 
