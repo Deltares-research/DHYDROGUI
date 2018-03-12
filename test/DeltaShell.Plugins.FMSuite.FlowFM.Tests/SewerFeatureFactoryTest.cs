@@ -202,19 +202,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #endregion
             //generate all instances
             var listOfElements = new List<GwswElement> {nodeOne, nodeTwo, nodeThree};
-            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements, null);
+            var features = SewerFeatureFactory.CreateMultipleInstances(listOfElements, new HydroNetwork());
             Assert.IsNotNull(features);
 
-            var listOfManholes = features.OfType<Manhole>().ToList();
+            var listOfManholes = features.OfType<Manhole>().Distinct().ToList(); 
             Assert.IsNotNull(listOfManholes);
-            Assert.IsTrue(listOfManholes.Any());
-            Assert.AreEqual(listOfElements.Count, listOfManholes.Count);
+            Assert.AreEqual(2, listOfManholes.Count);
 
             //check compartiments exist
             var compartimentList = listOfManholes.SelectMany(m => m.Compartments).ToList();
             Assert.IsTrue(compartimentList.Any( c => c.Name.Equals(nodeOneName)));
             Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeTwoName)));
             Assert.IsTrue(compartimentList.Any(c => c.Name.Equals(nodeThreeName)));
+            Assert.AreEqual(listOfElements.Count, compartimentList.Count);
 
             //check manholes and their geometries
             Assert.IsTrue(listOfManholes.Any( m => m.Name.Equals(manholeOne)));

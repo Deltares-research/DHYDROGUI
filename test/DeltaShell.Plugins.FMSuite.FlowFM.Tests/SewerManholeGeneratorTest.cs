@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var nodeType = EnumDescriptionAttributeTypeConverter.GetEnumDescription(ManholeMapping.NodeType.Manhole);
             var coordX = 10.0;
             var coordY = 20.0;
-            var str = string.Empty;
+            var str = "put";
             var dbl = 0.0;
             var gwswElement = GetNodeGwswElement(str, manholeId, nodeType, coordX, coordY, dbl, dbl, str, dbl, dbl,
                 dbl);

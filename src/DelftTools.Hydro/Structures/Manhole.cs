@@ -7,6 +7,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
+
 namespace DelftTools.Hydro.Structures
 {
     [Entity]

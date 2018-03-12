@@ -391,8 +391,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             var gwswImporter = new GwswFileImporter();
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            var mappingItem = gwswImporter.GwswAttributesDefinition.First(item => item.FileName == "Verbinding.csv");
-            gwswImporter.GwswAttributesDefinition.Remove(mappingItem);
+            gwswImporter.GwswAttributesDefinition.Clear();
             var message = string.Format(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__, filePath);
             gwswImporter.CsvDelimeter = ';';
             TestHelper.AssertAtLeastOneLogMessagesContains(() => gwswImporter.ImportGwswElementList(filePath), message);

@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -34,16 +36,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return FindManhole(gwswElement, network) ?? new Manhole(manholeName);
         }
 
+        /// <summary>
+        /// Sets the manhole coordinates based on the average of the compartiments.
+        /// </summary>
+        /// <param name="manhole">The manhole.</param>
+        /// <param name="gwswElement">The GWSW element.</param>
         protected static void SetManholeCoordinateAttributes(IManhole manhole, GwswElement gwswElement)
         {
             // Set the rest of manhole values
-            double yCoordinate;
-            double xCoordinate;
+            double x;
+            double y;
             var xCoord = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.XCoordinate);
             var yCoord = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.YCoordinate);
-            if (xCoord.TryGetValueAsDouble(out xCoordinate) && yCoord.TryGetValueAsDouble(out yCoordinate))
+            if (xCoord.TryGetValueAsDouble(out x) && yCoord.TryGetValueAsDouble(out y))
             {
-                manhole.Geometry = new Point(xCoordinate, yCoordinate);
+                var weight = manhole.Compartments.Count;
+                var xManhole = 0.0;
+                var yManhole = 0.0;
+                var point = manhole.Geometry as Point;
+                if (point != null)
+                {
+                    xManhole = point.X;
+                    yManhole = point.Y;
+                }
+                var xNew = (weight * xManhole + x) / (weight + 1.0);
+                var yNew = (weight * yManhole + y) / (weight + 1.0);
+                manhole.Geometry = new Point(xNew, yNew);
             }
         }
     }

@@ -28,17 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <returns>List of Network Features representing the elements stored in the <param name="listOfElements"/></returns>
         public static IEnumerable<INetworkFeature> CreateMultipleInstances(IList<GwswElement> listOfElements, IHydroNetwork network)
         {
-            var auxNetwork = network ?? new HydroNetwork();
-            
-            //check if extra elements are needed.
-            var auxList = CreateAuxiliarGwswElements(listOfElements);
-            //By using the auxiliar network the objects will be added to it and later used by the other list.
-            if (auxList.Any())
-            {
-                var validAuxFeatures = CreateInstances(auxList, auxNetwork).ToList();
-                AddAuxFeaturesToNetwork(validAuxFeatures, auxNetwork);
-            }
-
             var networkFeatures = CreateInstances(listOfElements, network).Where(c => c != null);
             return networkFeatures;
         }
@@ -71,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             // node types
             var nodeTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Node).Select(k => k.Value).ToList();
-            if (nodeTypes.Any())
+             if (nodeTypes.Any())
             {
                 createdNetworkFeatures.AddRange(nodeTypes.Select(n => CreateInstance(n, network)).Where(c => c != null));
             }
@@ -183,13 +172,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static ISewerNetworkFeatureGenerator GetSewerCompartmentGenerator(this GwswElement gwswElement)
         {
-            var basicGenerator = new SewerCompartmentGenerator();
+            ISewerNetworkFeatureGenerator result = new SewerCompartmentGenerator();
 
             var nodeTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType);
-            if (!nodeTypeAttribute.IsValidAttribute()) return basicGenerator;
-            if (nodeTypeAttribute.IsAuxGwswManhole()) return new SewerManholeGenerator();
-
-            return nodeTypeAttribute.IsGwswOutlet() ? new SewerCompartmentOutletGenerator() : basicGenerator;
+            if (nodeTypeAttribute.IsValidAttribute())
+            {
+                if (nodeTypeAttribute.IsAuxGwswManhole())
+                {
+                    result = new SewerManholeGenerator();
+                }
+                else if (nodeTypeAttribute.IsGwswOutlet())
+                {
+                    result = new SewerCompartmentOutletGenerator();
+                }
+            }
+            return result;
         }
 
         private static ISewerNetworkFeatureGenerator GetSewerConnectionGenerator(this GwswElement gwswElement)
@@ -205,90 +202,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return basicGenerator;
         }
-
-        #region Auxiliar Gwsw Elements
-
-        private static List<GwswElement> CreateAuxiliarGwswElements(IList<GwswElement> listOfElements)
-        {
-            var elementsGrouped = listOfElements.GroupBy(el => el.ElementTypeName).ToList();
-            SewerFeatureType elementType;
-            var nodeGroup = elementsGrouped.FirstOrDefault(group => Enum.TryParse(@group.Key, out elementType) &&
-                                                                    elementType == SewerFeatureType.Node);
-
-            var auxList = new List<GwswElement>();
-            if (nodeGroup == null) return auxList;
-            var manholeGroups = nodeGroup
-                .GroupBy(ng => ng
-                    .GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId).GetValidStringValue());
-
-            foreach (var manhole in manholeGroups)
-            {
-                var nameAttr = manhole.Select(mv => mv.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId)).First();
-                if (!nameAttr.IsValidAttribute()) continue;
-
-                var xCoords = manhole.Select(mv => mv.GetAttributeFromList(ManholeMapping.PropertyKeys.XCoordinate))
-                    .Where(v => v.IsValidAttribute()).ToList();
-                var yCoords = manhole.Select(mv => mv.GetAttributeFromList(ManholeMapping.PropertyKeys.YCoordinate))
-                    .Where(v => v.IsValidAttribute()).ToList();
-                if (!xCoords.Any() || !yCoords.Any()) continue;
-
-
-                var typeNode = GetAuxGwswAttribute(
-                    EnumDescriptionAttributeTypeConverter.GetEnumDescription(ManholeMapping.NodeType.Manhole),
-                    typeof(string),
-                    ManholeMapping.PropertyKeys.NodeType);
-
-                var xCoordAttr = GetAuxGwswAttribute(
-                    GetAverageCoordinate(xCoords).ToString(CultureInfo.InvariantCulture),
-                    typeof(double),
-                    ManholeMapping.PropertyKeys.XCoordinate);
-
-                var yCoordAttr = GetAuxGwswAttribute(
-                    GetAverageCoordinate(yCoords).ToString(CultureInfo.InvariantCulture),
-                    typeof(double), 
-                    ManholeMapping.PropertyKeys.YCoordinate);
-
-                var auxElement = new GwswElement()
-                {
-                    ElementTypeName = nodeGroup.Key,
-                    GwswAttributeList = new List<GwswAttribute>()
-                    {
-                        nameAttr,
-                        typeNode,
-                        xCoordAttr,
-                        yCoordAttr
-                    }
-                };
-
-                auxList.Add(auxElement);
-            }
-
-            return auxList;
-        }
-
-        private static void AddAuxFeaturesToNetwork(IEnumerable<INetworkFeature> features, IHydroNetwork network)
-        {
-            features.ForEach(f =>
-            {
-                var item = f as IManhole;
-                if( item != null) network.Nodes.Add(item); // TODO Sil: Added an item
-            });
-        }
-
-        private static GwswAttribute GetAuxGwswAttribute(string value, Type attrType, string keyValue)
-        {
-            return new GwswAttribute
-            {
-                ValueAsString = value,
-                GwswAttributeType = new GwswAttributeType()
-                {
-                    AttributeType = attrType,
-                    Key = keyValue
-                }
-            };
-        }
-
-        #endregion
 
         #region Helpers
 
@@ -340,6 +253,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return nodeType == ManholeMapping.NodeType.Manhole;
         }
 
+        public static bool IsValidGwswManhole(this GwswElement gwswElement)
+        {
+            if (gwswElement == null) return false;
+            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
+
+            //No need for log message because as per now, GwswManholes are our own creation (check CreateAuxiliarGwswElements)
+            if (!manholeName.IsValidAttribute()) return false;
+
+            var typeAttr = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType);
+            var manholeType = typeAttr.GetValueFromDescription<ManholeMapping.NodeType>();
+            return manholeType == ManholeMapping.NodeType.Manhole;
+        }
+
         public static bool IsGwswOutlet(this GwswAttribute sewerTypeAttribute)
         {
             var nodeType = sewerTypeAttribute.GetValueFromDescription<ManholeMapping.NodeType>();
@@ -374,19 +300,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             var connectionType = sewerTypeAttribute.GetValueFromDescription<SewerConnectionMapping.ConnectionType>();
             return connectionType == SewerConnectionMapping.ConnectionType.Crest;
-        }
-
-        public static bool IsValidGwswManhole(this GwswElement gwswElement)
-        {
-            if (gwswElement == null) return false;
-            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
-            
-            //No need for log message because as per now, GwswManholes are our own creation (check CreateAuxiliarGwswElements)
-            if (!manholeName.IsValidAttribute()) return false;
-
-            var typeAttr = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType);
-            var manholeType = typeAttr.GetValueFromDescription<ManholeMapping.NodeType>();
-            return manholeType == ManholeMapping.NodeType.Manhole;
         }
 
         public static bool IsValidGwswCompartment(this GwswElement gwswElement)

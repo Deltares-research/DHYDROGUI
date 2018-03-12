@@ -88,6 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             SetCompartmentAttributes(compartment, gwswElement);
             var manhole = GetNewOrExistingManhole(gwswElement, network);
             if( !manhole.Compartments.Contains(compartment))
+                SetManholeCoordinateAttributes(manhole,gwswElement);
                 manhole.Compartments.Add(compartment);
 
             return manhole;
