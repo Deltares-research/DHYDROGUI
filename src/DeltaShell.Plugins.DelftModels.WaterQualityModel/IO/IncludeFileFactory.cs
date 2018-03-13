@@ -712,12 +712,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 if (constantInitialConditions.Length > 0)
                 {
                     writer.WriteLine("INITIALS");
-                    writer.WriteLine(String.Join(" ",
-                        constantInitialConditions.Select(ic => String.Format("'{0}'", ic.Name)))); // "'NH4' 'CBOD5' 'CBOD5_2' 'OXY'"
+                    constantInitialConditions.ForEach(condition => writer.WriteLine("'{0}'", condition.Name));
                     writer.WriteLine("DEFAULTS");
-                    writer.WriteLine(String.Join(" ",
-                        constantInitialConditions.Select(
-                            ic => WaterQualityFunctionFactory.GetDefaultValue(ic).ToString(CultureInfo.InvariantCulture)))); // "1.2 2.3 3.4 4.5"
+                    constantInitialConditions.ForEach(condition => writer.WriteLine(WaterQualityFunctionFactory.GetDefaultValue(condition).ToString(CultureInfo.InvariantCulture)));
                 }
                 return writer.ToString();
             }
