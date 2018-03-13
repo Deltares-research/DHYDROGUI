@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GivenSimpleGwswCompartmentWithManholeIdNetworkAndExistingManhole_WhenCreatingWithGenerator_ThenManholeWithoutNewCoordinatesIsGiven()
+        public void GivenSimpleGwswCompartmentWithManholeIdNetworkAndExistingManhole_WhenCreatingWithGenerator_NewCoordinatesOfAverageCompartmentsIsGiven()
         {
             #region expectedVariables
             var uniqueId = "put1";
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.NotNull(compartment);
             
             // Check Compartment properties
-            CheckCompartmentAndManholePropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel, existingXCoord, existingYCoord, numberOfParentManholeCompartments);
+            CheckCompartmentAndManholePropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel, xCoordinate, yCoordinate, numberOfParentManholeCompartments);
         }
 
         [Test]

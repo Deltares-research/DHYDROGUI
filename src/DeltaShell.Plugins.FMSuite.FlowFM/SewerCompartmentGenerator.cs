@@ -79,7 +79,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return NetworkHelper.GetUniqueName("Manhole{0:D2}ForCompartment"+compartmentName, manholeList, "Manhole");
         }
 
-        protected IManhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null, object importHelper = null) where T : Compartment, new()
+        protected IManhole CreateCompartmentForManhole<T>(GwswElement gwswElement, IHydroNetwork network = null,
+            object importHelper = null) where T : Compartment, new()
         {
             if (gwswElement == null) return null;
 
@@ -87,10 +88,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             SetCompartmentAttributes(compartment, gwswElement);
             var manhole = GetNewOrExistingManhole(gwswElement, network);
-            if( !manhole.Compartments.Contains(compartment))
-                SetManholeCoordinateAttributes(manhole,gwswElement);
+            if (!manhole.Compartments.Contains(compartment))
+            {
+                SetManholeCoordinateAttributes(manhole, gwswElement);
                 manhole.Compartments.Add(compartment);
-
+            }
             return manhole;
         }
 
