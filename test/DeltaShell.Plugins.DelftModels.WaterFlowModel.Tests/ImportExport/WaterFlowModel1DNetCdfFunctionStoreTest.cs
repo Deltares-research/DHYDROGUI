@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             try
             {
                 var featureName = "stuw_Linn_zom";
-                var coverageName = "Crest level (s)";//;
+                var coverageName = "Crest level (s)";
                 Weir expectedLocation;
                 IVariableFilter[] filters;
                 WaterFlowModel1DNetCdfFunctionStore store;
