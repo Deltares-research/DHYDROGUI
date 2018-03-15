@@ -480,7 +480,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
             catch (Exception ex)
             {
-                Log.ErrorFormat("Error retriving data for variable {0}: {1}", ncVariableName, ex.Message);
+                Log.ErrorFormat("Error retrieving data for variable {0}: {1}", ncVariableName, ex.Message);
                 shape = new[] { 0, 0 };
                 return new List<double>();
             }
