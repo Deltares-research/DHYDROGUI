@@ -356,6 +356,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.3.0.39242\tools\mklink-test-data.cmd" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.1.3.0.39242\test-data\DelftTools.TestUtils

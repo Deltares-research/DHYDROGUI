@@ -418,6 +418,9 @@
   <ItemGroup>
     <Folder Include="Gui\MapTools\" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF EXIST "%25VS120COMNTOOLS%25vsvars32.bat" CALL “%25VS120COMNTOOLS%25vsvars32.bat” &amp;&amp; GOTO endvsvars
