@@ -1,10 +1,20 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Import;
+using DeltaShell.Plugins.ProjectExplorer;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
@@ -14,6 +24,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class GroupableCloudImporterTest
     {
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Performance)]
+        [Category(TestCategory.WindowsForms)]
+        public void ImportLargeAmountOfDryPoints()
+        {
+            var xyzFilePath = TestHelper.GetTestFilePath(@"xyzFiles\largeSampleFile.xyz");
+            var tempDir = FileUtils.CreateTempDirectory();
+            var testFilePath = Path.Combine(tempDir, Path.GetFileName(xyzFilePath));
+            FileUtils.CopyFile(xyzFilePath, testFilePath);
+
+            try
+            {
+                using (var gui = new DeltaShellGui())
+                {
+                    var app = gui.Application;
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                    gui.Plugins.Add(new FlowFMGuiPlugin());
+                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+                    gui.Run();
+
+                    Action mainWindowShown = delegate
+                    {
+                        app.Project.RootFolder.Add(new WaterFlowFMModel());
+                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                        Assert.IsNotNull(targetModel);
+
+                        var dryPointsImporter =
+                            app.FileImporters.OfType<GroupablePointCloudImporter>().FirstOrDefault();
+                        Assert.IsNotNull(dryPointsImporter);
+                        var activity = new FileImportActivity(dryPointsImporter, targetModel.Area.DryPoints)
+                        {
+                            Files = new[] {testFilePath}
+                        };
+
+                        // Importing large amount of dry points
+                        /* Before fixes from rev 39371 (DELFT3DFM-1374) performance was around 150 seconds. */
+                        /* Personal machine : 20 seconds avg. */
+                        /* x1.5 factor acceptance factor */
+                        /* x2 factor TeamCity acceptance factor */
+                        TestHelper.AssertIsFasterThan(60000, () => { gui.Application.RunActivity(activity); });
+
+                        Assert.AreEqual(1048576, targetModel.Area.DryPoints.Count);
+                    };
+                    WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDir);
+            }
+        }
+
         [Test]
         public void PointCloudImporterCanImportOnRootLevel()
         {

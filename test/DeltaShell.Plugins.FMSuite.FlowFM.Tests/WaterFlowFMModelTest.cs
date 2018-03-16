@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel();
 
-            var weir = new Weir2D()
+            var weir = new Weir2D
             {
                 Name = "weir01",
                 WeirFormula = new SimpleWeirFormula()

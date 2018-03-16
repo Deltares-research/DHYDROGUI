@@ -49,6 +49,7 @@ using SharpMap;
 using SharpMap.Api;
 using SharpMap.SpatialOperations;
 using INotifyCollectionChanged = DelftTools.Utils.Collections.INotifyCollectionChanged;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -81,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value = false;
 
             SynchronizeModelDefinitions();
-
 
             Grid = new UnstructuredGrid();
             InitializeUnstructuredGridCoverages();
@@ -2130,18 +2130,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return Area.ObservationCrossSections;
             }
         }
+        private bool OutputFeatureCollectionsContains(object item)
+        {
+            if (item is GroupableFeature2DPoint)
+            {
+                return Area.ObservationPoints.Contains(item);
+            }
+
+            if (item is ObservationCrossSection2D)
+            {
+                return Area.ObservationCrossSections.Contains(item);
+            }
+
+            return false;
+        }
+
+        private bool InputFeatureCollectionsContains(object item)
+        {
+            if (item is Pump2D)
+            {
+                return Area.Pumps.Contains(item);
+            }
+            
+            if (item is Weir2D)
+            {
+                return Area.Weirs.Contains(item);
+            }
+
+            if (item is Gate2D)
+            {
+                return Area.Gates.Contains(item);
+            }
+
+            return false;
+        }
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var groupableFeature = e.Item as IGroupableFeature;
-            if (!Area.IsEditing && e.Action != NotifyCollectionChangeAction.Remove && groupableFeature != null)
+            if (groupableFeature != null && e.Action != NotifyCollectionChangeAction.Remove && !Area.IsEditing)
             {
                 groupableFeature.UpdateGroupName(this);
             }
-
-            var inputSender = InputFeatureCollections.Contains(sender);
-            var outputSender = OutputFeatureCollections.Contains(sender);
-
+            
+            var inputSender = InputFeatureCollectionsContains(e.Item);
+            var outputSender = OutputFeatureCollectionsContains(e.Item);
+            
             if (inputSender || outputSender)
             {
                 var feature = (IFeature) e.Item;
@@ -2185,19 +2219,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             var groupableFeature = sender as IGroupableFeature;
-            if (!updatingGroupName && !Area.IsEditing && groupableFeature != null && e.PropertyName == TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName))
+            if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
+                e.PropertyName != TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName)) return;
+
+            updatingGroupName = true;// prevent recursive calls
+
+            groupableFeature.UpdateGroupName(this);
+
+            if (groupableFeature.IsDefaultGroup)
             {
-                updatingGroupName = true;// prevent recursive calls
-
-                groupableFeature.UpdateGroupName(this);
-
-                if (groupableFeature.IsDefaultGroup)
-                {
-                    groupableFeature.IsDefaultGroup = false;
-                }
-
-                updatingGroupName = false;
+                groupableFeature.IsDefaultGroup = false;
             }
+
+            updatingGroupName = false;
         }
 
         private void RemoveAreaFeature(IFeature feature)
