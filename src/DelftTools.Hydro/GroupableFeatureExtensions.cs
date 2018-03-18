@@ -7,23 +7,24 @@ namespace DelftTools.Hydro
 {
     public static class GroupableFeatureExtensions
     {
-        public static void MakeGroupNameRelative(this IGroupableFeature groupableFeature, string relativePath)
+        public static void MakeGroupNameRelative(this IGroupableFeature groupableFeature, string mduFilePath)
         {
             if (groupableFeature == null) return;
 
-            var directory = Path.GetDirectoryName(relativePath);
-            var groupName = groupableFeature.GroupName;
+            var directory = Path.GetDirectoryName(mduFilePath);
+            var originalGroupName = groupableFeature.GroupName;
 
-            var relativePathToFile = FileUtils.GetRelativePath(directory, groupName);
+            var relativePathToFile = FileUtils.GetRelativePath(directory, originalGroupName);
             if (string.IsNullOrEmpty(relativePathToFile)) return;
+            groupableFeature.GroupName = GetNewGroupName(relativePathToFile, directory, originalGroupName);
+        }
 
-            var isRelativeToPath = !relativePathToFile.Contains("..") &&
-                                   (!Path.IsPathRooted(groupName) ||
-                                    Path.GetPathRoot(directory) == Path.GetPathRoot(groupName));
+        public static string GetNewGroupName(string relativePathToFile, string directory, string originalGroupName)
+        {
+            var isInSubDirectory = !relativePathToFile.Contains("..") &&
+                                   (!Path.IsPathRooted(originalGroupName) || Path.GetPathRoot(directory) == Path.GetPathRoot(originalGroupName));
 
-            groupableFeature.GroupName = !isRelativeToPath
-                    ? Path.GetFileName(relativePathToFile)
-                    : relativePathToFile;
+            return isInSubDirectory ? relativePathToFile : Path.GetFileName(relativePathToFile);
         }
     }
 

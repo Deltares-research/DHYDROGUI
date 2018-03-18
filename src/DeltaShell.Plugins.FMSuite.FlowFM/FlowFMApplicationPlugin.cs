@@ -10,9 +10,6 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
-using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Extensions;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -75,14 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 };
         }
 
-        [InvokeRequired]
-        private static void AddFeatures(IRegion region, IList<GroupablePointFeature> newList, IList<GroupablePointFeature> pointFeatureList)
-        {
-            region?.BeginEdit("Setting group names");
-            pointFeatureList.AddRange(newList);
-            region?.EndEdit();
-        }
-
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new WaterFlowFMFileImporter();
@@ -92,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListImporter(StructuresListType.Gates) { GetModelForList = GetModelForCollection };
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
-            yield return new FMRstFileImporter(){GetFMModelForRestartState = GetFMModelForRestartState};
+            yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
             yield return new BoundaryConditionWpsImporter();
@@ -102,9 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     var model = Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault(m => Equals(m.Area.DryPoints, list));
                     return model == null ? "" : Path.GetDirectoryName(model.MduFilePath);
-                },
-                SetItems = AddFeatures
-
+                }
             };
 
             yield return new PliFileImporterExporter<Embankment, Embankment>

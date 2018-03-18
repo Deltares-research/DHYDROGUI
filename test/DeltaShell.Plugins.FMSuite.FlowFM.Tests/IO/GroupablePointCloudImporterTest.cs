@@ -22,7 +22,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    public class GroupableCloudImporterTest
+    public class GroupablePointCloudImporterTest
     {
         [Test]
         [Category(TestCategory.Integration)]

@@ -70,6 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private bool disposing;
         private bool updatingGroupName;
 
+        private IEventedList<ISedimentFraction> sedimentFractions;
+        private IDataItem areaDataItem;
+
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
         private double previousProgress = 0;
         private string progressText;
@@ -112,6 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var area = new HydroArea();
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
 
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
@@ -284,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             base.OnBeforeDataItemsSet();
 
-            var areaDataItem = GetDataItemByTag(HydroAreaTag);
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (areaDataItem != null)
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
@@ -308,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
         {
             // unsubscribe from area before unlink
-            var areaDataItem = GetDataItemByTag(HydroAreaTag);
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (Equals(e.Target, areaDataItem))
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
@@ -1245,7 +1249,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public HydroArea Area
         {
-            get {return (HydroArea) GetDataItemValueByTag(HydroAreaTag); }
+            get
+            {
+                if (areaDataItem == null)
+                    areaDataItem = GetDataItemByTag(HydroAreaTag);
+
+                return (HydroArea) GetDataItemValueByTag(HydroAreaTag);
+            }
             set
             {
                 var areaItem = GetDataItemByTag(HydroAreaTag);
@@ -2437,8 +2447,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
 
         public IEventedList<ISedimentProperty> SedimentOverallProperties { get; set; }
-
-        private IEventedList<ISedimentFraction> sedimentFractions;
+        
         public IEventedList<ISedimentFraction> SedimentFractions
         {
             get { return sedimentFractions; }
