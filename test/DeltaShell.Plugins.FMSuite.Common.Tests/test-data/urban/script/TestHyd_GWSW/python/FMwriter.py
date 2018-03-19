@@ -504,7 +504,7 @@ class FMwriter:
             fileRough.write('[definition]\n')
             fileRough.write('branchid = ' + str(value[0]) + '\n')
             fileRough.write('chainage = 0.00\n')
-            fileRough.write('value = 3.000\n')
+            fileRough.write('value = 0.003\n')
             fileRough.write('\n')
 
         fileCSLoc.close()
@@ -543,7 +543,7 @@ class FMwriter:
             fileCSDef.write('[definition]\n')
             fileCSDef.write('id = ' + str(value[0]) + '\n')
 
-            w = float(value[3])/1000.0 #mm -> m
+            w = float(value[3])/1000.0 #m -> mm
             t = str(value[2])
             if t == 'RND':
                 fileCSDef.write('type = circle\n')
@@ -556,7 +556,7 @@ class FMwriter:
                 #fileCSDef.write('width = ' + self.to2Dec(w) + '\n') not supported by kernel
                 #fileCSDef.write('height = ' + self.to2Dec(w * 1.5) + '\n') #redundant ??
             else:
-                h = float(value[4])/1000.0 #mm -> m
+                h = float(value[4])/1000.0 #m -> mm
                 fileCSDef.write('type = rectangle\n')
                 fileCSDef.write('width = ' + self.to2Dec(w) + '\n')
                 fileCSDef.write('height = ' + self.to2Dec(h) + '\n')
