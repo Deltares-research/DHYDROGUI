@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetBaseFolder = list =>
                 {
                     var model = Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault(m => Equals(m.Area.DryPoints, list));
-                    return model == null ? "" : Path.GetDirectoryName(model.MduFilePath);
+                    return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
                 }
             };
 

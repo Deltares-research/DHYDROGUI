@@ -69,8 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         /* Before fixes from rev 39371 (DELFT3DFM-1374) performance was around 150 seconds. */
                         /* Personal machine : 20 seconds avg. */
                         /* x1.5 factor acceptance factor */
-                        /* x2 factor TeamCity acceptance factor */
-                        TestHelper.AssertIsFasterThan(60000, () => { gui.Application.RunActivity(activity); });
+                        /* x3 factor TeamCity acceptance factor */
+                        TestHelper.AssertIsFasterThan(90000, () => { gui.Application.RunActivity(activity); });
 
                         Assert.AreEqual(1048576, targetModel.Area.DryPoints.Count);
                     };
