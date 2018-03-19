@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             int start_index = 1; //the smallest integer in sourcenodeid/targetnodeid is 1
             ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints, ref start_index);
             Assert.That(ierr, Is.EqualTo(0));
-            ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim);
+            ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim,ref start_index);
             Assert.That(ierr, Is.EqualTo(0));
 
             //9. make the links
