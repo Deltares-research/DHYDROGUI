@@ -180,7 +180,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
 
-                ierr = geomWrapper.Convert(ref meshtwod, ref meshtwoddim);
+                ierr = geomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -201,8 +201,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 }
 
                 //11. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
-                c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * linksCount); //2d cell number
-                c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * linksCount); //1d node
+                c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //2d cell number
+                c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //1d node
                 ierr = geomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref linksCount);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
@@ -248,11 +248,11 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
 
-        public int Convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim)
+        public int Convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim, ref int startIndex)
         {
             try
             {
-                var ierr = geomWrapper.Convert(ref c_meshgeom, ref c_meshgeomdim);
+                var ierr = geomWrapper.Convert(ref c_meshgeom, ref c_meshgeomdim, ref startIndex);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;

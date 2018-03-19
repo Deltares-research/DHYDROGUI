@@ -12,14 +12,14 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshgeomdim"></param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_convert", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim);
+        public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim, ref int startIndex);
 
         /// <summary>
         /// Makes the 1d/2d links (results are stored in memory)
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll();
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
         /// Use 1d array to fill kn matrix
@@ -77,15 +77,18 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
 
-        public int Convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim)
+        public int Convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim, ref int startIndex)
         {
-            int ierr = ggeo_convert_dll(ref c_meshgeom, ref c_meshgeomdim);
+            int ierr = ggeo_convert_dll(ref c_meshgeom, ref c_meshgeomdim, ref startIndex);
             return ierr;
         }
 
         public int Make1d2dInternalnetlinks()
         {
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll();
+            int c_jsferic = 0;
+            int c_jasfer3D = 0;
+            int c_jglobe = 0;
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 
