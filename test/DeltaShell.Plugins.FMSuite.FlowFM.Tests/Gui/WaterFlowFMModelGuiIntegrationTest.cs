@@ -4,11 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
@@ -44,6 +45,8 @@ using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
+using SharpMap.UI.Tools;
+using Control = System.Windows.Controls.Control;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
@@ -1077,6 +1080,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
 
             FileUtils.DeleteIfExists(netFile);
+        }
+ 
+        [Test]
+        [Category(TestCategory.Performance)]
+        [Category(TestCategory.Slow)]
+        public void ImportingOfDryPointsWithProjectItemMapViewOpenShouldBeFast()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                //setup env
+                var app = gui.Application;
+
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Run();
+
+                //create and add a HydroRegion with a HydroArea with DryPoints
+                var project = app.Project;
+                var area = new HydroArea();
+                var hydroRegion = new HydroRegion
+                {
+                    Name = "Hydro region",
+                    SubRegions = { area }
+                };
+                var dataItem = new DataItem(hydroRegion);
+                project.RootFolder.Add(hydroRegion);
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
+                {
+                    //load needed views
+                    gui.CommandHandler.OpenView(dataItem, typeof(ProjectItemMapView));
+                    var projectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                    Assert.NotNull(projectItemMapView);
+
+                    //importing harlingen point ~ 28800 points... this took over 15 min to load
+                    var fmtestPath = TestHelper.GetTestDataPath(typeof(WaterFlowFMModelTest).Assembly);
+                    var xyzPath = Path.Combine(fmtestPath, @"harlingen_model_3d\har_V3.xyz");
+                    var selection = new DataItem(area.DryPoints);
+
+                    gui.Selection = selection;
+
+                    //start the import and check the speed (TOOLS-21888)
+                    TestHelper.AssertIsFasterThan(20000, () =>
+                    {
+                        gui.CommandHandler.ImportFilesToGuiSelection(new[] { xyzPath });
+                        while (gui.Application.ActivityRunner.IsRunning)
+                        {
+                            Application.DoEvents();
+                        }
+                    });
+
+                    //zoom to extend for fun
+                    projectItemMapView.MapView.Map.ZoomToExtents();
+
+                    //switch from layer
+                    gui.Selection = area.DryAreas;
+
+                    //switch back to drypoints layer and check speed of selection (<4000ms!) & selection count (== SelectTool.MaxSelectedFeatures)
+                    TestHelper.AssertIsFasterThan(4000, () => gui.Selection = area.DryPoints);
+                    Assert.AreEqual(SelectTool.MaxSelectedFeatures, projectItemMapView.MapView.MapControl.SelectedFeatures.Count());
+                });
+            }
         }
 
         private static SnappedFeatureCollection GetSnappedFeatureCollectionFromLayers(IList<ILayer> layers, string layerName)
