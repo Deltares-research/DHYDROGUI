@@ -59,25 +59,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
                 object onImportItem;
                 // If importing from DeltaShell GUI, GetBaseFolder is set. In that case we import with progress
-                if (GetBaseFolder != null && GetRegion != null)
-                {
-                    var importedFeatures = new List<GroupablePointFeature>();
-                    onImportItem = base.OnImportItem(path, importedFeatures);
-
-                    var region = GetRegion?.Invoke(pointFeatureList);
-                    var baseFolder = GetBaseFolder(pointFeatureList);
-                    var relativePathToFile = FileUtils.GetRelativePath(baseFolder, path);
-                    var groupName = GroupableFeatureExtensions.GetNewGroupName(relativePathToFile, baseFolder, path);
-
-                    AddNewFeaturesToListWithGroupName(region, pointFeatureList, importedFeatures, groupName);
-
-                    return onImportItem;
-                }
-                else
+                if (GetBaseFolder == null || GetBaseFolder(pointFeatureList) == string.Empty || GetRegion == null)
                 {
                     onImportItem = base.OnImportItem(path, pointFeatureList);
                     pointFeatureList.ForEach(f => f.GroupName = path);
+                    return onImportItem;
                 }
+
+                var importedFeatures = new List<GroupablePointFeature>();
+                onImportItem = base.OnImportItem(path, importedFeatures);
+
+                var region = GetRegion?.Invoke(pointFeatureList);
+                var baseFolder = GetBaseFolder(pointFeatureList);
+                var relativePathToFile = FileUtils.GetRelativePath(baseFolder, path);
+                var groupName = GroupableFeatureExtensions.GetNewGroupName(relativePathToFile, baseFolder, path);
+
+                AddNewFeaturesToListWithGroupName(region, pointFeatureList, importedFeatures, groupName);
 
                 return onImportItem;
             }

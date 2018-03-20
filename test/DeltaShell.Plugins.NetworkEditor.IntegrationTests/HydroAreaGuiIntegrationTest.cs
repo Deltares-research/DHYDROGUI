@@ -10,6 +10,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -169,10 +171,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
 
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
                 gui.Run();
 
                 //create and add a HydroRegion with a HydroArea with DryPoints
