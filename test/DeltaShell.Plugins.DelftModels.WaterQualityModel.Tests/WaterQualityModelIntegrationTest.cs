@@ -170,10 +170,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void GivenValidWaqModel_WhenClearingOutput_ThenOutputDataItemsAndFilesAreRemovedFromModel()
         {
             var testDir = FileUtils.CreateTempDirectory();
-            var originalDir = TestHelper.GetTestFilePath("WaqModelProjects");
-            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(testDir), string.Empty);
+            var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
+
+            var dataDir = TestHelper.GetDataDir();
+            var hydFilePath = Path.Combine(dataDir, "IntegrationTests", "FM", "FlowFM.hyd");
+            var substanceFilePath = Path.Combine(dataDir, "IntegrationTests", "coli_04.sub");
+
             string[] outputTextDocumentsTags = { "ListFileTag", "ProcessFileTag", "MonitoringFileTag", "lastRunLogFileDataItem" };
-            string[] outputFeatureCoveragesTags = { "NH4", "CBOD5", "OXY", "SOD", "DO" };
+            string[] outputFeatureCoveragesTags = { "IM1", "Salinity", "EColi", "ExtUv", "MrtToEColi" };
 
             try
             {
@@ -186,16 +190,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                     app.Run();
+                    app.CreateNewProject();
+                    app.SaveProjectAs(Path.Combine(testDir, "BasicWaqProject.dsproj"));
 
-                    app.OpenProject(Path.Combine(testDir, "BasicWaqProject.dsproj"));
-                    var waqModel = app.Project.RootFolder.Items.OfType<WaterQualityModel>().FirstOrDefault();
-                    Assert.IsNotNull(waqModel);
+                    var waqModel = new WaterQualityModel();
+                    app.Project.RootFolder.Add(waqModel);
+                    app.SaveProject();
 
+                    //Import hydroDynamics file
+                    var hydFileImporter = app.FileImporters.OfType<HydFileImporter>().FirstOrDefault();
+                    Assert.IsNotNull(hydFileImporter);
+                    var hydFileImportActivity = new FileImportActivity(hydFileImporter, waqModel) { Files = new[] { hydFilePath } };
+                    app.RunActivity(hydFileImportActivity);
+                    
+                    // Import substance library
+                    var subFileImporter = app.FileImporters.OfType<SubFileImporter>().FirstOrDefault();
+                    Assert.IsNotNull(subFileImporter);
+                    var subFileImportActivity = new FileImportActivity(subFileImporter, waqModel.SubstanceProcessLibrary) { Files = new[] { substanceFilePath } };
+                    app.RunActivity(subFileImportActivity);
+                    
                     // Check if output file data items are non-existent AND that feature coverage data items
                     // are not connected to data
                     var outputDataItemValues = waqModel.AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output));
-                    foreach(var tag in outputTextDocumentsTags) Assert.IsFalse(outputDataItemValues.Any(di => di.Tag == tag));
-                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
+                    foreach (var tag in outputTextDocumentsTags) Assert.IsFalse(outputDataItemValues.Any(di => di.Tag == tag));
+                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag);
 
                     app.RunActivity(waqModel);
 
@@ -210,7 +228,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag);
 
                     // Check folder structure after model run
-                    var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
                     var outputFolderFiles = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
                     foreach (var filePath in outputFolderFiles)
                     {
