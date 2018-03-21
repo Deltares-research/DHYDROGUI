@@ -44,6 +44,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     public class WaterQualityModel : TimeDependentModelBase, IStateAwareModelEngine, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
+        private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup =
+        {
+            "bloominp.d09",
+            "bloominp.frm",
+            "deltashell-timers.out",
+            "memory_map.out"
+        };
 
         #region Tags
         public static readonly DispersionDataItemMetaData DispersionDataItemMetaData = new DispersionDataItemMetaData();
@@ -1197,10 +1204,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             MapFileFunctionStore.Path = null;
 
-            var outputDataItems = dataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)).Select(di => di.Value).ToList();
-            var outputCoverages = outputDataItems.OfType<UnstructuredGridCellCoverage>().ToList();
-            var featureCoverages = outputDataItems.OfType<IFeatureCoverage>();
-            var textDocuments = outputDataItems.OfType<TextDocument>();
+            var outputDataItemsValues = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)).Select(di => di.Value).ToList();
+            var outputCoverages = outputDataItemsValues.OfType<UnstructuredGridCellCoverage>().ToList();
+            var outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
+            var outputTextDocuments = outputDataItemsValues.OfType<TextDocument>();
+            var outputTextDocumentsFromFile = outputDataItemsValues.OfType<TextDocumentFromFile>();
 
             // Clear all output coverages
             foreach (var unstructuredGridCellCoverage in outputCoverages)
@@ -1209,17 +1217,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
 
             // Clear all dynamic feature coverages
-            foreach (var featureCoverage in featureCoverages)
+            foreach (var featureCoverage in outputFeatureCoverages)
             {
                 featureCoverage.Filters.Clear();
                 featureCoverage.Clear();
             }
 
             // Remove all text documents
-            foreach (var textDocument in textDocuments)
+            foreach (var textDocument in outputTextDocuments)
             {
                 DataItems.Remove(GetDataItemByValue(textDocument));
             }
+
+            // Remove all text documents based on files
+            foreach (var textDocumentFromFile in outputTextDocumentsFromFile)
+            {
+                FileUtils.DeleteIfExists(textDocumentFromFile.Path);
+                DataItems.Remove(GetDataItemByValue(textDocumentFromFile));
+            }
+            
+            DeleteOutputFiles();
 
             // Todo : Enable when monitoring output is added
             /*            // If relevant, clear the monitoring output data item time series
@@ -1229,8 +1246,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                         }*/
         }
 
-        # endregion
+        private void DeleteOutputFiles()
+        {
+            var outputDirectory = ModelSettings.OutputDirectory;
+            FileUtils.DeleteIfExists(outputDirectory);
+            FileUtils.CreateDirectoryIfNotExists(outputDirectory);
+            filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
+        }
 
+        # endregion
+        
         [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
