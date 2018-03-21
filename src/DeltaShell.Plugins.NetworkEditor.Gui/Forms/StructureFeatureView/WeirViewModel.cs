@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             EnableCrestLevelTimeSeries = previousCrestLevelTimeSeriesValue;
         }
 
-        public Visibility CrestLevelVisibility
+        public Visibility SimpleWeirPropertiesVisibility
         {
             get
             {
@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             set
             {
                 crestLevelEnabled = value;
-                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.CrestLevelVisibility));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SimpleWeirPropertiesVisibility));
             }
         }
         

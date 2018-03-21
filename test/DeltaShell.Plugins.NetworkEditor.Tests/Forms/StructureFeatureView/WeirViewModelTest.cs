@@ -347,7 +347,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
             Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
             Assert.IsFalse(viewModel.GateGroupboxEnabled);
-            Assert.That(viewModel.CrestLevelVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
+            Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
             Assert.AreEqual(1, count);
         }
 
@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
             Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
             Assert.IsTrue(viewModel.GateGroupboxEnabled);
-            Assert.That(viewModel.CrestLevelVisibility, Is.EqualTo(System.Windows.Visibility.Collapsed));
+            Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Collapsed));
             Assert.AreEqual(1, count);
         }
 
