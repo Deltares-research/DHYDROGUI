@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -915,6 +915,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary &apos;{0}&apos; does not contain a boundary condition.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_" +
+                        "boundary_condition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time series contains forbidden negative values for {0} at point {1}.
         /// </summary>
         public static string WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_ {
@@ -931,6 +941,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology" +
                         "_boundary_condition_cannot_have_more_than_one_point_with_generated_data_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A morphology boundary condition cannot have more than one timeseries per boundary..
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology" +
+                        "_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data defined for boundary condition &apos;{0}&apos; at boundary &apos;{1}&apos;.
+        /// </summary>
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defi" +
+                        "ned_for_boundary_condition___0___at_boundary___1__", resourceCulture);
             }
         }
         

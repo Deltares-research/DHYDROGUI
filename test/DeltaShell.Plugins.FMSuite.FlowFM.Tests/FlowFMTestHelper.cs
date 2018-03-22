@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Validation;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
-    public class FlowFMTestHelper
+    public static class FlowFMTestHelper
     {
         private static string expectedEnclosurePolFileContent = "\r\n    6    2\r\n                      10                      10\r\n                      22                      10\r\n                      20                      15\r\n                      20                      20\r\n                      12                      20\r\n                      10                      15\r\n";
 
@@ -70,6 +72,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Geometry = geometry
             };
             return enclosureFeature;
+        }
+
+        public static bool ContainsError(this ValidationReport report, string errorMessage)
+        {
+            return ContainsValidationIssue(report, errorMessage, ValidationSeverity.Error);
+        }
+
+        public static bool ContainsWarning(this ValidationReport report, string errorMessage)
+        {
+            return report.ContainsValidationIssue(errorMessage, ValidationSeverity.Warning);
+        }
+
+        private static bool ContainsValidationIssue(this ValidationReport report, string errorMessage, ValidationSeverity severity)
+        {
+            foreach (var issue in report.Issues.Where(i => i.Severity == severity))
+            {
+                Console.WriteLine(issue.Message);
+
+                if (issue.Message == errorMessage) return true;
+            }
+
+            return report.SubReports.Any(subReport => ContainsValidationIssue(subReport, errorMessage, severity));
         }
     }
 }
