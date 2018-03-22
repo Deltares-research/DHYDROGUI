@@ -133,6 +133,7 @@
     <Compile Include="Grid\UGridStub.cs" />
     <Compile Include="Grid\UGridTest.cs" />
     <Compile Include="Grid\UGridUnitTests.cs" />
+    <Compile Include="Grid\UnstructuredGridFileHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Adaptors;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
@@ -48,6 +49,41 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
+        public static double[] ReadZValues(string path, BedLevelLocation location)
+        {
+            var zValues = new double[0];
+            var fileConvention = GetConvention(path);
+            if (fileConvention == GridApiDataSet.DataSetConventions.CONV_UGRID)
+            {
+                using (var uGrid = new UGrid(path))
+                {
+                    switch (location)
+                    {
+                        case BedLevelLocation.Faces:
+                        case BedLevelLocation.FacesMeanLevFromNodes:
+                            zValues = uGrid.ReadZValuesAtFacesForMeshId(1);
+                            break;
+                        case BedLevelLocation.CellEdges:
+                            Log.WarnFormat(Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
+                            break;
+                        case BedLevelLocation.NodesMeanLev:
+                        case BedLevelLocation.NodesMinLev:
+                        case BedLevelLocation.NodesMaxLev:
+                            zValues = uGrid.ReadZValuesAtNodesForMeshId(1);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException("location", location, null);
+                    }
+                }
+            }
+            else
+            {
+                Log.WarnFormat(Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+            }
+
+            return zValues;
+        }
+
         public static void WriteZValues(string path, BedLevelLocation location, double[] values)
         {
             switch (GetConvention(path))
@@ -62,7 +98,7 @@ namespace DeltaShell.NGHS.IO.Grid
                                 uGrid.WriteZValuesAtFacesForMeshId(1, values);
                                 break;
                             case BedLevelLocation.CellEdges:
-                                Log.WarnFormat("Unable to Write z-values at this location, CellEdges are not currently supported");
+                                Log.WarnFormat(Resources.UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported);
                                 break;
                             case BedLevelLocation.NodesMeanLev:
                             case BedLevelLocation.NodesMinLev:
@@ -87,6 +123,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path))
                     {
+                        if(!uGrid.IsInitialized()) uGrid.Initialize();
                         return uGrid.CoordinateSystem;
                     }
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:

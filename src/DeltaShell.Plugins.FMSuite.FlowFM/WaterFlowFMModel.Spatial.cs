@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
@@ -280,16 +282,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             // Update bathymetry coverage based on specified value in .mdu file
             var bedLevelTypeProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
-            if (bedLevelTypeProperty != null && bedLevelLocationsForUnstructuredGridCellCoverage.Contains((UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value))
+            if (bedLevelTypeProperty != null)
             {
-                Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+                var zValues = GetZValuesFromNetFile(bedLevelType);
+                if (bedLevelLocationsForUnstructuredGridCellCoverage.Contains(bedLevelType))
+                {
+                    Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
+                }
+                else
+                {
+                    if(zValues == null) zValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z).ToArray() : null;
+                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
+                }
+                
+                // sync ModelDefinition with new Bathymetry
+                ModelDefinition.Bathymetry = Bathymetry;
             }
-            else
-            {
-                var bathymetryValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z) : null;
-                Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, bathymetryValues);
-            }
-            
+
             InitialWaterLevel = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
             InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
             {
@@ -311,56 +321,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (Bathymetry == null) return;
 
+            double[] zValues = null;
             switch (bedLevelType)
             {
                 case UnstructuredGridFileHelper.BedLevelLocation.Faces:
                 case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
                     if (Bathymetry is UnstructuredGridCellCoverage) return;
-                    // For now we just create a new Bathemetry and log a warning
-                    // Later will will re-apply values converting from one coverage type to another
-                    Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                    zValues = GetZValuesFromNetFile(bedLevelType);
+                    Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat("Unstructured grid edge coverages are not currently supported");
                     // Not supported yet, so create a VertexCoverage for now
                     if (Bathymetry is UnstructuredGridVertexCoverage) return;
-                    // For now we just create a new Bathemetry and log a warning
-                    // Later will will re-apply values converting from one coverage type to another
-                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                    zValues = GetZValuesFromNetFile(bedLevelType);
+                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
                     if (Bathymetry is UnstructuredGridVertexCoverage) return;
-                    // For now we just create a new Bathemetry and log a warning
-                    // Later will will re-apply values converting from one coverage type to another
-                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid);
+                    zValues = GetZValuesFromNetFile(bedLevelType);
+                    Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("bedLevelType", bedLevelType, null);
             }
 
-            // assuming you didn't already return (above)
-            Log.WarnFormat("The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated");
+            // sync ModelDefinition with new Bathymetry
+            ModelDefinition.Bathymetry = Bathymetry;
 
+            // update BedLevel DataItem
             var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
             if (bedLevelDataItem == null) return;
 
+            Log.InfoFormat("The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated.");
             bedLevelDataItem.Value = Bathymetry;
 
-            // For now we just remove the spatial operations
-            // Later we will re-apply them - DELFT3DFM-1031
-            if (bedLevelDataItem.ValueConverter != null)
+            // re-apply spatial operations
+            var spatialOperationsValueConverter = bedLevelDataItem.ValueConverter as SpatialOperationSetValueConverter;
+            if (spatialOperationsValueConverter?.SpatialOperationSet != null && spatialOperationsValueConverter.SpatialOperationSet.Operations.Any())
             {
-                var spatialOperationsValueConverter = bedLevelDataItem.ValueConverter as SpatialOperationSetValueConverter;
-
-                if (spatialOperationsValueConverter != null &&
-                    spatialOperationsValueConverter.SpatialOperationSet != null)
-                {
-                    spatialOperationsValueConverter.SpatialOperationSet.Operations.Clear();
-                }
-                    
+                spatialOperationsValueConverter.SpatialOperationSet.Operations.ForEach(o => o.Execute());
+                Log.InfoFormat("Reapplying existing spatial operations to new BedLevel Data");
             }
+        }
+
+        private double[] GetZValuesFromNetFile(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
+        {
+            if(string.IsNullOrEmpty(NetFilePath) || !File.Exists(NetFilePath)) return null;
+            var zValuesFromNetFile = UnstructuredGridFileHelper.ReadZValues(NetFilePath, bedLevelType);
+            return zValuesFromNetFile.Length > 0 ? zValuesFromNetFile : null;
         }
 
         private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)

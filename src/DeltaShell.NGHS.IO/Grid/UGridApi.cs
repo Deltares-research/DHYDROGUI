@@ -94,6 +94,62 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
+        public int ReadZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, out double[] zValues)
+        {
+            zValues = new double[0];
+
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            int ierr = GridApiDataSet.GridConstants.NOERR;
+            int nVal = 0;
+            try
+            {
+                var varId = 0;
+                wrapper.InqueryVariableIdByStandardName(ioncId, meshId, locationType, GridApiDataSet.UGridApiConstants.Altitude, ref varId);
+                if (varId == -1) return GridApiDataSet.GridConstants.NOERR;
+
+                switch (locationType)
+                {
+                    case GridApiDataSet.LocationType.UG_LOC_NODE:
+                        ierr = wrapper.GetNodeCount(ioncId, meshId, ref nVal);
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_EDGE:
+                        ierr = wrapper.GetEdgeCount(ioncId, meshId, ref nVal);
+                        break;
+                    case GridApiDataSet.LocationType.UG_LOC_FACE:
+                        ierr = wrapper.GetFaceCount(ioncId, meshId, ref nVal);
+                        break;
+                }
+                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+            }
+            catch (Exception)
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+
+            if (nVal == 0) return GridApiDataSet.GridConstants.NOERR;
+            IntPtr zPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double))*nVal);
+
+            try
+            {
+                ierr = wrapper.GetVariable(ioncId, meshId, (int) locationType, varName, ref zPtr, nVal, ref fillValue);
+                if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
+
+                zValues = new double[nVal];
+                Marshal.Copy(zPtr, zValues, 0, nVal);
+            }
+            catch (Exception)
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                if (zPtr != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(zPtr);
+                zPtr = IntPtr.Zero;
+            }
+            return ierr;
+        }
+
         public int GetMeshName(int mesh, out string name)
         {
             name = string.Empty;

@@ -171,19 +171,39 @@ namespace DeltaShell.NGHS.IO.Grid
                 uGridApi => uGridApi.WriteXYCoordinateValues(meshId, xValues, yValues)
                 , Resources.UGrid_RewriteGridCoordinates_Couldn_t_rewrite_grid_coordinates);
         }
-        
+
+        public double[] ReadZValuesAtFacesForMeshId(int meshId)
+        {
+            var zValues = new double[0];
+            DoWithValidGridApi(
+                uGridApi => uGridApi.ReadZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, GridApiDataSet.UGridApiConstants.FaceZ, out zValues),
+                Resources.UGrid_ReadZValuesAtFacesForMeshId_Error_reading_z_values_at_mesh_faces);
+
+            return zValues;
+        }
+
+        public double[] ReadZValuesAtNodesForMeshId(int meshId)
+        {
+            var zValues = new double[0];
+            DoWithValidGridApi(
+                uGridApi => uGridApi.ReadZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, GridApiDataSet.UGridApiConstants.NodeZ, out zValues),
+                Resources.UGrid_ReadZValuesAtNodesForMeshId_Error_reading_z_values_at_mesh_nodes);
+
+            return zValues;
+        }
+
         public void WriteZValuesAtFacesForMeshId(int meshId, double[] zValues)
         {
             DoWithValidGridApi(
-                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, GridApiDataSet.UGridApiConstants.FaceZ, Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces, zValues)
-                , Resources.UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces);
+                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_FACE, GridApiDataSet.UGridApiConstants.FaceZ, Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces, zValues),
+                Resources.UGrid_WriteZValuesAtFacesForMeshId_Error_writing_z_values_at_mesh_faces);
         }
 
         public void WriteZValuesAtNodesForMeshId(int meshId, double[] zValues)
         {
             DoWithValidGridApi(
-                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, GridApiDataSet.UGridApiConstants.NodeZ, Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes, zValues)
-                , Resources.UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes);
+                uGridApi => uGridApi.WriteZCoordinateValues(meshId, GridApiDataSet.LocationType.UG_LOC_NODE, GridApiDataSet.UGridApiConstants.NodeZ, Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes, zValues),
+                Resources.UGrid_WriteZValuesAtNodesForMeshId_Error_writing_z_values_at_mesh_nodes);
         }
 
         public string GetMeshName(int meshId)
