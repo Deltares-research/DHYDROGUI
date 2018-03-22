@@ -229,13 +229,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                     // Check folder structure after model run
                     var outputFolderFiles = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
+                    Assert.That(outputFolderFiles.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelRun.Length));
                     foreach (var filePath in outputFolderFiles)
                     {
                         Assert.That(relativePathsThatShouldExistAfterWaqModelRun.Contains(filePath),
                             $"File at location '{filePath}' should not exist after Water Quality Model run.");
                     }
-                    Assert.That(outputFolderFiles.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelRun.Length));
-
+                    
                     waqModel.ClearOutput(); // Clearing output
 
                     // Check if output file data items are non-existent AND that feature coverage data items
@@ -245,12 +245,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                     // Check folder structure after model cleanup
                     var outputFolderFilesAfterCleanup = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
+                    Assert.That(outputFolderFilesAfterCleanup.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelCleanup.Length));
                     foreach (var filePath in outputFolderFilesAfterCleanup)
                     {
                         Assert.That(relativePathsThatShouldExistAfterWaqModelCleanup.Contains(filePath), 
                             $"File at location '{filePath}' should not exist after Water Quality Model cleanup.");
                     }
-                    Assert.That(outputFolderFilesAfterCleanup.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelCleanup.Length));
                 }
             }
             finally
