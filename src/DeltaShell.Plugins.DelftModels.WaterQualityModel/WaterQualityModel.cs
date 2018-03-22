@@ -1251,7 +1251,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var outputDirectory = ModelSettings.OutputDirectory;
             FileUtils.DeleteIfExists(outputDirectory);
             FileUtils.CreateDirectoryIfNotExists(outputDirectory);
-            filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
+            if(ExplicitWorkingDirectory != null) filesToDeleteFromExplicitWorkingDirectoryAfterModelCleanup.ForEach(file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
         }
 
         # endregion
