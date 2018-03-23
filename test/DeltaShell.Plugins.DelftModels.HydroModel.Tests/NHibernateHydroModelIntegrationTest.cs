@@ -230,43 +230,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void RunFailingIntegratedModelConnectsOutputFromDimrCorrectly()
-        {
-            var projectPath = TestHelper.GetTestFilePath(@"integratedModel\modelRunFails.dsproj");
-            projectPath = TestHelper.CreateLocalCopy(projectPath);
-            Assert.IsTrue(File.Exists(projectPath));
-
-            using (var app = new DeltaShellApplication())
-            {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
-                app.Run();
-                app.OpenProject(projectPath);
-                var hydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
-                Assert.IsNotNull(hydroModel);
-                Assert.IsTrue(hydroModel.Activities.Any());
-                var flowFM = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.IsNotNull(flowFM);
-
-                ActivityRunner.RunActivity(hydroModel);
-                Assert.AreEqual(ActivityStatus.Failed, hydroModel.Status);
-
-                //Check if the dia file has been generated.
-                CheckLogFileGeneratedForHydroModel(flowFM, WaterFlowFMModel.DiaFileDataItemTag);
-                CheckLogFileGeneratedForHydroModel(hydroModel, DimrRunner.DimrRunLogfileDataItemTag);
-            }
-            var directoryPath = Path.GetDirectoryName(projectPath);
-            FileUtils.DeleteIfExists(directoryPath);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
         public void RunFailingFlowFMFromIntegratedModelConnectsOutputFromDimrCorrectly()
         {
             /* Issue DELFT3DFM-838, when this model is executed directly from the FlowFM it fails (and it's expected to fail)
