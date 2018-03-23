@@ -8,7 +8,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -17,8 +16,6 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -28,8 +25,8 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
-    [Category("Acceptance")]
-    [Category(TestCategory.VerySlow)]
+    [Category("Build.Acceptance")]
+    [Category(TestCategory.Slow)]
     [TestFixture]
     public class WaterFlowFMModelAcceptanceTest
 	{
@@ -177,6 +174,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	        }
 	    }
 
+	    private static void AddAppAndGuiPlugins(IApplication app, DeltaShellGui gui)
+	    {
+	        AddAppPlugins(app);
+	        gui.Plugins.Add(new CommonToolsGuiPlugin());
+	        gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+	        gui.Plugins.Add(new NetworkEditorGuiPlugin());
+	        gui.Plugins.Add(new SharpMapGisGuiPlugin());
+	        gui.Plugins.Add(new FlowFMGuiPlugin());
+	    }
+
+	    private static void AddAppPlugins(IApplication app)
+	    {
+	        app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+	        app.Plugins.Add(new CommonToolsApplicationPlugin());
+	        app.Plugins.Add(new FlowFMApplicationPlugin());
+	        app.Plugins.Add(new NetworkEditorApplicationPlugin());
+	        app.Plugins.Add(new SharpMapGisApplicationPlugin());
+	    }
+
 	    #endregion
 
         #region Test Cases
@@ -194,6 +210,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         #endregion
 
+
+	    #region Tests
 
 	    [Test]
 	    public void CheckIfZipModelsListExist()
@@ -232,8 +250,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 		}
 
-		[TestCaseSource("BasicModelsCase")]
-		public void ImportModel_RunTheModelWithCustomTimeSteps(string relativeZipUrl, string relativeMduPath)
+	    #region Run Models
+
+	    [TestCaseSource("BasicModelsCase")]
+        [Category(TestCategory.VerySlow)] //very slow model, we only want to run the Acceptance + very slow during the weekends.
+	    public void ImportModel_RunModel(string relativeZipUrl, string relativeMduPath)
+	    {
+	        var localZipPath = GetLocalZipPath(relativeZipUrl);
+	        Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+
+	        var extractPath = GetZipExtractPath(localZipPath);
+	        try
+	        {
+	            var model = ImportModelAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
+
+	            Assert.NotNull(model);
+
+	            //Validate before running
+	            var report = model.Validate();
+
+	            Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
+
+	            ActivityRunner.RunActivity(model);
+
+	            Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+	        }
+	        finally
+	        {
+	            FileUtils.DeleteIfExists(extractPath);
+	        }
+	    }
+
+        [TestCaseSource("BasicModelsCase")]
+		public void ImportModel_RunModel_WithCustomTimeSteps(string relativeZipUrl, string relativeMduPath)
 		{
 			var numTimeStepsToRun = 10;
 			var localZipPath = GetLocalZipPath(relativeZipUrl);
@@ -265,29 +314,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 			}
 		}
 
-		//		public void AcceptanceTest_Template(string relativeZipUrl, string relativeMduPath)
-		//		{
-		//			var localZipPath = GetLocalZipPath(relativeZipUrl);
-		//			Assert.IsTrue(File.Exists(localZipPath), string.Format("The zip file {0} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.", relativeZipUrl));
-		//			var extractPath = GetZipExtractPath(localZipPath);
-		//			try
-		//			{
-		//				ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-		//
-		//				var mduPath = Path.Combine(extractPath, relativeMduPath);
-		//				Assert.IsTrue(File.Exists(mduPath), string.Format("File does not exist: {0}", mduPath));
-		//
-		//				var model = new WaterFlowFMModel(mduPath);
-		//				Assert.NotNull(model);
-		//
-		//				}
-		//			finally
-		//			{
-		//				FileUtils.DeleteIfExists(extractPath);
-		//			}
-		//		}
+	    [TestCaseSource("BasicModelsCase")]
+	    [Category(TestCategory.VerySlow)] //very slow model, we only want to run the Acceptance + very slow during the weekends.
+        [Category(TestCategory.WindowsForms)]
+	    public void ImportModel_RunModel_WithGui(string relativeZipUrl, string relativeMduPath)
+	    {
+	        var localZipPath = GetLocalZipPath(relativeZipUrl);
+	        Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+	        var extractPath = GetZipExtractPath(localZipPath);
+	        try
+	        {
+	            ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
 
-		[TestCaseSource("BasicModelsCase")]
+	            var mduPath = Path.Combine(extractPath, relativeMduPath);
+	            Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
+     
+	            using (var gui = new DeltaShellGui())
+	            {
+	                //load the plugins
+	                var app = gui.Application;
+	                AddAppAndGuiPlugins(app, gui);
+	                gui.Run();
+
+	                Action mainWindowShown = delegate
+	                {
+	                    //Importing the model
+	                    var model = new WaterFlowFMModel(mduPath);
+	                    var project = app.Project;
+	                    project.RootFolder.Add(model);
+
+	                    Assert.IsNotNull(model);
+	                    Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
+
+	                    //Open FM window
+	                    OpenFmWindow(gui, model);
+                      
+                        //validate model
+	                    var report = model.Validate();
+	                    Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
+                        
+	                    ActivityRunner.RunActivity(model);
+
+	                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+	                    Assert.IsFalse(model.OutputIsEmpty);
+	                };
+
+	                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+	            }
+	        }
+	        finally
+	        {
+	            FileUtils.DeleteIfExists(extractPath);
+	        }
+	    }
+
+	    #endregion
+
+	    #region DIMR Configuration
+
+	    [TestCaseSource("BasicModelsCase")]
 		public void ImportModel_ExportDimrConfiguration_CheckDimrFiles(string relativeZipUrl, string relativeMduPath)
 		{
 			var localZipPath = GetLocalZipPath(relativeZipUrl);
@@ -305,23 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 		        var report = model.Validate();
 		        Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
 
-                var exporter = new DHydroConfigXmlExporter
-		        {
-		            ExportFilePath = exportFilePath
-		        };
-
-                //Export and check dimr.xml file exists
-		        Assert.IsTrue(exporter.Export(model, null));
-		        Assert.IsTrue(File.Exists(exportFilePath));
-
-                //Check exported model directory exists and contains files
-		        var exportedDimr = Path.Combine(extractPath, "dflowfm");
-		        Assert.IsTrue(Directory.Exists(exportedDimr));
-		        Assert.IsTrue(Directory.GetFiles(exportedDimr).Any());
-
-                //Check exported model mdu exists in directory
-                var exportedMdu = Path.Combine(exportedDimr, string.Concat(model.Name, ".mdu"));
-                Assert.IsTrue(File.Exists(exportedMdu));
+                ExtractDimrConfigurationAndCheck(exportFilePath, model, extractPath);
 		    }
 		    finally
 		    {
@@ -330,98 +399,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 		}
 
 	    [TestCaseSource("BasicModelsCase")]
-        public void ImportModel_SaveModel_LoadModel(string relativeZipUrl, string relativeMduPath)
-		{
-			var localZipPath = GetLocalZipPath(relativeZipUrl);
-			Assert.IsTrue(File.Exists(localZipPath), string.Format("The zip file {0} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.", relativeZipUrl));
-			var extractPath = GetZipExtractPath(localZipPath);
-		    var mduPath = Path.Combine(extractPath, relativeMduPath);
-		    var exportFilePath = Path.Combine(extractPath, Path.GetFileName(mduPath));
-            try
-			{
-                //Import model
-			    var model = ImportModelAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
-                
-			    //Export model into new location
-                Assert.IsFalse(File.Exists(exportFilePath));
-			    model.ExportTo(exportFilePath, false);
-                Assert.IsTrue(File.Exists(exportFilePath));
-
-                //Load exported model
-	            var exportedModel = new WaterFlowFMModel(mduPath);
-                Assert.IsNotNull(exportedModel);
-
-                //Check exported and imported model are the same
-			    Assert.AreEqual(exportedModel, model);
-            }
-			finally
-			{
-				FileUtils.DeleteIfExists(exportFilePath);
-			    FileUtils.DeleteIfExists(extractPath);
-            }
-		}
-
-		[Test]
-		[TestCaseSource("BasicModelsCase")]
-		public void ImportModel_SaveDsProject_ReloadProject(string relativeZipUrl, string relativeMduPath)
-		{
-			var localZipPath = GetLocalZipPath(relativeZipUrl);
-
-		    Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
-
-		    var extractPath = GetZipExtractPath(localZipPath);
-			var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
-			try
-			{
-				using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
-				{
-					app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-					app.Plugins.Add(new CommonToolsApplicationPlugin());
-					app.Plugins.Add(new SharpMapGisApplicationPlugin());
-					app.Plugins.Add(new FlowFMApplicationPlugin());
-					app.Plugins.Add(new NetworkEditorApplicationPlugin());
-					app.Run();
-
-				    CheckModelExistsOrNot(app.Project.RootFolder, false);
-
-				    //Import FM Model
-                    var fmModel = ImportModelAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
-					app.Project.RootFolder.Add(fmModel);
-
-                    //Verify model is imported
-				    var models = CheckModelExistsOrNot(app.Project.RootFolder, true).ToList(); //check that there are any model
-					Assert.AreEqual(1, models.Count()); // check that there is one project
-				    var firstImportedModel = models.FirstOrDefault();
-				    Assert.IsNotNull(firstImportedModel);
-                    Assert.AreEqual(fmModel,firstImportedModel );
-				
-				    //Validate
-					var report = fmModel.Validate();
-					Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
-					
-				    //Save 
-					app.SaveProjectAs(dsProjPath);
-					Assert.IsTrue(File.Exists(dsProjPath));
-                  
-				    //Reopen the project
-				    app.OpenProject(dsProjPath);
-				    models = CheckModelExistsOrNot(app.Project.RootFolder, true).ToList(); //check that there are any model
-				    Assert.AreEqual(1, models.Count()); // check that there is one project
-				    var reopenedModel = models.FirstOrDefault();
-				    Assert.IsNotNull(reopenedModel);
-                    Assert.AreEqual(fmModel, reopenedModel);
-                    Assert.IsNull(firstImportedModel);
-                }
-            }
-			finally
-			{
-				FileUtils.DeleteIfExists(extractPath);
-			}
-		}
-
-	    [TestCaseSource("BasicModelsCase")]
 	    [Category(TestCategory.WindowsForms)]
-	    public void ImportModel_SaveModelWithGui(string relativeZipUrl, string relativeMduPath)
+	    public void ImportModel_ExportDimrConfiguration_CheckDimrFiles_WithGui(string relativeZipUrl, string relativeMduPath)
 	    {
 	        var localZipPath = GetLocalZipPath(relativeZipUrl);
 
@@ -429,344 +408,217 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
 	        var extractPath = GetZipExtractPath(localZipPath);
 	        var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
+	        var exportFilePath = Path.Combine(extractPath, "dimr.xml");
             try
-            {
+	        {
 	            ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-
 	            var mduPath = Path.Combine(extractPath, relativeMduPath);
 
-                Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
-	     
-
+	            Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
+        
 	            using (var gui = new DeltaShellGui())
 	            {
 	                //load the plugins
 	                var app = gui.Application;
-	                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-	                app.Plugins.Add(new CommonToolsApplicationPlugin());
-	                app.Plugins.Add(new FlowFMApplicationPlugin());
-	                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-	                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-	                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-	                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-	                gui.Plugins.Add(new FlowFMGuiPlugin());
+	                AddAppAndGuiPlugins(app, gui);
 	                gui.Run();
 
 	                Action mainWindowShown = delegate
 	                {
-	                    CheckModelExistsOrNot(app.Project.RootFolder, false);
+	                    //Importing the model
+	                    var model = new WaterFlowFMModel(mduPath);
 
-	                    //Import FM Model
-	                    var fmModel = ImportModelAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
-	                    app.Project.RootFolder.Add(fmModel);
+	                    Assert.IsNotNull(model);
+                     
+	                    var project = app.Project;
+	                    project.RootFolder.Add(model);
 
-	                    //Verify model is imported
-	                    var models = CheckModelExistsOrNot(app.Project.RootFolder, true).ToList(); //check that there are any model
-	                    Assert.AreEqual(1, models.Count()); // check that there is one project
-	                    var firstImportedModel = models.FirstOrDefault();
-	                    Assert.IsNotNull(firstImportedModel);
-	                    Assert.AreEqual(fmModel, firstImportedModel);
+	                    Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
 
-	                    //Validate
-	                    var report = fmModel.Validate();
-	                    Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
-	               
-	                    //Save 
+	                    //Open FM window
+	                    OpenFmWindow(gui, model);
+
+	                    //Save project
 	                    app.SaveProjectAs(dsProjPath);
-	                    Assert.IsTrue(File.Exists(dsProjPath));
-	                   
-	                    //Reopen the project to check the model has been saved
-	                    app.OpenProject(dsProjPath);
-	                    models = CheckModelExistsOrNot(app.Project.RootFolder, true).ToList(); //check that there are any model
-	                    Assert.AreEqual(1, models.Count()); // check that there is one project
-	                    var reopenedModel = models.FirstOrDefault();
-	                    Assert.IsNotNull(reopenedModel);
-	                    Assert.AreEqual(fmModel, reopenedModel);
-	                    Assert.IsNull(firstImportedModel);
+                      
+	                    //Export to dimr
+	                    ExtractDimrConfigurationAndCheck(exportFilePath, model, extractPath);
                     };
 
 	                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-                }
-            }
+	            }
+	        }
 	        finally
 	        {
 	            FileUtils.DeleteIfExists(extractPath);
 	        }
 	    }
 
-        [TestCaseSource("BasicModelsCase")]
-        [Category(TestCategory.WindowsForms)]
-        public void ImportModel_ExportModelWithGui(string relativeZipUrl, string relativeMduPath)
-        {
-            var localZipPath = GetLocalZipPath(relativeZipUrl);
-
-            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
-
-            var extractPath = GetZipExtractPath(localZipPath);
-            var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
-            try
-            {
-                ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-                var mduPath = Path.Combine(extractPath, relativeMduPath);
-
-                Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
-        
-                using (var gui = new DeltaShellGui())
-                {
-                    //load the plugins
-                    var app = gui.Application;
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    gui.Plugins.Add(new CommonToolsGuiPlugin());
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin());
-                    gui.Run();
-
-                    Action mainWindowShown = delegate
-                    {
-                        //Importing the model
-                        var model = new WaterFlowFMModel(mduPath);
-
-                        Assert.IsNotNull(model);
-                     
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
-
-                        Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
-
-                        //Open FM window
-                        OpenFmWindow(gui, model);
-
-                        //Save project
-                        app.SaveProjectAs(dsProjPath);
-                      
-                        //Export to dimr
-                        var exportFilePath = Path.Combine(extractPath, "dimr.xml");
-                        var exporter = new DHydroConfigXmlExporter
-                        {
-                            ExportFilePath = exportFilePath
-                        };
-
-                       Assert.IsTrue(exporter.Export(model, null));
-                       Assert.IsTrue(File.Exists(exportFilePath));
-                    };
-
-                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(extractPath);
-            }
-        }
-
-        [TestCaseSource("BasicModelsCase")]
-	    [Category(TestCategory.WindowsForms)]
-	    public void ImportModel_OpenProject_SaveProjectWithGui(string relativeZipUrl, string relativeMduPath)
+	    private static void ExtractDimrConfigurationAndCheck(string exportFilePath, WaterFlowFMModel model, string extractPath)
 	    {
-            var localZipPath = GetLocalZipPath(relativeZipUrl);
+	        var exporter = new DHydroConfigXmlExporter
+	        {
+	            ExportFilePath = exportFilePath
+	        };
+
+	        //Export and check dimr.xml file exists
+	        Assert.IsTrue(exporter.Export(model, null));
+	        Assert.IsTrue(File.Exists(exportFilePath));
+
+	        //Check exported model directory exists and contains files
+	        var exportedDimr = Path.Combine(extractPath, "dflowfm");
+	        Assert.IsTrue(Directory.Exists(exportedDimr));
+	        Assert.IsTrue(Directory.GetFiles(exportedDimr).Any());
+
+	        //Check exported model mdu exists in directory
+	        var exportedMdu = Path.Combine(exportedDimr, string.Concat(model.Name, ".mdu"));
+	        Assert.IsTrue(File.Exists(exportedMdu));
+	    }
+
+	    #endregion
+
+	    #region Save Model
+
+	    private static void ImportModel_IntoProject_SaveProject_ReloadProject_CheckModel(string relativeMduPath, string localZipPath,
+	        string extractPath, IApplication app, string dsProjPath, Action additionalAction = null)
+	    {
+	        //Import FM Model
+	        var fmModel = ImportModelAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
+	        app.Project.RootFolder.Add(fmModel);
+
+	        //Verify model is imported
+	        var models = CheckModelExistsOrNot(app.Project.RootFolder, true).ToList(); //check that there are any model
+	        Assert.AreEqual(1, models.Count); // check that there is one project
+	        var firstImportedModel = models.FirstOrDefault();
+	        Assert.IsNotNull(firstImportedModel);
+	        Assert.AreEqual(fmModel, firstImportedModel);
+
+	        //Do additional action
+	        additionalAction?.Invoke();
+
+	        //Validate
+	        var report = fmModel.Validate();
+	        Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
+
+	        //Save 
+	        app.SaveProjectAs(dsProjPath);
+	        Assert.IsTrue(File.Exists(dsProjPath));
+
+	        //Close Project
+	        app.CloseProject();
+	        Assert.IsNull(app.Project);
+
+	        //Reopen the project
+	        app.OpenProject(dsProjPath);
+            Assert.IsNotNull(app.Project);
+	        models = CheckModelExistsOrNot(app.Project.RootFolder, true).ToList(); //check that there are any model
+	        Assert.AreEqual(1, models.Count); // check that there is one project
+
+	        //Check reloaded model is the same as the previous one.
+	        var reopenedModel = models.FirstOrDefault();
+	        Assert.IsNotNull(reopenedModel);
+	        Assert.AreEqual(fmModel, reopenedModel);
+	    }
+
+	    [TestCaseSource("BasicModelsCase")]
+	    public void ImportModel_SaveModel_ReloadModel(string relativeZipUrl, string relativeMduPath)
+	    {
+	        var localZipPath = GetLocalZipPath(relativeZipUrl);
+	        Assert.IsTrue(File.Exists(localZipPath), string.Format("The zip file {0} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.", relativeZipUrl));
+	        var extractPath = GetZipExtractPath(localZipPath);
+	        var mduPath = Path.Combine(extractPath, relativeMduPath);
+	        var exportFilePath = Path.Combine(extractPath, Path.GetFileName(mduPath));
+	        try
+	        {
+	            //Import model
+	            var model = ImportModelAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
+                
+	            //Export model into new location
+	            Assert.IsFalse(File.Exists(exportFilePath));
+	            model.ExportTo(exportFilePath);
+	            Assert.IsTrue(File.Exists(exportFilePath));
+
+	            //Load exported model
+	            var exportedModel = new WaterFlowFMModel(exportFilePath);
+	            Assert.IsNotNull(exportedModel);
+	        }
+	        finally
+	        {
+	            FileUtils.DeleteIfExists(exportFilePath);
+	            FileUtils.DeleteIfExists(extractPath);
+	        }
+	    }
+
+	    [TestCaseSource("BasicModelsCase")]
+	    [Category(TestCategory.WindowsForms)]
+	    public void ImportModel_SaveAsProject_WithGui(string relativeZipUrl, string relativeMduPath)
+	    {
+	        var localZipPath = GetLocalZipPath(relativeZipUrl);
 
 	        Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
 
 	        var extractPath = GetZipExtractPath(localZipPath);
-            var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
-            try
-            {
-                ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-                var mduPath = Path.Combine(extractPath, relativeMduPath);
+	        var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
+	        try
+	        {
+	            ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
 
-                Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
-               
-                //import the model
-                using (var gui = new DeltaShellGui())
-                {
-                    //load the plugins
-                    var app = gui.Application;
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    gui.Plugins.Add(new CommonToolsGuiPlugin());
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin());
-                    gui.Run();
+	            var mduPath = Path.Combine(extractPath, relativeMduPath);
 
-                    Assert.That(gui.Plugins.Any());
-                    //Assert.That(gui.Plugins.Count, Is.EqualTo(10));
+	            Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
+	     
 
-                    Action mainWindowShown = delegate
-                    {
-                        //Importing the model
-                        var model = new WaterFlowFMModel(mduPath);
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
+	            using (var gui = new DeltaShellGui())
+	            {
+	                //load the plugins
+	                var app = gui.Application;
+                    AddAppAndGuiPlugins(app, gui);
+	                gui.Run();
 
-                        Assert.IsNotNull(model);
-                        Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
-
-                        //Open FM window
-                         OpenFmWindow(gui, model);
-
-                        //Save the project and check if directory contains .dsproj
-                        Assert.IsFalse(File.Exists(dsProjPath));
-                        app.SaveProjectAs(dsProjPath);
-
-                        Assert.IsTrue(File.Exists(dsProjPath));
+	                Action mainWindowShown = delegate
+	                {
+	                    CheckModelExistsOrNot(app.Project.RootFolder, false);
+                        ImportModel_IntoProject_SaveProject_ReloadProject_CheckModel(relativeMduPath, localZipPath, extractPath, app, dsProjPath, () => OpenFmWindow(gui, app.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault()));
                     };
 
-                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(extractPath);
-            }
-        }
+	                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+	            }
+	        }
+	        finally
+	        {
+	            FileUtils.DeleteIfExists(extractPath);
+	        }
+	    }
 
+	    [Test]
 	    [TestCaseSource("BasicModelsCase")]
-	    [Category(TestCategory.WindowsForms)]
-	    public void ImportModel_ReOpenModel_RunModelWithGui(string relativeZipUrl, string relativeMduPath)
+	    public void ImportModel_SaveAsProject_ReloadProject(string relativeZipUrl, string relativeMduPath)
 	    {
-            var localZipPath = GetLocalZipPath(relativeZipUrl);
-            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
-            var extractPath = GetZipExtractPath(localZipPath);
-            var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
-            try
-            {
-                ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
+	        var localZipPath = GetLocalZipPath(relativeZipUrl);
 
-                var mduPath = Path.Combine(extractPath, relativeMduPath);
-                Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
-     
-                using (var gui = new DeltaShellGui())
-                {
-                    //load the plugins
-                    var app = gui.Application;
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new FlowFMApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    gui.Plugins.Add(new CommonToolsGuiPlugin());
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin());
-                    gui.Run();
+	        Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
 
-                    Action mainWindowShown = delegate
-                    {
-                        //Importing the model
-                        var model = new WaterFlowFMModel(mduPath);
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
+	        var extractPath = GetZipExtractPath(localZipPath);
+	        var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
+	        try
+	        {
+	            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+	            {
+	                AddAppPlugins(app);
+	                app.Run();
 
-                        Assert.IsNotNull(model);
-                        Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
+	                CheckModelExistsOrNot(app.Project.RootFolder, false);
+                    ImportModel_IntoProject_SaveProject_ReloadProject_CheckModel(relativeMduPath, localZipPath, extractPath, app, dsProjPath);
+	            }
+	        }
+	        finally
+	        {
+	            FileUtils.DeleteIfExists(extractPath);
+	        }
+	    }
 
-                        //Open FM window
-                        OpenFmWindow(gui, model);
-                      
-                        //Save
-                        app.SaveProjectAs(dsProjPath);
+	    #endregion
 
-                        ////////Load the project
-                        app.OpenProject(dsProjPath);
-
-                        //Validate before running
-                        var newModel = app.Project.RootFolder.Items.OfType<WaterFlowFMModel>().FirstOrDefault();
-                        Assert.IsNotNull(newModel);
-                        var report = newModel.Validate();
-
-                        Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
-
-
-                        ActivityRunner.RunActivity(model);
-
-                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                        Assert.IsFalse(model.OutputIsEmpty);
-                    };
-
-                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(extractPath);
-            }
-        }
-
-        //[TestCaseSource("BasicModelsCase")]
-        //[Category(TestCategory.WindowsForms)]
-        //public void DummyTest(string relativeZipUrl, string relativeMduPath)
-        //{
-        //    var localZipPath = GetLocalZipPath(relativeZipUrl);
-
-        //    Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
-        //    var extractPath = GetZipExtractPath(localZipPath);
-        //    var dsProjPath = Path.Combine(extractPath, "Project1.dsproj");
-        //    try
-        //    {
-        //        ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-        //        var mduPath = Path.Combine(extractPath, relativeMduPath);
-
-        //        Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
-
-        //        //import the model
-        //        using (var gui = new DeltaShellGui())
-        //        {
-        //            //load the plugins
-        //            var app = gui.Application;
-        //            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-        //            app.Plugins.Add(new CommonToolsApplicationPlugin());
-        //            app.Plugins.Add(new FlowFMApplicationPlugin());
-        //            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-        //            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-        //            gui.Plugins.Add(new CommonToolsGuiPlugin());
-        //            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-        //            gui.Plugins.Add(new NetworkEditorGuiPlugin());
-        //            gui.Plugins.Add(new SharpMapGisGuiPlugin());
-        //            gui.Plugins.Add(new FlowFMGuiPlugin());
-        //            gui.Run();
-
-        //            Assert.That(gui.Plugins.Any());
-
-        //            Action mainWindowShown = delegate
-        //            {
-        //                //Importing the model
-        //                var model = new WaterFlowFMModel(mduPath);
-                        
-        //                Assert.IsNotNull(model);
-
-        //                var project = app.Project;
-        //                project.RootFolder.Add(model);
-
-        //                Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
-
-        //                OpenFmWindow(gui, model);
-        //                app.SaveProjectAs(dsProjPath);
-
-        //                Assert.That(File.Exists(dsProjPath));
-        //                app.OpenProject(dsProjPath);
-        //            };
-                    
-        //            WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        FileUtils.DeleteIfExists(extractPath);
-        //    }
-        //}
+	    #endregion
 	}
 }
