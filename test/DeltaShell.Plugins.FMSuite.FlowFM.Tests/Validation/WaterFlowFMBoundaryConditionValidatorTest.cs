@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Boundaries.Add(new Feature2D {Name = "myBoundary"});
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
-            Assert.That(report.ContainsError("Boundary 'myBoundary' does not contain a boundary condition"));
+            Assert.IsTrue(report.ContainsError("Boundary 'myBoundary' does not contain a boundary condition"));
         }
 
         [Test]
