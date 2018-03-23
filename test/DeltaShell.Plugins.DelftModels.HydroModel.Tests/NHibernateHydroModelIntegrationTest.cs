@@ -227,52 +227,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
             converterAfterLoad.HydroRegion.Should().Not.Be.Null();
         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void RunFailingFlowFMFromIntegratedModelConnectsOutputFromDimrCorrectly()
-        {
-            /* Issue DELFT3DFM-838, when this model is executed directly from the FlowFM it fails (and it's expected to fail)
-                 the problem, however, is that FlowFM is not generating any log file because it crashes while initializing. */
-
-            var projectPath = TestHelper.GetTestFilePath(@"integratedModel\modelRunFails.dsproj");
-            projectPath = TestHelper.CreateLocalCopy(projectPath);
-            Assert.IsTrue(File.Exists(projectPath));
-
-            using (var app = new DeltaShellApplication())
-            {
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
-                app.Run();
-                app.OpenProject(projectPath);
-                var hydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
-                Assert.IsNotNull(hydroModel);
-                Assert.IsTrue(hydroModel.Activities.Any());
-                var flowFM = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.IsNotNull(flowFM);
-
-                ActivityRunner.RunActivity(flowFM);
-
-                //Check if the dia file has been generated.
-                CheckLogFileGeneratedForHydroModel(hydroModel, DimrRunner.DimrRunLogfileDataItemTag);
-            }
-            var directoryPath = Path.GetDirectoryName(projectPath);
-            FileUtils.DeleteIfExists(directoryPath);
-        }
-
-        private static void CheckLogFileGeneratedForHydroModel(IHydroModel model, string logTag)
-        {
-            var logFileDataItem = model.DataItems.FirstOrDefault(di => di.Tag == logTag);
-            Assert.IsNotNull(logFileDataItem, "No log item was created.");
-            Assert.IsNotNull(logFileDataItem.Value);
-            var textLogFile = ((TextDocument) logFileDataItem.Value).Content;
-            Assert.IsNotNull(textLogFile);
-        }
     }
 }
