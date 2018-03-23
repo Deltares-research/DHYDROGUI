@@ -112,9 +112,6 @@ namespace DeltaShell.NGHS.IO.Grid
                     case GridApiDataSet.LocationType.UG_LOC_NODE:
                         ierr = wrapper.GetNodeCount(ioncId, meshId, ref nVal);
                         break;
-                    case GridApiDataSet.LocationType.UG_LOC_EDGE:
-                        ierr = wrapper.GetEdgeCount(ioncId, meshId, ref nVal);
-                        break;
                     case GridApiDataSet.LocationType.UG_LOC_FACE:
                         ierr = wrapper.GetFaceCount(ioncId, meshId, ref nVal);
                         break;

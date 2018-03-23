@@ -291,4 +291,25 @@
   <data name="UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention" xml:space="preserve">
     <value>Unable to read z-values from file: {0}, file is not UGrid convention</value>
   </data>
+  <data name="WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported" xml:space="preserve">
+    <value>Unstructured grid edge coverages are not currently supported</value>
+  </data>
+  <data name="WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_not_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_" xml:space="preserve">
+    <value>The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated.</value>
+  </data>
+  <data name="WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data" xml:space="preserve">
+    <value>Reapplying existing spatial operations to new BedLevel Data</value>
+  </data>
+  <data name="WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialisation_step_in_the_D_FLow_FM_kernel___0_" xml:space="preserve">
+    <value>Error when reading grid after 1d2d initialisation step in the D-FLow FM kernel: {0}</value>
+  </data>
+  <data name="WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed__please_verify_the_model_first_" xml:space="preserve">
+    <value>Last attempt to perform snapping operation failed, please verify the model first.</value>
+  </data>
+  <data name="WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_" xml:space="preserve">
+    <value>Kernel failed to perform operation: {0}</value>
+  </data>
+  <data name="WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_" xml:space="preserve">
+    <value>Error disposing grid operation api: {0}</value>
+  </data>
 </root>

@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
@@ -331,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
-                    Log.WarnFormat("Unstructured grid edge coverages are not currently supported");
+                    Log.WarnFormat(Resources.WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported);
                     // Not supported yet, so create a VertexCoverage for now
                     if (Bathymetry is UnstructuredGridVertexCoverage) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
@@ -355,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
             if (bedLevelDataItem == null) return;
 
-            Log.InfoFormat("The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated.");
+            Log.InfoFormat(Resources.WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_not_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_);
             bedLevelDataItem.Value = Bathymetry;
 
             // re-apply spatial operations
@@ -363,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (spatialOperationsValueConverter?.SpatialOperationSet != null && spatialOperationsValueConverter.SpatialOperationSet.Operations.Any())
             {
                 spatialOperationsValueConverter.SpatialOperationSet.Operations.ForEach(o => o.Execute());
-                Log.InfoFormat("Reapplying existing spatial operations to new BedLevel Data");
+                Log.InfoFormat(Resources.WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data);
             }
         }
 
@@ -428,7 +429,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 catch (Exception e)
                 {
                     // Log exception but continue.
-                    Log.WarnFormat("Error when reading grid after 1d2d initialisation step in the D-FLow FM kernel: {0}", e.Message);
+                    Log.WarnFormat(Resources.WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialisation_step_in_the_D_FLow_FM_kernel___0_, e.Message);
                 }
             }
             
@@ -649,7 +650,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (snapApiInErrorMode) // very crude..
             {
-                Log.WarnFormat("Last attempt to perform snapping operation failed, please verify the model first.");
+                Log.WarnFormat(Resources.WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed__please_verify_the_model_first_);
             }
             try
             {
@@ -663,7 +664,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             catch (Exception e)
             {
-                Log.ErrorFormat("Kernel failed to perform operation: {0}", e.Message);
+                Log.ErrorFormat(Resources.WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_, e.Message);
                 snapApiInErrorMode = true;
                 throw;
             }
@@ -691,7 +692,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 catch (Exception ex)
                 {
-                    Log.ErrorFormat("Error disposing grid operation api: {0}", ex.Message);
+                    Log.ErrorFormat(Resources.WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_, ex.Message);
                 }
             }
             gridOperationApi = null;

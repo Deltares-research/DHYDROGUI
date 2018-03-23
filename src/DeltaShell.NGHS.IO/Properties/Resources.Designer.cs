@@ -598,5 +598,73 @@ namespace DeltaShell.NGHS.IO.Properties {
                         "__CellEdges_are_not_currently_supported", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error disposing grid operation api: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel failed to perform operation: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last attempt to perform snapping operation failed, please verify the model first..
+        /// </summary>
+        public static string WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed__please_verify_the_model_first_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed" +
+                        "__please_verify_the_model_first_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error when reading grid after 1d2d initialisation step in the D-FLow FM kernel: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialisation_step_in_the_D_FLow_FM_kernel___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialis" +
+                        "ation_step_in_the_D_FLow_FM_kernel___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reapplying existing spatial operations to new BedLevel Data.
+        /// </summary>
+        public static string WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_" +
+                        "to_new_BedLevel_Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated..
+        /// </summary>
+        public static string WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_not_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_no" +
+                        "t_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unstructured grid edge coverages are not currently supported.
+        /// </summary>
+        public static string WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_no" +
+                        "t_currently_supported", resourceCulture);
+            }
+        }
     }
 }

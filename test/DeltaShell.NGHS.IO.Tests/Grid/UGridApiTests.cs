@@ -371,6 +371,117 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [TestCase(GridApiDataSet.LocationType.UG_LOC_FACE)]
         [TestCase(GridApiDataSet.LocationType.UG_LOC_NODE)]
+        public void ReadZCoordinateValuesTest_WithMissingVariableForLocation(GridApiDataSet.LocationType location)
+        {
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+
+                    var wrapper = MockRepository.GenerateMock<GridWrapper>();
+                    var returnCode = -1;
+
+                    wrapper.Expect(w => w.InqueryVariableIdByStandardName(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, ref Arg<int>.Ref(new Anything(), returnCode).Dummy))
+                                .Return(GridApiDataSet.GridConstants.NOERR)
+                                .Repeat.Twice();
+                    TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+
+                    // uGridApi
+                    double[] zValues = null;
+                    var ierr = uGridApi.ReadZCoordinateValues(1, location, string.Empty, out zValues);
+                    Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
+                    Assert.AreEqual(0, zValues.Length);
+                },
+                uRemoteGridApi =>
+                {
+                    // uRemoteGridApi
+                    double[] zValues = null;
+                    var ierr = uRemoteGridApi.ReadZCoordinateValues(1, location, string.Empty, out zValues);
+                    Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
+                    Assert.AreEqual(0, zValues.Length);
+                });    
+        }
+
+        [TestCase(GridApiDataSet.LocationType.UG_LOC_FACE)]
+        [TestCase(GridApiDataSet.LocationType.UG_LOC_NODE)]
+        public void ReadZCoordinateValuesTest_WhenGetNumberOfValuesFails(GridApiDataSet.LocationType location)
+        {
+            var returnCode = -1;
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+                    var wrapper = MockRepository.GenerateMock<GridWrapper>();
+                    switch (location)
+                    {
+                        case GridApiDataSet.LocationType.UG_LOC_NODE:
+                            wrapper.Expect(w => w.GetNodeCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(new Anything(), returnCode).Dummy))
+                                .Return(returnCode)
+                                .Repeat.Twice();
+                            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+                            break;
+                        case GridApiDataSet.LocationType.UG_LOC_FACE:
+                            wrapper.Expect(w => w.GetFaceCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(new Anything(), returnCode).Dummy))
+                                .Return(returnCode)
+                                .Repeat.Twice();
+                            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+                            break;
+                    }
+                    // uGridApi
+                    double[] zValues = null;
+                    var ierr = uGridApi.ReadZCoordinateValues(1, location, string.Empty, out zValues);
+                    Assert.AreEqual(returnCode, ierr);
+                },
+                uRemoteGridApi =>
+                {
+                    // uRemoteGridApi
+                    double[] zValues = null;
+                    var ierr = uRemoteGridApi.ReadZCoordinateValues(1, location, string.Empty, out zValues);
+                    Assert.AreEqual(returnCode, ierr);
+                });
+        }
+
+        [TestCase(GridApiDataSet.LocationType.UG_LOC_FACE)]
+        [TestCase(GridApiDataSet.LocationType.UG_LOC_NODE)]
+        public void ReadZCoordinateValuesTest_WhenGetNumberOfValuesThrows(GridApiDataSet.LocationType location)
+        {
+            var returnCode = -1;
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    uGridApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
+                    var wrapper = MockRepository.GenerateMock<GridWrapper>();
+                    switch (location)
+                    {
+                        case GridApiDataSet.LocationType.UG_LOC_NODE:
+                            wrapper.Expect(w => w.GetNodeCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(new Anything(), returnCode).Dummy))
+                                .Throw(new Exception())
+                                .Repeat.Twice();
+                            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+                            break;
+                        case GridApiDataSet.LocationType.UG_LOC_FACE:
+                            wrapper.Expect(w => w.GetFaceCount(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(new Anything(), returnCode).Dummy))
+                                .Throw(new Exception())
+                                .Repeat.Twice();
+                            TypeUtils.SetField(uGridApi, WrapperVarName, wrapper);
+                            break;
+                    }
+                    // uGridApi
+                    double[] zValues = null;
+                    var ierr = uGridApi.ReadZCoordinateValues(1, location, string.Empty, out zValues);
+                    Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
+                },
+                uRemoteGridApi =>
+                {
+                    // uRemoteGridApi
+                    double[] zValues = null;
+                    var ierr = uRemoteGridApi.ReadZCoordinateValues(1, location, string.Empty, out zValues);
+                    Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, ierr);
+                });
+        }
+
+        [TestCase(GridApiDataSet.LocationType.UG_LOC_FACE)]
+        [TestCase(GridApiDataSet.LocationType.UG_LOC_NODE)]
         public void ReadZCoordinateValuesTest(GridApiDataSet.LocationType location)
         {
             DoWithMockedUGridApi(
