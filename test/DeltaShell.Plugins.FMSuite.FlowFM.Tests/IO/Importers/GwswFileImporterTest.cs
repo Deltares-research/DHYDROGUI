@@ -747,7 +747,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsTrue(attributeList.Count > 0, string.Format("Attributes found {0}", attributeList.Count));
 
             var uniqueFileList = attributeList.GroupBy(i => i.FileName).Select(grp => grp.Key).ToList();
-            Assert.AreEqual(uniqueFileList.Count, 13, "Mismatch on found filenames.");
+            Assert.AreEqual(uniqueFileList.Count, 12, "Mismatch on found filenames.");
 
             var csvSettings = new CsvSettings
             {
