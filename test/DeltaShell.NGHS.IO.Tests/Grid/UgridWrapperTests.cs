@@ -299,7 +299,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             }
         }
 
-        private void checklinkmesh(int ioncId, int mesh1D2D, ref GridWrapper wrapper)
+        private void check1D2DLinks(int ioncId, int mesh1D2D, ref GridWrapper wrapper)
         {
             IntPtr c_mesh1indexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nlinks);
             IntPtr c_mesh2indexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nlinks);
@@ -492,7 +492,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
 
                 //1. define links
-                var ierr = wrapper.Create1D2DLinks(fileId, ref mesh1D2DId, "1D2D links", nlinks, mesh1DId, mesh2DId,
+                var ierr = wrapper.Create1D2DLinks(fileId, ref mesh1D2DId, "1D2Dlinks", nlinks, mesh1DId, mesh2DId,
                     locationType1, locationType2);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -774,11 +774,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             ierr = wrapper.Open(path, mode, ref fileId, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
-            //11. Check 3 meshes are present
+            //11. Check 2 meshes are present (1D and 2D)
             int nmesh = -1;
             ierr = wrapper.GetMeshCount(fileId, ref nmesh);
             Assert.That(ierr, Is.EqualTo(0));
-            Assert.That(nmesh, Is.EqualTo(3));
+            Assert.That(nmesh, Is.EqualTo(2));
 
             //12. Get the mesh ids
             networkId = -1;
@@ -799,7 +799,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             //Assert.That(mesh1D2DId, Is.GreaterThan(-1));
 
             //13. Get the mesh ids
-            checklinkmesh(fileId, mesh1D2DId, ref wrapper);
+            check1D2DLinks(fileId, mesh1D2DId, ref wrapper);
 
             //14. Close the file
             ierr = wrapper.Close(fileId);
