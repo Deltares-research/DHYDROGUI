@@ -1291,5 +1291,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             FileUtils.DeleteIfExists(mduFilePath);
         }
+
+        [Test]
+        public void GivenWaterFlowFmModel_WhenChangingHeatFluxModelToComposite_ThenTimeSeriesArgumentsAndComponentsAreInTheRightOrder()
+        {
+            var humidity = "Humidity";
+            var airtemperature = "Air temperature";
+            var cloudCoverage = "Cloud coverage";
+            var solarRadiation = "Solar radiation";
+
+            var fmModel = new WaterFlowFMModel();
+            Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
+            fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
+
+            var meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
+            Assert.IsNotNull(meteoData);
+
+            // Check arguments
+            Assert.That(meteoData.Arguments.Count, Is.EqualTo(1));
+            Assert.That(meteoData.Arguments.FirstOrDefault()?.Name, Is.EqualTo("Time"));
+
+            // Check components
+            var meteoDataComponents = meteoData.Components;
+            Assert.That(meteoDataComponents.Count, Is.EqualTo(3));
+            Assert.That(meteoDataComponents[0].Name, Is.EqualTo(humidity));
+            Assert.That(meteoDataComponents[1].Name, Is.EqualTo(airtemperature));
+            Assert.That(meteoDataComponents[2].Name, Is.EqualTo(cloudCoverage));
+
+            // Add Solar Radiation to the Heat Flux Model
+            fmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
+
+            // Check components
+            Assert.That(meteoDataComponents.Count, Is.EqualTo(4));
+            Assert.That(meteoDataComponents[0].Name, Is.EqualTo(humidity));
+            Assert.That(meteoDataComponents[1].Name, Is.EqualTo(airtemperature));
+            Assert.That(meteoDataComponents[2].Name, Is.EqualTo(cloudCoverage));
+            Assert.That(meteoDataComponents[3].Name, Is.EqualTo(solarRadiation));
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Coverages;
@@ -188,6 +190,76 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var importedModel = new WaterFlowFMModel(mduPath);
             Assert.IsTrue(importedModel.UseTemperature);
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenWaterFlowFmModel_WhenWritingModelMeteoData_ThenTimeSeriesFileIsWrittenInTheRightOrder(bool useSolarRadiation)
+        {
+            var tempDir = FileUtils.CreateTempDirectory();
+            var timFilePath = Path.Combine(tempDir, "meteoData.tim");
+            try
+            {
+                var fmModel = new WaterFlowFMModel();
+                Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
+                fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
+
+                var meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
+                Assert.IsNotNull(meteoData);
+
+                // Setup lists of values
+                var timesList = new List<DateTime>();
+                var humidityValues = new List<double>();
+                var airTemperatureValues = new List<double>();
+                var cloudCoverageValues = new List<double>();
+                var solarRadiationValues = new List<double>();
+
+                var timeStep = new TimeSpan(0, 12, 0);
+                var startTime = fmModel.StartTime;
+                for (var i = 0; i < 3; ++i)
+                {
+                    timesList.Add(startTime);
+                    startTime += timeStep;
+                    humidityValues.Add(i * i + 1);
+                    airTemperatureValues.Add(i * i + 2);
+                    cloudCoverageValues.Add(i * i + 3);
+                    solarRadiationValues.Add(i * i + 4);
+                }
+
+                // Set meteo data values and write to file
+                meteoData.Arguments.FirstOrDefault(arg => arg.Name == "Time")?.SetValues(timesList);
+                meteoData.Components.FirstOrDefault(arg => arg.Name == "Humidity")?.SetValues(humidityValues);
+                meteoData.Components.FirstOrDefault(arg => arg.Name == "Air temperature")?.SetValues(airTemperatureValues);
+                meteoData.Components.FirstOrDefault(arg => arg.Name == "Cloud coverage")?.SetValues(cloudCoverageValues);
+                if (useSolarRadiation)
+                {
+                    fmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
+                    meteoData.Components.FirstOrDefault(arg => arg.Name == "Solar radiation")?.SetValues(solarRadiationValues);
+                }
+
+                new TimFile().Write(timFilePath, fmModel.ModelDefinition.HeatFluxModel.MeteoData, fmModel.ReferenceTime);
+
+                // Read tim file content and check if the result is as expected
+                var expectedLines = new[]
+                {
+                    "0.0000000e+00 1.0000000e+00 2.0000000e+00 3.0000000e+00" + (useSolarRadiation ? " 4.0000000e+00": string.Empty),
+                    "1.2000000e+01 2.0000000e+00 3.0000000e+00 4.0000000e+00" + (useSolarRadiation ? " 5.0000000e+00": string.Empty),
+                    "2.4000000e+01 5.0000000e+00 6.0000000e+00 7.0000000e+00" + (useSolarRadiation ? " 8.0000000e+00": string.Empty)
+                };
+                var writtenLinesInFile = File.ReadAllLines(timFilePath);
+                Assert.That(writtenLinesInFile.Length, Is.EqualTo(expectedLines.Length));
+                for (var lineNumber = 0; lineNumber < writtenLinesInFile.Length; lineNumber++)
+                {
+                    Assert.That(writtenLinesInFile[lineNumber], Is.EqualTo(expectedLines[lineNumber]),
+                        $"Written time series file is unequal at line {lineNumber}");
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDir);
+            }
+        }
+
 
         private static void ImportExportRun(string mduFilePath, ref string exportDir)
         {
