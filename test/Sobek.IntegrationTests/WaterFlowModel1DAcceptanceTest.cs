@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -40,11 +41,11 @@ namespace Sobek.IntegrationTests
     public class WaterFlowModel1DAcceptanceTest
     {
         /* Until we decide on using a checkout repository or not we will use the remote repository. */
-        private const string AcceptanceModelsRepository = "https://repos.deltares.nl/repos/DSCTestbench/trunk/cases/e110_delft3dfm_suite/f01_acceptance_models/";
+        private const string AcceptanceModelsRepository = "https://repos.deltares.nl/repos/DSCTestbench/trunk/cases/e111_sobek3_suite/f01_acceptance_models/";
         private const string CredentialsUser = "dscbuildserver";
         private const string CredentialsPwd = "Bu1lds3rv3r";
 
-        private string testTempDir = @"C:\D-Hydro\delta-shell\issue\DELTF3DFM-1234";
+        private string testTempDir = string.Empty;
 
         /* Models to be downloaded, if they are not included here the test that needs to use them will fail.*/
         private static IList<string> ZipModelsList
@@ -53,23 +54,22 @@ namespace Sobek.IntegrationTests
             {
                 return new List<string>
                 {
-                    "sobek-markermeer-j10_5-v1.zip",
-                    "sobek-oosterschelde-j12_5-v1.zip",
-                   " Duitse_Vecht.zip",
-                    "sobek-maas-j17_5-v1.zip",
-                    "sobek-meuse-j99_5-v2.zip",
-                    "sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip",
-                    "sobek-mlnbk-j14_5-v1.zip",
-                    "sobek-nzk_ark-j15_5-v1.zip",
-                    "sobek-oosterschelde-j12_5-v1.zip",
-                    "sobek-ovd_dv-j14_5-v1.zip",
-                    "sobek-ovd-j14_5-v1.zip",
-                    "sobek-rijn-j17_5-v1.zip",
-                    "sobek-rmm-j15_5-v1.zip",
-                    "sobek-twentekanaal-j10_5-v1.zip",
-                    "sobek-veluwerandmeren-j10_5-v1.zip",
-                    "sobek-vozo-j12_5-v1_201312stav.zip",
-                    "sobek-ym_ijd-j16_05-v1.zip"
+                    "c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip",
+                    "c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip",
+                    "c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip",
+                    "c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip",
+                    "c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip",
+                    "c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip",
+                    "c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip",
+                    "c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip",
+                    "c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip",
+                    "c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip",
+                    "c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip",
+                    "c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip",
+                    "c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip",
+                    "c14_sobek-duitse-vecht/Duitse_Vecht.zip",
+                    "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip",
+                    "c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip",
                 };
             }
         }
@@ -79,20 +79,20 @@ namespace Sobek.IntegrationTests
         [TestFixtureSetUp]
         public void Init()
         {
-            //	        testTempDir = FileUtils.CreateTempDirectory();
-            //	        foreach (var zipModel in ZipModelsList)
-            //	        {
-            //	            var remoteZipPath = GetRemoteZipPath(zipModel);
-            //	            var localZipPath = GetLocalZipPath(zipModel);
-            //
-            //                VerifyAndDownloadZip(remoteZipPath, localZipPath);
-            //	        }
+            testTempDir = FileUtils.CreateTempDirectory();
+            foreach (var zipModel in ZipModelsList)
+            {
+            	var remoteZipPath = GetRemoteZipPath(zipModel);
+            	var localZipPath = GetLocalZipPath(zipModel);
+            
+                VerifyAndDownloadZip(remoteZipPath, localZipPath);
+            }
         }
 
         [TestFixtureTearDown]
         public void CleanUp()
         {
-            //	        FileUtils.DeleteIfExists(testTempDir);
+            FileUtils.DeleteIfExists(testTempDir);
         }
         #endregion
 
@@ -109,7 +109,6 @@ namespace Sobek.IntegrationTests
             return waterFlowModel1D;
         }
 
-
         private static string GetDsProjPath(string relativeMduPath, string localZipPath, string extractPath)
         {
             ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
@@ -118,18 +117,6 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(File.Exists(dsProjPath), string.Format("File does not exist: {0}", dsProjPath));
 
             return dsProjPath;
-        }
-        private static WaterFlowModel1D ImportModelAndCheckNotNull(string relativeMd1dPath, string localZipPath, string extractPath)
-        {
-            ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-
-            var mduPath = Path.Combine(extractPath, relativeMd1dPath);
-            Assert.IsTrue(File.Exists(mduPath), string.Format("File does not exist: {0}", mduPath));
-
-            var model = new WaterFlowModel1D(mduPath);
-            Assert.IsNotNull(model);
-
-            return model;
         }
 
         private static void Open1DWindow(DeltaShellGui gui, WaterFlowModel1D model)
@@ -182,19 +169,6 @@ namespace Sobek.IntegrationTests
             Assert.IsTrue(Directory.GetFiles(extractPath, "*.*", SearchOption.AllDirectories).Length > 1);
         }
 
-        private static WaterFlowModel1D ImportModel(string relativeMduPath, string localZipPath, string extractPath)
-        {
-            ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
-
-            var mduPath = Path.Combine(extractPath, relativeMduPath);
-            Assert.IsTrue(File.Exists(mduPath), string.Format("File does not exist: {0}", mduPath));
-
-            var model = new WaterFlowModel1D();
-            Assert.IsNotNull(model);
-
-            return model;
-        }
-
         private static void VerifyAndDownloadZip(string remoteZipPath, string localZipPath)
         {
             if (File.Exists(localZipPath)) return;
@@ -208,17 +182,15 @@ namespace Sobek.IntegrationTests
                 {
                     client.DownloadFile(remoteZipPath, localZipPath);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Assert.Fail(e.Message);
+                    //We want to continue with the rest of downloads
+                    return;
                 }
             }
-
-            Assert.IsTrue(File.Exists(localZipPath),
-                string.Format("Acceptance model {0}was not downloaded correctly.", remoteZipPath));
         }
 
-        private static void AddPluginsToApp(DeltaShellApplication app)
+        private static void AddAppGuiPlugins(IApplication app)
         {
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new HydroModelApplicationPlugin());
@@ -233,35 +205,100 @@ namespace Sobek.IntegrationTests
             app.Plugins.Add(new NetCdfApplicationPlugin());
         }
 
+        private static void AddGuiAndAppPlugins(IApplication app, DeltaShellGui gui)
+        {
+            AddAppGuiPlugins(app);
+
+            gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+            gui.Plugins.Add(new CommonToolsGuiPlugin());
+            gui.Plugins.Add(new SharpMapGisGuiPlugin());
+            gui.Plugins.Add(new NetworkEditorGuiPlugin());
+            gui.Plugins.Add(new HydroModelGuiPlugin());
+            gui.Plugins.Add(new RealTimeControlGuiPlugin());
+            gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
+            gui.Plugins.Add(new RainfallRunoffGuiPlugin());
+            gui.Plugins.Add(new FlowFMGuiPlugin());
+            gui.Plugins.Add(new WaveGuiPlugin());
+        }
+
         #endregion
 
         #region TestCases
 
-        static object[] BasicModelsCase =
+        static object[] BasicOperationsCases =
         {
-            new object[] { "sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" },
-            //new object[] { "Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj" },
-            //new object[] { "sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj"},
-            //new object[] { "sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" },
-            //new object[] { "sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj" },
-            //new object[] { "sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj" },
-            //new object[] { "sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" },
-            //new object[] {"sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj"},
-            //new object[] {"sobek-ovd-j14_5-v1.zip",@"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj"},
-            //new object[] {"sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj"},
+            new object[] { "c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj"},
+            new object[] { "c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj"},
+            new object[] { "c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj"},
+            new object[] { "c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj"},
+            new object[] { "c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj" },
+            new object[] { "c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj"},
+            new object[] { "c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj"},
+            new object[] { "c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj"},
+            new object[] { "c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" },
+            new object[] { "c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj"},
+            new object[] { "c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" },
+            new object[] { "c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj"},
+            new object[] { "c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" },
+            new object[] { "c14_sobek-duitse-vecht/Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj" },
+            new object[] { "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj" },
+            new object[] { "c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj" },
+        };
 
-            //new object[] {"sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj"},
-            //new object[] { "sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj"},
-            //new object[] {"sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj"},
-            //new object[] {"sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj"},
-            //new object[] {"sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj"},
-        }; 
+        static object[] RunModelCases =
+        {
+            new object[] { "c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj"},
+            new object[] { "c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj"},
+            new object[] { "c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj"},
+            new object[] { "c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj"},
+            new object[] { "c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj" },
+            new object[] { "c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj"},
+            new object[] { "c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj"},
+            new object[] { "c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj"},
+            new object[] { "c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" },
+            new object[] { "c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj"},
+            new object[] { "c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" },
+            new object[] { "c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj"},
+            new object[] { "c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" },
+            new object[] { "c14_sobek-duitse-vecht/Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj" },
+            new object[] { "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj" },
+            new object[] { "c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj" },
+        };
+
+        /*Models that require investigation*/
+        static object[] NotRunnableModelCases =
+        {
+
+        };
+
         #endregion
 
         #region Tests
-        [TestCaseSource(nameof(BasicModelsCase))]
+
+        [Test]
+        public void CheckIfZipModelsListExist()
+        {
+            var notFoundZips = new List<string>();
+            foreach (var model in ZipModelsList)
+            {
+                var localZipPath = GetLocalZipPath(model);
+                if (!File.Exists(localZipPath))
+                {
+                    notFoundZips.Add(localZipPath);
+                }
+            }
+
+            if (notFoundZips.Any())
+            {
+                Assert.Fail("The following files were not found {0}", notFoundZips);
+            }
+        }
+
+        #region Open DS Proj
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
         [Category(TestCategory.WindowsForms)]
-        public void OpenModel_WithGui(string relativeZipUrl, string relativeDsProjPath)
+        public void Open_DSProj_WithGui(string relativeZipUrl, string relativeDsProjPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -274,25 +311,7 @@ namespace Sobek.IntegrationTests
                 using (var gui = new DeltaShellGui())
                 {
                     var app = gui.Application;
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                    app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-
-                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                    gui.Plugins.Add(new CommonToolsGuiPlugin());
-                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                    gui.Plugins.Add(new HydroModelGuiPlugin());
-                    gui.Plugins.Add(new RealTimeControlGuiPlugin());
-                    gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
-                    gui.Plugins.Add(new RainfallRunoffGuiPlugin());
-                    gui.Plugins.Add(new FlowFMGuiPlugin());
-                    gui.Plugins.Add(new WaveGuiPlugin());
+                    AddGuiAndAppPlugins((DeltaShellApplication)app, gui);
 
                     gui.Run();
 
@@ -317,8 +336,8 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        [TestCaseSource(nameof(BasicModelsCase))]
-        public void OpenModel_WithApplication(string relativeZipUrl, string relativeMduPath)
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_DSProj_WithApplication(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -330,10 +349,11 @@ namespace Sobek.IntegrationTests
             {
                 using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
                 {
-                    AddPluginsToApp(app);
+                    AddAppGuiPlugins(app);
 
                     app.Run();
                     app.OpenProject(dsProjPath);
+
                     var waterFlowModel1D = Get1DModelFromIntegratedModel(app.Project.RootFolder.Models);
                     Assert.NotNull(waterFlowModel1D);
                 }
@@ -344,10 +364,19 @@ namespace Sobek.IntegrationTests
             }
         }
 
+        #endregion
 
-        [TestCaseSource(nameof(BasicModelsCase))]
+        #region Run WaterFlow 1D model
+
+        [TestCaseSource(nameof(NotRunnableModelCases))]
+        public void TestCasesThatRequireInvestigation(string testCaseName, string testCaseIssue)
+        {
+            Assert.Fail("{0} is marked as not runnable. Reason: {1}", testCaseName, testCaseIssue);
+        }
+
+        [TestCaseSource(nameof(RunModelCases))]
         [Category(TestCategory.VerySlow)]
-        public void Open_Run_NoCustomTimeStep(string relativeZipUrl, string relativeDsProjPath)
+        public void Open_DSProj_Run_WaterFlow1D_WithOriginalTimeStep(string relativeZipUrl, string relativeDsProjPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -358,7 +387,7 @@ namespace Sobek.IntegrationTests
             {
                 using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    AddPluginsToApp(app);
+                    AddAppGuiPlugins(app);
 
                     app.Run();
 
@@ -388,8 +417,8 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        [TestCaseSource(nameof(BasicModelsCase))]
-        public void Open_Run_WithCustomTimeStep(string relativeZipUrl, string relativeDsProjPath)
+        [TestCaseSource(nameof(RunModelCases))]
+        public void Open_DSProj_Run_WaterFlow1D_WithCustomTimeStep(string relativeZipUrl, string relativeDsProjPath)
         {
             var numTimeStepsToRun = 10;
             var localZipPath = GetLocalZipPath(relativeZipUrl);
@@ -401,7 +430,7 @@ namespace Sobek.IntegrationTests
             {
                 using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    AddPluginsToApp(app);
+                    AddAppGuiPlugins(app);
 
                     app.Run();
 
@@ -435,11 +464,13 @@ namespace Sobek.IntegrationTests
             }
         }
 
+        #endregion
 
-        //todo
         //open-save
-        [TestCaseSource(nameof(BasicModelsCase))]
-        public void OpenModel_SaveMode(string relativeZipUrl, string relativeMduPath)
+        #region Save DS proj
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_Save_DSProj_CheckSavedFilesExist(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -456,7 +487,7 @@ namespace Sobek.IntegrationTests
             {
                 using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    AddPluginsToApp(app);
+                    AddAppGuiPlugins(app);
 
                     app.Run();
                     app.OpenProject(dsProjPath);
@@ -476,8 +507,8 @@ namespace Sobek.IntegrationTests
         }
 
         //open-save-closeproject-open
-        [TestCaseSource(nameof(BasicModelsCase))]
-        public void OpenModel_SaveModel_ReOpen(string relativeZipUrl, string relativeMduPath)
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_Save_ReOpen_DSProj(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -494,14 +525,7 @@ namespace Sobek.IntegrationTests
             {
                 using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                    app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+                    AddAppGuiPlugins(app);
 
                     app.Run();
                     app.OpenProject(dsProjPath);
@@ -533,8 +557,12 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        [TestCaseSource(nameof(BasicModelsCase))]
-        public void OpenModel_ExportDimrConfiguration(string relativeZipUrl, string relativeMduPath)
+        #endregion
+
+        #region Export DIMR Configuration
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_DSProj_ExportDimrConfiguration(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -547,7 +575,7 @@ namespace Sobek.IntegrationTests
             {
                 using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    AddPluginsToApp(app);
+                    AddAppGuiPlugins(app);
 
                     app.Run();
                     app.OpenProject(dsProjPath);
@@ -586,6 +614,9 @@ namespace Sobek.IntegrationTests
             var exportedMd1d = Path.Combine(exportedDimr, string.Concat(model.Name, ".md1d"));
             Assert.IsTrue(File.Exists(exportedMd1d));
         }
+
+        #endregion
+
         #endregion
     }
 }

@@ -78,25 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #endregion
 
         #region Helpers
-	    public void CheckIfZipModelsListExist()
-	    {
-	        var notFoundZips = new List<string>();
-	        foreach (var model in ZipModelsList)
-	        {
-	            var localZipPath = GetLocalZipPath(model);
-	            if (!File.Exists(localZipPath))
-	            {
-	                notFoundZips.Add(localZipPath);
-	            }
-	        }
 
-	        if (notFoundZips.Any())
-	        {
-	            Assert.Fail("The following files were not found {0}", notFoundZips);
-	        }
-	    }
-
-        private static string GetRemoteZipPath(string relativeZipCasePath)
+		private static string GetRemoteZipPath(string relativeZipCasePath)
 		{
 			return string.Concat(AcceptanceModelsRepository, relativeZipCasePath);
 		}
@@ -161,14 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	            {
 	                client.DownloadFile(remoteZipPath, localZipPath);
 	            }
-	            catch (Exception e)
+	            catch (Exception)
 	            {
-	                Assert.Fail(e.Message);
+	                //We want to continue with the rest of downloads
+	                return;
 	            }
-	        }
-
-	        Assert.IsTrue(File.Exists(localZipPath),
-	            string.Format("Acceptance model {0}was not downloaded correctly.", remoteZipPath));
+            }
 	    }
 
 	    private static IEnumerable<IWaterFlowFMModel> CheckModelExistsOrNot(Folder rootFolder, bool expected)
@@ -248,8 +229,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	    #region Tests
 
 	    [Test]
+	    public void CheckIfZipModelsListExist()
+	    {
+            var notFoundZips = new List<string>();
+	        foreach (var model in ZipModelsList)
+	        {
+	            var localZipPath = GetLocalZipPath(model);
+	            if (!File.Exists(localZipPath))
+	            {
+                    notFoundZips.Add(localZipPath);
+	            }
+	        }
 
+	        if (notFoundZips.Any())
+	        {
+	            Assert.Fail("The following files were not found {0}", notFoundZips);
+            }
+	    }
 
+        [Test]
 	    [TestCaseSource(nameof(BasicOperationsCases))]
 		public void ImportModel(string relativeZipUrl, string relativeMduPath)
         {
