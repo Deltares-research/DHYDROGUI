@@ -93,6 +93,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39242\lib\net40\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39242\lib\net40\DeltaShell\DeltaShell.Gui.exe</HintPath>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39242\lib\net40\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
@@ -104,6 +107,9 @@
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39242\lib\net40\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.ProjectExplorer">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39242\lib\net40\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Scripting">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39242\lib\net40\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
@@ -177,6 +183,7 @@
     <Compile Include="HisData\HisFunctionStoreTest.cs" />
     <Compile Include="HisData\NetworkLocationTypeConvertorTest.cs" />
     <Compile Include="InitialConditionsBuilderTest.cs" />
+    <Compile Include="NetCdfApplicationPlugin.cs" />
     <Compile Include="PartialSobekImport\SobekComputationalGridImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekControllersTriggersImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekInitialConditionsImporterTest.cs" />
@@ -233,10 +240,18 @@
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
+      <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.csproj">
+      <Project>{CE44B789-11F2-4ECA-A761-D4636B8ED504}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
       <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
@@ -252,6 +267,10 @@
       <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj">
+      <Project>{803D13C0-3274-4C83-AE54-5D828B3338F2}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj">
       <Project>{5EA08B58-6125-4D81-8767-8152D1CA2FBD}</Project>

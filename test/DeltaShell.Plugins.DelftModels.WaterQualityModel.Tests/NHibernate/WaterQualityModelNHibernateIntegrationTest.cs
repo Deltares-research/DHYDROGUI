@@ -110,7 +110,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-
                 gui.Run();
 
                 app.OpenProject(dsprojName);

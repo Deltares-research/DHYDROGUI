@@ -129,7 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
-            
         }
 
         public WaterFlowFMModelDefinition ModelDefinition

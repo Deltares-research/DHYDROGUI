@@ -78,8 +78,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         #endregion
 
         #region Helpers
+	    public void CheckIfZipModelsListExist()
+	    {
+	        var notFoundZips = new List<string>();
+	        foreach (var model in ZipModelsList)
+	        {
+	            var localZipPath = GetLocalZipPath(model);
+	            if (!File.Exists(localZipPath))
+	            {
+	                notFoundZips.Add(localZipPath);
+	            }
+	        }
 
-		private static string GetRemoteZipPath(string relativeZipCasePath)
+	        if (notFoundZips.Any())
+	        {
+	            Assert.Fail("The following files were not found {0}", notFoundZips);
+	        }
+	    }
+
+        private static string GetRemoteZipPath(string relativeZipCasePath)
 		{
 			return string.Concat(AcceptanceModelsRepository, relativeZipCasePath);
 		}
@@ -231,23 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	    #region Tests
 
 	    [Test]
-	    public void CheckIfZipModelsListExist()
-	    {
-            var notFoundZips = new List<string>();
-	        foreach (var model in ZipModelsList)
-	        {
-	            var localZipPath = GetLocalZipPath(model);
-	            if (!File.Exists(localZipPath))
-	            {
-                    notFoundZips.Add(localZipPath);
-	            }
-	        }
 
-	        if (notFoundZips.Any())
-	        {
-	            Assert.Fail("The following files were not found {0}", notFoundZips);
-            }
-	    }
 
 	    [TestCaseSource(nameof(BasicOperationsCases))]
 		public void ImportModel(string relativeZipUrl, string relativeMduPath)
