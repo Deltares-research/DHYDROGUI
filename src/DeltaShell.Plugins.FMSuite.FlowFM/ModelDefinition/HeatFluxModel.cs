@@ -16,8 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     }
 
     [Entity]
-    public class 
-        HeatFluxModel
+    public class HeatFluxModel
     {
         private HeatFluxModelType modelType;
         private IFunction meteoData;
