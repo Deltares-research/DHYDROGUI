@@ -193,20 +193,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	        app.Plugins.Add(new SharpMapGisApplicationPlugin());
 	    }
 
-	    #endregion
+        #endregion
 
         #region Test Cases
 
-	    static object[] BasicModelsCase =
+	    static object[] BasicOperationsCases =
 	    {
+	        new object[] { "c05_Oosterschelde/Oosterschelde.zip", @"Filebased\e02.mdu" },
+	        new object[] { "c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_uniWind.mdu" },
+            new object[] { "c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_varWind.mdu" },
+	        new object[] { "c03_Waal_40m/Waal_40m.zip", @"Waal_40m.dsproj_data\Waal_40m\Waal_40m.mdu" },
+	        new object[] { "c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu" },
+	        new object[] { "c02_Maas_40m/Maas_DIMR.zip", @"DIMR\dflowfm\Maas_j14_5-v2.mdu" },
+	        new object[] { "c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu" },
+	    };
+
+        static object[] RunModelCases = 
+	    {
+	        /* Models that hang or pending investigation should be included in the case below instead.*/
             new object[] { "c05_Oosterschelde/Oosterschelde.zip", @"Filebased\e02.mdu" },
             new object[] { "c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_uniWind.mdu" },
-            new object[] { "c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_varWind.mdu" },
             new object[] { "c03_Waal_40m/Waal_40m.zip", @"Waal_40m.dsproj_data\Waal_40m\Waal_40m.mdu" },
             new object[] { "c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu" },
             new object[] { "c02_Maas_40m/Maas_DIMR.zip", @"DIMR\dflowfm\Maas_j14_5-v2.mdu" },
             new object[] { "c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu" },
         };
+
+        /*Models that require investigation*/
+        static object[] NotRunnableModelCases = 
+	    {
+	        new object[] {"c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1/FlowFM_varWind", "Model hangs while running."},
+	    };
 
         #endregion
 
@@ -232,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 	    }
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(BasicOperationsCases))]
 		public void ImportModel(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
@@ -252,7 +269,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
 	    #region Run Models
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(NotRunnableModelCases))]
+	    public void TestCasesThatRequireInvestigation(string testCaseName, string testCaseIssue)
+	    {
+	        Assert.Fail("{0} is marked as not runnable. Reason: {1}", testCaseName, testCaseIssue);
+	    }
+
+	    [TestCaseSource(nameof(RunModelCases))]
         [Category(TestCategory.VerySlow)] //very slow model, we only want to run the Acceptance + very slow during the weekends.
 	    public void ImportModel_RunModel(string relativeZipUrl, string relativeMduPath)
 	    {
@@ -281,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	        }
 	    }
 
-        [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(RunModelCases))]
 		public void ImportModel_RunModel_WithCustomTimeSteps(string relativeZipUrl, string relativeMduPath)
 		{
 			var numTimeStepsToRun = 10;
@@ -306,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
 				ActivityRunner.RunActivity(model);
 
-			    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 			}
 			finally
 			{
@@ -314,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 			}
 		}
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(RunModelCases))]
 	    [Category(TestCategory.VerySlow)] //very slow model, we only want to run the Acceptance + very slow during the weekends.
         [Category(TestCategory.WindowsForms)]
 	    public void ImportModel_RunModel_WithGui(string relativeZipUrl, string relativeMduPath)
@@ -352,10 +375,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         //validate model
 	                    var report = model.Validate();
 	                    Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
-                        
-	                    ActivityRunner.RunActivity(model);
 
-	                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                        ActivityRunner.RunActivity(model);
+
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 	                    Assert.IsFalse(model.OutputIsEmpty);
 	                };
 
@@ -372,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
 	    #region DIMR Configuration
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(BasicOperationsCases))]
 		public void ImportModel_ExportDimrConfiguration_CheckDimrFiles(string relativeZipUrl, string relativeMduPath)
 		{
 			var localZipPath = GetLocalZipPath(relativeZipUrl);
@@ -398,7 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 		    }
 		}
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(BasicOperationsCases))]
 	    [Category(TestCategory.WindowsForms)]
 	    public void ImportModel_ExportDimrConfiguration_CheckDimrFiles_WithGui(string relativeZipUrl, string relativeMduPath)
 	    {
@@ -520,7 +543,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	        Assert.AreEqual(fmModel, reopenedModel);
 	    }
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(BasicOperationsCases))]
 	    public void ImportModel_SaveModel_ReloadModel(string relativeZipUrl, string relativeMduPath)
 	    {
 	        var localZipPath = GetLocalZipPath(relativeZipUrl);
@@ -549,7 +572,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	        }
 	    }
 
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(BasicOperationsCases))]
 	    [Category(TestCategory.WindowsForms)]
 	    public void ImportModel_SaveAsProject_WithGui(string relativeZipUrl, string relativeMduPath)
 	    {
@@ -591,7 +614,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	    }
 
 	    [Test]
-	    [TestCaseSource("BasicModelsCase")]
+	    [TestCaseSource(nameof(BasicOperationsCases))]
 	    public void ImportModel_SaveAsProject_ReloadProject(string relativeZipUrl, string relativeMduPath)
 	    {
 	        var localZipPath = GetLocalZipPath(relativeZipUrl);
