@@ -200,43 +200,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var timFilePath = Path.Combine(tempDir, "meteoData.tim");
             try
             {
-                var fmModel = new WaterFlowFMModel();
-                Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
-                fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
-
-                var meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
-                Assert.IsNotNull(meteoData);
-
-                // Setup lists of values
-                var timesList = new List<DateTime>();
-                var humidityValues = new List<double>();
-                var airTemperatureValues = new List<double>();
-                var cloudCoverageValues = new List<double>();
-                var solarRadiationValues = new List<double>();
-
-                var timeStep = new TimeSpan(0, 12, 0);
-                var startTime = fmModel.StartTime;
-                for (var i = 0; i < 3; ++i)
-                {
-                    timesList.Add(startTime);
-                    startTime += timeStep;
-                    humidityValues.Add(i * i + 1);
-                    airTemperatureValues.Add(i * i + 2);
-                    cloudCoverageValues.Add(i * i + 3);
-                    solarRadiationValues.Add(i * i + 4);
-                }
-
-                // Set meteo data values and write to file
-                meteoData.Arguments.FirstOrDefault(arg => arg.Name == "Time")?.SetValues(timesList);
-                meteoData.Components.FirstOrDefault(arg => arg.Name == "Humidity")?.SetValues(humidityValues);
-                meteoData.Components.FirstOrDefault(arg => arg.Name == "Air temperature")?.SetValues(airTemperatureValues);
-                meteoData.Components.FirstOrDefault(arg => arg.Name == "Cloud coverage")?.SetValues(cloudCoverageValues);
-                if (useSolarRadiation)
-                {
-                    fmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
-                    meteoData.Components.FirstOrDefault(arg => arg.Name == "Solar radiation")?.SetValues(solarRadiationValues);
-                }
-
+                // Create fm model with meteo data and export to tim file
+                var fmModel = GetWaterFlowFmModelWithMeteoData(useSolarRadiation);
                 new TimFile().Write(timFilePath, fmModel.ModelDefinition.HeatFluxModel.MeteoData, fmModel.ReferenceTime);
 
                 // Read tim file content and check if the result is as expected
@@ -258,6 +223,89 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 FileUtils.DeleteIfExists(tempDir);
             }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenWaterFlowFmModel_WhenExportingImportingMeteoData_ThenMeteoDataIsCorrect(bool useSolarRadiation)
+        {
+            var tempDir = FileUtils.CreateTempDirectory();
+            var timFilePath = Path.Combine(tempDir, "meteoData.tim");
+            try
+            {
+                var fmModel = GetWaterFlowFmModelWithMeteoData(useSolarRadiation);
+                var meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
+
+                // Export meteo data
+                var timFileImporterExporter = new TimFile();
+                timFileImporterExporter.Write(timFilePath, meteoData, fmModel.ReferenceTime);
+
+                // Create new fm model
+                var newFmModel = new WaterFlowFMModel();
+                newFmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
+                if (useSolarRadiation) newFmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
+
+                // Import exported meteo data
+                timFileImporterExporter.Read(timFilePath, newFmModel.ModelDefinition.HeatFluxModel.MeteoData, newFmModel.ReferenceTime);
+                var importedMeteoData = newFmModel.ModelDefinition.HeatFluxModel.MeteoData;
+                
+                // Check that meteo data before and after write/read are equal
+                Assert.That(importedMeteoData.Arguments.Count, Is.EqualTo(meteoData.Arguments.Count));
+                Assert.That(importedMeteoData.Components.Count, Is.EqualTo(meteoData.Components.Count));
+                Assert.AreEqual(meteoData.Arguments[0].Values, importedMeteoData.Arguments[0].Values);
+                var numOfComponents = useSolarRadiation ? 4 : 3;
+                for (var i = 0; i < numOfComponents; i++)
+                {
+                    ListTestUtils.AssertAreEqual(meteoData.Components[i].GetValues<double>(), importedMeteoData.Components[i].GetValues<double>(), 1e-10);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempDir);
+            }
+        }
+
+        private static WaterFlowFMModel GetWaterFlowFmModelWithMeteoData(bool useSolarRadiation)
+        {
+            var fmModel = new WaterFlowFMModel();
+            Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
+            fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
+
+            var meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
+            Assert.IsNotNull(meteoData);
+
+            // Setup lists of values
+            var timesList = new List<DateTime>();
+            var humidityValues = new List<double>();
+            var airTemperatureValues = new List<double>();
+            var cloudCoverageValues = new List<double>();
+            var solarRadiationValues = new List<double>();
+
+            var timeStep = new TimeSpan(0, 12, 0);
+            var startTime = fmModel.StartTime;
+            for (var i = 0; i < 3; ++i)
+            {
+                timesList.Add(startTime);
+                startTime += timeStep;
+                humidityValues.Add(i * i + 1);
+                airTemperatureValues.Add(i * i + 2);
+                cloudCoverageValues.Add(i * i + 3);
+                solarRadiationValues.Add(i * i + 4);
+            }
+
+            // Set meteo data values and write to file
+            meteoData.Arguments.FirstOrDefault(arg => arg.Name == "Time")?.SetValues(timesList);
+            meteoData.Components.FirstOrDefault(arg => arg.Name == "Humidity")?.SetValues(humidityValues);
+            meteoData.Components.FirstOrDefault(arg => arg.Name == "Air temperature")?.SetValues(airTemperatureValues);
+            meteoData.Components.FirstOrDefault(arg => arg.Name == "Cloud coverage")?.SetValues(cloudCoverageValues);
+            if (useSolarRadiation)
+            {
+                fmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
+                meteoData.Components.FirstOrDefault(arg => arg.Name == "Solar radiation")?.SetValues(solarRadiationValues);
+            }
+
+            return fmModel;
         }
 
 
