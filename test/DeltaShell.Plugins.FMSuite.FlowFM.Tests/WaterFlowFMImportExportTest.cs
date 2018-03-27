@@ -253,11 +253,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Check that meteo data before and after write/read are equal
                 Assert.That(importedMeteoData.Arguments.Count, Is.EqualTo(meteoData.Arguments.Count));
                 Assert.That(importedMeteoData.Components.Count, Is.EqualTo(meteoData.Components.Count));
-                Assert.AreEqual(meteoData.Arguments[0].Values, importedMeteoData.Arguments[0].Values);
+                Assert.That(importedMeteoData.Arguments[0].Values, Is.EqualTo(meteoData.Arguments[0].Values));
                 var numOfComponents = useSolarRadiation ? 4 : 3;
                 for (var i = 0; i < numOfComponents; i++)
                 {
-                    ListTestUtils.AssertAreEqual(meteoData.Components[i].GetValues<double>(), importedMeteoData.Components[i].GetValues<double>(), 1e-10);
+                    Assert.That(importedMeteoData.Components[i].Name, Is.EqualTo(meteoData.Components[i].Name));
+                    ListTestUtils.AssertAreEqual(importedMeteoData.Components[i].GetValues<double>(), meteoData.Components[i].GetValues<double>(), 1e-10);
                 }
             }
             finally
