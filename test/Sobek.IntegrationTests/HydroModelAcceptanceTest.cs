@@ -4,15 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Controls;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.Dimr;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
@@ -22,7 +25,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
+using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -33,6 +36,8 @@ using NUnit.Framework;
 namespace Sobek.IntegrationTests
 {
     [TestFixture]
+    [Category("Build.Acceptance")]
+    [Category(TestCategory.Slow)]
     public class HydroModelAcceptanceTest
     {
         /* Until we decide on using a checkout repository or not we will use the remote repository. */
@@ -40,7 +45,7 @@ namespace Sobek.IntegrationTests
         private const string CredentialsUser = "dscbuildserver";
         private const string CredentialsPwd = "Bu1lds3rv3r";
 
-        private string testTempDir = @"C:\D-Hydro\delta-shell\issue\DELTF3DFM-1234";
+        private string testTempDir = string.Empty;
 
         /* Models to be downloaded, if they are not included here the test that needs to use them will fail.*/
         private static IList<string> ZipModelsList
@@ -75,28 +80,58 @@ namespace Sobek.IntegrationTests
         [TestFixtureSetUp]
         public void Init()
         {
-            //	        testTempDir = FileUtils.CreateTempDirectory();
-            //	        foreach (var zipModel in ZipModelsList)
-            //	        {
-            //	            var remoteZipPath = GetRemoteZipPath(zipModel);
-            //	            var localZipPath = GetLocalZipPath(zipModel);
-            //
-            //                VerifyAndDownloadZip(remoteZipPath, localZipPath);
-            //	        }
+            testTempDir = FileUtils.CreateTempDirectory();
+            foreach (var zipModel in ZipModelsList)
+            {
+                var remoteZipPath = GetRemoteZipPath(zipModel);
+                var localZipPath = GetLocalZipPath(zipModel);
+
+                VerifyAndDownloadZip(remoteZipPath, localZipPath);
+            }
         }
 
         [TestFixtureTearDown]
         public void CleanUp()
         {
-            //	        FileUtils.DeleteIfExists(testTempDir);
+            FileUtils.DeleteIfExists(testTempDir);
         }
         #endregion
 
         #region Helpers
 
-        private static string GetRemoteZipPath(string relativeZipCasePath)
+        private static void AddAppPlugins(IApplication app)
         {
-            return string.Concat(AcceptanceModelsRepository, relativeZipCasePath);
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new HydroModelApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Plugins.Add(new RealTimeControlApplicationPlugin());
+            app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+            app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
+            app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+            app.Plugins.Add(new NetCdfApplicationPlugin());
+        }
+
+        private static void ExtractZipToCleanDirectoryAndCheckContent(string localZipPath, string extractPath)
+        {
+            //We want a clean extraction.
+            FileUtils.DeleteIfExists(extractPath);
+
+            //Extracting the zip content
+            ZipFileUtils.Extract(localZipPath, extractPath);
+
+            //Make sure we have extracted files.
+            Assert.IsTrue(Directory.GetFiles(extractPath, "*.*", SearchOption.AllDirectories).Length > 1);
+        }
+
+        private static HydroModel GetIntegratedModel(IEnumerable<IModel> models)
+        {
+            //Extract IntegratedModel
+            var integratedModel = models.OfType<HydroModel>().FirstOrDefault();
+            Assert.IsNotNull(integratedModel);
+
+            return integratedModel;
         }
 
         private string GetLocalZipPath(string zipName)
@@ -104,6 +139,11 @@ namespace Sobek.IntegrationTests
             var zipFile = Path.GetFileName(zipName);
             Assert.IsNotNull(zipFile);
             return Path.Combine(testTempDir, zipFile);
+        }
+
+        private static string GetRemoteZipPath(string relativeZipCasePath)
+        {
+            return string.Concat(AcceptanceModelsRepository, relativeZipCasePath);
         }
 
         private string GetZipName(string zipUrl)
@@ -121,29 +161,26 @@ namespace Sobek.IntegrationTests
             return Path.Combine(parentDirectory, targetDirectory);
         }
 
-        private static void ExtractZipToCleanDirectoryAndCheckContent(string localZipPath, string extractPath)
+        private static void OpenIntegratedModelWindow(DeltaShellGui gui, HydroModel model)
         {
-            //We want a clean extraction.
-            FileUtils.DeleteIfExists(extractPath);
-
-            //Extracting the zip content
-            ZipFileUtils.Extract(localZipPath, extractPath);
-
-            //Make sure we have extracted files.
-            Assert.IsTrue(Directory.GetFiles(extractPath, "*.*", SearchOption.AllDirectories).Length > 1);
+            try
+            {
+                gui.CommandHandler.OpenView(model, typeof(HydroModel));
+            }
+            catch (Exception e)
+            {
+                Assert.Fail("Test failed while opening the modelview. {0}", e.Message);
+            }
         }
 
-        private static HydroModel ImportModel(string relativeMduPath, string localZipPath, string extractPath)
+        private static string OpenDsProjAndCheckNotNull(string relativeMduPath, string localZipPath, string extractPath)
         {
             ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
 
-            var mduPath = Path.Combine(extractPath, relativeMduPath);
-            Assert.IsTrue(File.Exists(mduPath), string.Format("File does not exist: {0}", mduPath));
-
-            var model = new HydroModel();
-            Assert.IsNotNull(model);
-
-            return model;
+            var dsProjPath = Path.Combine(extractPath, relativeMduPath);
+            Assert.IsTrue(File.Exists(dsProjPath), string.Format("File does not exist: {0}", dsProjPath));
+           
+            return dsProjPath;
         }
 
         private static void VerifyAndDownloadZip(string remoteZipPath, string localZipPath)
@@ -171,29 +208,63 @@ namespace Sobek.IntegrationTests
 
         #endregion
 
-        static object[] BasicModelsCase =
-        {
-            new object[] { "sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" },
-            //new object[] { "Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj" },
-            //new object[] { "sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj"},
-            //new object[] { "sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" },
-            //new object[] { "sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj" },
-            //new object[] { "sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj" },
-            //new object[] { "sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" },
-            //new object[] {"sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj"},
-            //new object[] {"sobek-ovd-j14_5-v1.zip",@"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj"},
-            //new object[] {"sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj"},
+        #region TestCases
 
-            //new object[] {"sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj"},
-            //new object[] { "sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj"},
-            //new object[] {"sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj"},
-            //new object[] {"sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj"},
-            //new object[] {"sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj"},
+        static object[] BasicOperationsCases =
+        {
+            new object[] { "c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj"},
+            new object[] { "c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj"},
+            new object[] { "c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj"},
+            new object[] { "c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj"},
+            new object[] { "c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj" },
+            new object[] { "c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj"},
+            new object[] { "c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj"},
+            new object[] { "c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj"},
+            new object[] { "c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" },
+            new object[] { "c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj"},
+            new object[] { "c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" },
+            new object[] { "c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj"},
+            new object[] { "c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" },
+            new object[] { "c14_sobek-duitse-vecht/Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj" },
+            new object[] { "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj" },
+            new object[] { "c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj" },
         };
 
-        [TestCaseSource(nameof(BasicModelsCase))]
+        static object[] RunModelCases =
+        {
+            new object[] { "c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj"},
+            new object[] { "c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj"},
+            new object[] { "c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj"},
+            new object[] { "c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj"},
+            new object[] { "c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj" },
+            new object[] { "c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj"},
+            new object[] { "c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj"},
+            new object[] { "c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj"},
+            new object[] { "c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" },
+            new object[] { "c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj"},
+            new object[] { "c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" },
+            new object[] { "c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj"},
+            new object[] { "c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" },
+            new object[] { "c14_sobek-duitse-vecht/Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj" },
+            new object[] { "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj" },
+            new object[] { "c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj" },
+        };
+
+        /*Models that require investigation*/
+        static object[] NotRunnableModelCases =
+        {
+
+        };
+
+        #endregion
+
+        #region Tests
+
+        #region Open DsProj
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
         [Category(TestCategory.WindowsForms)]
-        public void OpenModel_WithGui(string relativeZipUrl, string relativeMduPath)
+        public void Open_DsProj_OpenHydroModelView(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -206,14 +277,7 @@ namespace Sobek.IntegrationTests
                 using (var gui = new DeltaShellGui())
                 {
                     var app = gui.Application;
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                    app.Plugins.Add(new RainfallRunoffApplicationPlugin());
+                    AddAppPlugins(app);
                     gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                     gui.Plugins.Add(new CommonToolsGuiPlugin());
                     gui.Plugins.Add(new SharpMapGisGuiPlugin());
@@ -223,13 +287,14 @@ namespace Sobek.IntegrationTests
                     gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
                     gui.Plugins.Add(new RainfallRunoffGuiPlugin());
                     gui.Plugins.Add(new FlowFMGuiPlugin());
-                    gui.Plugins.Add(new WaveGuiPlugin());
 
                     gui.Run();
                     Action mainWindowShown = delegate
                     {
-                        app.SaveProjectAs(dsProjPath);
                         app.OpenProject(dsProjPath);
+                        Assert.IsNotNull(app.Project);
+                        Assert.IsTrue(app.Project.RootFolder.Models.Any());
+                        OpenIntegratedModelWindow(gui, app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault());
                     };
 
                     WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
@@ -242,44 +307,32 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        [TestCaseSource(nameof(BasicModelsCase))]
-        [Category(TestCategory.WindowsForms)]
-        public void OpenModel_WithApplication(string relativeZipUrl, string relativeMduPath)
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_DsProj_CheckHydroModelExists_And_HasActivities(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
 
             var extractPath = GetZipExtractPath(localZipPath);
             var dsProjPath = OpenDsProjAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
-            // setup
-            var flow1DModel = new WaterFlowModel1D();
-            var hydroModel = new HydroModel();
-            hydroModel.Activities.Add(flow1DModel);
-
+          
             try
             {
-                using (var gui = new DeltaShellApplication())
+                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    gui.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    gui.Plugins.Add(new CommonToolsApplicationPlugin());
-                    gui.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    gui.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    gui.Plugins.Add(new RealTimeControlApplicationPlugin());
-                    gui.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    gui.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                    gui.Plugins.Add(new RainfallRunoffApplicationPlugin());
+                    AddAppPlugins(app);
 
-                    gui.Run();
+                    app.Run();
+                    app.OpenProject(dsProjPath);
 
-                    Action mainWindowShown = delegate
-                    {
-                        gui.SaveProjectAs(dsProjPath);
-                        gui.OpenProject(dsProjPath);
-                    };
+                    Assert.IsNotNull(app.Project);
+                    Assert.IsTrue(app.Project.RootFolder.Models.Any());
 
-                  //  WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                    var hydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                    Assert.IsNotNull(hydroModel);
+
+                    Assert.IsTrue(hydroModel.Activities.Any());
                 }
-
             }
             finally
             {
@@ -287,9 +340,13 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        [TestCaseSource(nameof(BasicModelsCase))]
-        [Category(TestCategory.WindowsForms)]
-        public void Open_Run(string relativeZipUrl, string relativeMduPath)
+        #endregion
+
+        //open-save
+        #region Save DS proj
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_Save_DSProj_CheckSavedFilesExist(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
             Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
@@ -297,65 +354,117 @@ namespace Sobek.IntegrationTests
             var extractPath = GetZipExtractPath(localZipPath);
             var dsProjPath = OpenDsProjAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
 
-
-            // setup
-            var flow1DModel = new RainfallRunoffModel();
-            var hydroModel = new HydroModel();
-            hydroModel.Activities.Add(flow1DModel);
+            var dsProjSaveAsPath = Path.Combine(extractPath, "test.dsproj");
+            FileUtils.DeleteIfExists(dsProjSaveAsPath);
+            var dsProjDataSaveAsPath = Path.Combine(extractPath, "test.dsproj_data");
+            Directory.Delete(dsProjDataSaveAsPath);
 
             try
             {
-                using (var gui = new DeltaShellGui())
+                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
-                    var app = gui.Application;
+                    AddAppPlugins(app);
+
+                    app.Run();
+                    app.OpenProject(dsProjPath);
+                    var integratedModel = GetIntegratedModel(app.Project.RootFolder.Models);
+                    Assert.NotNull(integratedModel);
+
+                    //new folder test.dsproj_data should be created
+                    app.SaveProjectAs(dsProjSaveAsPath);
+                    Assert.IsTrue(File.Exists(dsProjSaveAsPath));
+                    Assert.IsTrue(Directory.Exists(dsProjDataSaveAsPath));
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(extractPath);
+            }
+        }
+
+        //open-save-closeproject-open
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_Save_ReOpen_DSProj(string relativeZipUrl, string relativeMduPath)
+        {
+            var localZipPath = GetLocalZipPath(relativeZipUrl);
+            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+
+            var extractPath = GetZipExtractPath(localZipPath);
+            var dsProjPath = OpenDsProjAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
+
+            var dsProjSaveAsPath = Path.Combine(extractPath, "test.dsproj");
+            FileUtils.DeleteIfExists(dsProjSaveAsPath);
+            var dsProjDataSaveAsPath = Path.Combine(extractPath, "test.dsproj_data");
+            Directory.Delete(dsProjDataSaveAsPath);
+
+            try
+            {
+                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                {
+                    AddAppPlugins(app);
+
+                    app.Run();
+                    app.OpenProject(dsProjPath);
+                    var integratedModel = GetIntegratedModel(app.Project.RootFolder.Models);
+                    Assert.NotNull(integratedModel);
+
+                    //new folder test.dsproj_data should be created
+                    app.SaveProjectAs(dsProjSaveAsPath);
+                    Assert.IsTrue(File.Exists(dsProjSaveAsPath));
+                    Assert.IsTrue(Directory.Exists(dsProjDataSaveAsPath));
+                    app.CloseProject();
+
+                    //check there is nothing
+                    Assert.IsNull(app.Project);
+
+                    //open the project again
+                    app.OpenProject(dsProjDataSaveAsPath);
+                    var savedIntegratedModel = GetIntegratedModel(app.Project.RootFolder.Models);
+                    Assert.NotNull(savedIntegratedModel);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(extractPath);
+            }
+        }
+
+        #endregion
+
+        #region Run Model
+
+        [TestCaseSource(nameof(RunModelCases))]
+        public void Open_Run_NoCustomTimeStep(string relativeZipUrl, string relativeMduPath)
+        {
+            var localZipPath = GetLocalZipPath(relativeZipUrl);
+            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+
+            var extractPath = GetZipExtractPath(localZipPath);
+            var dsProjPath = OpenDsProjAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
+            try
+            {
+                using (var app = new DeltaShellApplication())
+                {
+                    AddAppPlugins(app);
                    
-                    var hydroModel2 = new HydroModelApplicationPlugin();
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                    app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-                    app.Plugins.Add(hydroModel2);
+                    app.Run();
 
-                    gui.Run();
+                    app.OpenProject(dsProjPath);
+                    Assert.NotNull(app.Project);
 
-              
-                    Action mainWindowShown = delegate
-                    {
+                    //retrieve hydromodel
+                    var hydroModel = GetIntegratedModel(app.Project.RootFolder.Models);
 
-                  
-                        var project = app.Project;
-                        project.RootFolder.Add(hydroModel);
-                        var rainfallRunoffModel = hydroModel.Activities.OfType<RainfallRunoffModel>().FirstOrDefault();
-                        Assert.NotNull(rainfallRunoffModel);
-                        app.SaveProjectAs(dsProjPath);
-                        var newModel = app.Project.RootFolder.Items.OfType<RainfallRunoffModel>().FirstOrDefault();
+                    //validate model
+                    var report = hydroModel.Validate();
+                    Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
 
-                        app.OpenProject(dsProjPath);
+                    //Run model
+                    ActivityRunner.RunActivity(hydroModel);
 
-                        Assert.IsNotNull(newModel);
-
-                        //validate model
-
-                        var report = newModel.Validate();
-                        Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
-
-                        //Run model
-
-
-                        ActivityRunner.RunActivity(hydroModel);
-
-                        Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);
-                        Assert.IsFalse(hydroModel.OutputIsEmpty);
-
-                    };
-
-                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                    Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);
+                    Assert.IsFalse(hydroModel.OutputIsEmpty);
                 }
-
             }
             finally
             {
@@ -363,25 +472,70 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        [TestCaseSource(nameof(BasicModelsCase))]
-        [Category(TestCategory.WindowsForms)]
-        public void Open_Run_Save(string relativeZipUrl, string relativeMduPath)
-        {
+        #endregion
 
+        #region Export Dimr Configuration
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void OpenModel_ExportDimrConfiguration(string relativeZipUrl, string relativeMduPath)
+        {
+            var localZipPath = GetLocalZipPath(relativeZipUrl);
+            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+
+            var extractPath = GetZipExtractPath(localZipPath);
+            var dsProjPath = OpenDsProjAndCheckNotNull(relativeMduPath, localZipPath, extractPath);
+
+
+            var exportFilePath = Path.Combine(extractPath, "dimr.xml");
+            try
+            {
+                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                {
+                    AddAppPlugins(app);
+
+                    app.Run();
+                    app.OpenProject(dsProjPath);
+                    var integratedModel = GetIntegratedModel(app.Project.RootFolder.Models);
+                    Assert.NotNull(integratedModel);
+                    ExtractDimrConfigurationAndCheck(exportFilePath, integratedModel, extractPath);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(extractPath);
+            }
         }
 
-
-
-        private static string OpenDsProjAndCheckNotNull(string relativeMduPath, string localZipPath, string extractPath)
+        private static void ExtractDimrConfigurationAndCheck(string exportFilePath, HydroModel model, string extractPath)
         {
-            ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
+            var exporter = new DHydroConfigXmlExporter
+            {
+                ExportFilePath = exportFilePath
+            };
 
-            var dsProjPath = Path.Combine(extractPath, relativeMduPath);
-            Assert.IsTrue(File.Exists(dsProjPath), string.Format("File does not exist: {0}", dsProjPath));
-           
-            return dsProjPath;
+            //Check if model is valid, otherwise it won't export.
+            var report = model.Validate();
+            Assert.IsFalse(report.AllErrors.Any());
+
+            //Export and check dimr.xml file exists
+            Assert.IsTrue(exporter.Export(model, null));
+            Assert.IsTrue(File.Exists(exportFilePath));
+
+            //Get the workflow to determine which folders should be created.
+            var wfActivities = model.CurrentWorkflow.Activities.ToList();
+            foreach (var wfActivity in wfActivities)
+            {
+                var dimrActivity = (IDimrModel) wfActivity;
+                Assert.IsNotNull(dimrActivity);
+
+                //Check exported model directory exists and contains files
+                var exportedDimr = Path.Combine(extractPath, dimrActivity.DirectoryName);
+                Assert.IsTrue(Directory.Exists(exportedDimr));
+            }
         }
 
+        #endregion
 
+        #endregion
     }
 }

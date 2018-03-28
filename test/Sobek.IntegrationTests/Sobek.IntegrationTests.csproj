@@ -357,14 +357,6 @@
       <Name>DeltaShell.Plugins.DeveloperTools</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj">
-      <Project>{9BFE4F50-7809-4BB6-A967-51B08E7359F5}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave.Gui</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj">
-      <Project>{6C01336E-AA42-44E2-B72C-430CD2AC4469}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
       <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>

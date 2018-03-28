@@ -24,8 +24,6 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -201,7 +199,6 @@ namespace Sobek.IntegrationTests
             app.Plugins.Add(new WaterQualityModelApplicationPlugin());
             app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
             app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new WaveApplicationPlugin());
             app.Plugins.Add(new NetCdfApplicationPlugin());
         }
 
@@ -218,7 +215,6 @@ namespace Sobek.IntegrationTests
             gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
             gui.Plugins.Add(new RainfallRunoffGuiPlugin());
             gui.Plugins.Add(new FlowFMGuiPlugin());
-            gui.Plugins.Add(new WaveGuiPlugin());
         }
 
         #endregion
@@ -545,10 +541,6 @@ namespace Sobek.IntegrationTests
                     app.OpenProject(dsProjDataSaveAsPath);
                     var savedWaterFlowModel1D = Get1DModelFromIntegratedModel(app.Project.RootFolder.Models);
                     Assert.NotNull(savedWaterFlowModel1D);
-                  
-                    //check the flow1dmodel is there
-                    var openedWaterFLowModel1D = Get1DModelFromIntegratedModel(app.Project.RootFolder.Models);
-                    Assert.NotNull(openedWaterFLowModel1D);
                 }
             }
             finally
