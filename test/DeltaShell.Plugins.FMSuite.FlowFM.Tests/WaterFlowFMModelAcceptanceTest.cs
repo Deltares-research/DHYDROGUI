@@ -35,7 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	    private const string CredentialsUser = "dscbuildserver";
         private const string CredentialsPwd = "Bu1lds3rv3r";
 
-	    /* @"C:\D-Hydro\delta-shell\issue\DELTF3DFM-1234\"*/
         private string testTempDir = string.Empty; //leave this string empty when using the remote repository
 
         /* Models to be downloaded, if they are not included here the test that needs to use them will fail.*/
@@ -390,11 +389,77 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 	        }
 	    }
 
-	    #endregion
+        [TestCaseSource(nameof(RunModelCases))]
+        [Category(TestCategory.VerySlow)] //very slow model, we only want to run the Acceptance + very slow during the weekends.
+        [Category(TestCategory.WindowsForms)]
+        public void ImportModel_RunModel_ThenSave(string relativeZipUrl, string relativeMduPath)
+        {
+            var localZipPath = GetLocalZipPath(relativeZipUrl);
+            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+            var extractPath = GetZipExtractPath(localZipPath);
 
-	    #region DIMR Configuration
+            //save path
+            var dsProjSaveAsPath = Path.Combine(extractPath, "test.dsproj");
+            FileUtils.DeleteIfExists(dsProjSaveAsPath);
+            var dsProjDataSaveAsPath = Path.Combine(extractPath, "test.dsproj_data");
+            Directory.Delete(dsProjDataSaveAsPath);
 
-	    [TestCaseSource(nameof(BasicOperationsCases))]
+            try
+            {
+                ExtractZipToCleanDirectoryAndCheckContent(localZipPath, extractPath);
+
+                var mduPath = Path.Combine(extractPath, relativeMduPath);
+                Assert.IsTrue(File.Exists(mduPath), $"File does not exist: {mduPath}");
+
+                using (var gui = new DeltaShellGui())
+                {
+                    //load the plugins
+                    var app = gui.Application;
+                    AddAppAndGuiPlugins(app, gui);
+                    gui.Run();
+
+                    Action mainWindowShown = delegate
+                    {
+                        //Importing the model
+                        var model = new WaterFlowFMModel(mduPath);
+                        var project = app.Project;
+                        project.RootFolder.Add(model);
+
+                        Assert.IsNotNull(model);
+                        Assert.That(project.RootFolder.Models.Count(), Is.EqualTo(1));
+
+                        //Open FM window
+                        OpenFmWindow(gui, model);
+
+                        //validate model
+                        var report = model.Validate();
+                        Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
+
+                        ActivityRunner.RunActivity(model);
+
+                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+                        Assert.IsFalse(model.OutputIsEmpty);
+
+                        //new folder test.dsproj_data should be created
+                        app.SaveProjectAs(dsProjSaveAsPath);
+                        Assert.IsTrue(File.Exists(dsProjSaveAsPath));
+                        Assert.IsTrue(Directory.Exists(dsProjDataSaveAsPath));
+                    };
+
+                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(extractPath);
+            }
+        }
+
+        #endregion
+
+        #region DIMR Configuration
+
+        [TestCaseSource(nameof(BasicOperationsCases))]
 		public void ImportModel_ExportDimrConfiguration_CheckDimrFiles(string relativeZipUrl, string relativeMduPath)
 		{
 			var localZipPath = GetLocalZipPath(relativeZipUrl);

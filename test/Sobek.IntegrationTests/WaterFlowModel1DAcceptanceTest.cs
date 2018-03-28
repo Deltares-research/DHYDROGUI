@@ -217,6 +217,49 @@ namespace Sobek.IntegrationTests
             gui.Plugins.Add(new FlowFMGuiPlugin());
         }
 
+        public void CheckIfZipModelsListExist()
+        {
+            var notFoundZips = new List<string>();
+            foreach (var model in ZipModelsList)
+            {
+                var localZipPath = GetLocalZipPath(model);
+                if (!File.Exists(localZipPath))
+                {
+                    notFoundZips.Add(localZipPath);
+                }
+            }
+
+            if (notFoundZips.Any())
+            {
+                Assert.Fail("The following files were not found {0}", notFoundZips);
+            }
+        }
+        
+        private static void ExtractDimrConfigurationAndCheck(string exportFilePath, WaterFlowModel1D model, string extractPath)
+        {
+            var exporter = new DHydroConfigXmlExporter
+            {
+                ExportFilePath = exportFilePath
+            };
+
+            //Check if model is valid, otherwise it won't export.
+            var report = model.Validate();
+            Assert.IsFalse(report.AllErrors.Any());
+
+            //Export and check dimr.xml file exists
+            Assert.IsTrue(exporter.Export(model, null));
+            Assert.IsTrue(File.Exists(exportFilePath));
+
+            //Check exported model directory exists and contains files
+            var exportedDimr = Path.Combine(extractPath, "dflow1d");
+            Assert.IsTrue(Directory.Exists(exportedDimr));
+            Assert.IsTrue(Directory.GetFiles(exportedDimr).Any());
+
+            //Check exported model mdu exists in directory
+            var exportedMd1d = Path.Combine(exportedDimr, string.Concat(model.Name, ".md1d"));
+            Assert.IsTrue(File.Exists(exportedMd1d));
+        }
+
         #endregion
 
         #region TestCases
@@ -272,23 +315,7 @@ namespace Sobek.IntegrationTests
         #region Tests
 
         [Test]
-        public void CheckIfZipModelsListExist()
-        {
-            var notFoundZips = new List<string>();
-            foreach (var model in ZipModelsList)
-            {
-                var localZipPath = GetLocalZipPath(model);
-                if (!File.Exists(localZipPath))
-                {
-                    notFoundZips.Add(localZipPath);
-                }
-            }
-
-            if (notFoundZips.Any())
-            {
-                Assert.Fail("The following files were not found {0}", notFoundZips);
-            }
-        }
+   
 
         #region Open DS Proj
 
@@ -460,6 +487,61 @@ namespace Sobek.IntegrationTests
             }
         }
 
+
+        [TestCaseSource(nameof(RunModelCases))]
+        [Category(TestCategory.VerySlow)]
+        public void Open_DSProj_Run_WaterFlow1D_ThenSave(string relativeZipUrl, string relativeDsProjPath)
+        {
+            var localZipPath = GetLocalZipPath(relativeZipUrl);
+            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+
+            var extractPath = GetZipExtractPath(localZipPath);
+            var dsProjPath = GetDsProjPath(relativeDsProjPath, localZipPath, extractPath);
+
+            var dsProjSaveAsPath = Path.Combine(extractPath, "test.dsproj");
+            FileUtils.DeleteIfExists(dsProjSaveAsPath);
+            var dsProjDataSaveAsPath = Path.Combine(extractPath, "test.dsproj_data");
+            Directory.Delete(dsProjDataSaveAsPath);
+
+            try
+            {
+                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                {
+                    AddAppGuiPlugins(app);
+
+                    app.Run();
+
+                    app.OpenProject(dsProjPath);
+                    Assert.IsNotNull(app.Project?.RootFolder);
+
+                    //Get integratedModel
+                    var rootFolderModels = app.Project.RootFolder.Models.ToList();
+                    Assert.That(rootFolderModels.Count, Is.EqualTo(1));
+
+                    var waterFlowModel1D = Get1DModelFromIntegratedModel(rootFolderModels);
+
+                    //validate model
+                    var report = waterFlowModel1D.Validate();
+                    Assert.AreEqual(0, report.ErrorCount, $"Report issues: {report.AllErrors.Select(e => e.Message)}");
+
+                    //Run model
+                    ActivityRunner.RunActivity(waterFlowModel1D);
+
+                    Assert.AreEqual(ActivityStatus.Cleaned, waterFlowModel1D.Status);
+                    Assert.IsFalse(waterFlowModel1D.OutputIsEmpty);
+
+                    //new folder test.dsproj_data should be created
+                    app.SaveProjectAs(dsProjSaveAsPath);
+                    Assert.IsTrue(File.Exists(dsProjSaveAsPath));
+                    Assert.IsTrue(Directory.Exists(dsProjDataSaveAsPath));
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(extractPath);
+            }
+        }
+
         #endregion
 
         //open-save
@@ -557,7 +639,8 @@ namespace Sobek.IntegrationTests
         public void Open_DSProj_ExportDimrConfiguration(string relativeZipUrl, string relativeMduPath)
         {
             var localZipPath = GetLocalZipPath(relativeZipUrl);
-            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+            Assert.IsTrue(File.Exists(localZipPath),
+                $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
 
             var extractPath = GetZipExtractPath(localZipPath);
             var dsProjPath = GetDsProjPath(relativeMduPath, localZipPath, extractPath);
@@ -565,7 +648,7 @@ namespace Sobek.IntegrationTests
             var exportFilePath = Path.Combine(extractPath, "dimr.xml");
             try
             {
-                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     AddAppGuiPlugins(app);
 
@@ -582,30 +665,46 @@ namespace Sobek.IntegrationTests
             }
         }
 
-        private static void ExtractDimrConfigurationAndCheck(string exportFilePath, WaterFlowModel1D model, string extractPath)
+        [TestCaseSource(nameof(BasicOperationsCases))]
+        public void Open_DSProj_Save_ThenExportDimrConfiguration(string relativeZipUrl, string relativeMduPath)
         {
-            var exporter = new DHydroConfigXmlExporter
+            var localZipPath = GetLocalZipPath(relativeZipUrl);
+            Assert.IsTrue(File.Exists(localZipPath), $"The zip file {relativeZipUrl} was not found, please make sure it has been included in the ZipModelsList list to be downloaded.");
+
+            var extractPath = GetZipExtractPath(localZipPath);
+            var dsProjPath = GetDsProjPath(relativeMduPath, localZipPath, extractPath);
+
+            var dsProjSaveAsPath = Path.Combine(extractPath, "test.dsproj");
+            FileUtils.DeleteIfExists(dsProjSaveAsPath);
+            var dsProjDataSaveAsPath = Path.Combine(extractPath, "test.dsproj_data");
+            Directory.Delete(dsProjDataSaveAsPath);
+
+            var exportFilePath = Path.Combine(extractPath, "dimr.xml");
+            try
             {
-                ExportFilePath = exportFilePath
-            };
+                using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+                {
+                    AddAppGuiPlugins(app);
 
-            //Check if model is valid, otherwise it won't export.
-            var report = model.Validate();
-            Assert.IsFalse(report.AllErrors.Any());
+                    app.Run();
+                    app.OpenProject(dsProjPath);
+                    var waterFlowModel1D = Get1DModelFromIntegratedModel(app.Project.RootFolder.Models);
+                    Assert.NotNull(waterFlowModel1D);
 
-            //Export and check dimr.xml file exists
-            Assert.IsTrue(exporter.Export(model, null));
-            Assert.IsTrue(File.Exists(exportFilePath));
+                    //new folder test.dsproj_data should be created
+                    app.SaveProjectAs(dsProjSaveAsPath);
+                    Assert.IsTrue(File.Exists(dsProjSaveAsPath));
+                    Assert.IsTrue(Directory.Exists(dsProjDataSaveAsPath));
 
-            //Check exported model directory exists and contains files
-            var exportedDimr = Path.Combine(extractPath, "dflow1d");
-            Assert.IsTrue(Directory.Exists(exportedDimr));
-            Assert.IsTrue(Directory.GetFiles(exportedDimr).Any());
-
-            //Check exported model mdu exists in directory
-            var exportedMd1d = Path.Combine(exportedDimr, string.Concat(model.Name, ".md1d"));
-            Assert.IsTrue(File.Exists(exportedMd1d));
+                    ExtractDimrConfigurationAndCheck(exportFilePath, waterFlowModel1D, extractPath);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(extractPath);
+            }
         }
+
 
         #endregion
 
