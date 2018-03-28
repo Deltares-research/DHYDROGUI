@@ -439,4 +439,7 @@
   <data name="WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type__1__could_not_be_found_" xml:space="preserve">
     <value>Values for {0} feature type {1} could not be found.</value>
   </data>
+  <data name="WaterFlowModel1DNetCdfFunctionStore_MetaData_Error_reading_MetaData_for_file___0__1__2_" xml:space="preserve">
+    <value>Error reading MetaData for file: {0}{1}{2}</value>
+  </data>
 </root>

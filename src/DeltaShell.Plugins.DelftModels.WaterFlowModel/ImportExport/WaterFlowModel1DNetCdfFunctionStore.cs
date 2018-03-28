@@ -41,17 +41,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         {
             get
             {
-                if (metaData == null)
+                if (metaData != null) return metaData;
+
+                if(!File.Exists(Path)) return new WaterFlowModel1DOutputFileMetaData();
+
+                try
                 {
-                    try
-                    {
-                        metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(Path);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.ErrorFormat("Error reading MetaData for file based function store: {0}", ex.Message);
-                        metaData = new WaterFlowModel1DOutputFileMetaData();
-                    }
+                    metaData = WaterFlowModel1DOutputFileReader.ReadMetaData(Path);
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat(Resources.WaterFlowModel1DNetCdfFunctionStore_MetaData_Error_reading_MetaData_for_file___0__1__2_, Path, Environment.NewLine, ex.Message);
+                    metaData = new WaterFlowModel1DOutputFileMetaData();
                 }
                 return metaData;
             }

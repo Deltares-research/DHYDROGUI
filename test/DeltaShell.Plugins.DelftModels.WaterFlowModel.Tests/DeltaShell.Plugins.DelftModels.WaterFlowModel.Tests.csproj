@@ -258,6 +258,7 @@
     <Compile Include="Validation\WaterFlowModel1DOutFileValidatorTest.cs" />
     <Compile Include="WaterFlowModel1DBoundaryNodeDataPropertiesTest.cs" />
     <Compile Include="WaterFlowModel1DConveyanceCalculatorTest.cs" />
+    <Compile Include="WaterFlowModel1DDataAccessListenerTest.cs" />
     <Compile Include="WaterFlowModel1DHelperTest.cs" />
     <Compile Include="WaterFlowModel1DInterpolationExtrapolationCSTest.cs" />
     <Compile Include="WaterFlowModel1DObservationPointsTest.cs" />

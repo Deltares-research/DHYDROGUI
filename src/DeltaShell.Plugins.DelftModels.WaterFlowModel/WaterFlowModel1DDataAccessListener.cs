@@ -1,6 +1,6 @@
-using System;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -47,6 +47,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
                 ProjectRepository.PreLoad<LateralSource>(n => n.Links);
                 ProjectRepository.PreLoad<ICompositeBranchStructure>(cbs => cbs.Structures);
                 firstNetwork = false;
+            }
+        }
+
+        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        {
+            if (!(entity is HydroNetwork)) return;
+
+            var hydroNetwork = (HydroNetwork) entity;
+
+            // SOBEK3-1392: CrossSectionDefinitions without any sections must have at least 'Main'
+            var crossSectionDefinitionsWithoutSections = hydroNetwork.CrossSections
+                .Select(cs => cs.Definition)
+                .Union(hydroNetwork.SharedCrossSectionDefinitions)
+                .Where(csd => !csd.Sections.Any())
+                .ToList();
+
+            if (!crossSectionDefinitionsWithoutSections.Any()) return;
+            
+            var mainSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == CrossSectionDefinition.MainSectionName);
+            if (mainSectionType == null)
+            {
+                mainSectionType = new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName };
+                hydroNetwork.CrossSectionSectionTypes.Add(mainSectionType);
+            }
+
+            foreach (var definition in crossSectionDefinitionsWithoutSections)
+            {
+                definition.Sections.Add(new CrossSectionSection()
+                {
+                    SectionType = mainSectionType
+                });
             }
         }
     }

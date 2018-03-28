@@ -887,6 +887,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error reading MetaData for file: {0}{1}{2}.
+        /// </summary>
+        public static string WaterFlowModel1DNetCdfFunctionStore_MetaData_Error_reading_MetaData_for_file___0__1__2_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DNetCdfFunctionStore_MetaData_Error_reading_MetaData_for_file___0_" +
+                        "_1__2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to parse DateTime {0} from file {1}.
         /// </summary>
         public static string WaterFlowModel1DOutputFileReader_ParseReferenceTime_UnableToParseDateTimeFromFile {
