@@ -194,6 +194,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(false)]
         [TestCase(true)]
         [Category(TestCategory.DataAccess)]
+        public void GivenTimFile_WhenImportingMeteorologicalDataFromFile_ThenImportResultIsAsExpected(bool useSolarRadiation)
+        {
+            var originalTimFilePath = TestHelper.GetTestFilePath(Path.Combine("timFiles", "FlowFM_MeteoData.tim"));
+            var timFilePath = TestHelper.CreateLocalCopySingleFile(originalTimFilePath);
+
+            try
+            {
+                var newFmModel = new WaterFlowFMModel();
+                newFmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
+                if (useSolarRadiation) newFmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
+
+                // Import exported meteo data
+                new TimFile().Read(timFilePath, newFmModel.ModelDefinition.HeatFluxModel.MeteoData,
+                    newFmModel.ReferenceTime);
+                var meteoData = newFmModel.ModelDefinition.HeatFluxModel.MeteoData;
+
+                var expectedValuesList = new[]
+                {
+                    new[] {1.0, 5.0, 9.0},
+                    new[] {2.0, 6.0, 10.0},
+                    new[] {3.0, 7.0, 11.0},
+                    new[] {4.0, 8.0, 12.0}
+                };
+
+                // Check argument names
+                var arguments = meteoData.Arguments;
+                Assert.That(arguments.Count, Is.EqualTo(1));
+                Assert.That(arguments[0].Name, Is.EqualTo("Time"));
+
+                // Check argument values
+                var timeValues = meteoData.Arguments[0].GetValues<DateTime>().ToArray();
+                Assert.That(timeValues,
+                    Is.EqualTo(new[]
+                        {new DateTime(2001, 1, 1), new DateTime(2001, 1, 1, 12, 0, 0), new DateTime(2001, 1, 2)}));
+
+                // Check component names
+                var componentNames = meteoData.Components.Select(comp => comp.Name).ToArray();
+                var list = new List<string> { "Humidity", "Air temperature", "Cloud coverage" };
+                if (useSolarRadiation) list.Add("Solar radiation");
+                Assert.That(componentNames, Is.EqualTo(list.ToArray()));
+
+                // Check component values
+                var numOfComponents = useSolarRadiation ? 4 : 3;
+                for (var i = 0; i < numOfComponents; i++)
+                {
+                    Assert.That(meteoData.Components[i].GetValues<double>().ToArray(),
+                        Is.EqualTo(expectedValuesList[i]));
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(timFilePath);
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        [Category(TestCategory.DataAccess)]
         public void GivenWaterFlowFmModel_WhenWritingModelMeteoData_ThenTimeSeriesFileIsWrittenInTheRightOrder(bool useSolarRadiation)
         {
             var tempDir = FileUtils.CreateTempDirectory();
