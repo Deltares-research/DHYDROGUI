@@ -461,6 +461,12 @@ namespace Sobek.IntegrationTests
 
         #region Run Model
 
+        [TestCaseSource(nameof(NotRunnableModelCases))]
+        public void TestCasesThatRequireInvestigation(string testCaseName, string testCaseIssue)
+        {
+            Assert.Fail("{0} is marked as not runnable. Reason: {1}", testCaseName, testCaseIssue);
+        }
+
         [TestCaseSource(nameof(RunModelCases))]
         [Category(TestCategory.VerySlow)]
         public void Open_Run_NoCustomTimeStep(string relativeZipUrl, string relativeMduPath)

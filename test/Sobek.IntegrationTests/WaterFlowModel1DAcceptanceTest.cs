@@ -562,6 +562,7 @@ namespace Sobek.IntegrationTests
             Directory.Delete(dsProjDataSaveAsPath);
 
             try
+
             {
                 using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
                 {
