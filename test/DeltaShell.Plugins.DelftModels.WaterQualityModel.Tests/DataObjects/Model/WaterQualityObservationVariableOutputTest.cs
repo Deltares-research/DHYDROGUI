@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         }
 
         [Test]
-        public void TestClearTimeSeries()
+        public void WhenClearingTimeSeries_AllTimeSeriesDoNotContainValues()
         {
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>
                                                                                                       {
@@ -146,10 +146,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
                                                                                                           new DelftTools.Utils.Tuple<string, string>("Substance 2", "kg/l")
                                                                                                       });
 
-            // Clear the time series
-            waterQualityObservationVariableOutput.ClearTimeSeries();
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.Count(), Is.EqualTo(2));
 
-            Assert.AreEqual(0, waterQualityObservationVariableOutput.TimeSeriesList.Count());
+            // Add a time-value pair to the first time series
+            var sub1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
+            sub1.Arguments[0].AddValues(new [] {DateTime.Now});
+            sub1.Components[0].SetValues(new[] {1.0});
+
+            // Add a time-value pair to the second time series
+            var sub2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
+            sub2.Arguments[0].AddValues(new[] { DateTime.Now });
+            sub2.Components[0].SetValues(new[] { 2.0 });
+
+            // Check value count before clearing time series
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0).Time.Values.Count, Is.EqualTo(1));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0).GetValues().Count, Is.EqualTo(1));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1).Time.Values.Count, Is.EqualTo(1));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1).GetValues().Count, Is.EqualTo(1));
+
+            // Clear the time series
+            waterQualityObservationVariableOutput.ClearAllTimeSeries();
+
+            // Check value count after clearing time series
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.Count(), Is.EqualTo(2));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0).Time.Values.Count, Is.EqualTo(0));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0).GetValues().Count, Is.EqualTo(0));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1).Time.Values.Count, Is.EqualTo(0));
+            Assert.That(waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1).GetValues().Count, Is.EqualTo(0));
         }
 
         [Test]

@@ -1209,6 +1209,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var outputFeatureCoverages = outputDataItemsValues.OfType<IFeatureCoverage>();
             var outputTextDocuments = outputDataItemsValues.OfType<TextDocument>();
             var outputTextDocumentsFromFile = outputDataItemsValues.OfType<TextDocumentFromFile>();
+            var waqObservationPointOutput = outputDataItemsValues.OfType<WaterQualityObservationVariableOutput>();
 
             // Clear all output coverages
             foreach (var unstructuredGridCellCoverage in outputCoverages)
@@ -1234,6 +1235,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 FileUtils.DeleteIfExists(textDocumentFromFile.Path);
                 DataItems.Remove(GetDataItemByValue(textDocumentFromFile));
+            }
+
+            // Clear all time series values for observation point output
+            foreach (var obsPointOutput in waqObservationPointOutput)
+            {
+                obsPointOutput.ClearAllTimeSeries();
             }
             
             DeleteOutputFiles();
