@@ -284,7 +284,7 @@
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMPartitionExporterTest.cs" />
-    <Compile Include="IO\GroupableCloudImporterTest.cs" />
+    <Compile Include="IO\GroupablePointCloudImporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
@@ -343,6 +343,7 @@
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTests.cs" />
     <Compile Include="WaterFlowFMTestHelper.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
+    <Compile Include="WaterFlowFMModelAcceptanceTest.cs" />
     <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
@@ -441,6 +442,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Gui\MapTools\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

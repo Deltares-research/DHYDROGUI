@@ -287,6 +287,24 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error reading z values at mesh faces.
+        /// </summary>
+        public static string UGrid_ReadZValuesAtFacesForMeshId_Error_reading_z_values_at_mesh_faces {
+            get {
+                return ResourceManager.GetString("UGrid_ReadZValuesAtFacesForMeshId_Error_reading_z_values_at_mesh_faces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error reading z values at mesh nodes.
+        /// </summary>
+        public static string UGrid_ReadZValuesAtNodesForMeshId_Error_reading_z_values_at_mesh_nodes {
+            get {
+                return ResourceManager.GetString("UGrid_ReadZValuesAtNodesForMeshId_Error_reading_z_values_at_mesh_nodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t rewrite grid coordinates.
         /// </summary>
         public static string UGrid_RewriteGridCoordinates_Couldn_t_rewrite_grid_coordinates {
@@ -296,11 +314,11 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t get z values at mesh faces.
+        ///   Looks up a localized string similar to Error writing z values at mesh faces.
         /// </summary>
-        public static string UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces {
+        public static string UGrid_WriteZValuesAtFacesForMeshId_Error_writing_z_values_at_mesh_faces {
             get {
-                return ResourceManager.GetString("UGrid_WriteZValuesAtFacesForMeshId_Couldn_t_get_z_values_at_mesh_faces", resourceCulture);
+                return ResourceManager.GetString("UGrid_WriteZValuesAtFacesForMeshId_Error_writing_z_values_at_mesh_faces", resourceCulture);
             }
         }
         
@@ -314,11 +332,11 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t write z values at mesh nodes.
+        ///   Looks up a localized string similar to Error writing z values at mesh nodes.
         /// </summary>
-        public static string UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes {
+        public static string UGrid_WriteZValuesAtNodesForMeshId_Error_writing_z_values_at_mesh_nodes {
             get {
-                return ResourceManager.GetString("UGrid_WriteZValuesAtNodesForMeshId_Couldn_t_write_z_values_at_mesh_nodes", resourceCulture);
+                return ResourceManager.GetString("UGrid_WriteZValuesAtNodesForMeshId_Error_writing_z_values_at_mesh_nodes", resourceCulture);
             }
         }
         
@@ -548,6 +566,104 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_ne" +
                         "twork_discretisation_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read z-values at this location, CellEdges are not currently supported.
+        /// </summary>
+        public static string UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported {
+            get {
+                return ResourceManager.GetString("UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__" +
+                        "CellEdges_are_not_currently_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read z-values from file: {0}, file is not UGrid convention.
+        /// </summary>
+        public static string UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention {
+            get {
+                return ResourceManager.GetString("UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___fi" +
+                        "le_is_not_UGrid_convention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to write z-values at this location, CellEdges are not currently supported.
+        /// </summary>
+        public static string UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported {
+            get {
+                return ResourceManager.GetString("UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location" +
+                        "__CellEdges_are_not_currently_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error disposing grid operation api: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kernel failed to perform operation: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_GetGridSnapApi_Kernel_failed_to_perform_operation___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last attempt to perform snapping operation failed, please verify the model first..
+        /// </summary>
+        public static string WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed__please_verify_the_model_first_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_GetGridSnapApi_Last_attempt_to_perform_snapping_operation_failed" +
+                        "__please_verify_the_model_first_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error when reading grid after 1d2d initialisation step in the D-FLow FM kernel: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialisation_step_in_the_D_FLow_FM_kernel___0_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialis" +
+                        "ation_step_in_the_D_FLow_FM_kernel___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reapplying existing spatial operations to new BedLevel Data.
+        /// </summary>
+        public static string WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_" +
+                        "to_new_BedLevel_Data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The BedLevel location specified does not match the existing BedLevel data, a new BedLevel Data will be generated..
+        /// </summary>
+        public static string WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_not_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_The_BedLevel_location_specified_does_no" +
+                        "t_match_the_existing_BedLevel_data__a_new_BedLevel_Data_will_be_generated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unstructured grid edge coverages are not currently supported.
+        /// </summary>
+        public static string WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_no" +
+                        "t_currently_supported", resourceCulture);
             }
         }
     }

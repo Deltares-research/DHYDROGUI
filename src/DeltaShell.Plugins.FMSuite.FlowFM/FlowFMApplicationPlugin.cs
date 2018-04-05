@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -16,6 +17,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -89,10 +91,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListImporter(StructuresListType.Gates) { GetModelForList = GetModelForCollection };
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
-            yield return new FMRstFileImporter(){GetFMModelForRestartState = GetFMModelForRestartState};
+            yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
             yield return new BoundaryConditionWpsImporter();
+            yield return new GroupablePointCloudImporter
+            {
+                GetBaseFolder = list =>
+                {
+                    var model = Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault(m => Equals(m.Area.DryPoints, list));
+                    return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
+                }
+            };
 
             yield return new PliFileImporterExporter<Embankment, Embankment>
             {

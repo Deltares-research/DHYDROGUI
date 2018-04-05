@@ -439,4 +439,7 @@
   <data name="WaterFlowModel1DApplicationPlugin_DisplayName_D_Flow1D_Plugin" xml:space="preserve">
     <value>D-Flow1D Plugin</value>
   </data>
+  <data name="WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type__1__could_not_be_found_" xml:space="preserve">
+    <value>Values for {0} feature type {1} could not be found.</value>
+  </data>
 </root>

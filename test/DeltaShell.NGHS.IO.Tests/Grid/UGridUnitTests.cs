@@ -535,8 +535,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 });
         }
 
+        #region TestWriteZValues
+
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get z values at mesh faces" + standardErrorMessage)]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Error writing z values at mesh faces" + standardErrorMessage)]
         public void WhenInvoking_WriteZValuesAtFaces_AndApiReturnsAnErrorValueThenThrowException()
         {
             DoWithMockedUGridApi(
@@ -569,7 +571,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't write z values at mesh nodes" + standardErrorMessage)]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Error writing z values at mesh nodes" + standardErrorMessage)]
         public void WhenInvoking_WriteZValuesAtNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
             DoWithMockedUGridApi(
@@ -600,6 +602,86 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid.WriteZValuesAtNodesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything);
                 });
         }
+
+        #endregion
+
+        #region TestReadZValues
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Error reading z values at mesh faces" + standardErrorMessage)]
+        public void WhenInvoking_ReadZValuesAtFaces_AndApiReturnsAnErrorValueThenThrowException()
+        {
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    double[] zValues = null;
+
+                    uGridApi
+                        .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
+                        .Return(errorValue).Repeat.Once();
+                },
+                grid =>
+                {
+                    grid.ReadZValuesAtFacesForMeshId(Arg<int>.Is.Anything);
+                });
+        }
+
+        [Test]
+        public void WhenInvoking_ReadZValuesAtFaces_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
+        {
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    double[] zValues = null;
+
+                    uGridApi
+                        .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
+                        .Return(noErrorValue).Repeat.Once();
+                },
+                grid =>
+                {
+                    grid.ReadZValuesAtFacesForMeshId(Arg<int>.Is.Anything);
+                });
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Error reading z values at mesh nodes" + standardErrorMessage)]
+        public void WhenInvoking_ReadZValuesAtNodes_AndApiReturnsAnErrorValueThenThrowException()
+        {
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    double[] zValues = null;
+
+                    uGridApi
+                        .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
+                        .Return(errorValue).Repeat.Once();
+                },
+                grid =>
+                {
+                    grid.ReadZValuesAtNodesForMeshId(Arg<int>.Is.Anything);
+                });
+        }
+
+        [Test]
+        public void WhenInvoking_ReadZValuesAtNodes_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
+        {
+            DoWithMockedUGridApi(
+                uGridApi =>
+                {
+                    double[] zValues = null;
+
+                    uGridApi
+                        .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
+                        .Return(noErrorValue).Repeat.Once();
+                },
+                grid =>
+                {
+                    grid.ReadZValuesAtNodesForMeshId(Arg<int>.Is.Anything);
+                });
+        }
+
+        #endregion
 
         [Test]
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get meshname" + standardErrorMessage)]

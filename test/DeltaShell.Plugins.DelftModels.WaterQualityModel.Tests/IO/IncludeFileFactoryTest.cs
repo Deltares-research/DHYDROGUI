@@ -1018,9 +1018,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             string expectedString2 = "MASS/M2" + Environment.NewLine +
                                      "INITIALS" + Environment.NewLine +
-                                     "'A' 'B'" + Environment.NewLine +
+                                     "'A'" + Environment.NewLine +
+                                     "'B'" + Environment.NewLine +
                                      "DEFAULTS" + Environment.NewLine +
-                                     "1.5 2.9" + Environment.NewLine +
+                                     "1.5" + Environment.NewLine +
+                                     "2.9" + Environment.NewLine +
                                      "INITIALS" + Environment.NewLine +
                                      "'C'" + Environment.NewLine +
                                      "ALL" + Environment.NewLine +

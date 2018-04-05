@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public override string ToString()
         {
-            if(!String.IsNullOrEmpty(TableName))
+            if(!string.IsNullOrEmpty(TableName))
             {
                 return TableName + "." + ColumnName;
             }
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 {
                     return null;
                 }
-                if (!String.IsNullOrEmpty(TableName))
+                if (!string.IsNullOrEmpty(TableName))
                 {
                     return TableName + "_" + ColumnName;
                 }

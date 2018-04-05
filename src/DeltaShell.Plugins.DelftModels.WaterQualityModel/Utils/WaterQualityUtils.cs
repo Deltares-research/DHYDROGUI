@@ -100,8 +100,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
                 {
                     if (!closeMainWindow && !waqModelProcess.HasExited)
                     {
-                        Log.ErrorFormat($"Could not close process ({Path.GetFileNameWithoutExtension(exePath)}) normally, trying to kill the process");
+                        Log.Warn($"Could not close process ({Path.GetFileNameWithoutExtension(exePath)}) normally, trying to kill the process. This might affect the model output.");
                         waqModelProcess.Kill();
+						Thread.Sleep(100); // wait for process to end
                     }
                 }
 

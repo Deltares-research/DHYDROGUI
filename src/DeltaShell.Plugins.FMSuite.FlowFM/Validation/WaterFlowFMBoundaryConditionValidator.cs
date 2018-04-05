@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 if (!flowBoundaryConditions.Any())
                 {
-                    issues.Add(new ValidationIssue(boundaryConditionSet.Name, ValidationSeverity.Warning,
-                        "No boundary condition associated to geometry: this feature will be ignored upon run/save model",
+                    issues.Add(new ValidationIssue(boundaryConditionSet.Name, ValidationSeverity.Error,
+                        string.Format(Resources.WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition, boundaryConditionSet.Feature.Name),
                         boundaryConditionSet));
                     continue;
                 }
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     bcSet.BoundaryConditions.Where( bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)).ToList().Count > 1)
                 {
                     issues.Add(new ValidationIssue(bcSet, ValidationSeverity.Error,
-                        "A morphology boundary condition cannot have more than one timeseries per boundary.", bcSet));
+                        Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_, bcSet));
                 }
             }
 
@@ -97,8 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 if (!boundaryCondition.DataPointIndices.Any())
                 {
-                    issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Warning,
-                        "No point data defined for boundary condition.", boundaryCondition));
+                    issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
+                        string.Format(Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__, boundaryConditionName, boundaryCondition.FeatureName),
+                        boundaryCondition));
                 }
                 else
                 {
@@ -160,8 +161,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     else
                     {
                         issues.Add(new ValidationIssue(boundaryConditionName, ValidationSeverity.Error,
-                            string.Format("No data defined for {0} at point {1}.", boundaryConditionName,
-                                supportPointName), boundaryCondition));
+                            string.Format(Resources.WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__,
+                                boundaryConditionName, supportPointName),
+                            boundaryCondition));
                     }
                 }
 

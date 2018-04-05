@@ -85,6 +85,7 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetVarNames(int meshId, GridApiDataSet.LocationType locationType , out int[] varIds);
         int WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues);
         int WriteZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, string longName, double[] zValues);
+        int ReadZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, out double[] zValues);
         int GetMeshName(int meshId, out string meshName);
         int write_geom_ugrid(string filename);
         int write_map_ugrid(string filename);

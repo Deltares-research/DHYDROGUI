@@ -45,6 +45,7 @@
     <Compile Include="FewsAdapterHKTGTest.cs" />
     <Compile Include="FewsAdapterMaasTest.cs" />
     <Compile Include="FewsAdapterTestBase.cs" />
+    <Compile Include="FewsPI\RunInfoTest.cs" />
     <Compile Include="ModelExchangeItemExporterTest.cs" />
     <Compile Include="ModelStateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -260,11 +261,6 @@
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Deltares.IO.FewsPI\Deltares.IO.FewsPI.csproj">
-      <Project>{2989E646-B5A0-4599-8AF5-113FD60C3749}</Project>
-      <Name>Deltares.IO.FewsPI</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.Fews\DeltaShell.Plugins.Fews.csproj">
       <Project>{DF36566F-25E2-4514-9715-163B50B87AAC}</Project>
       <Name>DeltaShell.Plugins.Fews</Name>
@@ -286,6 +282,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

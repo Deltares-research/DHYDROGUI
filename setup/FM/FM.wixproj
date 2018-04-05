@@ -8,7 +8,7 @@
     <!-- This is our release version -->
     <ReleaseVersion>1.4.3</ReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>Delft3D FM Suite 2018 HMWQ</ProductName>
+    <ProductName>Delft3D FM Suite 2018.01 HMWQ</ProductName>
     <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
@@ -119,7 +119,6 @@
     <Content Include="Plugins.wxi" />
     <Content Include="Resources\FM.ico" />
     <Content Include="Resources\FM.png" />
-    <Content Include="Resources\Welcome.htm" />
     <Content Include="Resources\WindowLayout_normal.en-US.xml" />
     <Content Include="RGFGrid_x64.wxi" />
     <Content Include="UtilityShortcuts.wxi" />

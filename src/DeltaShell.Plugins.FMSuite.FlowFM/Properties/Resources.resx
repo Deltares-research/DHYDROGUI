@@ -478,4 +478,13 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="UnstrucGridOperationApi_DisposeApiIfNotReachable_API_failed_to_generate_snapped_feature__0___Try_reopening_the_project_if_the_problem_persists_" xml:space="preserve">
     <value>API failed to generate snapped feature {0}. Try reopening the project if the problem persists.</value>
   </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_Validate_Boundary___0___does_not_contain_a_boundary_condition" xml:space="preserve">
+    <value>Boundary '{0}' does not contain a boundary condition</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_No_data_defined_for_boundary_condition___0___at_boundary___1__" xml:space="preserve">
+    <value>No data defined for boundary condition '{0}' at boundary '{1}'</value>
+  </data>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateFlowBoundaryConditions_A_morphology_boundary_condition_cannot_have_more_than_one_timeseries_per_boundary_" xml:space="preserve">
+    <value>A morphology boundary condition cannot have more than one timeseries per boundary.</value>
+  </data>
 </root>

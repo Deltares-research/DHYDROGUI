@@ -21,12 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         private static WaterFlowFMModel CreateValidModel()
         {
             return new WaterFlowFMModel
-                {
-                    TimeStep = new TimeSpan(0, 0, 1, 0),
-                    StartTime = new DateTime(2000, 1, 1),
-                    StopTime = new DateTime(2000, 1, 2),
-                    OutputTimeStep = new TimeSpan(0, 0, 2, 0)
-                };
+            {
+                TimeStep = new TimeSpan(0, 0, 1, 0),
+                StartTime = new DateTime(2000, 1, 1),
+                StopTime = new DateTime(2000, 1, 2),
+                OutputTimeStep = new TimeSpan(0, 0, 2, 0)
+            };
         }
 
         private static WaterFlowFMModel CreateValidMorphologyModel()
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = CreateValidModel();
             model.ModelDefinition.UseMorphologySediment = true;
             model.SedimentFractions = new EventedList<ISedimentFraction>();
-            model.SedimentFractions.Add(new SedimentFraction() {Name = "testFrac"});
+            model.SedimentFractions.Add(new SedimentFraction {Name = "testFrac"});
             return model;
         }
 
@@ -43,11 +43,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = CreateValidModel();
             
-            model.Boundaries.Add(new Feature2D {Name = "boundary"});
+            model.Boundaries.Add(new Feature2D {Name = "myBoundary"});
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
-
-            Assert.AreEqual(1, report.WarningCount);
+            Assert.IsTrue(report.ContainsError("Boundary 'myBoundary' does not contain a boundary condition"));
         }
 
         [Test]
@@ -55,14 +54,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = CreateValidModel();
 
-            var boundary = new Feature2D { Name = "boundary" };
+            var boundary = new Feature2D { Name = "myBoundary" };
             model.Boundaries.Add(boundary);
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 FlowBoundaryConditionFactory.CreateBoundaryCondition(boundary));
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
-
-            Assert.AreEqual(1, report.WarningCount);
+            Assert.That(report.ContainsError("No data defined for boundary condition 'Water level' at boundary 'myBoundary'"));
         }
 
         [Test]
@@ -121,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             model.ModelDefinition.UseMorphologySediment = true;
             model.SedimentFractions = new EventedList<ISedimentFraction>();
-            model.SedimentFractions.Add(new SedimentFraction(){ Name = "testFrac"});
+            model.SedimentFractions.Add(new SedimentFraction { Name = "testFrac"});
 
             var boundary = new Feature2D
             {
@@ -129,43 +127,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
             };
 
-            var flowBoundary = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
             {
-                Feature = boundary,
+                Feature = boundary
             };
+            flowBoundaryCondition.DataPointIndices.Add(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new [] { model.StartTime, model.StopTime });
 
-            var morphologyBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
-                SedimentFractionNames = new List<string>() { "testFrac" }
+                SedimentFractionNames = new List<string> { "testFrac" }
             };
 
             model.Boundaries.Add(boundary);
-            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new [] { morphologyBoundary, flowBoundary});
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new [] { morphologyBoundaryCondition, flowBoundaryCondition});
 
-            morphologyBoundary.AddPoint(1);
-            var timeSeriesP1 = morphologyBoundary.GetDataAtPoint(1);
+            morphologyBoundaryCondition.AddPoint(1);
+            var timeSeriesP1 = morphologyBoundaryCondition.GetDataAtPoint(1);
 
             timeSeriesP1[model.StartTime] = 0.5;
             timeSeriesP1[model.StopTime] = 0.5;
 
             /* Check everything went alright just with one data point */
-            Assert.AreEqual(1, morphologyBoundary.PointData.Count);
-            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(0)); // data for morphology is on all data points the same (Horizontally Uniform)
-            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(1));
+            Assert.AreEqual(1, morphologyBoundaryCondition.PointData.Count);
+            Assert.IsNotNull(morphologyBoundaryCondition.GetDataAtPoint(0)); // data for morphology is on all data points the same (Horizontally Uniform)
+            Assert.IsNotNull(morphologyBoundaryCondition.GetDataAtPoint(1));
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
 
             /* Now add a second data point and expect the validation to fail.*/
-            morphologyBoundary.AddPoint(0);
-            var timeSeriesP0 = morphologyBoundary.GetDataAtPoint(0);
+            morphologyBoundaryCondition.AddPoint(0);
+            var timeSeriesP0 = morphologyBoundaryCondition.GetDataAtPoint(0);
             timeSeriesP0[model.StartTime] = 0.5;
             timeSeriesP0[model.StopTime] = 0.5;
 
-            Assert.AreEqual(2, morphologyBoundary.PointData.Count);
-            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(0));
-            Assert.IsNotNull(morphologyBoundary.GetDataAtPoint(1));
+            Assert.AreEqual(2, morphologyBoundaryCondition.PointData.Count);
+            Assert.IsNotNull(morphologyBoundaryCondition.GetDataAtPoint(0));
+            Assert.IsNotNull(morphologyBoundaryCondition.GetDataAtPoint(1));
 
             report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
@@ -188,17 +188,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var morphologyBoundary = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
-                SedimentFractionNames = new List<string>() { "testFrac" }
+                SedimentFractionNames = new List<string> { "testFrac" }
             };
 
-            var flowBoundary1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
             };
-
+            AddPointDataToBoundaryCondition(flowBoundaryCondition, model);
 
             model.Boundaries.Add(boundary);
-            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundary, flowBoundary1 });
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundary, flowBoundaryCondition });
 
             morphologyBoundary.AddPoint(1);
             var timeSeriesP1 = morphologyBoundary.GetDataAtPoint(1);
@@ -242,34 +242,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Boundaries.Add(boundary);
             var bcSet = model.BoundaryConditionSets[0].BoundaryConditions;
 
-            var morphologyBoundary1 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
-                SedimentFractionNames = new List<string>() { "testFrac" }
+                SedimentFractionNames = new List<string> { "testFrac" }
             };
+            AddPointDataToBoundaryCondition(morphologyBoundaryCondition, model);
 
-            var flowBoundary1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            var flowBoundaryCondition1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
             {
-                Feature = boundary,
+                Feature = boundary
             };
-            
-            bcSet.AddRange(new [] { morphologyBoundary1, flowBoundary1});
+            AddPointDataToBoundaryCondition(flowBoundaryCondition1, model);
+
+            bcSet.AddRange(new [] { morphologyBoundaryCondition, flowBoundaryCondition1});
 
             Assert.AreEqual(2, bcSet.Count);
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(0, report.ErrorCount);
 
             /* Add a second condition */
-            var flowBoundary2 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
+            var flowBoundaryCondition2 = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
-                SedimentFractionNames = new List<string>() { "testFrac" }
+                SedimentFractionNames = new List<string> { "testFrac" }
             };
-            bcSet.Add(flowBoundary2);
+            AddPointDataToBoundaryCondition(flowBoundaryCondition2, model);
+            bcSet.Add(flowBoundaryCondition2);
 
             Assert.AreEqual(3, bcSet.Count);
             report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(1, report.ErrorCount);
+        }
+
+        private static void AddPointDataToBoundaryCondition(FlowBoundaryCondition boundaryCondition, WaterFlowFMModel fmModel)
+        {
+            boundaryCondition.DataPointIndices.Add(0);
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {fmModel.StartTime, fmModel.StopTime});
         }
 
         [Test]
@@ -348,14 +357,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
             };
 
-            var morphologyBoundary = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport, BoundaryConditionDataType.TimeSeries)
+            var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
-                SedimentFractionNames = new List<string>() { "testFrac" }
+                SedimentFractionNames = new List<string> { "testFrac" }
             };
+            AddPointDataToBoundaryCondition(morphologyBoundaryCondition, model);
 
             model.Boundaries.Add(boundary);
-            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundary });
+            model.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morphologyBoundaryCondition });
 
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(1, report.ErrorCount);
@@ -383,15 +393,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var morBC = new FlowBoundaryCondition(quantityType, BoundaryConditionDataType.TimeSeries)
             {
                 Feature = boundary,
-                SedimentFractionNames = new List<string>() { "testFrac" }
+                SedimentFractionNames = new List<string> { "testFrac" }
             };
-            var flowBoundary = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
             {
-                Feature = boundary,
+                Feature = boundary
             };
+            AddPointDataToBoundaryCondition(flowBoundaryCondition, model);
 
             bcSet.Add(morBC);
-            bcSet.Add(flowBoundary);
+            bcSet.Add(flowBoundaryCondition);
 
             model.BoundaryConditions.First().AddPoint(0);
             model.BoundaryConditions.First().AddPoint(1);

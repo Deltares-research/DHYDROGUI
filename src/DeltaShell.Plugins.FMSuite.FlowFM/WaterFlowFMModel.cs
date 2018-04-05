@@ -50,6 +50,7 @@ using SharpMap;
 using SharpMap.Api;
 using SharpMap.SpatialOperations;
 using INotifyCollectionChanged = DelftTools.Utils.Collections.INotifyCollectionChanged;
+using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -69,6 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
         private bool updatingGroupName;
+
+        private IEventedList<ISedimentFraction> sedimentFractions;
+        private IDataItem areaDataItem;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
         private double previousProgress = 0;
@@ -118,6 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var area = new HydroArea();
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
 
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
@@ -338,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             base.OnBeforeDataItemsSet();
 
-            var areaDataItem = GetDataItemByTag(HydroAreaTag);
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (areaDataItem != null)
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
@@ -362,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
         {
             // unsubscribe from area before unlink
-            var areaDataItem = GetDataItemByTag(HydroAreaTag);
+            areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (Equals(e.Target, areaDataItem))
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
@@ -1300,7 +1305,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public HydroArea Area
         {
-            get {return (HydroArea) GetDataItemValueByTag(HydroAreaTag); }
+            get
+            {
+                if (areaDataItem == null)
+                    areaDataItem = GetDataItemByTag(HydroAreaTag);
+
+                return (HydroArea) GetDataItemValueByTag(HydroAreaTag);
+            }
             set
             {
                 var areaItem = GetDataItemByTag(HydroAreaTag);
@@ -2209,18 +2220,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return Area.ObservationCrossSections;
             }
         }
+        private bool OutputFeatureCollectionsContains(object item)
+        {
+            if (item is GroupableFeature2DPoint)
+            {
+                return Area.ObservationPoints.Contains(item);
+            }
+
+            if (item is ObservationCrossSection2D)
+            {
+                return Area.ObservationCrossSections.Contains(item);
+            }
+
+            return false;
+        }
+
+        private bool InputFeatureCollectionsContains(object item)
+        {
+            if (item is Pump2D)
+            {
+                return Area.Pumps.Contains(item);
+            }
+            
+            if (item is Weir2D)
+            {
+                return Area.Weirs.Contains(item);
+            }
+
+            if (item is Gate2D)
+            {
+                return Area.Gates.Contains(item);
+            }
+
+            return false;
+        }
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
             var groupableFeature = e.Item as IGroupableFeature;
-            if (!Area.IsEditing && e.Action != NotifyCollectionChangeAction.Remove && groupableFeature != null)
+            if (groupableFeature != null && e.Action != NotifyCollectionChangeAction.Remove && !Area.IsEditing)
             {
                 groupableFeature.UpdateGroupName(this);
             }
-
-            var inputSender = InputFeatureCollections.Contains(sender);
-            var outputSender = OutputFeatureCollections.Contains(sender);
-
+            
+            var inputSender = InputFeatureCollectionsContains(e.Item);
+            var outputSender = OutputFeatureCollectionsContains(e.Item);
+            
             if (inputSender || outputSender)
             {
                 var feature = (IFeature) e.Item;
@@ -2264,19 +2309,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             var groupableFeature = sender as IGroupableFeature;
-            if (!updatingGroupName && !Area.IsEditing && groupableFeature != null && e.PropertyName == TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName))
+            if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
+                e.PropertyName != TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName)) return;
+
+            updatingGroupName = true;// prevent recursive calls
+
+            groupableFeature.UpdateGroupName(this);
+
+            if (groupableFeature.IsDefaultGroup)
             {
-                updatingGroupName = true;// prevent recursive calls
-
-                groupableFeature.UpdateGroupName(this);
-
-                if (groupableFeature.IsDefaultGroup)
-                {
-                    groupableFeature.IsDefaultGroup = false;
-                }
-
-                updatingGroupName = false;
+                groupableFeature.IsDefaultGroup = false;
             }
+
+            updatingGroupName = false;
         }
 
         private void RemoveAreaFeature(IFeature feature)
@@ -2482,8 +2527,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
 
         public IEventedList<ISedimentProperty> SedimentOverallProperties { get; set; }
-
-        private IEventedList<ISedimentFraction> sedimentFractions;
+        
         public IEventedList<ISedimentFraction> SedimentFractions
         {
             get { return sedimentFractions; }

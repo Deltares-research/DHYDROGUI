@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
@@ -250,30 +251,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
                 int[] shape = null;
                 IList<double> timeSeriesData = null;
-
-                if (hasTimeFilter)
+                try
                 {
-                    var timeStepIndex = MetaData.Times.IndexOf(dateTimeFilter.Values[0]);
-                    if (hasBranchFilter)
+                    if (hasTimeFilter)
                     {
-                        timeSeriesData = GetValueForTimeStepAtSingleLocation(ncVariableName, branchFeatureFilter, timeStepIndex, out shape);
-                    }
-                    else if (hasBranchRangeFilter)
-                    {
-                        timeSeriesData = GetValuesForTimeStepAtRangeOfLocations(ncVariableName, branchRangeFilter, timeStepIndex, out shape);
+                        var timeStepIndex = MetaData.Times.IndexOf(dateTimeFilter.Values[0]);
+                        if (hasBranchFilter)
+                        {
+                            timeSeriesData = GetValueForTimeStepAtSingleLocation(ncVariableName, branchFeatureFilter, timeStepIndex, out shape);
+                        }
+                        else if (hasBranchRangeFilter)
+                        {
+                            timeSeriesData = GetValuesForTimeStepAtRangeOfLocations(ncVariableName, branchRangeFilter, timeStepIndex, out shape);
+                        }
+                        else
+                        {
+                            timeSeriesData = GetValuesForTimeStepAtAllLocations(ncVariableName, timeStepIndex, out shape);
+                        }
                     }
                     else
                     {
-                        timeSeriesData = GetValuesForTimeStepAtAllLocations(ncVariableName, timeStepIndex, out shape);
+                        if (hasBranchFilter)
+                        {
+                            timeSeriesData = GetValuesForTimeSeriesAtSingleLocation(ncVariableName, branchFeatureFilter, out shape);
+                        }
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    if (hasBranchFilter)
-                    {
-                        timeSeriesData = GetValuesForTimeSeriesAtSingleLocation(ncVariableName, branchFeatureFilter, out shape);
-                    }
+                    Log.Error(e.Message);
+                    return new MultiDimensionalArray<double>();
                 }
+                
 
                 if (shape == null || timeSeriesData == null)
                 {
@@ -471,7 +480,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
             catch (Exception ex)
             {
-                Log.ErrorFormat("Error retriving data for variable {0}: {1}", ncVariableName, ex.Message);
+                Log.ErrorFormat("Error retrieving data for variable {0}: {1}", ncVariableName, ex.Message);
                 shape = new[] { 0, 0 };
                 return new List<double>();
             }
@@ -526,7 +535,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             if (location == null)
             {
-                throw new ArgumentException(string.Format("Can not find location for {0}", branchFeature));
+                throw new ArgumentException(string.Format(Resources.WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type__1__could_not_be_found_, branchFeature.Name, branchFeature.GetType().Name));
             }
 
             return MetaData.Locations.IndexOf(location);

@@ -251,6 +251,7 @@
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
     <Compile Include="Import\CrossSectionXYZFromCsvFileImporterTest.cs" />
     <Compile Include="Import\CrossSectionYZFromCsvFileImporterTest.cs" />
+    <Compile Include="Import\MappingColumnTest.cs" />
     <Compile Include="Import\NetworkCoverageFromGisImporterTest.cs" />
     <Compile Include="Import\PointValuePairsFromGisImporterTest.cs" />
     <Compile Include="Import\Wizard\ImportNetworkCoverageFromGisWizardDialogTest.cs" />
@@ -371,6 +372,7 @@
     <Compile Include="WpfConverters\EnumToDescriptionConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>

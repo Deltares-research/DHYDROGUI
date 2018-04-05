@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.DelftTools.Utils.Tuples;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -16,6 +17,7 @@ using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
 {
@@ -108,6 +110,100 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var values = store.GetVariableValues(variable);
 
             Assert.AreEqual(numLocations, values.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetVariableValues_LogsErrorMessage_IfLocationCouldNotBeFound()
+        {
+            /*Test created after issue SOBEK3-1376*/
+            var filePath = TestHelper.GetTestFilePath(@"CompositeStructures/structures.nc");
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            try
+            {
+                var featureName = "stuw_Linn_zom";
+                var coverageName = "Crest level (s)";
+                Weir expectedLocation;
+                IVariableFilter[] filters;
+                WaterFlowModel1DNetCdfFunctionStore store;
+                var variable = CreateVariableAndFilter(coverageName, featureName, filePath, out expectedLocation, out filters, out store);
+
+                var logMessage =
+                    string.Format(
+                        Resources
+                            .WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type__1__could_not_be_found_,
+                        featureName, expectedLocation.GetType().Name);
+                TestHelper.AssertAtLeastOneLogMessagesContains( () => store.GetVariableValues(variable, filters), logMessage);
+
+                Assert.NotNull(store.GetVariableValues(variable, filters));
+            }
+            finally 
+            {
+                FileUtils.DeleteIfExists(filePath);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetVariableValues_ReturnsEmptyValueCollection_IfLocationCouldNotBeFound()
+        {
+            /*Test created after issue SOBEK3-1376*/
+            var filePath = TestHelper.GetTestFilePath(@"CompositeStructures/structures.nc");
+            filePath = TestHelper.CreateLocalCopy(filePath);
+            try
+            {
+                var featureName = "stuw_Linn_zom";
+                var coverageName = "Crest level (s)";//;
+                Weir expectedLocation;
+                IVariableFilter[] filters;
+                WaterFlowModel1DNetCdfFunctionStore store;
+                var variable = CreateVariableAndFilter(coverageName, featureName, filePath, out expectedLocation, out filters, out store);
+
+                var values = store.GetVariableValues(variable, filters);
+                Assert.IsNotNull(values);
+                Assert.AreEqual(new MultiDimensionalArray<double>(), store.GetVariableValues(variable, filters));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(filePath);
+            }
+        }
+
+        private static Variable<double> CreateVariableAndFilter(string coverageName, string featureName, string filePath,
+            out Weir expectedLocation, out IVariableFilter[] filters, out WaterFlowModel1DNetCdfFunctionStore store)
+        {
+            var variable = new Variable<double>(coverageName) {NoDataValue = -999.9};
+            var coverage = new FeatureCoverage(coverageName);
+
+            //{08/10/2016 10:40:00, 08/10/2016 10:40:30}
+            var expectedTime = new DateTime(2016, 08, 10, 10, 40, 30);
+
+            var dateTimeVariable = new Variable<DateTime>();
+            dateTimeVariable.Values.Add(expectedTime);
+            coverage.Arguments.Add(dateTimeVariable);
+
+            var branch = new Branch("branch1", new HydroNode("node1"), new HydroNode("node2"), 100.0);
+            var network = new HydroNetwork();
+            network.Branches.Add(branch);
+
+            expectedLocation = new Weir {Name = featureName};
+            branch.BranchFeatures.Add(expectedLocation);
+            var locationVariable = new Variable<IBranchFeature>();
+            locationVariable.Values.Add(expectedLocation);
+            coverage.Arguments.Add(locationVariable);
+
+            filters = new IVariableFilter[]
+            {
+                new VariableValueFilter<IBranchFeature>(locationVariable, expectedLocation),
+            };
+
+            coverage.Components.Add(variable);
+            store = new WaterFlowModel1DNetCdfFunctionStore
+            {
+                Path = filePath,
+                Functions = new EventedList<IFunction> {coverage, variable}
+            };
+            return variable;
         }
 
         [TestCase("laterals.nc", 2)]

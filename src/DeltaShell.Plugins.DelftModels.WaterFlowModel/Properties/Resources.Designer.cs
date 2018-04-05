@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -882,6 +882,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowModel1DModelTemperatureValidator_ValidateModelParameters_Temperature_par" +
                         "ameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values for {0} feature type {1} could not be found..
+        /// </summary>
+        public static string WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type__1__could_not_be_found_ {
+            get {
+                return ResourceManager.GetString("WaterFlowModel1DNetCdfFunctionStore_GetLocationIndex_Values_for__0__feature_type_" +
+                        "_1__could_not_be_found_", resourceCulture);
             }
         }
         
