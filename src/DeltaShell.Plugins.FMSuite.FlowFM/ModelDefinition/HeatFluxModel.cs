@@ -16,8 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     }
 
     [Entity]
-    public class 
-        HeatFluxModel
+    public class HeatFluxModel
     {
         private HeatFluxModelType modelType;
         private IFunction meteoData;
@@ -30,17 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 switch (modelType)
                 {
                     case HeatFluxModelType.None:
-                        {
-                            meteoData = null;
-                            containsSolarRadiation = false;
-                        }
-                        break;
                     case HeatFluxModelType.TransportOnly:
-                        {
-                            meteoData = null;
-                            containsSolarRadiation = false;
-                        }
-                        break;
                     case HeatFluxModelType.ExcessTemperature:
                         {
                             meteoData = null;
@@ -77,27 +66,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         [EditAction]
         private void UpdateSolarRadiationInMeteoData()
         {
-            if (MeteoData != null)
-            {
-                var solarVariable = MeteoData.Components.FirstOrDefault(v => v.Name.Equals("Solar radiation"));
+            if (MeteoData == null) return;
+            var solarVariable = MeteoData.Components.FirstOrDefault(v => v.Name.Equals("Solar radiation"));
 
-                if (containsSolarRadiation)
+            if (containsSolarRadiation)
+            {
+                if (solarVariable == null && CanHaveSolarRadiation)
                 {
-                    if (solarVariable == null && CanHaveSolarRadiation)
+                    MeteoData.Components.Add(new Variable<double>("Solar radiation")
                     {
-                        MeteoData.Components.Add(new Variable<double>("Solar radiation")
-                        {
-                            Unit = new Unit("Irradiance", "W/m2"),
-                            DefaultValue = 0
-                        });
-                    }
+                        Unit = new Unit("Irradiance", "W/m2"),
+                        DefaultValue = 0
+                    });
                 }
-                else
+            }
+            else
+            {
+                if (solarVariable != null)
                 {
-                    if (solarVariable != null)
-                    {
-                        MeteoData.Components.Remove(solarVariable);
-                    }
+                    MeteoData.Components.Remove(solarVariable);
                 }
             }
         }
@@ -109,21 +96,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             IFunction result = new Function("Meteo data");
             result.Arguments.Add(new Variable<DateTime>("Time"));
-            result.Components.Add(new Variable<double>("Air temperature")
-            {
-                Unit = new Unit("degree celsius", "°C")
-            });
             result.Components.Add(new Variable<double>("Humidity")
             {
                 Unit = new Unit("percent", "%"),
                 MinValidValue = 0d,
-                MaxValidValue = 100d,
+                MaxValidValue = 100d
+            });
+            result.Components.Add(new Variable<double>("Air temperature")
+            {
+                Unit = new Unit("degree celsius", "°C")
             });
             result.Components.Add(new Variable<double>("Cloud coverage")
             {
                 Unit = new Unit("percent", "%"),
                 MinValidValue = 0d,
-                MaxValidValue = 100d,
+                MaxValidValue = 100d
             });
 
             return result;

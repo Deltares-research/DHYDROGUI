@@ -231,6 +231,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         public static void RefreshCrossSectionDefinitionSectionWidths(IHydroNetwork network)
         {
+            EnsureAllCrossSectionDefinitionsHaveAtLeastOneSection(network);
+
             // fix for added validation (cross section definition sections total width should not be less than total cross section width
             network.CrossSections.Select(cs => cs.Definition)
                 .OfType<CrossSectionDefinition>()
@@ -242,6 +244,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
                         .OfType<CrossSectionDefinition>()
                 )
                 .ForEach(csd => csd.RefreshSectionsWidths());
+        }
+
+        private static void EnsureAllCrossSectionDefinitionsHaveAtLeastOneSection(IHydroNetwork network)
+        {
+            var crossSectionDefinitionsWithoutSections = network.CrossSections.Select(cs => cs.Definition)
+                .Union(network.SharedCrossSectionDefinitions)
+                .Where(csd => !csd.Sections.Any())
+                .ToList();
+
+            if (!crossSectionDefinitionsWithoutSections.Any()) return;
+
+            var mainSection = network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(CrossSectionDefinition.MainSectionName));
+            if (mainSection == null)
+            {
+                mainSection = new CrossSectionSectionType() { Name = CrossSectionDefinition.MainSectionName };
+                network.CrossSectionSectionTypes.Add(mainSection);
+            }
+
+            foreach (var definition in crossSectionDefinitionsWithoutSections)
+            {
+                definition.Sections.Add(new CrossSectionSection() { SectionType = mainSection });
+            }
         }
     }
 }

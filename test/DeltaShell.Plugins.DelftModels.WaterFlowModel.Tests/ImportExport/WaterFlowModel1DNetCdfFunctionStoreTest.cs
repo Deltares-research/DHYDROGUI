@@ -10,6 +10,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -59,6 +60,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         #endregion
+
+        [Test]
+        public void TestGetMetaData_ForExistingMetaData()
+        {
+            var testFile = TestHelper.GetTestFilePath(@"FileWriters\output\gridpoints.nc");
+            var store = new WaterFlowModel1DNetCdfFunctionStore(){ Path = testFile };
+
+            var metaData = TypeUtils.GetPropertyValue(store, "MetaData") as WaterFlowModel1DOutputFileMetaData;
+            Assert.NotNull(metaData);
+            Assert.IsTrue(metaData.Locations.Any());
+        }
+
+        [Test]
+        public void TestGetMetaData_ForNonExistingMetaData()
+        {
+            var testFile = TestHelper.GetTestFilePath(@"thisFileDoesNotExist.nc");
+            var store = new WaterFlowModel1DNetCdfFunctionStore() { Path = testFile };
+
+            var metaData = TypeUtils.GetPropertyValue(store, "MetaData") as WaterFlowModel1DOutputFileMetaData;
+            Assert.NotNull(metaData);
+            Assert.IsFalse(metaData.Locations.Any());
+        }
 
         [Test]
         public void Clone_CopiesExistingFunctions()

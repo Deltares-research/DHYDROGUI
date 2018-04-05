@@ -486,10 +486,6 @@ namespace Sobek.IntegrationTests
                 Assert.IsTrue(File.Exists(Path.Combine(outputDirectory, "observations.nc")));
                 Assert.IsTrue(File.Exists(Path.Combine(outputDirectory, "reachsegments.nc")));
                 
-                // check old files have been cleaned up
-                var numOriginalNetFilesAfterRun = dsProjDataDir.EnumerateFiles("*.nc").Count();
-                Assert.AreEqual(0, numOriginalNetFilesAfterRun);
-
                 // close project and re-open to check persistance
                 app.CloseProject();
                 app.OpenProject(dsProjDir);
