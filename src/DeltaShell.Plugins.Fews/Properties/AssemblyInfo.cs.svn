@@ -30,6 +30,6 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("3.7.9.$WCREV$")]
-[assembly: AssemblyFileVersion("3.7.9.$WCREV$")]
+[assembly: AssemblyVersion("3.7.10.$WCREV$")]
+[assembly: AssemblyFileVersion("3.7.10.$WCREV$")]
 [assembly: InternalsVisibleTo("DeltaShell.Plugins.Fews.Tests")]
