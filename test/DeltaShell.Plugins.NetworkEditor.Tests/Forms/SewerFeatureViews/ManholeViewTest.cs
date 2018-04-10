@@ -38,16 +38,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
                 orifice,
             };
             
-            network.SewerConnections = connections;
+            network.Branches.AddRange(connections);
             manhole.Network = network;
-
-
+            
             manhole.Compartments.AddRange(new List<Compartment>
             {
                 compartment1,
                 compartment2,
             });
-
             view.Data = manhole;
             WpfTestHelper.ShowModal(view);
         }

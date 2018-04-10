@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        public IList<IDrawingShape> Shapes { get; set; } = new List<IDrawingShape>();
+        public ObservableCollection<IDrawingShape> Shapes { get; set; } = new ObservableCollection<IDrawingShape>();
 
         public double HeightWithMargin { get; set; }
 
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 var height = compartments.Max(c => c.Compartment.SurfaceLevel) -
                              compartments.Min(c => c.Compartment.BottomLevel);
 
-                return height * 0.005;
+                return height * 0.01;
             }
             return 0.1;
         }
@@ -61,14 +62,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             if (manhole == null) return;
 
-            Shapes = new List<IDrawingShape>();
+            Shapes = new ObservableCollection<IDrawingShape>();
 
             // Compartment shapes
             Shapes.AddRange(CreateCompartmentShapes());
 
             // Pipe shapes
             Shapes.AddRange(CreatePipeShapes());
-
+            
             // Connection shapes
             Shapes.AddRange(CreateConnectionShapes());
         }
@@ -181,7 +182,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (!pipeShapes.Any()) return;
 
             // Group all pipe shapes by compartment shape
-            var groupedPipeShapes = pipeShapes.GroupBy(p => p.ConnectedCompartmentShape.Compartment);
+            var groupedPipeShapes = pipeShapes.GroupBy(p => p.ConnectedCompartmentShape?.Compartment);
             // loop over groups -> 
             foreach (var group in groupedPipeShapes)
             {
