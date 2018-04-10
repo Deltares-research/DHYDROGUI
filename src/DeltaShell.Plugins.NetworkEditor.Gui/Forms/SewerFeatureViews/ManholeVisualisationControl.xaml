@@ -1,19 +1,52 @@
-﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeVisualisationControl"
+<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeVisualisationControl"
+             x:Name="UserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="800">
+             d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.DataContext>
-        <local:ManholeVisualisationControlViewModel x:Name="ViewModel" />
+        <local:ManholeVisualisationControlViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
-    <StackPanel Orientation="Horizontal">
-        <Canvas x:Name="Canvas" Width="500" Height="300" Background="Aquamarine" VerticalAlignment="Top"/>
-        <StackPanel>
-            <Button Content="Add shape" Command="{Binding AddShapeCommand}"/>
-            <Button Content="Remove shape" Command="{Binding RemoveShapeCommand}"/>
-        </StackPanel>
-    </StackPanel>
+    <Viewbox Stretch="Uniform">
+        <local:CanvasItemsControl ItemsSource="{Binding Shapes}" Background="BurlyWood">
+            <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type local:CompartmentShape}">
+                    <Grid>
+                        <Rectangle Fill="Orange" 
+                                   Width="{Binding Width}" Height="{Binding Height}" 
+                                   Stroke="Black" StrokeThickness="{Binding DataContext.StrokeThickness, RelativeSource={RelativeSource AncestorType=local:ManholeVisualisationControl}}" 
+                                   HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   ToolTip="{Binding Compartment.Name}"/>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:PipeShape}">
+                    <Rectangle Fill="RoyalBlue" Stroke="Black" StrokeThickness="{Binding DataContext.StrokeThickness, RelativeSource={RelativeSource AncestorType=local:ManholeVisualisationControl}}" 
+                             Width="{Binding Width}" Height="{Binding Height}" 
+                             HorizontalAlignment="Left" VerticalAlignment="Top"
+                             ToolTip="{Binding Pipe.Name}"/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:OrificeShape}">
+                    <Grid>
+                        <Rectangle Fill="LightBlue" 
+                               Width="{Binding Width}" Height="{Binding Height}" 
+                               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:PumpShape}">
+                    <Grid>
+                        <local:PumpShapeControl PumpShape="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}" BaseStrokeThickness="{Binding DataContext.StrokeThickness, RelativeSource={RelativeSource AncestorType=local:ManholeVisualisationControl}}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.Resources>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="True" Height="{Binding HeightWithMargin}" Width="{Binding WidthWithMargin}" ClipToBounds="True" SnapsToDevicePixels="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </local:CanvasItemsControl>
+    </Viewbox>
 </UserControl>

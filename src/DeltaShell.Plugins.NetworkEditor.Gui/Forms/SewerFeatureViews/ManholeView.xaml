@@ -90,11 +90,11 @@
 
                         <!-- Row 5 -->
                         <Label Grid.Column="0" Grid.Row="5" Content="Surface level [m]"/>
-                        <TextBlock Grid.Column="1" Grid.Row="5" Text="Dummy"/>
+                        <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding SurfaceLevel}"/>
 
                         <!-- Row 6 -->
                         <Label Grid.Column="0" Grid.Row="6" Content="Bottom level [m]"/>
-                        <TextBlock Grid.Column="1" Grid.Row="6" Text="Dummy 2"/>
+                        <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding BottomLevel}"/>
                     </Grid>
 
                     <!-- Pipes -->
@@ -122,7 +122,8 @@
                     </GroupBox>
 
                     <!-- Manhole overview -->
-                    <Canvas x:Name="Canvas"
+                    <local:ManholeVisualisationControl Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" Background="MediumAquamarine" Width="500" Height="175" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                    <!--<Canvas x:Name="Canvas"
                             Width="300" Height="200" 
                             Margin="20,0,0,0"
                             VerticalAlignment="Top"
@@ -133,7 +134,7 @@
                                    Width="100" Height="100" Canvas.Left="30" Canvas.Top="30"/>
                         <Rectangle Fill="RoyalBlue" VerticalAlignment="Center" HorizontalAlignment="Center"
                                    Width="100" Height="100" Canvas.Left="50" Canvas.Top="50"/>
-                    </Canvas>
+                    </Canvas>-->
                 </StackPanel>
             </Expander>
 

@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.PumpShapeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="10" d:DesignWidth="10">
+    <UserControl.DataContext>
+        <local:PumpShapeControlViewModel x:Name="ViewModel"/>
+    </UserControl.DataContext>
+    <Canvas>
+        <!-- Suction -->
+        <!-- Connector -->
+        <Polyline Points="{Binding SuctionConnection}" Stroke="Black" StrokeThickness="{Binding BaseStrokeThickness}"/>
+       
+        <!-- Start -->
+        <Polyline Points="{Binding SuctionStartLevel}" 
+                  Stroke="ForestGreen" StrokeThickness="{Binding BaseStrokeThickness}"/>
+        
+        <!-- Stop -->
+        <Polyline Points="{Binding SuctionStopLevel}" 
+                  Stroke="Red" StrokeThickness="{Binding BaseStrokeThickness}"/>
+
+
+        <!-- Delivery -->
+        <!-- Connector -->
+        <Polyline Points="{Binding DeliveryConnection}" Stroke="Black" StrokeThickness="{Binding BaseStrokeThickness}"/>
+        
+        <!-- Start -->
+        <Polyline Points="{Binding DeliveryStartLevel}" 
+                  Stroke="ForestGreen" StrokeThickness="{Binding BaseStrokeThickness}"/>
+
+        <!-- Stop -->
+        <Polyline Points="{Binding DeliveryStopLevel}" 
+                  Stroke="Red" StrokeThickness="{Binding BaseStrokeThickness}"/>
+
+        <!-- Pump -->
+        <Ellipse Fill="RoyalBlue" Canvas.Left="{Binding CenterLeftOffset}" Canvas.Top="{Binding CenterTopOffset}" Width="{Binding CenterWidth}" Height="{Binding CenterHeight}" />
+    </Canvas>
+</UserControl>

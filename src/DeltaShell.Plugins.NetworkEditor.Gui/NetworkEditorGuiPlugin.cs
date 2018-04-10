@@ -183,9 +183,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            // TODO Sil added sewer views at this location, has to be moved to a more approperiate location
-            yield return new ViewInfo<IManhole, ManholeView>();
-            
             yield return new ViewInfo<CrossSectionFromCsvFileImporterBase, CrossSectionCsvImportWizard>();
             yield return new ViewInfo<IPump, PumpView>
                 {
@@ -373,6 +370,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationCrossSections);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Embankments);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
+
+            yield return new ViewInfo<IManhole, ManholeView>();
+            yield return new ViewInfo<IPipe, PipeView>();
         }
 
         private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEventedList<TFeature>> getCollection)

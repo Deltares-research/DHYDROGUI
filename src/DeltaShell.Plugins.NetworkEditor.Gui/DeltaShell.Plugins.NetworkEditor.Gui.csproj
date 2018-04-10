@@ -145,10 +145,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\System.Windows.Interactivity.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
@@ -198,10 +194,12 @@
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
+    <Compile Include="Forms\SewerFeatureViews\CanvasItemsControl.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentView.xaml.cs">
       <DependentUpon>CompartmentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\CompartmentViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\IDrawingShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeView.xaml.cs">
       <DependentUpon>ManholeView.xaml</DependentUpon>
     </Compile>
@@ -210,6 +208,14 @@
       <DependentUpon>ManholeVisualisationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\ManholeVisualisationControlViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\PipeView.xaml.cs">
+      <DependentUpon>PipeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\PipeViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\PumpShapeControl.xaml.cs">
+      <DependentUpon>PumpShapeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\PumpShapeControlViewModel.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
     </Compile>
@@ -1097,6 +1103,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forms\SewerFeatureViews\ManholeVisualisationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Forms\SewerFeatureViews\PipeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\SewerFeatureViews\PumpShapeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

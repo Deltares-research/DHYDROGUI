@@ -44,7 +44,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 }
 
                 manhole = value;
-                
+
+
 
                 if (manhole != null)
                 {
@@ -52,20 +53,93 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     {
                         Compartments.Clear();
                         Compartments.AddRange(manhole.Compartments);
+
+                        DetermineSurfaceAndBottomLevels();
+
                         manhole.Compartments.CollectionChanged += CompartmentsOnCollectionChanged;
                     }
-                    
+
                     network = manhole.Network as IHydroNetwork;
 
                     if (network?.Pipes != null)
                     {
-                        GetPipesForManhole(network.Pipes);
+                        var pipes = manhole.GetPipesConnectedToManhole(network.Pipes);
+                        PipesInManholes.AddRange(pipes);
                     }
                 }
             }
         }
 
         public ObservableCollection<Compartment> Compartments { get; set; } = new ObservableCollection<Compartment>();
+
+        public ObservableCollection<IPipe> PipesInManholes { get; set; } = new ObservableCollection<IPipe>();
+
+        public Compartment SelectedCompartment { get; set; }
+
+        public double SurfaceLevel { get; set; }
+
+        public double BottomLevel { set; get; }
+
+
+        public ICommand AddCompartmentCommand { get; set; }
+
+        public ICommand RemoveCompartmentCommand { get; set; }
+
+        private void RemoveCompartment(object obj)
+        {
+            manhole?.Compartments?.Remove(SelectedCompartment);
+        }
+
+        private bool CanRemoveCompartment(object obj)
+        {
+            return SelectedCompartment != null;
+        }
+
+        private void AddCompartment(object obj)
+        {
+            var name = GetUniqueCompartmentName(network);
+
+            var newCompartment = new Compartment
+            {
+                Name = name,
+                ParentManhole = Manhole,
+            };
+
+            manhole.Compartments.Add(newCompartment);
+        }
+
+        private bool CanAddCompartment(object obj)
+        {
+            return Manhole?.Compartments != null;
+        }
+
+        private void DetermineSurfaceAndBottomLevels()
+        {
+            SurfaceLevel = CalculateSurfaceLevel();
+            BottomLevel = CalculateBottomLevel();
+        }
+
+        private double CalculateSurfaceLevel()
+        {
+            var compartments = manhole?.Compartments;
+            if (compartments != null && compartments.Any())
+            {
+                return compartments.Max(c => c.SurfaceLevel);
+            }
+
+            return 0;
+        }
+
+        private double CalculateBottomLevel()
+        {
+            var compartments = manhole?.Compartments;
+            if (compartments != null && compartments.Any())
+            {
+                return compartments.Min(c => c.BottomLevel);
+            }
+
+            return 0;
+        }
 
         private void CompartmentsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
@@ -86,58 +160,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     break;
             }
 
-        }
-
-        private void GetPipesForManhole(IEnumerable<IPipe> pipes)
-        {
-            var compartments = manhole.Compartments;
-
-            foreach (var pipe in pipes)
-            {
-                if (compartments.Contains(pipe.SourceCompartment) || compartments.Contains(pipe.TargetCompartment))
-                {
-                    PipesInManholes.Add(pipe); 
-                }
-            }
+            DetermineSurfaceAndBottomLevels();
         }
         
-        public ObservableCollection<IPipe> PipesInManholes { get; set; } = new ObservableCollection<IPipe>();
-        
-        public Compartment SelectedCompartment { get; set; }
-        
-        public ICommand AddCompartmentCommand { get; set; }  
-
-        public ICommand RemoveCompartmentCommand { get; set; } 
-
-        private void RemoveCompartment(object obj)
-        {
-            manhole?.Compartments?.Remove(SelectedCompartment); 
-            // TODO Sil set SelectedCompartment to null or is this done automatically?
-        }
-
-        private bool CanRemoveCompartment(object obj)
-        {
-            return SelectedCompartment != null;
-        }
-
-        private bool CanAddCompartment(object obj)
-        {
-            return Manhole?.Compartments != null;
-        }
-
-        private void AddCompartment(object obj)
-        {
-            var name = GetUniqueCompartmentName(network);
-
-            var newCompartment = new Compartment
-            {
-                Name = name,
-                ParentManhole = Manhole,
-            };
-            
-            manhole.Compartments.Add(newCompartment);
-        }
-
         private static string GetUniqueCompartmentName(IHydroNetwork network)
         {
             var compartmentList = network.Manholes.SelectMany(m => m.Compartments);

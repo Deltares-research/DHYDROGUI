@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -80,7 +79,7 @@ namespace DelftTools.Hydro.Structures
                     return;
                 case NotifyCollectionChangeAction.Add:
                     var oldParentManhole = compartment.ParentManhole;
-                    if ( oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartmentWithName(compartment.Name))
+                    if (oldParentManhole != null && oldParentManhole != this && oldParentManhole.ContainsCompartmentWithName(compartment.Name))
                     {
                         oldParentManhole.Compartments.Remove(compartment);
                     }

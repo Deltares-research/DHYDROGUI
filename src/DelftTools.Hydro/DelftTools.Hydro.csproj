@@ -198,6 +198,7 @@
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
+    <Compile Include="Structures\ManholeExtensions.cs" />
     <Compile Include="Structures\Pipe.cs" />
     <Compile Include="SewerConnection.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
