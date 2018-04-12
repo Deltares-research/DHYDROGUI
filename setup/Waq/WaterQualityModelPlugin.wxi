@@ -9,27 +9,6 @@
     
     <Directory Name="waq_kernel" Id="delwaq_kernel_folder">
       <?define waq_kernel_dir="$(var.waq_plugin_bin)\waq_kernel\"?>
-      <Directory Name="x86" Id="delwaq_x86_folder">
-        <?ifndef var.NOKERNELS?>
-        <Component Id="delwaq_x86" Guid="0AC78803-A77F-44A2-A28B-2849E5AFFEB1">
-          <File Id="x86_delwaq.dll" Source="$(var.waq_kernel_dir)x86\delwaq.dll" />
-          <File Id="x86_delwaq1.exe" Source="$(var.waq_kernel_dir)x86\delwaq1.exe" KeyPath="yes"/>
-          <File Id="x86_delwaq2.exe" Source="$(var.waq_kernel_dir)x86\delwaq2.exe" />
-          <File Id="x86_libifcoremd.dll" Source="$(var.waq_kernel_dir)x86\libifcoremd.dll" />
-          <File Id="x86_libifportmd.dll" Source="$(var.waq_kernel_dir)x86\libifportmd.dll" />
-          <File Id="x86_libiomp5md.dll" Source="$(var.waq_kernel_dir)x86\libiomp5md.dll" />
-          <File Id="x86_libmmd.dll" Source="$(var.waq_kernel_dir)x86\libmmd.dll" />
-          <File Id="x86_waq_msvcr110.dll" Source="$(var.waq_kernel_dir)x86\msvcr110.dll"/>
-          <File Id="x86_waq_netcdf.dll" Source="$(var.waq_kernel_dir)x86\netcdf.dll"/>
-          <File Id="x86_svml_dispmd.dll" Source="$(var.waq_kernel_dir)x86\svml_dispmd.dll" />
-          <File Id="x86_waq_plugin_wasteload.dll" Source="$(var.waq_kernel_dir)x86\waq_plugin_wasteload.dll" />
-        </Component>
-        <Component Id="DuflowProcessLibraryPlugin_x86" Guid="44E65CC0-1EE9-46DB-BA79-AD257FB7FD3B">
-          <File Id="x86_duflow.dll" Source="$(var.waq_kernel_dir)x86\duflow.dll" />
-        </Component>
-        <?endif?>
-      </Directory>
-      
       <Directory Name="x64" Id="delwaq_x64_folder">
         <?ifndef var.NOKERNELS?>
         <Component Id="delwaq_x64" Guid="75397383-7193-4FD1-83B5-4CB1DB83BC7C">
