@@ -230,14 +230,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HydroModelAcceptanceTest.cs" />
     <Compile Include="Model1D2DBuilder.cs" />
     <Compile Include="NHibernateWaterFlowModel1DPerformanceTest.cs" />
     <Compile Include="NHibernateWaterFlowModel1DWinFormsTest.cs" />
     <Compile Include="Run1D2DIntegrationTest.cs" />
     <Compile Include="RunDimrWorkflowsTest.cs" />
     <Compile Include="SobekFunctionsScriptingLibraryTest.cs" />
-    <Compile Include="WaterFlowModel1DAcceptanceTest.cs" />
     <Compile Include="WaterFlowModel1DBMIIntegrationTest.cs" />
     <Compile Include="WaterFlowModel1DMergeGuiIntegrationTest.cs" />
     <Compile Include="WaterFlowModel1DMergeIntegrationTest.cs" />
