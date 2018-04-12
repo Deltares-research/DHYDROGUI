@@ -402,8 +402,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // We get the workflow that runs all models in parallel
             var workflow = hydroModel.Workflows.FirstOrDefault(w => w.Activities.Count == hydroModel.Activities.Count);
-            hydroModel.CurrentWorkflow = workflow ?? 
-                throw new NullReferenceException("Unable to get Workflow (run all models in parallel)");
+            if(workflow == null) throw new NullReferenceException("Unable to get Workflow (run all models in parallel)");
+
+            hydroModel.CurrentWorkflow = workflow;
             
             // Run model
             ActivityRunner.RunActivity(hydroModel);
