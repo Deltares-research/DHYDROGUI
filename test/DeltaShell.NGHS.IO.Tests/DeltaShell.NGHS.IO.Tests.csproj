@@ -128,6 +128,9 @@
     <Compile Include="Grid\AGridTests.cs" />
     <Compile Include="Grid\GridApiTests.cs" />
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
+    <Compile Include="Grid\UGrid1D2DLinksApiTests..cs" />
+    <Compile Include="Grid\UGrid1D2DLinksIntegrationTests.cs" />
+    <Compile Include="Grid\UGrid1D2DLinksUnitTests.cs" />
     <Compile Include="Grid\UGridNetworkDiscretisationUnitTests.cs" />
     <Compile Include="Grid\UGridNetworkIntegrationTests.cs" />
     <Compile Include="Grid\UgridWrapperTests.cs" />

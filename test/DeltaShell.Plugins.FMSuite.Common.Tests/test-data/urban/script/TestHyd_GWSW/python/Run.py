@@ -13,6 +13,8 @@ oppervlakOnNode = False
 #oppervlakOnNode = True
 #inputDir = 'GWSW_Leiden'
 #oppervlakOnNode = True
+#inputDir = 'GWSW_Doorlaat'
+#oppervlakOnNode = True
 outputDir = 'output_FM'
 dirPath = os.path.abspath(p)
 

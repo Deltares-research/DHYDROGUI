@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
                     int networkId;
                     
-                    uGridNetwork.CreateNetworkInFile(networkUGridDataModel.Name,
+                    uGridNetwork.CreateNetworkInFile(
                         networkUGridDataModel.NumberOfNodes,
                         networkUGridDataModel.NumberOfBranches,
                         networkUGridDataModel.NumberOfGeometryPoints,
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
                     var networkId =  GetNetworkId(networkIds);
                     
-                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.Name, discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
+                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }
             }

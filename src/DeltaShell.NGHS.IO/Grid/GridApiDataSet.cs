@@ -77,6 +77,15 @@ namespace DeltaShell.NGHS.IO.Grid
             nf90_share          = 2048 
         }
 
+
+        public static class DataSetNames
+        {
+            public const string Network = "Network";
+            public const string Mesh1D = "Mesh1D";
+            public const string Mesh2D = "Mesh2D";
+            public const string Links1D2D = "Links1D2D";
+        }
+
         public enum LocationType
         {
             UG_LOC_NONE = 0,
@@ -85,6 +94,12 @@ namespace DeltaShell.NGHS.IO.Grid
             UG_LOC_FACE = 4,
             UG_LOC_VOL  = 8,
             UG_LOC_ALL2D = UG_LOC_NODE + UG_LOC_EDGE + UG_LOC_FACE 
+        }
+
+        public enum LinkType
+        {
+            Mesh1DMesh2D = 3,
+            RoofManhole = 5
         }
 
         public const string GRIDDLL_NAME = "io_netcdf.dll";

@@ -27,5 +27,14 @@ namespace DeltaShell.NGHS.IO.Grid
                    ? (IUGridNetworkDiscretisationApi)new RemoteUGridNetworkDiscretisationApi()
                    : new UGridNetworkDiscretisationApi();
         }
+
+
+        public static IUGrid1D2DLinksApi CreateNew1D2DLinks()
+        {
+            // TODO: consider allowing remote running explicitly (like the 'CreateNew' function above)
+            return (Environment.Is64BitProcess != Environment.Is64BitOperatingSystem)
+                    ? (IUGrid1D2DLinksApi)new RemoteUGrid1D2DLinksApi()
+                    : new UGrid1D2DLinksApi();
+        }
     }
 }

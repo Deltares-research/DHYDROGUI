@@ -16,22 +16,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write Network Discretisation
 
-        public int CreateNetworkDiscretisation(string name, int numberOfNetworkPoints, int numberOfMeshEdges, int networkId)
+        public int CreateNetworkDiscretisation(int numberOfNetworkPoints, int numberOfMeshEdges, int networkId)
         {
             if (!Initialized)
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
-            // replace spaces in network name by underscores
-            if (name != null) name = name.Replace(' ', '_');
-
             // ReSharper disable once RedundantAssignment
             int ierr = GridApiDataSet.GridConstants.NOERR;
 
             try
             {
-                ierr = wrapper.Create1DMesh(ioncId, networkId, ref meshIdForWriting, name, numberOfNetworkPoints, numberOfMeshEdges);
+                ierr = wrapper.Create1DMesh(ioncId, networkId, ref meshIdForWriting, GridApiDataSet.DataSetNames.Mesh1D, numberOfNetworkPoints, numberOfMeshEdges);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
             }
@@ -67,7 +64,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 discretisationPointIds.ReplaceSpacesInString();
                 discretisationPointLongnames.ReplaceSpacesInString();
 
-                const int startIndex = 0; // TODO Sil: What are the start index and the numberOfEdgeNodes? How do I obtain them here?
+                const int startIndex = 0;
                 var numberOfEdgeNodes = 0;
 
                 branchIdxPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfDiscretisationPoints);
@@ -88,9 +85,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     idInfo[i].longnames = tmpString.ToCharArray();
                 }
 
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-                /* The call below needs to be adapted to the new dll. */ // TODO Sil: Fix the startIndex and numberOfEdgeNodes. How do I get them here? -> Luca is looking in to this method on the kernel side
-                /*return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, edgeNodesPtr, offsetPtr, idInfo, numberOfEdgeNodes, numberOfDiscretisationPoints, startIndex);*/
+                return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, edgeNodesPtr, offsetPtr, idInfo, numberOfEdgeNodes, numberOfDiscretisationPoints, startIndex);
             }
             catch
             {

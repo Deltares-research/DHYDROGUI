@@ -15,12 +15,12 @@ namespace DeltaShell.NGHS.IO.Grid
             api = RemoteInstanceContainer.CreateInstance<IUGridNetworkApi, UGridNetworkApi>(Environment.Is64BitOperatingSystem, null, false, dimrDllAssembly);
         }
 
-        public virtual int CreateNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int nwId)
+        public virtual int CreateNetwork(int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int nwId)
         {
             nwId = -1;
             var uGridNetworkApi = api as IUGridNetworkApi;
             return uGridNetworkApi != null
-                ? uGridNetworkApi.CreateNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints,out nwId)
+                ? uGridNetworkApi.CreateNetwork(numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints,out nwId)
                 : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 

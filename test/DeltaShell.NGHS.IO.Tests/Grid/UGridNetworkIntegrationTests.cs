@@ -220,7 +220,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     int networkId;
                     // create 1D grid
                     ugrid1D.CreateNetworkInFile(
-                        network.Name,
                         network.Nodes.Count,
                         network.Branches.Count,
                         totalNumberOfGeometryPoints,
@@ -420,7 +419,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                     // create 1D mesh
                     uGrid1DMesh.CreateNetworkDiscretisationInFile(
-                        networkDiscretization.Name,
                         discretisationPoints.Length,
                         numberOfMeshEdges,
                         networkId

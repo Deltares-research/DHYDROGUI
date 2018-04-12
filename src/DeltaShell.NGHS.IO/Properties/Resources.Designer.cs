@@ -368,6 +368,43 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t get number of 1D2DLinks from file.
+        /// </summary>
+        public static string UGrid1D2DLinks_Couldn_t_get_number_of_1D2DLinks {
+            get {
+                return ResourceManager.GetString("UGrid1D2DLinks_Couldn_t_get_number_of_1D2DLinks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create a new link1D2Dmesh with {0} links from mesh1Dindex {1} to mesh2Dindex {2}.
+        /// </summary>
+        public static string UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_1d_mesh1DId_to_mesh2Id_2 {
+            get {
+                return ResourceManager.GetString("UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_lin" +
+                        "ks_from_1d_mesh1DId_to_mesh2Id_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t read links from file.
+        /// </summary>
+        public static string UGrid1D2DLinks_Read1D2DLinks_Couldn_t_read_links {
+            get {
+                return ResourceManager.GetString("UGrid1D2DLinks_Read1D2DLinks_Couldn_t_read_links", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t write 1D2DLinks to file.
+        /// </summary>
+        public static string UGrid1D2DLinks_Write1D2DLinks_Couldn_t_write_1D2DLinks {
+            get {
+                return ResourceManager.GetString("UGrid1D2DLinks_Write1D2DLinks_Couldn_t_write_1D2DLinks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}.
         /// </summary>
         public static string UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_ {

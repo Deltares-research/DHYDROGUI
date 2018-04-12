@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var link = new WaterFlowFM1D2DLink(cellFrom, branchTo)
                 {
                     Geometry = new LineString(new[] {fromCell.Center, toNode.Geometry.Coordinate})
-                };
+                }; 
                 Links.Add(link);
             }
         }

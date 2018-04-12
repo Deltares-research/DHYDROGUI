@@ -4,7 +4,7 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public interface IUGridNetworkApi : IGridApi, IDisposable
     {
-        int CreateNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId);
+        int CreateNetwork(int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId);
         bool NetworkReadyForWriting { get; }
         int GetNetworkName(int networkId, out string networkName);
         int GetNumberOfNetworkNodes(int networkId, out int numberOfNetworkNodes);

@@ -180,6 +180,7 @@
     <Compile Include="Grid\IUGridNetworkApi.cs" />
     <Compile Include="Grid\IUGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\RemoteGridApi.cs" />
+    <Compile Include="Grid\RemoteUGrid1D2DLinksApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkApi.cs" />
     <Compile Include="Grid\RemoteUGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\UGrid1D2DLinks.cs" />

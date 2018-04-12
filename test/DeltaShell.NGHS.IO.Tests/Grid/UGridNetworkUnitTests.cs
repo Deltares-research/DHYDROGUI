@@ -48,23 +48,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't create new network ", MatchType = MessageMatch.StartsWith)]
         public void WhenInvokingCreateNetworkInFileAndApiReturnsAnErrorValueThenThrowException()
         {
-            uGridNetworkApi.Expect(api => api.CreateNetwork(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
+            uGridNetworkApi.Expect(api => api.CreateNetwork(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
                 .Return(errorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetwork.CreateNetworkInFile(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy);
+            gridNetwork.CreateNetworkInFile(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy);
         }
 
         [Test]
         public void WhenInvokingCreateNetworkInFileAndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            uGridNetworkApi.Expect(api => api.CreateNetwork(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
+            uGridNetworkApi.Expect(api => api.CreateNetwork(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy))
                 .Return(noErrorValue).Repeat.Once();
 
             mocks.ReplayAll();
 
-            gridNetwork.CreateNetworkInFile(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy);
+            gridNetwork.CreateNetworkInFile(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, out Arg<int>.Out(1).Dummy);
         }
 
         [Test]

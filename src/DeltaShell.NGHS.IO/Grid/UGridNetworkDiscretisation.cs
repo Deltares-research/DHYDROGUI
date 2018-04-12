@@ -12,10 +12,10 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write network discretisation
 
-        public void CreateNetworkDiscretisationInFile(string name, int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
+        public void CreateNetworkDiscretisationInFile(int numberOfMeshPoints, int numberOfMeshEdges, int networkId)
         {
             DoWithValidGridApi(
-                uGridApi => uGridApi.CreateNetworkDiscretisation(name, numberOfMeshPoints, numberOfMeshEdges, networkId),
+                uGridApi => uGridApi.CreateNetworkDiscretisation(numberOfMeshPoints, numberOfMeshEdges, networkId),
                 Resources.UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_ + filename);
         }
 

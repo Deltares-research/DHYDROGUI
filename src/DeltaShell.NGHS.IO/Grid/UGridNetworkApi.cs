@@ -19,17 +19,14 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write Network
 
-        public int CreateNetwork(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int outNetworkId)
+        public int CreateNetwork(int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int outNetworkId)
         {
             outNetworkId = -1;
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
-            // replace spaces in network name by underscores
-            if (name != null) name = name.Replace(' ', '_');
-
             try
             {
-                var ierr = wrapper.Create1DNetwork(ioncId, ref networkIdForWriting, name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
+                var ierr = wrapper.Create1DNetwork(ioncId, ref networkIdForWriting, GridApiDataSet.DataSetNames.Network, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {

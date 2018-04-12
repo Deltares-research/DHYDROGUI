@@ -17,13 +17,12 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write network
 
-        public void CreateNetworkInFile(string name, int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)
+        public void CreateNetworkInFile(int numberOfNodes, int numberOfBranches, int totalNumberOfGeometryPoints, out int networkId)
         {
             string errorMessage = 
-                string.Format(Resources.UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_,
-                name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
+                string.Format(Resources.UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_,GridApiDataSet.DataSetNames.Network,numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints);
             var uGridNetworkApi = GetValidGridApi(errorMessage);
-            var ierr = uGridNetworkApi.CreateNetwork(name, numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out networkId);
+            var ierr = uGridNetworkApi.CreateNetwork(numberOfNodes, numberOfBranches, totalNumberOfGeometryPoints, out networkId);
             ThrowIfError(ierr, errorMessage);
         }
 

@@ -939,10 +939,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_def_mesh_contact_dll(ref ioncId, ref contactsmesh, contactsmeshname, ref ncontacts, ref mesh1, ref mesh2, ref locationType1Id, ref locationType2Id);
         }
 
-        public virtual int Write1D2DLinks(int ioncId, int contactsmesh, IntPtr c_mesh1indexes, IntPtr c_mesh2indexes, IntPtr c_contacttype, interop_charinfo[] contactsinfo, int ncontacts)
+        public virtual int Write1D2DLinks(int ioncId, int contactsmesh, IntPtr c_mesh1DIndexes, IntPtr c_mesh2DIndexes, IntPtr c_contacttype, interop_charinfo[] contactsinfo, int ncontacts)
         {
             var startindex = 0;
-            return ionc_put_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, ref c_contacttype, contactsinfo, ref ncontacts, ref startindex);
+            return ionc_put_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1DIndexes, ref c_mesh2DIndexes, ref c_contacttype, contactsinfo, ref ncontacts, ref startindex);
         }
 
         public virtual int GetNumberOf1D2DLinks(ref int ioncId, ref int contactsmesh, ref int ncontacts)
@@ -950,7 +950,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_contacts_count_dll(ref ioncId, ref contactsmesh, ref ncontacts);
         }
 
-        public virtual int Read1D2DLinks(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, ref IntPtr c_contacttype, interop_charinfo[] contactsinfo, ref int ncontacts)
+        public virtual int Read1D2DLinks(int ioncId, int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, ref IntPtr c_contacttype, ref interop_charinfo[] contactsinfo, ref int ncontacts)
         {
             int startIndex = 0;
             return ionc_get_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, ref c_contacttype, contactsinfo, ref ncontacts, ref startIndex);

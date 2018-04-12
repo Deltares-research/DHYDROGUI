@@ -315,9 +315,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 GridWrapper.interop_charinfo[] linksinfo = new GridWrapper.interop_charinfo[nlinks];
 
                 //2. Get the links values
-                ierr = wrapper.Read1D2DLinks(ref ioncId, ref mesh1D2D, ref c_mesh1indexes, ref c_mesh2indexes,
+                ierr = wrapper.Read1D2DLinks(ioncId, mesh1D2D, ref c_mesh1indexes, ref c_mesh2indexes,
                     ref c_linktypes,
-                    linksinfo, ref nlinks);
+                    ref linksinfo, ref nlinks);
                 Assert.That(ierr, Is.EqualTo(0));
                 int[] rc_mesh1indexes = new int[nlinks];
                 int[] rc_mesh2indexes = new int[nlinks];
