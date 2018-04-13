@@ -11,10 +11,8 @@
       <?define plct_bin="$(var.waq_plugin_bin)plct\bin\"?>
       <Component Guid="F99C5DCA-2835-407A-A190-2309B1A4B246" Id="plct_component">
         <File Id="plct_ERRCODES.TXT" Source="$(var.plct_bin)ERRCODES.TXT" />
-        <File Id="plct_libifcoremdd.dll" Source="$(var.plct_bin)libifcoremdd.dll" />
-        <File Id="plct_libmmd.dll" Source="$(var.plct_bin)libmmd.dll" />
-        <File Id="plct_msvcr110.dll" Source="$(var.plct_bin)msvcr110.dll" />
-        <File Id="plct_msvcr110d.dll" Source="$(var.plct_bin)msvcr110d.dll" />
+        <File Id="plct_msvcr110.dll" Source="$(var.plct_bin)msvcr120.dll" />
+        <File Id="plct_msvcr110d.dll" Source="$(var.plct_bin)msvcr120d.dll" />
         <File Id="plct_plct.exe" Source="$(var.plct_bin)plct.exe" />
         <File Id="plct_xnmba131.dll" Source="$(var.plct_bin)xnmba131.dll" />
         <File Id="plct_xnmhb131.dll" Source="$(var.plct_bin)xnmhb131.dll" />
