@@ -390,7 +390,7 @@ class FMwriter:
             area = 0.0
 
             try:
-                br = (float(value[12]) / 100)
+                br = (float(value[12]) / 1000)
             except ValueError:
                 print("Missing data for area " + id)
                 br = 0.0
@@ -399,7 +399,7 @@ class FMwriter:
                 area = pi * br**2
             else:
                 try:
-                    l = (float(value[13]) / 100)
+                    l = (float(value[13]) / 1000)
                 except ValueError:
                     print("Missing data for area " + id + " (width will be used as length)")
                     l = br
