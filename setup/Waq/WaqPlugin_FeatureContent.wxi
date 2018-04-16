@@ -13,10 +13,6 @@
   
   <ComponentRef Id="WaterQuality_scripts_examples_files"/>
   <ComponentRef Id="WaterQuality_scripts_libraries_files"/>
-
-  <?ifndef var.NOKERNELS?>
-  <ComponentRef Id="delwaq_x86"/>
-  <?endif?>
   
   <ComponentRef Id="plct_component"/>
   <ComponentRef Id="plctIni"/>
@@ -42,7 +38,6 @@
   <?ifndef var.NOKERNELS?>
   <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
     <ComponentRef Id="WaterQualityDuflowLibrary"/>
-    <ComponentRef Id="DuflowProcessLibraryPlugin_x86"/>
 
     <Feature Id="DuflowProcesses_x64" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
       <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>

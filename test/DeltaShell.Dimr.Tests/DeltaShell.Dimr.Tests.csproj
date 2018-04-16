@@ -106,7 +106,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DimrAcceptanceTests.cs" />
     <Compile Include="DimrApiTests.cs" />
     <Compile Include="DimrGuiPluginTests.cs" />
     <Compile Include="DimrGuiRibbonTests.cs" />

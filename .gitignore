@@ -1065,11 +1065,6 @@ src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x64/*.user
 src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x64/bin
 src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x64/obj
 src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x64/packages
-src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x86/*.suo
-src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x86/*.user
-src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x86/bin
-src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x86/obj
-src/DeltaShell.Plugins.DelftModels.WaterQualityModel/waq_kernel/x86/packages
 src/DeltaShell.Plugins.DeveloperTools/*.suo
 src/DeltaShell.Plugins.DeveloperTools/*.user
 src/DeltaShell.Plugins.DeveloperTools/Builders/*.suo

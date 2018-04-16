@@ -214,6 +214,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptanceModelsTest.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />
     <Compile Include="DHydroConfigModelCouplerTest.cs" />
@@ -251,6 +252,11 @@
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj">
+      <Project>{52847cb2-6a62-4b5a-8302-67198745d073}</Project>
+      <Name>DeltaShell.Dimr.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
@@ -298,9 +304,24 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj">
+      <Project>{0d371464-c886-433d-912d-84a3ef0ade01}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj">
       <Project>{803D13C0-3274-4C83-AE54-5D828B3338F2}</Project>
       <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.Fews\DeltaShell.Plugins.Fews.csproj">
+      <Project>{df36566f-25e2-4514-9715-163b50b87aac}</Project>
+      <Name>DeltaShell.Plugins.Fews</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
+      <Project>{7f3d15d6-3425-47a6-afd4-9b6e054ee8be}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">

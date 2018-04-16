@@ -23,16 +23,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <summary>
         /// Gets the folder file-path where the delwaq binaries can be found.
         /// </summary>
+        /// 
         public static string GetDelwaqBinariesFolderPath()
         {
-            return GetDelwaqBinariesFolderPath(Environment.Is64BitOperatingSystem);
-        }
-
-        private static string GetDelwaqBinariesFolderPath(bool isX64Machine)
-        {
-            string platformFolder = isX64Machine ? "x64" : "x86";
-
-            return Path.Combine(GetDelwaqKernelMainFolderPath(), platformFolder);
+            return Path.Combine(GetDelwaqKernelMainFolderPath(), "x64");
         }
 
         /// <summary>
