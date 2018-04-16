@@ -257,8 +257,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var geomWrapper = new GridGeomApi();
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
+            var startIndex = 0;
             var linksCount = 0;
-            var ierr = geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
+            var ierr = geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
             Assert.AreNotEqual(0, linksCount);
             Assert.IsNotEmpty(linksFrom);
@@ -290,11 +291,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var geomWrapper = new GridGeomApi();
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
+            var startIndex = 0;
             var linksCount = 0;
             try
             {
-                geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
-                geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
+                geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+                geomWrapper.Get1d2dLinksFromGridAndNetwork(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             }
             catch (Exception e)
             {

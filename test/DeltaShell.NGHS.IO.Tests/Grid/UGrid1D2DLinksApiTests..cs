@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
@@ -46,14 +47,26 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var wrapper = mocks.StrictMock<GridWrapper>();
 
             var mesh1DId = 3;
-            var mesh2DId = 4;
+            var mesh2DId = 3;
             var numberOfLinks = 5;
 
             var type1 = (int)GridApiDataSet.LocationType.UG_LOC_NODE;
             var type2 = (int)GridApiDataSet.LocationType.UG_LOC_FACE;
             var contactsmesh = -1;
-            wrapper.Expect(w => w.Create1D2DLinks(fileId, ref contactsmesh, "Links1D2D", numberOfLinks, mesh1DId, mesh2DId, type1, type2))
+            wrapper.Expect(w => w.Create1D2DLinks(Arg<int>.Is.Equal(fileId), ref Arg<int>.Ref(Rhino.Mocks.Constraints.Is.Anything(), 1).Dummy, Arg<string>.Is.Equal(GridApiDataSet.DataSetNames.Links1D2D), Arg<int>.Is.Equal(numberOfLinks), Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Equal(type1), Arg<int>.Is.Equal(type2)))
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
+                .Repeat.Any();
+
+            wrapper.Expect(
+                w => w.GetNumberOfMeshes(Arg<int>.Is.Anything, Arg<int>.Is.Anything, ref Arg<int>.Ref(Rhino.Mocks.Constraints.Is.Anything(), 1).Dummy))
+                .Return(GridApiDataSet.GridConstants.NOERR)
+                .Repeat.Any();
+
+            var intPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * 1);
+            Marshal.Copy(new []{2}, 0, intPtr, 1);
+            wrapper.Expect(
+                w => w.GetMeshIds(Arg<int>.Is.Anything, Arg<UGridMeshType>.Is.Anything, ref Arg<IntPtr>.Ref(Rhino.Mocks.Constraints.Is.Anything(),intPtr).Dummy, Arg<int>.Is.Anything))
+                .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Any();
 
             TypeUtils.SetField(uGrid1D2DLinksApi, fileIdFieldName, fileId);
@@ -62,7 +75,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             if (remote)
             {
                 TypeUtils.SetField(remoteUGrid1D2DLinksApi, ApiVarName, uGrid1D2DLinksApi);
-                remoteUGrid1D2DLinksApi.Expect(a => a.Create1D2DLinks(numberOfLinks, mesh1DId, mesh2DId)).
+                remoteUGrid1D2DLinksApi.Expect(a => a.Create1D2DLinks(numberOfLinks)).
                                 CallOriginalMethod(OriginalCallOptions.NoExpectation).Repeat.Once();
 
             }
@@ -71,11 +84,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             if (remote)
             {
-                Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteUGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks, mesh1DId, mesh2DId));
+                Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteUGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks));
             }
             else
             {
-                Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, uGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks, mesh1DId, mesh2DId));
+                Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, uGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks));
             }
         }
 
@@ -94,7 +107,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var type1 = (int)GridApiDataSet.LocationType.UG_LOC_NODE;
             var type2 = (int)GridApiDataSet.LocationType.UG_LOC_FACE;
             var contactsmesh = -1;
-            wrapper.Expect(w => w.Create1D2DLinks(fileId, ref contactsmesh, "Links1D2D", numberOfLinks, mesh1DId, mesh2DId, type1, type2))
+            wrapper.Expect(w => w.Create1D2DLinks(fileId, ref contactsmesh, GridApiDataSet.DataSetNames.Links1D2D, numberOfLinks, mesh1DId, mesh2DId, type1, type2))
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("Haha"))
                 .Repeat.Any();
@@ -102,18 +115,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TypeUtils.SetField(uGrid1D2DLinksApi, WrapperFieldName, wrapper);
 
             // uGrid1D2DLinksApi
-            uGrid1D2DLinksApi.Expect(a => a.Create1D2DLinks(numberOfLinks, mesh1DId, mesh2DId))
+            uGrid1D2DLinksApi.Expect(a => a.Create1D2DLinks(numberOfLinks))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGrid1D2DLinksApi
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR,
-                uGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks, mesh1DId, mesh2DId));
+                uGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks));
 
             // remoteUGrid1D2DLinksApi
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR,
-                remoteUGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks, mesh1DId, mesh2DId));
+                remoteUGrid1D2DLinksApi.Create1D2DLinks(numberOfLinks));
         }
 
         [Test]
@@ -136,7 +149,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var linksInfo = new GridWrapper.interop_charinfo[nLinks];
 
             uGrid1D2DLinksApi.Expect(a => a.Initialized).Return(true).Repeat.Any();
-            uGrid1D2DLinksApi.Expect(a => a.Links1D2DReadyForWriting).Return(true).Repeat.Any();
+            uGrid1D2DLinksApi.Expect(a => a.Links1D2DReadyForWritingOrReading).Return(true).Repeat.Any();
 
             var wrapper = mocks.DynamicMock<GridWrapper>();
 

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 
 namespace DeltaShell.NGHS.IO.Grid
@@ -98,7 +99,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public enum LinkType
         {
+            [Description("1D2D flow link")]
             Mesh1DMesh2D = 3,
+            [Description("Roof manhole link")]
             RoofManhole = 5
         }
 

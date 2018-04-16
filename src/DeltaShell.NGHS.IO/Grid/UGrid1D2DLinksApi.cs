@@ -14,14 +14,55 @@ namespace DeltaShell.NGHS.IO.Grid
             meshLinks1D2DIdx = -1;
         }
 
-        public int Create1D2DLinks(int numberOf1D2DLinks, int mesh1Idx, int mesh2Idx)
+        public int Create1D2DLinks(int numberOf1D2DLinks)
         {
             meshLinks1D2DIdx = -1;
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             try
             {
-                var ierr = wrapper.Create1D2DLinks(ioncId, ref meshLinks1D2DIdx, GridApiDataSet.DataSetNames.Links1D2D, numberOf1D2DLinks, mesh1Idx, mesh2Idx, (int)GridApiDataSet.LocationType.UG_LOC_NODE, (int)GridApiDataSet.LocationType.UG_LOC_FACE);
+
+                int nMesh1D;
+                var ierr = GetNumberOfMeshByType(UGridMeshType.Mesh1D, out nMesh1D);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+                int nMesh2D;
+                ierr = GetNumberOfMeshByType(UGridMeshType.Mesh2D, out nMesh2D);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+
+                //expect 1 mesh per kind
+                if (nMesh1D != 1 || nMesh2D != 1)
+                {
+                    return GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR;
+                }
+
+                int[] mesh1DIds;
+                int[] mesh2DIds;
+                ierr = GetMeshIdsByMeshType(UGridMeshType.Mesh1D, nMesh1D, out mesh1DIds);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+                ierr = GetMeshIdsByMeshType(UGridMeshType.Mesh2D, nMesh2D, out mesh2DIds);
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+
+                var mesh1Idx = mesh1DIds[0];
+                var mesh2Idx = mesh2DIds[0];
+
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    return ierr;
+                }
+
+                ierr = wrapper.Create1D2DLinks(ioncId, ref meshLinks1D2DIdx, GridApiDataSet.DataSetNames.Links1D2D, numberOf1D2DLinks, mesh1Idx, mesh2Idx, (int)GridApiDataSet.LocationType.UG_LOC_NODE, (int)GridApiDataSet.LocationType.UG_LOC_FACE);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
@@ -37,7 +78,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int Write1D2DLinks(int[] mesh1DPointIdx, int[] mesh2DFaceIdx, int[] linkType, string[] linkIds, string[] linkLongNames, int numberOf1D2DLinks)
         {
-            if (!Initialized || !Links1D2DReadyForWriting) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            if (!Initialized || !Links1D2DReadyForWritingOrReading) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             var err = CheckArrayFormatWithFileDeclaration(mesh1DPointIdx, mesh2DFaceIdx, linkType, linkIds, linkLongNames, numberOf1D2DLinks);
             if( err != GridApiDataSet.GridConstants.NOERR) return err;
@@ -105,12 +146,24 @@ namespace DeltaShell.NGHS.IO.Grid
             linkIds = new string[0];
             linkLongNames = new string[0];
 
-            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            var ierr = GridApiDataSet.GridConstants.NOERR;
+
+            if (!Links1D2DReadyForWritingOrReading)
+            {
+                ierr = wrapper.Get1D2DLinksMeshId(ioncId, ref meshLinks1D2DIdx);
+            }
+
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                return ierr;
+            }
+
+            if (!Initialized || !Links1D2DReadyForWritingOrReading) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
             int numberOf1D2DLinks = -1;
             try
             {
-                var ierr = GetNumberOf1D2DLinks(out numberOf1D2DLinks);
+                ierr = GetNumberOf1D2DLinks(out numberOf1D2DLinks);
                 if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
                 if (numberOf1D2DLinks < 0) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
@@ -126,7 +179,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var linksInfo = new GridWrapper.interop_charinfo[numberOf1D2DLinks];
-                var ierr = wrapper.Read1D2DLinks(ioncId, meshLinks1D2DIdx, ref mesh1DPointIdxPtr, ref mesh2DFaceIdxPtr, ref linkTypePtr, ref linksInfo, ref numberOf1D2DLinks);
+                ierr = wrapper.Read1D2DLinks(ioncId, meshLinks1D2DIdx, ref mesh1DPointIdxPtr, ref mesh2DFaceIdxPtr, ref linkTypePtr, ref linksInfo, ref numberOf1D2DLinks);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
@@ -168,7 +221,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 linkTypePtr = IntPtr.Zero;
             }
         }
-        public virtual bool Links1D2DReadyForWriting
+
+        public virtual bool Links1D2DReadyForWritingOrReading
         {
             get { return meshLinks1D2DIdx > 0; }
         }

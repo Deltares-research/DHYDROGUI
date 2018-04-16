@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region 1d2dlinks logic
 
-        public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
+        public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;
@@ -114,7 +114,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 //5. get the meshgeom arrays
                 bool includeArrays = true;
-                int startIndex = 0;
+                startIndex = 0;
                 ierr = gridWrapper.get_meshgeom(ref ioncId, ref meshId, ref meshtwod, ref startIndex, includeArrays); 
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {

@@ -11,11 +11,11 @@ namespace DeltaShell.NGHS.IO.Grid
             var dimrDllAssembly = typeof(DimrRunner).Assembly;
             api = RemoteInstanceContainer.CreateInstance<IUGrid1D2DLinksApi, UGrid1D2DLinksApi>(Environment.Is64BitOperatingSystem, null, false, dimrDllAssembly);
         }
-        public int Create1D2DLinks(int numberOf1D2DLinks, int mesh1Idx, int mesh2Idx)
+        public int Create1D2DLinks(int numberOf1D2DLinks)
         {
             var uGrid1D2DLinksApi = api as IUGrid1D2DLinksApi;
             return uGrid1D2DLinksApi != null
-                ? uGrid1D2DLinksApi.Create1D2DLinks(numberOf1D2DLinks, mesh1Idx, mesh2Idx)
+                ? uGrid1D2DLinksApi.Create1D2DLinks(numberOf1D2DLinks)
                 : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 

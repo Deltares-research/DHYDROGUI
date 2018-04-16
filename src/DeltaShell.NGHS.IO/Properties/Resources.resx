@@ -315,8 +315,8 @@
   <data name="UGrid1D2DLinks_Couldn_t_get_number_of_1D2DLinks" xml:space="preserve">
     <value>Couldn't get number of 1D2DLinks from file</value>
   </data>
-  <data name="UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_1d_mesh1DId_to_mesh2Id_2" xml:space="preserve">
-    <value>Couldn't create a new link1D2Dmesh with {0} links from mesh1Dindex {1} to mesh2Dindex {2}</value>
+  <data name="UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_mesh1D_to_mesh2D" xml:space="preserve">
+    <value>Couldn't create a new link1D2Dmesh with {0} links from mesh1D to mesh2D</value>
   </data>
   <data name="UGrid1D2DLinks_Read1D2DLinks_Couldn_t_read_links" xml:space="preserve">
     <value>Couldn't read links from file</value>

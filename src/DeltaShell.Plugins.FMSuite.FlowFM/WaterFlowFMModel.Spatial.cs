@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
@@ -256,6 +257,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public void WriteNetFile(string path)
         {
             WriteNetFile(path, Grid);
+        }
+
+        public void Save1D2DLinks()
+        {
+            UGrid1D2DLinksAdapter.Save1D2DLinks(NetFilePath,Links);  
         }
 
         private static void WriteNetFile(string path, UnstructuredGrid grid)

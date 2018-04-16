@@ -377,12 +377,12 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t create a new link1D2Dmesh with {0} links from mesh1Dindex {1} to mesh2Dindex {2}.
+        ///   Looks up a localized string similar to Couldn&apos;t create a new link1D2Dmesh with {0} links from mesh1D to mesh2D.
         /// </summary>
-        public static string UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_1d_mesh1DId_to_mesh2Id_2 {
+        public static string UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_mesh1D_to_mesh2D {
             get {
                 return ResourceManager.GetString("UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_lin" +
-                        "ks_from_1d_mesh1DId_to_mesh2Id_2", resourceCulture);
+                        "ks_from_mesh1D_to_mesh2D", resourceCulture);
             }
         }
         

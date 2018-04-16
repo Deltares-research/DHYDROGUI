@@ -170,18 +170,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var gGeomApi = new GridGeomApi();
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
+            var startIndex = 0;
             int linksCount = 0;
 
             try
             {
-                var ierr = gGeomApi.Get1d2dLinksFromGridAndNetwork(NetFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref linksCount);
+                var ierr = gGeomApi.Get1d2dLinksFromGridAndNetwork(NetFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     Log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
                     return;
                 }
 
-                Creates1d2dLinks(linksCount, linksFrom, linksTo);
+                Creates1d2dLinks(linksCount, linksFrom, linksTo, startIndex);
             }
             catch (Exception e)
             {
@@ -191,16 +192,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void Creates1d2dLinks(int linksCount, List<int> linksFrom, List<int> linksTo)
+        private void Creates1d2dLinks(int linksCount, List<int> linksToIndex, List<int> linksFromIndex, int startIndex)
         {
             for (int i = 0; i < linksCount; i++)
             {
-                var cellFrom = linksFrom[i] - 1; //Apparently the kernel indexes are from 1 to N, whereas we do 0 to N-1
-                var branchTo = linksTo[i] - 1;
+                var toCell = linksToIndex[i] - startIndex; 
+                var fromPoint = linksFromIndex[i] - startIndex;
 
-                var fromCell = grid.Cells[cellFrom];
-                var toNode = networkDiscretization.Locations.Values[branchTo];
-                var link = new WaterFlowFM1D2DLink(cellFrom, branchTo)
+                var fromCell = grid.Cells[toCell];
+                var toNode = networkDiscretization.Locations.Values[fromPoint];
+                var link = new WaterFlowFM1D2DLink(fromPoint, toCell)
                 {
                     Geometry = new LineString(new[] {fromCell.Center, toNode.Geometry.Coordinate})
                 }; 
@@ -392,6 +393,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
             var is1D2DModel = (bool) ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             Grid = ReadGridFromNetFile(NetFilePath, is1D2DModel) ?? new UnstructuredGrid();
+
+            Links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                 {
@@ -1781,6 +1784,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             mduFile.Write(mduPath, ModelDefinition, Area, switchTo, writeExtForcings, writeFeatures, DisableFlowNodeRenumbering);
 
+            if (Grid != null)
+            {
+                if (MduFilePath == null) MduFilePath = mduPath;
+                SaveGrid();
+            }
+
             if (Network != null)
             {
                 if (Network.Nodes != null && Network.Nodes.Count > 0)
@@ -1794,13 +1803,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            
-
-            if (Grid != null)
+            if (Links != null)
             {
-                if (MduFilePath == null) MduFilePath = mduPath;
-                SaveGrid();
+                if(Links.Count > 0)
+                {
+                    Save1D2DLinks();
+                }
             }
+
+
 
             if (switchTo)
             {

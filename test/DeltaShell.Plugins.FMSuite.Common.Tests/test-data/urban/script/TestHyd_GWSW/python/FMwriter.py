@@ -379,7 +379,7 @@ class FMwriter:
             # area=0.0
             # streetLevel=0.0
             # file.write('[retention]\n')
-            file.write('[node]\n')
+            file.write('[retention]\n')
             file.write('id = ' + id + '\n')
             file.write('name = ' + str(value[2]) + '\n')
             file.write('nodeId = ' + id + '\n')

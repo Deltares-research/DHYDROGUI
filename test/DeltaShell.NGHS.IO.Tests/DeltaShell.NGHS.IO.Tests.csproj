@@ -129,7 +129,7 @@
     <Compile Include="Grid\GridApiTests.cs" />
     <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
     <Compile Include="Grid\UGrid1D2DLinksApiTests..cs" />
-    <Compile Include="Grid\UGrid1D2DLinksIntegrationTests.cs" />
+    <Compile Include="Grid\UGrid1D2DLinksAdapterTests.cs" />
     <Compile Include="Grid\UGrid1D2DLinksUnitTests.cs" />
     <Compile Include="Grid\UGridNetworkDiscretisationUnitTests.cs" />
     <Compile Include="Grid\UGridNetworkIntegrationTests.cs" />
@@ -169,6 +169,10 @@
       <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
+      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>

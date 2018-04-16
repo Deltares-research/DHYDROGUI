@@ -211,7 +211,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
         {
-            numberOfMesh = 0;
+            numberOfMesh = -1;
 
             if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
 
@@ -219,9 +219,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var type = (int)meshType;
-                int nMesh = 0;
-                ierr = wrapper.GetNumberOfMeshes(ioncId, type, ref nMesh);
-                if(ierr == GridApiDataSet.GridConstants.NOERR) numberOfMesh = nMesh;
+                ierr = wrapper.GetNumberOfMeshes(ioncId, type, ref numberOfMesh);
             }
             catch
             {
@@ -288,7 +286,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     Marshal.Copy(meshIdsPtr, meshIds, 0, numberOfMeshes);
                 }
             }
-            catch
+            catch(Exception e)
             {
                 ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }

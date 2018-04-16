@@ -21,14 +21,12 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write links
 
-        public void Create1D2DLinksInFile(int numberOf1D2DLinks, int mesh1DIdx, int mesh2DIdx)
+        public void Create1D2DLinksInFile(int numberOf1D2DLinks)
         {
             string errorMessage =
-                string.Format(Resources.UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_1d_mesh1DId_to_mesh2Id_2, numberOf1D2DLinks, mesh1DIdx, mesh2DIdx);
-
+                string.Format(Resources.UGrid1D2DLinks_Create1D2DLinksInFile_Couldn_t_create_new_link1D2Dmesh__with_0_links_from_mesh1D_to_mesh2D, numberOf1D2DLinks);
             var uGrid1D2DLinksApi = GetValidGridApi(errorMessage);
-
-            var ierr = uGrid1D2DLinksApi.Create1D2DLinks(numberOf1D2DLinks, mesh1DIdx, mesh2DIdx);
+            var ierr = uGrid1D2DLinksApi.Create1D2DLinks(numberOf1D2DLinks);
 
             ThrowIfError(ierr, errorMessage);
         }
