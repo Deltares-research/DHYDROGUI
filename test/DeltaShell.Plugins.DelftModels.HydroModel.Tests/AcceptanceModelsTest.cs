@@ -73,13 +73,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         #endregion
 
         #region AcceptanceModelTests
-        [TestCase("c05_Oosterschelde/Oosterschelde.zip", @"Filebased\e02.mdu")]
-        [TestCase("c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_uniWind.mdu")]
-        [TestCase("c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_varWind.mdu")]
-        [TestCase("c03_Waal_40m/Waal_40m.zip", @"Waal_40m.dsproj_data\Waal_40m\Waal_40m.mdu")]
-        [TestCase("c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu")]
-        [TestCase("c02_Maas_40m/Maas_DIMR.zip", @"DIMR\dflowfm\Maas_j14_5-v2.mdu")]
-        [TestCase("c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu")]
+        [TestCase("c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu", TestName = "c01_Noordzeemodel")]
+        [TestCase("c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_40m)")]
+        [TestCase("c02_Maas_40m/Maas_DIMR.zip", @"DIMR\dflowfm\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_DIMR)")]
+        [TestCase("c03_Waal_40m/Waal_40m.zip", @"Waal_40m.dsproj_data\Waal_40m\Waal_40m.mdu", TestName = "c03_Waal_40m")]
+        [TestCase("c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_uniWind.mdu", TestName = "c04_Markermeer_Veluwerandmeren (FlowFM_uniWind)")]
+        [TestCase("c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"FlowFM_varWind.mdu", TestName = "c04_Markermeer_Veluwerandmeren (FlowFM_varWind)")]
+        [TestCase("c05_Oosterschelde/Oosterschelde.zip", @"Filebased\e02.mdu", TestName = "c05_Oosterschelde")]
         public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
         {
             // Step 1: Download
@@ -175,29 +175,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
         
-        [TestCase("c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj")]
-        [TestCase("c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj")]
-        [TestCase("c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj")]
-        [TestCase("c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj")]
-        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj")]
-        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2007.dsproj")]
-        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2011.dsproj")]
-        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2013.dsproj")]
-        [TestCase("c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj")]
-        [TestCase("c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2011.dsproj")]
-        [TestCase("c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2013.dsproj")]
-        [TestCase("c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj")]
-        [TestCase("c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj")]
-        [TestCase("c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj" )]
-        [TestCase("c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj")]
-        [TestCase("c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj" )]
-        [TestCase("c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj")]
-        [TestCase("c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj" )]
-        [TestCase("c14_sobek-duitse-vecht/Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj")]
-        [TestCase("c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1_meuse-j99_5-v3.dsproj")]
-        [TestCase("c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj")]
-        [TestCase("c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj" )]
-
+        [TestCase("c01_sobek-rijn-j17_5-v1/sobek-rijn-j17_5-v1.zip", @"sobek-rijn-j17_5-v1\sobek-rijn-j17_5-v1.dsproj", TestName = "c01_sobek-rijn-j17_5-v1")]
+        [TestCase("c02_sobek-maas-j17_5-v1/sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1\sobek-maas-j17_5-v1.dsproj", TestName = "c02_sobek-maas-j17_5-v1")]
+        [TestCase("c03_sobek-rmm-j15_5-v1/sobek-rmm-j15_5-v1.zip", @"sobek-rmm-j15_5-v1\sobek-rmm-j15_5-v1.dsproj", TestName = "c03_sobek-rmm-j15_5-v1")]
+        [TestCase("c04_sobek-ovd-j14_5-v1/sobek-ovd-j14_5-v1.zip", @"sobek-ovd-j14_5-v1\sobek-ovd-j14_5-v1.dsproj", TestName = "c04_sobek-ovd-j14_5-v1")]
+        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2006.dsproj", TestName = "c05_sobek-markermeer-j10_5-v1 (sobek-markermeer-j10_5-v1_rvw2006)")]
+        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2007.dsproj", TestName = "c05_sobek-markermeer-j10_5-v1 (sobek-markermeer-j10_5-v1_rvw2007)")]
+        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2011.dsproj", TestName = "c05_sobek-markermeer-j10_5-v1 (sobek-markermeer-j10_5-v1_rvw2011)")]
+        [TestCase("c05_sobek-markermeer-j10_5-v1/sobek-markermeer-j10_5-v1.zip", @"sobek-markermeer-j10_5-v1\sobek-markermeer-j10_5-v1_rvw2013.dsproj", TestName = "c05_sobek-markermeer-j10_5-v1 (sobek-markermeer-j10_5-v1_rvw2013)")]
+        [TestCase("c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2007.dsproj", TestName = "c06_sobek-ym_ijvd-j16_05-v1 (sobek-ym_ijd-j16_05-v1_rvw2007)")]
+        [TestCase("c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2011.dsproj", TestName = "c06_sobek-ym_ijvd-j16_05-v1 (sobek-ym_ijd-j16_05-v1_rvw2011)")]
+        [TestCase("c06_sobek-ym_ijvd-j16_05-v1/sobek-ym_ijd-j16_05-v1.zip", @"sobek-ym_ijd-j16_05-v1\sobek-ym_ijd-j16_05-v1_rvw2013.dsproj", TestName = "c06_sobek-ym_ijvd-j16_05-v1 (sobek-ym_ijd-j16_05-v1_rvw2013)")]
+        [TestCase("c07_sobek-veluwerandmeren-j10-v1/sobek-veluwerandmeren-j10_5-v1.zip", @"sobek-veluwerandmeren-j10_5-v1\sobek-vrm-j10_5-v1.dsproj", TestName = "c07_sobek-veluwerandmeren-j10-v1")]
+        [TestCase("c08_sobek-nzk_ark-j15_5-v1/sobek-nzk_ark-j15_5-v1.zip", @"sobek-nzk_ark-j15_5-v1\sobek-nzk_ark-j15_5-v1.dsproj", TestName = "c08_sobek-nzk_ark-j15_5-v1")]
+        [TestCase("c09_sobek-oosterschelde-j12_5-v1/sobek-oosterschelde-j12_5-v1.zip", @"sobek-oosterschelde-j12_5-v1\t18.dsproj", TestName = "c09_sobek-oosterschelde-j12_5-v1")]
+        [TestCase("c10_sobek-vozo-j12_5-v1_201312stav/sobek-vozo-j12_5-v1_201312stav.zip", @"sobek-vozo-j12_5-v1_201312stav\sobek-vozo-j12_5-v1_201312stav.dsproj", TestName = "c10_sobek-vozo-j12_5-v1_201312stav")]
+        [TestCase("c11_sobek-mlnbk_j14_5-v1/sobek-mlnbk-j14_5-v1.zip", @"sobek-mlnbk-j14_5-v1\sobek-mlnbk-j14_5-v1.dsproj", TestName = "c11_sobek-mlnbk_j14_5-v1")]
+        [TestCase("c12_sobek-twentekanaal-j10_5-v1/sobek-twentekanaal-j10_5-v1.zip", @"sobek-twentekanaal-j10_5-v1\sobek-twentekanaal_j10_5-v1.dsproj", TestName = "c12_sobek-twentekanaal-j10_5-v1")]
+        [TestCase("c13_sobek-meuse-j99_5_v2/sobek-meuse-j99_5-v2.zip", @"sobek-meuse-j99_5-v2\sobek-meuse-j99_5-v2.dsproj", TestName = "c13_sobek-meuse-j99_5_v2")]
+        [TestCase("c14_sobek-duitse-vecht/Duitse_Vecht.zip", @"Vecht_Ohne_Emlichheim_validatie1.dsproj", TestName = "c14_sobek-duitse-vecht")]
+        [TestCase("c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-maas-j17_5-v1_meuse-j99_5-v3.dsproj", TestName = "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3 (sobek-maas-j17_5-v1_meuse-j99_5-v3)")]
+        [TestCase("c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3/sobek-meuse-j99_5-v3_20_20_sobek-maas-j17_5-v1.zip", @"sobek-meuse-j99_5-v3.dsproj", TestName = "c15_coupled_sobek-maas-j17_5-v1_meuse-j99_5-v3 (sobek-meuse-j99_5-v3)")]
+        [TestCase("c16_coupled_sobek-ovd_dv-j14_5-v1/sobek-ovd_dv-j14_5-v1.zip", @"sobek-ovd_dv-j14_5-v1.dsproj", TestName = "c16_coupled_sobek-ovd_dv-j14_5-v1")]
         public void SOBEK3_AcceptanceModelTest(string relativeZipFilePath, string relativeDsProjFilePath)
         {
             // Step 1: Download
