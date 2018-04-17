@@ -57,8 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             int[] targetnodeid = { 2 };
 
             //links
-            int[] arrayfrom = { 2, 8 };
-            int[] arrayto = { 2, 3 };
+            int[] arrayfrom = { 2, 8, 7 };
+            int[] arrayto = { 2, 3, 4 };
 
             //1. open the file with the 2d mesh
             string c_path = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
