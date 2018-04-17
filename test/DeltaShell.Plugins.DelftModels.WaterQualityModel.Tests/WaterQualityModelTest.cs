@@ -159,11 +159,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
 
             // call
-            var kernalVersionsText = model.KernelVersions;
+            var kernalVersionsText = model.KernelVersions.Split();
 
-            // assert - here we are not checking for the full kernelversion. This number is periodically updated.
-            StringAssert.Contains(@"Kernel", kernalVersionsText.Split(' ')[0]);
-            StringAssert.Contains(@"delwaq1.exe", kernalVersionsText.Split(' ')[1]);
+            // assert
+            StringAssert.Contains(@"Kernel", kernalVersionsText[0]);
+            StringAssert.Contains(@"delwaq1.exe", kernalVersionsText[1]);
+            StringAssert.Contains(@"delwaq2.exe", kernalVersionsText[6]);
         }
 
         [Test]
