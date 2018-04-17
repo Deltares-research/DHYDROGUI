@@ -394,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var is1D2DModel = (bool) ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             Grid = ReadGridFromNetFile(NetFilePath, is1D2DModel) ?? new UnstructuredGrid();
 
-            Links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
+            //Links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                 {
