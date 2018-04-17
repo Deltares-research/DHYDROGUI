@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModel)),
                         string.Format("Failed to adjust time settings for model: {0}", rootModel.Name));
 
-                    // Step 11: Run FM model
+                    // Step 11: Run model
                     Assert.True(TryPerformAction(() => RunModel(rootModel)),
                         string.Format("Failed to run model: {0}", rootModel.Name));
 
@@ -279,7 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModel)),
                         string.Format("Failed to adjust time settings for model: {0}", rootModel.Name));
 
-                    // Step 11: Run HydroModel (All Sub-models workflow)
+                    // Step 11: Run model
                     Assert.True(TryPerformAction(() => RunModel(rootModel)),
                         string.Format("Failed to run model: {0}", rootModel.Name));
 
@@ -414,6 +414,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             // Run model
             ActivityRunner.RunActivity(activity);
+            if(activity.Status != ActivityStatus.Cleaned) throw new AssertionException(
+                string.Format("Unable to complete Model run{0}Expected status: Cleaned{0}Actual status: {1}",
+                    System.Environment.NewLine, activity.Status.ToString()));
         }
         
         private static void ExportDimrConfiguration(string tempDir, IModel model)
