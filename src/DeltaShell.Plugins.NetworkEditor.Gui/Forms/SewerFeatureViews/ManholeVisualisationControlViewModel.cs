@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Extensions;
@@ -13,6 +16,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         private double compartmentIntervalFactor = 0.1;// Factor to define the interval distance between the compartments; interval = factor * average_compartment_width
         private double compartmentIntervalDistance;
+
+        private double minX;
+        private double maxX;
+        private double minY;
+        private double maxY;
+        private double widthWithMargin;
 
         private Manhole manhole;
 
@@ -28,35 +37,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 CreateShapes();
                 DetermineGlobalDimensions();
                 PositionShapes();
+                UpdateShapePositions();
             }
         }
+
+
 
         public ObservableCollection<IDrawingShape> Shapes { get; set; } = new ObservableCollection<IDrawingShape>();
+        
+        public Func<double> ContainerWidth { get; set; }
 
-        public double HeightWithMargin { get; set; }
+        public Func<double> ContainerHeight { get; set; }
 
-        public double WidthWithMargin { get; set; }
-
-        private double ActualLevelAtTopOfCanvas { get; set; }
-
-        public double StrokeThickness
-        {
-            get { return DetermineStrokeThickness(); }
-            set { }
-        }
-
-        private double DetermineStrokeThickness()
-        {
-            var compartments = Shapes.OfType<CompartmentShape>().ToList();
-            if (compartments.Any())
-            {
-                var height = compartments.Max(c => c.Compartment.SurfaceLevel) -
-                             compartments.Min(c => c.Compartment.BottomLevel);
-
-                return height * 0.01;
-            }
-            return 0.1;
-        }
 
         private void CreateShapes()
         {
@@ -69,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             // Pipe shapes
             Shapes.AddRange(CreatePipeShapes());
-            
+
             // Connection shapes
             Shapes.AddRange(CreateConnectionShapes());
         }
@@ -81,25 +73,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             if (compartmentShapes == null || !compartmentShapes.Any())
             {
-                HeightWithMargin = 0;
-                WidthWithMargin = 0;
+                //heightWithMargin = 0;
+                widthWithMargin = 0;
                 return;
             }
 
-            // Determine height
-            var maxTopLevelOfCompartments = compartmentShapes.Max(c => c.TopLevel);
-            var minBottomLevelOfCompartments = compartmentShapes.Min(c => c.BottomLevel);
+            DetermineHeight();
 
-            var height = maxTopLevelOfCompartments - minBottomLevelOfCompartments;
-            var verticalMargin = height * 0.1; // The margin in vertical direction is 10% of the total height
-            HeightWithMargin = height + 2 * verticalMargin;
-            ActualLevelAtTopOfCanvas = maxTopLevelOfCompartments + verticalMargin; // The level at the top of the canvas (itemscontrol)
+            DetermineWidth(compartmentShapes);
+        }
 
-            // Determine width
+        private void DetermineWidth(List<CompartmentShape> compartmentShapes)
+        {
             compartmentIntervalDistance = compartmentShapes.Average(c => c.Width) * compartmentIntervalFactor;
             var width = GetCompartmentsTotalWidth();
             var horizontalMargin = width * 0.1; // The margin at each side in horizontal direction is 10% of the total width (compartment shapes + interval between shapes)
-            WidthWithMargin = width + 2 * horizontalMargin;
+            widthWithMargin = width + 2 * horizontalMargin;
+            minX = 0;
+            maxX = widthWithMargin;
+        }
+
+        private void DetermineHeight()
+        {
+            if (Shapes == null || !Shapes.Any())
+            {
+                widthWithMargin = 0;
+                return;
+            }
+
+            var maxTopLevel = Shapes.Max(c => c.TopLevel);
+            var minBottomLevel = Shapes.Min(c => c.BottomLevel);
+
+            var height = maxTopLevel - minBottomLevel;
+            var verticalMargin = height * 0.1; // The margin in vertical direction is 10% of the total height
+            
+            maxY = maxTopLevel + verticalMargin; // The level at the top of the canvas (itemscontrol)
+            minY = minBottomLevel - verticalMargin;
         }
 
         private void PositionShapes()
@@ -112,13 +121,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             // Pipe shapes
             PositionPipeShapes();
 
-            // Orifice shapes
-            PositionOrificeShapes();
-
-            // Pump shapes
-            PositionPumpShapes();
+            // Internal connection shapes
+            PositionConnectionShapes();
         }
-        
+
         private IEnumerable<CompartmentShape> CreateCompartmentShapes()
         {
             var compartments = new List<CompartmentShape>();
@@ -175,7 +181,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var connectedCompartmentShape = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == connectedCompartment);
             return connectedCompartmentShape;
         }
-        
+
         private void PositionPipeShapes()
         {
             var pipeShapes = Shapes.OfType<PipeShape>().ToList();
@@ -223,35 +229,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             shape.LeftOffset = leftOffset;
         }
 
-        private IEnumerable<IDrawingShape> CreateStructureConnections(IEnumerable<ISewerConnection> structureConnections)
+        private IEnumerable<IDrawingShape> CreateStructureConnections(IList<ISewerConnection> structureConnections)
         {
             var structureShapes = new List<IDrawingShape>();
             var pumpConnections = structureConnections.Select(s => s).Where(sc => sc.BranchFeatures.OfType<Pump>().Any()).ToList();
             foreach (var pumpConnection in pumpConnections)
             {
                 var pumps = pumpConnection.BranchFeatures.OfType<Pump>();
-                var pump = pumps.FirstOrDefault();
-                if (pump == null) continue;
 
-                var pumpShape = new PumpShape {Pump = pump};
+                foreach (var pump in pumps)
+                {
+                    var pumpShape = new PumpShape { Pump = pump };
 
-                var sourceCompartment = pumpConnection.SourceCompartment;
-                var targetCompartment = pumpConnection.TargetCompartment;
-                // Connection must have source and target
-                if (sourceCompartment == null || targetCompartment == null) continue;
+                    if (!TrySetShapeSourceAndTargetCompartment(pumpConnection, pumpShape)) continue;
 
-                var sourceCompartmentShape = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == sourceCompartment);
-                var targetCompartmentShape = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == targetCompartment);
-                
-                pumpShape.SourceCompartmentShape = sourceCompartmentShape;
-                pumpShape.TargetCompartmentShape = targetCompartmentShape;
+                    structureShapes.Add(pumpShape);
+                }
+            }
 
-                structureShapes.Add(pumpShape);
+            var weirConnections = structureConnections.Select(s => s).Where(sc => sc.BranchFeatures.OfType<Weir>().Any()).ToList();
+            foreach (var weirConnection in weirConnections)
+            {
+                var weirs = weirConnection.BranchFeatures.OfType<Weir>();
+                foreach (var weir in weirs)
+                {
+                    var weirShape = new WeirShape { Weir = weir };
+                    if (!TrySetShapeSourceAndTargetCompartment(weirConnection, weirShape)) continue;
 
+                    structureShapes.Add(weirShape);
+                }
             }
 
             return structureShapes;
         }
+
 
         private IEnumerable<IDrawingShape> CreateOrificeShapes(IEnumerable<SewerConnectionOrifice> orifices)
         {
@@ -289,7 +300,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             connectionShapes.AddRange(CreateOrificeShapes(orificeConnections));
 
             var structureConnections = internalConnections.Where(c => c.BranchFeatures.Any());
-            connectionShapes.AddRange(CreateStructureConnections(structureConnections));
+            connectionShapes.AddRange(CreateStructureConnections(structureConnections.ToList()));
             return connectionShapes;
         }
 
@@ -301,45 +312,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (!compartmentShapes.Any()) return;
 
             var totalCompartmentsWidth = GetCompartmentsTotalWidth();
-            var canvasWidth = WidthWithMargin;
-            var initialLeftOffset = (canvasWidth - totalCompartmentsWidth) / 2.0;
+            var initialLeftOffset = (widthWithMargin - totalCompartmentsWidth) / 2.0;
 
             EquallyDistributeShapesHorizontal(compartmentShapes, compartmentIntervalDistance, initialLeftOffset);
 
             // Set top levels of shapes
             SetTopOfShapes(compartmentShapes);
-
         }
 
-        private void PositionOrificeShapes()
+        private void PositionConnectionShapes()
         {
-            var orificeShapes = Shapes.OfType<OrificeShape>().ToList();
-            if (!orificeShapes.Any()) return;
+            var connectionShapes = Shapes.OfType<ConnectionShape>().ToList();
+            if (!connectionShapes.Any()) return;
 
-            foreach (var orificeShape in orificeShapes)
+            foreach (var connectionShape in connectionShapes)
             {
-                PositionShapeBetweenOtherShapes(orificeShape, orificeShape.SourceCompartmentShape, orificeShape.TargetCompartmentShape);
-                SetTopOfShape(orificeShape);
+                PositionShapeBetweenOtherShapes(connectionShape, connectionShape.SourceCompartmentShape, connectionShape.TargetCompartmentShape);
+                SetTopOfShape(connectionShape);
             }
         }
-
-        private void PositionPumpShapes()
-        {
-            var pumpShapes = Shapes.OfType<PumpShape>().ToList();
-            if (!pumpShapes.Any()) return;
-
-            foreach (var pumpShape in pumpShapes)
-            {
-                PositionShapeBetweenOtherShapes(pumpShape, pumpShape.SourceCompartmentShape, pumpShape.TargetCompartmentShape);
-                SetTopOfShape(pumpShape);
-            }
-        }
-
 
         private void SetTopOfShape(IDrawingShape shape)
         {
             if (shape == null) return;
-            shape.TopOffset = ActualLevelAtTopOfCanvas - shape.TopLevel;
+            shape.TopOffset = maxY - shape.TopLevel;
         }
 
         private void SetTopOfShapes(IEnumerable<IDrawingShape> shapes)
@@ -362,6 +358,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private static void PositionShapeBetweenOtherShapes(IDrawingShape shape, IDrawingShape referenceShape1, IDrawingShape referenceShape2)
         {
+            if (shape == null || referenceShape1 == null || referenceShape2 == null) return;
             var reference1IsLeft = referenceShape1.LeftOffset < referenceShape2.LeftOffset;
             var leftShape = reference1IsLeft ? referenceShape1 : referenceShape2;
             var rightShape = reference1IsLeft ? referenceShape2 : referenceShape1;
@@ -379,6 +376,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             if (!compartmentShapes.Any()) return 0;
             return compartmentShapes.Sum(c => c.Width) + (compartmentShapes.Count - 1) * compartmentIntervalDistance;
+        }
+
+        /// <summary>
+        /// Sets the source and target compartment shapes of a connection shape
+        /// </summary>
+        /// <param name="pumpConnection"></param>
+        /// <param name="pumpShape"></param>
+        /// <returns>Returns true if valid, else returns false</returns>
+        private bool TrySetShapeSourceAndTargetCompartment(ISewerConnection pumpConnection, ConnectionShape pumpShape)
+        {
+            var sourceCompartment = pumpConnection.SourceCompartment;
+            var targetCompartment = pumpConnection.TargetCompartment;
+            // Connection must have source and target
+            if (sourceCompartment == null || targetCompartment == null) return false;
+
+            var sourceCompartmentShape = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == sourceCompartment);
+            var targetCompartmentShape = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == targetCompartment);
+
+            pumpShape.SourceCompartmentShape = sourceCompartmentShape;
+            pumpShape.TargetCompartmentShape = targetCompartmentShape;
+            return true;
+        }
+
+        public void UpdateShapePositions()
+        {
+            foreach (var shape in Shapes)
+            {
+                shape.SetPixelValues(minX, maxX, minY, maxY, ContainerWidth.Invoke(), ContainerHeight.Invoke());
+            }
         }
     }
 }

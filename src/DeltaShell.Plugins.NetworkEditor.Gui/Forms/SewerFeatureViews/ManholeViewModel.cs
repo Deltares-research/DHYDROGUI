@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using DelftTools.Hydro;
@@ -32,7 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (value == null)
                 {
                     network = null;
-                    Compartments.Clear();
                 }
 
                 if (manhole != null)
@@ -45,17 +43,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
                 manhole = value;
 
-
-
                 if (manhole != null)
                 {
                     if (manhole.Compartments != null)
                     {
-                        Compartments.Clear();
-                        Compartments.AddRange(manhole.Compartments);
-
                         DetermineSurfaceAndBottomLevels();
-
                         manhole.Compartments.CollectionChanged += CompartmentsOnCollectionChanged;
                     }
 
@@ -69,8 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 }
             }
         }
-
-        public ObservableCollection<Compartment> Compartments { get; set; } = new ObservableCollection<Compartment>();
 
         public ObservableCollection<IPipe> PipesInManholes { get; set; } = new ObservableCollection<IPipe>();
 
@@ -143,26 +133,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void CompartmentsOnCollectionChanged(object sender, NotifyCollectionChangingEventArgs e)
         {
-            var compartment = e.Item as Compartment;
-            if (compartment == null) return;
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangeAction.Add:
-                    Compartments.Add(compartment);
-                    break;
-                case NotifyCollectionChangeAction.Remove:
-                    Compartments.Remove(compartment);
-                    break;
-                case NotifyCollectionChangeAction.Replace:
-                    break;
-                case NotifyCollectionChangeAction.Reset:
-                    break;
-            }
-
             DetermineSurfaceAndBottomLevels();
         }
-        
+
         private static string GetUniqueCompartmentName(IHydroNetwork network)
         {
             var compartmentList = network.Manholes.SelectMany(m => m.Compartments);

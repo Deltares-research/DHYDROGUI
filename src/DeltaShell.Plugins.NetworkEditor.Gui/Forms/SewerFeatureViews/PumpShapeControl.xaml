@@ -9,33 +9,46 @@
     <UserControl.DataContext>
         <local:PumpShapeControlViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
-    <Canvas>
-        <!-- Suction -->
-        <!-- Connector -->
-        <Polyline Points="{Binding SuctionConnection}" Stroke="Black" StrokeThickness="{Binding BaseStrokeThickness}"/>
-       
-        <!-- Start -->
-        <Polyline Points="{Binding SuctionStartLevel}" 
-                  Stroke="ForestGreen" StrokeThickness="{Binding BaseStrokeThickness}"/>
-        
-        <!-- Stop -->
-        <Polyline Points="{Binding SuctionStopLevel}" 
-                  Stroke="Red" StrokeThickness="{Binding BaseStrokeThickness}"/>
+    <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Canvas>
+            <!-- Suction -->
+            <!-- Connector -->
+            <Polyline Points="{Binding SuctionConnection}" Stroke="Black" StrokeThickness="2"/>
 
+            <!-- Start -->
+            <Polyline Points="{Binding SuctionStartLevel}" 
+                  Stroke="ForestGreen" StrokeThickness="2"/>
 
-        <!-- Delivery -->
-        <!-- Connector -->
-        <Polyline Points="{Binding DeliveryConnection}" Stroke="Black" StrokeThickness="{Binding BaseStrokeThickness}"/>
-        
-        <!-- Start -->
-        <Polyline Points="{Binding DeliveryStartLevel}" 
-                  Stroke="ForestGreen" StrokeThickness="{Binding BaseStrokeThickness}"/>
+            <!-- Stop -->
+            <Polyline Points="{Binding SuctionStopLevel}" 
+                  Stroke="Red" StrokeThickness="2"/>
 
-        <!-- Stop -->
-        <Polyline Points="{Binding DeliveryStopLevel}" 
-                  Stroke="Red" StrokeThickness="{Binding BaseStrokeThickness}"/>
+            <!-- Delivery -->
+            <!-- Connector -->
+            <Polyline Points="{Binding Connection}" Stroke="Black" StrokeThickness="2"/>
 
-        <!-- Pump -->
-        <Ellipse Fill="RoyalBlue" Canvas.Left="{Binding CenterLeftOffset}" Canvas.Top="{Binding CenterTopOffset}" Width="{Binding CenterWidth}" Height="{Binding CenterHeight}" />
-    </Canvas>
+            <!-- Start -->
+            <Polyline Points="{Binding DeliveryStartLevel}" 
+                  Stroke="ForestGreen" StrokeThickness="2"/>
+
+            <!-- Stop -->
+            <Polyline Points="{Binding DeliveryStopLevel}" 
+                  Stroke="Red" StrokeThickness="2"/>
+
+            <!-- Pump -->
+            <Path Stretch="Uniform" SnapsToDevicePixels="True" 
+                  Data="M -1,0 A 1,1 0 1 1 1,0 M -1,0 A 1,1 0 1 0 1,0 M -0.666,0 H 0.666 M 0,-0.666 V 0.666" 
+                  Stroke="Black" StrokeThickness="1" Width="{Binding IconWidth}" Height="{Binding IconWidth}" Canvas.Left="{Binding IconLeftOffset}" Canvas.Top="{Binding IconTopOffset}">
+                <Path.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FFFF8812" Offset="0.33"/>
+                        <GradientStop Color="#FFFFBA75" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
+        </Canvas>
+    </Grid>
 </UserControl>

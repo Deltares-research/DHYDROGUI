@@ -1,7 +1,9 @@
 ﻿using System;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
@@ -15,125 +17,166 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         double Height { get; set; }
 
-        double LeftOffset { get; set; }
+        double WidthPix { get; set; }
+
+        double HeightPix { get; set; }
+
+        #region Offset
 
         double TopOffset { get; set; }
+
+        double TopOffsetPix { get; set; }
+
+        double LeftOffset { get; set; }
+
+        double LeftOffsetPix { get; set; }
+
+        #endregion
+
+        void SetPixelValues(double minX, double maxX, double minY, double maxY, double actualWidth, double actualHeight);
+
     }
 
     [Entity]
-    public class CompartmentShape : IDrawingShape
+    public class DrawingShape : IDrawingShape
     {
-        public double TopOffset { get; set; }
-
-        public double LeftOffset { get; set; }
-
-        public Compartment Compartment { get; set; }
-
-        public double TopLevel
+        public virtual double TopLevel { get; set; }
+        public virtual double BottomLevel { get; set; }
+        public virtual double Width { get; set; }
+        public virtual double Height { get; set; }
+        public virtual double WidthPix { get; set; }
+        public virtual double HeightPix { get; set; }
+        public virtual double TopOffset { get; set; }
+        public virtual double TopOffsetPix { get; set; }
+        public virtual double LeftOffset { get; set; }
+        public virtual double LeftOffsetPix { get; set; }
+        public void SetPixelValues(double minX, double maxX, double minY, double maxY, double actualWidth, double actualHeight)
         {
-            get { return Compartment?.SurfaceLevel ?? double.NaN; }
-            set { }
-        }
-
-        public double BottomLevel
-        {
-            get { return Compartment?.BottomLevel ?? double.NaN; }
-            set { }
-        }
-
-        public double Width
-        {
-            get { return Compartment?.ManholeWidth / 1000 ?? double.NaN; }
-            set { }
-        }
-
-        public double Height
-        {
-            get { return Compartment?.SurfaceLevel - Compartment?.BottomLevel ?? double.NaN; }
-            set { }
+            LeftOffsetPix = CoordinateScalingHelper.ScaleX(LeftOffset, minX, maxX, actualWidth);
+            TopOffsetPix = CoordinateScalingHelper.ScaleY(TopLevel, minY, maxY, actualHeight);
+            WidthPix = CoordinateScalingHelper.ScaleWidth(Width, minX, maxX, actualWidth);
+            HeightPix = CoordinateScalingHelper.ScaleHeight(Height, minY, maxY, actualHeight);
         }
     }
 
     [Entity]
-    public class PipeShape : IDrawingShape
+    public class CompartmentShape : DrawingShape
     {
-        private CompartmentShape connectedCompartmentShape;
+        private Compartment compartment;
 
-        public CompartmentShape ConnectedCompartmentShape
+        public Compartment Compartment
         {
-            get { return connectedCompartmentShape; }
+            get { return compartment; }
             set
             {
-                if (connectedCompartmentShape != null)
-                {
-                    ResetProperties();
-                }
+                compartment = value;
 
-                connectedCompartmentShape = value;
-
-                if (connectedCompartmentShape != null)
+                if (compartment != null)
                 {
                     SetProperties();
                 }
             }
         }
 
-        private void ResetProperties()
-        {
-            BottomLevel = 0;
-            TopLevel = 0;
-        }
-
         private void SetProperties()
         {
-            CalculateBottomLevel();
-            TopLevel = CalculateTopLevel();
+            TopLevel = compartment.SurfaceLevel;
+            BottomLevel = compartment.BottomLevel;
+            Width = compartment.ManholeWidth;
+            Height = compartment.SurfaceLevel - compartment.BottomLevel;
         }
-
-        private void CalculateBottomLevel()
-        {
-            var connectedCompartment = connectedCompartmentShape?.Compartment;
-
-            if (Pipe == null || connectedCompartment == null) return;
-
-            if (connectedCompartment == Pipe.SourceCompartment)
-            {
-                BottomLevel = Pipe.LevelSource;
-            }
-            else if (connectedCompartment == Pipe.TargetCompartment)
-            {
-                BottomLevel = Pipe.LevelTarget;
-            }
-        }
-
-        private double CalculateTopLevel()
-        {
-            return BottomLevel + Height;
-        }
-
-        public double TopLevel { get; set; }
-
-        public double BottomLevel { get; set; }
-
-        public double Width { get { return 0.25; } set { } }
-
-        public double Height { get { return 0.25; } set { } }
-
-        public double LeftOffset { get; set; }
-
-        public double TopOffset { get; set; }
-
-        public IPipe Pipe { get; set; }
     }
 
     [Entity]
-    public class ConnectionShape : IDrawingShape
+    public class PipeShape : DrawingShape
     {
-        protected Compartment SourceCompartment;
-        protected Compartment TargetCompartment;
+        public IPipe Pipe { get; set; }
+
+        public CompartmentShape ConnectedCompartmentShape { get; set; }
+
+        public override double TopLevel
+        {
+            get { return BottomLevel + Height; }
+            set { }
+        }
+        public override double BottomLevel
+        {
+            get { return CalculateBottomLevel(); }
+            set { }
+        }
+
+        public override double Width
+        {
+            get { return GetPipeWidth(); }
+            set { }
+        }
+
+        public override double Height
+        {
+            get { return GetPipeHeight(); }
+            set { }
+        }
+
+        private double CalculateBottomLevel()
+        {
+            var connectedCompartment = ConnectedCompartmentShape?.Compartment;
+
+            if (Pipe == null || connectedCompartment == null) return double.NaN;
+
+            if (connectedCompartment == Pipe.SourceCompartment)
+            {
+                return Pipe.LevelSource;
+            }
+
+            return connectedCompartment == Pipe.TargetCompartment ? Pipe.LevelTarget : double.NaN;
+        }
+
+        private double GetPipeWidth()
+        {
+            var shape = Pipe?.SewerProfileDefinition?.Shape;
+            if (shape == null) return 0;
+            var rectangleShape = shape as CrossSectionStandardShapeWidthHeightBase;
+            if (rectangleShape != null)
+            {
+                return rectangleShape.Width;
+            }
+
+            var roundShape = shape as CrossSectionStandardShapeRound;
+            if (roundShape != null)
+            {
+                return roundShape.Diameter;
+            }
+
+            throw new ArgumentException($"Pipe shape {shape?.Type} is not yet supported");
+        }
+
+        private double GetPipeHeight()
+        {
+            var shape = Pipe?.SewerProfileDefinition?.Shape;
+            if (shape == null) return 0;
+            var rectangleShape = shape as CrossSectionStandardShapeWidthHeightBase;
+            if (rectangleShape != null)
+            {
+                return rectangleShape.Height;
+            }
+
+            var roundShape = shape as CrossSectionStandardShapeRound;
+            if (roundShape != null)
+            {
+                return roundShape.Diameter;
+            }
+
+            throw new ArgumentException($"Sewer pipe shape {shape?.Type} is not yet supported");
+        }
+    }
+
+    [Entity]
+    public class ConnectionShape : DrawingShape
+    {
+        private Compartment sourceCompartment;
+        private Compartment targetCompartment;
         private CompartmentShape sourceCompartmentShape;
         private CompartmentShape targetCompartmentShape;
-        public double TopOffset { get; set; }
 
         public CompartmentShape SourceCompartmentShape
         {
@@ -141,7 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set
             {
                 sourceCompartmentShape = value;
-                SourceCompartment = sourceCompartmentShape?.Compartment;
+                sourceCompartment = sourceCompartmentShape?.Compartment;
             }
         }
 
@@ -151,28 +194,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set
             {
                 targetCompartmentShape = value;
-                TargetCompartment = targetCompartmentShape?.Compartment;
+                targetCompartment = targetCompartmentShape?.Compartment;
             }
         }
-
-        public virtual double TopLevel { get; set; }
-
-        public virtual double BottomLevel { get; set; }
-
-        public virtual double Width
+     
+        public override double Width
         {
             get { return GetWidthBasedOnCompartments(); }
             set { }
         }
-
-        public double Height
+        
+        public override double Height
         {
             get { return TopLevel - BottomLevel; }
             set { }
         }
-
-        public double LeftOffset { get; set; }
-
 
         protected double GetWidthBasedOnCompartments()
         {
@@ -182,6 +218,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var rightShape = sourceIsLeft ? targetCompartmentShape : sourceCompartmentShape;
 
             return rightShape.LeftOffset - (leftShape.LeftOffset + leftShape.Width);
+        }
+
+        protected double GetTopLevelBasedOnCompartments()
+        {
+            if (sourceCompartment == null || targetCompartment == null)
+            {
+                return double.NaN;
+            }
+
+            return Math.Min(sourceCompartment.SurfaceLevel, targetCompartment.SurfaceLevel);
+        }
+
+        protected double GetBottomLevelBasedOnCompartments()
+        {
+            if (sourceCompartment == null || targetCompartment == null)
+            {
+                return double.NaN;
+            }
+
+            return Math.Max(sourceCompartment.BottomLevel, targetCompartment.BottomLevel);
         }
     }
 
@@ -231,13 +287,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     }
 
     [Entity]
-    public class OrificeShape : ConnectionShape
+    public class WeirShape : ConnectionShape
     {
-        public SewerConnectionOrifice Orifice { get; set; }
+        public Weir Weir { get; set; }
 
         public override double BottomLevel
         {
-            get { return Orifice?.Bottom_Level ?? double.NaN; }
+            get { return Weir?.CrestLevel ?? double.NaN; }
             set { }
         }
 
@@ -246,16 +302,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             get { return GetTopLevelBasedOnCompartments(); }
             set { }
         }
+    }
 
-        private double GetTopLevelBasedOnCompartments()
+    [Entity]
+    public class OrificeShape : ConnectionShape
+    {
+        public SewerConnectionOrifice Orifice { get; set; }
+
+        public override double BottomLevel
         {
-            if (SourceCompartment == null || TargetCompartment == null)
-            {
-                return double.NaN;
-            }
+            get { return GetBottomLevelBasedOnCompartments(); }
+            set { }
+        }
 
-            return Math.Min(SourceCompartment.SurfaceLevel, TargetCompartment.SurfaceLevel);
-
+        public override double TopLevel
+        {
+            get { return Orifice?.Bottom_Level ?? double.NaN; }
+            set { }
         }
     }
 }

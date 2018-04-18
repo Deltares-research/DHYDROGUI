@@ -245,6 +245,7 @@
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
     <Compile Include="Helpers\HydroNetworkTestHelper.cs" />
+    <Compile Include="Helpers\CoordinateScalingHelperTest.cs" />
     <Compile Include="Helpers\TestNetworkAndDiscretisationProvider.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />

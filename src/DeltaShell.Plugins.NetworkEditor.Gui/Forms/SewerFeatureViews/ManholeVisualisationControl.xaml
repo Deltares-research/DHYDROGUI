@@ -5,47 +5,118 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:crossSections="clr-namespace:DelftTools.Hydro.CrossSections;assembly=DelftTools.Hydro"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" >
     <UserControl.DataContext>
         <local:ManholeVisualisationControlViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
-    <Viewbox Stretch="Uniform">
-        <local:CanvasItemsControl ItemsSource="{Binding Shapes}" Background="BurlyWood">
+    <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged" Background="#FFE8E8E8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <local:CanvasItemsControl ItemsSource="{Binding Shapes}">
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:CompartmentShape}">
                     <Grid>
-                        <Rectangle Fill="Orange" 
-                                   Width="{Binding Width}" Height="{Binding Height}" 
-                                   Stroke="Black" StrokeThickness="{Binding DataContext.StrokeThickness, RelativeSource={RelativeSource AncestorType=local:ManholeVisualisationControl}}" 
-                                   HorizontalAlignment="Left" VerticalAlignment="Top"
-                                   ToolTip="{Binding Compartment.Name}"/>
+                        <Rectangle Fill="White"
+                                   Stroke="Black" StrokeThickness="2"
+                                   Width="{Binding WidthPix}" Height="{Binding HeightPix}"
+                                   ToolTip="{Binding Compartment.Name}">
+                        </Rectangle>
+                        <TextBlock Text="{Binding TopLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" FontSize="15" Margin="0, -20, 0, 0"/>
+                        <TextBlock Text="{Binding BottomLevel, StringFormat={}{0:G2} m}" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="15" Margin="0, 0, 0, -20"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PipeShape}">
-                    <Rectangle Fill="RoyalBlue" Stroke="Black" StrokeThickness="{Binding DataContext.StrokeThickness, RelativeSource={RelativeSource AncestorType=local:ManholeVisualisationControl}}" 
-                             Width="{Binding Width}" Height="{Binding Height}" 
-                             HorizontalAlignment="Left" VerticalAlignment="Top"
-                             ToolTip="{Binding Pipe.Name}"/>
+                    <DataTemplate.Resources>
+                        <Style x:Key="PipeStyle" TargetType="Shape">
+                            <Setter Property="Fill" Value="LightSlateGray"/>
+                            <Setter Property="Stroke" Value="Black" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Style>
+                        <Style x:Key="PipeStyling" TargetType="ContentControl">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <Rectangle Style="{StaticResource PipeStyle}"
+                                                   Width="{Binding WidthPix}" Height="{Binding HeightPix}" 
+                                                   ToolTip="{Binding Pipe.Name}"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Pipe.SewerProfileDefinition.ShapeType}" Value="{x:Static crossSections:CrossSectionStandardShapeType.Rectangle}">
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Rectangle Style="{StaticResource PipeStyle}"
+                                                           Width="{Binding WidthPix}" Height="{Binding HeightPix}" 
+                                                           ToolTip="{Binding Pipe.Name}"/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Pipe.SewerProfileDefinition.ShapeType}" Value="{x:Static crossSections:CrossSectionStandardShapeType.Round}">
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Ellipse Style="{StaticResource PipeStyle}"
+                                                           Width="{Binding WidthPix}" Height="{Binding HeightPix}" 
+                                                           ToolTip="{Binding Pipe.Name}"/>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataTemplate.Resources>
+                    <ContentControl Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}" Style="{StaticResource PipeStyling}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:OrificeShape}">
                     <Grid>
-                        <Rectangle Fill="LightBlue" 
-                               Width="{Binding Width}" Height="{Binding Height}" 
-                               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Border x:Name="OrificeShapeBorder" Width="{Binding WidthPix}" Height="{Binding HeightPix}" HorizontalAlignment="Left"
+                                BorderThickness="0, 2, 0, 2" BorderBrush="Black" >
+                            <Rectangle Fill="White"
+                                       ToolTip="{Binding Orifice.Name}"/>
+                        </Border>
+                        <Path Stretch="Uniform" Fill="RoyalBlue" StrokeThickness="1" Stroke="White"
+                              Data="M 0,115 95,115 65,90 85,90 120,120 85,150  65,150 95,125  0,125 Z"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PumpShape}">
                     <Grid>
-                        <local:PumpShapeControl PumpShape="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}" BaseStrokeThickness="{Binding DataContext.StrokeThickness, RelativeSource={RelativeSource AncestorType=local:ManholeVisualisationControl}}"/>
+                        <local:PumpShapeControl
+                            PumpShape="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}"
+                            SnapsToDevicePixels="True" 
+                            Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.WidthPix}" 
+                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext.HeightPix}"/>
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:WeirShape}">
+                    <Grid SnapsToDevicePixels="True">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" HorizontalAlignment="Left"
+                                Width="{Binding WidthPix}" Height="{Binding HeightPix}">
+                            <Rectangle Fill="White"/>
+
+                        </Border>
+                        <Path Stretch="Uniform" Fill="RoyalBlue" 
+                              Data="M 0,115 95,115 65,90 85,90 120,120 85,150  65,150 95,125  0,125 Z"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Margin="-15,0,0,0"/>
+
                     </Grid>
                 </DataTemplate>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas IsItemsHost="True" Height="{Binding HeightWithMargin}" Width="{Binding WidthWithMargin}" ClipToBounds="True" SnapsToDevicePixels="True" />
+                    <Canvas Width="{Binding ElementName=ViewGrid, Path=ActualWidth}" Height="{Binding ElementName=ViewGrid, Path=ActualHeight}" IsItemsHost="True" ClipToBounds="True" SnapsToDevicePixels="True" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </local:CanvasItemsControl>
-    </Viewbox>
+    </Grid>
 </UserControl>

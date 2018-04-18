@@ -2,12 +2,18 @@
 using System.Windows;
 using System.Windows.Media;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
     public class PumpShapeControlViewModel
     {
+        private double minX;
+        private double maxX;
+        private double minY;
+        private double maxY;
+
         private PumpShape pumpShape;
 
         public PumpShape PumpShape
@@ -23,100 +29,131 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        public double BaseStrokeThickness { get; set; } = 0.01;
-        
-        public double CenterLeftOffset { get; set; }
-        public double CenterTopOffset { get; set; }
-        public double CenterHeight { get; set; }
-        public double CenterWidth { get; set; }
-
         public PointCollection SuctionStartLevel { get; set; }
         public PointCollection SuctionStopLevel { get; set; }
         public PointCollection SuctionConnection { get; set; }
 
         public PointCollection DeliveryStartLevel { get; set; }
         public PointCollection DeliveryStopLevel { get; set; }
-        public PointCollection DeliveryConnection { get; set; }
+        public PointCollection Connection { get; set; }
 
+        public Action UpdateSizes { get; set; }
+        public Func<double> GetActualWidth { get; set; }
+        public Func<double> GetActualHeight { get; set; }
 
-        private double levelAtTop;
-
-        private void Update()
+        public double IconWidth { get; set; }
+        public double IconLeftOffset { get; set; }
+        public double IconTopOffset { get; set; }
+        
+        public void Update()
         {
-            var maxSuction = Math.Max(pumpShape.StartSuctionLevel, pumpShape.StopSuctionLevel);
-            var maxDelivery = Math.Max(pumpShape.StartDeliveryLevel, pumpShape.StopDeliveryLevel);
+            // TODO: Sometimes only the pressure or suction side is present, make sure to be able to handle with this.
+            SetRanges();
             
-            levelAtTop = Math.Max(maxSuction, maxDelivery);
+            double suctionMid;
+            var suctionRight = UpdateSuctionSide(out suctionMid);
 
-            var suctionLeft = 0;
-            var suctionRight = pumpShape.Width / 6.0;
-            var suctionStart = ConvertToOffsetFromTop(pumpShape.StartSuctionLevel);
-            var suctionStop = ConvertToOffsetFromTop(pumpShape.StopSuctionLevel);
-            var suctionMid = (suctionStart + suctionStop) / 2.0;
+            double deliveryMid;
+            var deliveryLeft = UpdateDeliverySide(out deliveryMid);
 
-            SuctionStartLevel = new PointCollection
+            var centerX = pumpShape.Width / 2.0;
+            var centerY = (suctionMid + deliveryMid) / 2.0;
+
+            var iconWidth = pumpShape.Width / 4.0;
+            SetPumpIconProperties(centerX, centerY, iconWidth);
+
+            Connection = new PointCollection
             {
-                new Point(suctionLeft, suctionStart),
-                new Point(suctionRight, suctionStart),
-                new Point(suctionRight, suctionMid),
-            };
+                new Point(ScaleX(suctionRight), ScaleY(suctionMid)),
+                new Point(ScaleX((suctionRight + centerX) * 0.5), ScaleY(suctionMid)),
+                new Point(ScaleX((suctionRight + centerX) * 0.5), ScaleY(centerY)),
 
-            SuctionStopLevel = new PointCollection
-            {
-                new Point(suctionLeft, suctionStop),
-                new Point(suctionRight, suctionStop),
-                new Point(suctionRight, suctionMid),
-            };
+                new Point(ScaleX((deliveryLeft + centerX) * 0.5), ScaleY(centerY)),
+                new Point(ScaleX((deliveryLeft + centerX) * 0.5), ScaleY(deliveryMid)),
+                new Point(ScaleX(deliveryLeft), ScaleY(deliveryMid)),
 
+            };
+        }
+
+        private void SetPumpIconProperties(double x, double y, double iconWidth)
+        {
+            IconLeftOffset = ScaleX(x - 0.5 * iconWidth);
+            IconTopOffset = ScaleY(y + 0.333 * iconWidth); 
+            IconWidth = ScaleX(iconWidth);
+        }
+
+        private double UpdateDeliverySide(out double deliveryMid)
+        {
             var deliveryLeft = 5.0 * pumpShape.Width / 6.0;
             var deliveryRight = pumpShape.Width;
-            var deliveryStart = ConvertToOffsetFromTop(pumpShape.StartDeliveryLevel);
-            var deliveryStop = ConvertToOffsetFromTop(pumpShape.StopDeliveryLevel);
-            var deliveryMid = (deliveryStart + deliveryStop) / 2.0;
-            
+            var deliveryStart = pumpShape.StartDeliveryLevel;
+            var deliveryStop = pumpShape.StopDeliveryLevel;
+            deliveryMid = (deliveryStart + deliveryStop) / 2.0;
+
             DeliveryStartLevel = new PointCollection
             {
-                new Point(deliveryRight, deliveryStart),
-                new Point(deliveryLeft, deliveryStart),
-                new Point(deliveryLeft, deliveryMid),
+                new Point(ScaleX(deliveryRight), ScaleY(deliveryStart)),
+                new Point(ScaleX(deliveryLeft), ScaleY(deliveryStart)),
+                new Point(ScaleX(deliveryLeft), ScaleY(deliveryMid)),
             };
 
             DeliveryStopLevel = new PointCollection
             {
-                new Point(deliveryRight, deliveryStop),
-                new Point(deliveryLeft, deliveryStop),
-                new Point(deliveryLeft, deliveryMid),
+                new Point(ScaleX(deliveryRight), ScaleY(deliveryStop)),
+                new Point(ScaleX(deliveryLeft), ScaleY(deliveryStop)),
+                new Point(ScaleX(deliveryLeft), ScaleY(deliveryMid)),
             };
-
-            var centerX = pumpShape.Width / 2.0;
-            var centerY = (suctionMid + deliveryMid) / 2.0;
-            
-            CenterHeight = pumpShape.Width / 5.0;
-            CenterWidth = CenterHeight;
-
-            CenterLeftOffset = centerX - 0.5 * CenterWidth;
-            CenterTopOffset = centerY - 0.5 * CenterHeight;
-
-            DeliveryConnection = new PointCollection
-            {
-                new Point(deliveryLeft, deliveryMid),
-                new Point((deliveryLeft + centerX) * 0.5, deliveryMid),
-                new Point((deliveryLeft + centerX) * 0.5, centerY),
-                new Point(centerX, centerY),
-            };
-
-            SuctionConnection = new PointCollection
-            {
-                new Point(suctionRight, suctionMid),
-                new Point((suctionRight + centerX) * 0.5, suctionMid),
-                new Point((suctionRight + centerX) * 0.5, centerY),
-                new Point(centerX, centerY),
-            };
+            return deliveryLeft;
         }
 
-        private double ConvertToOffsetFromTop(double y)
+        private double UpdateSuctionSide(out double suctionMid)
         {
-            return levelAtTop - y;
+            var suctionLeft = 0;
+            var suctionRight = pumpShape.Width / 6.0;
+            var suctionStart = pumpShape.StartSuctionLevel;
+            var suctionStop = pumpShape.StopSuctionLevel;
+            suctionMid = (suctionStart + suctionStop) / 2.0;
+
+            SuctionStartLevel = new PointCollection
+            {
+                new Point(ScaleX(suctionLeft), ScaleY(suctionStart)),
+                new Point(ScaleX(suctionRight), ScaleY(suctionStart)),
+                new Point(ScaleX(suctionRight), ScaleY(suctionMid)),
+            };
+
+            SuctionStopLevel = new PointCollection
+            {
+                new Point(ScaleX(suctionLeft), ScaleY(suctionStop)),
+                new Point(ScaleX(suctionRight), ScaleY(suctionStop)),
+                new Point(ScaleX(suctionRight), ScaleY(suctionMid)),
+            };
+            
+            return suctionRight;
+        }
+
+        private void SetRanges()
+        {
+            var minSuction = Math.Min(pumpShape.StartSuctionLevel, pumpShape.StopSuctionLevel);
+            var minDelivery = Math.Min(pumpShape.StartDeliveryLevel, pumpShape.StopDeliveryLevel);
+            minY = Math.Min(minSuction, minDelivery);
+
+            var maxSuction = Math.Max(pumpShape.StartSuctionLevel, pumpShape.StopSuctionLevel);
+            var maxDelivery = Math.Max(pumpShape.StartDeliveryLevel, pumpShape.StopDeliveryLevel);
+
+            maxY = Math.Max(maxSuction, maxDelivery);
+            minX = 0;
+            maxX = pumpShape.Width;
+
+        }
+
+        private double ScaleX(double x)
+        {
+            return GetActualWidth == null ? 0 : CoordinateScalingHelper.ScaleX(x, minX, maxX, GetActualWidth.Invoke());
+        }
+
+        private double ScaleY(double y)
+        {
+            return GetActualHeight == null ? 0 : CoordinateScalingHelper.ScaleY(y, minY, maxY, GetActualHeight.Invoke());
         }
     }
 }

@@ -216,6 +216,7 @@
       <DependentUpon>PumpShapeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\PumpShapeControlViewModel.cs" />
+    <Compile Include="Helpers\CoordinateScalingHelper.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
     </Compile>

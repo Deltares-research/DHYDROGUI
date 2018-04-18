@@ -19,6 +19,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public ManholeVisualisationControl()
         {
             InitializeComponent();
+            ViewModel.ContainerWidth = () => ViewGrid.ActualWidth;
+            ViewModel.ContainerHeight = () => ViewGrid.ActualHeight;
         }
 
         public Manhole Manhole
@@ -33,7 +35,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (view == null) return;
 
             view.ViewModel.Manhole = dependencyPropertyChangedEventArgs.NewValue as Manhole;
-            
+        }
+
+        private void ViewGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ViewModel.UpdateShapePositions();
         }
     }
 }

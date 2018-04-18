@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             var manhole = new Manhole("manhole 1");
 
             var compartment1 = new Compartment("Compartment 1") { SurfaceLevel = 1, BottomLevel = -2, ManholeWidth = 5000 };
-            var compartment2 = new Compartment("Compartment 2") { SurfaceLevel = 3, BottomLevel = -1, ManholeWidth = 3000 };
+            var compartment2 = new Compartment("Compartment 2") { SurfaceLevel = 1, BottomLevel = -1, ManholeWidth = 3000 };
             
             var network = new HydroNetwork();
             var orifice = new SewerConnectionOrifice
@@ -32,9 +32,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 
             var connections = new List<ISewerConnection>
             {
-                new Pipe {Name = "leiding 1", SourceCompartment = compartment1, LevelSource = 0.8},
-                new Pipe {Name = "leiding 2", TargetCompartment = compartment1, LevelTarget = 0.25},
-                new Pipe {Name = "leiding 3", SourceCompartment = compartment2, LevelSource = -1.2},
+                new Pipe {Name = "leiding 1", SourceCompartment = compartment1, Source = manhole, LevelSource = 0.8},
+                new Pipe {Name = "leiding 2", TargetCompartment = compartment1, Target = manhole, LevelTarget = 0.25},
+                new Pipe {Name = "leiding 3", SourceCompartment = compartment2, Source = manhole, LevelSource = -1.2},
                 orifice,
             };
             

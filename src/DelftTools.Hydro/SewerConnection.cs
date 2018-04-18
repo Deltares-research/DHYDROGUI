@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -65,11 +63,7 @@ namespace DelftTools.Hydro
             set
             {
                 sourceCompartment = value;
-                Source = null;
-                if (sourceCompartment != null)
-                {
-                    Source = sourceCompartment.ParentManhole;
-                }
+                Source = sourceCompartment?.ParentManhole;
             }
         }
 
@@ -79,11 +73,7 @@ namespace DelftTools.Hydro
             set
             {
                 targetCompartment = value;
-                Target = null;
-                if (targetCompartment != null)
-                {
-                    Target = targetCompartment.ParentManhole;
-                }
+                Target = targetCompartment?.ParentManhole;
             }
         }
         

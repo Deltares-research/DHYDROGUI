@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews"
+             xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1000" d:DataContext="{d:DesignInstance local:ManholeViewModel}">
     <UserControl.DataContext>
@@ -37,12 +38,10 @@
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
-
                 </Setter.Value>
             </Setter>
             <Setter Property="Margin" Value="2"/>
         </Style>
-
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -55,13 +54,14 @@
                 <StackPanel Orientation="Horizontal">
                     <Grid Width="300">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -98,43 +98,43 @@
                     </Grid>
 
                     <!-- Pipes -->
-                    <GroupBox Header="Pipes" Margin="7,0,0,0" >
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="7,0,0,0" Height="Auto" VerticalAlignment="Top">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Pipe:" FontWeight="Bold" Width="90"/>
+                                <Label Content="Source:" FontWeight="Bold" Width="130"/>
+                                <Label Content="Target:" FontWeight="Bold" Width="130"/>
+                            </StackPanel>
                             <ItemsControl ItemsSource="{Binding PipesInManholes}" >
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Label Content="{Binding Name}" Margin="0,3,3,0" VerticalAlignment="Center" Width="90" x:Name="Label"/>
-                                            <ComboBox ItemsSource="{Binding Path=DataContext.Compartments, ElementName=UserControl}" 
-                                                      SelectedItem="{Binding SourceCompartment}"
-                                                      Height="{Binding ElementName=Label, Path=ActualHeight}" Width="130" 
-                                                      />
-                                            <ComboBox ItemsSource="{Binding Path=DataContext.Compartments, ElementName=UserControl}"
-                                                      SelectedItem="{Binding TargetCompartment}"
-                                                      Height="{Binding ElementName=Label, Path=ActualHeight}" Width="130"
-                                                      />
+                                            <Label Content="{Binding Name}" VerticalAlignment="Center" Width="90" x:Name="Label"/>
+                                            <ComboBox ItemsSource="{Binding Path=DataContext.Manhole.Compartments, ElementName=UserControl}" 
+                                                          SelectedItem="{Binding SourceCompartment}" 
+                                                          Height="{Binding ElementName=Label, Path=ActualHeight}" Width="130" />
+                                            <ComboBox ItemsSource="{Binding Path=DataContext.Manhole.Compartments, ElementName=UserControl}"
+                                                          SelectedItem="{Binding TargetCompartment}" 
+                                                          Height="{Binding ElementName=Label, Path=ActualHeight}" Width="130"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </ScrollViewer>
-                    </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
 
                     <!-- Manhole overview -->
-                    <local:ManholeVisualisationControl Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" Background="MediumAquamarine" Width="500" Height="175" VerticalAlignment="Top" HorizontalAlignment="Left"  />
-                    <!--<Canvas x:Name="Canvas"
-                            Width="300" Height="200" 
-                            Margin="20,0,0,0"
-                            VerticalAlignment="Top"
-                            Background="White">
-                        <Rectangle Fill="Orange" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Width="100" Height="100" Canvas.Left="10" Canvas.Top="10"/>
-                        <Rectangle Fill="Red" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Width="100" Height="100" Canvas.Left="30" Canvas.Top="30"/>
-                        <Rectangle Fill="RoyalBlue" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Width="100" Height="100" Canvas.Left="50" Canvas.Top="50"/>
-                    </Canvas>-->
+                    <Grid Margin="7,7,0,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <local:ManholeVisualisationControl 
+                            Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" 
+                            Background="MediumAquamarine" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Width="500" Height="300"/>
+                    </Grid>
+
+
                 </StackPanel>
             </Expander>
 
@@ -152,7 +152,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ListBox ItemsSource="{Binding Compartments}" 
+                    <ListBox ItemsSource="{Binding Manhole.Compartments}" 
                              SelectedItem="{Binding SelectedCompartment}"
                              Grid.Column="0" Grid.Row="0"
                              HorizontalAlignment="Left"
@@ -166,7 +166,7 @@
                                     <TextBlock Text="{Binding Name}" Margin="1,3,3,0" VerticalAlignment="Center"/>
                                     <TextBlock FontStyle="Italic" Margin="1,3,3,3" VerticalAlignment="Center">
                                         <TextBlock.Text>
-                                            <MultiBinding StringFormat="Surface level [m]: {0}. Bottom level [m]: {1}">
+                                            <MultiBinding StringFormat="Surface level [m]: {0:G3}. Bottom level [m]: {1:G3}">
                                                 <Binding Path="SurfaceLevel"/>
                                                 <Binding Path="BottomLevel"/>
                                             </MultiBinding>
@@ -182,7 +182,7 @@
                     <local:CompartmentView Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Compartment="{Binding DataContext.SelectedCompartment, ElementName=UserControl}"/>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
-                        <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="0,3,3,3"/>
+                        <Button Content="Add compartment" Command="{Binding AddCompartmentCommand}" Margin="5,3,3,3"/>
                         <Button Content="Remove compartment" Command="{Binding RemoveCompartmentCommand}" Margin="0,3,3,3"/>
                     </StackPanel>
                 </Grid>
