@@ -35,12 +35,12 @@ namespace DelftTools.Hydro
         public CompartmentShape Shape { get; set; }
 
         /// <summary>
-        /// Length of manhole (mm).
+        /// Length of manhole (m).
         /// </summary>
         public double ManholeLength { get; set; }
 
         /// <summary>
-        /// Width of manhole (mm).
+        /// Width of manhole (m).
         /// </summary>
         public double ManholeWidth { get; set; }
 

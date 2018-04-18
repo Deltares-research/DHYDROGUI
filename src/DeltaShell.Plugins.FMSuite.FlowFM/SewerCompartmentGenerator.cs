@@ -156,11 +156,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             double auxDouble;
             var nodeLength = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
             if( nodeLength.TryGetValueAsDouble(out auxDouble))
-                compartment.ManholeLength = auxDouble;
+                compartment.ManholeLength = auxDouble / 1000.0; // Conversion from mm to m
 
             var nodeWidth = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeWidth);
-            if( nodeWidth.TryGetValueAsDouble(out auxDouble))
-                compartment.ManholeWidth = auxDouble;
+            if (nodeWidth.TryGetValueAsDouble(out auxDouble))
+                compartment.ManholeWidth = auxDouble / 1000.0; // Conversion from mm to m
 
             var floodableArea = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.FloodableArea);
             if(floodableArea.TryGetValueAsDouble(out auxDouble))
