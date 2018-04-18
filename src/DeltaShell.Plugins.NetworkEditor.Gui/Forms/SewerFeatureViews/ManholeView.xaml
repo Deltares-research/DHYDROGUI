@@ -51,7 +51,13 @@
                 <Expander.Header>
                     <TextBlock Text="General info" FontWeight="Bold"/>
                 </Expander.Header>
-                <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid Width="300">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -98,7 +104,7 @@
                     </Grid>
 
                     <!-- Pipes -->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="7,0,0,0" Height="Auto" VerticalAlignment="Top">
+                    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="7,0,0,0" Height="Auto" VerticalAlignment="Top">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Pipe:" FontWeight="Bold" Width="90"/>
@@ -124,18 +130,18 @@
                     </ScrollViewer>
 
                     <!-- Manhole overview -->
-                    <Grid Margin="7,7,0,5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <local:ManholeVisualisationControl 
-                            Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" 
-                            Background="MediumAquamarine" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                            Width="500" Height="300"/>
-                    </Grid>
+                    <Border Grid.Column="2" BorderBrush="#FF8B8B8B" BorderThickness="1" Margin="7,7,0,5">
+                        <Grid>
+                            
+                            <local:ManholeVisualisationControl Background="#FFE8E8E8"
+                                                               Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" 
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               Width="500" Height="300"/>
+                        </Grid>
+                    </Border>
+                    
 
-
-                </StackPanel>
+                </Grid>
             </Expander>
 
             <!-- Compartments -->

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
@@ -23,6 +24,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private double maxY;
         private double widthWithMargin;
 
+        public double HeigthWidthRatio => (maxY - minY) / (maxX - minX);
+
         private Manhole manhole;
 
         public Manhole Manhole
@@ -38,6 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 DetermineGlobalDimensions();
                 PositionShapes();
                 UpdateShapePositions();
+                SetWindowSize?.Invoke();
             }
         }
 
@@ -49,7 +53,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public Func<double> ContainerHeight { get; set; }
 
-
+        public Action SetWindowSize { get; set; }
+        
         private void CreateShapes()
         {
             if (manhole == null) return;
