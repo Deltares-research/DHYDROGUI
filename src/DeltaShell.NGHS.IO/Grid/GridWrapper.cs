@@ -255,7 +255,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="meshgeomdim"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In, Out] ref meshgeomdim meshgeomdim);
+        private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In] ref int networkId, [In, Out] ref meshgeomdim meshgeomdim);
 
         #region meshgeom
 
@@ -309,6 +309,7 @@ namespace DeltaShell.NGHS.IO.Grid
             public int nnodes;
             public int nbranches;
             public int ngeometry;
+            public int epgs;
         }
 
         #endregion meshgeom
@@ -1018,7 +1019,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual int get_meshgeom_dim(ref int ioncid, ref int meshId, ref meshgeomdim meshgeomdim)
         {
-            return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref meshgeomdim);
+            int networkId = 1;
+            return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref networkId, ref meshgeomdim);
         }
 
     }
