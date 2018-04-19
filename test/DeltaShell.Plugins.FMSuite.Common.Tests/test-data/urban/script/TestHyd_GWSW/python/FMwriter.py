@@ -385,7 +385,10 @@ class FMwriter:
             file.write('nodeId = ' + id + '\n')
             file.write('manholeId = ' + str(value[2]) + '\n')
             file.write('useTable = 0\n')
-            file.write('bedLevel = ' + str(value[11]) + '\n')
+            bedlevel = str(value[11])
+            if bedlevel == '':
+                bedlevel = '-999'
+            file.write('bedLevel = ' + bedlevel + '\n')
 
             area = 0.0
 
