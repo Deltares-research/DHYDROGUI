@@ -9,15 +9,15 @@ p = 'D:\\source\\nghs-1d2dflooding\\test\\DeltaShell.Plugins.FMSuite.Common.Test
 
 #inputDir = 'GWSW_DidactischStelsel'
 #oppervlakOnNode = False
-#nputDir = 'GWSW_Waardenburg'
-#oppervlakOnNode = True
+inputDir = 'GWSW_Waardenburg'
+oppervlakOnNode = True
 #inputDir = 'GWSW_Leiden'
 #oppervlakOnNode = True
 #inputDir = 'GWSW_Doorlaat'
 #oppervlakOnNode = True
 
-inputDir = 'W_C4'
-oppervlakOnNode = True
+#inputDir = 'W_C4'
+#oppervlakOnNode = True
 
 outputDir = 'output_FM'
 dirPath = os.path.abspath(p)

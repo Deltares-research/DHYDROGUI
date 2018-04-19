@@ -406,6 +406,8 @@ class FMwriter:
 
                 area = br * l
 
+            if area == 0.0:
+                area = 0.1
             areaStr  = self.to2Dec(area)
 
             try:
