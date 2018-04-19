@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             int twodnumedge = 24;
             int twodnumface = 9;
             int twodmaxnumfacenodes = 4;
-            int twodnumlayer = 0;
-            int twodlayertype = 0;
+            int twodnumlayer = -1;
+            int twodlayertype = -1;
             int startIndex = 1; // the indexes in the array are zero based
 
 
