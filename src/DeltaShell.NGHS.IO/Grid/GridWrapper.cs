@@ -245,7 +245,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom",
             CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In, Out] ref meshgeom meshgeom, ref int startIndex, ref bool includeArrays);
+        private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, ref int networkId, [In, Out] ref meshgeom meshgeom, ref int startIndex, ref bool includeArrays);
 
         /// <summary>
         /// Gets the dimension of the 1d2d grid.
@@ -1014,12 +1014,13 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual int get_meshgeom(ref int ioncid, ref int meshId, ref meshgeom meshgeom, ref int startIndex, bool includeArrays)
         {
-            return ionc_get_meshgeom_dll(ref ioncid, ref meshId, ref meshgeom, ref startIndex, ref includeArrays);
+            int networkId = -1;
+            return ionc_get_meshgeom_dll(ref ioncid, ref meshId, ref networkId, ref meshgeom, ref startIndex, ref includeArrays);
         }
 
         public virtual int get_meshgeom_dim(ref int ioncid, ref int meshId, ref meshgeomdim meshgeomdim)
         {
-            int networkId = 1;
+            int networkId = -1;
             return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref networkId, ref meshgeomdim);
         }
 
