@@ -444,7 +444,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_put_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, [In] ref IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] ref int edgenodes, [In] ref int nmeshpoints, [In] ref int startIndex);
+        private static extern int ionc_put_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, interop_charinfo[] nodeinfo, [In] ref int nmeshpoints, [In] ref int startIndex);
 
         /// <summary>
         /// Get the number of network nodes
@@ -887,9 +887,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_create_1d_mesh_dll(ref ioncId, ref networkId, ref meshId, meshname, ref numberOfMeshPoints, ref numberOfMeshEdges);
         }
 
-        public virtual int Write1DMeshDiscretisationPoints(int ioncid, int networkid, IntPtr c_branchidx, IntPtr c_offset, IntPtr c_edgenodes, interop_charinfo[] nodeinfo, [In] int edgenodes, int nmeshpoints, int startIndex)
+        public virtual int Write1DMeshDiscretisationPoints(int ioncid, int mesh1did, IntPtr c_branchidx, IntPtr c_offset, interop_charinfo[] nodeinfo, int nmeshpoints, int startIndex)
         {
-            return ionc_put_1d_mesh_discretisation_points_dll(ref ioncid, ref networkid, ref c_branchidx, ref c_offset, ref c_edgenodes, nodeinfo, ref edgenodes, ref nmeshpoints, ref startIndex);
+            return ionc_put_1d_mesh_discretisation_points_dll(ref ioncid, ref mesh1did, ref c_branchidx, ref c_offset, nodeinfo, ref nmeshpoints, ref startIndex);
         }
 
         public virtual int Get1DNetworkNodesCount(int ioncId, int networkId, ref int numberOfNodes)
