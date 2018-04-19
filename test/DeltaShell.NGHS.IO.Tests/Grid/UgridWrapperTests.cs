@@ -403,7 +403,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 }
 
                 //4. Write the discretization points
-                ierr = wrapper.Write1DMeshDiscretisationPoints(fileId, mesh1DId, c_branchidx, c_offset, c_edgenodes, meshnodeidsinfo, nmesh1dPoints, nedgenodes, startIndex);
+                ierr = wrapper.Write1DMeshDiscretisationPoints(fileId, mesh1DId, c_branchidx, c_offset, meshnodeidsinfo, nmesh1dPoints, startIndex);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 #endregion

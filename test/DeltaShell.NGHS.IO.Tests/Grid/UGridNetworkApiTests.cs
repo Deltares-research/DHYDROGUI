@@ -2315,8 +2315,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                        Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
+                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                        Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
                         Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
@@ -2357,9 +2357,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                        Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<int>.Is.Anything))
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                            Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Repeat.Twice();
@@ -2401,9 +2401,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                        Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<int>.Is.Anything))
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                            Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Throw(new Exception("myTest"))
@@ -2648,9 +2648,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             wrapper.Expect(
                 w =>
                     w.Write1DMeshDiscretisationPoints(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
-                        Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<int>.Is.Anything))
+                            Arg<IntPtr>.Is.Anything, Arg<IntPtr>.Is.Anything,
+                            Arg<GridWrapper.interop_charinfo[]>.Is.Anything, Arg<int>.Is.Anything,
+                            Arg<int>.Is.Anything))
                 .IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR)
                 .Repeat.Twice();

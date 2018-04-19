@@ -85,7 +85,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     idInfo[i].longnames = tmpString.ToCharArray();
                 }
 
-                return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, edgeNodesPtr, offsetPtr, idInfo, numberOfEdgeNodes, numberOfDiscretisationPoints, startIndex);
+                return wrapper.Write1DMeshDiscretisationPoints(ioncId, meshIdForWriting, branchIdxPtr, offsetPtr, idInfo, numberOfDiscretisationPoints, startIndex);
             }
             catch
             {
