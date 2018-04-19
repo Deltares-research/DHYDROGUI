@@ -1,13 +1,14 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    class DefinitionGeneratorStructureSiphon : DefinitionGeneratorStructureInvertedSiphon
+    public class DefinitionGeneratorStructureSiphon : DefinitionGeneratorStructureInvertedSiphon
     {
-        public DefinitionGeneratorStructureSiphon(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureSiphon(KeyValuePair<int, string> compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

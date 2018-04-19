@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -8,8 +9,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureCulvert : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureCulvert(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureCulvert(KeyValuePair<int, string> compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

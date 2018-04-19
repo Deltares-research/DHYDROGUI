@@ -1,4 +1,4 @@
-using System.IO;
+using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
@@ -113,36 +113,36 @@ namespace DeltaShell.NGHS.IO.FileWriters
 
         }
 
-        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, int compoundStructureId)
+        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, KeyValuePair<int, string> compoundStructureInfo)
         {
             switch (structureType)
             {
                 case StructureType.Pump:
-                    return new DefinitionGeneratorStructurePump(compoundStructureId);
+                    return new DefinitionGeneratorStructurePump(compoundStructureInfo);
                 case StructureType.Weir:
-                    return new DefinitionGeneratorStructureWeir(compoundStructureId);
+                    return new DefinitionGeneratorStructureWeir(compoundStructureInfo);
                 case StructureType.UniversalWeir:
-                    return new DefinitionGeneratorStructureUniversalWeir(compoundStructureId);
+                    return new DefinitionGeneratorStructureUniversalWeir(compoundStructureInfo);
                 case StructureType.RiverWeir:
-                    return new DefinitionGeneratorStructureRiverWeir(compoundStructureId);
+                    return new DefinitionGeneratorStructureRiverWeir(compoundStructureInfo);
                 case StructureType.AdvancedWeir:
-                    return new DefinitionGeneratorStructureAdvancedWeir(compoundStructureId);
+                    return new DefinitionGeneratorStructureAdvancedWeir(compoundStructureInfo);
                 case StructureType.Orifice:
-                    return new DefinitionGeneratorStructureOrifice(compoundStructureId);
+                    return new DefinitionGeneratorStructureOrifice(compoundStructureInfo);
                 case StructureType.GeneralStructure:
-                    return new DefinitionGeneratorStructureGeneralStructure(compoundStructureId);
+                    return new DefinitionGeneratorStructureGeneralStructure(compoundStructureInfo);
                 case StructureType.Culvert:
-                    return new DefinitionGeneratorStructureCulvert(compoundStructureId);
+                    return new DefinitionGeneratorStructureCulvert(compoundStructureInfo);
                 case StructureType.InvertedSiphon:
-                    return new DefinitionGeneratorStructureInvertedSiphon(compoundStructureId);
+                    return new DefinitionGeneratorStructureInvertedSiphon(compoundStructureInfo);
                 case StructureType.Siphon:
-                    return new DefinitionGeneratorStructureSiphon(compoundStructureId);
+                    return new DefinitionGeneratorStructureSiphon(compoundStructureInfo);
                 case StructureType.Bridge:
-                    return new DefinitionGeneratorStructureBridgeStandard(compoundStructureId);
+                    return new DefinitionGeneratorStructureBridgeStandard(compoundStructureInfo);
                 case StructureType.BridgePillar:
-                    return new DefinitionGeneratorStructureBridgePillar(compoundStructureId);
+                    return new DefinitionGeneratorStructureBridgePillar(compoundStructureInfo);
                 case StructureType.ExtraResistance:
-                    return new DefinitionGeneratorStructureExtraResistance(compoundStructureId);
+                    return new DefinitionGeneratorStructureExtraResistance(compoundStructureInfo);
                 default:
                     return null;
             }

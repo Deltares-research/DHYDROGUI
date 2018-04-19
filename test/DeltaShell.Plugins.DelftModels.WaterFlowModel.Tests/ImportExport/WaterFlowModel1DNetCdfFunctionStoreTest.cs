@@ -209,8 +209,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var network = new HydroNetwork();
             network.Branches.Add(branch);
 
-            expectedLocation = new Weir {Name = featureName};
+            expectedLocation = new Weir { Name = featureName };
+            var composite = new CompositeBranchStructure("Composite", 50.0);
+            expectedLocation.ParentStructure = composite;
+            composite.Structures.Add(expectedLocation);
+            
             branch.BranchFeatures.Add(expectedLocation);
+
             var locationVariable = new Variable<IBranchFeature>();
             locationVariable.Values.Add(expectedLocation);
             coverage.Arguments.Add(locationVariable);

@@ -571,10 +571,10 @@ namespace DeltaShell.NGHS.IO.TestUtils
             };
 
             var compoundStructureId = 0;
-            
             structures.ForEach(structure =>
             {
-                var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.GetStructureType(), compoundStructureId);
+                var compositeStructureInfo = new KeyValuePair<int, string>(compoundStructureId, string.Empty);
+                var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.GetStructureType(), compositeStructureInfo);
                 if (definitionGeneratorStructure != null)
                 {
                     var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);

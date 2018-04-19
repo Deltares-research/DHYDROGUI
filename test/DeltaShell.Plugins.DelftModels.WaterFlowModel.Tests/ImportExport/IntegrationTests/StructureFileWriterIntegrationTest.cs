@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.IntegrationTests
 {
     [TestFixture]
-    class StructureFileWriterIntegrationTest
+    public class StructureFileWriterIntegrationTest
     {
         private IHydroNetwork network;
 
@@ -77,6 +77,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
             Assert.IsTrue(weirCompoundStructureId <= 0, "An individual structure should have a CompoundStructureId less than or equal to zero");    
 
             Assert.AreEqual(pumpCompoundProperty.Value, culvertCompoundProperty.Value, "CompoundStructureIds should match for structure with the same parent CompoundStructure");
+
+            var pumpCompoundNameProperty = pumpProperties.FirstOrDefault(p => p.Name == StructureRegion.CompoundName.Key);
+            var weirCompoundNameProperty = weirProperties.FirstOrDefault(p => p.Name == StructureRegion.CompoundName.Key);
+            var culvertCompoundNameProperty = culvertProperties.FirstOrDefault(p => p.Name == StructureRegion.CompoundName.Key);
+
+            Assert.NotNull(pumpCompoundNameProperty);
+            Assert.AreEqual(composite1.Name, pumpCompoundNameProperty.Value);
+
+            // Names for compounds with only 1 sub-structure should not be written to file!
+            Assert.Null(weirCompoundNameProperty);
+
+            Assert.NotNull(culvertCompoundNameProperty);
+            Assert.AreEqual(composite1.Name, culvertCompoundNameProperty.Value);
         }
     }
 }

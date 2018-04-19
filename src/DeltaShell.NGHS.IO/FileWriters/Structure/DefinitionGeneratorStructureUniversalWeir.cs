@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -10,8 +11,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     {
         private const double DEFAULT_FREE_SUBMERGED_FACTOR = 0.667F;
 
-        public DefinitionGeneratorStructureUniversalWeir(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureUniversalWeir(KeyValuePair<int, string> compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 
