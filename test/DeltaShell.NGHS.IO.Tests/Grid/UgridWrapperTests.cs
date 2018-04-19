@@ -557,7 +557,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         //////create the netcdf files
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
-        public void create1dUGRIDNetcdf()
+        public void Create1dUGRIDNetcdf()
         { 
             
                 //1. Create a netcdf file 
@@ -597,7 +597,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [Ignore("should be in unit test of io_netcdf kernel")]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
-        public void read1dUGRIDNetcdf()
+        public void Read1dUGRIDNetcdf()
         {
             //1. Open a netcdf file 
             string c_path = TestHelper.GetTestFilePath(@"ugrid\write1d.nc");
@@ -630,7 +630,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // and clones the 2d mesh data read from a file produced by RGFgrid. 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
-        public void deltaShellClones2dMesh()
+        public void DeltaShellClones2dMesh()
         {
             var wrapper = new GridWrapper();
 
@@ -728,6 +728,53 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void Load1D2DlinksTest()
+        {
+            var wrapper = new GridWrapper();
+
+            var path = TestHelper.GetTestFilePath(@"ugrid\Ugrid_1D2D.nc");
+            path = TestHelper.CreateLocalCopy(path);
+            Assert.IsTrue(File.Exists(path));
+
+            var fileId = -1;  //file id  
+            var mode = 0;     //open in write mode
+            var ierr = wrapper.Open(path, mode, ref fileId, ref iconvtype, ref convversion);
+            Assert.That(ierr, Is.EqualTo(0));
+
+            //1. Check 2 meshes are present (1D and 2D)
+            int nmesh = -1;
+            ierr = wrapper.GetMeshCount(fileId, ref nmesh);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(nmesh, Is.EqualTo(2));
+
+            //2. Get the mesh ids
+            var networkId = -1;
+            var mesh1DId = -1;
+            var mesh2DId = -1;
+            var mesh1D2DId = -1;
+            ierr = wrapper.Get1DNetworkId(fileId, ref networkId);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(networkId, Is.GreaterThan(-1));
+            ierr = wrapper.Get1DMeshId(fileId, ref mesh1DId);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(networkId, Is.GreaterThan(-1));
+            ierr = wrapper.Get2DMeshId(ref fileId, ref mesh2DId);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(mesh1DId, Is.GreaterThan(-1));
+            ierr = wrapper.Get1D2DLinksMeshId(fileId, ref mesh1D2DId);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(mesh1D2DId, Is.GreaterThan(-1));
+
+            //3. Get the mesh ids
+            check1D2DLinks(fileId, mesh1D2DId, ref wrapper);
+
+            //4. Close the file
+            ierr = wrapper.Close(fileId);
+            Assert.That(ierr, Is.EqualTo(0));
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void SaveAndLoad1D2DlinksTest()
         {
             var wrapper = new GridWrapper();
@@ -794,9 +841,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             ierr = wrapper.Get2DMeshId(ref fileId, ref mesh2DId);
             Assert.That(ierr, Is.EqualTo(0));
             Assert.That(mesh1DId, Is.GreaterThan(-1));
-            //ierr = wrapper.Get1D2DMeshId(ref fileId, ref mesh1D2DId);
-            //Assert.That(ierr, Is.EqualTo(0));
-            //Assert.That(mesh1D2DId, Is.GreaterThan(-1));
+            ierr = wrapper.Get1D2DLinksMeshId(fileId, ref mesh1D2DId);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(mesh1D2DId, Is.GreaterThan(-1));
 
             //13. Get the mesh ids
             check1D2DLinks(fileId, mesh1D2DId, ref wrapper);
@@ -805,5 +852,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             ierr = wrapper.Close(fileId);
             Assert.That(ierr, Is.EqualTo(0));
         }
+
     }
 }
