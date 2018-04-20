@@ -6,7 +6,12 @@
              xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
                    mc:Ignorable="d" Width="686.4" Height="168" Background="White">
     <UserControl.Resources>
-        <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml"/>
+                <ResourceDictionary Source="RibbonBrushes.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
         <fluent:Ribbon.ContextualGroups>
@@ -14,15 +19,25 @@
         </fluent:Ribbon.ContextualGroups>
 
         <fluent:RibbonTabItem Header="Map" Name="mapTab" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="FmRegion" fluent:KeyTip.Keys="M">
-            <fluent:RibbonGroupBox Header="FM Region 2D / 3D"  Name="FmRegion" >
+            <fluent:RibbonGroupBox Header="FM Region 1D2D"  Name="FmRegion" >
                 <!--<fluent:ToggleButton x:Name="ButtonAddDredging" ToolTip="Add a (2D) dredging polygon" Header="Add Dredging" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\dredging.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddDumping" ToolTip="Add a (2D) dumping polygon" Header="Add Dumping" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\dumping.png" Size="Middle" SizeDefinition="Middle,Small,Small" />-->
                 <fluent:ToggleButton x:Name="ButtonAddBoundary" ToolTip="Add a (2D) flow boundary" Header="Add Flow Boundary" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSourceSink" ToolTip="Add a (2D) source/sink" Header="Add Source/Sink" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\SourceSink.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSource" ToolTip="Add a (2D) point source" Header="Add Point Source" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralSourceMap.png" Size="Middle" SizeDefinition="Small,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonGenerateLinks" ToolTip="Generate 1D2D links in selected area" Header="Generate links" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource GenerateLinksBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddLink" ToolTip="Add 1D2D Link" Header="Add links" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                            <Rectangle Fill="{StaticResource AddLinkBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
                 <fluent:Button x:Name="ButtonReverseLine" Header="Reverse line(s)" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\arrow_switch.png" Size="Middle" SizeDefinition="Small, Small, Small"/>
-            <fluent:Button x:Name="ButtonGenerateEmbankments" Header="Generate embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\guide.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate embankments for selected channels"/>
-            <fluent:Button x:Name="ButtonMergeEmbankments" Header="Merge embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\wrenchPlus.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Merge two selected embankments"/>
+                <fluent:Button x:Name="ButtonGenerateEmbankments" Header="Generate embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\guide.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate embankments for selected channels"/>
+                <fluent:Button x:Name="ButtonMergeEmbankments" Header="Merge embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\wrenchPlus.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Merge two selected embankments"/>
             <fluent:ToggleButton x:Name="ButtonGridWizard" Header="Grid creation wizard" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\gridwizard.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate grid based on embankments"/>
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>

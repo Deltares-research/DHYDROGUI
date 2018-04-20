@@ -514,6 +514,7 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\GenerateLinks16.png" />
     <Resource Include="Resources\deletehs.png" />
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />
@@ -554,6 +555,7 @@
     <None Include="Resources\Delete.png" />
     <None Include="Resources\add.png" />
     <Content Include="Resources\112_Plus_Blue_16x16_72.png" />
+    <Resource Include="Resources\AddLink16.png" />
     <Content Include="Resources\arrow.png" />
   </ItemGroup>
   <ItemGroup>
@@ -566,6 +568,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\SedimentFractionsEditorResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ribbon\RibbonBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
