@@ -672,7 +672,7 @@ namespace DeltaShell.NGHS.IO.Grid
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_network_id_from_mesh_id", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_network_id_from_mesh_id_dll([In] ref int ioncid, [In] ref int meshId, [In, Out] ref int networkid);
 
-        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_contact_id_dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_contact_id", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_get_contact_id_dll([In] ref int ioncid, [In] ref int contactId);
 
         // Read/Write discretisation point ids
