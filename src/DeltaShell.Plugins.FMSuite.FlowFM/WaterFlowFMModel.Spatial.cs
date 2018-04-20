@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void Save1D2DLinks()
         {
-            //UGrid1D2DLinksAdapter.Save1D2DLinks(NetFilePath,Links);  
+            UGrid1D2DLinksAdapter.Save1D2DLinks(NetFilePath,Links);  
         }
 
         private static void WriteNetFile(string path, UnstructuredGrid grid)

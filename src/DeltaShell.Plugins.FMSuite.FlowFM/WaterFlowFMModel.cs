@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var gGeomApi = new GridGeomApi();
             var linksFrom = new List<int>();
             var linksTo = new List<int>();
-            var startIndex = 0;
+            var startIndex = 1;
             int linksCount = 0;
 
             try
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return;
                 }
 
-                Creates1d2dLinks(linksCount, linksFrom, linksTo, startIndex);
+                Creates1d2dLinks(linksCount, linksFrom, linksTo);
             }
             catch (Exception e)
             {
@@ -192,12 +192,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void Creates1d2dLinks(int linksCount, List<int> linksToIndex, List<int> linksFromIndex, int startIndex)
+        private void Creates1d2dLinks(int linksCount, List<int> linksToIndex, List<int> linksFromIndex)
         {
             for (int i = 0; i < linksCount; i++)
             {
-                var toCell = linksToIndex[i] - startIndex; 
-                var fromPoint = linksFromIndex[i] - startIndex;
+                var toCell = linksToIndex[i] - 1; 
+                var fromPoint = linksFromIndex[i] - 1;
 
                 var fromCell = grid.Cells[toCell];
                 var toNode = networkDiscretization.Locations.Values[fromPoint];
