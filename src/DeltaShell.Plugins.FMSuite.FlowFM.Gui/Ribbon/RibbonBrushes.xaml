@@ -98,4 +98,226 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
+    <DrawingBrush x:Key="AddRoofLinkBrush" Stretch="Uniform">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 12.7708,1.02083L 12.7708,6.20833">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 10.2292,3.5625L 15.25,3.5625">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 5.36458,9.20833L 14.6667,15.1042">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 15.4792,15.3958L 10.8333,14.5L 12.6875,11.5625L 15.4792,15.3958 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 0.532463,8.33306L 7.19175,5.3086L 12.5104,8.80274">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2" LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 4.2496,4.05352L 4.2496,6.4196">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2" LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="GenerateRoofLinksBrush" Stretch="Uniform">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 12.9375,9.53674e-007L 12.9792,2.4375">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 12.9583,2.375L 15.0625,1.5625">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 14.6667,4.16667L 12.9167,2.375">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 11.6667,4.45833L 12.7917,2.27083">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 10.4375,1.8125L 12.6667,2.3125">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 4.81292,9.36647L 14.115,15.2623">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 14.9275,15.554L 10.2817,14.6581L 12.1358,11.7206L 14.9275,15.554 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M -0.0191958,8.49119L 6.6401,5.46673L 11.9588,8.96087">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2" LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 3.69794,4.21166L 3.69794,6.57773">
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2" LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="AddInhabitantsLinkBrush" Stretch="Uniform">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 12.7708,0.020833L 12.7708,5.20833">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 10.2292,2.5625L 15.25,2.5625">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 7.75582,10.7708L 8.83031,11.4375">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 15.4792,15.3958L 11.9317,14.7262L 13.3475,12.5305L 15.4792,15.3958 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 2.89542,2.14841C 3.53346,2.14841 4.0507,2.66564 4.0507,3.30369C 4.0507,3.94174 3.53346,4.45897 2.89542,4.45897C 2.25737,4.45897 1.74013,3.94174 1.74013,3.30369C 1.74013,2.66564 2.25737,2.14841 2.89542,2.14841 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 3.06785,4.94178C 4.50583,4.94178 5.67155,10.5254 5.67155,11.2872C 5.67155,12.0491 4.50584,12.6667 3.06785,12.6667C 1.62987,12.6667 0.464148,12.0491 0.464148,11.2872C 0.464148,10.5254 1.62986,4.94178 3.06785,4.94178 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 7.56139,2.4023C 8.03222,2.4023 8.41391,2.78398 8.41391,3.25482C 8.41391,3.72565 8.03222,4.10734 7.56139,4.10734C 7.09055,4.10734 6.70887,3.72565 6.70887,3.25482C 6.70887,2.78398 7.09055,2.4023 7.56139,2.4023 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 7.68863,4.46361C 8.74976,4.46361 9.60998,8.58392 9.60998,9.14611C 9.60998,9.7083 8.74976,10.164 7.68863,10.164C 6.62749,10.164 5.76728,9.7083 5.76728,9.14611C 5.76728,8.58392 6.62749,4.46361 7.68863,4.46361 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 11.4686,12.875L 12.5431,13.5417">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 9.46857,11.7292L 10.735,12.5417">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="GenerateInhabitantsLinksBrush" Stretch="Uniform">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 12.9375,9.53674e-007L 12.9792,2.4375">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 12.9583,2.375L 15.0625,1.5625">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 14.6667,4.16667L 12.9167,2.375">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 11.6667,4.45833L 12.7917,2.27083">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF00C800" Geometry="F1 M 10.4375,1.8125L 12.6667,2.3125">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF00C800"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 7.82052,10.5091L 8.89502,11.1758">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 15.5439,15.1341L 11.9964,14.4645L 13.4122,12.2688L 15.5439,15.1341 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 2.96013,1.88669C 3.59817,1.88669 4.11541,2.40393 4.11541,3.04197C 4.11541,3.68002 3.59817,4.19726 2.96013,4.19726C 2.32208,4.19726 1.80484,3.68002 1.80484,3.04197C 1.80484,2.40393 2.32208,1.88669 2.96013,1.88669 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 3.13256,4.68006C 4.57054,4.68006 5.73626,10.2637 5.73626,11.0255C 5.73626,11.7874 4.57054,12.4049 3.13256,12.4049C 1.69457,12.4049 0.528858,11.7874 0.528858,11.0255C 0.528858,10.2637 1.69457,4.68006 3.13256,4.68006 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 7.6261,2.14058C 8.09693,2.14058 8.47862,2.52227 8.47862,2.9931C 8.47862,3.46393 8.09693,3.84562 7.6261,3.84562C 7.15526,3.84562 6.77358,3.46393 6.77358,2.9931C 6.77358,2.52227 7.15526,2.14058 7.6261,2.14058 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FF000000" Geometry="F1 M 7.75334,4.2019C 8.81447,4.2019 9.67469,8.3222 9.67469,8.88439C 9.67469,9.44658 8.81447,9.90233 7.75334,9.90233C 6.6922,9.90233 5.83199,9.44658 5.83199,8.88439C 5.83199,8.3222 6.6922,4.2019 7.75334,4.2019 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FF000000"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 11.5333,12.6133L 12.6078,13.28">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFC70D0D" Geometry="F1 M 9.53328,11.4675L 10.7997,12.28">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFC70D0D"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
 </ResourceDictionary>

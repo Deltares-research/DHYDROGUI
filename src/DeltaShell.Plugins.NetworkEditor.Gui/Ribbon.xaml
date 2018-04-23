@@ -6,7 +6,12 @@
              xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
              mc:Ignorable="d" Width="1004.574" Height="168" Background="White">
     <UserControl.Resources>
-        <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml"/>
+                <ResourceDictionary Source="RibbonBrushes.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <fluent:Ribbon Name="RibbonControl" x:FieldModifier="private">
         <fluent:Ribbon.ContextualGroups>
@@ -39,6 +44,22 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewBranch" Header="Add Branch" ToolTip="Add new branch" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches1.png" Click="ButtonAddNewBranch_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="B"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewBranchScribble" Header="Add Branch (Freeform)" ToolTip="Add new branch (Freeform)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches11.png" Click="ButtonAddNewBranchScribble_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="F"/>
                 <fluent:ToggleButton x:Name="ButtonInsertNewNode" Header="Split Branch" ToolTip="Split branch" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NodeOnMultipleBranches.png" Click="ButtonInsertNewNode_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="N"/>
+                <Separator />
+                <fluent:ToggleButton x:Name="ButtonAddNewPipe" ToolTip="Add new pipe" Header="Add pipe" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource PipeBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonInsertManhole" ToolTip="Insert manhole, split pipe" Header="Split pipe" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource ManholeBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddNewOutlet" ToolTip="Add new outlet" Header="Add outlet" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource OutletBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
                 <Separator />
 
                 <!-- cross-sections --> 
@@ -85,9 +106,19 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewPump2D" Header="Pump" ToolTip="Add new pump (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\PumpSmall.png" Click="ButtonAddNewPump2D_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewWeir2D" Header="Weir" ToolTip="Add new weir (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Weir.png" Click="ButtonAddNewWeir2D_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewGate2D" Header="Gate" ToolTip="Add new gate (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Gate.png" Click="ButtonAddNewGate2D_Click" SizeDefinition="Small,Small,Small"/>
+                <fluent:ToggleButton x:Name="ButtonAddDamBreak" ToolTip="Add new dam break" Header="Dam break" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource DamBreakBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
                 <fluent:ToggleButton x:Name="ButtonAddNewLandBoundary2D" Header="Land boundary" ToolTip="Add new land boundary (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\landboundary.png" Click="ButtonAddNewLandBoundary_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewDryPoint2D" Header="Dry point" ToolTip="Add new dry point (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\dry_point.png" Click="ButtonAddNewDryPoint_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewDryArea2D" Header="Dry area" ToolTip="Add new dry area (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\dry_area.png" Click="ButtonAddNewDryArea_Click" SizeDefinition="Small,Small,Small"/>
+                <fluent:ToggleButton x:Name="ButtonAddNewRoofArea" ToolTip="Add new roof area" Header="Roof area" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource RoofAreaBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
                 <fluent:ToggleButton x:Name="ButtonAddNewEmbankment2D" Header="Embankment" ToolTip="Add new embankment (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Embankment.png" Click="ButtonAddNewEmbankment_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewEnclosure2D" Header="Enclosure" ToolTip="Add new enclosure (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\enclosure.png" Click="ButtonAddNewEnclosure_Click" SizeDefinition="Small,Small,Small"/>
             </fluent:RibbonGroupBox>

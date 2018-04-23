@@ -25,16 +25,38 @@
                 <fluent:ToggleButton x:Name="ButtonAddBoundary" ToolTip="Add a (2D) flow boundary" Header="Add Flow Boundary" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSourceSink" ToolTip="Add a (2D) source/sink" Header="Add Source/Sink" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\SourceSink.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSource" ToolTip="Add a (2D) point source" Header="Add Point Source" Click="OnClick"  Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralSourceMap.png" Size="Middle" SizeDefinition="Small,Small,Small" />
+                <Separator />
                 <fluent:ToggleButton x:Name="ButtonGenerateLinks" ToolTip="Generate 1D2D links in selected area" Header="Generate links" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
                         <Rectangle Fill="{StaticResource GenerateLinksBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
-                <fluent:ToggleButton x:Name="ButtonAddLink" ToolTip="Add 1D2D Link" Header="Add links" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                <fluent:ToggleButton x:Name="ButtonAddLink" ToolTip="Add 1D2D Link" Header="Add 1D2D link" Click="OnClickWIP"  Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
                             <Rectangle Fill="{StaticResource AddLinkBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonGenerateRoofLinks" ToolTip="Generate roof links (HWA) in selected area" Header="Generate roof links" Click="OnClickWIP"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource GenerateRoofLinksBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddRoofLink" ToolTip="Add roof link (HWA)" Header="Add roof link" Click="OnClickWIP"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource AddRoofLinkBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonGenerateInhabitantsLinks" ToolTip="Generate inhabitants links (DWA) in selected area" Header="Generate inhabitants links" Click="OnClickWIP"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource GenerateInhabitantsLinksBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddInhabitantsLink" ToolTip="Add inhabitants link (DWA)" Header="Add inhabitants link" Click="OnClickWIP"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource AddInhabitantsLinkBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
+                <Separator />
                 <fluent:Button x:Name="ButtonReverseLine" Header="Reverse line(s)" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\arrow_switch.png" Size="Middle" SizeDefinition="Small, Small, Small"/>
                 <fluent:Button x:Name="ButtonGenerateEmbankments" Header="Generate embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\guide.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate embankments for selected channels"/>
                 <fluent:Button x:Name="ButtonMergeEmbankments" Header="Merge embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\wrenchPlus.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Merge two selected embankments"/>

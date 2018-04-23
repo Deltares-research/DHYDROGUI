@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [TestFixture]
     public class UGrid1D2DLinksAdapterTests
     {
-        private const string UGRID_TEST_FILE = @"ugrid\Custom_Ugrid.nc";
+        private const string UGRID_TEST_FILE = @"ugrid\Ugrid_1D2D.nc";
 
         [Test]
         public void Load1D2DLinks()

@@ -285,7 +285,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     for (int j = 0; j < maxfacenodes; j++)
                     {
-                        Assert.That(rc_face_nodes[ind], Is.EqualTo(mesh2d_face_nodes[i,j]));
+                        Assert.That(rc_face_nodes[ind], Is.EqualTo(mesh2d_face_nodes[i,j])); //missing values seems to be traited as values and changed by start index diff
                         ind += 1;
                     }
                 }

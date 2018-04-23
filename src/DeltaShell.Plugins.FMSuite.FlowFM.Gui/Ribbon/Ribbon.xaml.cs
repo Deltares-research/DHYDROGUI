@@ -81,5 +81,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             buttonCommands[(ButtonBase)sender].Execute();
             ValidateItems();
         }
+
+        private void OnClickWIP(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Work in process");
+        }
     }
 }

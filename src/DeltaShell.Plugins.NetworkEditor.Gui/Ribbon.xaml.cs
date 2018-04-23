@@ -605,5 +605,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
             ValidateItems();
         }
+
+        private void OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Work in process");
+        }
     }
 }
