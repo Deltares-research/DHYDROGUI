@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Grid
             var err = CheckArrayFormatWithFileDeclaration(mesh1DPointIdx, mesh2DFaceIdx, linkType, linkIds, linkLongNames, numberOf1D2DLinks);
             if( err != GridApiDataSet.GridConstants.NOERR) return err;
 
-            IntPtr intPtrMesh1Dindexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOf1D2DLinks);
+            IntPtr intPtrMesh1Dindexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOf1D2DLinks);
             IntPtr intPtrMesh2Dindexes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOf1D2DLinks);
             IntPtr intPtrContactType = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOf1D2DLinks);
 

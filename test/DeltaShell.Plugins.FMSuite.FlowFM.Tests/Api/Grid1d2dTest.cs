@@ -136,7 +136,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.That(ierr, Is.EqualTo(0));
 
             //9. make the links
-            ierr = gridGeomWrapper.Make1d2dInternalnetlinks();
+            IntPtr intPtrXValuesSelectedArea = IntPtr.Zero;
+            IntPtr intPtrYValuesSelectedArea = IntPtr.Zero;
+            IntPtr intPtrZValuesSelectedArea = IntPtr.Zero;
+
+            int nCoordinates = 0;
+            intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+            intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+            intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+            var selectedAreaXCoords = new double[] { };
+            var selectedAreaYCoords = new double[] { };
+            var selectedAreaZCoords = new double[] { };
+            Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
+            Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
+            Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
+
+            ierr = gridGeomWrapper.Make1d2dInternalnetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea);
             Assert.That(ierr, Is.EqualTo(0));
 
             //10. get the number of links
@@ -176,6 +192,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Marshal.FreeCoTaskMem(c_targetnodeid);
             Marshal.FreeCoTaskMem(c_branchlength);
             Marshal.FreeCoTaskMem(c_branchoffset);
+
+            //selected area
+            Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
+            Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
+            Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
 
             //Free from and to arrays describing the links 
             Marshal.FreeCoTaskMem(c_arrayfrom);

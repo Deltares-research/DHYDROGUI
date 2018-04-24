@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
@@ -42,7 +44,29 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region 1d2dlinks logic
 
-        public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount)
+        public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization,
+            ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount)
+        {
+            var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
+
+            var xMin = points.Select(p => p.X).Min();
+            var yMin = points.Select(p => p.Y).Min();
+            var xMax = points.Select(p => p.X).Max();
+            var yMax = points.Select(p => p.Y).Max();
+
+            var coordinates = new List<Coordinate>();
+            coordinates.Add(new Coordinate(xMin, yMax));
+            coordinates.Add(new Coordinate(xMin, yMin));
+            coordinates.Add(new Coordinate(xMax, yMin));
+            coordinates.Add(new Coordinate(xMax, yMin));
+            coordinates.Add(new Coordinate(xMin, yMax));
+
+            var selectedArea = new Polygon(new LinearRing(coordinates.ToArray()));
+
+            return Get1d2dLinksFromGridAndNetwork(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea);
+        }
+
+        public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;
@@ -186,7 +210,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
                 //9. make the links
-                ierr = geomWrapper.Make1d2dInternalnetlinks();
+                ierr = Make1d2dInternalnetlinks(selectedArea);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -266,11 +290,29 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
-        public int Make1d2dInternalnetlinks()
+        private int Make1d2dInternalnetlinks(IPolygon selectedArea)
         {
+            IntPtr intPtrXValuesSelectedArea = IntPtr.Zero;
+            IntPtr intPtrYValuesSelectedArea = IntPtr.Zero;
+            IntPtr intPtrZValuesSelectedArea = IntPtr.Zero;
+
             try
             {
-                var ierr = geomWrapper.Make1d2dInternalnetlinks();
+                var coordinates = selectedArea.Coordinates.ToList();
+                int nCoordinates = coordinates.Count;
+                intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
+                intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
+                intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
+
+                var selectedAreaXCoords = coordinates.Select(c => c.X).ToArray();
+                var selectedAreaYCoords = coordinates.Select(c => c.Y).ToArray();
+                var selectedAreaZCoords = Enumerable.Repeat<double>(0.0, nCoordinates).ToArray(); ;
+                Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
+                Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
+                Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
+
+                var ierr = geomWrapper.Make1d2dInternalnetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -279,6 +321,12 @@ namespace DeltaShell.NGHS.IO.Grid
             catch
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
+                Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
+                Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
             }
 
             return GridApiDataSet.GridConstants.NOERR;

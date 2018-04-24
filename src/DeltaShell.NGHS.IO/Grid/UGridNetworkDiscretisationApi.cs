@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Write Network Discretisation
 
-        public int CreateNetworkDiscretisation(int numberOfNetworkPoints, int numberOfMeshEdges, int networkId)
+        public int CreateNetworkDiscretisation(int numberOfNetworkPoints)
         {
             if (!Initialized)
             {
@@ -28,7 +28,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.Create1DMesh(ioncId, networkId, ref meshIdForWriting, GridApiDataSet.DataSetNames.Mesh1D, numberOfNetworkPoints, numberOfMeshEdges);
+                ierr = wrapper.Create1DMesh(ioncId, GridApiDataSet.DataSetNames.Network, ref meshIdForWriting, GridApiDataSet.DataSetNames.Mesh1D, numberOfNetworkPoints);
 
                 if (ierr != GridApiDataSet.GridConstants.NOERR) return ierr;
             }

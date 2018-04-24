@@ -14,9 +14,9 @@ namespace DeltaShell.NGHS.IO.Grid
             api = RemoteInstanceContainer.CreateInstance<IUGridNetworkDiscretisationApi, UGridNetworkDiscretisationApi>(Environment.Is64BitOperatingSystem, null, false, dimrDllAssembly);
         }
         
-        public virtual int CreateNetworkDiscretisation(int numberOfNetworkPoints, int numberOfMeshEdges, int networkId)
+        public virtual int CreateNetworkDiscretisation(int numberOfNetworkPoints)
         {
-            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.CreateNetworkDiscretisation(numberOfNetworkPoints, numberOfMeshEdges, networkId), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
+            return GetFromValidUGridApiNetwork(ugridApiNetwork => ugridApiNetwork.CreateNetworkDiscretisation(numberOfNetworkPoints), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
         }
 
         public virtual int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, string[] ids, string[] names)

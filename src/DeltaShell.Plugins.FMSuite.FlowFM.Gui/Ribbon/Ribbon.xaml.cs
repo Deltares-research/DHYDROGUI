@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             buttonCommands.Add(ButtonGenerateEmbankments, new MapToolCommand(FlowFMMapViewDecorator.GenerateEmbankmentsToolName) { LayerType = typeof(AreaLayer), ToolAction = ToolAction.Execute});
             buttonCommands.Add(ButtonMergeEmbankments, new MapToolCommand(FlowFMMapViewDecorator.MergeEmbankmentsToolName) { LayerType = typeof(AreaLayer), ToolAction = ToolAction.Execute });
             buttonCommands.Add(ButtonGridWizard, new MapToolCommand(FlowFMMapViewDecorator.GridWizardToolName) { LayerType = typeof(AreaLayer) });
+            buttonCommands.Add(ButtonGenerateLinks, new MapToolCommand(FlowFMMapViewDecorator.GenerateLinksToolName) { LayerType = typeof(AreaLayer) });
 
             ButtonReverseLine.ToolTip = new ScreenTip
                 {

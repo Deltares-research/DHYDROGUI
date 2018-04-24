@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                     var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
                     var networkId =  GetNetworkId(networkIds);
                     
-                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges, networkId);
+                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }
             }

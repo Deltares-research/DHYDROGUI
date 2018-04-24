@@ -424,24 +424,24 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Writes a 1d mesh. The geometrical features (e.g. the branches and geometry points) are described in the network above
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="networkname">The network name</param>
         /// <param name="meshId">The mesh id (out)</param>
         /// <param name="meshname">The mesh name (in)</param>
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
-        /// <param name="nmeshedges">The number of mesh edges (in)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create_1d_mesh", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_create_1d_mesh_dll([In] ref int ioncid, [In] ref int networkid, [In, Out] ref int meshId, string meshname, [In] ref int nmeshpoints, [In] ref int nmeshedges);
+        private static extern int ionc_create_1d_mesh_dll([In] ref int ioncid, [In] ref string networkname, [In, Out] ref int meshId, [In] string meshname, [In] ref int nmeshpoints);
 
         /// <summary>
         /// Writes the mesh coordinates points 
         /// </summary>
         /// <param name="ioncid">The netCDF file id (in)</param>
-        /// <param name="networkid">The network id (in)</param>
+        /// <param name="meshid">dataset mesh 1d id</param>
         /// <param name="c_branchidx">The branch id for each mesh point (in)</param>
         /// <param name="c_offset">The offset along the branch from the starting point (in)</param>
         /// <param name="nodeinfo">The node info (in)</param>
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
+        /// <param name="startIndex">array start index</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_1d_mesh_discretisation_points", CallingConvention = CallingConvention.Cdecl)]
         private static extern int ionc_put_1d_mesh_discretisation_points_dll([In] ref int ioncid, [In] ref int meshid, [In] ref IntPtr c_branchidx, [In] ref IntPtr c_offset, interop_charinfo[] nodeinfo, [In] ref int nmeshpoints, [In] ref int startIndex);
@@ -882,9 +882,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_write_1d_network_branches_geometry_dll(ref ioncId, ref networkId, ref xGeometryPointsPtr, ref yGeometryPointsPtr, ref numberOfGeometryPoints);
         }
 
-        public virtual int Create1DMesh(int ioncId, int networkId, ref int meshId, string meshname, int numberOfMeshPoints, int numberOfMeshEdges)
+        public virtual int Create1DMesh(int ioncId, string networkName, ref int meshId, string meshName, int numberOfMeshPoints)
         {
-            return ionc_create_1d_mesh_dll(ref ioncId, ref networkId, ref meshId, meshname, ref numberOfMeshPoints, ref numberOfMeshEdges);
+            return ionc_create_1d_mesh_dll(ref ioncId, ref networkName, ref meshId, meshName, ref numberOfMeshPoints);
         }
 
         public virtual int Write1DMeshDiscretisationPoints(int ioncid, int mesh1did, IntPtr c_branchidx, IntPtr c_offset, interop_charinfo[] nodeinfo, int nmeshpoints, int startIndex)

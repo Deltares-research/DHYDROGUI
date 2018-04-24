@@ -2,7 +2,7 @@
 {
     public interface IUGridNetworkDiscretisationApi : IGridApi
     {
-        int CreateNetworkDiscretisation(int numberOfNetworkPoints, int numberOfMeshEdges, int networkId);
+        int CreateNetworkDiscretisation(int numberOfNetworkPoints);
         int WriteNetworkDiscretisationPoints(int[] branchIdx, double[] offset, string[] ids, string[] names);
         int GetNetworkIdFromMeshId(int meshId, out int networkId);
         int GetNetworkDiscretisationName(int meshId, out string meshName);

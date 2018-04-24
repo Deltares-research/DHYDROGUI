@@ -2105,18 +2105,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         public void CreateNetworkUninitialized()
         {
             //uRemoteGridNetworkApi
-            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.CreateNetworkDiscretisation(0, 0, 0))
+            uRemoteUGridNetworkDiscretisationApi.Expect(a => a.CreateNetworkDiscretisation(0))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR,
-                uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(0, 0, 0));
+                uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(0));
 
             // uRemoteGridNetworkApi
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR,
-                uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(0, 0, 0));
+                uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(0));
         }
 
         [Test]
@@ -2124,35 +2124,32 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             int nmeshedges = 12;
             int nmeshpts = 31;
-            int networkId = 1;
             int id = 1;
             int meshId = 0;
-            string meshName = "myMesh";
             var wrapper = mocks.DynamicMock<GridWrapper>();
 
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
 
-            wrapper.Expect(w => w.Create1DMesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
-                .OutRef(id, networkId, meshId, nmeshpts, nmeshedges).IgnoreArguments()
+            wrapper.Expect(w => w.Create1DMesh(id, GridApiDataSet.DataSetNames.Network, ref meshId, GridApiDataSet.DataSetNames.Mesh1D, nmeshpts))
+                .OutRef(id, meshId, nmeshpts).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.NOERR).Repeat.Twice();
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
                 a =>
-                    a.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<int>.Is.Anything)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+                    a.CreateNetworkDiscretisation(Arg<int>.Is.Anything)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything);
+            var result = uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(Arg<int>.Is.Anything);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, result);
 
             // uRemoteGridNetworkApi
             var remoteResult = uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(
-                Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything);
+                Arg<int>.Is.Anything);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, remoteResult);
         }
 
@@ -2171,25 +2168,24 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
             // wrapper
-            wrapper.Expect(w => w.Create1DMesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
-                .OutRef(id, networkId, meshId, nmeshpts, nmeshedges).IgnoreArguments()
+            wrapper.Expect(w => w.Create1DMesh(id, GridApiDataSet.DataSetNames.Network, ref meshId, GridApiDataSet.DataSetNames.Mesh1D, nmeshpts))
+                .OutRef(id, meshId, nmeshpts).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR).Repeat.Twice();
             TypeUtils.SetField(uGridNetworkDiscretisationApi, WrapperFieldName, wrapper);
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
                 a =>
-                    a.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<int>.Is.Anything)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
+                    a.CreateNetworkDiscretisation(Arg<int>.Is.Anything)).CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything);
+            var result = uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(Arg<int>.Is.Anything);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything);
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(Arg<int>.Is.Anything);
             Assert.AreEqual(GridApiDataSet.GridConstants.TESTING_ERROR, remoteResult);
         }
 
@@ -2208,8 +2204,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             // uGridNetworkApi
             uGridNetworkDiscretisationApi.Expect(a => a.Initialized).Return(true).Repeat.Twice();
 
-            wrapper.Expect(w => w.Create1DMesh(id, networkId, ref meshId, meshName, nmeshpts, nmeshedges))
-                .OutRef(id, networkId, meshId, nmeshpts, nmeshedges).IgnoreArguments()
+            wrapper.Expect(w => w.Create1DMesh(id, GridApiDataSet.DataSetNames.Network, ref meshId, GridApiDataSet.DataSetNames.Mesh1D, nmeshpts))
+                .OutRef(id, meshId, nmeshpts).IgnoreArguments()
                 .Return(GridApiDataSet.GridConstants.TESTING_ERROR)
                 .Throw(new Exception("myTest"))
                 .Repeat.Twice();
@@ -2217,19 +2213,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // uRemoteGridNetworkApi
             uRemoteUGridNetworkDiscretisationApi.Expect(
-                a => a.CreateNetworkDiscretisation(nmeshpts, nmeshedges, networkId))
+                a => a.CreateNetworkDiscretisation(nmeshpts))
                 .CallOriginalMethod(OriginalCallOptions.NoExpectation);
 
             mocks.ReplayAll();
 
             // uGridNetworkApi
-            var result = uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(nmeshpts, nmeshedges,
-                networkId);
+            var result = uGridNetworkDiscretisationApi.CreateNetworkDiscretisation(nmeshpts);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, result);
 
             // uRemoteGridNetworkApi
-            var remoteResult = uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(nmeshpts,
-                nmeshedges, networkId);
+            var remoteResult = uRemoteUGridNetworkDiscretisationApi.CreateNetworkDiscretisation(nmeshpts);
             Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteResult);
         }
 

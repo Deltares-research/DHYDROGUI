@@ -163,6 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void RefreshMappings()
         {
+            return;
             Links = new EventedList<WaterFlowFM1D2DLink>();
             if (grid == null || networkDiscretization == null || !networkDiscretization.Locations.AllValues.Any()) return;
 

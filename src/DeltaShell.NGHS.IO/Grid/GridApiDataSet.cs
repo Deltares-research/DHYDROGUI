@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             [Description("1D2D flow link")]
             Mesh1DMesh2D = 3,
-            [Description("Roof manhole link")]
+            [Description("Roof sewer link")]
             RoofManhole = 5
         }
 

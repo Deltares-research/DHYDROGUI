@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int nLinks, ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
         /// Use 1d array to fill kn matrix
@@ -83,12 +83,13 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int Make1d2dInternalnetlinks()
+        public int Make1d2dInternalnetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl)
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            int nLinks = 0;
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref nLinks, ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 
