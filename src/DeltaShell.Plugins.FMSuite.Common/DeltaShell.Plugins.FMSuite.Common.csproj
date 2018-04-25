@@ -140,6 +140,7 @@
     <Compile Include="FeatureData\IWindField.cs" />
     <Compile Include="FeatureData\UniformWindField.cs" />
     <Compile Include="FileBasedWindDefinition.cs" />
+    <Compile Include="IO\ApwxwyFileReader.cs" />
     <Compile Include="IO\Delft3DDepthFileExporter.cs" />
     <Compile Include="IO\Delft3DDepthFileImporter.cs" />
     <Compile Include="IO\Delft3DDepthFileReader.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="IO\T3DFile.cs" />
     <Compile Include="IO\TimFile.cs" />
     <Compile Include="IO\FMParser.cs" />
+    <Compile Include="IO\WindFile.cs" />
     <Compile Include="Layers\Boundary2DEditor.cs" />
     <Compile Include="Layers\Boundary2DInteractor.cs" />
     <Compile Include="Layers\ModelGroupLayer.cs" />

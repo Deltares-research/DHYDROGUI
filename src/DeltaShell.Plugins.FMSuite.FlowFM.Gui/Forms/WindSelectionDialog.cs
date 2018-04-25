@@ -2,11 +2,15 @@
 using System.IO;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     internal partial class WindSelectionDialog : Form
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WindSelectionDialog));
+
         private const string TimFileFilter = "time series file|*.tim";
         private const string XGridFileFilter = "arcinfo file|*.amu";
         private const string YGridFileFilter = "arcinfo file|*.amv";
@@ -118,16 +122,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public static string GetCorrespondingGridFile(string filePath)
         {
-            var path = Path.GetDirectoryName(filePath);
-            var fname = Path.GetFileNameWithoutExtension(filePath);
-            var gridFile = Path.Combine(path, string.Join(".", fname, "grd"));
-            if (!File.Exists(gridFile))
-            {
-                MessageBox.Show("The corresponding grid file " + gridFile + "could not be found.",
-                    "File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-            return gridFile;
+            var gridFile = WindFile.GetCorrespondingGridFilePath(filePath);
+            if (File.Exists(gridFile)) return gridFile;
+
+            Log.ErrorFormat("The corresponding grid file '{0}' could not be found.", gridFile);
+            return null;            
         }
 
         private static string SelectFilePath(string filter)

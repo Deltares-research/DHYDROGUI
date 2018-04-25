@@ -123,6 +123,7 @@
     <Compile Include="FMSuiteCommonTestHelper.cs" />
     <Compile Include="Gui\FileBasedWindDefinitionViewTest.cs" />
     <Compile Include="Gui\SupportPointListBoxTest.cs" />
+    <Compile Include="IO\ApwxwyFileReaderTest.cs" />
     <Compile Include="IO\Feature2DAttributesTestHelper.cs" />
     <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
     <Compile Include="IO\FunctionExtentionsTest.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="IO\StructureSchemaCsvFileTest.cs" />
     <Compile Include="IO\StructureSchemaTest.cs" />
     <Compile Include="IO\StructuresFileTest.cs" />
+    <Compile Include="IO\WindFileTest.cs" />
     <Compile Include="ModelSchema\ModelPropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StructuresTestHelper.cs" />

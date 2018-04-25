@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             windXFile = TestHelper.GetTestFilePath(@"windtest\windX.amu");
             windYFile = TestHelper.GetTestFilePath(@"windtest\windY.amv");
             windPFile = TestHelper.GetTestFilePath(@"windtest\windP.amp");
-            windCurviFile = TestHelper.GetTestFilePath(@"windtest\windXYP.ampxy");
+            windCurviFile = TestHelper.GetTestFilePath(@"windtest\windXYP.apwxwy");
             windCurviGrid = TestHelper.GetTestFilePath(@"windtest\windXYP.grd");
             windSpwFile = TestHelper.GetTestFilePath(@"windtest\wind.spw");
         }
