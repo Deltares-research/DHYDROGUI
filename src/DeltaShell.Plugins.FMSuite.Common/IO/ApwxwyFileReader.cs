@@ -13,7 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ApwxwyFileReader));
         private readonly string filePath;
-
+        private const string GridFileIdentifier = "grid_file";
+        
         public ApwxwyFileReader(string filePath)
         {
             this.filePath = filePath;
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 while ((line = GetNextLine()) != null)
                 {
                     var fields = line.Split('=');
-                    if (fields[0].Trim() == "grid_file")
+                    if (fields[0].Trim() == GridFileIdentifier)
                     {
                         CloseInputFile();
                         return fields[1].Trim();

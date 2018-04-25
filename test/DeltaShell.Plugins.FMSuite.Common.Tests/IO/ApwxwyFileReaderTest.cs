@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             var filePath = TestHelper.GetTestFilePath(relativeTestFilePath);
             var testFilePath = TestHelper.CreateLocalCopy(filePath);
-            Assert.That(ReadGridFileFromApwxwyFile(testFilePath) == expectedGridFileName);
+            Assert.That(ReadGridFileFromApwxwyFile(testFilePath), Is.EqualTo(expectedGridFileName));
         }
 
         [Test]
