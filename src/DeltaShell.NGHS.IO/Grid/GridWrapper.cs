@@ -430,7 +430,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="nmeshpoints">The number of mesh points (in)</param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_create_1d_mesh", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_create_1d_mesh_dll([In] ref int ioncid, [In] ref string networkname, [In, Out] ref int meshId, [In] string meshname, [In] ref int nmeshpoints);
+        private static extern int ionc_create_1d_mesh_dll([In] ref int ioncid, [In] string networkname, [In, Out] ref int meshId, [In] string meshname, [In] ref int nmeshpoints);
 
         /// <summary>
         /// Writes the mesh coordinates points 
@@ -884,7 +884,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual int Create1DMesh(int ioncId, string networkName, ref int meshId, string meshName, int numberOfMeshPoints)
         {
-            return ionc_create_1d_mesh_dll(ref ioncId, ref networkName, ref meshId, meshName, ref numberOfMeshPoints);
+            return ionc_create_1d_mesh_dll(ref ioncId, networkName, ref meshId, meshName, ref numberOfMeshPoints);
         }
 
         public virtual int Write1DMeshDiscretisationPoints(int ioncid, int mesh1did, IntPtr c_branchidx, IntPtr c_offset, interop_charinfo[] nodeinfo, int nmeshpoints, int startIndex)
