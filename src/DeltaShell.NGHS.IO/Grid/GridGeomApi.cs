@@ -299,6 +299,7 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 var coordinates = selectedArea.Coordinates.ToList();
+                coordinates.Add(new Coordinate(-999.0, -999.0, -999.0)); //add separator
                 int nCoordinates = coordinates.Count;
                 intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
                 intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof (double))*nCoordinates);
