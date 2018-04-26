@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [FeatureAttribute(Order = 3, ExportName = "Type")]
         public GridApiDataSet.LinkType TypeOfLink { get; set; }
 
-        public int FaceIndex { get; set; }
+        public int DiscretisationPointIndex { get; private set; }
 
-        public int DiscretisationPointIndex { get; set; }
+        public int FaceIndex { get; private set; }
     }
 }

@@ -41,6 +41,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -163,51 +164,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void RefreshMappings()
         {
+            //ToDo reset indexes of Links based on geometry
             return;
-            Links = new EventedList<WaterFlowFM1D2DLink>();
-            if (grid == null || networkDiscretization == null || !networkDiscretization.Locations.AllValues.Any()) return;
+        }
 
-            // Talk to the api!
-            var gGeomApi = new GridGeomApi();
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 1;
-            int linksCount = 0;
-
-            try
+        private void SetGeometry1D2DLinks(IList<WaterFlowFM1D2DLink> listOfLinks)
+        {
+            if (NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any() && Grid != null && Grid.Cells.Any())
             {
-                var ierr = gGeomApi.Get1d2dLinksFromGridAndNetwork(NetFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                foreach (var link in listOfLinks)
                 {
-                    Log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
-                    return;
+                    var fromNode = networkDiscretization.Locations.Values[link.DiscretisationPointIndex];
+                    var toCell = grid.Cells[link.FaceIndex];
+                    link.Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toCell.Center });
                 }
-
-                Creates1d2dLinks(linksCount, linksFrom, linksTo);
-            }
-            catch (Exception e)
-            {
-                Log.DebugFormat("Unexpected exception thrown while generating 1D2D links: {0}", e.Message);
-                Log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
-                throw;
             }
         }
 
-        private void Creates1d2dLinks(int linksCount, List<int> linksToIndex, List<int> linksFromIndex)
+        private void LoadLinks()
         {
-            for (int i = 0; i < linksCount; i++)
-            {
-                var toCell = linksToIndex[i] - 1; 
-                var fromPoint = linksFromIndex[i] - 1;
-
-                var fromCell = grid.Cells[toCell];
-                var toNode = networkDiscretization.Locations.Values[fromPoint];
-                var link = new WaterFlowFM1D2DLink(fromPoint, toCell)
-                {
-                    Geometry = new LineString(new[] {fromCell.Center, toNode.Geometry.Coordinate})
-                }; 
-                Links.Add(link);
-            }
+            var links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
+            SetGeometry1D2DLinks(links);
+            Links = links;
         }
 
         public override IBasicModelInterface BMIEngine
@@ -394,8 +372,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
             var is1D2DModel = (bool) ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
             Grid = ReadGridFromNetFile(NetFilePath, is1D2DModel) ?? new UnstructuredGrid();
-
-            //Links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
                 {
@@ -1863,6 +1839,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             LoadStateFromMdu(mduPath);
             
             LoadNetworkAndDiscretisation();
+
+            LoadLinks();
 
             ImportSpatialOperationsAfterLoading();
         }

@@ -41,6 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             for (var iLink = 0; iLink < mesh1DPointIdx.Length; iLink++)
             {
                 var link = new WaterFlowFM1D2DLink(mesh1DPointIdx[iLink], mesh2DFaceIdx[iLink]);
+                link.Name = linkIds[iLink];
+                link.LongName = linkLongNames[iLink];
+
                 links.Add(link);
             }
 

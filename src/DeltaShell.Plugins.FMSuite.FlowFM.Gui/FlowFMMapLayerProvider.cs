@@ -138,7 +138,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         }
                     },
                     Selectable = true,
-                    NameIsReadOnly = true
+                    NameIsReadOnly = true,
+
                 };
             }
 

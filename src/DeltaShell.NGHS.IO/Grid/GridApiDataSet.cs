@@ -81,10 +81,10 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public static class DataSetNames
         {
-            public const string Network = "Network";
-            public const string Mesh1D = "Mesh1D";
-            public const string Mesh2D = "Mesh2D";
-            public const string Links1D2D = "Links1D2D";
+            public const string Network = "network";
+            public const string Mesh1D = "mesh1d";
+            public const string Mesh2D = "mesh2d";
+            public const string Links1D2D = "links1d2d";
         }
 
         public enum LocationType

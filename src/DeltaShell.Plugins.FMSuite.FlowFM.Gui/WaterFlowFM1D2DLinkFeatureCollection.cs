@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using GeoAPI.Extensions.Feature;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
@@ -39,6 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (model == null || e.PropertyName != "CoordinateSystem") return;
             CoordinateSystem = model.CoordinateSystem;
         }
+
 
         public override void Dispose()
         {
