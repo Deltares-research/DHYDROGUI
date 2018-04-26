@@ -11,6 +11,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -27,181 +28,139 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
         
         [Test]
-        public void CreateLinksFrom2dFileGridGeomWrapper()
+        public void Create1D2DLinksForAreaCompleteMesh1D()
         {
-            /* This is a 'copy' of the original test in the FlowFM kernel made by Luca. It should work here as long as it works in the kernel. */
-            var gridWrapper = new GridWrapper();
-            var gridGeomWrapper = new GridGeomWrapper();
+            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
 
-            //mesh2d
-            int twoddim = 2;
-            int twodnumnode = 16;
-            int twodnumedge = 24;
-            int twodnumface = 9;
-            int twodmaxnumfacenodes = 4;
-            int twodnumlayer = -1;
-            int twodlayertype = -1;
-            int startIndex = 1; // the indexes in the array are zero based
+            //mesh1D coordinates
+            //meshXCoords = { -6, 5, 23, 34 };
+            //meshYCoords = { 22, 16, 16, 7 };
+            var areaX = new double[] { -10.0, -10.0, 40.0, 40.0, -10.0 };
+            var areaY = new double[] { 30.0, 0.0, 0.0, 30.0, 30.0 };
 
+            //expected links
+            var expectedLinksFrom1DIndexes = new int[] { 2, 8, 7 };
+            var expectedLinksTo2DIndexes = new int[] { 2, 3, 4 };
 
-            //mesh1d
-            //discretization points information
-            int nmeshpoints = 4;
-            int nbranches = 1;
-            int[] branchids = { 1, 1, 1, 1 };
-            double[] meshXCoords = { -6, 5, 23, 34 };
-            double[] meshYCoords = { 22, 16, 16, 7 };
-            double[] branchoffset = { 0, 10, 20, 100 }; /// important are the first and last offset
-            double[] branchlength = { 100 };
-            int[] sourcenodeid = { 1 };
-            int[] targetnodeid = { 2 };
+            var linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
 
-            //links
-            int[] arrayfrom = { 2, 8, 7 };
-            int[] arrayto = { 2, 3, 4 };
+            //check links
+            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
 
-            //1. open the file with the 2d mesh
-            string c_path = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
-            Assert.IsTrue(File.Exists(c_path));
-
-            c_path = TestHelper.CreateLocalCopy(c_path);
-            Assert.IsTrue(File.Exists(c_path));
-
-            int ioncid = 0; //file variable 
-            int mode = 0;   //create in read mode
-            int iconvtype = 2;
-            double convversion = 0.0;
-
-            var ierr = gridWrapper.Open(c_path, mode, ref ioncid, ref iconvtype, ref convversion);
-            Assert.That(ierr, Is.EqualTo(0));
-
-            //2. get the 2d mesh id
-            int meshid = 1;
-            ierr = gridWrapper.Get2DMeshId(ref ioncid, ref meshid);
-            Assert.That(ierr, Is.EqualTo(0));
-
-            //3. get the dimensions of the 2d mesh
-            GridWrapper.meshgeomdim meshtwoddim = new GridWrapper.meshgeomdim();
-            ierr = gridWrapper.get_meshgeom_dim(ref ioncid, ref meshid, ref meshtwoddim);
-            Assert.That(ierr, Is.EqualTo(0));
-
-            Assert.That(meshtwoddim.dim, Is.EqualTo(twoddim));
-            Assert.That(meshtwoddim.numnode, Is.EqualTo(twodnumnode));
-            Assert.That(meshtwoddim.numedge, Is.EqualTo(twodnumedge));
-            Assert.That(meshtwoddim.numface, Is.EqualTo(twodnumface));
-            Assert.That(meshtwoddim.maxnumfacenodes, Is.EqualTo(twodmaxnumfacenodes));
-            Assert.That(meshtwoddim.numlayer, Is.EqualTo(twodnumlayer));
-            Assert.That(meshtwoddim.layertype, Is.EqualTo(twodlayertype));
-
-            //4. allocate the arrays in meshgeom for storing the 2d mesh coordinates, edge_nodes
-            GridWrapper.meshgeom meshtwod = new GridWrapper.meshgeom();
-            meshtwod.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * twodnumnode);
-            meshtwod.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * twodnumnode);
-            meshtwod.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * twodnumnode);
-            meshtwod.edge_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * twodnumedge * 2);
-
-            //5. get the meshgeom arrays
-            bool includeArrays = true;
-            ierr = gridWrapper.get_meshgeom(ref ioncid, ref meshid, ref meshtwod, ref startIndex, includeArrays);
-            Assert.That(ierr, Is.EqualTo(0));
-            double[] rc_twodnodex = new double[twodnumnode];
-            double[] rc_twodnodey = new double[twodnumnode];
-            double[] rc_twodnodez = new double[twodnumnode];
-            Marshal.Copy(meshtwod.nodex, rc_twodnodex, 0, twodnumnode);
-            Marshal.Copy(meshtwod.nodey, rc_twodnodey, 0, twodnumnode);
-            Marshal.Copy(meshtwod.nodez, rc_twodnodez, 0, twodnumnode);
-
-            //6. allocate the 1d arrays for storing the 1d coordinates and edge_nodes
-            IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
-            IntPtr c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
-            IntPtr c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
-            IntPtr c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
-            IntPtr c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nbranches);
-            IntPtr c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nbranches);
-            IntPtr c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nbranches);
-
-            Marshal.Copy(branchids, 0, c_branchids, nmeshpoints);
-            Marshal.Copy(meshXCoords, 0, c_meshXCoords, nmeshpoints);
-            Marshal.Copy(meshYCoords, 0, c_meshYCoords, nmeshpoints);
-            Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nbranches);
-            Marshal.Copy(targetnodeid, 0, c_targetnodeid, nbranches);
-            Marshal.Copy(branchoffset, 0, c_branchoffset, nmeshpoints);
-            Marshal.Copy(branchlength, 0, c_branchlength, nbranches);
-
-            //7. fill kn (Herman datastructure) for creating the links
-            int start_index = 1; //the smallest integer in sourcenodeid/targetnodeid is 1
-            ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength, ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints, ref start_index);
-            Assert.That(ierr, Is.EqualTo(0));
-            ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim,ref start_index);
-            Assert.That(ierr, Is.EqualTo(0));
-
-            //9. make the links
-            IntPtr intPtrXValuesSelectedArea = IntPtr.Zero;
-            IntPtr intPtrYValuesSelectedArea = IntPtr.Zero;
-            IntPtr intPtrZValuesSelectedArea = IntPtr.Zero;
-
-            int nCoordinates = 0;
-            intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
-            intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
-            intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
-            var selectedAreaXCoords = new double[] { };
-            var selectedAreaYCoords = new double[] { };
-            var selectedAreaZCoords = new double[] { };
-            Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
-            Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
-            Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
-
-            ierr = gridGeomWrapper.Make1d2dInternalnetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
-                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea);
-            Assert.That(ierr, Is.EqualTo(0));
-
-            //10. get the number of links
-            int n1d2dlinks = 0;
-            ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks);
-            Assert.That(ierr, Is.EqualTo(0));
-
-            //11. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
-            IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
-            IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-            ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks);
-            Assert.That(ierr, Is.EqualTo(0));
-
-
-            int[] rc_arrayfrom = new int[n1d2dlinks];
-            int[] rc_arrayto = new int[n1d2dlinks];
-            Marshal.Copy(c_arrayfrom, rc_arrayfrom, 0, n1d2dlinks);
-            Marshal.Copy(c_arrayto, rc_arrayto, 0, n1d2dlinks);
-            for (int i = 0; i < n1d2dlinks; i++)
+            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
             {
-                Assert.That(rc_arrayfrom[i], Is.EqualTo(arrayfrom[i]));
-                Assert.That(rc_arrayto[i], Is.EqualTo(arrayto[i]));
+                for (int i = 0; i < linkIndexes.Count; i++)
+                {
+                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
+                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
+                }
             }
-            //for writing the links look io_netcdf ionc_def_mesh_contact, ionc_put_mesh_contact 
-
-            //Free 2d arrays
-            Marshal.FreeCoTaskMem(meshtwod.nodex);
-            Marshal.FreeCoTaskMem(meshtwod.nodey);
-            Marshal.FreeCoTaskMem(meshtwod.nodez);
-            Marshal.FreeCoTaskMem(meshtwod.edge_nodes);
-
-            //Free 1d arrays
-            Marshal.FreeCoTaskMem(c_meshXCoords);
-            Marshal.FreeCoTaskMem(c_meshYCoords);
-            Marshal.FreeCoTaskMem(c_branchids);
-            Marshal.FreeCoTaskMem(c_sourcenodeid);
-            Marshal.FreeCoTaskMem(c_targetnodeid);
-            Marshal.FreeCoTaskMem(c_branchlength);
-            Marshal.FreeCoTaskMem(c_branchoffset);
-
-            //selected area
-            Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
-            Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
-            Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
-
-            //Free from and to arrays describing the links 
-            Marshal.FreeCoTaskMem(c_arrayfrom);
-            Marshal.FreeCoTaskMem(c_arrayto);
         }
+
+        [Test]
+        public void Create1D2DLinksForAreaPartialMesh1D()
+        {
+            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
+
+            //mesh1D coordinates
+            //meshXCoords = { -6, 5, 23, 34 };
+            //meshYCoords = { 22, 16, 16, 7 };
+            var areaX = new double[] { 4.0, 4.0, 6.0, 6.0, 4.0 };
+            var areaY = new double[] { 17.0, 15.0, 15.0, 17.0, 17.0 };
+
+            //expected links
+            var expectedLinksFrom1DIndexes = new int[] { 2 };
+            var expectedLinksTo2DIndexes = new int[] { 2 };
+
+            var linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
+
+            //check links
+            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
+
+            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
+            {
+                for (int i = 0; i < linkIndexes.Count; i++)
+                {
+                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
+                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
+                }
+            }
+        }
+
+        [Test]
+        public void Create1D2DLinksForAreaNotAPartOfTheMesh1D()
+        {
+            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
+
+            //mesh1D coordinates
+            //meshXCoords = { -6, 5, 23, 34 };
+            //meshYCoords = { 22, 16, 16, 7 };
+            var areaX = new double[] { 100.0, 100.0, 140.0, 140.0, 100.0 };
+            var areaY = new double[] { 130.0, 100.0, 100.0, 130.0, 130.0 };
+
+            var linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
+
+            //check links
+            Assert.AreEqual(0, linkIndexes.Count);
+        }
+
+
+        [Test]
+        public void Create1D2DLinksForAreaWithTwoCalls()
+        {
+            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
+
+            //mesh1D coordinates
+            //meshXCoords = { -6, 5, 23, 34 };
+            //meshYCoords = { 22, 16, 16, 7 };
+            var areaX = new double[] { 4.0, 4.0, 6.0, 6.0, 4.0 };
+            var areaY = new double[] { 17.0, 15.0, 15.0, 17.0, 17.0 };
+
+            //expected links
+            var expectedLinksFrom1DIndexes = new int[] { 2 };
+            var expectedLinksTo2DIndexes = new int[] { 2 };
+
+            var linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
+
+            //check links
+            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
+
+            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
+            {
+                for (int i = 0; i < linkIndexes.Count; i++)
+                {
+                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
+                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
+                }
+            }
+
+
+            //second call should not remove the links of previous call
+
+            //meshXCoords = { -6, 5, 23, 34 };
+            //meshYCoords = { 22, 16, 16, 7 };
+            areaX = new double[] { 33.0, 33.0, 35.0, 35.0, 33.0 };
+            areaY = new double[] { 8.0, 8.0, 6.0, 6.0, 8.0 };
+
+            //expected links
+            expectedLinksFrom1DIndexes = new int[] { 2, 7 };
+            expectedLinksTo2DIndexes = new int[] { 2, 4 };
+
+            linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
+
+            //check links
+            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
+
+            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
+            {
+                for (int i = 0; i < linkIndexes.Count; i++)
+                {
+                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
+                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
+                }
+            }
+        }
+
 
         [Test]
         public void Get1d2dLinksFromEvent()
@@ -322,6 +281,211 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             catch (Exception e)
             {
                 Assert.Fail("Did not run twice: {0}", e.Message);
+            }
+        }
+
+        private class TestCaseMaking1D2DLinks : IDisposable
+        {
+            private GridGeomWrapper gridGeomWrapper;
+            private GridWrapper gridWrapper;
+            private string filePath;
+            int ierr;
+            GridWrapper.meshgeom meshtwod;
+            IntPtr c_meshXCoords;
+            IntPtr c_meshYCoords;
+            IntPtr c_branchids;
+            IntPtr c_branchoffset;
+            IntPtr c_sourcenodeid;
+            IntPtr c_targetnodeid;
+            IntPtr c_branchlength;
+
+            public TestCaseMaking1D2DLinks()
+            {
+                gridWrapper = new GridWrapper();
+                gridGeomWrapper = new GridGeomWrapper();
+
+                //mesh2d
+                int twoddim = 2;
+                int twodnumnode = 16;
+                int twodnumedge = 24;
+                int twodnumface = 9;
+                int twodmaxnumfacenodes = 4;
+                int twodnumlayer = -1;
+                int twodlayertype = -1;
+                int startIndex = 1; // the indexes in the array are zero based
+
+                //mesh1d
+                //discretization points information
+                int nmeshpoints = 4;
+                int nbranches = 1;
+                int[] branchids = { 1, 1, 1, 1 };
+                double[] meshXCoords = { -6, 5, 23, 34 };
+                double[] meshYCoords = { 22, 16, 16, 7 };
+                double[] branchoffset = { 0, 10, 20, 100 }; /// important are the first and last offset
+                double[] branchlength = { 100 };
+                int[] sourcenodeid = { 1 };
+                int[] targetnodeid = { 2 };
+
+                //1. open the file with the 2d mesh
+                var orgFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
+                Assert.IsTrue(File.Exists(orgFilePath));
+
+                filePath = TestHelper.CreateLocalCopy(orgFilePath);
+                Assert.IsTrue(File.Exists(filePath));
+
+                int ioncid = 0; //file variable 
+                int mode = 0; //create in read mode
+                int iconvtype = 2;
+                double convversion = 0.0;
+
+                var ierr = gridWrapper.Open(filePath, mode, ref ioncid, ref iconvtype, ref convversion);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                //2. get the 2d mesh id
+                int meshid = 1;
+                ierr = gridWrapper.Get2DMeshId(ref ioncid, ref meshid);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                //3. get the dimensions of the 2d mesh
+                GridWrapper.meshgeomdim meshtwoddim = new GridWrapper.meshgeomdim();
+                ierr = gridWrapper.get_meshgeom_dim(ref ioncid, ref meshid, ref meshtwoddim);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                Assert.That(meshtwoddim.dim, Is.EqualTo(twoddim));
+                Assert.That(meshtwoddim.numnode, Is.EqualTo(twodnumnode));
+                Assert.That(meshtwoddim.numedge, Is.EqualTo(twodnumedge));
+                Assert.That(meshtwoddim.numface, Is.EqualTo(twodnumface));
+                Assert.That(meshtwoddim.maxnumfacenodes, Is.EqualTo(twodmaxnumfacenodes));
+                Assert.That(meshtwoddim.numlayer, Is.EqualTo(twodnumlayer));
+                Assert.That(meshtwoddim.layertype, Is.EqualTo(twodlayertype));
+
+                //4. allocate the arrays in meshgeom for storing the 2d mesh coordinates, edge_nodes
+                meshtwod = new GridWrapper.meshgeom();
+                meshtwod.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * twodnumnode);
+                meshtwod.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * twodnumnode);
+                meshtwod.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * twodnumnode);
+                meshtwod.edge_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * twodnumedge * 2);
+
+                //5. get the meshgeom arrays
+                bool includeArrays = true;
+                ierr = gridWrapper.get_meshgeom(ref ioncid, ref meshid, ref meshtwod, ref startIndex, includeArrays);
+                Assert.That(ierr, Is.EqualTo(0));
+                double[] rc_twodnodex = new double[twodnumnode];
+                double[] rc_twodnodey = new double[twodnumnode];
+                double[] rc_twodnodez = new double[twodnumnode];
+                Marshal.Copy(meshtwod.nodex, rc_twodnodex, 0, twodnumnode);
+                Marshal.Copy(meshtwod.nodey, rc_twodnodey, 0, twodnumnode);
+                Marshal.Copy(meshtwod.nodez, rc_twodnodez, 0, twodnumnode);
+
+                //6. allocate the 1d arrays for storing the 1d coordinates and edge_nodes
+                c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
+                c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
+                c_branchids = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nmeshpoints);
+                c_branchoffset = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nmeshpoints);
+                c_sourcenodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nbranches);
+                c_targetnodeid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nbranches);
+                c_branchlength = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nbranches);
+
+                Marshal.Copy(branchids, 0, c_branchids, nmeshpoints);
+                Marshal.Copy(meshXCoords, 0, c_meshXCoords, nmeshpoints);
+                Marshal.Copy(meshYCoords, 0, c_meshYCoords, nmeshpoints);
+                Marshal.Copy(sourcenodeid, 0, c_sourcenodeid, nbranches);
+                Marshal.Copy(targetnodeid, 0, c_targetnodeid, nbranches);
+                Marshal.Copy(branchoffset, 0, c_branchoffset, nmeshpoints);
+                Marshal.Copy(branchlength, 0, c_branchlength, nbranches);
+
+                //7. fill kn (Herman datastructure) for creating the links
+                int start_index = 1; //the smallest integer in sourcenodeid/targetnodeid is 1
+                ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength,
+                    ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints, ref start_index);
+                Assert.That(ierr, Is.EqualTo(0));
+                ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
+                Assert.That(ierr, Is.EqualTo(0));
+            }
+
+            public IList<Tuple<int,int>> MakeLinksForAreaAndReturnFromToOfAllLInks(double[] areaXValues, double[] areaYValues)
+            {
+                var result = new List<Tuple<int, int>>();
+
+                IntPtr intPtrXValuesSelectedArea;
+                IntPtr intPtrYValuesSelectedArea;
+                IntPtr intPtrZValuesSelectedArea;
+
+                //1. make area
+                int nCoordinates = areaXValues.Length;
+                intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinates);
+                var selectedAreaXCoords = areaXValues;
+                var selectedAreaYCoords = areaYValues;
+                var selectedAreaZCoords = Enumerable.Repeat(0.0,nCoordinates).ToArray();
+                Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
+                Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
+                Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
+
+                //2. generate links
+                ierr = gridGeomWrapper.Make1d2dInternalnetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                //3. get the number of links
+                int n1d2dlinks = 0;
+                ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
+                IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
+                IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks);
+                Assert.That(ierr, Is.EqualTo(0));
+
+                int[] rc_arrayfrom = new int[n1d2dlinks];
+                int[] rc_arrayto = new int[n1d2dlinks];
+                Marshal.Copy(c_arrayfrom, rc_arrayfrom, 0, n1d2dlinks);
+                Marshal.Copy(c_arrayto, rc_arrayto, 0, n1d2dlinks);
+
+                for (var i = 0; i < n1d2dlinks; i++)
+                {
+                    result.Add(new Tuple<int, int>(rc_arrayfrom[i], rc_arrayto[i]));
+                }
+
+                //Free from and to arrays describing the links 
+                Marshal.FreeCoTaskMem(c_arrayfrom);
+                Marshal.FreeCoTaskMem(c_arrayto);
+
+                //selected area
+                Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
+                Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
+                Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
+
+                return result;
+            }
+
+            public void Dispose()
+            {
+                gridWrapper = null;
+                gridGeomWrapper = null;
+
+                //Free 2d arrays
+                Marshal.FreeCoTaskMem(meshtwod.nodex);
+                Marshal.FreeCoTaskMem(meshtwod.nodey);
+                Marshal.FreeCoTaskMem(meshtwod.nodez);
+                Marshal.FreeCoTaskMem(meshtwod.edge_nodes);
+
+                //Free 1d arrays
+                Marshal.FreeCoTaskMem(c_meshXCoords);
+                Marshal.FreeCoTaskMem(c_meshYCoords);
+                Marshal.FreeCoTaskMem(c_branchids);
+                Marshal.FreeCoTaskMem(c_sourcenodeid);
+                Marshal.FreeCoTaskMem(c_targetnodeid);
+                Marshal.FreeCoTaskMem(c_branchlength);
+                Marshal.FreeCoTaskMem(c_branchoffset);
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
             }
         }
     }
