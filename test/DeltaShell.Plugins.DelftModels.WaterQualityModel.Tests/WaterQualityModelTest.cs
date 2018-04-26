@@ -1081,5 +1081,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.That(model.Loads.Count, Is.EqualTo(1));
             //Assert.That(model.LoadsDataManager.Count, Is.EqualTo(1));
 		}
+
+        [Test]
+        public void myTest()
+        {
+            var waqModel = new WaterQualityModel {Name = "Mick"};
+            Assert.That(waqModel.Name, Is.EqualTo("Mick"));
+        }
     }
 }
