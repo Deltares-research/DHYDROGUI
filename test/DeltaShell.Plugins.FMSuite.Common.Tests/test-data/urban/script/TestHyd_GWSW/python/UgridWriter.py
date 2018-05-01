@@ -13,14 +13,18 @@ class UgridWriter:
     def __init__(self, model):
         self.model = model
 
-    def write(self, dirPath, outputDir):  # write ugrid file from GWSW model
+    def write(self, dirPath, outputDir, generate2DGrid):  # write ugrid file from GWSW model
         ncfile = self.create_netcdf(dirPath, outputDir, "sewer_system")
 
         print("start generating 1d data")
         networkdata = self.generate_networkdata()
 
-        print("start generating 2d data")
-        data_2dmesh = self.generate_2dmesh_data()
+        if( generate2DGrid == True):
+            print("start generating 2d data")
+            data_2dmesh = self.generate_2dmesh_data()
+        else:
+            print("start generating 2d DUMMY data")
+            data_2dmesh = self.generate_dummy2dmesh_2columnsrightside()
 
         print("init ugrid 1d")
         self.init_1dnetwork(ncfile,networkdata)
@@ -395,7 +399,6 @@ class UgridWriter:
 
     # generate a street grid based on the manholes
     def generate_2dmesh_data(self):
-        grid = {}
         rasterSize = 10.0
         margin = 5.0
         minX = sys.float_info.max
@@ -420,7 +423,41 @@ class UgridWriter:
         yElements = range(minY, maxY, int(rasterSize))
         n_xElements = len(xElements)
         n_yElements = len(yElements)
-        n_nodes = n_xElements * n_yElements
+
+        return self.get_2dmesh_grid(xElements, yElements, n_xElements, n_yElements, rasterSize)
+
+    # generate dummy 2d data just right from the 1d area
+    def generate_dummy2dmesh_2columnsrightside(self):
+        rasterSize = 10.0
+        margin = 5.0
+        minX = sys.float_info.max
+        minY = sys.float_info.max
+        maxX = sys.float_info.min
+        maxY = sys.float_info.min
+
+        for keyvalue in self.model.nodes.items():
+            value = keyvalue[1]
+            x = float(value[3])
+            y = float(value[4])
+            if x < minX: minX = x
+            if y < minY: minY = y
+            if x > maxX: maxX = x
+            if y > maxY: maxY = y
+
+        minX = int(round(maxX + rasterSize + margin))
+        minY = int(round(minY - margin))
+        maxX = int(round(maxX + 3* rasterSize + margin))
+        maxY = int(round(maxY + rasterSize + margin))
+        xElements = range(minX, maxX, int(rasterSize))
+        yElements = range(minY, maxY, int(rasterSize))
+        n_xElements = len(xElements)
+        n_yElements = len(yElements)
+
+        return self.get_2dmesh_grid(xElements, yElements, n_xElements, n_yElements, rasterSize)
+
+    # fills the 2d grid object
+    def get_2dmesh_grid(self, xElements, yElements, n_xElements, n_yElements, rasterSize):
+        grid = {}
 
         grid["node_x"] = []
         grid["node_y"] = []
