@@ -41,12 +41,10 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Api;
 using SharpMap.SpatialOperations;
@@ -164,27 +162,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void RefreshMappings()
         {
-            //ToDo reset indexes of Links based on geometry
-            return;
-        }
-
-        private void SetGeometry1D2DLinks(IList<WaterFlowFM1D2DLink> listOfLinks)
-        {
-            if (NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any() && Grid != null && Grid.Cells.Any())
-            {
-                foreach (var link in listOfLinks)
-                {
-                    var fromNode = networkDiscretization.Locations.Values[link.DiscretisationPointIndex];
-                    var toCell = grid.Cells[link.FaceIndex];
-                    link.Geometry = new LineString(new[] { fromNode.Geometry.Coordinate, toCell.Center });
-                }
-            }
+            Links1D2DHelper.SetIndexes1D2DLinks(Links, NetworkDiscretization, Grid);
         }
 
         private void LoadLinks()
         {
             var links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
-            SetGeometry1D2DLinks(links);
+            Links1D2DHelper.SetGeometry1D2DLinks(links, NetworkDiscretization, Grid);
             Links = links;
         }
 
@@ -1082,7 +1066,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             //uncomment when required:
             //yield return Grid;
-                       
+
+            yield return Links;
+
+            foreach (var link in Links)
+            {
+                yield return link;
+            }
+
             yield return InitialSalinity;
             yield return Viscosity;
             yield return Diffusivity;

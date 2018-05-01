@@ -251,6 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (loadedNetworkDiscretisation != null)
             {
                 NetworkDiscretization = loadedNetworkDiscretisation;
+                NetworkDiscretization.Name = DiscretizationObjectName;
                 Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
                 return;
             }

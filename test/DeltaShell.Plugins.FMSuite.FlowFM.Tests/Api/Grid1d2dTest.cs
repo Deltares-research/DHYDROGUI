@@ -104,64 +104,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.AreEqual(0, linkIndexes.Count);
         }
 
-
-        [Test]
-        public void Create1D2DLinksForAreaWithTwoCalls()
-        {
-            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
-
-            //mesh1D coordinates
-            //meshXCoords = { -6, 5, 23, 34 };
-            //meshYCoords = { 22, 16, 16, 7 };
-            var areaX = new double[] { 4.0, 4.0, 6.0, 6.0, 4.0 };
-            var areaY = new double[] { 17.0, 15.0, 15.0, 17.0, 17.0 };
-
-            //expected links
-            var expectedLinksFrom1DIndexes = new int[] { 2 };
-            var expectedLinksTo2DIndexes = new int[] { 2 };
-
-            var linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
-
-            //check links
-            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
-
-            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
-            {
-                for (int i = 0; i < linkIndexes.Count; i++)
-                {
-                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
-                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
-                }
-            }
-
-
-            //second call should not remove the links of previous call
-
-            //meshXCoords = { -6, 5, 23, 34 };
-            //meshYCoords = { 22, 16, 16, 7 };
-            areaX = new double[] { 33.0, 33.0, 35.0, 35.0, 33.0 };
-            areaY = new double[] { 8.0, 8.0, 6.0, 6.0, 8.0 };
-
-            //expected links
-            expectedLinksFrom1DIndexes = new int[] { 2, 7 };
-            expectedLinksTo2DIndexes = new int[] { 2, 4 };
-
-            linkIndexes = caseMaking1D2DLinks.MakeLinksForAreaAndReturnFromToOfAllLInks(areaX, areaY);
-
-            //check links
-            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
-
-            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
-            {
-                for (int i = 0; i < linkIndexes.Count; i++)
-                {
-                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
-                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
-                }
-            }
-        }
-
-
         [Test]
         public void Get1d2dLinksFromEvent()
         {
@@ -289,8 +231,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             private GridGeomWrapper gridGeomWrapper;
             private GridWrapper gridWrapper;
             private string filePath;
-            int ierr;
-            GridWrapper.meshgeom meshtwod;
+            private int ierr;
+            private GridWrapper.meshgeomdim meshtwoddim;
+            private GridWrapper.meshgeom meshtwod;
             IntPtr c_meshXCoords;
             IntPtr c_meshYCoords;
             IntPtr c_branchids;
@@ -299,6 +242,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             IntPtr c_targetnodeid;
             IntPtr c_branchlength;
 
+            int[] branchids = { 1, 1, 1, 1 };
+            double[] meshXCoords = { -6, 5, 23, 34 };
+            double[] meshYCoords = { 22, 16, 16, 7 };
+            double[] branchoffset = { 0, 10, 20, 100 }; /// important are the first and last offset
+            double[] branchlength = { 100 };
+            int[] sourcenodeid = { 1 };
+            int[] targetnodeid = { 2 };
+
+            //mesh1d
+            //discretization points information
+            int nmeshpoints = 4;
+            int nbranches = 1;
+            int twodnumnode = 16;
+
             public TestCaseMaking1D2DLinks()
             {
                 gridWrapper = new GridWrapper();
@@ -306,25 +263,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 //mesh2d
                 int twoddim = 2;
-                int twodnumnode = 16;
+                twodnumnode = 16;
                 int twodnumedge = 24;
                 int twodnumface = 9;
                 int twodmaxnumfacenodes = 4;
                 int twodnumlayer = -1;
                 int twodlayertype = -1;
                 int startIndex = 1; // the indexes in the array are zero based
-
-                //mesh1d
-                //discretization points information
-                int nmeshpoints = 4;
-                int nbranches = 1;
-                int[] branchids = { 1, 1, 1, 1 };
-                double[] meshXCoords = { -6, 5, 23, 34 };
-                double[] meshYCoords = { 22, 16, 16, 7 };
-                double[] branchoffset = { 0, 10, 20, 100 }; /// important are the first and last offset
-                double[] branchlength = { 100 };
-                int[] sourcenodeid = { 1 };
-                int[] targetnodeid = { 2 };
 
                 //1. open the file with the 2d mesh
                 var orgFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
@@ -347,7 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.That(ierr, Is.EqualTo(0));
 
                 //3. get the dimensions of the 2d mesh
-                GridWrapper.meshgeomdim meshtwoddim = new GridWrapper.meshgeomdim();
+                meshtwoddim = new GridWrapper.meshgeomdim();
                 ierr = gridWrapper.get_meshgeom_dim(ref ioncid, ref meshid, ref meshtwoddim);
                 Assert.That(ierr, Is.EqualTo(0));
 
@@ -370,9 +315,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 bool includeArrays = true;
                 ierr = gridWrapper.get_meshgeom(ref ioncid, ref meshid, ref meshtwod, ref startIndex, includeArrays);
                 Assert.That(ierr, Is.EqualTo(0));
+
+ 
+            }
+
+            public IList<Tuple<int,int>> MakeLinksForAreaAndReturnFromToOfAllLInks(double[] areaXValues, double[] areaYValues)
+            {
+                var result = new List<Tuple<int, int>>();
+
                 double[] rc_twodnodex = new double[twodnumnode];
                 double[] rc_twodnodey = new double[twodnumnode];
                 double[] rc_twodnodez = new double[twodnumnode];
+
                 Marshal.Copy(meshtwod.nodex, rc_twodnodex, 0, twodnumnode);
                 Marshal.Copy(meshtwod.nodey, rc_twodnodey, 0, twodnumnode);
                 Marshal.Copy(meshtwod.nodez, rc_twodnodez, 0, twodnumnode);
@@ -401,11 +355,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.That(ierr, Is.EqualTo(0));
                 ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
                 Assert.That(ierr, Is.EqualTo(0));
-            }
-
-            public IList<Tuple<int,int>> MakeLinksForAreaAndReturnFromToOfAllLInks(double[] areaXValues, double[] areaYValues)
-            {
-                var result = new List<Tuple<int, int>>();
 
                 IntPtr intPtrXValuesSelectedArea;
                 IntPtr intPtrYValuesSelectedArea;
@@ -419,6 +368,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var selectedAreaXCoords = areaXValues;
                 var selectedAreaYCoords = areaYValues;
                 var selectedAreaZCoords = Enumerable.Repeat(0.0,nCoordinates).ToArray();
+
                 Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinates);
                 Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinates);
@@ -458,6 +408,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
                 Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
 
+                gridGeomWrapper.DeallocateMemory();
+
                 return result;
             }
 
@@ -483,7 +435,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 if (File.Exists(filePath))
                 {
-                    File.Delete(filePath);
+                    //File.Delete(filePath);
                 }
 
             }

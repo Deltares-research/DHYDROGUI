@@ -172,6 +172,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     },
                 };
 
+//            var attributeTableViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterFlowFM1D2DLink, WaterFlowFMModel>(m => m.Links, () => Gui);
+//
+//            yield return new ViewInfo<FlowFMTreeShortcut, IEnumerable<WaterFlowFM1D2DLink>,VectorLayerAttributeTableView>
+//            {
+//                Description = attributeTableViewInfo.Description,
+//                GetViewName = (v, o) => "test",
+//                AdditionalDataCheck = o => o.Text == "1D2D Links",
+//                GetViewData = o => o.Model.Links,
+//                CompositeViewType = typeof(ProjectItemMapView),
+//                GetCompositeViewData = o => o.Model,
+//                AfterCreate = (v, o) =>
+//                {
+//                    attributeTableViewInfo.AfterCreate(v, o.Model.Links);
+//                }
+//            };
+
             // 'General'
             yield return new ViewInfo<FlowFMTreeShortcut, WaterFlowFMModel, WaterFlowFMModelView>
             {

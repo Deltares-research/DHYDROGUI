@@ -593,6 +593,58 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 wrapper.Close(ioncId);
         }
 
+        //////create the netcdf files
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void Create1d2dLinks_CheckNumberOfLinks()
+        {
+            var wrapper = new GridWrapper();
+
+            //RGF grid creates a 2d mesh. We read a file with existing 2D grid
+            var path = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
+            path = TestHelper.CreateLocalCopy(path);
+            Assert.IsTrue(File.Exists(path));
+            int fileId = -1;   //file id 
+            int mode = 1;   //write mode
+
+            //1. Open file
+            int ierr = wrapper.Open(path, mode, ref fileId, ref iconvtype, ref convversion);
+            Assert.That(ierr, Is.EqualTo(0));
+
+            //2. Get the 2D mesh ids
+            int mesh2DId = -1;
+            ierr = wrapper.Get2DMeshId(ref fileId, ref mesh2DId);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(mesh2DId, Is.GreaterThan(-1));
+
+            //3. write 1D network
+            int networkId = -1;
+            int mesh1DId = -1;
+            ierr = wrapper.Create1DNetwork(fileId, ref networkId, networkName, nNodes,
+                nBranches, nGeometry);
+            Assert.That(ierr, Is.EqualTo(0));
+            Assert.That(networkId, Is.GreaterThan(-1));
+            write1DNetworkAndMesh(fileId, ref networkId, ref mesh1DId, ref wrapper);
+            Assert.That(mesh1DId, Is.GreaterThan(-1));
+
+            //4. define links
+            int mesh1D2DId = -1;
+            int expectedNlinks = 0;
+            var ierrCreating = wrapper.Create1D2DLinks(fileId, ref mesh1D2DId, "1D2Dlinks", expectedNlinks, mesh1DId, mesh2DId,
+                locationType1, locationType2);
+            int retrievedNlinks = -1;
+            var ierrRetrieving = wrapper.GetNumberOf1D2DLinks(ref fileId, ref mesh1D2DId, ref retrievedNlinks);
+
+            //5. Close the file
+            wrapper.Close(fileId);
+
+            //6. Check number of links
+            Assert.That(ierrCreating, Is.EqualTo(0));
+            Assert.That(ierrCreating, Is.EqualTo(0));
+            Assert.That(mesh1D2DId, Is.GreaterThan(-1));
+            Assert.That(retrievedNlinks, Is.EqualTo(expectedNlinks));
+        }
+
         ////// read the netcdf file created in the test above
         [Test]
         [Ignore("should be in unit test of io_netcdf kernel")]

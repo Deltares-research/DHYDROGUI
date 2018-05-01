@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DeltaShell.NGHS.IO.Properties;
+using NetTopologySuite.Utilities;
 
 namespace DeltaShell.NGHS.IO.Grid
 {

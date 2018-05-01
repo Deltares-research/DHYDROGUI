@@ -126,6 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
                     DataSource = new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),
+                    FeatureEditor = new Feature2DEditor(fmModel),
                     CanBeRemovedByUser = false,
                     SmoothingMode = SmoothingMode.AntiAlias,
                     Opacity = 0.7f,

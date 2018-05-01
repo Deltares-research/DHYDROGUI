@@ -173,10 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                      * However, when more networks will be stored this method is no longer valid and another method to obtain the correct 
                      * network ID must be implemented.
                      */
-
-                    var networkIds = uGridNetworkDiscretisation.GetNetworkIds();
-                    var networkId =  GetNetworkId(networkIds);
-                    
+                  
                     uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints);
                     uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
                 }
@@ -217,8 +214,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                     string[] names;
                     uGridNetworkDiscretisation.ReadNetworkDiscretisationPointsForMeshId(meshId, out branchIndices, out offset, out ids, out names);
                     
-                    
-                    
                     var networkDiscretisationDataModel = new NetworkDiscretisationUGridDataModel(meshDiscretisationName, branchIndices, offset, networkId, ids, names);
 
                     return networkDiscretisationDataModel;
@@ -250,13 +245,6 @@ namespace DeltaShell.Plugins.NetworkEditor
             var networkDiscretisation = NetworkDiscretisationUGridDataModel.ReconstructNetworkDiscretisation(loadedNetwork, discretisationDataModel.Name, discretisationDataModel.BranchIdx, discretisationDataModel.Offset, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
             
             return networkDiscretisation;
-        }
-
-        private static int GetNetworkId(int[] networkIds)
-        {
-            if (networkIds.Length > 1)
-                Log.Warn("Using more than one network in one mesh is currently not supported by DeltaShell. The first network stored in the NetCDF file will be returned.");
-            return networkIds[0];
         }
     }
 }
