@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using System.Net;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -117,6 +117,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             {
                 Directory.CreateDirectory(includeDirectory);
             }
+      
+
+            var volumesFile = FileUtils.ReplaceDirectorySeparator(initSettings.VolumesFile);
+            FileUtils.ReplaceDirectorySeparator(initSettings.SurfacesFile);
+            var verticalDiffusionFile= FileUtils.ReplaceDirectorySeparator(initSettings.VerticalDiffusionFile);
+            var attributesFile =       FileUtils.ReplaceDirectorySeparator(initSettings.AttributesFile);
+            var pointersFile =         FileUtils.ReplaceDirectorySeparator(initSettings.PointersFile);
+            var areasFile =            FileUtils.ReplaceDirectorySeparator(initSettings.AreasFile);
+            var flowsFile =            FileUtils.ReplaceDirectorySeparator(initSettings.FlowsFile);
+            var lengthsFile =          FileUtils.ReplaceDirectorySeparator(initSettings.LengthsFile);
 
             var filesDictionary = new Dictionary<string, Func<WaqInitializationSettings, string>>
                                       {
@@ -129,15 +139,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                           {"B2_outputtimers.inc", set => IncludeFileFactory.CreateOutputTimersInclude(set.Settings)},
                                           
                                           {"B3_nrofseg.inc", set => IncludeFileFactory.CreateNumberOfSegmentsInclude(set.SegmentsPerLayer, set.NumberOfLayers)},
-                                          {"B3_attributes.inc", set => IncludeFileFactory.CreateAttributesFileInclude(set.AttributesFile)},
-                                          {"B3_volumes.inc", set => IncludeFileFactory.CreateVolumesFileInclude(set.VolumesFile)},
+                                          {"B3_attributes.inc", set => IncludeFileFactory.CreateAttributesFileInclude(attributesFile)},
+                                          {"B3_volumes.inc", set => IncludeFileFactory.CreateVolumesFileInclude(volumesFile)},
 
                                           {"B4_nrofexch.inc", set => IncludeFileFactory.CreateNumberOfExchangesInclude(set.HorizontalExchanges, set.VerticalExchanges)},
-                                          {"B4_pointers.inc", set => IncludeFileFactory.CreatePointersFileInclude(set.PointersFile)},
+                                          {"B4_pointers.inc", set => IncludeFileFactory.CreatePointersFileInclude(pointersFile)},
                                           {"B4_cdispersion.inc", set => IncludeFileFactory.CreateConstantDispersionInclude(set.VerticalDispersion, set.Dispersion.First())},
-                                          {"B4_area.inc", set => IncludeFileFactory.CreateAreasFileInclude(set.AreasFile)},
-                                          {"B4_flows.inc", set => IncludeFileFactory.CreateFlowsFileInclude(set.FlowsFile)},
-                                          {"B4_length.inc", set => IncludeFileFactory.CreateLengthsFileInclude(set.LengthsFile)},
+                                          {"B4_area.inc", set => IncludeFileFactory.CreateAreasFileInclude(areasFile)},
+                                          {"B4_flows.inc", set => IncludeFileFactory.CreateFlowsFileInclude(flowsFile)},
+                                          {"B4_length.inc", set => IncludeFileFactory.CreateLengthsFileInclude(lengthsFile)},
                                           
                                           {"B5_boundlist.inc", set => IncludeFileFactory.CreateBoundaryListInclude(set.BoundaryNodeIds, set.NumberOfLayers)},
                                           {"B5_boundaliases.inc", set => IncludeFileFactory.CreateBoundaryAliasesInclude(set.BoundaryAliases)},
@@ -152,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                           {"B7_functions.inc", set => IncludeFileFactory.CreateFunctionsInclude(set.ProcessCoefficients)},
                                           {"B7_parameters.inc", set => IncludeFileFactory.CreateParametersInclude(set)},
                                           {"B7_dispersion.inc", set => IncludeFileFactory.CreateSpatialDispersionInclude(set.Dispersion.First(), set.NumberOfLayers)},
-                                          {"B7_vdiffusion.inc", set => IncludeFileFactory.CreateVerticalDiffusionInclude(set.VerticalDiffusionFile, set.UseAdditionalVerticalDiffusion)},
+                                          {"B7_vdiffusion.inc", set => IncludeFileFactory.CreateVerticalDiffusionInclude(verticalDiffusionFile, set.UseAdditionalVerticalDiffusion)},
                                           {"B7_segfunctions.inc", set => IncludeFileFactory.CreateSegfunctionsInclude(set)},
                                           {"B7_numerical_options.inc", set => IncludeFileFactory.CreateNumericalOptionsInclude(set)},
                                           

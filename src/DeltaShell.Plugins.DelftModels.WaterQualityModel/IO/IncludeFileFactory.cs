@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -471,8 +472,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {
                     if(dataTable.IsEnabled)
                     {
+                        
+                        // todo: use FileUtil class for this functionality
                         var relativeFilePath = FileUtils.GetRelativePath(workDirectory, dataTable.DataFile.Path);
-                        writer.WriteLine("INCLUDE '{0}'", relativeFilePath);
+                        var convertedFilePath= FileUtils.ReplaceDirectorySeparator(relativeFilePath);
+                        writer.WriteLine("INCLUDE '{0}'", convertedFilePath);
                     }
                 }
                 return writer.ToString();
@@ -572,7 +576,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("PARAMETERS");
                     writer.WriteLine("'Surf'");
                     writer.WriteLine("ALL");
-                    writer.WriteLine("BINARY_FILE '{0}' ; from horizontal-surfaces-file key in hyd file", initializationSettings.SurfacesFile);    
+                    // todo: use FileUtil class for this functionality
+                    writer.WriteLine("BINARY_FILE '{0}' ; from horizontal-surfaces-file key in hyd file", FileUtils.ReplaceDirectorySeparator(initializationSettings.SurfacesFile));    
                 }
 
                 if (initializationSettings.ProcessCoefficients != null)
@@ -618,7 +623,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("'VertDisper'");
                     writer.WriteLine("ALL");
                     writer.WriteLine("BINARY_FILE '{0}'", verticalDiffusionFile);
-
+                    
                     return writer.ToString();
                 }
             }
