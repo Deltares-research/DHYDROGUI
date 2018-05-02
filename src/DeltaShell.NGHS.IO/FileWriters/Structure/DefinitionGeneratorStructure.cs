@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public abstract class DefinitionGeneratorStructure : IDefinitionGeneratorStructure
     {
-        private readonly KeyValuePair<int, string> compoundStructureInfo;
+        private readonly CompoundStructureInfo compoundStructureInfo;
         protected DelftIniCategory IniCategory { get; private set; }
 
-        protected DefinitionGeneratorStructure(KeyValuePair<int, string> compoundStructureInfo)
+        protected DefinitionGeneratorStructure(CompoundStructureInfo compoundStructureInfo)
         {
             this.compoundStructureInfo = compoundStructureInfo;
             IniCategory = new DelftIniCategory(StructureRegion.Header);
@@ -27,9 +26,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.BranchId.Key, structure.Branch.Name, StructureRegion.BranchId.Description);
             IniCategory.AddProperty(StructureRegion.Chainage.Key, structure.Chainage, StructureRegion.Chainage.Description, StructureRegion.Chainage.Format);
 
-            var compoundStructureId = compoundStructureInfo.Key;
+            var compoundStructureId = compoundStructureInfo.Id;
             IniCategory.AddProperty(StructureRegion.Compound.Key, compoundStructureId, StructureRegion.Compound.Description);
-            if (compoundStructureId > 0) IniCategory.AddProperty(StructureRegion.CompoundName.Key, compoundStructureInfo.Value, StructureRegion.CompoundName.Description);
+            if (compoundStructureId > 0) IniCategory.AddProperty(StructureRegion.CompoundName.Key, compoundStructureInfo.Name, StructureRegion.CompoundName.Description);
             IniCategory.AddProperty(StructureRegion.DefinitionType.Key, definitionType, StructureRegion.DefinitionType.Description);
         }
     }

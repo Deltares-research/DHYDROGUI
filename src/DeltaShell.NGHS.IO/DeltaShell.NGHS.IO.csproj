@@ -153,6 +153,7 @@
     <Compile Include="FileWriters\SpatialData\SpatialDataFileWriter.cs" />
     <Compile Include="FileWriters\SpatialData\SpatialDataQuantity.cs" />
     <Compile Include="FileWriters\SpatialData\SpatialDataRegion.cs" />
+    <Compile Include="FileWriters\Structure\CompoundStructureInfo.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructure.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureAdvancedWeir.cs" />
     <Compile Include="FileWriters\Structure\DefinitionGeneratorStructureBridge.cs" />

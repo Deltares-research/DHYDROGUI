@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public abstract class DefinitionGeneratorStructureBridge : DefinitionGeneratorStructure
     {
-        protected DefinitionGeneratorStructureBridge(KeyValuePair<int, string> compoundStructureInfo)
+        protected DefinitionGeneratorStructureBridge(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
         }

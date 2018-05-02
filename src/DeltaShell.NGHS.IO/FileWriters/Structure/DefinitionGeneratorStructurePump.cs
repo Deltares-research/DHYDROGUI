@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Helpers;
@@ -13,7 +12,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         private const double DEFAULT_HEAD = 0.0;
         private const double DEFAULT_REDUCTION_FACTOR = 1.0;
 
-        public DefinitionGeneratorStructurePump(KeyValuePair<int, string> compoundStructureInfo)
+        public DefinitionGeneratorStructurePump(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
         }

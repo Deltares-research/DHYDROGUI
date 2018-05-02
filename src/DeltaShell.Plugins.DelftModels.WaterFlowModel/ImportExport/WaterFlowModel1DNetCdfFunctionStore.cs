@@ -532,13 +532,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
             else if (branchFeature is IStructure)
             {
-                var structureName = branchFeature.Name;
-                var structure = (IStructure) branchFeature;
-                if (structure.ParentStructure != null && structure.ParentStructure.Structures.Count > 1)
-                {
-                    var compositePrefix = structure.ParentStructure.Name + "_";
-                    structureName = compositePrefix + branchFeature.Name;
-                }
+                var structure = (IStructure)branchFeature;
+
+                var compositePrefix = structure.ParentStructure?.Structures.Count > 1
+                    ? structure.ParentStructure.Name + "_"
+                    : string.Empty;
+
+                var structureName = compositePrefix + branchFeature.Name;
+
                 location = MetaData.Locations.FirstOrDefault(l => l.Id == structureName);
             }
             else

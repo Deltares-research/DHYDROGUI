@@ -3627,21 +3627,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
 
         private void SetFeaturesOnCoverage(string netFile, FeatureCoverage coverage)
         {
+            IEnumerable<IFeature> features = null;
             switch (netFile)
             {
                 case WaterFlowModel1DOutputFileConstants.FileNames.ObservationsFile:
-                    coverage.Clear();
-                    coverage.Features = new EventedList<IFeature>(Network.ObservationPoints);
+                    features = Network.ObservationPoints;
                     break;
                 case WaterFlowModel1DOutputFileConstants.FileNames.LateralsFile:
-                    coverage.Clear();
-                    coverage.Features = new EventedList<IFeature>(Network.LateralSources);
+                    features = Network.LateralSources;
                     break;
                 case WaterFlowModel1DOutputFileConstants.FileNames.StructuresFile:
-                    coverage.Clear();
-                    coverage.Features = new EventedList<IFeature>(Network.Structures.Except(Network.CompositeBranchStructures.Where(cbs => cbs.Structures.Count < 2)));
+                    features = Network.Structures.Except(Network.CompositeBranchStructures.Where(cbs => cbs.Structures.Count < 2));
                     break;
             }
+
+            coverage.Clear();
+            coverage.Features = new EventedList<IFeature>(features);
         }
 
         [NoNotifyPropertyChange]

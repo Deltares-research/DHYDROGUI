@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
@@ -113,7 +112,7 @@ namespace DeltaShell.NGHS.IO.FileWriters
 
         }
 
-        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, KeyValuePair<int, string> compoundStructureInfo)
+        public static IDefinitionGeneratorStructure GetDefinitionGeneratorStructure(StructureType structureType, CompoundStructureInfo compoundStructureInfo)
         {
             switch (structureType)
             {

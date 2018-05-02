@@ -573,7 +573,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             var compoundStructureId = 0;
             structures.ForEach(structure =>
             {
-                var compositeStructureInfo = new KeyValuePair<int, string>(compoundStructureId, string.Empty);
+                var compositeStructureInfo = new CompoundStructureInfo(compoundStructureId, string.Empty);
                 var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.GetStructureType(), compositeStructureInfo);
                 if (definitionGeneratorStructure != null)
                 {

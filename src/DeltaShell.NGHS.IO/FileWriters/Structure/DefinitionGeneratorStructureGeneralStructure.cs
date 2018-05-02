@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.Helpers;
@@ -8,7 +7,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureGeneralStructure(KeyValuePair<int, string> compoundStructureInfo = new KeyValuePair<int, string>())
+        public DefinitionGeneratorStructureGeneralStructure(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
         }

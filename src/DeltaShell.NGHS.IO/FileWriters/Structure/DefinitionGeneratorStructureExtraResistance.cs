@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Helpers;
@@ -8,7 +7,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureExtraResistance : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureExtraResistance(KeyValuePair<int, string> compoundStructureInfo)
+        public DefinitionGeneratorStructureExtraResistance(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -9,7 +8,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureOrifice : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureOrifice(KeyValuePair<int, string> compoundStructureInfo)
+        public DefinitionGeneratorStructureOrifice(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
         }

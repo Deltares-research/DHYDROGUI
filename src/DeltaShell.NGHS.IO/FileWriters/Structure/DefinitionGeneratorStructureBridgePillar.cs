@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -7,7 +6,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureBridgePillar : DefinitionGeneratorStructureBridge
     {
-        public DefinitionGeneratorStructureBridgePillar(KeyValuePair<int, string> compoundStructureInfo)
+        public DefinitionGeneratorStructureBridgePillar(CompoundStructureInfo compoundStructureInfo)
             : base(compoundStructureInfo)
         {
         }
