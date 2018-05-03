@@ -772,7 +772,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var segfunctionInclude = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
 
             // assert
-            var expectedText =
+            var expectedTextUnformatted =
                 "SEG_FUNCTIONS" + Environment.NewLine +
                 "'A'" + Environment.NewLine +
                 "ALL" + Environment.NewLine +
@@ -783,7 +783,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "ALL" + Environment.NewLine +
                 "BINARY_FILE '"+ pathB + "'" + Environment.NewLine +
                 Environment.NewLine;
-
+            var expectedText= FileUtils.ReplaceDirectorySeparator(expectedTextUnformatted);
             Assert.AreEqual(expectedText, segfunctionInclude);
         }
 
