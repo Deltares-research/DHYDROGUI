@@ -639,7 +639,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("SEG_FUNCTIONS");
                     writer.WriteLine("'{0}'", segfunction.Key);
                     writer.WriteLine("ALL");
-                    writer.WriteLine("BINARY_FILE '{0}'", segfunction.Value);
+                    writer.WriteLine("BINARY_FILE '{0}'", FileUtils.ReplaceDirectorySeparator(segfunction.Value));
                     writer.WriteLine();
                 }
                 return writer.ToString();

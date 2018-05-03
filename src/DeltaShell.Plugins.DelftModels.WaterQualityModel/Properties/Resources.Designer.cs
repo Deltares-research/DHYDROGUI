@@ -216,8 +216,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         ///&apos;Water quality calculation&apos;
         ///&apos; &apos;
         ///&apos; &apos;
-        ///INCLUDE &apos;includes_deltashell\B1_t0.inc&apos;             ; From UI: Time stamp
-        ///INCLUDE &apos;includes_deltashell\B1_sublist.inc&apos;        ; From UI: Substance list
+        ///INCLUDE &apos;includes_deltashell/B1_t0.inc&apos;             ; From UI: Time stamp
+        ///INCLUDE &apos;includes_deltashell/B1_sublist.inc&apos;        ; From UI: Substance list
         ///#1;
         ///
         ///;###############################################################################
@@ -239,8 +239,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         ///&apos;Water quality calculation&apos;
         ///&apos; &apos;
         ///&apos; &apos;
-        ///INCLUDE &apos;includes_deltashell\B1_t0.inc&apos;             ; From UI: Time stamp
-        ///INCLUDE &apos;includes_deltashell\B1_sublist.inc&apos;        ; From UI: Substance list
+        ///INCLUDE &apos;includes_deltashell/B1_t0.inc&apos;             ; From UI: Time stamp
+        ///INCLUDE &apos;includes_deltashell/B1_sublist.inc&apos;        ; From UI: Substance list
         ///#1;
         ///
         ///;###############################################################################
@@ -262,8 +262,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         ///&apos;Water quality calculation&apos;
         ///&apos; &apos;
         ///&apos; &apos;
-        ///INCLUDE &apos;includes_deltashell\B1_t0.inc&apos;             ; From UI: Time stamp
-        ///INCLUDE &apos;includes_deltashell\B1_sublist.inc&apos;        ; From UI: Substance list
+        ///INCLUDE &apos;includes_deltashell/B1_t0.inc&apos;             ; From UI: Time stamp
+        ///INCLUDE &apos;includes_deltashell/B1_sublist.inc&apos;        ; From UI: Substance list
         ///#1;
         ///
         ///;###############################################################################
