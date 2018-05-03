@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -472,8 +470,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {
                     if(dataTable.IsEnabled)
                     {
-                        
-                        // todo: use FileUtil class for this functionality
                         var relativeFilePath = FileUtils.GetRelativePath(workDirectory, dataTable.DataFile.Path);
                         var convertedFilePath= FileUtils.ReplaceDirectorySeparator(relativeFilePath);
                         writer.WriteLine("INCLUDE '{0}'", convertedFilePath);
@@ -576,7 +572,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("PARAMETERS");
                     writer.WriteLine("'Surf'");
                     writer.WriteLine("ALL");
-                    // todo: use FileUtil class for this functionality
                     writer.WriteLine("BINARY_FILE '{0}' ; from horizontal-surfaces-file key in hyd file", FileUtils.ReplaceDirectorySeparator(initializationSettings.SurfacesFile));    
                 }
 

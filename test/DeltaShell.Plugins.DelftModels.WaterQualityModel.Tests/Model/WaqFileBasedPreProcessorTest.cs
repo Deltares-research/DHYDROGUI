@@ -71,8 +71,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             var waqModelDataDir = Path.Combine(currentDirectory, "A");
             var workingDirectory = Path.GetFullPath(@".\TestInitializeWaqForFileBasedProcessing\");
             var includeDirectory = workingDirectory + @"includes_deltashell\";
-            var listFile = workingDirectory + "deltashell.lst";
-            var processFile = workingDirectory + "deltashell.lsp";
 
             // Delete directory to avoid failing test on build server when there is already a previous version of the directory
             FileUtils.DeleteIfExists(workingDirectory);
@@ -80,17 +78,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             FileUtils.DeleteIfExists(waqModelDataDir);
             Directory.CreateDirectory(waqModelDataDir);
-
-        
-            var listFileStream = File.Create(listFile);
-            var processFileStream = File.Create(processFile);
-            var byteArray = Encoding.ASCII.GetBytes("Test file");
-
-            listFileStream.Write(byteArray, 0, byteArray.Length);
-            processFileStream.Write(byteArray, 0, byteArray.Length);
-
-            listFileStream.Close();
-            processFileStream.Close();
 
             var boundaryDataFolderPath = Path.Combine(waqModelDataDir, "haha");
             var manager = new DataTableManager { FolderPath = boundaryDataFolderPath };
@@ -144,26 +131,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             //act
             preprocessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => model.AddTextDocument(displayName, filePath));
             string[] files = Directory.GetFiles(includeDirectory);
-            var volumeFile = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_volumes.inc")));
-            var attributesFile = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_attributes.inc")));
-            var areaFile = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_area.inc")));
-            var flows = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_flows.inc")));
-            var lengthFile = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_length.inc")));
-            var pointer = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_pointers.inc")));
-            var parameters = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_parameters.inc")));
-            var verticalDiffusionFile = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_vdiffusion.inc")));
-            var loadDataFile = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B6_loads_data.inc")));
+            var volumeFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_volumes.inc")));
+            var attributesFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_attributes.inc")));
+            var areaFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_area.inc")));
+            var flowsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_flows.inc")));
+            var lengthFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_length.inc")));
+            var pointersFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_pointers.inc")));
+            var parametersFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_parameters.inc")));
+            var verticalDiffusionFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_vdiffusion.inc")));
+            var loadsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B6_loads_data.inc")));
 
             //assert
-            Assert.That(volumeFile, Is.StringContaining(@"dir1/dir2/volumesfile.inc"));
-            Assert.That(attributesFile, Is.StringContaining(@"dir1/dir2/attributesfile.inc"));
-            Assert.That(areaFile, Is.StringContaining(@"dir1/dir2/areasfile.inc"));
-            Assert.That(flows, Is.StringContaining(@"dir1/dir2/flowsfile.inc"));
-            Assert.That(lengthFile, Is.StringContaining(@"dir1/dir2/lengthsfile.inc"));
-            Assert.That(pointer, Is.StringContaining(@"dir1/dir2/pointersfile.inc"));
-            Assert.That(parameters, Is.StringContaining(@"dir1/dir2/parametersfile.inc"));
-            Assert.That(loadDataFile, Is.StringContaining(@"INCLUDE '../A/lol/O.tbl'"));
-            Assert.That(verticalDiffusionFile, Is.StringContaining(@"dir1/dir2/verticaldiffusionfile.inc"));
+            Assert.That(volumeFilePath, Is.StringContaining(@"dir1/dir2/volumesfile.inc"));
+            Assert.That(attributesFilePath, Is.StringContaining(@"dir1/dir2/attributesfile.inc"));
+            Assert.That(areaFilePath, Is.StringContaining(@"dir1/dir2/areasfile.inc"));
+            Assert.That(flowsFilePath, Is.StringContaining(@"dir1/dir2/flowsfile.inc"));
+            Assert.That(lengthFilePath, Is.StringContaining(@"dir1/dir2/lengthsfile.inc"));
+            Assert.That(pointersFilePath, Is.StringContaining(@"dir1/dir2/pointersfile.inc"));
+            Assert.That(parametersFilePath, Is.StringContaining(@"dir1/dir2/parametersfile.inc"));
+            Assert.That(loadsFilePath, Is.StringContaining(@"INCLUDE '../A/lol/O.tbl'"));
+            Assert.That(verticalDiffusionFilePath, Is.StringContaining(@"dir1/dir2/verticaldiffusionfile.inc"));
         }
 
         [Test]
@@ -178,8 +165,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             var waqModelDataDir = Path.Combine(currentDirectory, "A");
             var workingDirectory = Path.GetFullPath(@".\TestInitializeWaqForFileBasedProcessing\");
             var includeDirectory = workingDirectory + @"includes_deltashell\";
-            var listFile = workingDirectory + "deltashell.lst";
-            var processFile = workingDirectory + "deltashell.lsp";
 
             // Delete directory to avoid failing test on build server when there is already a previous version of the directory
             FileUtils.DeleteIfExists(workingDirectory);
@@ -190,16 +175,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             try
             {
-                var listFileStream = File.Create(listFile);
-                var processFileStream = File.Create(processFile);
-                var byteArray = Encoding.ASCII.GetBytes("Test file");
-
-                listFileStream.Write(byteArray, 0, byteArray.Length);
-                processFileStream.Write(byteArray, 0, byteArray.Length);
-
-                listFileStream.Close();
-                processFileStream.Close();
-
                 var boundaryDataFolderPath = Path.Combine(waqModelDataDir, "haha");
                 var manager = new DataTableManager { FolderPath = boundaryDataFolderPath };
                 manager.CreateNewDataTable("A", "B", "C.usefors", "E");

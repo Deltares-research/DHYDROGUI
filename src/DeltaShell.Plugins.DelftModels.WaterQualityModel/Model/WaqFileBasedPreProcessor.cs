@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -117,10 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             {
                 Directory.CreateDirectory(includeDirectory);
             }
-      
 
             var volumesFile = FileUtils.ReplaceDirectorySeparator(initSettings.VolumesFile);
-            FileUtils.ReplaceDirectorySeparator(initSettings.SurfacesFile);
             var verticalDiffusionFile= FileUtils.ReplaceDirectorySeparator(initSettings.VerticalDiffusionFile);
             var attributesFile =       FileUtils.ReplaceDirectorySeparator(initSettings.AttributesFile);
             var pointersFile =         FileUtils.ReplaceDirectorySeparator(initSettings.PointersFile);
