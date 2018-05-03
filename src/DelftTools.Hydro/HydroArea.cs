@@ -18,6 +18,7 @@ namespace DelftTools.Hydro
         public const string DryAreasPluralName = "Dry Areas";
         public const string ThinDamsPluralName = "Thin Dams";
         public const string FixedWeirsPluralName = "Fixed Weirs";
+        public const string DamBreakName = "Dam Breaks";
         public const string ObservationPointsPluralName = "Observation Points";
         public const string ObservationCrossSectionsPluralName = "Observation Cross-Sections";
         public const string PumpsPluralName = "Pumps";
@@ -25,6 +26,8 @@ namespace DelftTools.Hydro
         public const string GatesPluralName = "Gates";
         public const string EmbankmentsPluralName = "Embankments";
         public const string EnclosureName = "Enclosure";
+        public const string RoofAreaName = "Roof Areas";
+        public const string KolkName = "Kolks";
 
         public HydroArea()
         {
@@ -41,6 +44,7 @@ namespace DelftTools.Hydro
             DryAreas = new EventedList<GroupableFeature2DPolygon>();
             ThinDams = new EventedList<ThinDam2D>();
             FixedWeirs = new EventedList<FixedWeir>();
+            DamBreaks = new EventedList<DamBreak>();
             ObservationPoints = new EventedList<GroupableFeature2DPoint>();
             ObservationCrossSections = new EventedList<ObservationCrossSection2D>();
             DumpingLocations = new EventedList<GroupableFeature2D>();
@@ -51,6 +55,9 @@ namespace DelftTools.Hydro
             Pumps = new EventedList<Pump2D>();
             Weirs = new EventedList<Weir2D>();
             Gates = new EventedList<Gate2D>();
+
+            RoofAreas = new EventedList<GroupableFeature2DPolygon>();
+            Kolks = new EventedList<GroupableFeature2DPoint>();
         }
 
         public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
@@ -58,6 +65,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
         public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
         public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
+        public virtual IEventedList<DamBreak> DamBreaks { get; protected set; }
         public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
         public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
         public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }
@@ -69,6 +77,10 @@ namespace DelftTools.Hydro
         public virtual IEventedList<Weir2D> Weirs { get; protected set; }
         public virtual IEventedList<Gate2D> Gates { get; protected set; }
 
+        public virtual IEventedList<GroupableFeature2DPolygon> RoofAreas { get; protected set; }
+
+        public virtual IEventedList<GroupableFeature2DPoint> Kolks { get; protected set; }
+
         #region IHydroRegion
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects
@@ -77,6 +89,7 @@ namespace DelftTools.Hydro
         }
 
         public virtual IEventedList<HydroLink> Links { get; set; }
+
 
         public override IEnumerable<object> GetDirectChildren()
         {
@@ -103,6 +116,11 @@ namespace DelftTools.Hydro
             foreach (var fixedWeir in FixedWeirs)
             {
                 yield return fixedWeir;
+            }
+            yield return DamBreaks;
+            foreach (var damBreak in DamBreaks)
+            {
+                yield return damBreak;
             }
             foreach (var landBoundary in LandBoundaries)
             {
@@ -140,6 +158,16 @@ namespace DelftTools.Hydro
             foreach (var enclosure in Enclosures)
             {
                 yield return enclosure;
+            }
+            yield return RoofAreas;
+            foreach (var roofArea in RoofAreas)
+            {
+                yield return roofArea;
+            }
+            yield return Kolks;
+            foreach (var kolk in Kolks)
+            {
+                yield return kolk;
             }
         }
 

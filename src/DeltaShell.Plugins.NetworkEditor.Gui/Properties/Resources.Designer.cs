@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -346,6 +346,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static System.Drawing.Bitmap cut {
             get {
                 object obj = ResourceManager.GetObject("cut", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap DamBreak {
+            get {
+                object obj = ResourceManager.GetObject("DamBreak", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -694,6 +704,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static System.Drawing.Bitmap import {
             get {
                 object obj = ResourceManager.GetObject("import", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Kolk {
+            get {
+                object obj = ResourceManager.GetObject("Kolk", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap KolkMap {
+            get {
+                object obj = ResourceManager.GetObject("KolkMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1225,6 +1255,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static string RetentionProperties_DisplayName {
             get {
                 return ResourceManager.GetString("RetentionProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Roof {
+            get {
+                object obj = ResourceManager.GetObject("Roof", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -67,11 +67,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<LandBoundary2D>
                    || data is IEventedList<ThinDam2D>
                    || data is IEventedList<ObservationCrossSection2D> 
-                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points
+                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points, kolks
                    || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
-                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas & enclosures
+                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas, roof areas & enclosures
                    || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
+                   || (data is IEventedList<DamBreak> && parentObject is HydroArea) //dambreak
                    || (data is IEventedList<Embankment> && parentObject is HydroArea);
         }
 
@@ -127,6 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     yield return area2D.ThinDams;
                     yield return area2D.FixedWeirs;
+                    yield return area2D.DamBreaks;
                     yield return area2D.ObservationPoints;
                     yield return area2D.ObservationCrossSections;
                     yield return area2D.Pumps;
@@ -135,6 +137,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.LandBoundaries;
                     yield return area2D.DryPoints;
                     yield return area2D.DryAreas;
+                    yield return area2D.RoofAreas;
+                    yield return area2D.Kolks;
                     yield return area2D.Embankments;
                     yield return area2D.Enclosures;
                 }
@@ -599,6 +603,65 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir", modelName,
                             area2DParent.CoordinateSystem)
+                };
+            }
+
+            var damBreaks = data as IEventedList<DamBreak>;
+            if (damBreaks != null && area2DParent != null && Equals(damBreaks, area2DParent.DamBreaks))
+            {
+                return new VectorLayer(HydroArea.DamBreakName)
+                {
+                    NameIsReadOnly = true,
+                    FeatureEditor = new Feature2DEditor(area2DParent),
+                    Style = AreaLayerStyles.DamBreakStyle,
+                    DataSource =
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DamBreaks, "DamBreaks", modelName,
+                                                       area2DParent.CoordinateSystem)
+                };
+            }
+
+            if (Equals(features, area2DParent.RoofAreas))
+            {
+                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.RoofAreas, "RoofAreas", modelName, area2DParent.CoordinateSystem);
+                ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                {
+                    if (!(geometry is IPolygon))
+                    {
+                        if (geometry.Coordinates.Count() < 4) return null;
+                        geometry = new Polygon(new LinearRing(geometry.Coordinates));
+                    }
+                    var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
+                    ds.Features.Add(newFeature);
+
+                    return newFeature;
+                };
+
+                return new VectorLayer(HydroArea.RoofAreaName)
+                {
+                    NameIsReadOnly = true,
+                    FeatureEditor = new Feature2DEditor(area2DParent),
+                    Style = AreaLayerStyles.RoofAreaStyle,
+                    DataSource = ds
+                };
+            }
+
+            if (Equals(features, area2DParent.Kolks))
+            {
+                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Kolks, "Kolks", modelName, area2DParent.CoordinateSystem);
+                ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                {
+                    var newFeature = new GroupableFeature2DPoint() { Geometry = geometry };
+                    ds.Features.Add(newFeature);
+
+                    return newFeature;
+                };
+
+                return new VectorLayer(HydroArea.KolkName)
+                {
+                    NameIsReadOnly = true,
+                    FeatureEditor = new Feature2DEditor(area2DParent),
+                    Style = AreaLayerStyles.KolkStyle,
+                    DataSource = ds
                 };
             }
 

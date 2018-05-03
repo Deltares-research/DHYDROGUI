@@ -195,6 +195,7 @@
     <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionOrifice.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
+    <Compile Include="Structures\DamBreak.cs" />
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />

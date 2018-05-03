@@ -217,5 +217,42 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 };
             }
         }
+
+        public static VectorStyle RoofAreaStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.Firebrick, 3f),
+                    Fill = new SolidBrush(Color.FromArgb(100, Color.Tomato)),
+                    Outline = new Pen(Color.FromArgb(100, Color.Tomato), 2f),
+                };
+            }
+        }
+
+        public static VectorStyle KolkStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Symbol = Properties.Resources.KolkMap
+                };
+            }
+        }
+
+        public static VectorStyle DamBreakStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.Orange, 3f),
+                    GeometryType = typeof(ILineString)
+                };
+            }
+        }
     }
 }

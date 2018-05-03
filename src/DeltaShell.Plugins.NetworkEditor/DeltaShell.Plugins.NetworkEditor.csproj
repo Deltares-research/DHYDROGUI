@@ -385,6 +385,9 @@
   <ItemGroup>
     <Folder Include="IO\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\KolkMap.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>

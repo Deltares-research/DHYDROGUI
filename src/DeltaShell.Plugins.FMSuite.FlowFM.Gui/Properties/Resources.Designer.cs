@@ -143,6 +143,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap DamBreak {
+            get {
+                object obj = ResourceManager.GetObject("DamBreak", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Delete {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
@@ -313,6 +323,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Kolk {
+            get {
+                object obj = ResourceManager.GetObject("Kolk", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap landboundary {
             get {
                 object obj = ResourceManager.GetObject("landboundary", resourceCulture);
@@ -406,6 +426,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap refresh {
             get {
                 object obj = ResourceManager.GetObject("refresh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Roof {
+            get {
+                object obj = ResourceManager.GetObject("Roof", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

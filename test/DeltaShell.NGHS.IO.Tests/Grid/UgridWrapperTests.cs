@@ -605,10 +605,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             path = TestHelper.CreateLocalCopy(path);
             Assert.IsTrue(File.Exists(path));
             int fileId = -1;   //file id 
-            int mode = 1;   //write mode
+            int modeWriting = 1;   //write mode
+            int modeReading = 2;   //write mode
 
             //1. Open file
-            int ierr = wrapper.Open(path, mode, ref fileId, ref iconvtype, ref convversion);
+            int ierr = wrapper.Open(path, modeWriting, ref fileId, ref iconvtype, ref convversion);
             Assert.That(ierr, Is.EqualTo(0));
 
             //2. Get the 2D mesh ids
@@ -632,15 +633,24 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             int expectedNlinks = 0;
             var ierrCreating = wrapper.Create1D2DLinks(fileId, ref mesh1D2DId, "1D2Dlinks", expectedNlinks, mesh1DId, mesh2DId,
                 locationType1, locationType2);
-            int retrievedNlinks = -1;
-            var ierrRetrieving = wrapper.GetNumberOf1D2DLinks(ref fileId, ref mesh1D2DId, ref retrievedNlinks);
 
             //5. Close the file
             wrapper.Close(fileId);
 
-            //6. Check number of links
+            //6. Open file
+            ierr = wrapper.Open(path, modeReading, ref fileId, ref iconvtype, ref convversion);
+            Assert.That(ierr, Is.EqualTo(0));
+
+            //7 call number of links
+            int retrievedNlinks = -1;
+            var ierrRetrieving = wrapper.GetNumberOf1D2DLinks(ref fileId, ref mesh1D2DId, ref retrievedNlinks);
+
+            //8. Close the file
+            wrapper.Close(fileId);
+
+            //9. Check number of links
             Assert.That(ierrCreating, Is.EqualTo(0));
-            Assert.That(ierrCreating, Is.EqualTo(0));
+            Assert.That(ierrRetrieving, Is.EqualTo(0));
             Assert.That(mesh1D2DId, Is.GreaterThan(-1));
             Assert.That(retrievedNlinks, Is.EqualTo(expectedNlinks));
         }

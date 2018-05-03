@@ -22,12 +22,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 parentNodeData.DryPoints, 
                 parentNodeData.DryAreas,
                 parentNodeData.ThinDams, 
-                parentNodeData.FixedWeirs, 
+                parentNodeData.FixedWeirs,
+                parentNodeData.DamBreaks,
                 parentNodeData.ObservationPoints,
                 parentNodeData.ObservationCrossSections,
                 parentNodeData.Pumps,
                 parentNodeData.Weirs, 
-                parentNodeData.Gates, 
+                parentNodeData.Gates,
+                parentNodeData.RoofAreas,
+                parentNodeData.Kolks,
                 parentNodeData.Embankments,
                 parentNodeData.Enclosures
             };

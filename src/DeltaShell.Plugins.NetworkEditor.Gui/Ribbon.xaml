@@ -119,6 +119,11 @@
                         <Rectangle Fill="{StaticResource RoofAreaBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddNewKolk" ToolTip="Add new kolk" Header="Kolk" Click="OnClick"  Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource KolkBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
                 <fluent:ToggleButton x:Name="ButtonAddNewEmbankment2D" Header="Embankment" ToolTip="Add new embankment (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Embankment.png" Click="ButtonAddNewEmbankment_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewEnclosure2D" Header="Enclosure" ToolTip="Add new enclosure (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\enclosure.png" Click="ButtonAddNewEnclosure_Click" SizeDefinition="Small,Small,Small"/>
             </fluent:RibbonGroupBox>

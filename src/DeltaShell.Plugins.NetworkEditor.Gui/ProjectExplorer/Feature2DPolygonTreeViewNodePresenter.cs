@@ -14,11 +14,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
     {
         private static Bitmap enclosureImage;
         private static Bitmap dryAreaImage;
+        private static Bitmap roofAreaImage;
 
         public Feature2DPolygonTreeViewNodePresenter() : base("", null)
         {
             enclosureImage = Resources.enclosure;
             dryAreaImage = Resources.dry_area;
+            roofAreaImage = Resources.Roof;
         }
 
         /// <summary>
@@ -43,6 +45,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
             {
                 node.Text = HydroArea.DryAreasPluralName;
                 node.Image = dryAreaImage;
+            }
+
+            if (nodeData == area.RoofAreas)
+            {
+                node.Text = HydroArea.RoofAreaName;
+                node.Image = roofAreaImage;
             }
         }
     }

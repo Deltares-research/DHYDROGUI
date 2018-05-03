@@ -57,6 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 {
                     return WaterFlowFMModelNodePresenter.FixedWeirIcon;
                 }
+                if (MatchProperty(data, KnownProperties.DamBreakFile))
+                {
+                    return WaterFlowFMModelNodePresenter.DamBreakIcon;
+                }
                 if (MatchProperty(data, KnownProperties.ObsFile))
                 {
                     return WaterFlowFMModelNodePresenter.ObsIcon;
@@ -76,6 +80,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 if (MatchProperty(data, KnownProperties.DryPointsFile))
                 {
                     return WaterFlowFMModelNodePresenter.DryPointIcon;
+                }
+                if (MatchProperty(data, KnownProperties.RoofsFile))
+                {
+                    return WaterFlowFMModelNodePresenter.RoofAreaIcon;
+                }
+                if (MatchProperty(data, KnownProperties.KolksFile))
+                {
+                    return WaterFlowFMModelNodePresenter.KolkIcon;
                 }
                 if (MatchProperty(data.Parent, KnownProperties.ExtForceFile) ||
                     MatchProperty(data.Parent, KnownProperties.BndExtForceFile))

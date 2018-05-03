@@ -27,12 +27,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public static readonly Bitmap UnstrucModelIcon = new Bitmap(Resources.unstrucmodel, 16, 16);
         public static readonly Bitmap ThinDamIcon = new Bitmap(Resources.thindam, 16, 16);
         public static readonly Bitmap FixedWeirIcon = new Bitmap(Resources.fixedweir, 16, 16);
+        public static readonly Bitmap DamBreakIcon = new Bitmap(Resources.DamBreak, 16, 16);
         public static readonly Bitmap LandBoundaryIcon = new Bitmap(Resources.landboundary, 16, 16);
         public static readonly Bitmap DryPointIcon = new Bitmap(Resources.dry_point, 16, 16);
         public static readonly Bitmap ObsIcon = new Bitmap(Common.Gui.Properties.Resources.Observation, 16, 16);
         public static readonly Bitmap ObsCSIcon = new Bitmap(Common.Gui.Properties.Resources.ObservationCS, 16, 16);
         public static readonly Bitmap UnstrucIcon = new Bitmap(Resources.unstruc, 16, 16);
         public static readonly Bitmap Link1D2DIcon = new Bitmap(Resources.links1d2d, 16, 16);
+        public static readonly Bitmap RoofAreaIcon = new Bitmap(Resources.Roof, 16, 16);
+        public static readonly Bitmap KolkIcon = new Bitmap(Resources.Kolk, 16, 16);
         private static readonly Bitmap ProcessesIcon = new Bitmap(Common.Gui.Properties.Resources.processes, 16, 16);
         private static readonly Bitmap TimeFrameIcon = new Bitmap(Common.Gui.Properties.Resources.timers, 16, 16);
         private static readonly Bitmap InitialConditionsIcon = new Bitmap(Resources.initial_folder, 16, 16);

@@ -637,6 +637,7 @@
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
+    <Compile Include="ProjectExplorer\Feature2DPointTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\Feature2DPolygonTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroNetworkProjectTreeViewNodePresenter.cs" />
@@ -1214,6 +1215,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Pipe_Small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Roof.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Kolk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\KolkMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DamBreak.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
