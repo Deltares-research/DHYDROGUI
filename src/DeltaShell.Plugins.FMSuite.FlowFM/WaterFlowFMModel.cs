@@ -115,7 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             SedimentFractions = new EventedList<ISedimentFraction>();
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            
+            Links = new EventedList<WaterFlowFM1D2DLink>();
+
             // DELFT3DFM-371: Disable Model Inspection
             // ModelInspection = true;
 
