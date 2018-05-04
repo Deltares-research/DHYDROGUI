@@ -220,12 +220,24 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39681\lib\net40\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.NetCDF">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39681\lib\net40\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Scripting">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39681\lib\net40\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39681\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39681\lib\net40\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Toolbox">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39681\lib\net40\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
