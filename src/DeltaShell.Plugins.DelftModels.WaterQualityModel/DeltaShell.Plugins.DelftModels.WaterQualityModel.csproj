@@ -655,7 +655,9 @@
     <Content Include="waq_kernel\x64\svml_dispmd.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="waq_kernel\x64\vcruntime140.dll" />
+    <Content Include="waq_kernel\x64\vcruntime140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="waq_kernel\x64\waq_plugin_wasteload.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
