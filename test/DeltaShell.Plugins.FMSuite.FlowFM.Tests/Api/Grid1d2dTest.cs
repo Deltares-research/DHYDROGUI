@@ -105,54 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        public void Get1d2dLinksFromEvent()
-        {
-            string mduPath = TestHelper.GetTestFilePath(@"flow1d2dLinks\SimpleModel\FlowFM.mdu");
-            Assert.IsTrue(File.Exists(mduPath));
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            Assert.IsTrue(File.Exists(mduPath));
-
-            /* Note, we would like to load everything directly from the MDU, but the previous implementation is wrong and does not load the 1d network */
-            string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\SimpleModel\2d_ugrid_net.nc");
-            Assert.IsTrue(File.Exists(netFilePath));
-            netFilePath = TestHelper.CreateLocalCopy(netFilePath);
-            Assert.IsTrue(File.Exists(netFilePath));
-
-            var model = new WaterFlowFMModel(mduPath);
-
-            // 0.1 Set Network Discretization.
-            model.Network = new HydroNetwork();
-            WaterFlowFMTestHelper.ConfigureDemoNetworkAtGivenCoordinates(model.Network);
-            Assert.NotNull(model.Network);
-
-            model.NetworkDiscretization = new Discretization
-            {
-                Name = WaterFlowFMModel.DiscretizationObjectName,
-                Network = model.Network,
-                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
-            };
-            Assert.NotNull(model.NetworkDiscretization);
-
-            // first offest always equal to 0 last offset equal to branch length
-            var offSet = new double[] { 0, 5, 10, 36.8337027874097 };
-            HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)model.Network.Branches[0], offSet);
-
-            // 0.2 Set grid.
-            model.Grid = UnstructuredGridFileHelper.LoadFromFile(netFilePath, true);
-            Assert.NotNull(model.Grid);
-
-            //Mode 1. Make sure the event propagation when changing the grid triggers the link generation.
-            Assert.IsFalse(model.NetworkDiscretization == null || !model.NetworkDiscretization.Locations.AllValues.Any());
-            Assert.NotNull(model.Links);
-            Assert.AreNotEqual(0, model.Links.Count);
-            foreach (var link in model.Links)
-            {
-                Assert.NotNull( link.Geometry );
-                Assert.AreEqual(typeof(LineString), link.Geometry.GetType());
-            }
-        }
-
-        [Test]
         public void Get1d2dLinksFromApi()
         {
             string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\SimpleModel\2d_ugrid_net.nc");

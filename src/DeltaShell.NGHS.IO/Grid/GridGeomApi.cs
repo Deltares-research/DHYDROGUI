@@ -48,22 +48,27 @@ namespace DeltaShell.NGHS.IO.Grid
             ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount)
         {
             var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
-
-            var xMin = points.Select(p => p.X).Min();
-            var yMin = points.Select(p => p.Y).Min();
-            var xMax = points.Select(p => p.X).Max();
-            var yMax = points.Select(p => p.Y).Max();
-
             var coordinates = new List<Coordinate>();
-            coordinates.Add(new Coordinate(xMin, yMax));
-            coordinates.Add(new Coordinate(xMin, yMin));
-            coordinates.Add(new Coordinate(xMax, yMin));
-            coordinates.Add(new Coordinate(xMax, yMin));
-            coordinates.Add(new Coordinate(xMin, yMax));
 
-            var selectedArea = new Polygon(new LinearRing(coordinates.ToArray()));
+            if (points.Count > 2)
+            {
+                var xMin = points.Select(p => p.X).Min();
+                var yMin = points.Select(p => p.Y).Min();
+                var xMax = points.Select(p => p.X).Max();
+                var yMax = points.Select(p => p.Y).Max();
 
-            return Get1d2dLinksFromGridAndNetwork(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea);
+                coordinates.Add(new Coordinate(xMin, yMax));
+                coordinates.Add(new Coordinate(xMin, yMin));
+                coordinates.Add(new Coordinate(xMax, yMin));
+                coordinates.Add(new Coordinate(xMax, yMin));
+                coordinates.Add(new Coordinate(xMin, yMax));
+
+                var selectedArea = new Polygon(new LinearRing(coordinates.ToArray()));
+
+                return Get1d2dLinksFromGridAndNetwork(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                    ref startIndex, ref linksCount, selectedArea);
+            }
+            return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
         public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea)

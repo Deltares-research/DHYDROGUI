@@ -31,8 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             CheckManholeNodePropertyValues(compartment.ParentManhole, manholeId, xCoordinate, yCoordinate, numberOfParentManholeCompartments);
 
             Assert.That(compartment.Name, Is.EqualTo(uniqueId));
-            Assert.That(compartment.ManholeLength, Is.EqualTo(manholeLength));
-            Assert.That(compartment.ManholeWidth, Is.EqualTo(manholeWidth));
+            Assert.That(compartment.ManholeLength, Is.EqualTo(manholeLength / 1000.0)); //mm -> m
+            Assert.That(compartment.ManholeWidth, Is.EqualTo(manholeWidth / 1000.0)); //mm -> m
             Assert.That(compartment.Shape, Is.EqualTo(shape));
             Assert.That(compartment.FloodableArea, Is.EqualTo(floodableArea));
             Assert.That(compartment.BottomLevel, Is.EqualTo(bottomLevel));

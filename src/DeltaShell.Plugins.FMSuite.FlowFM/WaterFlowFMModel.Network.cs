@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public partial class WaterFlowFMModel
     {
         public const string DiscretizationObjectName = "Computational 1D Grid";
+        public const string NetworkObjectName = "Network";
         private IHydroNetwork network;
 
         private IDiscretization networkDiscretization;
@@ -37,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 UnSubscribeFromNetwork();
 
                 network = value;
+                network.Name = NetworkObjectName;
 
                 SubscribeToNetwork();
 
@@ -54,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ((INotifyPropertyChanged) networkDiscretization).PropertyChanged -= OnNetworkDiscretisationChanged;
                 }
                 networkDiscretization = value;
+                networkDiscretization.Name = DiscretizationObjectName;
                 if (networkDiscretization != null)
                 {
                     ((INotifyPropertyChanged)networkDiscretization).PropertyChanged += OnNetworkDiscretisationChanged;
@@ -251,7 +254,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (loadedNetworkDiscretisation != null)
             {
                 NetworkDiscretization = loadedNetworkDiscretisation;
-                NetworkDiscretization.Name = DiscretizationObjectName;
                 Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
                 return;
             }
