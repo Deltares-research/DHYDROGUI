@@ -172,28 +172,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     },
                 };
 
-//            var attributeTableViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterFlowFM1D2DLink, WaterFlowFMModel>(m => m.Links, () => Gui);
-//
-//            yield return new ViewInfo<FlowFMTreeShortcut, IEnumerable<WaterFlowFM1D2DLink>,VectorLayerAttributeTableView>
-//            {
-//                Description = attributeTableViewInfo.Description,
-//                GetViewName = (v, o) => "test",
-//                AdditionalDataCheck = o => o.Text == "1D2D Links",
-//                GetViewData = o => o.Model.Links,
-//                CompositeViewType = typeof(ProjectItemMapView),
-//                GetCompositeViewData = o => o.Model,
-//                AfterCreate = (v, o) =>
+//                var attributeTableViewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<WaterFlowFM1D2DLink, WaterFlowFMModel>(m => m.Links, () => Gui);
+//            
+//                yield return new ViewInfo<FlowFMTreeShortcut, IEnumerable<WaterFlowFM1D2DLink>,VectorLayerAttributeTableView>
 //                {
-//                    attributeTableViewInfo.AfterCreate(v, o.Model.Links);
-//                }
-//            };
+//                    Description = attributeTableViewInfo.Description,
+//                    GetViewName = (v, o) => "test",
+//                    AdditionalDataCheck = o => o.Text == "1D2D Links",
+//                    GetViewData = o => o.Model.Links,
+//                    CompositeViewType = typeof(ProjectItemMapView),
+//                    GetCompositeViewData = o => o.Model,
+//                    AfterCreate = (v, o) =>
+//                    {
+//                        attributeTableViewInfo.AfterCreate(v, o.Model.Links);
+//                        v.CanAddDeleteAttributes = false;
+//                        //v.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
+//                    }
+//                };
+
 
             // 'General'
             yield return new ViewInfo<FlowFMTreeShortcut, WaterFlowFMModel, WaterFlowFMModelView>
             {
                 Description = "FM Model",
                 GetViewName = (v, o) => o.Name + " (FM model)",
-                AdditionalDataCheck = o => o.CanSwitchToTab,
+                AdditionalDataCheck = o => o.CanSwitchToTab && o.Text != "1D2D Links",
                 GetViewData = o => o.Model,
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => o.Model,

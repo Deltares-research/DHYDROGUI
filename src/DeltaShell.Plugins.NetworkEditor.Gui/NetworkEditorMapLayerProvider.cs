@@ -613,10 +613,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.DamBreakStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DamBreaks, "DamBreaks", modelName,
-                                                       area2DParent.CoordinateSystem)
+                                                       area2DParent.CoordinateSystem),
+                    CustomRenderers = new List<IFeatureRenderer>(new[] { new DamBreakRenderer(AreaLayerStyles.DamBreakStyle, AreaLayerStyles.BreachLocationStyle) })
                 };
             }
 

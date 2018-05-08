@@ -175,6 +175,7 @@
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
+    <Compile Include="MapLayers\CustomRenderers\DamBreakRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
     <Compile Include="MapLayers\Editors\CatchmentFeatureEditor.cs" />

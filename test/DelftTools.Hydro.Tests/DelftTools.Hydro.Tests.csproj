@@ -74,6 +74,7 @@
     <Compile Include="LateralSourceTest.cs" />
     <Compile Include="PipeTest.cs" />
     <Compile Include="SewerConnectionOrificeTest.cs" />
+    <Compile Include="Structures\DamBreakTest.cs" />
     <Compile Include="Structures\ManholeTest.cs" />
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

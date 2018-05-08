@@ -73,6 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(AreaLayer) };
+        private ICommand addNewDamBreakCommand = new MapToolCommand(HydroRegionEditorMapTool.DamBreakToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(AreaLayer) };
 
@@ -126,6 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
+                yield return addNewDamBreakCommand;
                 yield return addNewLinkCommand;
                 yield return addNewNetworkLocationCommand;
                 yield return showSideViewCommand;
@@ -193,6 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewObsCs2D.SetState(addObsCS2dCommand, showArea2DTools);
             ButtonAddNewPump2D.SetState(addPump2dCommand, showArea2DTools);
             ButtonAddNewWeir2D.SetState(addWeir2dCommand, showArea2DTools);
+            ButtonAddDamBreak.SetState(addNewDamBreakCommand, showArea2DTools);
             ButtonAddNewGate2D.SetState(addGate2dCommand, showArea2DTools);
             ButtonAddNewLandBoundary2D.SetState(addLandBoundary2dCommand, showArea2DTools);
             ButtonAddNewDryPoint2D.SetState(addDryPoint2dCommand, showArea2DTools);
@@ -539,6 +542,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
+        /// <summary>
+        /// Handles the Click event of the ButtonAddNewLink control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void ButtonAddNewLink_Click(object sender, RoutedEventArgs e)
         {
             addNewLinkCommand.Execute();
@@ -563,6 +571,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
+        private void ButtonAddDamBreak_Click(object sender, RoutedEventArgs e)
+        {
+            addNewDamBreakCommand.Execute();
+            ValidateItems();
+        }
         private void ButtonAddNewEmbankment_Click(object sender, RoutedEventArgs e)
         {
             addNewEmbankmentCommand.Execute();
@@ -610,5 +623,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             MessageBox.Show("Work in process");
         }
+
+
     }
 }

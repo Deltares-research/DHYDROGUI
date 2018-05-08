@@ -31,6 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string WaterLevelBnd = "waterlevelbnd";
         public const string VelocityBnd = "velocitybnd";
         public const string DischargeBnd = "dischargebnd";
+        public const string DamBreakLine = "dambreakline";
+        public const string BreachPoint = "breachpoint";
 
         private readonly string tempPath;
         private IFlexibleMeshModelApi api;
