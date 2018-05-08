@@ -634,6 +634,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Gully {
+            get {
+                object obj = ResourceManager.GetObject("Gully", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap hide_empty_tabs {
             get {
                 object obj = ResourceManager.GetObject("hide_empty_tabs", resourceCulture);
@@ -704,26 +714,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static System.Drawing.Bitmap import {
             get {
                 object obj = ResourceManager.GetObject("import", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Kolk {
-            get {
-                object obj = ResourceManager.GetObject("Kolk", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap KolkMap {
-            get {
-                object obj = ResourceManager.GetObject("KolkMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

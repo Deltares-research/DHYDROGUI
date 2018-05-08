@@ -81,6 +81,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string DryAreaToolName = "Dry area tool";
         public const string DamBreakToolName = "Dam break tool";
         public const string BreachLocationToolName = "Breach location tool";
+        public const string RoofAreaToolName = "Roof area tool";
+        public const string GullyToolName = "Gully tool";
         public const string EmbankmentToolName = "Embankment tool";
         public const string EnclosureToolName = "Enclosure tool";
 
@@ -113,7 +115,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewWwtpToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.wwtp);
         private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
         private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
-        private static readonly Cursor AddNewDamBreakCursor = MapCursors.CreateArrowOverlayCuror(Resources.DamBreak);
         private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
 
         private bool FeatureTypeLayerFilter<T>(ILayer layer)
@@ -293,6 +294,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DLineTool(HydroArea.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroArea.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
             AddMapTool(new DamBreakMapTool(HydroArea.DamBreakName, DamBreakToolName, Resources.DamBreak));
+            AddMapTool(new Feature2DLineTool(HydroArea.RoofAreaName, RoofAreaToolName, Resources.Roof));
+            AddMapTool(new Feature2DPointTool(HydroArea.GullyName, GullyToolName, Resources.Gully));
             AddMapTool(new SingleFeature2DLineTool(HydroArea.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
 
             var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };

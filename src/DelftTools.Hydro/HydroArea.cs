@@ -27,7 +27,7 @@ namespace DelftTools.Hydro
         public const string EmbankmentsPluralName = "Embankments";
         public const string EnclosureName = "Enclosure";
         public const string RoofAreaName = "Roof Areas";
-        public const string KolkName = "Kolks";
+        public const string GullyName = "Gullies";
 
         public HydroArea()
         {
@@ -57,7 +57,7 @@ namespace DelftTools.Hydro
             Gates = new EventedList<Gate2D>();
 
             RoofAreas = new EventedList<GroupableFeature2DPolygon>();
-            Kolks = new EventedList<GroupableFeature2DPoint>();
+            Gullies = new EventedList<GroupableFeature2DPoint>();
         }
 
         public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
@@ -79,7 +79,7 @@ namespace DelftTools.Hydro
 
         public virtual IEventedList<GroupableFeature2DPolygon> RoofAreas { get; protected set; }
 
-        public virtual IEventedList<GroupableFeature2DPoint> Kolks { get; protected set; }
+        public virtual IEventedList<GroupableFeature2DPoint> Gullies { get; protected set; }
 
         #region IHydroRegion
 
@@ -164,10 +164,10 @@ namespace DelftTools.Hydro
             {
                 yield return roofArea;
             }
-            yield return Kolks;
-            foreach (var kolk in Kolks)
+            yield return Gullies;
+            foreach (var Gully in Gullies)
             {
-                yield return kolk;
+                yield return Gully;
             }
         }
 

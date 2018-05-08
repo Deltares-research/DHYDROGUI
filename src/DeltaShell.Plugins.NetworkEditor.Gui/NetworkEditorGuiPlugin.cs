@@ -370,7 +370,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationCrossSections);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.RoofAreas);
-            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Kolks);
+            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Gullies);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Embankments);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
 
@@ -740,7 +740,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<Gate2D>(HydroArea.GatesPluralName, Properties.Resources.Gate) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPolygon>(HydroArea.RoofAreaName, Properties.Resources.Roof) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.KolkName, Properties.Resources.Kolk) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.GullyName, Properties.Resources.Gully) { GuiPlugin = this };
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

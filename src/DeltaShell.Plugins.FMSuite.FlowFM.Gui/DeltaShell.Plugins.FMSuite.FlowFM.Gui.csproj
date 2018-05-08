@@ -515,9 +515,9 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Gully.png" />
     <None Include="Resources\DamBreak.png" />
     <None Include="Resources\Roof.png" />
-    <None Include="Resources\Kolk.png" />
     <None Include="Resources\links1d2d.png" />
     <Resource Include="Resources\deletehs.png" />
     <Resource Include="Resources\hurricane2.png" />

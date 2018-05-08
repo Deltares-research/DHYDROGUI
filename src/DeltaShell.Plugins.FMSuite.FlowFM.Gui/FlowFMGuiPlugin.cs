@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 Description = "FM Model",
                 GetViewName = (v, o) => o.Name + " (FM model)",
-                AdditionalDataCheck = o => o.CanSwitchToTab && o.Text != "1D2D Links",
+                AdditionalDataCheck = o => o.CanSwitchToTab,
                 GetViewData = o => o.Model,
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => o.Model,

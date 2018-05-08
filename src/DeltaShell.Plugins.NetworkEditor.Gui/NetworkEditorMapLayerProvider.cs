@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<LandBoundary2D>
                    || data is IEventedList<ThinDam2D>
                    || data is IEventedList<ObservationCrossSection2D> 
-                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points, kolks
+                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points, Gullies
                    || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
                    || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas, roof areas & enclosures
                    || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.DryPoints;
                     yield return area2D.DryAreas;
                     yield return area2D.RoofAreas;
-                    yield return area2D.Kolks;
+                    yield return area2D.Gullies;
                     yield return area2D.Embankments;
                     yield return area2D.Enclosures;
                 }
@@ -627,8 +628,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     if (!(geometry is IPolygon))
                     {
-                        if (geometry.Coordinates.Count() < 4) return null;
-                        geometry = new Polygon(new LinearRing(geometry.Coordinates));
+                        var coordinates = geometry.Coordinates.ToList();
+                        if (coordinates.Count() < 4) return null;
+                        if (!coordinates.First().Equals(coordinates.Last()))
+                        {
+                            coordinates.Add(coordinates.First());
+                        }
+                        geometry = new Polygon(new LinearRing(coordinates.ToArray()));
                     }
                     var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
                     ds.Features.Add(newFeature);
@@ -639,15 +645,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new VectorLayer(HydroArea.RoofAreaName)
                 {
                     NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.RoofAreaStyle,
                     DataSource = ds
                 };
             }
 
-            if (Equals(features, area2DParent.Kolks))
+            if (Equals(features, area2DParent.Gullies))
             {
-                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Kolks, "Kolks", modelName, area2DParent.CoordinateSystem);
+                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies", modelName, area2DParent.CoordinateSystem);
                 ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
                 {
                     var newFeature = new GroupableFeature2DPoint() { Geometry = geometry };
@@ -656,11 +661,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return newFeature;
                 };
 
-                return new VectorLayer(HydroArea.KolkName)
+                return new VectorLayer(HydroArea.GullyName)
                 {
                     NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.KolkStyle,
+                    Style = AreaLayerStyles.Gulliestyle,
                     DataSource = ds
                 };
             }

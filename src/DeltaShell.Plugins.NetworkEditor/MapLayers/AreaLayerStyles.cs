@@ -224,21 +224,22 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             {
                 return new VectorStyle
                 {
+                    GeometryType = typeof(IPolygon),
                     Line = new Pen(Color.Firebrick, 3f),
-                    Fill = new SolidBrush(Color.FromArgb(100, Color.Tomato)),
-                    Outline = new Pen(Color.FromArgb(100, Color.Tomato), 2f),
+                    Fill = new SolidBrush(Color.FromArgb(50, Color.Tomato)),
+                    Outline = new Pen(Color.FromArgb(50, Color.Tomato), 2f),
                 };
             }
         }
 
-        public static VectorStyle KolkStyle
+        public static VectorStyle Gulliestyle
         {
             get
             {
                 return new VectorStyle
                 {
                     GeometryType = typeof(IPoint),
-                    Symbol = Properties.Resources.KolkMap
+                    Symbol = Properties.Resources.Gully
                 };
             }
         }

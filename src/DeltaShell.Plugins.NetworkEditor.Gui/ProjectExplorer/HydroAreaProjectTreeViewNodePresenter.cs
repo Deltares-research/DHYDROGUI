@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 parentNodeData.Weirs, 
                 parentNodeData.Gates,
                 parentNodeData.RoofAreas,
-                parentNodeData.Kolks,
+                parentNodeData.Gullies,
                 parentNodeData.Embankments,
                 parentNodeData.Enclosures
             };

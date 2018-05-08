@@ -1221,13 +1221,10 @@
     <None Include="Resources\Roof.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Kolk.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\KolkMap.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\DamBreak.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gully.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

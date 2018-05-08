@@ -85,9 +85,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 {
                     return WaterFlowFMModelNodePresenter.RoofAreaIcon;
                 }
-                if (MatchProperty(data, KnownProperties.KolksFile))
+                if (MatchProperty(data, KnownProperties.GulliesFile))
                 {
-                    return WaterFlowFMModelNodePresenter.KolkIcon;
+                    return WaterFlowFMModelNodePresenter.GullyIcon;
                 }
                 if (MatchProperty(data.Parent, KnownProperties.ExtForceFile) ||
                     MatchProperty(data.Parent, KnownProperties.BndExtForceFile))

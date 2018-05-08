@@ -303,6 +303,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Gully {
+            get {
+                object obj = ResourceManager.GetObject("Gully", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap hurricane2 {
             get {
                 object obj = ResourceManager.GetObject("hurricane2", resourceCulture);
@@ -316,16 +326,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap initial_folder {
             get {
                 object obj = ResourceManager.GetObject("initial_folder", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Kolk {
-            get {
-                object obj = ResourceManager.GetObject("Kolk", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -18,17 +18,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
     internal class Feature2DPointTreeViewNodePresenter : FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>
     {
         private static Bitmap observationPointImage;
-        private static Bitmap kolkImage;
+        private static Bitmap GullyImage;
         private static Bitmap roofAreaImage;
 
         public Feature2DPointTreeViewNodePresenter() : base("", null)
         {
             observationPointImage = Resources.observationcs2d;
-            kolkImage = Resources.Kolk;
+            GullyImage = Resources.Gully;
         }
 
         /// <summary>
-        /// Override UpdateNode to distinguish between observation points and kolks
+        /// Override UpdateNode to distinguish between observation points and Gullies
         /// </summary>
         /// <param name="parentNode"></param>
         /// <param name="node"></param>
@@ -46,10 +46,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 node.Image = observationPointImage;
             }
 
-            if (nodeData == area.Kolks)
+            if (nodeData == area.Gullies)
             {
-                node.Text = HydroArea.KolkName;
-                node.Image = kolkImage;
+                node.Text = HydroArea.GullyName;
+                node.Image = GullyImage;
             }
         }
     }

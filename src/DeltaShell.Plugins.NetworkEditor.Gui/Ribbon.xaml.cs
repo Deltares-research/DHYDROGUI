@@ -75,6 +75,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addNewDamBreakCommand = new MapToolCommand(HydroRegionEditorMapTool.DamBreakToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(AreaLayer) };
+        private ICommand addRoofAreaCommand = new MapToolCommand(HydroRegionEditorMapTool.RoofAreaToolName) { LayerType = typeof(AreaLayer) };
+        private ICommand addGullyCommand = new MapToolCommand(HydroRegionEditorMapTool.GullyToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(AreaLayer) };
 
         public Ribbon()
@@ -128,6 +130,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
                 yield return addNewDamBreakCommand;
+                yield return addRoofAreaCommand;
+                yield return addGullyCommand;
                 yield return addNewLinkCommand;
                 yield return addNewNetworkLocationCommand;
                 yield return showSideViewCommand;
@@ -201,6 +205,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewDryPoint2D.SetState(addDryPoint2dCommand, showArea2DTools);
             ButtonAddNewDryArea2D.SetState(addDryArea2dCommand, showArea2DTools);
             ButtonAddNewEmbankment2D.SetState(addNewEmbankmentCommand, showArea2DTools);
+            ButtonAddNewRoofArea.SetState(addRoofAreaCommand, showArea2DTools);
+            ButtonAddNewGully.SetState(addGullyCommand, showArea2DTools);
             ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
 
             ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
@@ -588,6 +594,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
+        private void ButtonAddNewRoofArea_Click(object sender, RoutedEventArgs e)
+        {
+            addRoofAreaCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonAddNewGully_Click(object sender, RoutedEventArgs e)
+        {
+            addGullyCommand.Execute();
+            ValidateItems();
+        }
+
         private void UpdateAddNetworkLocationHeaderTooltip()
         {
             var mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
@@ -623,7 +641,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             MessageBox.Show("Work in process");
         }
-
-
     }
 }
