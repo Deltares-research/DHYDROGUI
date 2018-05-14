@@ -138,6 +138,7 @@
     <Compile Include="CunetteCrossSectionDefinitionGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Importers\GwswAttribute.cs" />
     <Compile Include="IO\Importers\GwswAttributeType.cs" />
     <Compile Include="IO\Importers\GwswElement.cs" />
