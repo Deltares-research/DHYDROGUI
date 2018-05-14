@@ -30,24 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override bool OpenViewAfterImport { get { return false; } }
 
-        private string GetStructuresName()
-        {
-            switch (Type)
-            {
-                case StructuresListType.Pumps:
-                    return "Pumps";
-                case StructuresListType.Weirs:
-                    return "Weirs";
-                case StructuresListType.Gates:
-                    return "Gates";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
 
         #region IFileImporter
 
-        public override string Name { get { return GetStructuresName(); } }
+        public override string Name { get { return "temp name"; } }
 
         public override string Category { get { return "2D / 3D"; } }
 
@@ -55,17 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get
             {
-                switch (Type)
-                {
-                    case StructuresListType.Pumps:
-                        return Properties.Resources.PumpSmall;
-                    case StructuresListType.Weirs:
-                        return Properties.Resources.WeirSmall;
-                    case StructuresListType.Gates:
-                        return Properties.Resources.GateSmall;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                return Properties.Resources.PumpSmall;
             }
         }
 
@@ -73,21 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             get 
             {
-                switch (Type)
-                {
-                    case StructuresListType.Pumps:
-                        yield return typeof(IList<IPump>);
-                        yield return typeof(IEventedList<IPump>);
-                        break;
-                    case StructuresListType.Weirs:
-                        yield return typeof(IList<IWeir>);
-                        yield return typeof(IEventedList<IWeir>);
-                        break;
-                    case StructuresListType.Gates:
-                        yield return typeof(IList<IGate>);
-                        yield return typeof(IEventedList<IGate>);
-                        break;
-                }
+              yield return typeof(IList<IPump>);
             }
         }
 
@@ -146,19 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private void InsertStructures(IEnumerable<IStructure> structures, IList list)
         {
             var count = 0;
-            switch (Type)
-            {
-                case StructuresListType.Pumps:
-                    InsertStructure<IPump>(structures, list, ref count);
-                    break;
-                case StructuresListType.Weirs:
-                    InsertStructure<IWeir>(structures, list, ref count);
-                    break;
-                case StructuresListType.Gates:
-                    InsertStructure<IGate>(structures, list, ref count);
-                    break;
-            }
-            Log.InfoFormat("Read {0} {1}.", count, GetStructuresName());
+            InsertStructure<IPump>(structures, list, ref count);
+            Log.InfoFormat("Read {0} {1}.", count, "temp name");
         }
 
         [InvokeRequired]
