@@ -8,8 +8,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureRiverWeir : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureRiverWeir(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureRiverWeir(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

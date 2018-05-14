@@ -8,7 +8,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -472,7 +471,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     if(dataTable.IsEnabled)
                     {
                         var relativeFilePath = FileUtils.GetRelativePath(workDirectory, dataTable.DataFile.Path);
-                        writer.WriteLine("INCLUDE '{0}'", relativeFilePath);
+                        var convertedFilePath= FileUtils.ReplaceDirectorySeparator(relativeFilePath);
+                        writer.WriteLine("INCLUDE '{0}'", convertedFilePath);
                     }
                 }
                 return writer.ToString();
@@ -572,7 +572,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("PARAMETERS");
                     writer.WriteLine("'Surf'");
                     writer.WriteLine("ALL");
-                    writer.WriteLine("BINARY_FILE '{0}' ; from horizontal-surfaces-file key in hyd file", initializationSettings.SurfacesFile);    
+                    writer.WriteLine("BINARY_FILE '{0}' ; from horizontal-surfaces-file key in hyd file", FileUtils.ReplaceDirectorySeparator(initializationSettings.SurfacesFile));    
                 }
 
                 if (initializationSettings.ProcessCoefficients != null)
@@ -618,7 +618,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("'VertDisper'");
                     writer.WriteLine("ALL");
                     writer.WriteLine("BINARY_FILE '{0}'", verticalDiffusionFile);
-
+                    
                     return writer.ToString();
                 }
             }
@@ -639,7 +639,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     writer.WriteLine("SEG_FUNCTIONS");
                     writer.WriteLine("'{0}'", segfunction.Key);
                     writer.WriteLine("ALL");
-                    writer.WriteLine("BINARY_FILE '{0}'", segfunction.Value);
+                    writer.WriteLine("BINARY_FILE '{0}'", FileUtils.ReplaceDirectorySeparator(segfunction.Value));
                     writer.WriteLine();
                 }
                 return writer.ToString();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.Functions;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
@@ -144,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             if (SeparateGridFile)
             {
                 var gridFilePath = GetCorrespondingGridFilePath(path);
-                if (!File.Exists(gridFilePath))
+                if (gridFilePath == null || !File.Exists(gridFilePath))
                 {
                     throw new FileNotFoundException(string.Format("Corresponding grid file {0} could not be found", gridFilePath));
                 }
@@ -172,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     return;                    
                 }
                 var destGridFilePath = GetCorrespondingGridFilePath(destinationPath);
-                if (System.IO.Path.GetFullPath(GridFilePath) != System.IO.Path.GetFullPath(destGridFilePath))
+                if (destGridFilePath != null && System.IO.Path.GetFullPath(GridFilePath) != System.IO.Path.GetFullPath(destGridFilePath))
                 {
                     File.Copy(GridFilePath, destGridFilePath, true);
                 }
@@ -201,11 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         #endregion
 
-        public static string GetCorrespondingGridFilePath(string path)
+        public static string GetCorrespondingGridFilePath(string filePath)
         {
-            var fullPath = System.IO.Path.GetFullPath(path);
-            var extension = System.IO.Path.GetExtension(fullPath);
-            return string.Concat(fullPath.Substring(0, fullPath.Length - extension.Length), ".grd");
+            return WindFile.GetCorrespondingGridFilePath(filePath);
         }
     }
 }

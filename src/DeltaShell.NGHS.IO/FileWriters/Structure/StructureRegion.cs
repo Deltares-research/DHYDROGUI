@@ -35,6 +35,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "When compound is equal or less than to 0 the structure is a single structure. " +
             "In case a value greater than 0 is given, the structure is a part of a compound structure. " +
             "All structures with the same compound id are considered to be elements of the same compound structure.");
+        public static readonly ConfigurationSetting CompoundName = new ConfigurationSetting(key: "compoundName", description: "");
         public static readonly ConfigurationSetting DefinitionType = new ConfigurationSetting(key: "type", description: "");
         public static readonly ConfigurationSetting AllowedFlowDir = new ConfigurationSetting(key: "allowedflowdir", description: "0=Both, 1=Positive, 2=Negative, 3=None");
         // [Common Culvert and Common Bridge]

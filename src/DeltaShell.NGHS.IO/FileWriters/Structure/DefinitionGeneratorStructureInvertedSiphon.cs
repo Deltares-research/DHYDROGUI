@@ -4,10 +4,10 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    class DefinitionGeneratorStructureInvertedSiphon : DefinitionGeneratorStructureCulvert
+    public class DefinitionGeneratorStructureInvertedSiphon : DefinitionGeneratorStructureCulvert
     {
-        public DefinitionGeneratorStructureInvertedSiphon(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureInvertedSiphon(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

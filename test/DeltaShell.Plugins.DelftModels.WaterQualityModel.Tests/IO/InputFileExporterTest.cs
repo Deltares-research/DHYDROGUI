@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     public class InputFileExporterTest
     {
         [Test]
-        public void InporterNeedsValidWaqModel()
+        public void ImporterNeedsValidWaqModel()
         {
             var mocks = new MockRepository();
             var hydroData = mocks.Stub<IHydroData>();

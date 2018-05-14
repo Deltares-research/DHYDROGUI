@@ -30,7 +30,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 foreach (var structure in composite.Structures)
                 {
                     var structureType = structure.GetStructureType();
-                    var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structureType, currentCompositeStructureId);
+                    var compositeStructureInfo = new CompoundStructureInfo(currentCompositeStructureId, composite.Name);
+                    var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structureType, compositeStructureInfo);
 
                     var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
                     var structurefrictionData = structure as IFrictionData;

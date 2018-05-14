@@ -1063,7 +1063,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+       [NUnit.Framework.Category(TestCategory.VerySlow)]
         public void RunModelWithGeneralStructuresAcceptanceTest()
         {
             var filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM.mdu");

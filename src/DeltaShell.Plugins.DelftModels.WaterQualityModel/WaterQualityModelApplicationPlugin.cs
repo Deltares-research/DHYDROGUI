@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -131,6 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void Application_OnProjectClosing(Project obj)
         {
             ((INotifyCollectionChange) obj).CollectionChanged -= Project_OnCollectionChanged;
+            ((INotifyPropertyChanged)obj).PropertyChanged -= Project_OnPropertyChanged;
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
@@ -231,6 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             allWaqModels.ForEach(RelinkToProcessDefinitionFiles);
 
             ((INotifyCollectionChange) project).CollectionChanged += Project_OnCollectionChanged;
+            ((INotifyPropertyChanged) project).PropertyChanged += Project_OnPropertyChanged;
 
             ExecuteAllWaterQualitySpatialOperations(project);
         }
@@ -298,5 +301,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 }
             }
         }
+
+        /// <summary>
+        /// Listens to a change of a waq model's name property.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Project_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!(sender is WaterQualityModel) || e.PropertyName != "Name") return;
+
+            ((WaterQualityModel) sender).SetupModelDataFolderStructure(Application.HybridProjectRepository.ProjectDataDirectory);
+        }
+
     }
 }

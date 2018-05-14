@@ -4,8 +4,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public abstract class DefinitionGeneratorStructureBridge : DefinitionGeneratorStructure
     {
-        protected DefinitionGeneratorStructureBridge(int compoundStructureId)
-            : base(compoundStructureId)
+        protected DefinitionGeneratorStructureBridge(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

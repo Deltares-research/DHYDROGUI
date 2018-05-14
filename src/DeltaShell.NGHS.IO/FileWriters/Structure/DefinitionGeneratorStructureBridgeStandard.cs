@@ -4,10 +4,10 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    class DefinitionGeneratorStructureBridgeStandard : DefinitionGeneratorStructureBridge
+    public class DefinitionGeneratorStructureBridgeStandard : DefinitionGeneratorStructureBridge
     {
-        public DefinitionGeneratorStructureBridgeStandard(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureBridgeStandard(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

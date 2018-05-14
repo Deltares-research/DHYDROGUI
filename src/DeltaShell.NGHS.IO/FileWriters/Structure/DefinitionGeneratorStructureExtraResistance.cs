@@ -5,10 +5,10 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    class DefinitionGeneratorStructureExtraResistance : DefinitionGeneratorStructure
+    public class DefinitionGeneratorStructureExtraResistance : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureExtraResistance(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureExtraResistance(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

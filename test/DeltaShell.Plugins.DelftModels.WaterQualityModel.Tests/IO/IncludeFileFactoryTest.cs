@@ -6,7 +6,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -389,9 +388,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
                 // assert
                 var expectedContents =
-                    @"INCLUDE '..\..\..\tables\K.tbl'" + Environment.NewLine +
-                    @"INCLUDE '..\..\..\tables\F.tbl'" + Environment.NewLine +
-                    @"INCLUDE '..\..\..\tables\A.tbl'" + Environment.NewLine;
+                    @"INCLUDE '../../../tables/K.tbl'" + Environment.NewLine +
+                    @"INCLUDE '../../../tables/F.tbl'" + Environment.NewLine +
+                    @"INCLUDE '../../../tables/A.tbl'" + Environment.NewLine;
                 Assert.AreEqual(expectedContents, boundaryDataIncludeFileContents);
             }
             finally
@@ -429,8 +428,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
                 // assert
                 var expectedContents =
-                    @"INCLUDE '..\..\..\tables\K.tbl'" + Environment.NewLine +
-                    @"INCLUDE '..\..\..\tables\A.tbl'" + Environment.NewLine;
+                    @"INCLUDE '../../../tables/K.tbl'" + Environment.NewLine +
+                    @"INCLUDE '../../../tables/A.tbl'" + Environment.NewLine;
                 Assert.AreEqual(expectedContents, boundaryDataIncludeFileContents);
             }
             finally
@@ -536,9 +535,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
                 // assert
                 var expectedContents =
-                    @"INCLUDE '..\..\..\tables\K.tbl'" + Environment.NewLine +
-                    @"INCLUDE '..\..\..\tables\F.tbl'" + Environment.NewLine +
-                    @"INCLUDE '..\..\..\tables\A.tbl'" + Environment.NewLine;
+                    @"INCLUDE '../../../tables/K.tbl'" + Environment.NewLine +
+                    @"INCLUDE '../../../tables/F.tbl'" + Environment.NewLine +
+                    @"INCLUDE '../../../tables/A.tbl'" + Environment.NewLine;
                 Assert.AreEqual(expectedContents, dryWasteLoadDataIncludeContent);
             }
             finally
@@ -773,7 +772,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var segfunctionInclude = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
 
             // assert
-            var expectedText =
+            var expectedTextUnformatted =
                 "SEG_FUNCTIONS" + Environment.NewLine +
                 "'A'" + Environment.NewLine +
                 "ALL" + Environment.NewLine +
@@ -784,7 +783,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "ALL" + Environment.NewLine +
                 "BINARY_FILE '"+ pathB + "'" + Environment.NewLine +
                 Environment.NewLine;
-
+            var expectedText= FileUtils.ReplaceDirectorySeparator(expectedTextUnformatted);
             Assert.AreEqual(expectedText, segfunctionInclude);
         }
 

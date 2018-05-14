@@ -7,8 +7,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureGeneralStructure(int compoundStructureId = 0)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureGeneralStructure(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 

@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure structure)
         {
-            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure();
+            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
             var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
             return generalStructureCategory.Properties;
         }

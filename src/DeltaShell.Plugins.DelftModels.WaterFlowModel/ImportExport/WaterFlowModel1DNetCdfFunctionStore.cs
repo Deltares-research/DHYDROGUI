@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -528,6 +529,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             {
                 var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);
                 location = MetaData.Locations.FirstOrDefault(l => l.BranchId - 1 == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
+            }
+            else if (branchFeature is IStructure)
+            {
+                var structure = (IStructure)branchFeature;
+
+                var compositePrefix = structure.ParentStructure?.Structures.Count > 1
+                    ? structure.ParentStructure.Name + "_"
+                    : string.Empty;
+
+                var structureName = compositePrefix + branchFeature.Name;
+
+                location = MetaData.Locations.FirstOrDefault(l => l.Id == structureName);
             }
             else
             {

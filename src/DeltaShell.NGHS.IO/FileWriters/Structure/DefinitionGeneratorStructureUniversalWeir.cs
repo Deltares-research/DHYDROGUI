@@ -10,8 +10,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     {
         private const double DEFAULT_FREE_SUBMERGED_FACTOR = 0.667F;
 
-        public DefinitionGeneratorStructureUniversalWeir(int compoundStructureId)
-            : base(compoundStructureId)
+        public DefinitionGeneratorStructureUniversalWeir(CompoundStructureInfo compoundStructureInfo)
+            : base(compoundStructureInfo)
         {
         }
 
