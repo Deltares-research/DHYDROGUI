@@ -19,13 +19,15 @@ class FMwriter:
         ugridWriter.write(dirPath, outputDir, generate2DGrid)
         self.writeMdFiles(dirPath, outputDir)
         self.writeRetentions(dirPath, outputDir)
-        self.writePipes(dirPath, outputDir)
-        self.writeProfiles(dirPath, outputDir)
         self.writeStructures(dirPath, outputDir)
         #self.writeBoundaries(dirPath, outputDir)
         #self.writeLaterals(dirPath, outputDir)
         self.writeExternalForcingFiles(dirPath, outputDir)
         self.writeXYZStreetlevel(dirPath, outputDir)
+
+        self.addStructurePipesAndProfiles()
+        self.writePipes(dirPath, outputDir)
+        self.writeProfiles(dirPath, outputDir)
 
         print("********************************************")
         print("                 THE END                    ")
@@ -574,6 +576,100 @@ class FMwriter:
 
         fileCSDef.close()
         return True
+
+    def addStructurePipesAndProfiles(self):
+
+        #PRO_IDE  Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #PRO_MAT  Materiaal profiel
+        #PRO_VRM  Vorm profiel
+        #PRO_BRE  Breedte/diameter profiel
+        #PRO_HGT  Hoogte profiel
+
+
+        #UNI_IDE  Unieke identificatie van het knooppunt of de verbinding, een verwijzing naar de bestandsregel-identificatie. De waarde van deze kolom mag slechts één keer voorkomen in zowel Knooppunt.csv als Verbinding.csv. Koppeling tussen Knooppunt.csv of Verbinding.csv met Kunstwerk.csv, BOP.csv, Oppervlak.csv, Debiet.csv.
+        #KN1_IDE  Identificatie knooppunt 1. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
+        #KN2_IDE  Identificatie knooppunt 2. Verwijzing naar UNI_IDE in Knooppunt.csv. Als het type verbinding een overstortdrempel of doorlaat is (Verbinding/VRB_TYP=DRP, DRL) dan moet het type knooppunt een compartiment zijn (Knooppunt/KNP_TYP=CMP).
+        #VRB_TYP  Type verbinding
+        #LEI_IDE
+        #BOB_KN1  Binnenonderkant buis knooppunt 1 t.o.v. NAP
+        #BOB_KN2  Binnenonderkant buis knooppunt 2 t.o.v. NAP
+        #STR_RCH  Mogelijke stromingsrichting door verbinding
+        #VRB_LEN  Lengte van de leiding of de lengte die via het kunstwerk overbrugd wordt (bijvoorbeeld de lengte van de persleiding tussen pomp en lozingspunt)
+        #INZ_TYP  Type afvalwater dat wordt ingezameld
+        #INV_KN1  Instroomverliescoëfficient knooppunt 1
+        #UTV_KN1  Uitstroomverliescoëfficient knooppunt 1
+        #INV_KN2  Instroomverliescoëfficient knooppunt 2
+        #UTV_KN2  Uitstroomverliescoëfficient knooppunt 2
+        #ITO_IDE  Definitie infiltratiekarakteristieken. Koppeling tussen ItObject.csv en Verbinding.csv of Knooppunt.csv
+        #PRO_IDE  Profieldefinitie. Koppeling tussen Profiel.csv en Verbinding.csv
+        #STA_OBJ  Status van het object
+        #AAN_BB1  Aanname waarde BOB_KN1
+        #AAN_BB2  Aanname waarde BOB_KN2
+        #INI_NIV  Initiële waterstand t.o.v. NAP
+        #ALG_TOE  Toelichting bij deze regel
+
+        for keyvalue in self.model.structures.items():
+
+            value = keyvalue[1]
+            type = value[1]
+            name = value[0]
+            structureprofileid = "structure_profile_" + name
+            branchId = name
+
+            if type == 'UIT':
+                continue;
+
+            connection = self.model.connections[name]
+            connection[0] = name
+            connection[3] = 'GSL'
+            connection[8] = 1.0; #length
+            connection[15] = structureprofileid
+
+            profile = [''] * 13
+            profile[0] = structureprofileid
+
+            if type == 'DRL':
+                bottomlevel = float(value[3])
+                connection[5] = bottomlevel;
+                connection[6] = bottomlevel;
+                #profile already exists in gwsw data
+
+            elif type == 'OVS':
+
+                streetLevel = self.getStreetLevel(value[0])
+                crestLevel = float(value[7])
+                topLevel = streetLevel - self.deltaGateHeightTopLevel
+                width = float(value[6])
+
+                #add connection info
+                connection[5] = crestLevel;
+                connection[6] = crestLevel;
+
+                #add profile
+                profile[3] = width * 1000 #width in mm
+                profile[4] = (topLevel-crestLevel) * 1000 #height in mm
+                self.model.profiles[profile[0]] = profile[0:]
+
+            elif type == 'PMP':
+                stoplevel = 0.0
+                diam = 0.1
+
+                if value[11] != '':
+                    stoplevelsuctionside = float(value[11])
+                    stoplevel = min(stoplevel,stoplevelsuctionside)
+
+                if value[13] != '':
+                    stopleveldeliveryside = float(value[13])
+                    stoplevel = min(stoplevel,stopleveldeliveryside)
+
+                #add connection info
+                connection[5] = stoplevel - diam;
+                connection[6] = stoplevel - diam;
+
+                #add profile
+                profile[2] = 'RND'
+                profile[3] = diam * 1000 #diam in mm
+                self.model.profiles[profile[0]] = profile[0:]
 
     def writeStructures(self, dirPath, outputDir):
 
