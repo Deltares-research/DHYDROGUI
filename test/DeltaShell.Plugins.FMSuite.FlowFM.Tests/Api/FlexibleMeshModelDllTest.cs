@@ -437,6 +437,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        public void TestGetSnappedDamBreakFeature()
+        {
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var model = new WaterFlowFMModel(localCopy);
+
+            using (var api = new RemoteFlexibleMeshModelApi())
+            {
+                api.Initialize(model.MduFilePath);
+
+                var gridExtent = model.GridExtent;
+
+                var center = gridExtent.Centre;
+                var snappedDamBreak = model.GetGridSnappedGeometry(UnstrucGridOperationApi.DamBreakLine,
+                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+
+                Assert.IsTrue(model.SnapsToGrid(snappedDamBreak));
+            }
+        }
+
+
+        [Test]
         public void TestGetSnappedCrossSectionFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

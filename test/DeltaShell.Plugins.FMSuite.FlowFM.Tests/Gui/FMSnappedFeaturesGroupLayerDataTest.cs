@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void GetAllAvailableSnappedFeaturesLayers()
         {
-            var expectedNumberOfLayers = 15;
+            var expectedNumberOfLayers = 16;
 
             using (var gui = new DeltaShellGui())
             {
@@ -69,6 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsPoint, "Observation points (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ThinDams, "Thin dams (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.FixedWeir, "Fixed weirs (snapped)"));
+                Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.DamBreakLine, "Dam break / breach locations (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsPoint, "Dry points (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Dry areas (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Enclosure (snapped)"));
@@ -395,6 +396,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Boundaries (snapped)"));
+            }
+        }
+
+        [Test]
+        public void SnappedDamBreakIsGenerated()
+        {
+            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            netFile = TestHelper.CreateLocalCopy(netFile);
+
+            using (var gui = new DeltaShellGui())
+            {
+                var snappedLayers = SnappedLayers(gui, netFile);
+
+                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(model);
+
+                var gridExtent = model.GridExtent;
+                var center = gridExtent.Centre;
+                model.Area.DamBreaks.Add(new DamBreak()
+                {
+                    BreachLocationX = center.X + 50.0,
+                    BreachLocationY = center.Y + 50.0,
+                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                });
+
+                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Dam break / breach locations (snapped)"));
             }
         }
 

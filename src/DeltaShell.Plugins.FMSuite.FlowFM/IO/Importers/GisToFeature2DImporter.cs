@@ -33,7 +33,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         #region IFileImporter
 
-        public override string Name { get { return "temp name"; } }
+        public override string Name
+        {
+            get
+            {
+                return "GIS to 2D feature importer";
+            }
+        }
 
         public override string Category { get { return "2D / 3D"; } }
 

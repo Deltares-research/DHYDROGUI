@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
     public class SnappedFeatureCollection : FeatureCollection
     {
         private VectorStyle OriginalFeaturesLayerStyle { get; set; }
-        private List<Feature2D> SnappedFeatures { get; set; }
+        protected List<Feature2D> SnappedFeatures { get; set; }
         private bool dirty;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
@@ -110,9 +110,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         }
 
         private IList originalFeatures;
+
         public IGridOperationApi OperationApi { get; set; }
 
-        private IList OriginalFeatures
+        protected IList OriginalFeatures
         {
             get { return originalFeatures; }
             set
@@ -159,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             }
         }
 
-        private Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry=null)
+        protected virtual Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry=null)
         {
             if (snappedGeometry == null || snappedGeometry.IsEmpty)
             {
@@ -227,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             FireFeaturesChanged();
         }
 
-        private void CalculateSnappedFeatures()
+        protected virtual void CalculateSnappedFeatures()
         {
             SnappedFeatures.Clear();
             
@@ -235,6 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 return;
 
             var originalGeometries = new List<IGeometry>();
+
             originalGeometries.AddRange(OriginalFeatures.OfType<IFeature>().Select(f => f.Geometry));
             //SourceSink is a FeatureData, so we need to extract the feature geometry from it.
             originalGeometries.AddRange(OriginalFeatures.OfType<IFeatureData>().Select(f => f.Feature.Geometry));

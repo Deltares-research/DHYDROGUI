@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using SharpMap.Utilities;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {

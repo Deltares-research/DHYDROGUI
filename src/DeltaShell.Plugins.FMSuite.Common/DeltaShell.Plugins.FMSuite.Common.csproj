@@ -174,6 +174,7 @@
     <Compile Include="Layers\Boundary2DInteractor.cs" />
     <Compile Include="Layers\ModelGroupLayer.cs" />
     <Compile Include="IO\FMSuiteFileBase.cs" />
+    <Compile Include="Layers\SnappedDamBreakCollection.cs" />
     <Compile Include="Layers\SnappedFeatureCollection.cs" />
     <Compile Include="ModelSchema\FileBasedModelItem.cs" />
     <Compile Include="ModelSchema\ModelProperty.cs" />

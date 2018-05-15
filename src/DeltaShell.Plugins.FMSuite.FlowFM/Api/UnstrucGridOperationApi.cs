@@ -31,8 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string WaterLevelBnd = "waterlevelbnd";
         public const string VelocityBnd = "velocitybnd";
         public const string DischargeBnd = "dischargebnd";
-        public const string DamBreakLine = "dambreakline";
-        public const string BreachPoint = "breachpoint";
+        public const string DamBreakLine = "dambreak";
 
         private readonly string tempPath;
         private IFlexibleMeshModelApi api;
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             TryInitializeApi();
         }
-        
+
         public bool SnapsToGrid(IGeometry geometry)
         {
             if (geometry == null)
@@ -197,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 }
 
                 // no separators for point geometries (obs points):
-                if (geom.Coordinates.Length != 1)
+                if (geom.Coordinates.Length != 1 && featureType == DamBreakLine)
                 {
                     xin.Add(MissingValue);
                     yin.Add(MissingValue);
