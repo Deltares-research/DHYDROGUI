@@ -133,7 +133,7 @@ namespace DelftTools.Hydro
         }
 
         [Aggregation]
-        public virtual DrainageBasin Basin { get; set; }
+        public virtual IDrainageBasin Basin { get; set; }
 
         [Aggregation]
         public virtual IHydroRegion Region { get { return Basin; } }

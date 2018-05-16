@@ -11,12 +11,21 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro
 {
+    public interface IDrainageBasin : IHydroRegion
+    {
+        IEventedList<Catchment> Catchments { get; }
+        IEventedList<WasteWaterTreatmentPlant> WasteWaterTreatmentPlants { get; set; }
+        IEnumerable<Catchment> AllCatchments { get; }
+    }
+
+ 
+
     /// <summary>
     /// Drainage basin is defined as a set of catchments (sub-basins) covering some drainage area, including a set of related hydgraphic features such as waste-water treatment plants.
     /// </summary>
     [Entity]
     [DisplayName("Drainage Basin")]
-    public class DrainageBasin : RegionBase, IHydroRegion
+    public class DrainageBasin : RegionBase, IDrainageBasin
     {
         public DrainageBasin()
         {
