@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             SnappedFeatures.Clear();
 
-            var lstDamBreaks = OriginalFeatures.OfType<DamBreak>();
+            var lstDamBreaks = OriginalFeatures.OfType<LeveeBreach>();
 
             foreach (var damBreak in lstDamBreaks)
             {
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
         protected override Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry = null)
         {
-            var damBreak = feature as DamBreak;
+            var damBreak = feature as LeveeBreach;
 
             IEnumerable<IGeometry> snappedDamBreakGeometry = new List<IGeometry>();
             
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__, "DamBreak (no dam break type)");
             }
 
-            var feature2D = new DamBreak();
+            var feature2D = new LeveeBreach();
             if (feature.Attributes != null)
                 feature2D.Attributes = (IFeatureAttributeCollection)feature.Attributes.Clone();
             if (feature is INameable)

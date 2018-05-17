@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var gridExtent = model.GridExtent;
                 var center = gridExtent.Centre;
-                model.Area.DamBreaks.Add(new DamBreak()
+                model.Area.DamBreaks.Add(new LeveeBreach
                 {
                     BreachLocationX = center.X + 50.0,
                     BreachLocationY = center.Y + 50.0,
