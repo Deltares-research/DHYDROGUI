@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas, roof areas & enclosures
                    || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
-                   || (data is IEventedList<DamBreak> && parentObject is HydroArea) //dambreak
+                   || (data is IEventedList<LeveeBreach> && parentObject is HydroArea) //dambreak
                    || (data is IEventedList<Embankment> && parentObject is HydroArea);
         }
 
@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            var damBreaks = data as IEventedList<DamBreak>;
+            var damBreaks = data as IEventedList<LeveeBreach>;
             if (damBreaks != null && area2DParent != null && Equals(damBreaks, area2DParent.DamBreaks))
             {
                 return new VectorLayer(HydroArea.DamBreakName)

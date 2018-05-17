@@ -44,7 +44,7 @@ namespace DelftTools.Hydro
             DryAreas = new EventedList<GroupableFeature2DPolygon>();
             ThinDams = new EventedList<ThinDam2D>();
             FixedWeirs = new EventedList<FixedWeir>();
-            DamBreaks = new EventedList<DamBreak>();
+            DamBreaks = new EventedList<LeveeBreach>();
             ObservationPoints = new EventedList<GroupableFeature2DPoint>();
             ObservationCrossSections = new EventedList<ObservationCrossSection2D>();
             DumpingLocations = new EventedList<GroupableFeature2D>();
@@ -65,7 +65,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
         public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
         public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
-        public virtual IEventedList<DamBreak> DamBreaks { get; protected set; }
+        public virtual IEventedList<LeveeBreach> DamBreaks { get; protected set; }
         public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
         public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
         public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }

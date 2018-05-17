@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public bool Render(IFeature feature, Graphics graphics, ILayer layer)
         {
-            var damBreak = feature as DamBreak;
+            var damBreak = feature as LeveeBreach;
             if (damBreak == null)
             {
                 throw new InvalidOperationException("Cannot render incompatible feature, should be an Dam break.");

@@ -153,6 +153,10 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.3.0.39740\lib\net40\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddInterpolatedCrossSectionCommand.cs" />
@@ -187,6 +191,7 @@
     <Compile Include="Commands\ShowCrossSectionHistoryCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Commands\ShowSideViewCommand.cs" />
+    <Compile Include="DummyConverter.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
@@ -199,6 +204,10 @@
       <DependentUpon>CompartmentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\CompartmentViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\LeveeBreachView.xaml.cs">
+      <DependentUpon>LeveeBreachView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\LeveeBreachViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\IDrawingShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeView.xaml.cs">
       <DependentUpon>ManholeView.xaml</DependentUpon>
@@ -637,6 +646,7 @@
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
+    <Compile Include="PopupNotOnTop.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\Feature2DPointTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\Feature2DPolygonTreeViewNodePresenter.cs" />
@@ -1098,6 +1108,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Forms\SewerFeatureViews\CompartmentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\SewerFeatureViews\LeveeBreachView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

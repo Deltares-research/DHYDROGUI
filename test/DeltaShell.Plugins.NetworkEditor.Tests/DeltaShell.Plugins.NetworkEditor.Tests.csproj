@@ -239,6 +239,8 @@
     <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\WeirPropertiesTest.cs" />
     <Compile Include="Export\HydroRegionToShapeFileExporterTest.cs" />
+    <Compile Include="Forms\SewerFeatureViews\LeveeBreachViewModelTest.cs" />
+    <Compile Include="Forms\SewerFeatureViews\LeveeBreachViewTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeViewTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeVisualisationControlTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
