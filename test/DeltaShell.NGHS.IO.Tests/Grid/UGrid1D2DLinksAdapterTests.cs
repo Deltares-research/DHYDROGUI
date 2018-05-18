@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -25,7 +22,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var links = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
 
             Assert.IsNotNull(links);
-            Assert.Greater(links.Count,0);
+            Assert.Greater(links.Count, 0);
         }
 
         [Test]
@@ -33,24 +30,32 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var testFilePath = TestHelper.GetTestFilePath(@"ugrid\Ugrid_Network_mesh1D_mesh2D_noLinks.nc");
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
-
-            var links = new List<WaterFlowFM1D2DLink>();
-            links.Add(new WaterFlowFM1D2DLink(2 , 2) {Name = "link1", LongName = "link1 longname",TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D});
-            links.Add(new WaterFlowFM1D2DLink(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = GridApiDataSet.LinkType.RoofManhole});
-
-            UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);
-
-            var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
-
-            Assert.AreEqual(links.Count, retrievedLinks.Count);
-
-            for(var i = 0; i < links.Count; i++)
+            try
             {
-                Assert.AreEqual(links[i].Name, retrievedLinks[i].Name);
-                Assert.AreEqual(links[i].LongName, retrievedLinks[i].LongName);
-                Assert.AreEqual(links[i].DiscretisationPointIndex, retrievedLinks[i].DiscretisationPointIndex);
-                Assert.AreEqual(links[i].FaceIndex, retrievedLinks[i].FaceIndex);
-                Assert.AreEqual(links[i].TypeOfLink, retrievedLinks[i].TypeOfLink);
+                var links = new List<WaterFlowFM1D2DLink>
+                {
+                    new WaterFlowFM1D2DLink(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D },
+                    new WaterFlowFM1D2DLink(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = GridApiDataSet.LinkType.RoofManhole }
+                };
+
+                UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);
+
+                var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
+
+                Assert.AreEqual(links.Count, retrievedLinks.Count);
+
+                for (var i = 0; i < links.Count; i++)
+                {
+                    Assert.AreEqual(links[i].Name, retrievedLinks[i].Name);
+                    Assert.AreEqual(links[i].LongName, retrievedLinks[i].LongName);
+                    Assert.AreEqual(links[i].DiscretisationPointIndex, retrievedLinks[i].DiscretisationPointIndex);
+                    Assert.AreEqual(links[i].FaceIndex, retrievedLinks[i].FaceIndex);
+                    Assert.AreEqual(links[i].TypeOfLink, retrievedLinks[i].TypeOfLink);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(localCopyOfTestFile);
             }
         }
 
@@ -59,15 +64,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var testFilePath = TestHelper.GetTestFilePath(@"ugrid\Ugrid_Network_mesh1D_mesh2D_noLinks.nc");
             var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
+            try
+            {
+                var links = new List<WaterFlowFM1D2DLink>();
 
-            var links = new List<WaterFlowFM1D2DLink>();
+                UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);
 
-            UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);
+                var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
 
-            var retrievedLinks = UGrid1D2DLinksAdapter.Load1D2DLinks(localCopyOfTestFile);
+                Assert.AreEqual(links.Count, retrievedLinks.Count);
 
-            Assert.AreEqual(links.Count, retrievedLinks.Count);
-
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(localCopyOfTestFile);
+            }
         }
     }
 }

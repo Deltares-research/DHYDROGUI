@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using NUnit.Framework;
-using PostSharp.Reflection.GenericArgs;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 

@@ -226,6 +226,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             selectPolygonTool.MapControl = MapControl;
         }
 
+        // TODO: Method seems to be unused, remove?
+        [Obsolete]
         private void ExitBoundingBoxDrawingMode()
         {
             MapControl.Tools.Remove(selectPolygonTool);

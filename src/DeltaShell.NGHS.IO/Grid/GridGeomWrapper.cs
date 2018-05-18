@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ggeo_make1D2Dinternalnetlinks_dll( ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
-
+        
         /// <summary>
         /// Use 1d array to fill kn matrix
         /// </summary>

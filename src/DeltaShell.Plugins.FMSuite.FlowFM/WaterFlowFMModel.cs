@@ -169,7 +169,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void LoadLinks()
         {
             var links = UGrid1D2DLinksAdapter.Load1D2DLinks(NetFilePath);
-            Links1D2DHelper.SetGeometry1D2DLinks(links, NetworkDiscretization, Grid);
+            if (NetworkDiscretization == null || Grid == null) return;
+            Links1D2DHelper.SetGeometry1D2DLinks(links, NetworkDiscretization.Locations, Grid.Cells);
             Links = links;
         }
 

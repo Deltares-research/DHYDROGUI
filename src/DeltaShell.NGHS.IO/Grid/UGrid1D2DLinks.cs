@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DeltaShell.NGHS.IO.Properties;
-using NetTopologySuite.Utilities;
+﻿using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO.Grid
 {

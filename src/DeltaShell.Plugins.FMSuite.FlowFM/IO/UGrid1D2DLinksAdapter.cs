@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class UGrid1D2DLinksAdapter
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(UGrid1D2DLinksAdapter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UGrid1D2DLinksAdapter));
 
         public static void Save1D2DLinks(string filePath, IList<WaterFlowFM1D2DLink> links)
         {
@@ -37,33 +37,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 int[] mesh1DPointIdx;
                 int[] mesh2DFaceIdx;
-                int[] linkType;
+                int[] linkTypes;
                 string[] linkIds;
                 string[] linkLongNames;
 
-                uGrid1D2DLinks.Read1D2DLinks(out mesh1DPointIdx, out mesh2DFaceIdx, out linkType, out linkIds,
-                    out linkLongNames);
+                uGrid1D2DLinks.Read1D2DLinks(out mesh1DPointIdx, out mesh2DFaceIdx, out linkTypes, out linkIds, out linkLongNames);
 
                 for (var iLink = 0; iLink < mesh1DPointIdx.Length; iLink++)
                 {
-                    var link = new WaterFlowFM1D2DLink(mesh1DPointIdx[iLink], mesh2DFaceIdx[iLink]);
-                    link.Name = linkIds[iLink];
-                    link.LongName = linkLongNames[iLink];
-                    if (Enum.IsDefined(typeof (GridApiDataSet.LinkType), linkType[iLink]))
-                    {
-                        link.TypeOfLink = (GridApiDataSet.LinkType)linkType[iLink];
-                    }
-                    else
-                    {
-                        log.ErrorFormat("Unknown link type ({0}) of link {1} detected. Type has been set to 'mesh1D-mesh2D', no 3.", linkType[iLink], linkIds[iLink]);
-                        link.TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D;
-                    }
-                    
+                    var fromPoint = mesh1DPointIdx[iLink];
+                    var toCell = mesh2DFaceIdx[iLink];
+                    var linkName = linkIds[iLink];
+                    var linkLongName = linkLongNames[iLink];
+                    var linkType = linkTypes[iLink];
+                    var linkId = linkIds[iLink];
+
+                    var link = CreateLink(fromPoint, toCell, linkName, linkLongName, linkType, linkId);
+
                     links.Add(link);
                 }
 
                 return links;
             }
+        }
+
+        private static WaterFlowFM1D2DLink CreateLink(int fromPoint, int toCell, string linkName, string linkLongName, int linkType, string linkId)
+        {
+            var link = new WaterFlowFM1D2DLink(fromPoint, toCell)
+            {
+                Name = linkName,
+                LongName = linkLongName
+            };
+
+            if (Enum.IsDefined(typeof(GridApiDataSet.LinkType), linkType))
+            {
+                link.TypeOfLink = (GridApiDataSet.LinkType) linkType;
+            }
+            else
+            {
+                Log.ErrorFormat("Unknown link type ({0}) of link {1} detected. Type has been set to 'mesh1D-mesh2D', no 3.", linkType, linkId);
+                link.TypeOfLink = GridApiDataSet.LinkType.Mesh1DMesh2D;
+            }
+            return link;
         }
     }
 }

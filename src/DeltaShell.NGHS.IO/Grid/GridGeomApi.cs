@@ -71,6 +71,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
+        // TODO: This method is huge.. Make smaller please :(
         public int Get1d2dLinksFromGridAndNetwork(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
@@ -338,6 +339,8 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
+        // TODO: This method is not used, can it be removed?
+        [Obsolete]
         public int Convert1dArray(int meshId, int numberOfNodes, int nBranches, int start_index)
         {
             IntPtr c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * numberOfNodes);
@@ -388,6 +391,8 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
+        // TODO: This method is not used, can it be removed?
+        [Obsolete]
         public int GetLinkCount(ref int nbranches)
         {
             try
