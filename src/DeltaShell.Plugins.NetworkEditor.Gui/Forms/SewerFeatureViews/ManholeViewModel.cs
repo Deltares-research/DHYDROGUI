@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (value == null)
                 {
                     network = null;
+                    PipesInManholes.Clear();
                 }
 
                 if (manhole != null)
@@ -41,23 +42,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                     }
                 }
 
+                PipesInManholes.Clear();
                 manhole = value;
 
-                if (manhole != null)
+                if (manhole == null) return;
+
+                if (manhole.Compartments != null)
                 {
-                    if (manhole.Compartments != null)
-                    {
-                        DetermineSurfaceAndBottomLevels();
-                        manhole.Compartments.CollectionChanged += CompartmentsOnCollectionChanged;
-                    }
+                    DetermineSurfaceAndBottomLevels();
+                    manhole.Compartments.CollectionChanged += CompartmentsOnCollectionChanged;
+                }
 
-                    network = manhole.Network as IHydroNetwork;
+                network = manhole.Network as IHydroNetwork;
 
-                    if (network?.Pipes != null)
-                    {
-                        var pipes = manhole.GetPipesConnectedToManhole(network.Pipes);
-                        PipesInManholes.AddRange(pipes);
-                    }
+                if (network?.Pipes != null)
+                {
+                    var pipes = manhole.GetPipesConnectedToManhole(network.Pipes);
+                    PipesInManholes.AddRange(pipes);
                 }
             }
         }
