@@ -65,6 +65,7 @@
     <Compile Include="Helpers\StandardCrossSectionsFactoryTest.cs" />
     <Compile Include="Helpers\ThreadingHelperTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
+    <Compile Include="HydroNetworkExtensionsTest.cs" />
     <Compile Include="HydroNetworkTest.cs" />
     <Compile Include="HydroNodeTest.cs" />
     <Compile Include="HydroRegionTest.cs" />

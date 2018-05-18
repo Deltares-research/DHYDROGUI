@@ -1,7 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -97,6 +98,32 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var actToRemove = acts1D.First();
             Assert.DoesNotThrow(() => hydroModel.CurrentWorkflow.Activities.Remove(actToRemove));
             Assert.That(!hydroModel.CurrentWorkflow.Activities.Contains(actToRemove));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void TestImportSobekModel_CompositeStructureNamesAreUnique()
+        {
+            var pathToSobekModel = TestHelper.GetDataDir() + @"\SOBEK3-1015\6\DEFTOP.1";
+
+            var hydroModel = CreateHydroModel();
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
+            var sobekModelImporter = new SobekHydroModelImporter(false)
+            {
+                TargetObject = hydroModel,
+                PartialSobekImporter = importer,
+                PathSobek = pathToSobekModel
+            };
+
+            sobekModelImporter.Import();
+
+            var network = hydroModel.Region.SubRegions.OfType<HydroNetwork>().FirstOrDefault();
+            Assert.NotNull(network);
+            var compositeStructures = network.CompositeBranchStructures.ToList();
+
+            Assert.IsTrue(compositeStructures.Count > 1);
+            Assert.IsTrue(compositeStructures.Select(cbs => cbs.Name).HasUniqueValues());
         }
 
         private static HydroModel CreateHydroModel()

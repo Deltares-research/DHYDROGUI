@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -151,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_Description));
             Assert.That(applicationPlugin.Version,
                 Is.EqualTo(applicationPlugin.GetType().Assembly.GetName().Version.ToString()));
-            Assert.That(applicationPlugin.FileFormatVersion, Is.EqualTo("3.5.1.0"));
+            Assert.IsTrue(new Regex(@"\d.\d.\d.\d").IsMatch(applicationPlugin.FileFormatVersion));
             Assert.That(applicationPlugin.Image, Is.InstanceOf(typeof(Bitmap)));
             Assert.That(applicationPlugin.Image.Height, Is.EqualTo(32));
             Assert.That(applicationPlugin.Image.Width, Is.EqualTo(32));

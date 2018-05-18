@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override string FileFormatVersion
         {
-            get { return "3.5.1.0"; }
+            get { return "3.5.2.0"; }
         }
 
         public override Image Image

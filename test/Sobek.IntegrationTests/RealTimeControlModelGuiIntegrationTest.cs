@@ -186,14 +186,14 @@ namespace Sobek.IntegrationTests
                 var originalRtcModel = originalHydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<RealTimeControlModel>().FirstOrDefault();
                 Assert.NotNull(originalRtcModel);
 
+                gui.MainWindow.Show();
+                app.RunActivity(originalHydroModel);
+
                 var originalOutputFileFunctionStore = originalRtcModel.OutputFileFunctionStore;
                 Assert.NotNull(originalOutputFileFunctionStore);
                 Assert.Greater(originalOutputFileFunctionStore.Functions.Count, 0);
 
                 var originalFunction = originalOutputFileFunctionStore.Functions.First();
-
-                gui.MainWindow.Show();
-                app.RunActivity(originalHydroModel);
 
                 var resavedPath = "resaved_" + localLegacyPath;
                 app.SaveProjectAs(resavedPath);

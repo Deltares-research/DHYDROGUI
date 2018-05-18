@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -207,6 +208,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 {
                     log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
                 }
+
+                var network = waterFlowModel1D.Network as HydroNetwork;
+                if (network != null) network.EnsureCompositeBranchStructureNamesAreUnique();
 
                 WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
                 WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);

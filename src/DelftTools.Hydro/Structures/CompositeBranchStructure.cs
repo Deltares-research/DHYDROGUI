@@ -176,19 +176,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        public static CompositeBranchStructure CreateDefault(IBranch branch)
-        {
-            var compositeBranchStructure = new CompositeBranchStructure
-                                               {
-                                                   Branch = branch,
-                                                   Network = branch.Network,
-                                                   Chainage = 0,
-                                                   Geometry = new Point(branch.Geometry.Coordinates[0])
-                                               };
-            compositeBranchStructure.Name =  HydroNetworkHelper.GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
-            return compositeBranchStructure;
-        }
-
         public override StructureType GetStructureType()
         {
             return StructureType.CompositeBranchStructure;

@@ -104,6 +104,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 app.OpenProject(filePath); // save to initialize file repository..
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
+                // Should re-run activity since this project may be migrated (clears output)
+                app.RunActivity(loadedModel);
+
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
                 var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
                 var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(loadedModel);
@@ -385,6 +388,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProject();
 
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+
+                // Should re-run activity since this project may be migrated (clears output)
+                app.RunActivity(loadedModel);
 
                 var groupLayerData = new FMOutputSnappedFeaturesGroupLayerData(loadedModel);
                 var outputSnappedLayers = groupLayerData.CreateLayers().ToList();

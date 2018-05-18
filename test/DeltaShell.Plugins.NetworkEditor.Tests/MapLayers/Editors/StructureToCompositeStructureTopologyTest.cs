@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
@@ -61,6 +62,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             {
                 mapControl.Dispose();
             }
+        }
+
+        [Test]
+        public void TestAddStructureToNewCompositeStructure_GeneratesUniqueNamesForCompositeBranchStructures()
+        {
+            var network = new HydroNetwork();
+            hydroNetworkLayer = InitializeNetworkEditor(network);
+            AddGeometry(GetChannelLayer(hydroNetworkLayer), GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
+
+            AddGeometry(GetChildLayerOfType<Weir>(hydroNetworkLayer), GeometryFromWKT.Parse("Point (25 0)"));
+            AddGeometry(GetChildLayerOfType<Weir>(hydroNetworkLayer), GeometryFromWKT.Parse("Point (25 0)"));
+            AddGeometry(GetChildLayerOfType<Weir>(hydroNetworkLayer), GeometryFromWKT.Parse("Point (50 0)"));
+            AddGeometry(GetChildLayerOfType<Weir>(hydroNetworkLayer), GeometryFromWKT.Parse("Point (75 0)"));
+
+            Assert.AreEqual(3, network.CompositeBranchStructures.Count());
+            Assert.IsTrue(network.CompositeBranchStructures.Select(cbs=>cbs.Name).HasUniqueValues());
         }
 
         [Test]

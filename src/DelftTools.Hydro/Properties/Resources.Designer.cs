@@ -22,7 +22,7 @@ namespace DelftTools.Hydro.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -107,6 +107,17 @@ namespace DelftTools.Hydro.Properties {
             get {
                 object obj = ResourceManager.GetObject("hbv", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composite Structure names must be unique, the following Composite Structures have been renamed:.
+        /// </summary>
+        public static string HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Structure_names_must_be_unique__the_following_Composite_Structures_have_been_renamed_ {
+            get {
+                return ResourceManager.GetString("HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Str" +
+                        "ucture_names_must_be_unique__the_following_Composite_Structures_have_been_rename" +
+                        "d_", resourceCulture);
             }
         }
         

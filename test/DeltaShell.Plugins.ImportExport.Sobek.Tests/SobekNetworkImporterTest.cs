@@ -612,6 +612,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        public void TestReadNetworkWithCompoundStructures_CompositeStructureNamesAreUnique()
+        {
+            // we use this test-data since it contains composite structures with non-unique names
+            var pathToSobekNetwork = TestHelper.GetDataDir() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
+            var importer = new SobekNetworkImporter();
+            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var compositeStructures = network.CompositeBranchStructures.ToList();
+
+            Assert.IsTrue(compositeStructures.Count > 1);
+            Assert.IsTrue(compositeStructures.Select(cbs => cbs.Name).HasUniqueValues());
+        }
+
+        [Test]
         [Category(TestCategory.Slow)]
         public void ReadLargeNetwork()
         {

@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             if (hydroRegion != null)
             {
                 var network = (HydroNetwork) hydroRegion.SubRegions[0];
+                if (network != null) network.EnsureCompositeBranchStructureNamesAreUnique();
 
                 var basin = (DrainageBasin) hydroRegion.SubRegions[1];
 
