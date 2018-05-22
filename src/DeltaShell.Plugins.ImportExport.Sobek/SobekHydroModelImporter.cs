@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -200,22 +201,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             AdaptWorkflow(rtcFound);
 
             var waterFlowModel1D = hydroModel.Activities.OfType<WaterFlowModel1D>().FirstOrDefault();
-            if (waterFlowModel1D != null)
+            if (waterFlowModel1D == null) return;
+
+            waterFlowModel1D.HydFileOutput = enableWaqOutput;
+
+            if (enableWaqOutput)
             {
-                waterFlowModel1D.HydFileOutput = enableWaqOutput;
-
-                if (enableWaqOutput)
-                {
-                    log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
-                }
-
-                var network = waterFlowModel1D.Network as HydroNetwork;
-                if (network != null) network.EnsureCompositeBranchStructureNamesAreUnique();
-
-                WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
-                WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);
+                log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
             }
 
+            waterFlowModel1D.Network?.MakeNamesUnique<ICompositeBranchStructure>();
+            
+            WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
+            WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);
         }
 
         public bool IsActive { get; set; }

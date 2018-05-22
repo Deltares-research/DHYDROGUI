@@ -65,6 +65,7 @@
     <Compile Include="Helpers\StandardCrossSectionsFactoryTest.cs" />
     <Compile Include="Helpers\ThreadingHelperTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
+    <Compile Include="HydroNetwork351LegacyLoaderTest.cs" />
     <Compile Include="HydroNetworkExtensionsTest.cs" />
     <Compile Include="HydroNetworkTest.cs" />
     <Compile Include="HydroNodeTest.cs" />
@@ -162,6 +163,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="ValidationAspects">
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
