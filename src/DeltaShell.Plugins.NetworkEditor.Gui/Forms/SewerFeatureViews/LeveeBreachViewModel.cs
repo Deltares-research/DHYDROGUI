@@ -10,13 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         private bool useActive = true;
         private LeveeBreach leveeBreach;
-
-        public LeveeBreachViewModel()
-        {
-
-            LeveeBreach = new LeveeBreach();
-        }
-
+        
         public LeveeBreach LeveeBreach
         {
             get { return leveeBreach; }
