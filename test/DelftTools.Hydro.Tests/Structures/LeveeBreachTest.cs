@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -77,8 +78,8 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        [TestCase(LeveeBreachGrowthFormula.VdKnaap2000, typeof(LeveeBreachSettingsVdKnaap2000))]
-        [TestCase(LeveeBreachGrowthFormula.VerweijvdKnaap2002, typeof(LeveeBreachSettingsVerheijVdKnaap2002))]
+        [TestCase(LeveeBreachGrowthFormula.UserDefinedBreach, typeof(UserDefinedBreach))]
+        [TestCase(LeveeBreachGrowthFormula.VerweijvdKnaap2002, typeof(VerheijVdKnaap2002Breach))]
         public void LeveeBreachWithGrowthFormula_GettingsSettings_ShouldReturnCorrectType<T>(LeveeBreachGrowthFormula growthFormula, T type)
         {
             var leveeBreach = new LeveeBreach { LeveeBreachFormula = growthFormula };

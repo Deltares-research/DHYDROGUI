@@ -1,0 +1,25 @@
+﻿using System;
+using DelftTools.Utils.Aop;
+
+namespace DelftTools.Hydro.Structures.LeveeBreachFormula
+{
+    [Entity]
+    public class VerheijVdKnaap2002Breach : LeveeBreachSettings
+    {
+        public override LeveeBreachGrowthFormula GrowthFormula { get; } = LeveeBreachGrowthFormula.VerweijvdKnaap2002;
+
+        public double InitialBreachWidth { get; set; }
+
+        public double InitialCrestLevel { get; set; }
+        
+        public double Factor1Alfa { get; set; }
+
+        public double Factor2Beta { get; set; }
+
+        public double LowestCrestLevel { get; set; }
+
+        public double CriticalFlowVelocity { get; set; }
+
+        public TimeSpan PeriodToReachZmin { get; set; } = new TimeSpan(1, 0, 0);
+    }
+}

@@ -196,11 +196,13 @@
     <Compile Include="SewerConnectionOrifice.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
     <Compile Include="Structures\LeveeBreach.cs" />
-    <Compile Include="Structures\LeveeBreachGrowthFormula.cs" />
+    <Compile Include="Structures\LeveeBreachFormula\LeveeBreachGrowthFormula.cs" />
     <Compile Include="Structures\IManhole.cs" />
+    <Compile Include="Structures\LeveeBreachFormula\LeveeBreachSettings.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\ManholeExtensions.cs" />
+    <Compile Include="Structures\LeveeBreachFormula\BreachGrowthSetting.cs" />
     <Compile Include="Structures\Pipe.cs" />
     <Compile Include="SewerConnection.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
@@ -285,6 +287,8 @@
     <Compile Include="Structures\Pump.cs" />
     <Compile Include="Structures\Pump2D.cs" />
     <Compile Include="Structures\PumpControlDirection.cs" />
+    <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreach.cs" />
+    <Compile Include="Structures\LeveeBreachFormula\VerheijVdKnaap2002Breach.cs" />
     <Compile Include="Structures\Weir.cs" />
     <Compile Include="Structures\Weir2D.cs" />
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormula.cs" />

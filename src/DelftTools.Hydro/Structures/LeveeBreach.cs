@@ -4,6 +4,7 @@ using DelftTools.Utils.Aop;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -19,8 +20,8 @@ namespace DelftTools.Hydro.Structures
         {
             leveeBreachSettings = new List<LeveeBreachSettings>
             {
-                new LeveeBreachSettingsVdKnaap2000(),
-                new LeveeBreachSettingsVerheijVdKnaap2002()
+                new UserDefinedBreach(),
+                new VerheijVdKnaap2002Breach()
             };
         }
 
@@ -66,7 +67,7 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        public LeveeBreachGrowthFormula LeveeBreachFormula { get; set; } = LeveeBreachGrowthFormula.VdKnaap2000;
+        public LeveeBreachGrowthFormula LeveeBreachFormula { get; set; } = LeveeBreachGrowthFormula.VerweijvdKnaap2002;
 
         public LeveeBreachSettings GetLeveeBreachSettings()
         {

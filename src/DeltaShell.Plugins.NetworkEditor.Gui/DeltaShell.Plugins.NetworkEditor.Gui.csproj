@@ -646,7 +646,6 @@
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
-    <Compile Include="PopupNotOnTop.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\Feature2DPointTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\Feature2DPolygonTreeViewNodePresenter.cs" />
