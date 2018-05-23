@@ -139,12 +139,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var sourceFile = MduFileHelper.GetSubfilePath(Path,
                     modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
+                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
+                
                 if (sourceFile != null)
                 {
-                    var targetFile = System.IO.Path.Combine(targetDir, System.IO.Path.GetFileName(sourceFile));
-
-                    if (File.Exists(sourceFile))
+                    if (File.Exists(sourceFile) && targetFile != null)
                     {
+                        var targetNcDir = System.IO.Path.GetDirectoryName(targetFile);
+                        Directory.CreateDirectory(targetNcDir);
+
                         var fullSourcePath = string.IsNullOrEmpty(sourceFile) ? string.Empty : System.IO.Path.GetFullPath(sourceFile);
                         var fullTargetPath = string.IsNullOrEmpty(targetFile) ? string.Empty : System.IO.Path.GetFullPath(targetFile);
 
@@ -153,11 +158,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             File.Copy(fullSourcePath, fullTargetPath, true);
                         }
                     }
-
+                    
                     // write the bathymetry in the net file.
                     IList<ISpatialOperation> bathymetryOperations;
                     if (modelDefinition.SpatialOperations.TryGetValue(
-                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations))
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) && File.Exists(targetFile))
                     {
                         if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
                         {

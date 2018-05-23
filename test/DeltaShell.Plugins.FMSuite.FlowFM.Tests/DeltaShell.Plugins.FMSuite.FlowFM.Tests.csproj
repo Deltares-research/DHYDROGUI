@@ -283,6 +283,7 @@
     <Compile Include="IO\Importers\SourceAndSinkImporterHelperTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
+    <Compile Include="IO\MduFileTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />
@@ -348,10 +349,6 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
-      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj">
       <Project>{A2D91FEB-C4D5-401A-AF97-ED0072899423}</Project>

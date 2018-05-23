@@ -1424,7 +1424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     var currentFileName = Path.GetFileName(propertyValue);
                     if (modelDefinitionName == null ||
-                        (modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase))
+                        ((modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile))
                     {
                         propertyValue = Name + pair.Value;
                     }
@@ -1817,7 +1817,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void RenameSubFilesIfApplicable()
         {
-            foreach (var subFile in SubFiles)
+            foreach (var subFile in SubFiles) 
             {
                 var waterFlowFMProperty = subFile.Key;
                 
