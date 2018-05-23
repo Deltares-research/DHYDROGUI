@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
+using DeltaShell.Dimr;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -138,6 +146,189 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModel.Status, ActivityStatus.Cleaned);
             Assert.IsFalse(hydroModel.OutputIsEmpty);
         }
+
+        [Test]
+        public void CheckIfSubModelStatusIsSetToNoneWhenRunningOnInitializeTest()
+        {
+            var mocks = new MockRepository();
+            
+            var dimrModel = mocks.DynamicMultiMock<IDimrModel>(typeof(IActivity));
+            dimrModel.Expect(m => m.Status).PropertyBehavior();
+            dimrModel.Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
+            dimrModel.Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
+            dimrModel.Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
+            dimrModel.Expect(m => m.DirectoryName).Return(".").Repeat.Any();
+            dimrModel.Expect(m => m.Name).Return("dimrModel").Repeat.Any();
+            dimrModel.Expect(m => m.ExporterType).Return(typeof(SimpleExporter)).Repeat.Any();
+            Expect.Call(dimrModel.Validate()).Return(new ValidationReport("dimrmodel",new List<ValidationIssue>())).Repeat.Any();
+            Expect.Call(dimrModel.GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return(".").Repeat.Any();
+            
+            var activities = new EventedList<IActivity>() {dimrModel};
+            
+            mocks.ReplayAll();
+            dimrModel.Status = ActivityStatus.Failed;
+            dimrModel.RunsInIntegratedModel = true;
+            dimrModel.ExplicitWorkingDirectory = ".";
+
+            var hydroModel = new HydroModel();
+            var workFlow = new SequentialActivity
+            {
+                Activities = activities
+                        
+            };
+
+            hydroModel.Workflows.Add(workFlow);
+            hydroModel.CurrentWorkflow = workFlow;
+            Assert.That(dimrModel.Status, Is.EqualTo(ActivityStatus.Failed));
+            TypeUtils.CallPrivateMethod<HydroModel>(hydroModel, "OnInitialize");
+            Assert.That(dimrModel.Status, Is.EqualTo(ActivityStatus.None));
+            mocks.VerifyAll();
+
+            
+        }
+
+        //[Test]
+        //public void CheckIfSubSubModelStatusIsSetToNoneWhenRunningOnInitializeTest()
+        //{
+        //    var mocks = new MockRepository();
+        //    /*
+        //    var dimrModel1 = mocks.DynamicMultiMock<IDimrModel>(typeof(ITimeDependentModel));
+        //    //((ITimeDependentModel)dimrModel1).Expect(m => m.AllDataItems).Return(new List<IDataItem>() { new }).Repeat.Any();
+        //    dimrModel1.Expect(m => m.Status).PropertyBehavior();
+        //    dimrModel1.Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
+        //    dimrModel1.Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
+        //    dimrModel1.Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
+        //    dimrModel1.Expect(m => m.DirectoryName).Return(".").Repeat.Any();
+        //    dimrModel1.Expect(m => m.Name).Return("dimrModel1").Repeat.Any();
+        //    dimrModel1.Expect(m => m.ExporterType).Return(typeof(SimpleExporter)).Repeat.Any();
+        //    Expect.Call(dimrModel1.Validate()).Return(new ValidationReport("dimrmodel", new List<ValidationIssue>())).Repeat.Any();
+        //    Expect.Call(dimrModel1.GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return(".").Repeat.Any();
+
+        //    var dimrModel2 = mocks.DynamicMultiMock<IDimrModel>(typeof(ITimeDependentModel));
+        //  //  ((ITimeDependentModel)dimrModel2).Expect(m => m.AllDataItems).Return(new List<IDataItem>()).Repeat.Any();
+        //    dimrModel2.Expect(m => m.Status).PropertyBehavior();
+        //    dimrModel2.Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
+        //    dimrModel2.Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
+        //    dimrModel2.Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
+        //    dimrModel2.Expect(m => m.DirectoryName).Return(".").Repeat.Any();
+        //    dimrModel2.Expect(m => m.Name).Return("dimrModel2").Repeat.Any();
+        //    dimrModel2.Expect(m => m.ExporterType).Return(typeof(SimpleExporter)).Repeat.Any();
+        //    Expect.Call(dimrModel2.Validate()).Return(new ValidationReport("dimrmodel", new List<ValidationIssue>())).Repeat.Any();
+        //    Expect.Call(dimrModel2.GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return(".").Repeat.Any();
+
+        //    //var iterativeModel  = new Iterative1D2DCoupler() {Flow1DModel = (ITimeDependentModel)dimrModel1, Flow2DModel = (ITimeDependentModel)dimrModel2};
+        //    var iterativeModel  = new Iterative1D2DCoupler();
+        //    TypeUtils.SetField<Iterative1D2DCoupler>(iterativeModel, "flow1DModel", (ITimeDependentModel)dimrModel1);
+        //    TypeUtils.SetField<Iterative1D2DCoupler>(iterativeModel, "flow2DModel", (ITimeDependentModel)dimrModel2);
+        //    var subActivities = new EventedList<IActivity> {new ActivityWrapper(dimrModel1), new ActivityWrapper(dimrModel2)};
+        //    TypeUtils.SetPropertyValue(iterativeModel, "Activities", subActivities);
+
+        //    //mocked1d2dCoupler.Expect(wf => wf.Activities).Return().Repeat.Any();
+        //    //var iterativeModel = mocks.Stub<Iterative1D2DCoupler>();
+        //    //iterativeModel.Expect(i => i.f).SetPropertyWithArgument().Return(dimrModel1 as ITimeDependentModel).Repeat.Any();
+        //    //iterativeModel.Expect(i => i.Flow2DModel).Return(dimrModel2 as ITimeDependentModel).Repeat.Any();
+        //    var activities = new EventedList<IActivity>() { iterativeModel };
+
+        //    mocks.ReplayAll();
+        //    dimrModel1.Status = ActivityStatus.Failed;
+        //    dimrModel1.RunsInIntegratedModel = true;
+        //    dimrModel1.ExplicitWorkingDirectory = ".";
+
+        //    dimrModel2.Status = ActivityStatus.Failed;
+        //    dimrModel2.RunsInIntegratedModel = true;
+        //    dimrModel2.ExplicitWorkingDirectory = ".";
+        //    */
+        //    var mockedF1dModel = mocks.DynamicMultiMock<ITimeDependentModel>(typeof(IModel), typeof(IDimrModel));
+        //    mockedF1dModel.Expect(m => m.AllDataItems).Return(new List<IDataItem>()).Repeat.Any();
+        //    mockedF1dModel.Expect(m => m.Name).Return("dimrModel1").Repeat.Any();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.ShortName).Return("mockedF1dModel").Repeat.Any();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.Status).PropertyBehavior();
+        //    ((IDimrModel)mockedF1dModel).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.DirectoryName).Return("dm1").Repeat.Any();
+        //    ((IDimrModel)mockedF1dModel).Expect(m => m.ExporterType).Return(typeof(WaterFlowModel1DExporter)).Repeat.Any();
+        //    Expect.Call(((IDimrModel)mockedF1dModel).Validate()).Return(new ValidationReport("dimrmodel1", new List<ValidationIssue>())).Repeat.Any();
+        //    Expect.Call(((IDimrModel)mockedF1dModel).GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return("dm1\\").Repeat.Any();
+
+        //    var now = new DateTime(1981, 7, 12);
+        //    ((ITimeDependentModel)mockedF1dModel).Expect(m => m.StartTime).Return(now - TimeSpan.FromDays(2)).Repeat.Any();
+        //    ((ITimeDependentModel)mockedF1dModel).Expect(m => m.StopTime).Return(now).Repeat.Any();
+        //    ((ITimeDependentModel)mockedF1dModel).Expect(m => m.TimeStep).Return(TimeSpan.FromHours(1)).Repeat.Any();
+
+        //    var mockedFMModel = mocks.DynamicMultiMock<ITimeDependentModel>(typeof(IModel), typeof(IDimrModel));
+        //    mockedFMModel.Expect(m => m.AllDataItems).Return(new List<IDataItem>()).Repeat.Any();
+
+        //    mockedFMModel.Expect(m => m.Name).Return("dimrModel2").Repeat.Any();
+        //    ((IDimrModel)mockedFMModel).Expect(dm => dm.ShortName).Return("source").Repeat.Any();
+        //    ((IDimrModel)mockedFMModel).Expect(dm => dm.Status).PropertyBehavior();
+        //    ((IDimrModel)mockedFMModel).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
+        //    ((IDimrModel)mockedFMModel).Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
+        //    ((IDimrModel)mockedFMModel).Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
+        //    ((IDimrModel)mockedFMModel).Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
+        //    ((IDimrModel)mockedFMModel).Expect(m => m.DirectoryName).Return("dm2").Repeat.Any();
+        //    ((IDimrModel)mockedFMModel).Expect(m => m.ExporterType).Return(typeof(WaterFlowFMFileExporter)).Repeat.Any();
+        //    Expect.Call(((IDimrModel)mockedFMModel).Validate()).Return(new ValidationReport("dimrmodel2", new List<ValidationIssue>())).Repeat.Any();
+        //    Expect.Call(((IDimrModel)mockedFMModel).GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return("dm2\\").Repeat.Any();
+        //    ((ITimeDependentModel)mockedFMModel).Expect(m => m.StartTime).Return(now - TimeSpan.FromDays(2)).Repeat.Any();
+        //    ((ITimeDependentModel)mockedFMModel).Expect(m => m.StopTime).Return(now).Repeat.Any();
+        //    ((ITimeDependentModel)mockedFMModel).Expect(m => m.TimeStep).Return(TimeSpan.FromHours(1)).Repeat.Any();
+
+
+        //    var mocked1d2dCoupler = mocks.DynamicMultiMock<Iterative1D2DCoupler>(typeof(IModel), typeof(ICompositeActivity), typeof(IDimrModel));
+        //    mocked1d2dCoupler.Expect(wf => wf.Activities).Return(new EventedList<IActivity> { new ActivityWrapper(mockedF1dModel), new ActivityWrapper(mockedFMModel) }).Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.Flow1DModel).Return(mockedF1dModel as ITimeDependentModel).Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.Flow2DModel).Return(mockedFMModel as ITimeDependentModel).Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.DeepClone()).Return(mocked1d2dCoupler).Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.Name).Return("Coupler").Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.AllDataItems).Return(Enumerable.Empty<IDataItem>()).Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.GetHashCode()).Return(1).Repeat.Any();
+        //    mocked1d2dCoupler.Expect(wf => wf.Equals(Arg<object>.Is.Anything)).IgnoreArguments().Return(false).Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(dm => dm.ShortName).Return("Coupler").Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(dm => dm.LibraryName).Return(string.Empty).Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(dm => dm.DirectoryName).Return("iterative1d2d").Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(dm => dm.InputFile).Return(string.Empty).Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(m => m.Status).PropertyBehavior();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(m => m.ExplicitWorkingDirectory).PropertyBehavior();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(m => m.RunsInIntegratedModel).PropertyBehavior();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(m => m.KernelDirectoryLocation).Return(".").Repeat.Any();
+        //    ((IDimrModel)mocked1d2dCoupler).Expect(m => m.ExporterType).Return(typeof(Iterative1D2DCouplerExporter)).Repeat.Any();
+        //    Expect.Call(((IDimrModel)mocked1d2dCoupler).Validate()).Return(new ValidationReport("dimrmodel3", new List<ValidationIssue>())).Repeat.Any();
+        //    Expect.Call(((IDimrModel)mocked1d2dCoupler).GetExporterPath(Arg<string>.Is.Anything)).IgnoreArguments().Return("iterative1d2d\\").Repeat.Any();
+
+        //    mocks.ReplayAll();
+        //    var activities = new EventedList<IActivity>() {mocked1d2dCoupler};
+        //    var hydroModel = new HydroModel();
+        //    var workFlow = new SequentialActivity
+        //    {
+        //        Activities = activities
+
+        //    };
+        //    ((IDimrModel)mockedF1dModel).Status = ActivityStatus.Failed;
+        //    ((IDimrModel)mockedF1dModel).ExplicitWorkingDirectory = string.Empty;
+        //    ((IDimrModel)mockedF1dModel).RunsInIntegratedModel= default(bool);
+
+        //    ((IDimrModel)mockedFMModel).Status = ActivityStatus.Failed;
+        //    ((IDimrModel)mockedFMModel).ExplicitWorkingDirectory = string.Empty;
+        //    ((IDimrModel)mockedFMModel).RunsInIntegratedModel= default(bool);
+
+        //    ((IDimrModel)mocked1d2dCoupler).Status = ActivityStatus.Failed;
+        //    ((IDimrModel)mocked1d2dCoupler).ExplicitWorkingDirectory = string.Empty;
+        //    ((IDimrModel)mocked1d2dCoupler).RunsInIntegratedModel = default(bool);
+
+        //    hydroModel.Workflows.Add(workFlow);
+        //    hydroModel.CurrentWorkflow = workFlow;
+        //    Assert.That(((IDimrModel)mockedF1dModel).Status, Is.EqualTo(ActivityStatus.Failed));
+        //    Assert.That(((IDimrModel)mockedFMModel).Status, Is.EqualTo(ActivityStatus.Failed));
+        //    TypeUtils.CallPrivateMethod<HydroModel>(hydroModel, "OnInitialize");
+        //    Assert.That(((IDimrModel)mockedF1dModel).Status, Is.EqualTo(ActivityStatus.None));
+        //    Assert.That(((IDimrModel)mockedFMModel).Status, Is.EqualTo(ActivityStatus.None));
+        //    mocks.VerifyAll();
+
+
+        //}
 
         [Test]
         public void TestRunUsingSimpleModel2_FailsValidation()
@@ -316,6 +507,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
         }
 
+        public class SimpleExporter : IFileExporter
+        {
+            public bool Export(object item, string path)
+            {
+                return true;
+            }
+
+            public IEnumerable<Type> SourceTypes()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool CanExportFor(object item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string Name { get; }
+            public string Category { get; }
+            public string FileFilter { get; }
+            public Bitmap Icon { get; }
+        }
         public class SimpleHydroModel : ModelBase, IHydroModel
         {
             public SimpleHydroModel()
