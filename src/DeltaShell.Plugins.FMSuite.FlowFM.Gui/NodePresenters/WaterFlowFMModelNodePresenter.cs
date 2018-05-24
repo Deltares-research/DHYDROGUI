@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public static readonly Bitmap UnstrucModelIcon = new Bitmap(Resources.unstrucmodel, 16, 16);
         public static readonly Bitmap ThinDamIcon = new Bitmap(Resources.thindam, 16, 16);
         public static readonly Bitmap FixedWeirIcon = new Bitmap(Resources.fixedweir, 16, 16);
-        public static readonly Bitmap DamBreakIcon = new Bitmap(Resources.DamBreak, 16, 16);
+        public static readonly Bitmap LeveeBreachIcon = new Bitmap(Resources.DamBreak, 16, 16);
         public static readonly Bitmap LandBoundaryIcon = new Bitmap(Resources.landboundary, 16, 16);
         public static readonly Bitmap DryPointIcon = new Bitmap(Resources.dry_point, 16, 16);
         public static readonly Bitmap ObsIcon = new Bitmap(Common.Gui.Properties.Resources.Observation, 16, 16);

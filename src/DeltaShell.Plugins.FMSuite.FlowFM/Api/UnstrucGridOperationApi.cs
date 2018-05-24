@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string WaterLevelBnd = "waterlevelbnd";
         public const string VelocityBnd = "velocitybnd";
         public const string DischargeBnd = "dischargebnd";
-        public const string DamBreakLine = "dambreak";
+        public const string LeveeBreach = "dambreak";
 
         private readonly string tempPath;
         private IFlexibleMeshModelApi api;
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 }
 
                 // no separators for point geometries (obs points):
-                if (geom.Coordinates.Length != 1 && featureType == DamBreakLine)
+                if (geom.Coordinates.Length != 1 && featureType == LeveeBreach)
                 {
                     xin.Add(MissingValue);
                     yin.Add(MissingValue);

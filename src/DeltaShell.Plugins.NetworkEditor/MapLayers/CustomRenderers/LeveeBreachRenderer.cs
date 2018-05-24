@@ -13,38 +13,38 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
-    public class DamBreakRenderer : IFeatureRenderer
+    public class LeveeBreachRenderer : IFeatureRenderer
     {
         readonly static IGeometryFactory geometryFactory = new GeometryFactory();
 
-        private VectorStyle breachLocationStyle;
-        private VectorStyle damBreakLineStyle;
+        private VectorStyle breachStyle;
+        private VectorStyle leveeStyle;
 
-        public DamBreakRenderer(VectorStyle damBreakLineStyle, VectorStyle breachLocationStyle)
+        public LeveeBreachRenderer(VectorStyle leveeStyle, VectorStyle breachStyle)
         {
-            this.damBreakLineStyle = damBreakLineStyle;
-            this.breachLocationStyle = breachLocationStyle;
+            this.leveeStyle = leveeStyle;
+            this.breachStyle = breachStyle;
         }
 
 
 
         public bool Render(IFeature feature, Graphics graphics, ILayer layer)
         {
-            var damBreak = feature as LeveeBreach;
-            if (damBreak == null)
+            var leveeBreach = feature as LeveeBreach;
+            if (leveeBreach == null)
             {
-                throw new InvalidOperationException("Cannot render incompatible feature, should be an Dam break.");
+                throw new InvalidOperationException("Cannot render incompatible feature, should be an Levee breach.");
             }
 
             var line = GetRenderedFeatureGeometry(feature, layer);
 
            // Draw line. 
-           VectorRenderingHelper.RenderGeometry(graphics, layer.Map, line, damBreakLineStyle, null, true);
+           VectorRenderingHelper.RenderGeometry(graphics, layer.Map, line, leveeStyle, null, true);
 
            // Draw breach location.
-            var point = GetTransformedGeometry(damBreak.BreachLocation, layer);
+            var point = GetTransformedGeometry(leveeBreach.BreachLocation, layer);
 
-            VectorRenderingHelper.RenderGeometry(graphics, layer.Map, point, breachLocationStyle, null, true);
+            VectorRenderingHelper.RenderGeometry(graphics, layer.Map, point, breachStyle, null, true);
 
             return true;
         }

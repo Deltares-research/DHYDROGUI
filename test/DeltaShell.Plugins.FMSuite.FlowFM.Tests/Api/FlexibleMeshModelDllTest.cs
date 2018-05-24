@@ -437,7 +437,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        public void TestGetSnappedDamBreakFeature()
+        public void TestGetSnappedLeveeBreachkFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
@@ -451,10 +451,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var gridExtent = model.GridExtent;
 
                 var center = gridExtent.Centre;
-                var snappedDamBreak = model.GetGridSnappedGeometry(UnstrucGridOperationApi.DamBreakLine,
+                var snappedLeveeBreach = model.GetGridSnappedGeometry(UnstrucGridOperationApi.LeveeBreach,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedDamBreak));
+                Assert.IsTrue(model.SnapsToGrid(snappedLeveeBreach));
             }
         }
 

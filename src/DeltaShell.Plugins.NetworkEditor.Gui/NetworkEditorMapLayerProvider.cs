@@ -617,7 +617,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "DamBreaks", modelName,
                                                        area2DParent.CoordinateSystem),
-                    CustomRenderers = new List<IFeatureRenderer>(new[] { new DamBreakRenderer(AreaLayerStyles.DamBreakStyle, AreaLayerStyles.BreachLocationStyle) })
+                    CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle) })
                 };
             }
 

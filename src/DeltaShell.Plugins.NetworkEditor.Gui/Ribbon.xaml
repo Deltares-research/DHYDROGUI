@@ -106,9 +106,9 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewPump2D" Header="Pump" ToolTip="Add new pump (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\PumpSmall.png" Click="ButtonAddNewPump2D_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewWeir2D" Header="Weir" ToolTip="Add new weir (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Weir.png" Click="ButtonAddNewWeir2D_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewGate2D" Header="Gate" ToolTip="Add new gate (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Gate.png" Click="ButtonAddNewGate2D_Click" SizeDefinition="Small,Small,Small"/>
-                <fluent:ToggleButton x:Name="ButtonAddDamBreak" ToolTip="Add new dam break" Header="Dam break" Click="ButtonAddDamBreak_Click"  Size="Middle" SizeDefinition="Small,Small,Small">
+                <fluent:ToggleButton x:Name="ButtonAddLeveeBreach" ToolTip="Add new levee breach" Header="Levee breach" Click="ButtonAddLeveeBeach_Click"  Size="Middle" SizeDefinition="Small,Small,Small">
                     <fluent:ToggleButton.Icon>
-                        <Rectangle Fill="{StaticResource DamBreakBrush}"/>
+                        <Rectangle Fill="{StaticResource LeveeBreachBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
                 <fluent:ToggleButton x:Name="ButtonAddNewLandBoundary2D" Header="Land boundary" ToolTip="Add new land boundary (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\landboundary.png" Click="ButtonAddNewLandBoundary_Click" SizeDefinition="Small,Small,Small"/>

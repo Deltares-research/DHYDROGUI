@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addNewDamBreakCommand = new MapToolCommand(HydroRegionEditorMapTool.DamBreakToolName) { LayerType = typeof(AreaLayer) };
+        private ICommand addNewLeveeBreachCommand = new MapToolCommand(HydroRegionEditorMapTool.LeveeBreachToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addRoofAreaCommand = new MapToolCommand(HydroRegionEditorMapTool.RoofAreaToolName) { LayerType = typeof(AreaLayer) };
         private ICommand addGullyCommand = new MapToolCommand(HydroRegionEditorMapTool.GullyToolName) { LayerType = typeof(AreaLayer) };
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
-                yield return addNewDamBreakCommand;
+                yield return addNewLeveeBreachCommand;
                 yield return addRoofAreaCommand;
                 yield return addGullyCommand;
                 yield return addNewLinkCommand;
@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewObsCs2D.SetState(addObsCS2dCommand, showArea2DTools);
             ButtonAddNewPump2D.SetState(addPump2dCommand, showArea2DTools);
             ButtonAddNewWeir2D.SetState(addWeir2dCommand, showArea2DTools);
-            ButtonAddDamBreak.SetState(addNewDamBreakCommand, showArea2DTools);
+            ButtonAddLeveeBreach.SetState(addNewLeveeBreachCommand, showArea2DTools);
             ButtonAddNewGate2D.SetState(addGate2dCommand, showArea2DTools);
             ButtonAddNewLandBoundary2D.SetState(addLandBoundary2dCommand, showArea2DTools);
             ButtonAddNewDryPoint2D.SetState(addDryPoint2dCommand, showArea2DTools);
@@ -577,9 +577,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
-        private void ButtonAddDamBreak_Click(object sender, RoutedEventArgs e)
+        private void ButtonAddLeveeBeach_Click(object sender, RoutedEventArgs e)
         {
-            addNewDamBreakCommand.Execute();
+            addNewLeveeBreachCommand.Execute();
             ValidateItems();
         }
         private void ButtonAddNewEmbankment_Click(object sender, RoutedEventArgs e)

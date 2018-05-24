@@ -732,7 +732,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroArea.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroArea.DryPointsPluralName, Properties.Resources.dry_point) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroArea.ThinDamsPluralName, Properties.Resources.thindam) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<LeveeBreach>(HydroArea.LeveeBreachName, Properties.Resources.DamBreak) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<LeveeBreach>(HydroArea.LeveeBreachName, Properties.Resources.LeveeBreach) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroArea.FixedWeirsPluralName, Properties.Resources.fixedweir) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.ObservationPointsPluralName, Properties.Resources.Observation) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroArea.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };

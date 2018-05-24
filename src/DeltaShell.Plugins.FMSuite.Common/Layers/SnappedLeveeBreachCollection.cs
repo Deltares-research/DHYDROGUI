@@ -16,11 +16,11 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Layers
 {
-    public class SnappedDamBreakCollection: SnappedFeatureCollection
+    public class SnappedLeveeBreachCollection: SnappedFeatureCollection
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedDamBreakCollection));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedLeveeBreachCollection));
 
-        public SnappedDamBreakCollection(IGridOperationApi operationApi, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType) : base(operationApi, coordinateSystem, originalFeatures, originalFeaturesLayerStyle, layerName, snapApiFeatureType)
+        public SnappedLeveeBreachCollection(IGridOperationApi operationApi, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType) : base(operationApi, coordinateSystem, originalFeatures, originalFeaturesLayerStyle, layerName, snapApiFeatureType)
         {
         }
 
@@ -29,29 +29,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         {
             SnappedFeatures.Clear();
 
-            var lstDamBreaks = OriginalFeatures.OfType<LeveeBreach>();
+            var leveeBreaches = OriginalFeatures.OfType<LeveeBreach>();
 
-            foreach (var damBreak in lstDamBreaks)
+            foreach (var leveeBreach in leveeBreaches)
             {
-                SnappedFeatures.Add(GetSnappedFeature(damBreak));
+                SnappedFeatures.Add(GetSnappedFeature(leveeBreach));
             }
         }
 
         protected override Feature2D GetSnappedFeature(IFeature feature, IGeometry snappedGeometry = null)
         {
-            var damBreak = feature as LeveeBreach;
+            var leveeBreach = feature as LeveeBreach;
 
-            IEnumerable<IGeometry> snappedDamBreakGeometry = new List<IGeometry>();
+            IEnumerable<IGeometry> snappedLeveeBreachGeometry = new List<IGeometry>();
             
 
-            if (damBreak != null)
+            if (leveeBreach != null)
             {
                 if (snappedGeometry == null || snappedGeometry.IsEmpty)
                 {
                     try
                     {
-                        snappedDamBreakGeometry = OperationApi.GetGridSnappedGeometry("dambreak", new[] { damBreak.Geometry, damBreak.BreachLocation});
-                        if (snappedDamBreakGeometry.Count() != 2)
+                        snappedLeveeBreachGeometry = OperationApi.GetGridSnappedGeometry("dambreak", new[] { leveeBreach.Geometry, leveeBreach.BreachLocation});
+                        if (snappedLeveeBreachGeometry.Count() != 2)
                         {
                             Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__, feature.Geometry.GeometryType);
                         }
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             }
             else
             {
-                Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__, "DamBreak (no dam break type)");
+                Log.WarnFormat(Resources.SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__, "LeveeBreaches (no levee breach type)");
             }
 
             var feature2D = new LeveeBreach();
@@ -72,10 +72,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             if (feature is INameable)
                 feature2D.Name = ((INameable)feature).Name;
 
-            if (snappedDamBreakGeometry.Count() == 2)
+            if (snappedLeveeBreachGeometry.Count() == 2)
             {
-                feature2D.Geometry = snappedDamBreakGeometry.First();
-                var breachLocation = snappedDamBreakGeometry.Last() as IPoint;
+                feature2D.Geometry = snappedLeveeBreachGeometry.First();
+                var breachLocation = snappedLeveeBreachGeometry.Last() as IPoint;
                 if (breachLocation != null)
                 {
                     feature2D.BreachLocationX = breachLocation.X;

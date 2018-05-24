@@ -18,7 +18,7 @@ namespace DelftTools.Hydro
         public const string DryAreasPluralName = "Dry Areas";
         public const string ThinDamsPluralName = "Thin Dams";
         public const string FixedWeirsPluralName = "Fixed Weirs";
-        public const string LeveeBreachName = "Levee Breach";
+        public const string LeveeBreachName = "Levee breaches";
         public const string ObservationPointsPluralName = "Observation Points";
         public const string ObservationCrossSectionsPluralName = "Observation Cross-Sections";
         public const string PumpsPluralName = "Pumps";

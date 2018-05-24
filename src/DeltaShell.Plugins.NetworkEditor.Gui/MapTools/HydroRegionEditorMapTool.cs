@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string LandBoundaryToolName = "Land boundary tool";
         public const string DryPointToolName = "Dry point tool";
         public const string DryAreaToolName = "Dry area tool";
-        public const string DamBreakToolName = "Dam break tool";
+        public const string LeveeBreachToolName = "Levee breach tool";
         public const string BreachLocationToolName = "Breach location tool";
         public const string RoofAreaToolName = "Roof area tool";
         public const string GullyToolName = "Gully tool";
@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DPointTool(HydroArea.DryPointsPluralName, DryPointToolName, Resources.dry_point));
             AddMapTool(new Feature2DLineTool(HydroArea.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroArea.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
-            AddMapTool(new DamBreakMapTool(HydroArea.LeveeBreachName, DamBreakToolName, Resources.DamBreak));
+            AddMapTool(new LeveeBreachMapTool(HydroArea.LeveeBreachName, LeveeBreachToolName, Resources.LeveeBreach));
             AddMapTool(new Feature2DLineTool(HydroArea.RoofAreaName, RoofAreaToolName, Resources.Roof));
             AddMapTool(new Feature2DPointTool(HydroArea.GullyName, GullyToolName, Resources.Gully));
             AddMapTool(new SingleFeature2DLineTool(HydroArea.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });

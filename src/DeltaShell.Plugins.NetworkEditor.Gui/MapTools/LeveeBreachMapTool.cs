@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using GeoAPI.Geometries;
+using log4net.Core;
+using SharpMap.Api.Layers;
+using SharpMap.Layers;
 using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
-    public class DamBreakMapTool: Feature2DLineTool
+    public class LeveeBreachMapTool: Feature2DLineTool
     {
-        public DamBreakMapTool(string targetLayerName, string name, Bitmap icon) : base(targetLayerName, name, icon)
+        public LeveeBreachMapTool(string targetLayerName, string name, Bitmap icon) : base(targetLayerName, name, icon)
         {
         }
 
@@ -23,6 +28,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 ? VectorLayer.DataSource.GetFeature(featureCount - 1)
                 : null;
         }
-
     }
 }

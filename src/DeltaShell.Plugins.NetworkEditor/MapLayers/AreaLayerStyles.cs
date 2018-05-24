@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
-        public static VectorStyle DamBreakStyle
+        public static VectorStyle LeveeStyle
         {
             get
             {
@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
-        public static VectorStyle BreachLocationStyle
+        public static VectorStyle BreachStyle
         {
             get
             {

@@ -353,16 +353,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap DamBreak {
-            get {
-                object obj = ResourceManager.GetObject("DamBreak", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap definition {
             get {
                 object obj = ResourceManager.GetObject("definition", resourceCulture);
@@ -753,6 +743,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static System.Drawing.Bitmap LateralSourceSmall {
             get {
                 object obj = ResourceManager.GetObject("LateralSourceSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap LeveeBreach {
+            get {
+                object obj = ResourceManager.GetObject("LeveeBreach", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
