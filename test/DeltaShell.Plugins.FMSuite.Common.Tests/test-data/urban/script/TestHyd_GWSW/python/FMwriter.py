@@ -623,7 +623,6 @@ class FMwriter:
             connection[0] = name
             connection[3] = 'GSL'
             connection[8] = 1.0; #length
-            connection[15] = structureprofileid
 
             profile = [''] * 13
             profile[0] = structureprofileid
@@ -638,16 +637,17 @@ class FMwriter:
 
                 streetLevel = self.getStreetLevel(value[0])
                 crestLevel = float(value[7])
-                topLevel = streetLevel - self.deltaGateHeightTopLevel
-                width = float(value[6])
+                topLevel = (streetLevel - self.deltaGateHeightTopLevel)
+                width = float(value[6]) / 1000.0 #width in mm -> m
 
                 #add connection info
+                connection[15] = structureprofileid
                 connection[5] = crestLevel;
                 connection[6] = crestLevel;
 
                 #add profile
-                profile[3] = width * 1000 #width in mm
-                profile[4] = (topLevel-crestLevel) * 1000 #height in mm
+                profile[3] = width
+                profile[4] = (topLevel-crestLevel)
                 self.model.profiles[profile[0]] = profile[0:]
 
             elif type == 'PMP':
@@ -663,6 +663,7 @@ class FMwriter:
                     stoplevel = min(stoplevel,stopleveldeliveryside)
 
                 #add connection info
+                connection[15] = structureprofileid
                 connection[5] = stoplevel - diam;
                 connection[6] = stoplevel - diam;
 
