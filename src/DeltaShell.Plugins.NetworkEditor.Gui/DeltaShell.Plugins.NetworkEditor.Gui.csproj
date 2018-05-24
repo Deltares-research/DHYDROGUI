@@ -221,6 +221,10 @@
       <DependentUpon>PipeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\PipeViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\PipeVisualisation.xaml.cs">
+      <DependentUpon>PipeVisualisation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SewerFeatureViews\PipeVisualisationViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\PumpShapeControl.xaml.cs">
       <DependentUpon>PumpShapeControl.xaml</DependentUpon>
     </Compile>
@@ -1123,6 +1127,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Forms\SewerFeatureViews\PipeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\SewerFeatureViews\PipeVisualisation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

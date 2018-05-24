@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro.Structures;
 using Image = System.Drawing.Image;
@@ -14,6 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public PipeView()
         {
             InitializeComponent();
+            
         }
         
         #region IView implementation

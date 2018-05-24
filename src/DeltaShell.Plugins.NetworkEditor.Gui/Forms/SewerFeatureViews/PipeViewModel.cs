@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -7,17 +6,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     [Entity]
     public class PipeViewModel
     {
-        public Pipe Pipe { get; set; }
+        private Pipe pipe;
 
-        private static double GetPipeDeltaX(IPipe pipe)
+        public Pipe Pipe
         {
-            var length = pipe.Length;
-            var dy = pipe.LevelTarget - pipe.LevelSource;
+            get { return pipe; }
+            set
+            {
+                pipe = value;
 
-            var dx = Math.Sqrt(length * length - dy * dy);
-            return dx;
+                if (pipe == null) return;
 
+                PipeSlope = pipe.Slope();
+            }
         }
 
+        public double PipeSlope { get; set; }
     }
 }

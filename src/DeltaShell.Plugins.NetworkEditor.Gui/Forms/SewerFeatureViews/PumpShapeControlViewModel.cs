@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public PointCollection DeliveryStopLevel { get; set; }
         public PointCollection Connection { get; set; }
 
-        public Action UpdateSizes { get; set; }
         public Func<double> GetActualWidth { get; set; }
         public Func<double> GetActualHeight { get; set; }
 

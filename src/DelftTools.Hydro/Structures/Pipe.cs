@@ -46,7 +46,7 @@ namespace DelftTools.Hydro.Structures
 
             }
         }
-
+        
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs notifyCollectionChangingEventArgs)
         {
             if (notifyCollectionChangingEventArgs.Action != NotifyCollectionChangeAction.Add) return;

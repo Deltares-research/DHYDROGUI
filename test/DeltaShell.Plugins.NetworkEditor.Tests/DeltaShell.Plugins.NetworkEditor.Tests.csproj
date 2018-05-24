@@ -243,6 +243,7 @@
     <Compile Include="Forms\SewerFeatureViews\LeveeBreachViewTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeViewTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeVisualisationControlTest.cs" />
+    <Compile Include="Forms\SewerFeatureViews\PipeViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />

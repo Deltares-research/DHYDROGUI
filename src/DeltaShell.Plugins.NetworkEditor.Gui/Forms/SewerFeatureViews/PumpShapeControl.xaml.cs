@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -20,7 +19,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public PumpShapeControl()
         {
             InitializeComponent();
-            ViewModel.UpdateSizes = UpdateSizes;
             ViewModel.GetActualWidth = () => ViewGrid.ActualWidth;
             ViewModel.GetActualHeight = () => ViewGrid.ActualHeight;
         }
