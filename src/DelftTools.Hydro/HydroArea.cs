@@ -18,7 +18,7 @@ namespace DelftTools.Hydro
         public const string DryAreasPluralName = "Dry Areas";
         public const string ThinDamsPluralName = "Thin Dams";
         public const string FixedWeirsPluralName = "Fixed Weirs";
-        public const string DamBreakName = "Dam Breaks";
+        public const string LeveeBreachName = "Levee Breach";
         public const string ObservationPointsPluralName = "Observation Points";
         public const string ObservationCrossSectionsPluralName = "Observation Cross-Sections";
         public const string PumpsPluralName = "Pumps";
@@ -44,7 +44,7 @@ namespace DelftTools.Hydro
             DryAreas = new EventedList<GroupableFeature2DPolygon>();
             ThinDams = new EventedList<ThinDam2D>();
             FixedWeirs = new EventedList<FixedWeir>();
-            DamBreaks = new EventedList<LeveeBreach>();
+            LeveeBreaches = new EventedList<LeveeBreach>();
             ObservationPoints = new EventedList<GroupableFeature2DPoint>();
             ObservationCrossSections = new EventedList<ObservationCrossSection2D>();
             DumpingLocations = new EventedList<GroupableFeature2D>();
@@ -65,7 +65,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
         public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
         public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
-        public virtual IEventedList<LeveeBreach> DamBreaks { get; protected set; }
+        public virtual IEventedList<LeveeBreach> LeveeBreaches { get; protected set; }
         public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
         public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
         public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }
@@ -117,10 +117,10 @@ namespace DelftTools.Hydro
             {
                 yield return fixedWeir;
             }
-            yield return DamBreaks;
-            foreach (var damBreak in DamBreaks)
+            yield return LeveeBreaches;
+            foreach (var leveeBreach in LeveeBreaches)
             {
-                yield return damBreak;
+                yield return leveeBreach;
             }
             foreach (var landBoundary in LandBoundaries)
             {

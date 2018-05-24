@@ -43,8 +43,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
                                                       AreaLayerStyles.ThinDamStyle, "Thin dams (snapped)", UnstrucGridOperationApi.ThinDams);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.FixedWeirs,
                                                       AreaLayerStyles.FixedWeirStyle, "Fixed weirs (snapped)", UnstrucGridOperationApi.FixedWeir);
-            yield return new SnappedDamBreakCollection(model, model.CoordinateSystem, (IList)model.Area.DamBreaks,
-                                          AreaLayerStyles.DamBreakStyle, "Dam break / breach locations (snapped)", UnstrucGridOperationApi.DamBreakLine);
+            yield return new SnappedDamBreakCollection(model, model.CoordinateSystem, (IList)model.Area.LeveeBreaches,
+                                          AreaLayerStyles.DamBreakStyle, "Levee breach / breach locations (snapped)", UnstrucGridOperationApi.DamBreakLine);
             yield return
                 new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.DryPoints,
                     AreaLayerStyles.DryPointStyle, "Dry points (snapped)", UnstrucGridOperationApi.ObsPoint);

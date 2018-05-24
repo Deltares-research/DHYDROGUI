@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 parentNodeData.DryAreas,
                 parentNodeData.ThinDams, 
                 parentNodeData.FixedWeirs,
-                parentNodeData.DamBreaks,
+                parentNodeData.LeveeBreaches,
                 parentNodeData.ObservationPoints,
                 parentNodeData.ObservationCrossSections,
                 parentNodeData.Pumps,

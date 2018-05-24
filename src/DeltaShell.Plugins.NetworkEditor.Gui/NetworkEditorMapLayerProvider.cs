@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     yield return area2D.ThinDams;
                     yield return area2D.FixedWeirs;
-                    yield return area2D.DamBreaks;
+                    yield return area2D.LeveeBreaches;
                     yield return area2D.ObservationPoints;
                     yield return area2D.ObservationCrossSections;
                     yield return area2D.Pumps;
@@ -608,14 +608,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             var damBreaks = data as IEventedList<LeveeBreach>;
-            if (damBreaks != null && area2DParent != null && Equals(damBreaks, area2DParent.DamBreaks))
+            if (damBreaks != null && area2DParent != null && Equals(damBreaks, area2DParent.LeveeBreaches))
             {
-                return new VectorLayer(HydroArea.DamBreakName)
+                return new VectorLayer(HydroArea.LeveeBreachName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DamBreaks, "DamBreaks", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "DamBreaks", modelName,
                                                        area2DParent.CoordinateSystem),
                     CustomRenderers = new List<IFeatureRenderer>(new[] { new DamBreakRenderer(AreaLayerStyles.DamBreakStyle, AreaLayerStyles.BreachLocationStyle) })
                 };

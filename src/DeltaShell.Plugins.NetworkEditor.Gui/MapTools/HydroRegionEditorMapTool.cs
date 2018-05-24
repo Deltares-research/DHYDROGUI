@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DPointTool(HydroArea.DryPointsPluralName, DryPointToolName, Resources.dry_point));
             AddMapTool(new Feature2DLineTool(HydroArea.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroArea.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
-            AddMapTool(new DamBreakMapTool(HydroArea.DamBreakName, DamBreakToolName, Resources.DamBreak));
+            AddMapTool(new DamBreakMapTool(HydroArea.LeveeBreachName, DamBreakToolName, Resources.DamBreak));
             AddMapTool(new Feature2DLineTool(HydroArea.RoofAreaName, RoofAreaToolName, Resources.Roof));
             AddMapTool(new Feature2DPointTool(HydroArea.GullyName, GullyToolName, Resources.Gully));
             AddMapTool(new SingleFeature2DLineTool(HydroArea.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
