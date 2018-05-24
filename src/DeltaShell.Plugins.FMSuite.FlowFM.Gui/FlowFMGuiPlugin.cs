@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     DialogResult userFeedback = DialogResult.OK;
                     if (model.Grid != null && !model.Grid.IsEmpty)
                     {
-                        userFeedback = MessageBox.Show("Editing the 2D grid will possibly remove the 1D2D links.", "Are you certain to continue?" , MessageBoxButtons.OKCancel);
+                        userFeedback = DelftTools.Controls.Swf.MessageBox.Show("Editing the 2D grid will possibly remove the 1D2D links.", "Are you certain to continue?" , MessageBoxButtons.OKCancel);
                     }
                     if (userFeedback == DialogResult.OK)
                     {
@@ -276,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         catch (Exception exception)
                         {
                             var dialogResult =
-                                MessageBox.Show(
+                                DelftTools.Controls.Swf.MessageBox.Show(
                                     "Failed to reload grid after RGFGrid edits: " + exception.Message +
                                     Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
                                     MessageBoxButtons.YesNo);
