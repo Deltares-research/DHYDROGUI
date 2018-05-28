@@ -451,10 +451,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var gridExtent = model.GridExtent;
 
                 var center = gridExtent.Centre;
-                var snappedLeveeBreach = model.GetGridSnappedGeometry(UnstrucGridOperationApi.LeveeBreach,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-
-                Assert.IsTrue(model.SnapsToGrid(snappedLeveeBreach));
+                var snappedLeveeBreach = model.GetGridSnappedGeometry(
+                    UnstrucGridOperationApi.LeveeBreach, 
+                    new List<IGeometry>() {
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }),
+                        new Point(new Coordinate(center.X + 50.0, center.Y + 50.0))}
+                    );
+                Assert.AreEqual(2, snappedLeveeBreach.Count());
+                var levee = snappedLeveeBreach.First();
+                var breach = snappedLeveeBreach.Last();
+                // Assert.IsTrue(model.SnapsToGrid(snappedLeveeBreach));
             }
         }
 

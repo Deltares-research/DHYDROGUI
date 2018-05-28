@@ -17,10 +17,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set
             {
                 leveeBreach = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(SelectedGrowthFormula));
-                OnPropertyChanged(nameof(LeveeBreachSettings));
-                OnPropertyChanged(nameof(UseActive));
+                if (leveeBreach != null)
+                {
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(SelectedGrowthFormula));
+                    OnPropertyChanged(nameof(LeveeBreachSettings));
+                    OnPropertyChanged(nameof(UseActive));
+                }
             }
         }
 

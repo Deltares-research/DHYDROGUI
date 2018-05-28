@@ -615,7 +615,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "DamBreaks", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "LeveeBreach", modelName,
                                                        area2DParent.CoordinateSystem),
                     CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle) })
                 };

@@ -80,16 +80,16 @@
 
                 <!-- Row 2 -->
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Levee length"/>
-                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding LeveeBreach.Geometry.Length}"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding LeveeBreach.Geometry.Length, StringFormat={}{0:F2}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="[m]" />
 
                 <!-- Row 3 -->
                 <TextBlock Grid.Column="0" Grid.Row="3" Text="Breach x-location"/>
-                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding LeveeBreach.BreachLocationX}"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding LeveeBreach.BreachLocationX, StringFormat={}{0:F2}}"/>
 
                 <!-- Row 4 -->
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="Breach y-location"/>
-                <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding LeveeBreach.BreachLocationY}"/>
+                <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding LeveeBreach.BreachLocationY, StringFormat={}{0:F2}}"/>
 
                 <!-- Row 5 -->
                 <CheckBox Grid.Column="0" Grid.Row="5" Content="Active breach growth" IsChecked="{Binding UseActive}" VerticalAlignment="Center" Margin="0,3,0,3"/>

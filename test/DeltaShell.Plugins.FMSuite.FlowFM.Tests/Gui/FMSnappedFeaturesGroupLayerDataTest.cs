@@ -400,7 +400,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void SnappedDamBreakIsGenerated()
+        public void SnappedLeveeBreachIsGenerated()
         {
             var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
@@ -421,7 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
                 });
 
-                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Dam break / breach locations (snapped)"));
+                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Levee breaches (snapped)"));
             }
         }
 
