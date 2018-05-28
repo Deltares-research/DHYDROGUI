@@ -89,7 +89,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         public static readonly ConfigurationSetting Rho = new ConfigurationSetting(key: "Rho", description: "");
         public static readonly ConfigurationSetting StructureInertiaDampingFactor = new ConfigurationSetting(key: "StructureInertiaDampingFactor", description: "");
         public static readonly ConfigurationSetting Theta = new ConfigurationSetting(key: "Theta", description: "");
-        public static readonly ConfigurationSetting ThresholdValueDrying = new ConfigurationSetting(key: "ThresholdValueDrying", description: "");
         public static readonly ConfigurationSetting ThresholdValueFlooding = new ConfigurationSetting(key: "ThresholdValueFlooding", description: "");
         public static readonly ConfigurationSetting UseOmp = new ConfigurationSetting(key: "UseOmp", description: "0=false, 1=true");
         public static readonly ConfigurationSetting UseTimeStepReducerStructures = new ConfigurationSetting(key: "UseTimeStepReducerStructures", description: "0=false, 1=true");

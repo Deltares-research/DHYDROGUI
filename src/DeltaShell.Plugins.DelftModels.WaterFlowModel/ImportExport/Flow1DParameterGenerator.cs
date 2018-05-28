@@ -418,8 +418,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 numericalParametersValues.AddProperty(ModelDefinitionsRegion.Theta.Key, theta.Value, ModelDefinitionsRegion.Theta.Description);
             }
 
-            //TODO: Add ThresholdValueDrying ???
-
             var thresholdValueFlooding = waterFlowModel1D.ParameterSettings.FirstOrDefault(ps => ps.Name == ModelDefinitionsRegion.ThresholdValueFlooding.Key);
             if (thresholdValueFlooding != null)
             {
