@@ -638,7 +638,7 @@ class FMwriter:
                 streetLevel = self.getStreetLevel(value[0])
                 crestLevel = float(value[7])
                 topLevel = (streetLevel - self.deltaGateHeightTopLevel)
-                width = float(value[6]) / 1000.0 #width in mm -> m
+                width = float(value[6])
 
                 #add connection info
                 connection[15] = structureprofileid
