@@ -20,6 +20,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
@@ -46,6 +47,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data.Providers;
+using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
 using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
@@ -428,6 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     SharpMapGisGuiPlugin.Instance.Gui.MainWindow.SetWaitCursorOn();
                 }
+
                 // D3DFMIQ-16: This if-statement should be removed after the fix in DELFT3DFM-1413, where the user should be 
                 // prompted by RGFGRID if he/she wants to save the grid.
                 if (File.Exists(model.NetFilePath) && new FileInfo(model.NetFilePath).Length == 0)
@@ -435,23 +438,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     throw new FileFormatException(new Uri(model.NetFilePath),
                         "Empty file detected. Changes in the grid were not saved.\nPlease save your project before exiting RGFGRID.");
                 }
+
                 if (!File.Exists(model.NetFilePath))
                 {
                     model.RemoveGrid();
                     return;
                 }
 
-                if (model.CoordinateSystem != null)
+                var currentCoordinateSystem = model.CoordinateSystem;
+                var targetCoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(model.NetFilePath);
+
+                if (currentCoordinateSystem != targetCoordinateSystem && 
+                        (currentCoordinateSystem == null || 
+                        targetCoordinateSystem == null || 
+                        currentCoordinateSystem.IsGeographic != targetCoordinateSystem.IsGeographic)
+                    )
                 {
-                    var netfile = new ImportedFMNetFile(model.NetFilePath);
-                    var coordinates = netfile.Grid.Vertices;
-                    if (!CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates,
-                        model.CoordinateSystem))
-                    {
-                        throw new Exception(
-                            "Grid coordinates are incompatible with current model coordinate system");
-                    }
+                    model.CoordinateSystem = targetCoordinateSystem;
                 }
+                
                 model.ReloadGrid(false);
             }
             // D3DFMIQ-16: This catch block should be removed after the fix in DELFT3DFM-1413, where the user should be 
@@ -464,11 +469,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
             catch (Exception exception)
             {
-                var dialogResult =
-                    DelftTools.Controls.Swf.MessageBox.Show(
-                        "Failed to reload grid after RGFGrid edits: " + exception.Message +
-                        Environment.NewLine + "Continue with new grid?", "Failed to reload grid.",
-                        MessageBoxButtons.YesNo);
+                var dialogResult = DelftTools.Controls.Swf.MessageBox.Show(
+                    "Failed to reload grid after RGFGrid edits: " + exception.Message + Environment.NewLine +
+                    "Continue with new grid?", "Failed to reload grid.", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
                     model.Grid = NetFileImporter.ImportGrid(model.NetFilePath) ?? new UnstructuredGrid();
