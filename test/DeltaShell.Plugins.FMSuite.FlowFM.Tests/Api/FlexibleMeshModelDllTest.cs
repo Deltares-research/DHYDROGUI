@@ -458,9 +458,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                         new Point(new Coordinate(center.X + 50.0, center.Y + 50.0))}
                     );
                 Assert.AreEqual(2, snappedLeveeBreach.Count());
-                var levee = snappedLeveeBreach.First();
-                var breach = snappedLeveeBreach.Last();
-                // Assert.IsTrue(model.SnapsToGrid(snappedLeveeBreach));
+                var snappedLeveeGeometry = snappedLeveeBreach.First() as ILineString;
+                var snappedBreachGeometry = snappedLeveeBreach.Last() as IPoint;
+
+                Assert.IsNotNull(snappedLeveeGeometry);
+                Assert.IsNotNull(snappedBreachGeometry);
+
             }
         }
 
