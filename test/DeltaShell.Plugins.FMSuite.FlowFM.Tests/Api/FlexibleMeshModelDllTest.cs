@@ -454,8 +454,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var snappedLeveeBreach = model.GetGridSnappedGeometry(
                     UnstrucGridOperationApi.LeveeBreach, 
                     new List<IGeometry>() {
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }),
-                        new Point(new Coordinate(center.X + 50.0, center.Y + 50.0))}
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 1000.0, center.Y + 1000.0) }),
+                        new Point(new Coordinate(center.X + 500.0, center.Y + 500.0))}
                     );
                 Assert.AreEqual(2, snappedLeveeBreach.Count());
                 var snappedLeveeGeometry = snappedLeveeBreach.First() as ILineString;
