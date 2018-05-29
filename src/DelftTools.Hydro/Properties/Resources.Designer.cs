@@ -111,13 +111,12 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Composite Structure names must be unique, the following Composite Structures have been renamed:.
+        ///   Looks up a localized string similar to Branch feature names must be unique, the following Branch features have been renamed:.
         /// </summary>
-        public static string HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Structure_names_must_be_unique__the_following_Composite_Structures_have_been_renamed_ {
+        public static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
             get {
-                return ResourceManager.GetString("HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Str" +
-                        "ucture_names_must_be_unique__the_following_Composite_Structures_have_been_rename" +
-                        "d_", resourceCulture);
+                return ResourceManager.GetString("HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_f" +
+                        "ollowing_Branch_features_have_been_renamed_", resourceCulture);
             }
         }
         

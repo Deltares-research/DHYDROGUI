@@ -40,10 +40,14 @@ namespace DelftTools.Hydro
             // function to add change log messages
             PropertyChangedEventHandler onNetworkPropertyChanged = (sender, e) =>
             {
-                var compositeBranchStructure = sender as T;
-                if (compositeBranchStructure == null) return;
+                var branchFeature = sender as T;
+                if (branchFeature == null) return;
 
-                messagesList.Add(string.Format("{0} has been renamed to {1}", previousName, compositeBranchStructure.Name));
+                // we don't want to log messages for 'hidden' composite structures as this is confusing for the user
+                var compositeBranchStructure = sender as ICompositeBranchStructure;
+                if (compositeBranchStructure != null && compositeBranchStructure.Structures.Count < 2) return;
+
+                messagesList.Add(string.Format("{0} has been renamed to {1}", previousName, branchFeature.Name));
             };
 
             if (shouldLog)
@@ -54,7 +58,8 @@ namespace DelftTools.Hydro
 
             try
             {
-                NamingHelper.MakeNamesUnique(network.BranchFeatures.OfType<T>());
+                var numberOfBranchFeatures = network.BranchFeatures.OfType<T>().Count();
+                if (numberOfBranchFeatures > 1) NamingHelper.MakeNamesUnique(network.BranchFeatures.OfType<T>());
             }
             finally
             {
@@ -63,9 +68,11 @@ namespace DelftTools.Hydro
                     networkNotifyPropertyChanging.PropertyChanging -= onNetworkPropertyChanging;
                     networkNotifyPropertyChanged.PropertyChanged -= onNetworkPropertyChanged;
 
-                    var logMessage = Resources.HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Structure_names_must_be_unique__the_following_Composite_Structures_have_been_renamed_;
-                    Log.Info($"{logMessage}{Environment.NewLine}" +
-                             $"{string.Join(Environment.NewLine, messagesList)}");
+                    if (messagesList.Any())
+                    {
+                        var logMessage = Resources.HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_;
+                        Log.Info($"{logMessage}{Environment.NewLine}" + $"{string.Join(Environment.NewLine, messagesList)}");
+                    }
                 }
             }
         }

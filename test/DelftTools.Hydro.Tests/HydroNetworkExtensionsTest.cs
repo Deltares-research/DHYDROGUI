@@ -13,6 +13,8 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class HydroNetworkExtensionsTest
     {
+        private const int BuildServerFactor = 3;
+
         [Test]
         public void TestEnsureCompositeBranchStructureNamesAreUnique()
         {
@@ -59,7 +61,7 @@ namespace DelftTools.Hydro.Tests
             // Make unique and check messages
             TestHelper.AssertAtLeastOneLogMessagesContains(
                 () => network.MakeNamesUnique<ICompositeBranchStructure>(),
-                Resources.HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Structure_names_must_be_unique__the_following_Composite_Structures_have_been_renamed_);
+                Resources.HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_);
 
             Assert.IsTrue(network.CompositeBranchStructures.Select(cbs => cbs.Name).HasUniqueValues());
         }
@@ -75,8 +77,8 @@ namespace DelftTools.Hydro.Tests
             network.Expect(n => n.BranchFeatures).Return(compositeStructureList).Repeat.Any();
             
             mocks.ReplayAll();
-
-            TestHelper.AssertIsFasterThan(200, () => network.MakeNamesUnique<ICompositeBranchStructure>());
+            
+            TestHelper.AssertIsFasterThan(300 * BuildServerFactor, () => network.MakeNamesUnique<ICompositeBranchStructure>());
 
             Assert.IsTrue(compositeStructureList.HasUniqueValues());
         }

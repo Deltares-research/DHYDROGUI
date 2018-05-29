@@ -154,7 +154,7 @@
   <data name="CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m" xml:space="preserve">
     <value>The {0} section width of cross section {1} has been changed from {2}m to {3}m</value>
   </data>
-  <data name="HydroNetworkExtensions_EnsureCompositeBranchStructureNamesAreUnique_Composite_Structure_names_must_be_unique__the_following_Composite_Structures_have_been_renamed_" xml:space="preserve">
-    <value>Composite Structure names must be unique, the following Composite Structures have been renamed:</value>
+  <data name="HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_" xml:space="preserve">
+    <value>Branch feature names must be unique, the following Branch features have been renamed:</value>
   </data>
 </root>
