@@ -24,7 +24,6 @@ namespace DeltaShell.Dimr
         private DimrApiWrapper.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
         private DateTime currentTime;
         private DateTime dimrRefDate;
-        private double relativeStartTime;
 
         static DimrApi()
         {
@@ -218,7 +217,6 @@ namespace DeltaShell.Dimr
                 DimrApiWrapper.get_end_time(ref tEnd);
                 DimrApiWrapper.get_time_step(ref tStep);
                 DimrApiWrapper.get_current_time(ref tCurrent);
-                relativeStartTime = tCurrent;
             }
             catch (Exception exception)
             {
@@ -261,7 +259,7 @@ namespace DeltaShell.Dimr
         {
             DimrApiWrapper.update(step);
             DimrApiWrapper.get_current_time(ref tCurrent);
-            currentTime = DimrRefDate.AddSeconds(tCurrent-relativeStartTime);
+            currentTime = DimrRefDate.AddSeconds(tCurrent);
             return 0;
         }
 
