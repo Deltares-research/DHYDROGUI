@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
@@ -87,6 +88,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             if (hydroRegion != null)
             {
                 var network = (HydroNetwork) hydroRegion.SubRegions[0];
+                if (network != null) network.MakeNamesUnique<ICompositeBranchStructure>();
 
                 var basin = (DrainageBasin) hydroRegion.SubRegions[1];
 

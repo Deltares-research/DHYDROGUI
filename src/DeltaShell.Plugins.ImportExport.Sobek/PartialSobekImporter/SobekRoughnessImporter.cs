@@ -523,7 +523,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var crossSectionSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == sectionTypeName);
             if (crossSectionSectionType == null)
             {
-                log.ErrorFormat("Roughness section type {0} is not available in network. The import of the roughness spatial data has been skipped.", sectionTypeName);
+                log.WarnFormat("Roughness section type {0} is not available in network. The import of the roughness spatial data has been skipped.", sectionTypeName);
                 return null;
             }
 

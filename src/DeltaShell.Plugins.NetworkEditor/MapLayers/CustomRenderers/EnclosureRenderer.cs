@@ -41,7 +41,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             IGeometry geometry = GetRenderedFeatureGeometry(feature, layer);
 
             var viewEnvelope = layer.Map.Envelope;
-            layer.Opacity = (float) 0.25;
             var newPol = new Polygon(new LinearRing(new[]{
                                       new Coordinate( viewEnvelope.MinX, viewEnvelope.MinY),  new Coordinate( viewEnvelope.MaxX, viewEnvelope.MinY),
                                       new Coordinate( viewEnvelope.MaxX, viewEnvelope.MaxY),  new Coordinate( viewEnvelope.MinX, viewEnvelope.MaxY),

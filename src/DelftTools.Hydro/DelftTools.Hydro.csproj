@@ -188,6 +188,8 @@
     <Compile Include="GroupableFeatureComparer.cs" />
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
+    <Compile Include="HydroNetwork351LegacyLoader.cs" />
+    <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="ISewerConnection.cs" />
     <Compile Include="Compartment.cs" />
@@ -511,7 +513,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Structures\Culvert.3.5.0.hbm.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="HydroNetwork.3.5.1.hbm.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -540,9 +540,17 @@ namespace DelftTools.Hydro.Helpers
 
             if(compositeBranchStructure == null)
             {
-                compositeBranchStructure = CompositeBranchStructure.CreateDefault(branch);
-                compositeBranchStructure.Chainage = structure.Chainage;
-                compositeBranchStructure.Geometry = structure.Geometry;
+                compositeBranchStructure = new CompositeBranchStructure
+                {
+                    Branch = branch,
+                    Network = branch.Network,
+                    Chainage = structure.Chainage,
+                    Geometry = (IGeometry)structure.Geometry?.Clone()
+                };
+
+                // make new composite structure names unique
+                compositeBranchStructure.Name = GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
+
                 branch.BranchFeatures.Add(compositeBranchStructure);
             }
 

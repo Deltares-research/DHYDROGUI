@@ -15,6 +15,7 @@ using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using Mono.Addins;
 using NetTopologySuite.IO;
 
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override string FileFormatVersion
         {
-            get { return "3.5.1.0"; }
+            get { return "3.5.2.0"; }
         }
 
         public override Image Image
@@ -364,19 +365,19 @@ namespace DeltaShell.Plugins.NetworkEditor
             };
         }
 
-        private static void AddExampleHydroRegionData(HydroRegion hydroRegion)
+        private static void AddExampleHydroRegionData(IRegion hydroRegion)
         {
-            var hydroNetwork = hydroRegion.SubRegions.OfType<HydroNetwork>().First();
-            var drainageBasin = hydroRegion.SubRegions.OfType<DrainageBasin>().First();
+            var hydroNetwork = hydroRegion.SubRegions.OfType<IHydroNetwork>().First();
+            var drainageBasin = hydroRegion.SubRegions.OfType<IDrainageBasin>().First();
 
             AddExampleHydroNetworkData(hydroNetwork);
             AddExampleDrainageBasinData(drainageBasin);
 
-            var link = drainageBasin.WasteWaterTreatmentPlants[0].LinkTo(hydroNetwork.LateralSources.First());
+            var link = drainageBasin.WasteWaterTreatmentPlants[0].LinkTo(hydroNetwork.LateralSources.FirstOrDefault());
             link.Geometry = WktReader.Read("LINESTRING(5 5, 5 0)");
         }
 
-        private static void AddExampleHydroNetworkData(HydroNetwork network)
+        private static void AddExampleHydroNetworkData(IHydroNetwork network)
         {
             var node1 = new HydroNode { Name = "Node1", Geometry = WktReader.Read("POINT(0 0)") };
             var node2 = new HydroNode { Name = "Node2", Geometry = WktReader.Read("POINT(10 0)") };
@@ -387,9 +388,9 @@ namespace DeltaShell.Plugins.NetworkEditor
             network.Nodes.AddRange(new[] { node1, node2 });
         }
 
-        private static void AddExampleDrainageBasinData(DrainageBasin drainageBasin)
+        private static void AddExampleDrainageBasinData(IDrainageBasin drainageBasin)
         {
-            var catchment = new Catchment { Name = "Catchment1", CatchmentType = CatchmentType.Unpaved, Geometry = WktReader.Read("POLYGON((0 6, 0 12, 10 12, 10 6, 0 6))") };
+            var catchment = new Catchment { Name = "Catchment1", CatchmentType = CatchmentType.Unpaved, Geometry = WktReader.Read("POLYGON((0 6, 0 12, 10 12, 10 6, 0 6))"), Basin = drainageBasin};
             var plant = new WasteWaterTreatmentPlant { Name = "Plant1", Geometry = WktReader.Read("POINT(5 5)") };
 
             drainageBasin.Catchments.Add(catchment);

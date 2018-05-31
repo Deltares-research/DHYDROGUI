@@ -115,13 +115,19 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             {
                 oldParentCompositeStructure.Structures.Remove(structure);
             }
+
             // Connection could not be made to an existing StructureFeature; Add a new StructureFeature at this location
             var newCompositeStructure = new CompositeBranchStructure
-                                            {
-                                                Geometry = ((IGeometry) structure.Geometry.Clone()),
-                                                Branch = branch
-                                            };
+            {
+                Branch = branch,
+                Network = branch.Network,
+                Chainage = structure.Chainage,
+                Geometry = (IGeometry)structure.Geometry?.Clone()
+            };
 
+            // make new composite structure names unique
+            newCompositeStructure.Name = HydroNetworkHelper.GetUniqueFeatureName(newCompositeStructure.Network as HydroNetwork, newCompositeStructure);
+            
             // always connect structure to branch because of property changed events
             structure.Branch =  branch; 
             branch.BranchFeatures.Add(newCompositeStructure);

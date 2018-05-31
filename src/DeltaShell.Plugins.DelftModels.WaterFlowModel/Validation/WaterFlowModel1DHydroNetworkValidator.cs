@@ -121,7 +121,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                                         ValidationHelper.ValidateDuplicateNames(network.Retentions.Cast<INameable>(), "retentions", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Weirs.Cast<INameable>(), "weirs", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Gates.Cast<INameable>(), "gates", network),
-                                        
+                                        ValidationHelper.ValidateDuplicateNames(network.CompositeBranchStructures.Cast<INameable>(), "composite branch structures", network),
+
                                         ValidationHelper.ValidateNoEmptyNames(network.Branches.Cast<INameable>(), "branch", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.Bridges.Cast<INameable>(), "bridge", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.Culverts.Cast<INameable>(), "culvert", network),
@@ -135,7 +136,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation
                                         ValidationHelper.ValidateNoEmptyNames(network.Pumps.Cast<INameable>(), "pump", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.Retentions.Cast<INameable>(), "retention", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.Weirs.Cast<INameable>(), "weir", network),
-                                        ValidationHelper.ValidateNoEmptyNames(network.Gates.Cast<INameable>(), "gate", network)
+                                        ValidationHelper.ValidateNoEmptyNames(network.Gates.Cast<INameable>(), "gate", network),
+                                        ValidationHelper.ValidateNoEmptyNames(network.CompositeBranchStructures.Cast<INameable>(), "composite branch structure", network)
                                     };
 
             var issues = issuesAsArray.SelectMany(iss => iss);

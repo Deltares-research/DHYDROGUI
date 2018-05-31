@@ -587,6 +587,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
+                    Opacity = (float) 0.25,
                     Style = AreaLayerStyles.EnclosureStyle,                  
                     DataSource = ds,
                     CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })

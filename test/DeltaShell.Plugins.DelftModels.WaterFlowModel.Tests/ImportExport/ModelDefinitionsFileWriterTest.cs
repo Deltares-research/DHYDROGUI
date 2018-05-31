@@ -543,8 +543,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var thetaProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.Theta.Key);
             Assert.AreEqual(expectedTheta, thetaProperty.Value);
 
-            // TODO: ThresholdValueDrying (not implemented yet)
-
             var thresholdValueFloodingProperty = content.Properties.First(p => p.Name == ModelDefinitionsRegion.ThresholdValueFlooding.Key);
             Assert.AreEqual(expectedThresholdValueFlooding, thresholdValueFloodingProperty.Value);
 

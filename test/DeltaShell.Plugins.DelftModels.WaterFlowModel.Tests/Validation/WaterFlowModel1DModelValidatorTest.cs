@@ -369,6 +369,67 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
+        public void CompositeBranchStructuresShouldHaveUniqueNames()
+        {
+            var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+            var branch = waterFlowModel1D.Network.Branches[0];
+
+            var composite1 = new CompositeBranchStructure()
+            {
+                Name = "StructureFeature",
+                Branch = branch,
+                Network = branch.Network,
+                Chainage = 5.0,
+                Geometry = new Point(0.0, 5.0)
+            };
+            var composite2 = new CompositeBranchStructure()
+            {
+                Name = "StructureFeature",
+                Branch = branch,
+                Network = branch.Network,
+                Chainage = 10.0,
+                Geometry = new Point(0.0, 10.0)
+            };
+
+            NetworkHelper.AddBranchFeatureToBranch(composite1, branch, 5);
+            NetworkHelper.AddBranchFeatureToBranch(composite2, branch, 10);
+
+            Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(waterFlowModel1D),
+                                        "Several composite branch structures with the same id exist"));
+
+            composite2.Name = composite1.Name + "_different";
+
+            Assert.IsFalse(ContainsError(new WaterFlowModel1DModelValidator().Validate(waterFlowModel1D),
+                                        "Several composite branch structures with the same id exist"));
+        }
+
+        [Test]
+        public void CompositeBranchStructuresShouldNotHaveEmptyNames()
+        {
+            var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
+            var branch = waterFlowModel1D.Network.Branches[0];
+
+            var compositeBranchStructure = new CompositeBranchStructure()
+            {
+                Name = "",
+                Branch = branch,
+                Network = branch.Network,
+                Chainage = 5.0,
+                Geometry = new Point(0.0, 5.0)
+            };
+            
+            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch, 5);
+            
+            Assert.IsTrue(ContainsError(new WaterFlowModel1DModelValidator().Validate(waterFlowModel1D),
+                "Name of composite branch structure ({CompositeBranchStructure: branch1, 5})) is not set (it is empty or consists of only white-space characters)."));
+
+            compositeBranchStructure.Name = "YayNowIHaveAName";
+
+            Assert.IsFalse(ContainsError(new WaterFlowModel1DModelValidator().Validate(waterFlowModel1D),
+                "Name of composite branch structure ({CompositeBranchStructure: branch1, 5})) is not set (it is empty or consists of only white-space characters)."));
+        }
+
+        [Test]
         public void ValidateDemoModel()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();

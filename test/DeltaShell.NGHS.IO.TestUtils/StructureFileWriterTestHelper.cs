@@ -620,7 +620,14 @@ namespace DeltaShell.NGHS.IO.TestUtils
         private static void AddStructure(this IBranch branch, IStructure structure)
         {
             // Note: DeltaShell always wraps structures into CompositeStructures
-            var composite = new CompositeBranchStructure("", structure.Chainage);
+            var composite = new CompositeBranchStructure()
+            {
+                Branch = branch,
+                Network = branch.Network,
+                Chainage = structure.Chainage,
+                Geometry = (IGeometry)structure.Geometry?.Clone()
+            };
+            composite.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion) branch.Network, composite);
             branch.BranchFeatures.Add(composite);
             HydroNetworkHelper.AddStructureToComposite(composite, structure);
         }
