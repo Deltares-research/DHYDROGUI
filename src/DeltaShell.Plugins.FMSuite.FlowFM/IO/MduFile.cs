@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -170,12 +171,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
 
+                    NetCdfFile netCdfFile = null;
+                    string nameProjectedCS = string.Empty;
+
+                    try
+                    {
+                        netCdfFile = NetCdfFile.OpenExisting(targetFile, true);
+                        var projectedCSVariable = netCdfFile.GetVariableByName("projected_coordinate_system");
+                        if (projectedCSVariable != null)
+                            nameProjectedCS = netCdfFile.GetAttributeValue(projectedCSVariable, "name");
+                    }
+                    finally
+                    {
+                        if (netCdfFile != null)
+                            netCdfFile.Close();
+                    }
+
                     // if needed, adjust coordinate system in netfile
                     if (modelDefinition.CoordinateSystem != null && File.Exists(targetFile))
                     {
                         var fileCoordinateSystem = NetFile.ReadCoordinateSystem(targetFile);
                         if (fileCoordinateSystem == null ||
-                            fileCoordinateSystem.AuthorityCode != modelDefinition.CoordinateSystem.AuthorityCode)
+                            fileCoordinateSystem.AuthorityCode != modelDefinition.CoordinateSystem.AuthorityCode || 
+                            (nameProjectedCS != null && nameProjectedCS != modelDefinition.CoordinateSystem.Name)) 
                         {
                             UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                         }
