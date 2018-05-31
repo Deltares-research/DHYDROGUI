@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -431,15 +432,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (settings == null) return;
 
             var timeSeriesFilePath = GetPropertyValue(structure2D, KnownStructureProperties.TimeFilePath, "");
-            var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, timeSeriesFilePath);
-            var reader = new TimFile();
-            
-            reader.Read(filePath, settings.TimeSeries, refDate);
-            /*
-             var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
-                                    var reader = new TimFile();
-                                    reader.Read(filePath, timeSeries, refDate);
-                         */
+            var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(path, timeSeriesFilePath);
+
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            {
+                Log.WarnFormat($"Unable to import levee breach growth settings from .tim file, {0}", string.IsNullOrWhiteSpace(filePath) ? "the filepath is undefined" : $"the file '{filePath}' does not exist");
+                return;
+            }
+            var timeSeries = UserDefinedBreachConversionHelper.GetFormattedTimeSeries();
+            new TimFile().Read(filePath, timeSeries, refDate);
+
+            settings.CreateTableFromTimeSeries(timeSeries);
         }
 
         private static LeveeBreach SetLeveeBreachProperties(Structure2D structure2D)
@@ -456,8 +459,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             return leveeBreach;
         }
-
-
+        
 
         private static T GetPropertyValue<T>(Structure2D structure2D, string propertyName, T defaultValue)
         {

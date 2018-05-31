@@ -199,6 +199,7 @@
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachGrowthFormula.cs" />
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachSettings.cs" />
+    <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreachConversionHelper.cs" />
     <Compile Include="Structures\Manhole.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\ManholeExtensions.cs" />

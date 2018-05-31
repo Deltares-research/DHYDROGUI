@@ -430,10 +430,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var userDefinedSettings = settings as UserDefinedBreach;
             if (userDefinedSettings != null)
             {
-                var ts = userDefinedSettings.TimeSeries;
+                var timeSeries = userDefinedSettings.CreateTimeSeriesFromTable();
                 var timeFilePath = ConstructTimeFilePath(leveeBreach, KnownStructureProperties.TimeFilePath);
                 properties.Add(ConstructProperty(KnownStructureProperties.TimeFilePath, timeFilePath, structureType));
-                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), ts, settings.StartTimeBreachGrowth);
+                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), timeSeries, settings.StartTimeBreachGrowth);
             }
 
             return properties;

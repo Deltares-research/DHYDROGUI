@@ -784,7 +784,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.NotNull(settings);
 
                 settings.BreachGrowthActive = true;
-                settings.StartTimeBreachGrowth = DateTime.Now;
+                settings.StartTimeBreachGrowth = new DateTime(2018, 5, 31, 14, 30, 00);
                 settings.ManualBreachGrowthSettings = new EventedList<BreachGrowthSetting>
                 {
                     new BreachGrowthSetting {TimeSpan = new TimeSpan(0,10,0), Height = 1, Width = 2},
@@ -823,7 +823,51 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteReadLeveeBreachWithInactiveBreachGrowth_ExportedAndImportedStructuresShouldBeEqual()
+        {
+            var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
+            if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
 
+            try
+            {
+                var name = "lb_02";
+                var lb = new LeveeBreach
+                {
+                    Name = name,
+                    BreachLocationX = 375,
+                    BreachLocationY = 500,
+                    Geometry = new LineString(new[] { new Coordinate(20, 20), new Coordinate(30, 30) }),
+                    LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002
+                };
+
+                lb.GetLeveeBreachSettings().BreachGrowthActive = false;
+                
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = schema,
+                    ReferenceDate = new DateTime(2000, 1, 1)
+                };
+                structuresFile.Write(iniFilePath, new[] { lb });
+                Assert.That(File.Exists(iniFilePath));
+
+                var importedStructures = structuresFile.Read(iniFilePath);
+                Assert.IsNotEmpty(importedStructures);
+                var importedLeveeBreach = importedStructures.FirstOrDefault(s => s.Name == name) as LeveeBreach;
+                Assert.NotNull(importedLeveeBreach);
+
+                CompareLeveeBreaches(lb, importedLeveeBreach);
+                CompareLeveeBreachSettingsBase(lb.GetLeveeBreachSettings(), importedLeveeBreach.GetLeveeBreachSettings());
+            }
+            finally
+            {
+                if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+            }
+        }
+
+        #region Comparison helper methods for levee breaches
+        
         private static void CompareLeveeBreaches(LeveeBreach expected, LeveeBreach actual)
         {
             Assert.AreEqual(expected.Name, actual.Name);
@@ -854,8 +898,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         private static void CompareLeveeBreachUserDefinedSettings(UserDefinedBreach expected, UserDefinedBreach actual)
         {
             Assert.AreEqual(expected.ManualBreachGrowthSettings.Count, actual.ManualBreachGrowthSettings.Count);
-            CollectionAssert.AreEqual(expected.ManualBreachGrowthSettings, actual.ManualBreachGrowthSettings);
+
+            var actualSettings = actual.ManualBreachGrowthSettings;
+            var expectedSettings = expected.ManualBreachGrowthSettings;
+            for (var i = 0; i < actualSettings.Count; i++)
+            {
+                Assert.AreEqual(actualSettings[i].TimeSpan, expectedSettings[i].TimeSpan);
+                Assert.AreEqual(actualSettings[i].Height, expectedSettings[i].Height);
+                Assert.AreEqual(actualSettings[i].Width, expectedSettings[i].Width);
+                Assert.AreEqual(actualSettings[i].Area, expectedSettings[i].Area);
+            }
         }
+
+        #endregion
 
         #endregion
 
