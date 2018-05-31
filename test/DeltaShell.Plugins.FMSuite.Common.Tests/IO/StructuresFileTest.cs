@@ -5,8 +5,10 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -36,14 +38,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
 
-            var structureFile = new StructuresFile {StructureSchema = schema};
+            var structureFile = new StructuresFile { StructureSchema = schema };
             var structures = structureFile.ReadStructures2D(path).ToList();
 
-            Assert.AreEqual(7, structures.Count);
+            Assert.AreEqual(8, structures.Count);
             Assert.AreEqual(2, structures.Count(s => s.StructureType == StructureType.Weir));
             Assert.AreEqual(3, structures.Count(s => s.StructureType == StructureType.Pump));
             Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.Gate));
             Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.GeneralStructure));
+            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.LeveeBreach));
 
             var weirDown = structures.First(s => s.Name == "Weir_down");
             Assert.AreEqual(6, weirDown.Properties.Count);
@@ -56,6 +59,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
             Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
             Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.WidthCenter).GetValueAsString(), Is.EqualTo("2.3"));
+
+            var leveeBreach = structures.FirstOrDefault(s => s.Name == "lb_01");
+            Assert.NotNull(leveeBreach);
+            Assert.AreEqual(15, leveeBreach.Properties.Count);
+            Assert.AreEqual("lb_01.pli", leveeBreach.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString());
+
         }
 
         [Test]
@@ -63,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadStructuresInvalidFileFormat()
         {
             var path = TestHelper.GetTestFilePath(@"structures\invalidFormat.imp");
-            var structuresFile = new StructuresFile {StructureSchema = schema};
+            var structuresFile = new StructuresFile { StructureSchema = schema };
             var structures = structuresFile.ReadStructures2D(path);
             Assert.AreEqual(0, structures.Count(), "Nothing should have been read.");
         }
@@ -91,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             IList<Structure2D> structures = null;
-            var structuresFile = new StructuresFile {StructureSchema = schema};
+            var structuresFile = new StructuresFile { StructureSchema = schema };
             TestHelper.AssertLogMessageIsGenerated(
                 () => structures = structuresFile.ReadStructures2D(path).ToList(),
                 "Category [test] not supported for structures and is skipped.");
@@ -123,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             IList<Structure2D> structures = null;
-            var structuresFile = new StructuresFile {StructureSchema = schema};
+            var structuresFile = new StructuresFile { StructureSchema = schema };
             TestHelper.AssertLogMessageIsGenerated(
                 () => structures = structuresFile.ReadStructures2D(path).ToList(),
                 String.Format(
@@ -152,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var path = TestHelper.GetTestFilePath(@"structures\missingTypeProperty.imp");
 
             IList<Structure2D> structures = null;
-            var structuresFile = new StructuresFile {StructureSchema = schema};
+            var structuresFile = new StructuresFile { StructureSchema = schema };
             TestHelper.AssertLogMessageIsGenerated(() => structures = structuresFile.ReadStructures2D(path).ToList(),
                 "Obligated property 'type' expected but is missing; Structure is skipped.");
             Assert.AreEqual(0, structures.Count, "No valid structures in file.");
@@ -163,10 +172,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void WriteStructures()
         {
             var exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
-            if(File.Exists(exportFilePath)) File.Delete(exportFilePath);
+            if (File.Exists(exportFilePath)) File.Delete(exportFilePath);
 
             var weir = new Structure2D("weir");
-            weir.AddProperty(KnownStructureProperties.Type, typeof (string), "weir");
+            weir.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
             weir.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_down");
             weir.AddProperty(KnownStructureProperties.X, typeof(double), "680");
             weir.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
@@ -177,20 +186,88 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {
                     weir
                 };
-            var structuresFile = new StructuresFile();
-           StructuresFile.WriteStructures2D(exportFilePath, structures);
+            StructuresFile.WriteStructures2D(exportFilePath, structures);
 
             var fileContents = File.ReadAllText(exportFilePath);
             Assert.AreEqual(
-                "[structure]"                                       +Environment.NewLine+
-                "    type                  = weir                "  +Environment.NewLine+
-                "    id                    = Weir_down           "  +Environment.NewLine+
-                "    x                     = 680                 "  +Environment.NewLine+
-                "    y                     = 360                 "  +Environment.NewLine+
-                "    crest_level           = 2                   "  +Environment.NewLine+
-                "    lat_contr_coeff       = 1                   "  +Environment.NewLine, fileContents);
+                "[structure]" + Environment.NewLine +
+                "    type                  = weir                " + Environment.NewLine +
+                "    id                    = Weir_down           " + Environment.NewLine +
+                "    x                     = 680                 " + Environment.NewLine +
+                "    y                     = 360                 " + Environment.NewLine +
+                "    crest_level           = 2                   " + Environment.NewLine +
+                "    lat_contr_coeff       = 1                   " + Environment.NewLine, fileContents);
 
             File.Delete(exportFilePath);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteLeveeBreach()
+        {
+            var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
+            if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+
+            try
+            {
+                var lb = new LeveeBreach
+                {
+                    Name = "lb_01",
+                    BreachLocationX = 125,
+                    BreachLocationY = 250,
+                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) }),
+                    LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002
+
+                };
+
+                var settings = lb.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+                Assert.NotNull(settings);
+
+                settings.StartTimeBreachGrowth = new DateTime(2001, 01, 01);
+                settings.BreachGrowthActive = true;
+                settings.InitialCrestLevel = 2.25;
+                settings.MinimumCrestLevel = 0.69;
+                settings.InitialBreachWidth = 2.38;
+                settings.PeriodToReachZmin = new TimeSpan(1, 11, 11);
+                settings.Factor1Alfa = 0.88;
+                settings.Factor2Beta = 0.73;
+                settings.CriticalFlowVelocity = 1.22;
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = schema,
+                    ReferenceDate = new DateTime(2000, 1, 1)
+                };
+                structuresFile.Write(iniFilePath, new[] { lb });
+                Assert.That(File.Exists(iniFilePath));
+
+                // This is a temporary addition until the reader for levee breaches is finished.
+                var text = File.ReadAllText(iniFilePath);
+                var expectedText =
+                 "[structure]" + Environment.NewLine +
+                 "    type                  = leveebreach         # Type of structure" + Environment.NewLine +
+                 "    id                    = lb_01               # Name of the structure" + Environment.NewLine +
+                 "    polylinefile          = lb_01.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
+                 "    Start_Location_X      = 125                 # X-position of the breach growth" + Environment.NewLine +
+                 "    Start_Location_Y      = 250                 # Y-position of the breach growth" + Environment.NewLine +
+                 "    T0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
+                 "    State                 = 1                   # 0 = off 1 = on (typically set via BMI)" + Environment.NewLine +
+                 "    Algorithm             = 2                   # 0 = unknown 1 = User defined 2 = Verheij - vd Knaap (2002)" + Environment.NewLine +
+                 "    CrestLevelIni         = 2.25                # Initial crest level [m]" + Environment.NewLine +
+                 "    CrestLevelMin         = 0.69                # Minimum crest level [m]" + Environment.NewLine +
+                 "    BreachWidthIni        = 2.38                # Initial breach width [m]" + Environment.NewLine +
+                 "    TimeToBreachToMaximumDepth= 4271                # Time to reach maximum breach depth (in seconds) [s]" + Environment.NewLine +
+                 "    F1                    = 0.88                # Factor 1 Alfa [-]" + Environment.NewLine +
+                 "    F2                    = 0.73                # Factor 2 Beta [-]" + Environment.NewLine +
+                 "    Ucrit                 = 1.22                # Critical flow velocity [m/s]" + Environment.NewLine;
+
+                Assert.AreEqual(expectedText, text);
+
+            }
+            finally
+            {
+                if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+            }
         }
 
         [Test]
@@ -198,12 +275,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void CanRepeatedlyReadAndWrite()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
-
-            var structureFile = new StructuresFile {StructureSchema = schema};
+            Assert.True(File.Exists(path), $"Expected file '{path}' does not exist");
+            var structureFile = new StructuresFile { StructureSchema = schema };
             var structures = structureFile.ReadStructures2D(path).ToList();
 
             var exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
-            var newStructuresFile = new StructuresFile {StructureSchema = schema};
+            var newStructuresFile = new StructuresFile { StructureSchema = schema };
             StructuresFile.WriteStructures2D(exportFilePath, structures);
 
             CompareStructureIniFiles(path, exportFilePath); // Note: Comments in user file can differ from schema!
@@ -265,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structuresFile.Write(iniFilePath, structures);
             var readResult = structuresFile.Read(iniFilePath);
             Assert.That(readResult.Count, Is.EqualTo(1));
-            
+
             var resultingGeneralStructure = readResult.FirstOrDefault() as Weir;
             Assert.IsNotNull(resultingGeneralStructure);
             var resultingFormula = resultingGeneralStructure.WeirFormula as GeneralStructureWeirFormula;
@@ -318,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void ReadThrowsForInvalidFilePath()
         {
-            var structureFile = new StructuresFile() {StructureSchema = new StructureSchema<ModelPropertyDefinition>()};
+            var structureFile = new StructuresFile() { StructureSchema = new StructureSchema<ModelPropertyDefinition>() };
             Assert.Throws<FileNotFoundException>(() => structureFile.ReadStructures2D("I do not exist").ToList());
         }
 
@@ -329,8 +406,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadAsSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures-sobek.imp");
-            
-            var structureFile = new StructuresFile {StructureSchema = schema, ReferenceDate = new DateTime()};
+
+            var structureFile = new StructuresFile { StructureSchema = schema, ReferenceDate = new DateTime() };
 
             var structures = structureFile.Read(path).ToList();
 
@@ -353,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             var path = TestHelper.GetTestFilePath(@"structures\time_dependent_structures.ini");
 
-            var structureFile = new StructuresFile {StructureSchema = schema, ReferenceDate = new DateTime(2013, 1, 1)};
+            var structureFile = new StructuresFile { StructureSchema = schema, ReferenceDate = new DateTime(2013, 1, 1) };
 
             var structures = structureFile.Read(path).ToList();
 
@@ -405,31 +482,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
 
             #endregion
-            
+
             var pump = new Pump("pump1", true)
-                {
-                    Branch = null,
-                    Chainage = double.NaN,
-                    UseCapacityTimeSeries = false,
-                    Capacity = 3.0,
-                    ControlDirection = PumpControlDirection.DeliverySideControl,
-                    StartDelivery = 3.4,
-                    StopDelivery = 2.3,
-                    Geometry = new LineString(new []{new Coordinate(1,2), new Coordinate(2,3)})
-                };
+            {
+                Branch = null,
+                Chainage = double.NaN,
+                UseCapacityTimeSeries = false,
+                Capacity = 3.0,
+                ControlDirection = PumpControlDirection.DeliverySideControl,
+                StartDelivery = 3.4,
+                StopDelivery = 2.3,
+                Geometry = new LineString(new[] { new Coordinate(1, 2), new Coordinate(2, 3) })
+            };
             var simpleWeir = new Weir("weir1", true)
+            {
+                Branch = null,
+                Chainage = double.NaN,
+                UseCrestLevelTimeSeries = false,
+                CrestLevel = 2.0,
+                CrestWidth = 25,
+                WeirFormula = new SimpleWeirFormula
                 {
-                    Branch = null,
-                    Chainage = double.NaN,
-                    UseCrestLevelTimeSeries = false,
-                    CrestLevel = 2.0,
-                    CrestWidth = 25,
-                    WeirFormula = new SimpleWeirFormula
-                        {
-                            LateralContraction = 0.7
-                        },
-                    Geometry = new LineString(new [] { new Coordinate(4, 5), new Coordinate(6, 7) })
-                };
+                    LateralContraction = 0.7
+                },
+                Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) })
+            };
             var simpleGate = new Gate("gate1")
             {
                 Branch = null,
@@ -442,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 HorizontalOpeningDirection = GateOpeningDirection.FromLeft,
                 UseSillLevelTimeSeries = false,
                 SillLevel = 1.0,
-                Geometry = new LineString(new [] { new Coordinate(8, 9), new Coordinate(10, 11) })
+                Geometry = new LineString(new[] { new Coordinate(8, 9), new Coordinate(10, 11) })
             };
 
             var structures = new IStructure[]
@@ -450,10 +527,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     pump, simpleWeir, simpleGate
                 };
             var structuresFile = new StructuresFile
-                {
-                    StructureSchema = schema,
-                    ReferenceDate = new DateTime(2013, 1, 1, 0, 0, 0)
-                };
+            {
+                StructureSchema = schema,
+                ReferenceDate = new DateTime(2013, 1, 1, 0, 0, 0)
+            };
             structuresFile.Write(exportFilePath, structures);
 
             var fileContents = File.ReadAllText(exportFilePath);
@@ -486,7 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.IsTrue(File.Exists(filePath), String.Format("File '{0}' expected to exist.", filePath));
                 File.Delete(filePath);
             }
-            
+
             File.Delete(exportFilePath);
         }
 
@@ -505,8 +582,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var expectedFileNames = new[]
                 {
-                    "pump1.pli", "weir1.pli", "gate1.pli", 
-                    "pump1_capacity.tim", 
+                    "pump1.pli", "weir1.pli", "gate1.pli",
+                    "pump1_capacity.tim",
                     "weir1_crest_level.tim",
                     "gate1_lower_edge_level.tim", "gate1_opening_width.tim"
                 };
@@ -520,7 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
 
             #endregion
-            
+
             var pump = new Pump("pump1", true)
             {
                 Branch = null,
@@ -530,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 ControlDirection = PumpControlDirection.DeliverySideControl,
                 StartDelivery = 3.4,
                 StopDelivery = 2.3,
-                Geometry = new LineString(new [] { new Coordinate(1, 2), new Coordinate(2, 3) })
+                Geometry = new LineString(new[] { new Coordinate(1, 2), new Coordinate(2, 3) })
             };
             pump.CapacityTimeSeries[new DateTime(2013, 1, 2, 3, 4, 0)] = 5.6;
             pump.CapacityTimeSeries[new DateTime(2013, 7, 8, 9, 10, 0)] = 11.12;
@@ -546,7 +623,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {
                     LateralContraction = 0.7
                 },
-                Geometry = new LineString(new [] { new Coordinate(4, 5), new Coordinate(6, 7) })
+                Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) })
             };
             simpleWeir.CrestLevelTimeSeries[new DateTime(2013, 1, 2, 3, 4, 0)] = 6.5;
             simpleWeir.CrestLevelTimeSeries[new DateTime(2013, 7, 8, 9, 10, 0)] = 12.11;
@@ -564,7 +641,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 UseSillLevelTimeSeries = true,
                 SillLevel = 1.0,
                 SillWidth = 15.5,
-                Geometry = new LineString(new [] { new Coordinate(8, 9), new Coordinate(10, 11) })
+                Geometry = new LineString(new[] { new Coordinate(8, 9), new Coordinate(10, 11) })
             };
 
             simpleGate.SillLevelTimeSeries[new DateTime(2013, 6, 5, 4, 3, 2)] = 1.0;
@@ -624,6 +701,162 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             File.Delete(exportFilePath);
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteReadLeveeBreachVerheij_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
+        {
+            var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
+            if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+
+            try
+            {
+                var name = "lb_01";
+                var lb = new LeveeBreach
+                {
+                    Name = name,
+                    BreachLocationX = 125,
+                    BreachLocationY = 250,
+                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) }),
+                    LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002,
+
+                };
+
+                var settings = lb.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+                Assert.NotNull(settings);
+
+                settings.BreachGrowthActive = true;
+                settings.StartTimeBreachGrowth = new DateTime(2018, 5, 29, 18, 19, 0);
+                settings.InitialCrestLevel = 2.25;
+                settings.MinimumCrestLevel = 0.69;
+                settings.InitialBreachWidth = 2.38;
+                settings.PeriodToReachZmin = new TimeSpan(1, 11, 11);
+                settings.Factor1Alfa = 0.88;
+                settings.Factor2Beta = 0.73;
+                settings.CriticalFlowVelocity = 1.22;
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = schema,
+                    ReferenceDate = new DateTime(2000, 1, 1)
+                };
+                structuresFile.Write(iniFilePath, new[] { lb });
+                Assert.That(File.Exists(iniFilePath));
+
+                var importedStructures = structuresFile.Read(iniFilePath);
+                Assert.IsNotEmpty(importedStructures);
+                var importedLeveeBreach = importedStructures.FirstOrDefault(s => s.Name == name) as LeveeBreach;
+                Assert.NotNull(importedLeveeBreach);
+
+                CompareLeveeBreaches(lb, importedLeveeBreach);
+                CompareLeveeBreachSettingsBase(lb.GetLeveeBreachSettings(), importedLeveeBreach.GetLeveeBreachSettings());
+
+                var importedSettings = importedLeveeBreach.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+                Assert.NotNull(importedSettings);
+                CompareLeveeBreachVerheijSettings(settings, importedSettings);
+
+            }
+            finally
+            {
+                if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void WriteReadLeveeBreachUserDefined_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
+        {
+            var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
+            if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+
+            try
+            {
+                var name = "lb_02";
+                var lb = new LeveeBreach
+                {
+                    Name = name,
+                    BreachLocationX = 250,
+                    BreachLocationY = 375,
+                    Geometry = new LineString(new[] { new Coordinate(10, 10), new Coordinate(20, 20) }),
+                    LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach
+                };
+
+                var settings = lb.GetLeveeBreachSettings() as UserDefinedBreach;
+                Assert.NotNull(settings);
+
+                settings.BreachGrowthActive = true;
+                settings.StartTimeBreachGrowth = DateTime.Now;
+                settings.ManualBreachGrowthSettings = new EventedList<BreachGrowthSetting>
+                {
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(0,10,0), Height = 1, Width = 2},
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(0,20,0), Height = 3, Width = 4},
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(0,30,0), Height = 5, Width = 6},
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(0,40,0), Height = 7, Width = 8},
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(0,50,0), Height = 9, Width = 10},
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(1,00,0), Height = 11, Width = 12},
+                    new BreachGrowthSetting {TimeSpan = new TimeSpan(1,10,0), Height = 13, Width = 14}
+                };
+
+                var structuresFile = new StructuresFile
+                {
+                    StructureSchema = schema,
+                    ReferenceDate = new DateTime(2000, 1, 1)
+                };
+                structuresFile.Write(iniFilePath, new[] { lb });
+                Assert.That(File.Exists(iniFilePath));
+
+                var importedStructures = structuresFile.Read(iniFilePath);
+                Assert.IsNotEmpty(importedStructures);
+                var importedLeveeBreach = importedStructures.FirstOrDefault(s => s.Name == name) as LeveeBreach;
+                Assert.NotNull(importedLeveeBreach);
+
+                CompareLeveeBreaches(lb, importedLeveeBreach);
+                CompareLeveeBreachSettingsBase(lb.GetLeveeBreachSettings(), importedLeveeBreach.GetLeveeBreachSettings());
+
+                var importedSettings = importedLeveeBreach.GetLeveeBreachSettings() as UserDefinedBreach;
+                Assert.NotNull(importedSettings);
+                CompareLeveeBreachUserDefinedSettings(settings, importedSettings);
+
+            }
+            finally
+            {
+                if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
+            }
+        }
+
+
+        private static void CompareLeveeBreaches(LeveeBreach expected, LeveeBreach actual)
+        {
+            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.BreachLocationX, actual.BreachLocationX);
+            Assert.AreEqual(expected.BreachLocationY, actual.BreachLocationY);
+            Assert.AreEqual(expected.Geometry, actual.Geometry);
+            Assert.AreEqual(expected.LeveeBreachFormula, actual.LeveeBreachFormula);
+        }
+
+        private static void CompareLeveeBreachSettingsBase(LeveeBreachSettings expected, LeveeBreachSettings actual)
+        {
+            Assert.AreEqual(expected.BreachGrowthActive, actual.BreachGrowthActive);
+            Assert.AreEqual(expected.GrowthFormula, actual.GrowthFormula);
+            Assert.AreEqual(expected.StartTimeBreachGrowth, actual.StartTimeBreachGrowth);
+        }
+
+        private static void CompareLeveeBreachVerheijSettings(VerheijVdKnaap2002Breach expected, VerheijVdKnaap2002Breach actual)
+        {
+            Assert.AreEqual(expected.InitialCrestLevel, actual.InitialCrestLevel);
+            Assert.AreEqual(expected.MinimumCrestLevel, actual.MinimumCrestLevel);
+            Assert.AreEqual(expected.InitialBreachWidth, actual.InitialBreachWidth);
+            Assert.AreEqual(expected.PeriodToReachZmin, actual.PeriodToReachZmin);
+            Assert.AreEqual(expected.Factor1Alfa, actual.Factor1Alfa);
+            Assert.AreEqual(expected.Factor2Beta, actual.Factor2Beta);
+            Assert.AreEqual(expected.CriticalFlowVelocity, actual.CriticalFlowVelocity);
+        }
+
+        private static void CompareLeveeBreachUserDefinedSettings(UserDefinedBreach expected, UserDefinedBreach actual)
+        {
+            Assert.AreEqual(expected.ManualBreachGrowthSettings.Count, actual.ManualBreachGrowthSettings.Count);
+            CollectionAssert.AreEqual(expected.ManualBreachGrowthSettings, actual.ManualBreachGrowthSettings);
+        }
+
         #endregion
 
         #region Comparison helper methods for .ini files:
@@ -656,7 +889,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // Don't care about comments
             }
         }
-        
+
         #endregion
 
         #region Comparison helper methods for structure collections:

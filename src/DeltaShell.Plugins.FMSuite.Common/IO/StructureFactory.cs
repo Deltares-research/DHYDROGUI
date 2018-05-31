@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
@@ -22,10 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private static readonly Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>> CreateStructureType = new Dictionary<StructureType, Func<Structure2D, string, DateTime, IStructure>>
         {
-            { StructureType.Pump, CreatePumpCore },
-            { StructureType.Gate, CreateGateCore },
-            { StructureType.Weir, CreateSimpleWeirCore },
-            { StructureType.GeneralStructure, CreateGeneralStructureCore }
+            {StructureType.Pump, CreatePumpCore},
+            {StructureType.Gate, CreateGateCore},
+            {StructureType.Weir, CreateSimpleWeirCore},
+            {StructureType.GeneralStructure, CreateGeneralStructureCore},
+            {StructureType.LeveeBreach, CreateLeveeBreach}
         };
 
         /// <summary>
@@ -134,11 +136,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static Pump2D CreatePumpCore(Structure2D structure, string path, DateTime refDate)
         {
             var pump = new Pump2D(true);
-            
+
             var property = structure.GetProperty(KnownStructureProperties.Capacity);
             if (property != null)
             {
-                var steerable = (Steerable) property.Value;
+                var steerable = (Steerable)property.Value;
                 switch (steerable.Mode)
                 {
                     case SteerableMode.ConstantValue:
@@ -262,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return structure;
         }
 
-        
+
         /// <summary>
         /// Create a simple weir.
         /// </summary>
@@ -306,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var weir = new Weir2D();
             weir.WeirFormula = CreateGeneralStructureWeirFormula(structure2D);
-            
+
             return weir;
         }
 
@@ -323,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     gsWeirFormula.SetPropertyValue(property, FMParser.FromString<double>(structureproperty.GetValueAsString()));
                 }
-            } 
+            }
 
             return gsWeirFormula;
         }
@@ -344,10 +346,127 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 ? 0.0
                 : FMParser.FromString<double>(crestWidthString);
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
-                                  TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                                  TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+                TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
+                TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
 
             return weir;
+        }
+
+        /// <summary>
+        /// Create a levee breach
+        /// </summary>
+        /// <param name="structure2D">Source of data to create structure</param>
+        /// <param name="path">Filepath of the <see cref="StructuresFile"/>.</param>
+        /// <param name="refDate">Reference data used for <see cref="TimFile"/>.</param>
+        /// <returns></returns>
+        private static IStructure CreateLeveeBreach(Structure2D structure2D, string path, DateTime refDate)
+        {
+            var leveeBreach = SetLeveeBreachProperties(structure2D);
+
+            SetLeveeBreachSettings(leveeBreach, structure2D, path, refDate);
+
+
+            Log.InfoFormat("Work in progess on loading the levee breaches from file. The breaches will be loaded with only their positions.");
+            //SetCommonStructureData(leveeBreach, structure2D, path);
+            return leveeBreach;
+        }
+
+        private static void SetLeveeBreachSettings(LeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
+        {
+            // Base settings
+            var startTime = GetBreachGrowthStartTime(structure2D, refDate);
+            var breachGrowthActive = GetPropertyValue(structure2D, KnownStructureProperties.BreachGrowthActivated, false);
+            leveeBreach.SetBaseLeveeBreachSettings(startTime, breachGrowthActive);
+
+            // formula
+            var algorithmEnumValue = GetPropertyValue(structure2D, KnownStructureProperties.Algorithm, 0);
+            var growthFormulaIsDefined = Enum.IsDefined(typeof(LeveeBreachGrowthFormula), algorithmEnumValue);
+
+            if (!growthFormulaIsDefined)
+            {
+                // return, no use to set the settings
+                return;
+            }
+
+            // settings 
+            leveeBreach.LeveeBreachFormula = (LeveeBreachGrowthFormula)algorithmEnumValue;
+
+            if (leveeBreach.LeveeBreachFormula == LeveeBreachGrowthFormula.VerheijvdKnaap2002)
+            {
+                SetVerheijVdKnaapSettings(leveeBreach, structure2D);
+            }
+
+            if (leveeBreach.LeveeBreachFormula == LeveeBreachGrowthFormula.UserDefinedBreach)
+            {
+                SetUserDefinedSettings(leveeBreach, structure2D, path, startTime);
+            }
+        }
+
+        private static DateTime GetBreachGrowthStartTime(Structure2D structure2D, DateTime refDate)
+        {
+            var startTimeBreachGrowthInSecondsFrom = GetPropertyValue(structure2D, KnownStructureProperties.StartTimeBreachGrowth, 0);
+            var timeSpan = new TimeSpan(0, 0, startTimeBreachGrowthInSecondsFrom);
+            var startTime = refDate + timeSpan;
+            return startTime;
+        }
+
+        private static void SetVerheijVdKnaapSettings(LeveeBreach leveeBreach, Structure2D structure2D)
+        {
+            var settings = leveeBreach.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+            if (settings == null) return;
+
+            settings.InitialCrestLevel = GetPropertyValue(structure2D, KnownStructureProperties.InitialCrestLevel, 0.0);
+            settings.MinimumCrestLevel = GetPropertyValue(structure2D, KnownStructureProperties.MinimumCrestLevel, 0.0);
+            settings.InitialBreachWidth = GetPropertyValue(structure2D, KnownStructureProperties.InitalBreachWidth, 0.0);
+            settings.Factor1Alfa = GetPropertyValue(structure2D, KnownStructureProperties.Factor1, 0.0);
+            settings.Factor2Beta = GetPropertyValue(structure2D, KnownStructureProperties.Factor2, 0.0);
+            var secondsToReachMinimumCrestLevel = GetPropertyValue(structure2D, KnownStructureProperties.TimeToReachMinimumCrestLevel, 0.0);
+            settings.PeriodToReachZmin = new TimeSpan(0, 0, (int)secondsToReachMinimumCrestLevel);
+            settings.CriticalFlowVelocity = GetPropertyValue(structure2D, KnownStructureProperties.CriticalFlowVelocity, 0.0);
+        }
+
+        private static void SetUserDefinedSettings(LeveeBreach leveeBreach, Structure2D structure2D, string path, DateTime refDate)
+        {
+            var settings = leveeBreach.GetLeveeBreachSettings() as UserDefinedBreach;
+            if (settings == null) return;
+
+            var timeSeriesFilePath = GetPropertyValue(structure2D, KnownStructureProperties.TimeFilePath, "");
+            var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, timeSeriesFilePath);
+            var reader = new TimFile();
+            
+            reader.Read(filePath, settings.TimeSeries, refDate);
+            /*
+             var filePath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(path, steerable.TimeSeriesFilename);
+                                    var reader = new TimFile();
+                                    reader.Read(filePath, timeSeries, refDate);
+                         */
+        }
+
+        private static LeveeBreach SetLeveeBreachProperties(Structure2D structure2D)
+        {
+            var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
+            var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
+
+            var leveeBreach = new LeveeBreach
+            {
+                BreachLocationX = breachLocationX,
+                BreachLocationY = breachLocationY,
+
+            };
+
+            return leveeBreach;
+        }
+
+
+
+        private static T GetPropertyValue<T>(Structure2D structure2D, string propertyName, T defaultValue)
+        {
+            var property = structure2D.GetProperty(propertyName);
+            var valueString = property?.GetValueAsString();
+            var value = string.IsNullOrEmpty(valueString)
+                ? defaultValue
+                : FMParser.FromString<T>(valueString);
+            return value;
         }
 
         #endregion

@@ -6,7 +6,7 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
     [Entity]
     public class VerheijVdKnaap2002Breach : LeveeBreachSettings
     {
-        public override LeveeBreachGrowthFormula GrowthFormula { get; } = LeveeBreachGrowthFormula.VerweijvdKnaap2002;
+        public override LeveeBreachGrowthFormula GrowthFormula { get; } = LeveeBreachGrowthFormula.VerheijvdKnaap2002;
 
         public double InitialBreachWidth { get; set; }
 
@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
 
         public double Factor2Beta { get; set; }
 
-        public double LowestCrestLevel { get; set; }
+        public double MinimumCrestLevel { get; set; }
 
         public double CriticalFlowVelocity { get; set; }
 

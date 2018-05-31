@@ -35,5 +35,23 @@
         public const string GateHorizontalOpeningDirection = "horizontal_opening_direction";
         public const string GateSillWidth = "sill_width";
         #endregion Gate
+
+        #region Levee breach
+
+        public const string BreachLocationX = "Start_Location_X";
+        public const string BreachLocationY = "Start_Location_Y";
+        public const string Algorithm = "Algorithm";
+        public const string InitialCrestLevel = "CrestLevelIni";
+        public const string InitalBreachWidth = "BreachWidthIni";
+        public const string MinimumCrestLevel = "CrestLevelMin";
+        public const string TimeToReachMinimumCrestLevel = "TimeToBreachToMaximumDepth";
+        public const string Factor1 = "F1";
+        public const string Factor2 = "F2";
+        public const string CriticalFlowVelocity = "Ucrit";
+        public const string StartTimeBreachGrowth = "T0";
+        public const string BreachGrowthActivated = "State";
+        public const string TimeFilePath = "TimeFile";
+
+        #endregion
     }
 }

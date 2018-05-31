@@ -8,7 +8,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     public class LeveeBreachViewModel : INotifyPropertyChanged
     {
-        private bool useActive = true;
         private LeveeBreach leveeBreach;
         
         public LeveeBreach LeveeBreach
@@ -17,19 +16,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set
             {
                 leveeBreach = value;
-                if (leveeBreach != null)
-                {
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(SelectedGrowthFormula));
-                    OnPropertyChanged(nameof(LeveeBreachSettings));
-                    OnPropertyChanged(nameof(UseActive));
-                }
+                if (leveeBreach == null) return;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedGrowthFormula));
+                OnPropertyChanged(nameof(LeveeBreachSettings));
+                OnPropertyChanged(nameof(UseActive));
+
             }
         }
 
         public LeveeBreachGrowthFormula SelectedGrowthFormula
         {
-            get { return LeveeBreach?.LeveeBreachFormula ?? LeveeBreachGrowthFormula.VerweijvdKnaap2002; }
+            get { return LeveeBreach?.LeveeBreachFormula ?? LeveeBreachGrowthFormula.VerheijvdKnaap2002; }
             set
             {
                 if (LeveeBreach == null) return;
@@ -42,10 +40,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         [ExcludeFromCodeCoverage]
         public bool UseActive
         {
-            get { return useActive; }
+            get { return LeveeBreachSettings?.BreachGrowthActive ?? false; }
             set
             {
-                useActive = value;
+                if (LeveeBreachSettings == null) return;
+                LeveeBreachSettings.BreachGrowthActive = value;
                 OnPropertyChanged();
             }
         }

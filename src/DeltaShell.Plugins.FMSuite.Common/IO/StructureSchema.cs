@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             var group = StructurePropertyGroups[structureType];
-            return group.PropertyDefinitions.Concat(StructurePropertyGroups["structure"].PropertyDefinitions).FirstOrDefault(p => p.FilePropertyName == name);
+            return group.PropertyDefinitions.Concat(StructurePropertyGroups["structure"].PropertyDefinitions).FirstOrDefault(p => string.Equals(p.FilePropertyName, name, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

@@ -15,17 +15,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
             {
                 LeveeBreach = new LeveeBreach
                 {
-                    LeveeBreachFormula = LeveeBreachGrowthFormula.VerweijvdKnaap2002
+                    LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002
                 }
             };
 
-            Assert.AreEqual(LeveeBreachGrowthFormula.VerweijvdKnaap2002, vm.SelectedGrowthFormula);
+            Assert.AreEqual(LeveeBreachGrowthFormula.VerheijvdKnaap2002, vm.SelectedGrowthFormula);
 
             vm.LeveeBreach.LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach;
             Assert.AreEqual(LeveeBreachGrowthFormula.UserDefinedBreach, vm.SelectedGrowthFormula);
 
             vm.LeveeBreach = null;
-            Assert.AreEqual(LeveeBreachGrowthFormula.VerweijvdKnaap2002, vm.SelectedGrowthFormula);
+            Assert.AreEqual(LeveeBreachGrowthFormula.VerheijvdKnaap2002, vm.SelectedGrowthFormula);
         }
 
         [Test]
@@ -51,9 +51,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
         [Test]
         public void ViewModelWithLeveeBreach_GettingBreahSettings_ShouldReturnExpected()
         {
-            var vm = new LeveeBreachViewModel { LeveeBreach = new LeveeBreach {LeveeBreachFormula = LeveeBreachGrowthFormula.VerweijvdKnaap2002} };
+            var vm = new LeveeBreachViewModel { LeveeBreach = new LeveeBreach {LeveeBreachFormula = LeveeBreachGrowthFormula.VerheijvdKnaap2002} };
 
-            Assert.That(vm.LeveeBreach.LeveeBreachFormula == LeveeBreachGrowthFormula.VerweijvdKnaap2002);
+            Assert.That(vm.LeveeBreach.LeveeBreachFormula == LeveeBreachGrowthFormula.VerheijvdKnaap2002);
             Assert.NotNull(vm.LeveeBreachSettings);
             Assert.That(vm.LeveeBreachSettings.GetType() == typeof(VerheijVdKnaap2002Breach));
         }

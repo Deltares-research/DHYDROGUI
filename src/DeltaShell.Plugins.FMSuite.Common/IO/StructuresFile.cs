@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Units;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -24,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
     public class StructuresFile : FMSuiteFileBase, IFeature2DFileBase<IStructure>
     {
         private const string StructureCategoryName = "structure";
-        private static readonly ILog Log = LogManager.GetLogger(typeof (StructuresFile));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
 
         public StructureSchema<ModelPropertyDefinition> StructureSchema { private get; set; }
 
@@ -96,14 +99,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
         {
-            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory),path);
+            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
         }
 
         private IStructure ConvertStructure(Structure2D structure, string filePath, string oldFilePath = null)
         {
             try
             {
-                if(oldFilePath != null && !filePath.Equals(oldFilePath))
+                if (oldFilePath != null && !filePath.Equals(oldFilePath))
                     CopyPolylineFile(structure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Path.GetDirectoryName(filePath), Path.GetDirectoryName(oldFilePath));
                 return StructureFactory.CreateStructure(structure, filePath, ReferenceDate, oldFilePath);
             }
@@ -141,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var list = new List<IStructure>();
             foreach (var structure in structures)
             {
-                if (structure is IPump || structure is IWeir || structure is IGate)
+                if (structure is IPump || structure is IWeir || structure is IGate || structure is LeveeBreach)
                 {
                     list.Add(structure);
                 }
@@ -152,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             return list;
         }
-        
+
         private static DelftIniCategory CreateDelftIniCategory(Structure2D structure)
         {
             var delftIniCategory = new DelftIniCategory(StructureCategoryName);
@@ -240,21 +243,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 Log.ErrorFormat("Geometry type '{0}' for structure '{1}' not supported and therefore not written.", structure.Geometry.GetType(), structure.Name);
             }
         }
-        
+
         private IEnumerable<DelftIniProperty> ConstructStructureProperties(IStructure structure, string structureType, string path, DateTime refDate)
         {
             var pump = structure as IPump;
-            if(pump != null)
+            if (pump != null)
                 return ConstructPumpProperties(pump, structureType, path, refDate);
 
             var weir = structure as IWeir;
-            if(weir != null)
+            if (weir != null)
                 return ConstructWeirProperties(weir, structureType, path, refDate);
 
             var gate = structure as IGate;
             if (gate != null)
                 return ConstructGateProperties(gate, structureType, path, refDate);
 
+            var leveeBreach = structure as LeveeBreach;
+            if (leveeBreach != null)
+                return ConstructLeveeBreachProperties(leveeBreach, structureType, path, refDate);
             throw new NotImplementedException();
         }
 
@@ -301,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure structure, string path, string structureType, DateTime refDate)
         {
-            var weir = (IWeir) structure;
+            var weir = (IWeir)structure;
             var properties = new List<DelftIniProperty>();
 
             if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
@@ -324,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient, formula.LateralContraction, structureType));
             return properties;
         }
-        
+
         private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure structure, string structureType, string path, DateTime refDate)
         {
             var gate = (IGate)structure;
@@ -387,6 +393,52 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             return properties;
         }
 
+        private IEnumerable<DelftIniProperty> ConstructLeveeBreachProperties(IStructure structure, string structureType, string path, DateTime refDate)
+        {
+            var leveeBreach = structure as LeveeBreach;
+            var properties = new List<DelftIniProperty>();
+            if (leveeBreach == null) return properties;
+
+            var settings = leveeBreach.GetLeveeBreachSettings();
+            if (settings == null) return properties;
+
+            // general properties
+            properties.Add(ConstructProperty(KnownStructureProperties.BreachLocationX, leveeBreach.BreachLocationX, structureType));
+            properties.Add(ConstructProperty(KnownStructureProperties.BreachLocationY, leveeBreach.BreachLocationY, structureType));
+            var secondsSinceRefDate = (int)(settings.StartTimeBreachGrowth - refDate).TotalSeconds;
+            properties.Add(ConstructProperty(KnownStructureProperties.StartTimeBreachGrowth, secondsSinceRefDate, structureType));
+            properties.Add(ConstructProperty(KnownStructureProperties.BreachGrowthActivated, settings.BreachGrowthActive, structureType));
+
+            if (!settings.BreachGrowthActive) return properties;
+            
+            // specific properties
+            properties.Add(ConstructProperty(KnownStructureProperties.Algorithm, (int)leveeBreach.LeveeBreachFormula, structureType));
+            var breachSettings = leveeBreach.GetLeveeBreachSettings() as VerheijVdKnaap2002Breach;
+            var useVerheij = breachSettings != null;
+            if (useVerheij)
+            {
+                properties.Add(ConstructProperty(KnownStructureProperties.InitialCrestLevel, breachSettings.InitialCrestLevel, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.MinimumCrestLevel, breachSettings.MinimumCrestLevel, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.InitalBreachWidth, breachSettings.InitialBreachWidth, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.TimeToReachMinimumCrestLevel, breachSettings.PeriodToReachZmin, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.Factor1, breachSettings.Factor1Alfa, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.Factor2, breachSettings.Factor2Beta, structureType));
+                properties.Add(ConstructProperty(KnownStructureProperties.CriticalFlowVelocity, breachSettings.CriticalFlowVelocity, structureType));
+            }
+
+            // Write tm file for table?
+            var userDefinedSettings = settings as UserDefinedBreach;
+            if (userDefinedSettings != null)
+            {
+                var ts = userDefinedSettings.TimeSeries;
+                var timeFilePath = ConstructTimeFilePath(leveeBreach, KnownStructureProperties.TimeFilePath);
+                properties.Add(ConstructProperty(KnownStructureProperties.TimeFilePath, timeFilePath, structureType));
+                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), ts, settings.StartTimeBreachGrowth);
+            }
+
+            return properties;
+        }
+
         private void AddReductionTableRelatedProperties(IPump pump, List<DelftIniProperty> properties, string structureType)
         {
             if (pump.ReductionTable.Arguments[0].Values.Count == 0)
@@ -436,11 +488,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var definition = StructureSchema.GetDefinition(structureType, propertyName);
             var delftIniProperty = new DelftIniProperty
-                {
-                    Name = definition.FilePropertyName,
-                    Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
-                    Comment = definition.Description
-                };
+            {
+                Name = definition.FilePropertyName,
+                Value = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType()),
+                Comment = definition.Description
+            };
             return delftIniProperty;
         }
 
@@ -456,6 +508,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 if (weir.WeirFormula is GeneralStructureWeirFormula) return StructureRegion.StructureTypeName.GeneralStructure;
             }
 
+            var leveeBreach = structure as LeveeBreach;
+            if (leveeBreach != null) return StructureRegion.StructureTypeName.LeveeBreach;
 
             throw new NotImplementedException();
         }
@@ -463,7 +517,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         #endregion
 
         #region FileWriting
-        
+
         private static void WritePliFile(string pliFilePath, IStructure structure)
         {
             var pliFile = new PliFile<Feature2D>();
@@ -514,7 +568,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
                     var propertyValue = structureProperty.Value as Steerable;
-                    if (propertyValue!=null && propertyValue.Mode == SteerableMode.TimeSeries)
+                    if (propertyValue != null && propertyValue.Mode == SteerableMode.TimeSeries)
                     {
                         var directory = Path.GetDirectoryName(propertyValue.TimeSeriesFilename);
                         if (directory != TimFolder)
@@ -545,9 +599,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 catch (FormatException e)
                 {
                     throw new FormatException(String.Format("An invalid value{0} was encountered (expected {1}) for property '{2}' on line {3} of file {4}",
-                                                            e.InnerException is OverflowException ? " (too large/small)" : "", 
-                                                            GetValueTypeDescription(modelPropertyDefinition.DataType, modelPropertyDefinition), 
-                                                            property.Name, property.LineNumber, filePath),e);
+                                                            e.InnerException is OverflowException ? " (too large/small)" : "",
+                                                            GetValueTypeDescription(modelPropertyDefinition.DataType, modelPropertyDefinition),
+                                                            property.Name, property.LineNumber, filePath), e);
                 }
             }
 
@@ -563,7 +617,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (dataType == typeof(bool)) return "a '1' or '0'";
             if (dataType == typeof(DateTime)) return "a date in yyyyMMdd or yyyyMMdHHmmss format";
             if (dataType == typeof(Steerable)) return "a number or a filepath to a time series";
-            if (dataType.IsEnum) return "Any of the following values: "+ String.Join(", ", Enum.GetValues(modelPropertyDefinition.DataType));
+            if (dataType.IsEnum) return "Any of the following values: " + String.Join(", ", Enum.GetValues(modelPropertyDefinition.DataType));
 
             throw new NotImplementedException();
         }

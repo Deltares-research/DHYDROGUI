@@ -53,3 +53,20 @@ type             = generalstructure
 id               = gs_01
 polylinefile     = gs_01.pli
 widthcenter      = 2.3
+
+[structure]
+type                  = leveebreach
+id                    = lb_01
+polylinefile          = lb_01.pli
+Start_Location_X      = 100
+Start_Location_Y      = 150.3
+T0                    = 176400
+State                 = 1
+Algorithm             = 2
+CrestLevelIni         = 2
+CrestLevelMin         = 5
+BreachWidthIni        = 1
+TimeToBreachToMaximumDepth= 4271
+F1                    = 3
+F2                    = 4
+Ucrit                 = 6

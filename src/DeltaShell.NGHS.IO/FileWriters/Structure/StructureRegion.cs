@@ -18,6 +18,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             public const string AdvancedWeir = "advancedWeir";
             public const string Orifice = "orifice";
             public const string GeneralStructure = "generalstructure";
+            public const string LeveeBreach = "leveebreach";
             public const string Culvert = "culvert";
             public const string InvertedSiphon = "invertedSiphon";
             public const string Siphon = "siphon";
@@ -188,6 +189,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting NumValues = new ConfigurationSetting(key: "numValues", description: "Number of values");
         public static readonly ConfigurationSetting Levels = new ConfigurationSetting(key: "levels", description: "Water levels (m AD)");
         public static readonly ConfigurationSetting Ksi = new ConfigurationSetting(key: "ksi", description: "KSI-values (s2/m5)", format:"G6");
+        #endregion
+
+        #region Levee Breach Elements
+
+
+
         #endregion
     }
 }

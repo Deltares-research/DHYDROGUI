@@ -586,7 +586,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections.ToList(),
                 ref obsCrsFile, ObsCrossExtension, ObsCrossAlternativeExtension);
 
-            var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).ToList();
+            var structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).Concat(hydroArea.Gates).Concat(hydroArea.LeveeBreaches).ToList();
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
                 ref structuresFile, StructuresExtension);
@@ -919,6 +919,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 else if (structure is Gate2D)
                 {
                     hydroArea.Gates.Add((Gate2D) structure);
+                }
+                else if (structure is LeveeBreach)
+                {
+                    hydroArea.LeveeBreaches.Add((LeveeBreach) structure);
                 }
                 else
                 {

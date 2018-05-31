@@ -176,7 +176,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             StructureType.Pump,
             StructureType.Weir,
             StructureType.Gate,
-            StructureType.GeneralStructure
+            StructureType.GeneralStructure,
+            StructureType.LeveeBreach 
         };
 
         /// <summary>

@@ -1,5 +1,5 @@
 StructureType,attributeName,Caption,Type,Default,Min,Max,StructureFileOnly,Description
-structure,type,Type:Weir|Pump|Gate|GeneralStructure,weir|pump|gate|generalstructure,,,,TRUE,Type of structure
+structure,type,Type:Weir|Pump|Gate|GeneralStructure|LeveeBreach,weir|pump|gate|generalstructure|leveebreach,,,,TRUE,Type of structure
 structure,id,Name,String,,,,FALSE,Name of the structure
 structure,x,X,Double,,,,FALSE,X coordinate for a 1D structure
 structure,y,Y,Double,,,,FALSE,Y coordinate for a 1D structure
@@ -37,8 +37,19 @@ generalstructure,neg_drownweirflowcoeff,Negative drown weir flow,Double,,,,FALSE
 generalstructure,neg_contrcoeffreegate,Negative flow contraction,Double,,,,FALSE,Negative flow contraction coefficient (-)
 generalstructure,extraresistance,Extra resistance,Double,,,,FALSE,Extra resistance (-)
 generalstructure,gatedoorheight,Gate door height,Double,,,,FALSE,Gate opening height (m)
-
-
+leveebreach,start_location_x,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
+leveebreach,start_location_y,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
+leveebreach,algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|1,,,,FALSE,0 = unknown 1 = User defined 2 = Verheij - vd Knaap (2002)
+leveebreach,crestlevelini,Initial crest level,Double,,,,FALSE,Initial crest level [m]
+leveebreach,crestlevelmin,Minimum crest level,Double,,,,FALSE,Minimum crest level [m]
+leveebreach,breachwidthini,Initial breach width,Double,,,,FALSE,Initial breach width [m]
+leveebreach,timetobreachtomaximumdepth, Time to reach maximum breach depth,Double,,,,FALSE,Time to reach maximum breach depth (in seconds) [s]
+leveebreach,f1,Factor 1,Double,,,,FALSE,Factor 1, Alfa [-]
+leveebreach,f2,Factor 2,Double,,,,FALSE,Factor 2, Beta [-]
+leveebreach,ucrit,Critical flow velocity,Double,,,,FALSE,Critical flow velocity [m/s]
+leveebreach,t0,Breach start time,Double,,,,FALSE,Start time of the breach (in seconds) [s]
+leveebreach,state,State of the growth,1|0,,,,FALSE,0 = off 1 = on (typically set via BMI)
+leveebreach,timeFile,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach 
 
 
 

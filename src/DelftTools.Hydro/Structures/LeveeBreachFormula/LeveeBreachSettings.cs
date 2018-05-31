@@ -8,6 +8,8 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
     {
         public abstract LeveeBreachGrowthFormula GrowthFormula { get; }
 
-        public DateTime StartTimeBreachGrowth { get; set; } = new DateTime(2000, 1, 1, 1, 0, 0);
+        public DateTime StartTimeBreachGrowth { get; set; } = new DateTime(2001, 1, 1, 1, 0, 0);
+
+        public bool BreachGrowthActive { get; set; } = true;
     }
 }

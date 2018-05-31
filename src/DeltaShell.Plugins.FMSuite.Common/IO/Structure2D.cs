@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         [Description(StructureRegion.StructureTypeName.Gate)] Gate,
         [Description(StructureRegion.StructureTypeName.Weir)] Weir,
         [Description(StructureRegion.StructureTypeName.GeneralStructure)] GeneralStructure,
+        [Description(StructureRegion.StructureTypeName.LeveeBreach)] LeveeBreach,
         InvalidType
     }
 
